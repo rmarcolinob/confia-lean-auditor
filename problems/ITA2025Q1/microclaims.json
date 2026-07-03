@@ -1,0 +1,26 @@
+{
+  "problem_id": "ITA2025Q1",
+  "microclaims": [
+    {
+      "id": "mc_area_formula",
+      "description": "A área do triângulo é a² - 2a + 5.",
+      "theorem": "triangleArea_formula",
+      "claim_types": ["area_formula"],
+      "supports_rubric_items": ["area_formula"]
+    },
+    {
+      "id": "mc_unique_positive_solution",
+      "description": "Se a > 0 e a área é 200, então a = 15.",
+      "theorem": "answer_unique",
+      "claim_types": ["area_equation", "positive_root_selection"],
+      "supports_rubric_items": ["equation", "positive_root", "final_answer"]
+    },
+    {
+      "id": "mc_answer_check",
+      "description": "O valor a = 15 satisfaz a condição de área 200.",
+      "theorem": "answer_check",
+      "claim_types": ["final_answer"],
+      "supports_rubric_items": ["final_answer"]
+    }
+  ]
+}

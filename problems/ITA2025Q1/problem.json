@@ -1,0 +1,8 @@
+{
+  "id": "ITA2025Q1",
+  "title": "ITA 2025 Matemática Questão 1",
+  "statement": "Seja z = a + 2i um número complexo, em que a ∈ R é positivo. Determine o valor de a para que as representações de 1, z e z² no plano de Argand-Gauss formem um triângulo de área 200.",
+  "answer_type": "numeric",
+  "correct_answer": "15",
+  "max_score": 10
+}

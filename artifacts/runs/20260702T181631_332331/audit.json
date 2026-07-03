@@ -1,0 +1,63 @@
+{
+  "problem_id": "ITA2025Q1",
+  "score": 10.0,
+  "max_score": 10.0,
+  "verdict": "correto",
+  "rubric_assessment": {
+    "score": 10.0,
+    "max_score": 10.0,
+    "items": [
+      {
+        "id": "coordinates",
+        "description": "Representa corretamente os pontos 1, z e z² em coordenadas reais.",
+        "detected": true,
+        "points": 2.0,
+        "max_points": 2.0,
+        "evidence": "Detectou z² = (a² - 4) + 4ai."
+      },
+      {
+        "id": "area_formula",
+        "description": "Obtém a fórmula correta da área por determinante ou equivalente.",
+        "detected": true,
+        "points": 3.0,
+        "max_points": 3.0,
+        "evidence": "Detectou fórmula da área a² - 2a + 5."
+      },
+      {
+        "id": "equation",
+        "description": "Monta a equação a² - 2a + 5 = 200 ou equivalente.",
+        "detected": true,
+        "points": 2.0,
+        "max_points": 2.0,
+        "evidence": "Detectou equação equivalente à condição de área 200."
+      },
+      {
+        "id": "positive_root",
+        "description": "Usa a condição a > 0 para descartar a raiz negativa.",
+        "detected": true,
+        "points": 2.0,
+        "max_points": 2.0,
+        "evidence": "Usou a positividade de a para descartar a raiz negativa."
+      },
+      {
+        "id": "final_answer",
+        "description": "Conclui corretamente a = 15.",
+        "detected": true,
+        "points": 1.0,
+        "max_points": 1.0,
+        "evidence": "Concluiu a = 15."
+      }
+    ]
+  },
+  "lean_certificate": {
+    "status": "verified",
+    "compiled": true,
+    "exit_code": 0,
+    "uses_forbidden_token": false,
+    "forbidden_tokens_found": [],
+    "stdout": "",
+    "stderr": ""
+  },
+  "feedback": "A solução apresentou os seguintes elementos corretos: Representa corretamente os pontos 1, z e z² em coordenadas reais.; Obtém a fórmula correta da área por determinante ou equivalente.; Monta a equação a² - 2a + 5 = 200 ou equivalente.; Usa a condição a > 0 para descartar a raiz negativa.; Conclui corretamente a = 15.. O certificado Lean fixo da questão foi verificado sem tokens proibidos.",
+  "artifact_dir": "/Users/LinMarcolino/Documents/confia-lean-auditor/artifacts/runs/20260702T181631_332331"
+}

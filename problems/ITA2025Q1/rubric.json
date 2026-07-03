@@ -1,0 +1,36 @@
+{
+  "problem_id": "ITA2025Q1",
+  "max_score": 10,
+  "items": [
+    {
+      "id": "coordinates",
+      "description": "Representa corretamente os pontos 1, z e z² em coordenadas reais.",
+      "points": 2,
+      "claim_type": "z_squared_coordinates"
+    },
+    {
+      "id": "area_formula",
+      "description": "Obtém a fórmula correta da área por determinante ou equivalente.",
+      "points": 3,
+      "claim_type": "area_formula"
+    },
+    {
+      "id": "equation",
+      "description": "Monta a equação a² - 2a + 5 = 200 ou equivalente.",
+      "points": 2,
+      "claim_type": "area_equation"
+    },
+    {
+      "id": "positive_root",
+      "description": "Usa a condição a > 0 para descartar a raiz negativa.",
+      "points": 2,
+      "claim_type": "positive_root_selection"
+    },
+    {
+      "id": "final_answer",
+      "description": "Conclui corretamente que a = 15.",
+      "points": 1,
+      "claim_type": "final_answer"
+    }
+  ]
+}
