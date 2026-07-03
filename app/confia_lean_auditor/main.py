@@ -10,13 +10,14 @@ from confia_lean_auditor.claims.extract_claims import extract_claims
 from confia_lean_auditor.core.paths import InvalidProblemId, get_problem_dir, get_repo_root
 from confia_lean_auditor.core.schemas import AuditRequest, AuditResponse, LeanCertificate
 from confia_lean_auditor.lean.build_attempt import build_attempt
+from confia_lean_auditor.lean.formal_step_evaluator import evaluate_formal_steps
 from confia_lean_auditor.lean.microclaim_evaluator import evaluate_microclaims
 from confia_lean_auditor.lean.run_lean import run_lean_file
 from confia_lean_auditor.reports.report_builder import build_feedback, verdict_from_score
 from confia_lean_auditor.rubric.rubric_evaluator import evaluate_rubric
 
 
-app = FastAPI(title="ConfIA Lean Auditor", version="0.3.1")
+app = FastAPI(title="ConfIA Lean Auditor", version="0.4.0")
 
 
 def repo_root() -> Path:
@@ -28,7 +29,7 @@ def health():
     return {
         "status": "ok",
         "service": "ConfIA Lean Auditor",
-        "version": "0.3.1"
+        "version": "0.4.0"
     }
 
 
@@ -51,9 +52,14 @@ def audit(req: AuditRequest) -> AuditResponse:
     claim_extraction = extract_claims(req.problem_id, req.solution)
 
     try:
-        rubric = evaluate_rubric(root, req.problem_id, claim_extraction)
-    except FileNotFoundError as exc:
-        raise HTTPException(status_code=404, detail=str(exc)) from exc
+        formal_steps = evaluate_formal_steps(
+            repo_root=root,
+            problem_id=req.problem_id,
+            claim_extraction=claim_extraction,
+            artifact_dir=artifact_dir,
+        )
+    except NotImplementedError as exc:
+        raise HTTPException(status_code=501, detail=str(exc)) from exc
 
     try:
         attempt_build = build_attempt(
@@ -61,6 +67,7 @@ def audit(req: AuditRequest) -> AuditResponse:
             problem_id=req.problem_id,
             claim_extraction=claim_extraction,
             artifact_dir=artifact_dir,
+            formal_step_results=formal_steps,
         )
     except NotImplementedError as exc:
         raise HTTPException(status_code=501, detail=str(exc)) from exc
@@ -81,9 +88,20 @@ def audit(req: AuditRequest) -> AuditResponse:
             claim_extraction=claim_extraction,
             lean_certificate=lean_certificate,
             generated_theorems=generated_theorems,
+            formal_step_results=formal_steps,
         )
     except FileNotFoundError as exc:
         raise HTTPException(status_code=500, detail=str(exc)) from exc
+
+    try:
+        rubric = evaluate_rubric(
+            repo_root=root,
+            problem_id=req.problem_id,
+            claim_extraction=claim_extraction,
+            microclaims=microclaims,
+        )
+    except FileNotFoundError as exc:
+        raise HTTPException(status_code=404, detail=str(exc)) from exc
 
     verdict = verdict_from_score(rubric.score, rubric.max_score)
     feedback = build_feedback(rubric, lean_certificate, microclaims)
@@ -94,6 +112,7 @@ def audit(req: AuditRequest) -> AuditResponse:
         max_score=rubric.max_score,
         verdict=verdict,
         extracted_claims=claim_extraction,
+        formal_steps=formal_steps,
         rubric_assessment=rubric,
         lean_certificate=lean_certificate,
         microclaims=microclaims,

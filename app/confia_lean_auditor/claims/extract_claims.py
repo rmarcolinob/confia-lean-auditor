@@ -4,17 +4,29 @@ import re
 import unicodedata
 from typing import Dict, List, Optional
 
-from confia_lean_auditor.core.schemas import ClaimExtraction, ExtractedClaim
+from confia_lean_auditor.core.schemas import (
+    ClaimExtraction,
+    ExtractedClaim,
+    FormalStep,
+)
 
 
 def normalize(text: str) -> str:
-    text = text.lower()
-    text = unicodedata.normalize("NFKD", text)
-    text = "".join(ch for ch in text if not unicodedata.combining(ch))
     text = text.replace("²", "^2")
     text = text.replace("−", "-")
     text = text.replace("·", "*")
+    text = text.lower()
+    text = unicodedata.normalize("NFKD", text)
+    text = "".join(ch for ch in text if not unicodedata.combining(ch))
     return text
+
+
+def compact(text: str) -> str:
+    return re.sub(r"\s+", "", text)
+
+
+def compact_no_star(text: str) -> str:
+    return compact(text).replace("*", "")
 
 
 def make_claim(
@@ -35,16 +47,83 @@ def make_claim(
     )
 
 
+def leanize_polynomial_expr(expr: str) -> str:
+    expr = expr.strip()
+    expr = expr.strip(".;,")
+    expr = expr.replace(" ", "")
+    expr = expr.replace("²", "^2")
+    expr = expr.replace("−", "-")
+
+    expr = re.sub(r"(\d+)a", r"\1*a", expr)
+
+    expr = expr.replace("^", " ^ ")
+    expr = expr.replace("*", " * ")
+    expr = expr.replace("+", " + ")
+    expr = expr.replace("-", " - ")
+
+    expr = re.sub(r"\s+", " ", expr).strip()
+
+    if expr.startswith("- "):
+        expr = "-" + expr[2:]
+
+    return expr
+
+
+def extract_q1_formal_steps(solution: str) -> List[FormalStep]:
+    t = normalize(solution)
+    steps: List[FormalStep] = []
+
+    for raw_line in t.splitlines():
+        line = compact(raw_line)
+
+        if "=" not in line:
+            continue
+
+        if "(a-1)" not in line:
+            continue
+
+        if "a^2-5" not in line:
+            continue
+
+        rhs = line.split("=")[-1].strip().strip(".;,")
+
+        if "a^2" not in rhs:
+            continue
+
+        if "10" not in rhs:
+            continue
+
+        rhs_lean = leanize_polynomial_expr(rhs)
+
+        steps.append(
+            FormalStep(
+                id="q1_s1_determinant_expansion",
+                type="determinant_expansion",
+                description="Expansão algébrica do determinante usado no cálculo da área.",
+                evidence=raw_line.strip(),
+                lhs="(a - 1) * (4 * a) - 2 * (a ^ 2 - 5)",
+                rhs=rhs_lean,
+                lean_method="ring",
+                supports_claim_types=["area_formula"],
+                supports_rubric_items=["area_formula"],
+            )
+        )
+
+        break
+
+    return steps
+
+
 def extract_claims_ita2025q1(solution: str) -> ClaimExtraction:
     t = normalize(solution)
-    compact = t.replace(" ", "")
+    c = compact_no_star(t)
 
     claims: List[ExtractedClaim] = []
+    formal_steps = extract_q1_formal_steps(solution)
 
-    # Claim 1: coordenadas de z²
-    has_z2 = ("z^2" in t or "z2" in t) and "a^2" in compact
-    has_real = "a^2-4" in compact
-    has_imag = "4a" in compact or "4*a" in compact
+    has_z2 = ("z^2" in t or "z2" in t) and "a^2" in c
+    has_real = "a^2-4" in c
+    has_imag = "4a" in c
 
     if has_z2 and has_real and has_imag:
         claims.append(
@@ -58,12 +137,8 @@ def extract_claims_ita2025q1(solution: str) -> ClaimExtraction:
             )
         )
 
-    # Claim 2: fórmula da área
     has_area_method = "area" in t or "det" in t or "determinante" in t
-    has_area_formula = (
-        "a^2-2a+5" in compact
-        or "a^2-2*a+5" in compact
-    )
+    has_area_formula = "a^2-2a+5" in c
 
     if has_area_method and has_area_formula:
         claims.append(
@@ -77,13 +152,10 @@ def extract_claims_ita2025q1(solution: str) -> ClaimExtraction:
             )
         )
 
-    # Claim 3: equação da área igual a 200
     has_equation = (
-        "a^2-2a+5=200" in compact
-        or "a^2-2*a+5=200" in compact
-        or "a^2-2a-195=0" in compact
-        or "a^2-2*a-195=0" in compact
-        or "(a-15)(a+13)=0" in compact
+        "a^2-2a+5=200" in c
+        or "a^2-2a-195=0" in c
+        or "(a-15)(a+13)=0" in c
     )
 
     if has_equation:
@@ -98,7 +170,6 @@ def extract_claims_ita2025q1(solution: str) -> ClaimExtraction:
             )
         )
 
-    # Claim 4: escolha da raiz positiva
     mentions_positive = "a > 0" in t or "a positivo" in t or "positivo" in t
     discards_negative = "-13" in t or "raiz negativa" in t or "descarta" in t
 
@@ -114,7 +185,6 @@ def extract_claims_ita2025q1(solution: str) -> ClaimExtraction:
             )
         )
 
-    # Claim 5: resposta final discursiva
     final_answer_patterns = [
         r"\ba\s*=\s*15\b",
         r"\ba\s+vale\s+15\b",
@@ -134,11 +204,15 @@ def extract_claims_ita2025q1(solution: str) -> ClaimExtraction:
             )
         )
 
-    return ClaimExtraction(problem_id="ITA2025Q1", claims=claims)
+    return ClaimExtraction(
+        problem_id="ITA2025Q1",
+        claims=claims,
+        formal_steps=formal_steps,
+    )
 
 
 def extract_claims(problem_id: str, solution: str) -> ClaimExtraction:
     if problem_id == "ITA2025Q1":
         return extract_claims_ita2025q1(solution)
 
-    return ClaimExtraction(problem_id=problem_id, claims=[])
+    return ClaimExtraction(problem_id=problem_id, claims=[], formal_steps=[])

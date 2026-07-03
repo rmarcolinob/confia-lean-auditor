@@ -10,6 +10,36 @@ class AuditRequest(BaseModel):
     solution: str
 
 
+class FormalStep(BaseModel):
+    id: str
+    type: str
+    description: str
+    evidence: str
+    lhs: str
+    rhs: str
+    lean_method: str = "ring"
+    supports_claim_types: List[str] = Field(default_factory=list)
+    supports_rubric_items: List[str] = Field(default_factory=list)
+
+
+class FormalStepResult(BaseModel):
+    id: str
+    type: str
+    description: str
+    evidence: str
+    lhs: str
+    rhs: str
+    lean_method: str
+    supports_claim_types: List[str] = Field(default_factory=list)
+    supports_rubric_items: List[str] = Field(default_factory=list)
+    lean_file: str
+    status: str
+    compiled: bool
+    exit_code: int
+    stdout: str = ""
+    stderr: str = ""
+
+
 class ExtractedClaim(BaseModel):
     id: str
     type: str
@@ -22,6 +52,7 @@ class ExtractedClaim(BaseModel):
 class ClaimExtraction(BaseModel):
     problem_id: str
     claims: List[ExtractedClaim]
+    formal_steps: List[FormalStep] = Field(default_factory=list)
 
 
 class RubricItemResult(BaseModel):
@@ -57,6 +88,10 @@ class MicroclaimResult(BaseModel):
     description: str
     theorem: Optional[str] = None
     claim_types: List[str] = Field(default_factory=list)
+    required_formal_step_types: List[str] = Field(default_factory=list)
+    depends_on_microclaim_ids: List[str] = Field(default_factory=list)
+    dependencies_verified: bool = True
+    formal_steps_verified: bool = True
     textual_evidence: bool
     lean_status: str
     supports_rubric_items: List[str] = Field(default_factory=list)
@@ -68,6 +103,7 @@ class AuditResponse(BaseModel):
     max_score: float
     verdict: str
     extracted_claims: ClaimExtraction
+    formal_steps: List[FormalStepResult]
     rubric_assessment: RubricAssessment
     lean_certificate: LeanCertificate
     microclaims: List[MicroclaimResult]

@@ -1,9 +1,9 @@
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Any, Dict, List, Set
+from typing import Any, Dict, List, Optional, Set
 
-from confia_lean_auditor.core.schemas import ClaimExtraction
+from confia_lean_auditor.core.schemas import ClaimExtraction, FormalStepResult
 
 
 COMMON_HEADER_Q1 = r'''
@@ -86,11 +86,22 @@ def claim_types(claim_extraction: ClaimExtraction) -> Set[str]:
     return set(claim.type for claim in claim_extraction.claims)
 
 
+def verified_step_types(formal_step_results: Optional[List[FormalStepResult]]) -> Set[str]:
+    if formal_step_results is None:
+        return set()
+
+    return {
+        step.type for step in formal_step_results if step.status == "verified"
+    }
+
+
 def build_attempt_ita2025q1(
     claim_extraction: ClaimExtraction,
     artifact_dir: Path,
+    formal_step_results: Optional[List[FormalStepResult]] = None,
 ) -> Dict[str, Any]:
     types = claim_types(claim_extraction)
+    verified_steps = verified_step_types(formal_step_results)
 
     parts: List[str] = [COMMON_HEADER_Q1]
     generated_theorems: List[str] = []
@@ -99,7 +110,7 @@ def build_attempt_ita2025q1(
         parts.append(Z_SQUARED_COORDINATES)
         generated_theorems.append("z_squared_coordinates")
 
-    if "area_formula" in types:
+    if "area_formula" in types and "determinant_expansion" in verified_steps:
         parts.append(TRIANGLE_AREA_FORMULA)
         generated_theorems.append("triangleArea_formula")
 
@@ -127,8 +138,13 @@ def build_attempt(
     problem_id: str,
     claim_extraction: ClaimExtraction,
     artifact_dir: Path,
+    formal_step_results: Optional[List[FormalStepResult]] = None,
 ) -> Dict[str, Any]:
     if problem_id == "ITA2025Q1":
-        return build_attempt_ita2025q1(claim_extraction, artifact_dir)
+        return build_attempt_ita2025q1(
+            claim_extraction=claim_extraction,
+            artifact_dir=artifact_dir,
+            formal_step_results=formal_step_results,
+        )
 
     raise NotImplementedError("Attempt builder not implemented for problem: " + problem_id)

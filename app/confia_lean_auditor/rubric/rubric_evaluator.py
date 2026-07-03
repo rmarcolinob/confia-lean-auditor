@@ -2,60 +2,87 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
-from typing import Optional
+from typing import List, Optional
 
+from confia_lean_auditor.core.paths import get_problem_dir
 from confia_lean_auditor.core.schemas import (
     ClaimExtraction,
-    ExtractedClaim,
+    MicroclaimResult,
     RubricAssessment,
     RubricItemResult,
 )
-
-
-def find_claim(claims: ClaimExtraction, claim_type: str) -> Optional[ExtractedClaim]:
-    for claim in claims.claims:
-        if claim.type == claim_type:
-            return claim
-    return None
 
 
 def evaluate_rubric(
     repo_root: Path,
     problem_id: str,
     claim_extraction: ClaimExtraction,
+    microclaims: Optional[List[MicroclaimResult]] = None,
 ) -> RubricAssessment:
-    rubric_path = repo_root / "problems" / problem_id / "rubric.json"
+    problem_dir = get_problem_dir(repo_root, problem_id)
+    path = problem_dir / "rubric.json"
 
-    if not rubric_path.exists():
-        raise FileNotFoundError("Rubric not found: " + str(rubric_path))
+    if not path.exists():
+        raise FileNotFoundError("Rubric not found: " + str(path))
 
-    rubric = json.loads(rubric_path.read_text(encoding="utf-8"))
+    data = json.loads(path.read_text(encoding="utf-8"))
 
-    results = []
-    total = 0.0
+    claims_by_type = {}
+    for claim in claim_extraction.claims:
+        claims_by_type.setdefault(claim.type, claim)
 
-    for item in rubric["items"]:
-        claim_type = item["claim_type"]
-        claim = find_claim(claim_extraction, claim_type)
+    verified_microclaim_ids = set()
+    if microclaims is not None:
+        verified_microclaim_ids = {
+            mc.id
+            for mc in microclaims
+            if mc.textual_evidence and mc.lean_status == "verified_by_lean"
+        }
 
-        detected = claim is not None
+    items: List[RubricItemResult] = []
+    score = 0.0
+
+    for item in data["items"]:
+        claim_type = item.get("claim_type")
+        claim = claims_by_type.get(claim_type)
+
+        required_microclaim_ids = item.get("required_microclaim_ids", [])
+
+        has_claim = claim is not None
+
+        if required_microclaim_ids:
+            has_required_microclaims = all(
+                mc_id in verified_microclaim_ids for mc_id in required_microclaim_ids
+            )
+        else:
+            has_required_microclaims = True
+
+        detected = has_claim and has_required_microclaims
+
         points = float(item["points"]) if detected else 0.0
-        total += points
+        score += points
 
-        results.append(
+        evidence = None
+        claim_id = None
+
+        if claim is not None:
+            evidence = claim.evidence
+            claim_id = claim.id
+
+        items.append(
             RubricItemResult(
                 id=item["id"],
                 description=item["description"],
                 detected=detected,
                 points=points,
                 max_points=float(item["points"]),
-                evidence=claim.evidence if claim else None,
-                claim_id=claim.id if claim else None,
+                evidence=evidence,
+                claim_id=claim_id,
             )
         )
 
     return RubricAssessment(
-        score=total,
-        max_score=float(rubric["max_score"]),
-        items=results,
+        score=score,
+        max_score=float(data["max_score"]),
+        items=items,
     )

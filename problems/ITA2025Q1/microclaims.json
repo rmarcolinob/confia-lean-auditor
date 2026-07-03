@@ -13,6 +13,7 @@
       "description": "A área do triângulo é a² - 2a + 5.",
       "theorem": "triangleArea_formula",
       "claim_types": ["area_formula"],
+      "required_formal_step_types": ["determinant_expansion"],
       "supports_rubric_items": ["area_formula"]
     },
     {
@@ -20,6 +21,7 @@
       "description": "Se a > 0 e a área é 200, então a = 15.",
       "theorem": "answer_unique",
       "claim_types": ["area_equation", "positive_root_selection"],
+      "depends_on_microclaim_ids": ["mc_area_formula"],
       "supports_rubric_items": ["equation", "positive_root", "final_answer"]
     },
     {
