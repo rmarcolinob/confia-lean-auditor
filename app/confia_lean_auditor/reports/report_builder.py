@@ -9,6 +9,13 @@ from confia_lean_auditor.core.schemas import (
 )
 
 
+def clean_sentence(text: str) -> str:
+    text = text.strip()
+    while text.endswith("."):
+        text = text[:-1].strip()
+    return text
+
+
 def verdict_from_score(score: float, max_score: float) -> str:
     ratio = score / max_score if max_score else 0.0
 
@@ -26,11 +33,11 @@ def build_feedback(
     lean_certificate: LeanCertificate,
     microclaims: List[MicroclaimResult],
 ) -> str:
-    detected = [item.description for item in rubric.items if item.detected]
-    missing = [item.description for item in rubric.items if not item.detected]
+    detected = [clean_sentence(item.description) for item in rubric.items if item.detected]
+    missing = [clean_sentence(item.description) for item in rubric.items if not item.detected]
 
     verified_microclaims = [
-        mc.description
+        clean_sentence(mc.description)
         for mc in microclaims
         if mc.lean_status == "verified_by_lean" and mc.textual_evidence
     ]

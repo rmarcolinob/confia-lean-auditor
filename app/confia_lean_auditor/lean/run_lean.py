@@ -7,6 +7,8 @@ import subprocess
 from pathlib import Path
 from typing import Any, Dict, List
 
+from confia_lean_auditor.core.paths import InvalidProblemId, get_problem_dir
+
 
 FORBIDDEN_TOKENS = [
     "sorry",
@@ -97,7 +99,20 @@ def run_lean_file(repo_root: Path, lean_file: Path, timeout_seconds: int = 30) -
 
 
 def run_problem(repo_root: Path, problem_id: str) -> Dict[str, Any]:
-    lean_file = repo_root / "problems" / problem_id / "certificate" / "Statement.lean"
+    try:
+        problem_dir = get_problem_dir(repo_root, problem_id)
+    except InvalidProblemId as exc:
+        return {
+            "status": "invalid_problem_id",
+            "compiled": False,
+            "exit_code": -1,
+            "uses_forbidden_token": False,
+            "forbidden_tokens_found": [],
+            "stdout": "",
+            "stderr": str(exc),
+        }
+
+    lean_file = problem_dir / "certificate" / "Statement.lean"
 
     if not lean_file.exists():
         return {

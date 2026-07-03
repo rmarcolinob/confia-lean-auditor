@@ -48,6 +48,8 @@ class LeanCertificate(BaseModel):
     forbidden_tokens_found: List[str]
     stdout: str = ""
     stderr: str = ""
+    lean_file: Optional[str] = None
+    generated_theorems: List[str] = Field(default_factory=list)
 
 
 class MicroclaimResult(BaseModel):

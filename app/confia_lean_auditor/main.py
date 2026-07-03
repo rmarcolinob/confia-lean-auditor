@@ -7,18 +7,20 @@ from pathlib import Path
 from fastapi import FastAPI, HTTPException
 
 from confia_lean_auditor.claims.extract_claims import extract_claims
+from confia_lean_auditor.core.paths import InvalidProblemId, get_problem_dir, get_repo_root
 from confia_lean_auditor.core.schemas import AuditRequest, AuditResponse, LeanCertificate
+from confia_lean_auditor.lean.build_attempt import build_attempt
 from confia_lean_auditor.lean.microclaim_evaluator import evaluate_microclaims
-from confia_lean_auditor.lean.run_lean import run_problem
+from confia_lean_auditor.lean.run_lean import run_lean_file
 from confia_lean_auditor.reports.report_builder import build_feedback, verdict_from_score
 from confia_lean_auditor.rubric.rubric_evaluator import evaluate_rubric
 
 
-app = FastAPI(title="ConfIA Lean Auditor", version="0.2.0")
+app = FastAPI(title="ConfIA Lean Auditor", version="0.3.1")
 
 
 def repo_root() -> Path:
-    return Path(__file__).resolve().parents[2]
+    return get_repo_root()
 
 
 @app.get("/health")
@@ -26,17 +28,25 @@ def health():
     return {
         "status": "ok",
         "service": "ConfIA Lean Auditor",
-        "version": "0.2.0"
+        "version": "0.3.1"
     }
 
 
 @app.post("/audit", response_model=AuditResponse)
 def audit(req: AuditRequest) -> AuditResponse:
     root = repo_root()
-    problem_dir = root / "problems" / req.problem_id
+
+    try:
+        problem_dir = get_problem_dir(root, req.problem_id)
+    except InvalidProblemId as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
 
     if not problem_dir.exists():
         raise HTTPException(status_code=404, detail="Problem not found: " + req.problem_id)
+
+    run_id = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S_%f")
+    artifact_dir = root / "artifacts" / "runs" / run_id
+    artifact_dir.mkdir(parents=True, exist_ok=True)
 
     claim_extraction = extract_claims(req.problem_id, req.solution)
 
@@ -45,22 +55,38 @@ def audit(req: AuditRequest) -> AuditResponse:
     except FileNotFoundError as exc:
         raise HTTPException(status_code=404, detail=str(exc)) from exc
 
-    lean_raw = run_problem(root, req.problem_id)
+    try:
+        attempt_build = build_attempt(
+            repo_root=root,
+            problem_id=req.problem_id,
+            claim_extraction=claim_extraction,
+            artifact_dir=artifact_dir,
+        )
+    except NotImplementedError as exc:
+        raise HTTPException(status_code=501, detail=str(exc)) from exc
+
+    attempt_path = attempt_build["attempt_path"]
+    generated_theorems = attempt_build["generated_theorems"]
+
+    lean_raw = run_lean_file(root, attempt_path)
+    lean_raw["lean_file"] = str(attempt_path)
+    lean_raw["generated_theorems"] = generated_theorems
+
     lean_certificate = LeanCertificate(**lean_raw)
 
-    microclaims = evaluate_microclaims(
-        repo_root=root,
-        problem_id=req.problem_id,
-        claim_extraction=claim_extraction,
-        lean_certificate=lean_certificate,
-    )
+    try:
+        microclaims = evaluate_microclaims(
+            repo_root=root,
+            problem_id=req.problem_id,
+            claim_extraction=claim_extraction,
+            lean_certificate=lean_certificate,
+            generated_theorems=generated_theorems,
+        )
+    except FileNotFoundError as exc:
+        raise HTTPException(status_code=500, detail=str(exc)) from exc
 
     verdict = verdict_from_score(rubric.score, rubric.max_score)
     feedback = build_feedback(rubric, lean_certificate, microclaims)
-
-    run_id = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S_%f")
-    artifact_dir = root / "artifacts" / "runs" / run_id
-    artifact_dir.mkdir(parents=True, exist_ok=True)
 
     response = AuditResponse(
         problem_id=req.problem_id,

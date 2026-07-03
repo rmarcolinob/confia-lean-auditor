@@ -1,0 +1,23 @@
+Temos z = a + 2i, então z^2 = (a + 2i)^2 = a^2 - 4 + 4ai.
+
+Logo, os pontos são:
+1 = (1,0),
+z = (a,2),
+z^2 = (a^2 - 4, 4a).
+
+A área pode ser calculada pelo determinante:
+Área = 1/2 |det((a-1,2), (a^2-5,4a))|.
+
+O determinante é:
+(a-1)4a - 2(a^2-5) = 2a^2 - 4a + 10.
+
+Assim, a área é a^2 - 2a + 5.
+
+Como a área é 200:
+a^2 - 2a + 5 = 200
+a^2 - 2a - 195 = 0
+(a - 15)(a + 13) = 0.
+
+Como a > 0, descartamos a raiz negativa -13.
+
+Portanto, a = 15.
