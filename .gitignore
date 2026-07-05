@@ -1,19 +1,17 @@
-/.lake
-
-# Python
-.venv/
-__pycache__/
-*.pyc
-.pytest_cache/
-
-# ConfIA artifacts
-artifacts/runs/
-
 # Python local environment
 .venv/
 __pycache__/
 *.pyc
 .pytest_cache/
+.mypy_cache/
+.ruff_cache/
 
 # Runtime artifacts
 artifacts/runs/
+
+# Local environment files
+.env
+.env.*
+
+# macOS
+.DS_Store
