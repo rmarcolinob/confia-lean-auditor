@@ -1,2 +1,0 @@
-Como z = a + 2i, concluo que a área é 2a + 5.
-Então 2a + 5 = 200, logo a = 97,5.

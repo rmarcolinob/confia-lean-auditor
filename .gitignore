@@ -1,1 +1,10 @@
 /.lake
+
+# Python
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# ConfIA artifacts
+artifacts/runs/
