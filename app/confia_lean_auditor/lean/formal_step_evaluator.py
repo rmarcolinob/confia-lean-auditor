@@ -9,6 +9,10 @@ from confia_lean_auditor.core.schemas import (
     FormalStepResult,
 )
 from confia_lean_auditor.lean.run_lean import run_lean_file
+from confia_lean_auditor.lean.safe_formal_step import (
+    FormalStepValidationError,
+    validate_formal_step,
+)
 
 
 def lean_theorem_name(step_id: str) -> str:
@@ -58,8 +62,43 @@ def evaluate_formal_steps(
     results: List[FormalStepResult] = []
 
     for step in claim_extraction.formal_steps:
-        lean_source = render_formal_step(problem_id, step)
         lean_file = steps_dir / (step.id + ".lean")
+
+        try:
+            validate_formal_step(step)
+        except FormalStepValidationError as exc:
+            rejected_file = steps_dir / (step.id + ".rejected.txt")
+            rejected_file.write_text(
+                "Rejected formal step.\n\n"
+                + "Reason: " + str(exc) + "\n\n"
+                + "lhs: " + step.lhs + "\n"
+                + "rhs: " + step.rhs + "\n"
+                + "lean_method: " + step.lean_method + "\n",
+                encoding="utf-8",
+            )
+
+            results.append(
+                FormalStepResult(
+                    id=step.id,
+                    type=step.type,
+                    description=step.description,
+                    evidence=step.evidence,
+                    lhs=step.lhs,
+                    rhs=step.rhs,
+                    lean_method=step.lean_method,
+                    supports_claim_types=step.supports_claim_types,
+                    supports_rubric_items=step.supports_rubric_items,
+                    lean_file=str(rejected_file),
+                    status="invalid_formal_step",
+                    compiled=False,
+                    exit_code=-1,
+                    stdout="",
+                    stderr=str(exc),
+                )
+            )
+            continue
+
+        lean_source = render_formal_step(problem_id, step)
         lean_file.write_text(lean_source, encoding="utf-8")
 
         raw = run_lean_file(repo_root=repo_root, lean_file=lean_file)
