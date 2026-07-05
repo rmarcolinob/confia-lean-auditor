@@ -1,9 +1,0 @@
-Metadata-Version: 2.4
-Name: confia-lean-auditor
-Version: 0.1.0
-Summary: ConfIA Lean Auditor: corretor matemático com rubrica e certificados Lean
-Requires-Python: >=3.9
-Requires-Dist: fastapi
-Requires-Dist: uvicorn
-Requires-Dist: pydantic>=2
-Requires-Dist: pytest

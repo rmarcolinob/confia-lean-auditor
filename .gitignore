@@ -15,3 +15,10 @@ artifacts/runs/
 
 # macOS
 .DS_Store
+
+# Python package metadata
+*.egg-info/
+app/*.egg-info/
+
+# Lean/Lake build artifacts
+.lake/
