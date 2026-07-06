@@ -12,7 +12,8 @@ dependencies = [
     "uvicorn",
     "pydantic>=2",
     "pytest",
-    "httpx"
+    "httpx",
+    "openai>=1.0.0"
 ]
 
 [tool.setuptools]
