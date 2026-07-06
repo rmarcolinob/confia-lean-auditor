@@ -114,7 +114,11 @@ def build_attempt_ita2025q1(
         parts.append(TRIANGLE_AREA_FORMULA)
         generated_theorems.append("triangleArea_formula")
 
-    if "area_equation" in types and "positive_root_selection" in types:
+    if (
+        "determinant_expansion" in verified_steps
+        and "area_equation" in types
+        and "positive_root_selection" in types
+    ):
         parts.append(ANSWER_UNIQUE)
         generated_theorems.append("answer_unique")
 

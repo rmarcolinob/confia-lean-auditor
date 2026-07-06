@@ -121,6 +121,16 @@ def extract_claims_ita2025q1(solution: str) -> ClaimExtraction:
     claims: List[ExtractedClaim] = []
     formal_steps = extract_q1_formal_steps(solution)
 
+    if not any(step.type == "determinant_expansion" for step in formal_steps):
+        from confia_lean_auditor.llm.formal_step_extractor import (
+            extract_formal_steps_with_llm,
+        )
+
+        formal_steps.extend(
+            extract_formal_steps_with_llm("ITA2025Q1", solution)
+        )
+
+
     has_z2 = ("z^2" in t or "z2" in t) and "a^2" in c
     has_real = "a^2-4" in c
     has_imag = "4a" in c

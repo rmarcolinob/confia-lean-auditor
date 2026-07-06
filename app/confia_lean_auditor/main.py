@@ -15,6 +15,7 @@ from confia_lean_auditor.lean.microclaim_evaluator import evaluate_microclaims
 from confia_lean_auditor.lean.run_lean import run_lean_file
 from confia_lean_auditor.reports.report_builder import build_feedback, verdict_from_score
 from confia_lean_auditor.rubric.rubric_evaluator import evaluate_rubric
+from confia_lean_auditor.llm.formal_step_extractor import FormalStepExtractionError
 
 
 app = FastAPI(title="ConfIA Lean Auditor", version="0.4.0")
@@ -49,7 +50,10 @@ def audit(req: AuditRequest) -> AuditResponse:
     artifact_dir = root / "artifacts" / "runs" / run_id
     artifact_dir.mkdir(parents=True, exist_ok=True)
 
-    claim_extraction = extract_claims(req.problem_id, req.solution)
+    try:
+        claim_extraction = extract_claims(req.problem_id, req.solution)
+    except FormalStepExtractionError as exc:
+        raise HTTPException(status_code=503, detail=str(exc)) from exc
 
     try:
         formal_steps = evaluate_formal_steps(

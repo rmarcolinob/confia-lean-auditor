@@ -87,7 +87,12 @@ def test_q1_wrong_determinant_step_blocks_area_and_dependencies():
     assert area_mc["formal_steps_verified"] is False
 
     unique_mc = microclaim_by_id(data, "mc_unique_positive_solution")
-    assert unique_mc["lean_status"] == "dependency_not_verified"
+    assert unique_mc["lean_status"] == "not_generated"
+    assert unique_mc["dependencies_verified"] is False
+
+    generated = data["lean_certificate"]["generated_theorems"]
+    assert "triangleArea_formula" not in generated
+    assert "answer_unique" not in generated
     assert unique_mc["dependencies_verified"] is False
 
 
@@ -127,3 +132,61 @@ def test_malicious_problem_id_is_rejected():
     )
 
     assert response.status_code == 400
+
+
+def test_llm_failure_returns_503(monkeypatch):
+    from confia_lean_auditor.llm.formal_step_extractor import (
+        FormalStepExtractionError,
+    )
+
+    def fake_extract_formal_steps_with_llm(problem_id: str, solution: str):
+        raise FormalStepExtractionError("forced llm failure")
+
+    monkeypatch.setenv("CONFIA_ENABLE_LLM_FORMAL_STEPS", "1")
+    monkeypatch.setattr(
+        "confia_lean_auditor.llm.formal_step_extractor.extract_formal_steps_with_llm",
+        fake_extract_formal_steps_with_llm,
+    )
+
+    response = CLIENT.post(
+        "/audit",
+        json={
+            "problem_id": "ITA2025Q1",
+            "solution": (
+                "A solução calcula a área por determinante e obtém a^2 - 2a + 5. "
+                "Como a área é 200, temos a^2 - 2a + 5 = 200. "
+                "Portanto, a = 15."
+            ),
+        },
+    )
+
+    assert response.status_code == 503
+    assert "forced llm failure" in response.json()["detail"]
+
+
+
+def test_llm_fallback_is_called_only_once(monkeypatch):
+    from confia_lean_auditor.claims.extract_claims import extract_claims
+
+    calls = {"count": 0}
+
+    def fake_extract_formal_steps_with_llm(problem_id: str, solution: str):
+        calls["count"] += 1
+        return []
+
+    monkeypatch.setenv("CONFIA_ENABLE_LLM_FORMAL_STEPS", "1")
+    monkeypatch.setattr(
+        "confia_lean_auditor.llm.formal_step_extractor.extract_formal_steps_with_llm",
+        fake_extract_formal_steps_with_llm,
+    )
+
+    solution = (
+        "A solução calcula a área por determinante e obtém a^2 - 2a + 5. "
+        "Como a área é 200, temos a^2 - 2a + 5 = 200. "
+        "Como a > 0, concluímos a = 15."
+    )
+
+    extraction = extract_claims("ITA2025Q1", solution)
+
+    assert extraction.problem_id == "ITA2025Q1"
+    assert calls["count"] == 1

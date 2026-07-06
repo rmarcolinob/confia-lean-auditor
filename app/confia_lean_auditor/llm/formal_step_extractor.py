@@ -8,6 +8,10 @@ from typing import Any, Dict, List, Optional
 from confia_lean_auditor.core.schemas import FormalStep
 
 
+class FormalStepExtractionError(RuntimeError):
+    pass
+
+
 SEMANTIC_EXTRACTION_SCHEMA: Dict[str, Any] = {
     "type": "object",
     "additionalProperties": False,
@@ -226,42 +230,51 @@ def extract_q1_semantic_data_with_llm(solution: str) -> Dict[str, Any]:
 
     try:
         from openai import OpenAI
-    except ImportError:
-        return {}
+    except ImportError as exc:
+        raise FormalStepExtractionError(
+            "LLM formal-step extraction is enabled, but the openai package is not installed."
+        ) from exc
 
     model = os.environ.get("CONFIA_LLM_MODEL", "gpt-4o-mini")
     client = OpenAI()
 
-    response = client.responses.create(
-        model=model,
-        input=[
-            {
-                "role": "system",
-                "content": (
-                    "Você é um extrator semântico. "
-                    "Você não corrige, não pontua, não completa raciocínios e não gera código Lean. "
-                    "Você apenas extrai dados explícitos da solução do aluno em JSON estruturado."
-                ),
+    try:
+        response = client.responses.create(
+            model=model,
+            input=[
+                {
+                    "role": "system",
+                    "content": (
+                        "Você é um extrator semântico. "
+                        "Você não corrige, não pontua, não completa raciocínios e não gera código Lean. "
+                        "Você apenas extrai dados explícitos da solução do aluno em JSON estruturado."
+                    ),
+                },
+                {
+                    "role": "user",
+                    "content": build_q1_semantic_prompt(solution),
+                },
+            ],
+            text={
+                "format": {
+                    "type": "json_schema",
+                    "name": "confia_q1_semantic_extraction",
+                    "strict": True,
+                    "schema": SEMANTIC_EXTRACTION_SCHEMA,
+                }
             },
-            {
-                "role": "user",
-                "content": build_q1_semantic_prompt(solution),
-            },
-        ],
-        text={
-            "format": {
-                "type": "json_schema",
-                "name": "confia_q1_semantic_extraction",
-                "strict": True,
-                "schema": SEMANTIC_EXTRACTION_SCHEMA,
-            }
-        },
-    )
+        )
+    except Exception as exc:
+        raise FormalStepExtractionError(
+            "LLM semantic extraction request failed."
+        ) from exc
 
     try:
         return json.loads(response.output_text)
-    except Exception:
-        return {}
+    except json.JSONDecodeError as exc:
+        raise FormalStepExtractionError(
+            "LLM returned invalid JSON for semantic extraction."
+        ) from exc
 
 
 def extract_q1_formal_steps_with_llm(solution: str) -> List[FormalStep]:
