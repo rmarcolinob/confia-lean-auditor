@@ -1,10 +1,10 @@
 from __future__ import annotations
 
-import json
 from pathlib import Path
 from typing import List, Optional
 
 from confia_lean_auditor.core.paths import get_problem_dir
+from confia_lean_auditor.core.problem_assets import RubricConfig, load_rubric_config
 from confia_lean_auditor.core.schemas import (
     ClaimExtraction,
     MicroclaimResult,
@@ -18,14 +18,11 @@ def evaluate_rubric(
     problem_id: str,
     claim_extraction: ClaimExtraction,
     microclaims: Optional[List[MicroclaimResult]] = None,
+    rubric_config: Optional[RubricConfig] = None,
 ) -> RubricAssessment:
-    problem_dir = get_problem_dir(repo_root, problem_id)
-    path = problem_dir / "rubric.json"
-
-    if not path.exists():
-        raise FileNotFoundError("Rubric not found: " + str(path))
-
-    data = json.loads(path.read_text(encoding="utf-8"))
+    if rubric_config is None:
+        problem_dir = get_problem_dir(repo_root, problem_id)
+        rubric_config = load_rubric_config(problem_dir)
 
     claims_by_type = {}
     for claim in claim_extraction.claims:
@@ -42,11 +39,11 @@ def evaluate_rubric(
     items: List[RubricItemResult] = []
     score = 0.0
 
-    for item in data["items"]:
-        claim_type = item.get("claim_type")
+    for item in rubric_config.items:
+        claim_type = item.claim_type
         claim = claims_by_type.get(claim_type)
 
-        required_microclaim_ids = item.get("required_microclaim_ids", [])
+        required_microclaim_ids = item.required_microclaim_ids
 
         has_claim = claim is not None
 
@@ -59,7 +56,7 @@ def evaluate_rubric(
 
         detected = has_claim and has_required_microclaims
 
-        points = float(item["points"]) if detected else 0.0
+        points = float(item.points) if detected else 0.0
         score += points
 
         evidence = None
@@ -71,11 +68,11 @@ def evaluate_rubric(
 
         items.append(
             RubricItemResult(
-                id=item["id"],
-                description=item["description"],
+                id=item.id,
+                description=item.description,
                 detected=detected,
                 points=points,
-                max_points=float(item["points"]),
+                max_points=float(item.points),
                 evidence=evidence,
                 claim_id=claim_id,
             )
@@ -83,6 +80,6 @@ def evaluate_rubric(
 
     return RubricAssessment(
         score=score,
-        max_score=float(data["max_score"]),
+        max_score=float(rubric_config.max_score),
         items=items,
     )

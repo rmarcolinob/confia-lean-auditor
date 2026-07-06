@@ -1,10 +1,13 @@
 from __future__ import annotations
 
-import json
 from pathlib import Path
-from typing import Dict, List
+from typing import Dict, List, Optional
 
 from confia_lean_auditor.core.paths import get_problem_dir
+from confia_lean_auditor.core.problem_assets import (
+    MicroclaimsConfig,
+    load_microclaims_config,
+)
 from confia_lean_auditor.core.schemas import (
     ClaimExtraction,
     FormalStepResult,
@@ -42,14 +45,11 @@ def evaluate_microclaims(
     lean_certificate: LeanCertificate,
     generated_theorems: List[str],
     formal_step_results: List[FormalStepResult],
+    microclaims_config: Optional[MicroclaimsConfig] = None,
 ) -> List[MicroclaimResult]:
-    problem_dir = get_problem_dir(repo_root, problem_id)
-    path = problem_dir / "microclaims.json"
-
-    if not path.exists():
-        raise FileNotFoundError("Microclaim contract not found: " + str(path))
-
-    data = json.loads(path.read_text(encoding="utf-8"))
+    if microclaims_config is None:
+        problem_dir = get_problem_dir(repo_root, problem_id)
+        microclaims_config = load_microclaims_config(problem_dir)
 
     present_claim_types = set(claim.type for claim in claim_extraction.claims)
     generated = set(generated_theorems)
@@ -59,11 +59,11 @@ def evaluate_microclaims(
 
     first_pass: List[MicroclaimResult] = []
 
-    for item in data["microclaims"]:
-        theorem = item.get("theorem")
-        claim_types = item.get("claim_types", [])
-        required_formal_step_types = item.get("required_formal_step_types", [])
-        depends_on_microclaim_ids = item.get("depends_on_microclaim_ids", [])
+    for item in microclaims_config.microclaims:
+        theorem = item.theorem
+        claim_types = item.claim_types
+        required_formal_step_types = item.required_formal_step_types
+        depends_on_microclaim_ids = item.depends_on_microclaim_ids
 
         textual_evidence = (
             all(claim_type in present_claim_types for claim_type in claim_types)
@@ -91,8 +91,8 @@ def evaluate_microclaims(
 
         first_pass.append(
             MicroclaimResult(
-                id=item["id"],
-                description=item["description"],
+                id=item.id,
+                description=item.description,
                 theorem=theorem,
                 claim_types=claim_types,
                 required_formal_step_types=required_formal_step_types,
@@ -101,7 +101,7 @@ def evaluate_microclaims(
                 formal_steps_verified=formal_steps_verified,
                 textual_evidence=textual_evidence,
                 lean_status=lean_status,
-                supports_rubric_items=item.get("supports_rubric_items", []),
+                supports_rubric_items=item.supports_rubric_items,
             )
         )
 

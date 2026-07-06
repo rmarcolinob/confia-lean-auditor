@@ -60,6 +60,14 @@ class MicroclaimsConfig(BaseModel):
     microclaims: List[MicroclaimConfig]
 
 
+class ProblemAssets(BaseModel):
+    model_config = ConfigDict(extra="allow")
+
+    problem: ProblemConfig
+    rubric: RubricConfig
+    microclaims: MicroclaimsConfig
+
+
 def _load_json(path: Path) -> Dict[str, Any]:
     if not path.exists():
         raise ProblemAssetValidationError(f"Arquivo obrigatório não encontrado: {path}")
@@ -142,7 +150,7 @@ def _assert_unique_ids(kind: str, ids: List[str]) -> None:
         )
 
 
-def validate_problem_assets(problem_dir: Path, expected_problem_id: str) -> None:
+def validate_problem_assets(problem_dir: Path, expected_problem_id: str) -> ProblemAssets:
     problem = load_problem_config(problem_dir)
     rubric = load_rubric_config(problem_dir)
     microclaims = load_microclaims_config(problem_dir)
@@ -202,3 +210,9 @@ def validate_problem_assets(problem_dir: Path, expected_problem_id: str) -> None
         raise ProblemAssetValidationError(
             f"problem.json max_score ({problem.max_score}) difere de rubric.json max_score ({rubric.max_score})."
         )
+
+    return ProblemAssets(
+        problem=problem,
+        rubric=rubric,
+        microclaims=microclaims,
+    )

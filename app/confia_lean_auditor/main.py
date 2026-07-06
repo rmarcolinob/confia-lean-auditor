@@ -48,7 +48,7 @@ def audit(req: AuditRequest) -> AuditResponse:
         raise HTTPException(status_code=404, detail="Problem not found: " + req.problem_id)
 
     try:
-        validate_problem_assets(problem_dir, req.problem_id)
+        assets = validate_problem_assets(problem_dir, req.problem_id)
     except ProblemAssetValidationError as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc
 
@@ -99,6 +99,7 @@ def audit(req: AuditRequest) -> AuditResponse:
             lean_certificate=lean_certificate,
             generated_theorems=generated_theorems,
             formal_step_results=formal_steps,
+            microclaims_config=assets.microclaims,
         )
     except FileNotFoundError as exc:
         raise HTTPException(status_code=500, detail=str(exc)) from exc
@@ -109,6 +110,7 @@ def audit(req: AuditRequest) -> AuditResponse:
             problem_id=req.problem_id,
             claim_extraction=claim_extraction,
             microclaims=microclaims,
+            rubric_config=assets.rubric,
         )
     except FileNotFoundError as exc:
         raise HTTPException(status_code=404, detail=str(exc)) from exc
