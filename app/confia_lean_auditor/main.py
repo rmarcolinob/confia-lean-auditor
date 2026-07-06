@@ -8,6 +8,7 @@ from fastapi import FastAPI, HTTPException
 
 from confia_lean_auditor.claims.extract_claims import extract_claims
 from confia_lean_auditor.core.paths import InvalidProblemId, get_problem_dir, get_repo_root
+from confia_lean_auditor.core.problem_assets import ProblemAssetValidationError, validate_problem_assets
 from confia_lean_auditor.core.schemas import AuditRequest, AuditResponse, LeanCertificate
 from confia_lean_auditor.lean.build_attempt import build_attempt
 from confia_lean_auditor.lean.formal_step_evaluator import evaluate_formal_steps
@@ -45,6 +46,11 @@ def audit(req: AuditRequest) -> AuditResponse:
 
     if not problem_dir.exists():
         raise HTTPException(status_code=404, detail="Problem not found: " + req.problem_id)
+
+    try:
+        validate_problem_assets(problem_dir, req.problem_id)
+    except ProblemAssetValidationError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
 
     run_id = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S_%f")
     artifact_dir = root / "artifacts" / "runs" / run_id
