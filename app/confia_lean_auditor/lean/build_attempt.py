@@ -44,7 +44,7 @@ theorem z_squared_coordinates : ZSquaredCoordinatesClaim := by
 TRIANGLE_AREA_FORMULA = r'''
 theorem triangleArea_formula : TriangleAreaFormulaClaim := by
   unfold TriangleAreaFormulaClaim
-  intro a
+  intro a _ha
   exact triangleArea_formula_helper a
 '''
 

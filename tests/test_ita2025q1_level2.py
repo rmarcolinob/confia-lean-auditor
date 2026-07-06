@@ -87,7 +87,7 @@ def test_q1_wrong_determinant_step_blocks_area_and_dependencies():
     assert area_mc["formal_steps_verified"] is False
 
     unique_mc = microclaim_by_id(data, "mc_unique_positive_solution")
-    assert unique_mc["lean_status"] == "not_generated"
+    assert unique_mc["lean_status"] == "formal_steps_not_verified"
     assert unique_mc["dependencies_verified"] is False
 
     generated = data["lean_certificate"]["generated_theorems"]

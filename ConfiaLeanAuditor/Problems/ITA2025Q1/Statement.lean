@@ -17,6 +17,7 @@ def ZSquaredCoordinatesClaim : Prop :=
 
 def TriangleAreaFormulaClaim : Prop :=
   ∀ a : ℝ,
+    0 < a →
     triangleArea a = a ^ 2 - 2 * a + 5
 
 def AnswerUniqueClaim : Prop :=

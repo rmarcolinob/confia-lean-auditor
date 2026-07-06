@@ -5,31 +5,57 @@
       "id": "mc_z_squared_coordinates",
       "description": "O quadrado de z = a + 2i tem coordenadas reais (a² - 4, 4a).",
       "theorem": "z_squared_coordinates",
-      "claim_types": ["z_squared_coordinates"],
-      "supports_rubric_items": ["coordinates"]
+      "claim_types": [
+        "z_squared_coordinates"
+      ],
+      "supports_rubric_items": [
+        "coordinates"
+      ]
     },
     {
       "id": "mc_area_formula",
       "description": "A área do triângulo é a² - 2a + 5.",
       "theorem": "triangleArea_formula",
-      "claim_types": ["area_formula"],
-      "required_formal_step_types": ["determinant_expansion"],
-      "supports_rubric_items": ["area_formula"]
+      "claim_types": [
+        "area_formula"
+      ],
+      "required_formal_step_types": [
+        "determinant_expansion"
+      ],
+      "supports_rubric_items": [
+        "area_formula"
+      ]
     },
     {
       "id": "mc_unique_positive_solution",
       "description": "Se a > 0 e a área é 200, então a = 15.",
       "theorem": "answer_unique",
-      "claim_types": ["area_equation", "positive_root_selection"],
-      "depends_on_microclaim_ids": ["mc_area_formula"],
-      "supports_rubric_items": ["equation", "positive_root", "final_answer"]
+      "claim_types": [
+        "area_equation",
+        "positive_root_selection"
+      ],
+      "depends_on_microclaim_ids": [
+        "mc_area_formula"
+      ],
+      "supports_rubric_items": [
+        "equation",
+        "positive_root",
+        "final_answer"
+      ],
+      "required_formal_step_types": [
+        "determinant_expansion"
+      ]
     },
     {
       "id": "mc_answer_check",
       "description": "O valor a = 15 satisfaz a condição de área 200.",
       "theorem": "answer_check",
-      "claim_types": ["final_answer"],
-      "supports_rubric_items": ["final_answer"]
+      "claim_types": [
+        "final_answer"
+      ],
+      "supports_rubric_items": [
+        "final_answer"
+      ]
     }
   ]
 }
