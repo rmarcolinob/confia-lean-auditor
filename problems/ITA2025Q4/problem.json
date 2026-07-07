@@ -1,0 +1,13 @@
+{
+  "id": "ITA2025Q4",
+  "title": "Funções reais e não injetividade",
+  "statement": "Sejam f : R -> R e g : R -> R funções reais definidas em todo R. Suponha que, para todo x > 0, vale g(x^2) = f(2x^2 - x + 1). Prove que g não é injetora.",
+  "answer_type": "proof",
+  "correct_answer": "g não é injetora",
+  "max_score": 10.0,
+  "source": {
+    "exam": "ITA 2025 - 1ª fase",
+    "original_question": "Questão 4",
+    "adaptation": "Questão originalmente de múltipla escolha adaptada para problema aberto de demonstração."
+  }
+}

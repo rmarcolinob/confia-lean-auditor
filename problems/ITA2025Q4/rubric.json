@@ -1,0 +1,41 @@
+{
+  "problem_id": "ITA2025Q4",
+  "max_score": 10.0,
+  "items": [
+    {
+      "id": "positive_witnesses",
+      "description": "Escolhe testemunhas positivas adequadas, por exemplo x1 = 1/8 e x2 = 3/8.",
+      "points": 2.0,
+      "claim_type": "positive_witnesses",
+      "required_microclaim_ids": ["mc_positive_witnesses"]
+    },
+    {
+      "id": "same_f_argument",
+      "description": "Verifica que 2x1^2 - x1 + 1 = 2x2^2 - x2 + 1.",
+      "points": 3.0,
+      "claim_type": "same_f_argument",
+      "required_microclaim_ids": ["mc_same_f_argument"]
+    },
+    {
+      "id": "distinct_g_inputs",
+      "description": "Verifica que x1^2 e x2^2 são distintos.",
+      "points": 2.0,
+      "claim_type": "distinct_g_inputs",
+      "required_microclaim_ids": ["mc_distinct_g_inputs"]
+    },
+    {
+      "id": "equal_g_values",
+      "description": "Usa a hipótese funcional para concluir que g(x1^2) = g(x2^2).",
+      "points": 2.0,
+      "claim_type": "equal_g_values",
+      "required_microclaim_ids": ["mc_equal_g_values"]
+    },
+    {
+      "id": "not_injective_conclusion",
+      "description": "Conclui corretamente que g não é injetora.",
+      "points": 1.0,
+      "claim_type": "not_injective_conclusion",
+      "required_microclaim_ids": []
+    }
+  ]
+}

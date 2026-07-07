@@ -1,0 +1,25 @@
+Escolha x1 = 1/8 e x2 = 3/8. Ambos são positivos.
+
+Temos:
+2(1/8)^2 - 1/8 + 1 = 29/32
+e
+2(3/8)^2 - 3/8 + 1 = 29/32.
+
+Logo,
+2x1^2 - x1 + 1 = 2x2^2 - x2 + 1.
+
+Pela hipótese funcional,
+g(x1^2) = f(2x1^2 - x1 + 1)
+e
+g(x2^2) = f(2x2^2 - x2 + 1).
+
+Como os argumentos de f são iguais, segue que
+g(x1^2) = g(x2^2).
+
+Além disso,
+x1^2 = 1/64
+e
+x2^2 = 9/64,
+que são distintos.
+
+Portanto, g assume o mesmo valor em dois pontos distintos. Logo, g não é injetora.
