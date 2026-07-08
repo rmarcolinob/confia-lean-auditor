@@ -9,5 +9,10 @@
     "exam": "ITA 2025 - 1ª fase",
     "original_question": "Questão 4",
     "adaptation": "Questão originalmente de múltipla escolha adaptada para problema aberto de demonstração."
-  }
+  },
+  "assessment_notes": [
+    "A conclusão textual correta de que g não é injetora recebe pontuação mínima mesmo quando a cadeia completa de microclaims não foi verificada.",
+    "O microclaim mc_not_injective representa a conclusão formal completa e depende da verificação de igualdade de valores e distinção das entradas.",
+    "Essa separação distingue reconhecimento da resposta correta de demonstração matemática completa."
+  ]
 }

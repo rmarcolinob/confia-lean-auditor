@@ -97,7 +97,7 @@ def evaluate_microclaims(
                 claim_types=claim_types,
                 required_formal_step_types=required_formal_step_types,
                 depends_on_microclaim_ids=depends_on_microclaim_ids,
-                dependencies_verified=True,
+                dependencies_verified=False,
                 formal_steps_verified=formal_steps_verified,
                 textual_evidence=textual_evidence,
                 lean_status=lean_status,
