@@ -43,9 +43,40 @@ end ConfIA.LeanAuditor.Generated.ITA2025Q1.Step
 '''
 
 
+def render_q4_formal_step(step: FormalStep) -> str:
+    theorem_name = lean_theorem_name(step.id)
+
+    if step.type == "q4_distinct_g_inputs":
+        relation = "≠"
+    else:
+        relation = "="
+
+    return f'''
+import ConfiaLeanAuditor.Problems.ITA2025Q4.Statement
+
+namespace ConfIA.LeanAuditor.Generated.ITA2025Q4.Step
+
+open ConfIA.LeanAuditor.ITA2025Q4
+
+noncomputable section
+
+theorem {theorem_name} :
+    ({step.lhs} : ℝ)
+      {relation} ({step.rhs} : ℝ) := by
+  {step.lean_method}
+
+end
+
+end ConfIA.LeanAuditor.Generated.ITA2025Q4.Step
+'''
+
+
 def render_formal_step(problem_id: str, step: FormalStep) -> str:
     if problem_id == "ITA2025Q1":
         return render_q1_formal_step(step)
+
+    if problem_id == "ITA2025Q4":
+        return render_q4_formal_step(step)
 
     raise NotImplementedError("Formal step rendering not implemented for problem: " + problem_id)
 

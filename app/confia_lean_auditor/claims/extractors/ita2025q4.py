@@ -2,11 +2,12 @@ from __future__ import annotations
 
 import re
 import unicodedata
-from typing import Dict, Optional
+from typing import Dict, List, Optional
 
 from confia_lean_auditor.core.schemas import (
     ClaimExtraction,
     ExtractedClaim,
+    FormalStep,
 )
 
 
@@ -42,11 +43,77 @@ def make_claim(
     )
 
 
+def extract_q4_formal_steps(solution: str) -> List[FormalStep]:
+    t = normalize(solution)
+    c = compact(t)
+
+    steps: List[FormalStep] = []
+
+    has_correct_witnesses = "1/8" in c and "3/8" in c
+
+    has_same_argument_evidence = (
+        has_correct_witnesses
+        and "29/32" in c
+        and (
+            "2(1/8)^2-1/8+1" in c
+            or "2*(1/8)^2-1/8+1" in c
+            or "2x1^2-x1+1" in c
+            or "2*x1^2-x1+1" in c
+        )
+        and (
+            "2(3/8)^2-3/8+1" in c
+            or "2*(3/8)^2-3/8+1" in c
+            or "2x2^2-x2+1" in c
+            or "2*x2^2-x2+1" in c
+        )
+    )
+
+    if has_same_argument_evidence:
+        steps.append(
+            FormalStep(
+                id="q4_s1_same_f_argument",
+                type="q4_same_f_argument",
+                description="Verificação aritmética de que as testemunhas produzem o mesmo argumento em f.",
+                evidence="A solução calcula 2(1/8)^2 - 1/8 + 1 = 29/32 e 2(3/8)^2 - 3/8 + 1 = 29/32.",
+                lhs="2 * (1 / 8) ^ 2 - (1 / 8) + 1",
+                rhs="2 * (3 / 8) ^ 2 - (3 / 8) + 1",
+                lean_method="norm_num",
+                supports_claim_types=["same_f_argument"],
+                supports_rubric_items=["same_f_argument"],
+            )
+        )
+
+    has_distinct_input_evidence = (
+        has_correct_witnesses
+        and "1/64" in c
+        and "9/64" in c
+        and ("distintos" in t or "diferentes" in t or "!=" in c or "≠" in c)
+    )
+
+    if has_distinct_input_evidence:
+        steps.append(
+            FormalStep(
+                id="q4_s2_distinct_g_inputs",
+                type="q4_distinct_g_inputs",
+                description="Verificação aritmética de que as entradas de g são distintas.",
+                evidence="A solução identifica x1^2 = 1/64 e x2^2 = 9/64, que são distintos.",
+                lhs="1 / 64",
+                rhs="9 / 64",
+                lean_method="norm_num",
+                supports_claim_types=["distinct_g_inputs"],
+                supports_rubric_items=["distinct_g_inputs"],
+            )
+        )
+
+    return steps
+
+
 def extract_claims_ita2025q4(solution: str) -> ClaimExtraction:
     t = normalize(solution)
     c = compact(t)
 
-    claims = []
+    claims: List[ExtractedClaim] = []
+    formal_steps = extract_q4_formal_steps(solution)
 
     has_x1 = "1/8" in c or "(1/8)" in c
     has_x2 = "3/8" in c or "(3/8)" in c
@@ -77,11 +144,13 @@ def extract_claims_ita2025q4(solution: str) -> ClaimExtraction:
         or "2*x1^2-x1+1" in c
         or "2x_1^2-x_1+1" in c
         or "2(1/8)^2-1/8+1" in c
+        or "2*(1/8)^2-1/8+1" in c
     ) and (
         "2x2^2-x2+1" in c
         or "2*x2^2-x2+1" in c
         or "2x_2^2-x_2+1" in c
         or "2(3/8)^2-3/8+1" in c
+        or "2*(3/8)^2-3/8+1" in c
     )
 
     if has_x1 and has_x2 and (has_same_value or has_phi_expression):
@@ -167,5 +236,5 @@ def extract_claims_ita2025q4(solution: str) -> ClaimExtraction:
     return ClaimExtraction(
         problem_id="ITA2025Q4",
         claims=claims,
-        formal_steps=[],
+        formal_steps=formal_steps,
     )

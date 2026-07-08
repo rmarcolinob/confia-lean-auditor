@@ -5,46 +5,86 @@
       "id": "mc_positive_witnesses",
       "description": "As testemunhas x1 = 1/8 e x2 = 3/8 são positivas.",
       "theorem": "positive_witnesses",
-      "claim_types": ["positive_witnesses"],
+      "claim_types": [
+        "positive_witnesses"
+      ],
       "required_formal_step_types": [],
       "depends_on_microclaim_ids": [],
-      "supports_rubric_items": ["positive_witnesses"]
+      "supports_rubric_items": [
+        "positive_witnesses"
+      ]
     },
     {
       "id": "mc_same_f_argument",
       "description": "As testemunhas produzem o mesmo argumento em f.",
       "theorem": "same_f_argument",
-      "claim_types": ["same_f_argument"],
-      "required_formal_step_types": [],
-      "depends_on_microclaim_ids": ["mc_positive_witnesses"],
-      "supports_rubric_items": ["same_f_argument"]
+      "claim_types": [
+        "same_f_argument"
+      ],
+      "required_formal_step_types": [
+        "q4_same_f_argument"
+      ],
+      "depends_on_microclaim_ids": [
+        "mc_positive_witnesses"
+      ],
+      "supports_rubric_items": [
+        "same_f_argument"
+      ]
     },
     {
       "id": "mc_distinct_g_inputs",
       "description": "As entradas x1^2 e x2^2 de g são distintas.",
       "theorem": "distinct_g_inputs",
-      "claim_types": ["distinct_g_inputs"],
-      "required_formal_step_types": [],
-      "depends_on_microclaim_ids": ["mc_positive_witnesses"],
-      "supports_rubric_items": ["distinct_g_inputs"]
+      "claim_types": [
+        "distinct_g_inputs"
+      ],
+      "required_formal_step_types": [
+        "q4_distinct_g_inputs"
+      ],
+      "depends_on_microclaim_ids": [
+        "mc_positive_witnesses"
+      ],
+      "supports_rubric_items": [
+        "distinct_g_inputs"
+      ]
     },
     {
       "id": "mc_equal_g_values",
       "description": "Pela hipótese funcional, g(x1^2) = g(x2^2).",
       "theorem": "equal_g_values",
-      "claim_types": ["equal_g_values"],
-      "required_formal_step_types": [],
-      "depends_on_microclaim_ids": ["mc_same_f_argument", "mc_distinct_g_inputs"],
-      "supports_rubric_items": ["equal_g_values"]
+      "claim_types": [
+        "equal_g_values"
+      ],
+      "required_formal_step_types": [
+        "q4_same_f_argument",
+        "q4_distinct_g_inputs"
+      ],
+      "depends_on_microclaim_ids": [
+        "mc_same_f_argument",
+        "mc_distinct_g_inputs"
+      ],
+      "supports_rubric_items": [
+        "equal_g_values"
+      ]
     },
     {
       "id": "mc_not_injective",
       "description": "Como g assume o mesmo valor em entradas distintas, g não é injetora.",
       "theorem": "g_not_injective",
-      "claim_types": ["not_injective_conclusion", "equal_g_values"],
-      "required_formal_step_types": [],
-      "depends_on_microclaim_ids": ["mc_equal_g_values"],
-      "supports_rubric_items": ["not_injective_conclusion"]
+      "claim_types": [
+        "not_injective_conclusion",
+        "equal_g_values"
+      ],
+      "required_formal_step_types": [
+        "q4_same_f_argument",
+        "q4_distinct_g_inputs"
+      ],
+      "depends_on_microclaim_ids": [
+        "mc_equal_g_values"
+      ],
+      "supports_rubric_items": [
+        "not_injective_conclusion"
+      ]
     }
   ]
 }

@@ -44,6 +44,13 @@ def test_q4_correct_solution_scores_10_and_verifies_lean():
     assert data["score"] == 10.0
     assert data["lean_certificate"]["status"] == "verified"
 
+    formal_steps_by_type = {
+        step["type"]: step
+        for step in data["formal_steps"]
+    }
+    assert formal_steps_by_type["q4_same_f_argument"]["status"] == "verified"
+    assert formal_steps_by_type["q4_distinct_g_inputs"]["status"] == "verified"
+
     generated = set(data["lean_certificate"]["generated_theorems"])
     assert "positive_witnesses" in generated
     assert "same_f_argument" in generated

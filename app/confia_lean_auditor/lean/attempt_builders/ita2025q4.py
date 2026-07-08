@@ -84,12 +84,22 @@ def claim_types(claim_extraction: ClaimExtraction) -> Set[str]:
     return set(claim.type for claim in claim_extraction.claims)
 
 
+def verified_step_types(formal_step_results: Optional[List[FormalStepResult]]) -> Set[str]:
+    if formal_step_results is None:
+        return set()
+
+    return {
+        step.type for step in formal_step_results if step.status == "verified"
+    }
+
+
 def build_attempt_ita2025q4(
     claim_extraction: ClaimExtraction,
     artifact_dir: Path,
     formal_step_results: Optional[List[FormalStepResult]] = None,
 ) -> Dict[str, Any]:
     types = claim_types(claim_extraction)
+    verified_steps = verified_step_types(formal_step_results)
 
     parts: List[str] = [COMMON_HEADER_Q4]
     generated_theorems: List[str] = []
@@ -98,11 +108,11 @@ def build_attempt_ita2025q4(
         parts.append(POSITIVE_WITNESSES)
         generated_theorems.append("positive_witnesses")
 
-    if "same_f_argument" in types:
+    if "same_f_argument" in types and "q4_same_f_argument" in verified_steps:
         parts.append(SAME_F_ARGUMENT)
         generated_theorems.append("same_f_argument")
 
-    if "distinct_g_inputs" in types:
+    if "distinct_g_inputs" in types and "q4_distinct_g_inputs" in verified_steps:
         parts.append(DISTINCT_G_INPUTS)
         generated_theorems.append("distinct_g_inputs")
 
@@ -111,6 +121,8 @@ def build_attempt_ita2025q4(
         and "same_f_argument" in types
         and "distinct_g_inputs" in types
         and "equal_g_values" in types
+        and "q4_same_f_argument" in verified_steps
+        and "q4_distinct_g_inputs" in verified_steps
     ):
         parts.append(EQUAL_G_VALUES)
         generated_theorems.append("equal_g_values")
@@ -119,6 +131,8 @@ def build_attempt_ita2025q4(
         "equal_g_values" in types
         and "distinct_g_inputs" in types
         and "not_injective_conclusion" in types
+        and "q4_same_f_argument" in verified_steps
+        and "q4_distinct_g_inputs" in verified_steps
     ):
         parts.append(G_NOT_INJECTIVE)
         generated_theorems.append("g_not_injective")
