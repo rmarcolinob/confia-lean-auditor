@@ -1,0 +1,10 @@
+Escolha x1 = 1/8 e x2 = 3/8. Ambos são positivos.
+
+Temos:
+2(1/8)^2 - 1/8 + 1 = 29/32
+e
+2(3/8)^2 - 3/8 + 1 = 29/32.
+
+Logo, os argumentos em f são iguais.
+
+Portanto, f não é injetora.

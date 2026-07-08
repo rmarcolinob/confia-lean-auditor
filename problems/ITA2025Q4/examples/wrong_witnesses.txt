@@ -1,0 +1,8 @@
+Escolha x1 = 1/8 e x2 = 1/4. Ambos são positivos.
+
+Afirmamos que:
+2(1/8)^2 - 1/8 + 1 = 2(1/4)^2 - 1/4 + 1.
+
+Pela hipótese funcional, segue que g(x1^2) = g(x2^2).
+
+Portanto, g não é injetora.
