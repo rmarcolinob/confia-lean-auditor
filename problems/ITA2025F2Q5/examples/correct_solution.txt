@@ -1,0 +1,22 @@
+Temos:
+log10(3^100) = 100log10(3) = 100 * 0,4771 = 47,7100.
+
+Assim,
+3^100 = 10^47 * 10^0,7100.
+Logo, o primeiro algarismo depende de 10^0,7100.
+
+Agora,
+log10(5) = log10(10/2) = 1 - log10(2) = 1 - 0,3010 = 0,6990.
+
+Além disso,
+log10(6) = log10(2*3) = log10(2) + log10(3) = 0,3010 + 0,4771 = 0,7781.
+
+Como
+0,6990 < 0,7100 < 0,7781,
+temos
+5 < 10^0,7100 < 6.
+
+Portanto,
+5 * 10^47 < 3^100 < 6 * 10^47.
+
+Logo, o primeiro algarismo de 3^100 é 5.

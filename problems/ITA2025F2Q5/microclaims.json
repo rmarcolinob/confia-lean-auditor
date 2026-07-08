@@ -1,0 +1,50 @@
+{
+  "problem_id": "ITA2025F2Q5",
+  "microclaims": [
+    {
+      "id": "mc_log_power_decomposition",
+      "description": "100log10(3)=47,7100.",
+      "theorem": "log_power_decomposition",
+      "claim_types": ["log_power_decomposition"],
+      "required_formal_step_types": ["f2q5_log_power_decomposition"],
+      "depends_on_microclaim_ids": [],
+      "supports_rubric_items": ["log_power_decomposition"]
+    },
+    {
+      "id": "mc_mantissa_identification",
+      "description": "A parte fracionária de 47,7100 é 0,7100.",
+      "theorem": "log_power_decomposition",
+      "claim_types": ["mantissa_identification"],
+      "required_formal_step_types": ["f2q5_log_power_decomposition"],
+      "depends_on_microclaim_ids": ["mc_log_power_decomposition"],
+      "supports_rubric_items": ["mantissa_identification"]
+    },
+    {
+      "id": "mc_digit_log_bounds",
+      "description": "log10(5)=1-log10(2)=0,6990 e log10(6)=log10(2)+log10(3)=0,7781.",
+      "theorem": "digit_log_bounds",
+      "claim_types": ["digit_log_bounds"],
+      "required_formal_step_types": ["f2q5_digit_bounds"],
+      "depends_on_microclaim_ids": [],
+      "supports_rubric_items": ["digit_log_bounds"]
+    },
+    {
+      "id": "mc_mantissa_between_bounds",
+      "description": "A mantissa 0,7100 satisfaz 0,6990 < 0,7100 < 0,7781.",
+      "theorem": "mantissa_between_bounds",
+      "claim_types": ["mantissa_between_bounds"],
+      "required_formal_step_types": ["f2q5_digit_bounds"],
+      "depends_on_microclaim_ids": ["mc_mantissa_identification", "mc_digit_log_bounds"],
+      "supports_rubric_items": ["mantissa_between_bounds"]
+    },
+    {
+      "id": "mc_final_digit",
+      "description": "Como 10^0,7100 está entre 5 e 6, o primeiro algarismo de 3^100 é 5.",
+      "theorem": "final_digit_five",
+      "claim_types": ["final_digit_five"],
+      "required_formal_step_types": ["f2q5_digit_bounds"],
+      "depends_on_microclaim_ids": ["mc_mantissa_between_bounds"],
+      "supports_rubric_items": ["final_digit"]
+    }
+  ]
+}

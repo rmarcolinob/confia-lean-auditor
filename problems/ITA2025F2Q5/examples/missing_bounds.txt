@@ -1,0 +1,5 @@
+log10(3^100) = 100log10(3) = 47,7100.
+
+Logo, a parte fracionária é 0,7100.
+
+Portanto, o primeiro algarismo de 3^100 é 5.

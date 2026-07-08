@@ -1,0 +1,41 @@
+{
+  "problem_id": "ITA2025F2Q5",
+  "max_score": 10.0,
+  "items": [
+    {
+      "id": "log_power_decomposition",
+      "description": "Calcula log10(3^100)=100log10(3)=47,7100.",
+      "points": 2.0,
+      "claim_type": "log_power_decomposition",
+      "required_microclaim_ids": ["mc_log_power_decomposition"]
+    },
+    {
+      "id": "mantissa_identification",
+      "description": "Identifica que a parte fracionária relevante é 0,7100.",
+      "points": 2.0,
+      "claim_type": "mantissa_identification",
+      "required_microclaim_ids": ["mc_mantissa_identification"]
+    },
+    {
+      "id": "digit_log_bounds",
+      "description": "Calcula log10(5)=0,6990 e log10(6)=0,7781.",
+      "points": 2.0,
+      "claim_type": "digit_log_bounds",
+      "required_microclaim_ids": ["mc_digit_log_bounds"]
+    },
+    {
+      "id": "mantissa_between_bounds",
+      "description": "Compara 0,6990 < 0,7100 < 0,7781.",
+      "points": 2.0,
+      "claim_type": "mantissa_between_bounds",
+      "required_microclaim_ids": ["mc_mantissa_between_bounds"]
+    },
+    {
+      "id": "final_digit",
+      "description": "Conclui que o primeiro algarismo de 3^100 é 5.",
+      "points": 2.0,
+      "claim_type": "final_digit_five",
+      "required_microclaim_ids": []
+    }
+  ]
+}

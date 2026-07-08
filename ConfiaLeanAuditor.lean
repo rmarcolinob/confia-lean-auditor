@@ -4,3 +4,4 @@ import ConfiaLeanAuditor.Problems.ITA2025Q4.Statement
 import ConfiaLeanAuditor.Problems.ITA2025Q3.Statement
 import ConfiaLeanAuditor.Problems.ITA2025Q5.Statement
 import ConfiaLeanAuditor.Problems.ITA2025Q8.Statement
+import ConfiaLeanAuditor.Problems.ITA2025F2Q5.Statement

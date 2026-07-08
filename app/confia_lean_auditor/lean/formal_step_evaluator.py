@@ -164,6 +164,47 @@ end ConfIA.LeanAuditor.Generated.ITA2025Q8.Step
 """
 
 
+
+def render_f2q5_formal_step(step: FormalStep) -> str:
+    theorem_name = lean_theorem_name(step.id)
+
+    if step.type == "f2q5_log_power_decomposition":
+        theorem_body = f"""
+theorem {theorem_name} : LogPowerDecompositionClaim := by
+  unfold LogPowerDecompositionClaim totalLogScaled integerPartScaled mantissaScaled log3Scaled scale
+  norm_num
+"""
+
+    elif step.type == "f2q5_digit_bounds":
+        theorem_body = f"""
+theorem {theorem_name} : DigitLogBoundsClaim ∧ MantissaBetweenBoundsClaim := by
+  constructor
+  · unfold DigitLogBoundsClaim log5Scaled log6Scaled log2Scaled log3Scaled scale
+    norm_num
+  · unfold MantissaBetweenBoundsClaim log5Scaled log6Scaled mantissaScaled log2Scaled log3Scaled scale
+    norm_num
+"""
+
+    else:
+        raise NotImplementedError(f"Unsupported ITA2025F2Q5 formal step type: {step.type}")
+
+    return f"""
+import ConfiaLeanAuditor.Problems.ITA2025F2Q5.Statement
+
+namespace ConfIA.LeanAuditor.Generated.ITA2025F2Q5.Step
+
+open ConfIA.LeanAuditor.ITA2025F2Q5
+
+noncomputable section
+
+{theorem_body}
+
+end
+
+end ConfIA.LeanAuditor.Generated.ITA2025F2Q5.Step
+"""
+
+
 def render_formal_step(problem_id: str, step: FormalStep) -> str:
     if problem_id == "ITA2025Q1":
         return render_q1_formal_step(step)
@@ -179,6 +220,9 @@ def render_formal_step(problem_id: str, step: FormalStep) -> str:
 
     if problem_id == "ITA2025Q8":
         return render_q8_formal_step(step)
+
+    if problem_id == "ITA2025F2Q5":
+        return render_f2q5_formal_step(step)
 
     raise NotImplementedError("Formal step rendering not implemented for problem: " + problem_id)
 

@@ -1,0 +1,18 @@
+{
+  "id": "ITA2025F2Q5",
+  "title": "Primeiro algarismo de 3^100 usando logaritmos",
+  "statement": "Usando as aproximações log10 2 = 0,3010, log10 3 = 0,4771 e log10 7 = 0,8450, determine o primeiro algarismo, da esquerda para a direita, do resultado de 3^100.",
+  "answer_type": "integer_digit",
+  "correct_answer": "5",
+  "max_score": 10.0,
+  "source": {
+    "exam": "ITA 2025 - 2ª fase",
+    "original_question": "Questão 5",
+    "adaptation": "Questão dissertativa preservada em formato aberto."
+  },
+  "assessment_notes": [
+    "A verificação Lean cobre a aritmética inteira escalada das aproximações decimais.",
+    "A interpretação de logaritmos como ferramenta para identificar o primeiro algarismo é auditada por claims textuais.",
+    "O sistema verifica formalmente que 0,7100 fica entre log10(5)=0,6990 e log10(6)=0,7781, usando escala inteira 10000."
+  ]
+}

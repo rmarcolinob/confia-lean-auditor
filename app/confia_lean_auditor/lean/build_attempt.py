@@ -23,6 +23,10 @@ from confia_lean_auditor.lean.attempt_builders.ita2025q8 import (
     build_attempt_ita2025q8,
 )
 
+from confia_lean_auditor.lean.attempt_builders.ita2025f2q5 import (
+    build_attempt_ita2025f2q5,
+)
+
 def build_attempt(
     repo_root: Path,
     problem_id: str,
@@ -64,6 +68,14 @@ def build_attempt(
             artifact_dir=artifact_dir,
             formal_step_results=formal_step_results,
         )
+
+    if problem_id == "ITA2025F2Q5":
+        return build_attempt_ita2025f2q5(
+            claim_extraction=claim_extraction,
+            artifact_dir=artifact_dir,
+            formal_step_results=formal_step_results,
+        )
+
 
 
     raise NotImplementedError("Attempt builder not implemented for problem: " + problem_id)

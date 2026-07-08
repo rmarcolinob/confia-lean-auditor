@@ -1,0 +1,1 @@
+O primeiro algarismo de 3^100 é 5.
