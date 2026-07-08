@@ -71,9 +71,36 @@ end ConfIA.LeanAuditor.Generated.ITA2025Q4.Step
 '''
 
 
+
+def render_q3_formal_step(step: FormalStep) -> str:
+    theorem_name = lean_theorem_name(step.id)
+
+    return f"""
+import ConfiaLeanAuditor.Problems.ITA2025Q3.Statement
+
+namespace ConfIA.LeanAuditor.Generated.ITA2025Q3.Step
+
+open ConfIA.LeanAuditor.ITA2025Q3
+
+noncomputable section
+
+theorem {theorem_name} (i j : ℤ) :
+    {step.lhs}
+      ≠ {step.rhs} := by
+  {step.lean_method}
+
+end
+
+end ConfIA.LeanAuditor.Generated.ITA2025Q3.Step
+"""
+
+
 def render_formal_step(problem_id: str, step: FormalStep) -> str:
     if problem_id == "ITA2025Q1":
         return render_q1_formal_step(step)
+
+    if problem_id == "ITA2025Q3":
+        return render_q3_formal_step(step)
 
     if problem_id == "ITA2025Q4":
         return render_q4_formal_step(step)

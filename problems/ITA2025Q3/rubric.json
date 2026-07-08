@@ -1,0 +1,41 @@
+{
+  "problem_id": "ITA2025Q3",
+  "max_score": 10.0,
+  "items": [
+    {
+      "id": "first_factor_exponent",
+      "description": "Identifica que os expoentes dos termos de (x + 1/x)^6 têm a forma 6 - 2i.",
+      "points": 2.0,
+      "claim_type": "first_factor_exponent_form",
+      "required_microclaim_ids": ["mc_first_factor_exponent"]
+    },
+    {
+      "id": "second_factor_exponent",
+      "description": "Identifica que os expoentes dos termos de (x - 2/x)^5 têm a forma 5 - 2j.",
+      "points": 2.0,
+      "claim_type": "second_factor_exponent_form",
+      "required_microclaim_ids": ["mc_second_factor_exponent"]
+    },
+    {
+      "id": "exponent_balance",
+      "description": "Monta a condição 11 - 2i - 2j = 0 para haver termo independente.",
+      "points": 2.0,
+      "claim_type": "exponent_balance",
+      "required_microclaim_ids": ["mc_exponent_balance"]
+    },
+    {
+      "id": "parity_obstruction",
+      "description": "Observa que 11 - 2i - 2j é sempre ímpar, logo nunca é zero.",
+      "points": 3.0,
+      "claim_type": "parity_obstruction",
+      "required_microclaim_ids": ["mc_parity_obstruction"]
+    },
+    {
+      "id": "final_answer",
+      "description": "Conclui que o termo independente é 0.",
+      "points": 1.0,
+      "claim_type": "final_answer_zero",
+      "required_microclaim_ids": []
+    }
+  ]
+}

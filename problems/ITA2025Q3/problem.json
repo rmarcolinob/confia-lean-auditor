@@ -1,0 +1,13 @@
+{
+  "id": "ITA2025Q3",
+  "title": "Termo independente em expansão algébrica",
+  "statement": "Determine, com justificativa, o termo independente da expansão de (x + 1/x)^6 (x - 2/x)^5.",
+  "answer_type": "integer",
+  "correct_answer": 0,
+  "max_score": 10.0,
+  "source": {
+    "exam": "ITA 2025 - 1ª fase",
+    "original_question": "Questão 3",
+    "adaptation": "Questão originalmente de múltipla escolha adaptada para problema aberto."
+  }
+}

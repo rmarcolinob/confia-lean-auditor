@@ -5,9 +5,9 @@ import re
 from confia_lean_auditor.core.schemas import FormalStep
 
 
-ALLOWED_LEAN_METHODS = {"ring", "norm_num"}
+ALLOWED_LEAN_METHODS = {"ring", "norm_num", "omega"}
 
-ALLOWED_EXPR_RE = re.compile(r"^[0-9a\s+\-*/^()]+$")
+ALLOWED_EXPR_RE = re.compile(r"^[0-9A-Za-z_\s+\-*/^()]+$")
 
 
 class FormalStepValidationError(ValueError):
@@ -43,7 +43,7 @@ def validate_restricted_polynomial_expr(expr: str) -> None:
 
     identifiers = re.findall(r"[A-Za-z_]+", expr)
     for ident in identifiers:
-        if ident != "a":
+        if ident not in {"a", "i", "j"}:
             raise FormalStepValidationError(
                 "Forbidden identifier in Lean expression: " + ident
             )

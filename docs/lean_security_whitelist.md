@@ -47,3 +47,10 @@ A fronteira principal está no módulo:
 ```text
 app/confia_lean_auditor/lean/safe_formal_step.py
 MD
+
+
+## Atualização — aritmética inteira linear
+
+A whitelist também permite a tática `omega` para formal steps restritos de aritmética inteira linear, como argumentos de paridade e impossibilidade de equações do tipo `11 - 2*i - 2*j = 0`.
+
+Mesmo nesse caso, o aluno e a LLM não escrevem Lean livre. As expressões continuam passando por `safe_formal_step.py`, com identificadores explicitamente permitidos, como `a`, `i` e `j`, além de numerais e operações aritméticas básicas.

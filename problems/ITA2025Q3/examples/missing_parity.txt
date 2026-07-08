@@ -1,0 +1,5 @@
+No fator (x + 1/x)^6, os expoentes têm a forma 6 - 2i.
+No fator (x - 2/x)^5, os expoentes têm a forma 5 - 2j.
+Logo, no produto, o expoente é 11 - 2i - 2j.
+
+O termo independente é 0.

@@ -1,0 +1,13 @@
+No fator (x + 1/x)^6, o termo geral tem expoente da forma 6 - 2i.
+
+No fator (x - 2/x)^5, o termo geral tem expoente da forma 5 - 2j.
+
+Ao multiplicar os dois termos, o expoente de x fica:
+(6 - 2i) + (5 - 2j) = 11 - 2i - 2j.
+
+Para haver termo independente, seria necessário:
+11 - 2i - 2j = 0.
+
+Mas 11 - 2i - 2j é sempre ímpar, pois 2i e 2j são pares. Portanto, esse expoente nunca pode ser zero.
+
+Logo, não há termo independente não nulo na expansão. Assim, o termo independente é 0.

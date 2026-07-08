@@ -1,0 +1,50 @@
+{
+  "problem_id": "ITA2025Q3",
+  "microclaims": [
+    {
+      "id": "mc_first_factor_exponent",
+      "description": "Os expoentes dos termos do primeiro fator têm a forma 6 - 2i.",
+      "theorem": "first_factor_exponent_form",
+      "claim_types": ["first_factor_exponent_form"],
+      "required_formal_step_types": [],
+      "depends_on_microclaim_ids": [],
+      "supports_rubric_items": ["first_factor_exponent"]
+    },
+    {
+      "id": "mc_second_factor_exponent",
+      "description": "Os expoentes dos termos do segundo fator têm a forma 5 - 2j.",
+      "theorem": "second_factor_exponent_form",
+      "claim_types": ["second_factor_exponent_form"],
+      "required_formal_step_types": [],
+      "depends_on_microclaim_ids": [],
+      "supports_rubric_items": ["second_factor_exponent"]
+    },
+    {
+      "id": "mc_exponent_balance",
+      "description": "A condição para termo independente é 11 - 2i - 2j = 0.",
+      "theorem": "no_constant_exponent",
+      "claim_types": ["exponent_balance"],
+      "required_formal_step_types": ["q3_no_zero_exponent"],
+      "depends_on_microclaim_ids": ["mc_first_factor_exponent", "mc_second_factor_exponent"],
+      "supports_rubric_items": ["exponent_balance"]
+    },
+    {
+      "id": "mc_parity_obstruction",
+      "description": "O expoente 11 - 2i - 2j é sempre ímpar e, portanto, não pode ser zero.",
+      "theorem": "product_exponent_odd",
+      "claim_types": ["parity_obstruction"],
+      "required_formal_step_types": ["q3_no_zero_exponent"],
+      "depends_on_microclaim_ids": ["mc_exponent_balance"],
+      "supports_rubric_items": ["parity_obstruction"]
+    },
+    {
+      "id": "mc_final_answer",
+      "description": "Como não há termo de expoente zero, o termo independente é 0.",
+      "theorem": "final_answer_zero",
+      "claim_types": ["final_answer_zero"],
+      "required_formal_step_types": ["q3_no_zero_exponent"],
+      "depends_on_microclaim_ids": ["mc_parity_obstruction"],
+      "supports_rubric_items": ["final_answer"]
+    }
+  ]
+}
