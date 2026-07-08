@@ -1,0 +1,41 @@
+{
+  "problem_id": "ITA2025Q8",
+  "max_score": 10.0,
+  "items": [
+    {
+      "id": "numerator_factorization",
+      "description": "Fatora corretamente o numerador como (2cos(x)+1)(2sen(x)-1).",
+      "points": 2.5,
+      "claim_type": "numerator_factorization",
+      "required_microclaim_ids": ["mc_numerator_factorization"]
+    },
+    {
+      "id": "denominator_condition",
+      "description": "Identifica que o denominador é positivo exceto quando cos(x)=0, pontos que devem ser excluídos.",
+      "points": 2.0,
+      "claim_type": "denominator_condition",
+      "required_microclaim_ids": []
+    },
+    {
+      "id": "sign_analysis",
+      "description": "Analisa corretamente o sinal de (2cos(x)+1)(2sen(x)-1) em [-π,2π].",
+      "points": 2.0,
+      "claim_type": "sign_analysis",
+      "required_microclaim_ids": []
+    },
+    {
+      "id": "longest_interval",
+      "description": "Identifica que o maior intervalo é (5π/6, 4π/3).",
+      "points": 2.0,
+      "claim_type": "longest_interval",
+      "required_microclaim_ids": []
+    },
+    {
+      "id": "endpoint_sum",
+      "description": "Calcula a+b = 13π/6.",
+      "points": 1.5,
+      "claim_type": "endpoint_sum",
+      "required_microclaim_ids": ["mc_endpoint_sum"]
+    }
+  ]
+}

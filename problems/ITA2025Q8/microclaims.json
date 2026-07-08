@@ -1,0 +1,23 @@
+{
+  "problem_id": "ITA2025Q8",
+  "microclaims": [
+    {
+      "id": "mc_numerator_factorization",
+      "description": "O numerador 2sen(2x)+2sen(x)-2cos(x)-1 é igual a (2cos(x)+1)(2sen(x)-1).",
+      "theorem": "numerator_factorization",
+      "claim_types": ["numerator_factorization"],
+      "required_formal_step_types": ["q8_numerator_factorization"],
+      "depends_on_microclaim_ids": [],
+      "supports_rubric_items": ["numerator_factorization"]
+    },
+    {
+      "id": "mc_endpoint_sum",
+      "description": "Para a=5π/6 e b=4π/3, tem-se a+b=13π/6.",
+      "theorem": "endpoint_sum",
+      "claim_types": ["endpoint_sum"],
+      "required_formal_step_types": ["q8_endpoint_sum"],
+      "depends_on_microclaim_ids": [],
+      "supports_rubric_items": ["endpoint_sum"]
+    }
+  ]
+}

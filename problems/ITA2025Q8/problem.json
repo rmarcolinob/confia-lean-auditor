@@ -1,0 +1,13 @@
+{
+  "id": "ITA2025Q8",
+  "title": "Domínio trigonométrico e maior intervalo",
+  "statement": "Considere a função f(x) = sqrt((2sen(2x) + 2sen(x) - 2cos(x) - 1) / (8(cos(2x) + 1))). Determine, com justificativa, o intervalo aberto I = (a,b) de maior comprimento contido em [-π,2π] tal que f(x) está definida para todo x ∈ I. Calcule também a+b.",
+  "answer_type": "interval_and_expression",
+  "correct_answer": "I = (5π/6, 4π/3) e a+b = 13π/6",
+  "max_score": 10.0,
+  "source": {
+    "exam": "ITA 2025 - 1ª fase",
+    "original_question": "Questão 8",
+    "adaptation": "Questão originalmente de múltipla escolha adaptada para problema aberto."
+  }
+}

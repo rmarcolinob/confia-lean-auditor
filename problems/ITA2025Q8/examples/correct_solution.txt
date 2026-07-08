@@ -1,0 +1,33 @@
+A função está definida quando o radicando é maior ou igual a zero e o denominador é não nulo.
+
+O numerador é:
+2sen(2x) + 2sen(x) - 2cos(x) - 1.
+
+Como sen(2x) = 2sen(x)cos(x), temos:
+2sen(2x) + 2sen(x) - 2cos(x) - 1
+= 4sen(x)cos(x) + 2sen(x) - 2cos(x) - 1
+= (2cos(x) + 1)(2sen(x) - 1).
+
+Além disso,
+8(cos(2x)+1) = 16cos^2(x).
+Portanto, o denominador é positivo quando cos(x) != 0, e não está definido quando cos(x)=0.
+
+Assim, fora dos pontos em que cos(x)=0, precisamos analisar:
+(2cos(x)+1)(2sen(x)-1) >= 0.
+
+Os pontos críticos em [-π,2π] são:
+cos(x)=0 em x=-π/2, π/2, 3π/2;
+cos(x)=-1/2 em x=-2π/3, 2π/3, 4π/3;
+sen(x)=1/2 em x=π/6, 5π/6.
+
+Fazendo o estudo de sinais, os intervalos de definição relevantes são:
+[-π,-2π/3],
+[π/6,π/2),
+(π/2,2π/3],
+[5π/6,4π/3].
+
+O intervalo aberto de maior comprimento contido no domínio é:
+I = (5π/6, 4π/3).
+
+Logo,
+a + b = 5π/6 + 4π/3 = 13π/6.

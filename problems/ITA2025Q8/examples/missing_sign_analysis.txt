@@ -1,0 +1,6 @@
+O numerador pode ser fatorado como
+(2cos(x)+1)(2sen(x)-1).
+
+O denominador é 8(cos(2x)+1), logo devemos excluir os pontos em que cos(x)=0.
+
+O maior intervalo é (5π/6, 4π/3), e a+b = 13π/6.
