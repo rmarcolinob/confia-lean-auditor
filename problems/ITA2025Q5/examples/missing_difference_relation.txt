@@ -1,0 +1,6 @@
+Como (b_n) é uma PG, podemos escrever b_n = c q^n.
+
+Assim,
+a_n = c q^{n+1} - c q^n = c(q - 1)q^n.
+
+Logo, (a_n) também é uma PG.

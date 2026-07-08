@@ -43,7 +43,7 @@ def validate_restricted_polynomial_expr(expr: str) -> None:
 
     identifiers = re.findall(r"[A-Za-z_]+", expr)
     for ident in identifiers:
-        if ident not in {"a", "i", "j"}:
+        if ident not in {"a", "i", "j", "c", "q", "n"}:
             raise FormalStepValidationError(
                 "Forbidden identifier in Lean expression: " + ident
             )

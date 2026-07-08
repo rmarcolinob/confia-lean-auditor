@@ -1,0 +1,13 @@
+{
+  "id": "ITA2025Q5",
+  "title": "Sequências e progressão geométrica",
+  "statement": "Sejam (a_n) e (b_n) duas sequências reais tais que S_n = ∑_{k=1}^n a_k = b_{n+1} - b_1 para todo n ≥ 1. Prove que, se (b_n) é uma progressão geométrica, então (a_n) também é uma progressão geométrica.",
+  "answer_type": "proof",
+  "correct_answer": "Se b_n = c q^n, então a_n = b_{n+1} - b_n = c q^{n+1} - c q^n = c(q - 1)q^n, logo a_n é uma PG.",
+  "max_score": 10.0,
+  "source": {
+    "exam": "ITA 2025 - 1ª fase",
+    "original_question": "Questão 5",
+    "adaptation": "Questão originalmente de múltipla escolha adaptada para prova aberta de apenas uma afirmação."
+  }
+}

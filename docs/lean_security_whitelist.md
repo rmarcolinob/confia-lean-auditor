@@ -54,3 +54,10 @@ MD
 A whitelist também permite a tática `omega` para formal steps restritos de aritmética inteira linear, como argumentos de paridade e impossibilidade de equações do tipo `11 - 2*i - 2*j = 0`.
 
 Mesmo nesse caso, o aluno e a LLM não escrevem Lean livre. As expressões continuam passando por `safe_formal_step.py`, com identificadores explicitamente permitidos, como `a`, `i` e `j`, além de numerais e operações aritméticas básicas.
+
+
+## Atualização — parâmetros algébricos de progressões
+
+Para formal steps de progressões geométricas, a whitelist pode permitir identificadores controlados como `c`, `q` e `n`, usados em expressões do tipo `c * q ^ n`.
+
+Esses identificadores continuam sendo aceitos apenas dentro da linguagem intermediária validada por `safe_formal_step.py`; a solução do aluno e a LLM não escrevem Lean livre.

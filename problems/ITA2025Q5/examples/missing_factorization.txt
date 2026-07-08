@@ -1,0 +1,8 @@
+Da relação S_n = b_{n+1} - b_1, temos S_{n-1} = b_n - b_1.
+
+Logo,
+a_n = S_n - S_{n-1} = b_{n+1} - b_n.
+
+Como (b_n) é uma PG, podemos escrever b_n = c q^n.
+
+Portanto, (a_n) também é uma PG.

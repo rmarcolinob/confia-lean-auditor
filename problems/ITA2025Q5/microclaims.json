@@ -1,0 +1,41 @@
+{
+  "problem_id": "ITA2025Q5",
+  "microclaims": [
+    {
+      "id": "mc_difference_relation",
+      "description": "Da relação S_n = b_{n+1} - b_1, obtém-se a_n = S_n - S_{n-1} = b_{n+1} - b_n.",
+      "theorem": "difference_relation",
+      "claim_types": ["difference_relation"],
+      "required_formal_step_types": [],
+      "depends_on_microclaim_ids": [],
+      "supports_rubric_items": ["difference_relation"]
+    },
+    {
+      "id": "mc_geometric_form",
+      "description": "Como (b_n) é PG, escreve-se b_n = c q^n.",
+      "theorem": "geometric_form_template",
+      "claim_types": ["geometric_form"],
+      "required_formal_step_types": [],
+      "depends_on_microclaim_ids": [],
+      "supports_rubric_items": ["geometric_form"]
+    },
+    {
+      "id": "mc_geometric_factorization",
+      "description": "Substituindo b_n = c q^n, obtém-se a_n = c q^{n+1} - c q^n = c(q - 1)q^n.",
+      "theorem": "geometric_factorization",
+      "claim_types": ["geometric_factorization"],
+      "required_formal_step_types": ["q5_geometric_factorization"],
+      "depends_on_microclaim_ids": ["mc_difference_relation", "mc_geometric_form"],
+      "supports_rubric_items": ["geometric_factorization"]
+    },
+    {
+      "id": "mc_conclusion_pg",
+      "description": "Como a_n = c(q - 1)q^n, a sequência (a_n) também é uma PG.",
+      "theorem": "conclusion_pg",
+      "claim_types": ["conclusion_pg"],
+      "required_formal_step_types": ["q5_geometric_factorization"],
+      "depends_on_microclaim_ids": ["mc_geometric_factorization"],
+      "supports_rubric_items": ["conclusion_pg"]
+    }
+  ]
+}

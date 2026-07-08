@@ -1,0 +1,15 @@
+Da relação S_n = b_{n+1} - b_1, temos também S_{n-1} = b_n - b_1.
+
+Logo,
+a_n = S_n - S_{n-1}
+    = (b_{n+1} - b_1) - (b_n - b_1)
+    = b_{n+1} - b_n.
+
+Como (b_n) é uma PG, podemos escrever b_n = c q^n.
+
+Então:
+a_n = b_{n+1} - b_n
+    = c q^{n+1} - c q^n
+    = c(q - 1)q^n.
+
+Como c(q - 1) é constante, a_n tem a forma de uma progressão geométrica. Portanto, (a_n) também é uma PG.

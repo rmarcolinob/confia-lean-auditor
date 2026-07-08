@@ -1,0 +1,1 @@
+Se b_n é uma PG, então a_n também é uma PG.

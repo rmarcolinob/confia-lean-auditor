@@ -1,0 +1,34 @@
+{
+  "problem_id": "ITA2025Q5",
+  "max_score": 10.0,
+  "items": [
+    {
+      "id": "difference_relation",
+      "description": "Deduz que a_n = b_{n+1} - b_n a partir da relação entre S_n e b_n.",
+      "points": 3.0,
+      "claim_type": "difference_relation",
+      "required_microclaim_ids": ["mc_difference_relation"]
+    },
+    {
+      "id": "geometric_form",
+      "description": "Representa a PG (b_n) na forma b_n = c q^n.",
+      "points": 2.0,
+      "claim_type": "geometric_form",
+      "required_microclaim_ids": ["mc_geometric_form"]
+    },
+    {
+      "id": "geometric_factorization",
+      "description": "Fatora c q^{n+1} - c q^n como c(q - 1)q^n.",
+      "points": 4.0,
+      "claim_type": "geometric_factorization",
+      "required_microclaim_ids": ["mc_geometric_factorization"]
+    },
+    {
+      "id": "conclusion_pg",
+      "description": "Conclui que (a_n) é uma progressão geométrica.",
+      "points": 1.0,
+      "claim_type": "conclusion_pg",
+      "required_microclaim_ids": []
+    }
+  ]
+}
