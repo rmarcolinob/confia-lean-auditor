@@ -12,7 +12,7 @@ class ProblemAssetValidationError(ValueError):
 
 
 class ProblemConfig(BaseModel):
-    model_config = ConfigDict(extra="allow")
+    model_config = ConfigDict(extra="forbid")
 
     id: str
     title: str
@@ -20,11 +20,12 @@ class ProblemConfig(BaseModel):
     answer_type: str
     correct_answer: Any
     max_score: float
+    assessment_notes: List[str] = Field(default_factory=list)
     source: Optional[Dict[str, Any]] = None
 
 
 class RubricItemConfig(BaseModel):
-    model_config = ConfigDict(extra="allow")
+    model_config = ConfigDict(extra="forbid")
 
     id: str
     description: str
@@ -34,7 +35,7 @@ class RubricItemConfig(BaseModel):
 
 
 class RubricConfig(BaseModel):
-    model_config = ConfigDict(extra="allow")
+    model_config = ConfigDict(extra="forbid")
 
     problem_id: str
     max_score: float = Field(ge=0)
@@ -42,7 +43,7 @@ class RubricConfig(BaseModel):
 
 
 class MicroclaimConfig(BaseModel):
-    model_config = ConfigDict(extra="allow")
+    model_config = ConfigDict(extra="forbid")
 
     id: str
     description: str
@@ -54,14 +55,14 @@ class MicroclaimConfig(BaseModel):
 
 
 class MicroclaimsConfig(BaseModel):
-    model_config = ConfigDict(extra="allow")
+    model_config = ConfigDict(extra="forbid")
 
     problem_id: str
     microclaims: List[MicroclaimConfig]
 
 
 class ProblemAssets(BaseModel):
-    model_config = ConfigDict(extra="allow")
+    model_config = ConfigDict(extra="forbid")
 
     problem: ProblemConfig
     rubric: RubricConfig

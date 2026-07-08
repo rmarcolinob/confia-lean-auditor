@@ -9,5 +9,10 @@
     "exam": "ITA 2025 - 1ª fase",
     "original_question": "Questão 8",
     "adaptation": "Questão originalmente de múltipla escolha adaptada para problema aberto."
-  }
+  },
+  "assessment_notes": [
+    "A formalização Lean desta questão é parcial.",
+    "Lean verifica a fatoração trigonométrica do numerador e a soma dos extremos do intervalo.",
+    "O estudo completo de sinais, a maximalidade do intervalo e a exclusão formal de todos os pontos fora do domínio são avaliados como claims textuais auditáveis, não como formalização completa em Lean."
+  ]
 }

@@ -9,5 +9,10 @@
     "exam": "ITA 2025 - 1ª fase",
     "original_question": "Questão 5",
     "adaptation": "Questão originalmente de múltipla escolha adaptada para prova aberta de apenas uma afirmação."
-  }
+  },
+  "assessment_notes": [
+    "A conclusão textual de que a_n também é uma PG pode receber pontuação mínima mesmo sem a demonstração completa.",
+    "A verificação Lean cobre o passo algébrico central c*q^(n+1) - c*q^n = c*(q-1)*q^n.",
+    "A noção pedagógica de progressão geométrica é auditada por claims textuais e pela forma algébrica verificada."
+  ]
 }
