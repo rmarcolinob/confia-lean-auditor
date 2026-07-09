@@ -1,5 +1,9 @@
 import Mathlib
 
+set_option linter.unusedSimpArgs false
+set_option linter.style.emptyLine false
+set_option linter.style.nativeDecide false
+
 namespace ConfIA.LeanAuditor.ITA2025F2Q8
 
 noncomputable section
