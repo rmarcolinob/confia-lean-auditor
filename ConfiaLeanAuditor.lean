@@ -7,3 +7,4 @@ import ConfiaLeanAuditor.Problems.ITA2025Q8.Statement
 import ConfiaLeanAuditor.Problems.ITA2025F2Q5.Statement
 import ConfiaLeanAuditor.Problems.ITA2025F2Q1.Statement
 import ConfiaLeanAuditor.Problems.ITA2025F2Q6.Statement
+import ConfiaLeanAuditor.Problems.ITA2025F2Q8.Statement

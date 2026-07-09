@@ -1,0 +1,34 @@
+{
+  "problem_id": "ITA2025F2Q8",
+  "max_score": 10.0,
+  "items": [
+    {
+      "id": "matrix_transformation",
+      "description": "Reconhece ou executa uma transformação adequada por diferenças de colunas.",
+      "points": 2.5,
+      "claim_type": "matrix_transformation",
+      "required_microclaim_ids": ["f2q8_column_difference"]
+    },
+    {
+      "id": "determinant_formula",
+      "description": "Obtém corretamente det(A_k)=(-1)^(k-1)k.",
+      "points": 4.0,
+      "claim_type": "determinant_formula",
+      "required_microclaim_ids": ["f2q8_det_formula"]
+    },
+    {
+      "id": "alternating_sum",
+      "description": "Reduz a soma pedida a 1-2+3-4+...+2025.",
+      "points": 2.0,
+      "claim_type": "alternating_sum",
+      "required_microclaim_ids": ["f2q8_alternating_sum"]
+    },
+    {
+      "id": "final_answer",
+      "description": "Calcula corretamente o valor final 1013.",
+      "points": 1.5,
+      "claim_type": "final_answer",
+      "required_microclaim_ids": ["f2q8_final_sum"]
+    }
+  ]
+}

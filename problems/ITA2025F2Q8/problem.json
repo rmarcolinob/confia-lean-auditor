@@ -1,0 +1,15 @@
+{
+  "id": "ITA2025F2Q8",
+  "title": "ITA 2025 2ª fase - Questão 8",
+  "statement": "Seja A_k=(a_ij) uma matriz quadrada de ordem k tal que a_ij=max{i,j}, para i,j em {1,...,k}. Determine a soma de det(A_k), para k=1 até 2025.",
+  "answer_type": "integer",
+  "correct_answer": "1013",
+  "max_score": 10.0,
+  "source": {
+    "name": "ITA",
+    "year": 2025,
+    "phase": "2ª fase",
+    "subject": "Matemática",
+    "question": 8
+  }
+}
