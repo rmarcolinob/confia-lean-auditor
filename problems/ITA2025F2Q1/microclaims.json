@@ -1,0 +1,41 @@
+{
+  "problem_id": "ITA2025F2Q1",
+  "microclaims": [
+    {
+      "id": "mc_power_reductions",
+      "description": "As potências relevantes reduzem-se a x^57 ≡ -1, x^14 ≡ x-1 e x^7 ≡ x.",
+      "theorem": "power_reductions",
+      "claim_types": ["power_reductions"],
+      "required_formal_step_types": ["f2q1_power_reductions"],
+      "depends_on_microclaim_ids": [],
+      "supports_rubric_items": ["power_reductions"]
+    },
+    {
+      "id": "mc_reduced_polynomial_form",
+      "description": "O resto geral de p(x) é (a+b)x-a.",
+      "theorem": "reduced_polynomial_form",
+      "claim_types": ["reduced_polynomial_form"],
+      "required_formal_step_types": ["f2q1_reduced_form"],
+      "depends_on_microclaim_ids": ["mc_power_reductions"],
+      "supports_rubric_items": ["reduced_polynomial_form"]
+    },
+    {
+      "id": "mc_coefficient_system",
+      "description": "Comparando (a+b)x-a com 2x+1, obtém-se a+b=2 e -a=1.",
+      "theorem": "coefficient_system_solution",
+      "claim_types": ["coefficient_system"],
+      "required_formal_step_types": ["f2q1_coefficient_solution"],
+      "depends_on_microclaim_ids": ["mc_reduced_polynomial_form"],
+      "supports_rubric_items": ["coefficient_system"]
+    },
+    {
+      "id": "mc_final_answer",
+      "description": "A solução do sistema é a=-1 e b=3.",
+      "theorem": "final_answer",
+      "claim_types": ["final_answer"],
+      "required_formal_step_types": ["f2q1_coefficient_solution"],
+      "depends_on_microclaim_ids": ["mc_coefficient_system"],
+      "supports_rubric_items": ["final_answer"]
+    }
+  ]
+}

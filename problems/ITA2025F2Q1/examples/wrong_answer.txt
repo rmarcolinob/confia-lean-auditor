@@ -1,0 +1,1 @@
+Como o resto é 2x+1, concluo que a = 1 e b = 1.

@@ -1,0 +1,27 @@
+Como x^2 - x + 1 = 0, temos x^2 = x - 1.
+
+Multiplicando por x, obtemos x^3 = x^2 - x = (x - 1) - x = -1.
+Logo, x^6 = 1.
+
+Assim, podemos reduzir os expoentes módulo 6:
+x^57 = x^3 = -1,
+x^14 = x^2 = x - 1,
+x^7 = x.
+
+Portanto,
+p(x) = x^57 + a x^14 + b x^7 + 1
+deixa o mesmo resto que
+-1 + a(x - 1) + bx + 1.
+
+Logo, o resto é
+(a+b)x - a.
+
+Como o resto pedido é 2x+1, devemos ter
+a+b = 2
+e
+-a = 1.
+
+Da segunda equação, a = -1.
+Substituindo na primeira, b = 3.
+
+Portanto, a = -1 e b = 3.

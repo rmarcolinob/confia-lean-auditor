@@ -205,6 +205,61 @@ end ConfIA.LeanAuditor.Generated.ITA2025F2Q5.Step
 """
 
 
+
+def render_f2q1_formal_step(step: FormalStep) -> str:
+    theorem_name = lean_theorem_name(step.id)
+
+    if step.type == "f2q1_power_reductions":
+        theorem_body = f"""
+theorem {theorem_name} : PowerReductionsClaim := by
+  unfold PowerReductionsClaim
+  norm_num [powRem]
+"""
+
+    elif step.type == "f2q1_reduced_form":
+        theorem_body = f"""
+theorem {theorem_name} : ReducedPolynomialFormClaim := by
+  unfold ReducedPolynomialFormClaim
+  intro a b
+  unfold remainderConst remainderXCoeff
+  constructor
+  · norm_num [powRem]
+  · norm_num [powRem]
+"""
+
+    elif step.type == "f2q1_coefficient_solution":
+        theorem_body = f"""
+theorem {theorem_name} : CoefficientSystemSolutionClaim ∧ TargetRemainderClaim ∧ FinalAnswerClaim := by
+  constructor
+  · unfold CoefficientSystemSolutionClaim candidateA candidateB
+    norm_num
+  · constructor
+    · unfold TargetRemainderClaim remainderXCoeff remainderConst candidateA candidateB
+      norm_num [powRem]
+    · unfold FinalAnswerClaim candidateA candidateB
+      norm_num
+"""
+
+    else:
+        raise NotImplementedError(f"Unsupported ITA2025F2Q1 formal step type: {step.type}")
+
+    return f"""
+import ConfiaLeanAuditor.Problems.ITA2025F2Q1.Statement
+
+namespace ConfIA.LeanAuditor.Generated.ITA2025F2Q1.Step
+
+open ConfIA.LeanAuditor.ITA2025F2Q1
+
+noncomputable section
+
+{theorem_body}
+
+end
+
+end ConfIA.LeanAuditor.Generated.ITA2025F2Q1.Step
+"""
+
+
 def render_formal_step(problem_id: str, step: FormalStep) -> str:
     if problem_id == "ITA2025Q1":
         return render_q1_formal_step(step)
@@ -220,6 +275,9 @@ def render_formal_step(problem_id: str, step: FormalStep) -> str:
 
     if problem_id == "ITA2025Q8":
         return render_q8_formal_step(step)
+
+    if problem_id == "ITA2025F2Q1":
+        return render_f2q1_formal_step(step)
 
     if problem_id == "ITA2025F2Q5":
         return render_f2q5_formal_step(step)

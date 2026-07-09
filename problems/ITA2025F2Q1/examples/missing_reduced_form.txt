@@ -1,0 +1,8 @@
+Como x^2 - x + 1 = 0, temos x^3 = -1 e x^6 = 1.
+
+Assim:
+x^57 = x^3 = -1,
+x^14 = x^2 = x - 1,
+x^7 = x.
+
+Portanto, os valores são a = -1 e b = 3.

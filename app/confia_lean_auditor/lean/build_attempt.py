@@ -27,6 +27,10 @@ from confia_lean_auditor.lean.attempt_builders.ita2025f2q5 import (
     build_attempt_ita2025f2q5,
 )
 
+from confia_lean_auditor.lean.attempt_builders.ita2025f2q1 import (
+    build_attempt_ita2025f2q1,
+)
+
 def build_attempt(
     repo_root: Path,
     problem_id: str,
@@ -64,6 +68,13 @@ def build_attempt(
 
     if problem_id == "ITA2025Q8":
         return build_attempt_ita2025q8(
+            claim_extraction=claim_extraction,
+            artifact_dir=artifact_dir,
+            formal_step_results=formal_step_results,
+        )
+
+    if problem_id == "ITA2025F2Q1":
+        return build_attempt_ita2025f2q1(
             claim_extraction=claim_extraction,
             artifact_dir=artifact_dir,
             formal_step_results=formal_step_results,

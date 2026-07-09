@@ -1,0 +1,18 @@
+{
+  "id": "ITA2025F2Q1",
+  "title": "Resto de polinômio por x² - x + 1",
+  "statement": "Encontre os valores reais a e b tais que o polinômio p(x)=x^57+a x^14+b x^7+1, ao ser dividido por x^2-x+1, deixe resto 2x+1.",
+  "answer_type": "ordered_pair",
+  "correct_answer": "a = -1, b = 3",
+  "max_score": 10.0,
+  "source": {
+    "exam": "ITA 2025 - 2ª fase",
+    "original_question": "Questão 1",
+    "adaptation": "Questão dissertativa preservada em formato aberto."
+  },
+  "assessment_notes": [
+    "A verificação Lean cobre a redução algébrica dos expoentes módulo o padrão periódico de x^2-x+1.",
+    "A etapa formal usa uma representação linear do resto como par de coeficientes constante e linear.",
+    "A interpretação polinomial completa da divisão é auditada por claims textuais e por verificação formal dos cálculos centrais."
+  ]
+}

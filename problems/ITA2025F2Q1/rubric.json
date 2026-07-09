@@ -1,0 +1,34 @@
+{
+  "problem_id": "ITA2025F2Q1",
+  "max_score": 10.0,
+  "items": [
+    {
+      "id": "power_reductions",
+      "description": "Usa a relação x^2=x-1, ou x^3=-1 e x^6=1, para reduzir x^57, x^14 e x^7.",
+      "points": 3.0,
+      "claim_type": "power_reductions",
+      "required_microclaim_ids": ["mc_power_reductions"]
+    },
+    {
+      "id": "reduced_polynomial_form",
+      "description": "Obtém o resto geral p(x) ≡ (a+b)x - a.",
+      "points": 3.0,
+      "claim_type": "reduced_polynomial_form",
+      "required_microclaim_ids": ["mc_reduced_polynomial_form"]
+    },
+    {
+      "id": "coefficient_system",
+      "description": "Compara com 2x+1 e monta o sistema a+b=2 e -a=1.",
+      "points": 2.0,
+      "claim_type": "coefficient_system",
+      "required_microclaim_ids": ["mc_coefficient_system"]
+    },
+    {
+      "id": "final_answer",
+      "description": "Conclui corretamente a=-1 e b=3.",
+      "points": 2.0,
+      "claim_type": "final_answer",
+      "required_microclaim_ids": []
+    }
+  ]
+}
