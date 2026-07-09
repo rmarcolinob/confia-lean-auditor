@@ -28,6 +28,10 @@ from confia_lean_auditor.claims.extractors.ita2025f2q1 import (
     extract_claims_ita2025f2q1,
 )
 
+from confia_lean_auditor.claims.extractors.ita2025f2q6 import (
+    extract_claims_ita2025f2q6,
+)
+
 def extract_claims(problem_id: str, solution: str) -> ClaimExtraction:
     if problem_id == "ITA2025Q1":
         return extract_claims_ita2025q1(solution)
@@ -46,6 +50,9 @@ def extract_claims(problem_id: str, solution: str) -> ClaimExtraction:
 
     if problem_id == "ITA2025F2Q1":
         return extract_claims_ita2025f2q1(solution)
+
+    if problem_id == "ITA2025F2Q6":
+        return extract_claims_ita2025f2q6(solution)
 
     if problem_id == "ITA2025F2Q5":
         return extract_claims_ita2025f2q5(solution)

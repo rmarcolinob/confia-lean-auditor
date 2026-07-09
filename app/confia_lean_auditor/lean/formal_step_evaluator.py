@@ -260,6 +260,50 @@ end ConfIA.LeanAuditor.Generated.ITA2025F2Q1.Step
 """
 
 
+
+def render_f2q6_formal_step(step: FormalStep) -> str:
+    theorem_name = lean_theorem_name(step.id)
+
+    if step.type == "f2q6_probability_values":
+        theorem_body = f"""
+theorem {theorem_name} : ProbabilityValuesClaim := by
+  unfold ProbabilityValuesClaim waysBeforeFourthHead denom
+  norm_num
+"""
+
+    elif step.type == "f2q6_ratio_comparison":
+        theorem_body = f"""
+theorem {theorem_name} : RatioComparisonClaim := by
+  unfold RatioComparisonClaim ratioNumer ratioDenom
+  constructor
+  · intro n hn hlt
+    omega
+  · constructor
+    · norm_num
+    · intro n hgt
+      omega
+"""
+
+    else:
+        raise NotImplementedError(f"Unsupported ITA2025F2Q6 formal step type: {step.type}")
+
+    return f"""
+import ConfiaLeanAuditor.Problems.ITA2025F2Q6.Statement
+
+namespace ConfIA.LeanAuditor.Generated.ITA2025F2Q6.Step
+
+open ConfIA.LeanAuditor.ITA2025F2Q6
+
+noncomputable section
+
+{theorem_body}
+
+end
+
+end ConfIA.LeanAuditor.Generated.ITA2025F2Q6.Step
+"""
+
+
 def render_formal_step(problem_id: str, step: FormalStep) -> str:
     if problem_id == "ITA2025Q1":
         return render_q1_formal_step(step)
@@ -278,6 +322,9 @@ def render_formal_step(problem_id: str, step: FormalStep) -> str:
 
     if problem_id == "ITA2025F2Q1":
         return render_f2q1_formal_step(step)
+
+    if problem_id == "ITA2025F2Q6":
+        return render_f2q6_formal_step(step)
 
     if problem_id == "ITA2025F2Q5":
         return render_f2q5_formal_step(step)

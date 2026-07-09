@@ -1,0 +1,1 @@
+A probabilidade é máxima quando n = 4, pois queremos obter a quarta cara o mais cedo possível.

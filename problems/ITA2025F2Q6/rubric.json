@@ -1,0 +1,34 @@
+{
+  "problem_id": "ITA2025F2Q6",
+  "max_score": 10.0,
+  "items": [
+    {
+      "id": "probability_formula",
+      "description": "Obtém P(N=n)=C(n-1,3)/2^n para n≥4.",
+      "points": 3.0,
+      "claim_type": "probability_formula",
+      "required_microclaim_ids": ["mc_probability_formula"]
+    },
+    {
+      "id": "ratio_comparison",
+      "description": "Calcula e analisa P(N=n+1)/P(N=n)=n/(2n-6).",
+      "points": 3.0,
+      "claim_type": "ratio_comparison",
+      "required_microclaim_ids": ["mc_ratio_comparison"]
+    },
+    {
+      "id": "maximizers_identification",
+      "description": "Identifica que a sequência de probabilidades cresce até n=6, empata de n=6 para n=7 e decresce depois.",
+      "points": 2.0,
+      "claim_type": "maximizers_identification",
+      "required_microclaim_ids": ["mc_maximizers_identification"]
+    },
+    {
+      "id": "final_answer",
+      "description": "Conclui corretamente que os valores maximizantes são n=6 e n=7.",
+      "points": 2.0,
+      "claim_type": "final_answer",
+      "required_microclaim_ids": []
+    }
+  ]
+}

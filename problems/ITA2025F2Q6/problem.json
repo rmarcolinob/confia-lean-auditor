@@ -1,0 +1,18 @@
+{
+  "id": "ITA2025F2Q6",
+  "title": "Quarta cara no enésimo lançamento",
+  "statement": "Uma moeda não viciada é lançada n vezes. Encontre os valores de n que maximizam a probabilidade de sair cara pela quarta vez exatamente no enésimo lançamento.",
+  "answer_type": "set_of_integers",
+  "correct_answer": "n = 6 e n = 7",
+  "max_score": 10.0,
+  "source": {
+    "exam": "ITA 2025 - 2ª fase",
+    "original_question": "Questão 6",
+    "adaptation": "Questão dissertativa preservada em formato aberto."
+  },
+  "assessment_notes": [
+    "A verificação Lean cobre a aritmética discreta dos candidatos n=6 e n=7 e a comparação simbólica da razão P(n+1)/P(n).",
+    "A derivação probabilística da fórmula P(N=n)=C(n-1,3)/2^n é auditada por claims textuais.",
+    "A maximização é verificada por uma combinação de análise textual da distribuição binomial negativa e prova formal das desigualdades aritméticas da razão."
+  ]
+}

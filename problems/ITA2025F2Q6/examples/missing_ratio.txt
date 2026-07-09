@@ -1,0 +1,6 @@
+Para a quarta cara ocorrer no n-ésimo lançamento, é preciso haver 3 caras nos n-1 primeiros lançamentos e cara no último.
+
+Logo,
+P(N=n) = C(n-1,3)/2^n.
+
+Portanto, os valores que maximizam a probabilidade são n=6 e n=7.

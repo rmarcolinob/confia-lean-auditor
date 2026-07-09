@@ -1,0 +1,41 @@
+{
+  "problem_id": "ITA2025F2Q6",
+  "microclaims": [
+    {
+      "id": "mc_probability_formula",
+      "description": "A probabilidade da quarta cara ocorrer exatamente no n-ésimo lançamento é C(n-1,3)/2^n.",
+      "theorem": "probability_values",
+      "claim_types": ["probability_formula"],
+      "required_formal_step_types": ["f2q6_probability_values"],
+      "depends_on_microclaim_ids": [],
+      "supports_rubric_items": ["probability_formula"]
+    },
+    {
+      "id": "mc_ratio_comparison",
+      "description": "A razão entre probabilidades consecutivas é comparada por n/(2n-6).",
+      "theorem": "ratio_comparison",
+      "claim_types": ["ratio_comparison"],
+      "required_formal_step_types": ["f2q6_ratio_comparison"],
+      "depends_on_microclaim_ids": ["mc_probability_formula"],
+      "supports_rubric_items": ["ratio_comparison"]
+    },
+    {
+      "id": "mc_maximizers_identification",
+      "description": "A análise da razão mostra que os máximos ocorrem em n=6 e n=7.",
+      "theorem": "candidate_maximizers",
+      "claim_types": ["maximizers_identification"],
+      "required_formal_step_types": ["f2q6_ratio_comparison"],
+      "depends_on_microclaim_ids": ["mc_ratio_comparison"],
+      "supports_rubric_items": ["maximizers_identification"]
+    },
+    {
+      "id": "mc_final_answer",
+      "description": "Os valores de n que maximizam a probabilidade são 6 e 7.",
+      "theorem": "final_answer",
+      "claim_types": ["final_answer"],
+      "required_formal_step_types": ["f2q6_ratio_comparison"],
+      "depends_on_microclaim_ids": ["mc_maximizers_identification"],
+      "supports_rubric_items": ["final_answer"]
+    }
+  ]
+}
