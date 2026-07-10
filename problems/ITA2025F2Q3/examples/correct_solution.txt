@@ -1,0 +1,8 @@
+Das equações sen alpha - sen beta = 1/4 e sen alpha - 2 sen beta + cos beta = 3/4, subtraindo a primeira da segunda obtemos cos beta - sen beta = 1/2.
+
+Como beta está em [pi/2,3pi/2], escolhemos os sinais compatíveis e obtemos sen beta = -(1+sqrt(7))/4 e cos beta = (1-sqrt(7))/4. Assim, sen alpha = sen beta + 1/4 = -sqrt(7)/4. Como alpha está em [pi/2,3pi/2], temos cos alpha = -3/4.
+
+Logo,
+sen(alpha+beta)=sen alpha cos beta + cos alpha sen beta
+= (-sqrt(7)/4)((1-sqrt(7))/4)+(-3/4)(-(1+sqrt(7))/4)
+= (5+sqrt(7))/8.

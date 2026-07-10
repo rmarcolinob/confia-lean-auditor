@@ -1,0 +1,50 @@
+{
+  "problem_id": "ITA2025F2Q3",
+  "microclaims": [
+    {
+      "id": "f2q3_beta_difference",
+      "description": "Das duas equações segue cos(beta)-sen(beta)=1/2.",
+      "theorem": "generated_beta_difference",
+      "claim_types": ["beta_difference"],
+      "required_formal_step_types": ["f2q3_beta_difference"],
+      "depends_on_microclaim_ids": [],
+      "supports_rubric_items": ["beta_difference"]
+    },
+    {
+      "id": "f2q3_equations",
+      "description": "Os valores candidatos satisfazem as duas equações do enunciado.",
+      "theorem": "generated_equations",
+      "claim_types": ["candidate_values"],
+      "required_formal_step_types": ["f2q3_equations"],
+      "depends_on_microclaim_ids": ["f2q3_beta_difference"],
+      "supports_rubric_items": ["candidate_values"]
+    },
+    {
+      "id": "f2q3_unit_circle",
+      "description": "Os candidatos satisfazem sen²+cos²=1 para alpha e beta.",
+      "theorem": "generated_unit_circle",
+      "claim_types": ["candidate_values"],
+      "required_formal_step_types": ["f2q3_unit_circle"],
+      "depends_on_microclaim_ids": [],
+      "supports_rubric_items": ["candidate_values"]
+    },
+    {
+      "id": "f2q3_final_sin_sum",
+      "description": "O cálculo sen alpha cos beta + cos alpha sen beta resulta em (5+sqrt(7))/8.",
+      "theorem": "generated_final_sin_sum",
+      "claim_types": ["final_sin_sum"],
+      "required_formal_step_types": ["f2q3_final_sin_sum"],
+      "depends_on_microclaim_ids": ["f2q3_equations", "f2q3_unit_circle"],
+      "supports_rubric_items": ["final_sin_sum"]
+    },
+    {
+      "id": "f2q3_final_answer",
+      "description": "A resposta final é (5+sqrt(7))/8.",
+      "theorem": "generated_final_answer",
+      "claim_types": ["final_answer"],
+      "required_formal_step_types": ["f2q3_final_answer"],
+      "depends_on_microclaim_ids": [],
+      "supports_rubric_items": ["final_answer"]
+    }
+  ]
+}

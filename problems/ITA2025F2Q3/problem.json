@@ -1,0 +1,15 @@
+{
+  "id": "ITA2025F2Q3",
+  "title": "ITA 2025 2ª fase - Questão 3",
+  "statement": "Dados alpha e beta em [pi/2, 3pi/2], tais que sen alpha - sen beta = 1/4 e sen alpha - 2 sen beta + cos beta = 3/4, calcule sen(alpha+beta).",
+  "answer_type": "real_expression",
+  "correct_answer": "(5 + sqrt(7)) / 8",
+  "max_score": 10.0,
+  "source": {
+    "name": "ITA",
+    "year": 2025,
+    "phase": "2ª fase",
+    "subject": "Matemática",
+    "question": 3
+  }
+}

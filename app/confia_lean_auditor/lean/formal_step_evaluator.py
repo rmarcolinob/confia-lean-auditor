@@ -263,6 +263,58 @@ end ConfIA.LeanAuditor.Generated.ITA2025F2Q1.Step
 
 
 
+
+
+def render_f2q3_formal_step(step: FormalStep) -> str:
+    if step.type == "f2q3_beta_difference":
+        theorem_body = r"""
+theorem f2q3_beta_difference_step : BetaDifferenceClaim := by
+  exact beta_difference_claim
+"""
+
+    elif step.type == "f2q3_equations":
+        theorem_body = r"""
+theorem f2q3_equations_step : FirstEquationClaim ∧ SecondEquationClaim := by
+  exact ⟨first_equation_claim, second_equation_claim⟩
+"""
+
+    elif step.type == "f2q3_unit_circle":
+        theorem_body = r"""
+theorem f2q3_unit_circle_step : CandidateUnitCircleClaim := by
+  exact candidate_unit_circle_claim
+"""
+
+    elif step.type == "f2q3_final_sin_sum":
+        theorem_body = r"""
+theorem f2q3_final_sin_sum_step : FinalSinSumClaim := by
+  exact final_sin_sum_claim
+"""
+
+    elif step.type == "f2q3_final_answer":
+        theorem_body = r"""
+theorem f2q3_final_answer_step : FinalAnswerClaim := by
+  exact final_answer_claim
+"""
+
+    else:
+        raise NotImplementedError(f"Unsupported ITA2025F2Q3 formal step type: {step.type}")
+
+    return f"""
+import ConfiaLeanAuditor.Problems.ITA2025F2Q3.Statement
+
+namespace ConfIA.LeanAuditor.Generated.ITA2025F2Q3.Step
+
+open ConfIA.LeanAuditor.ITA2025F2Q3
+
+noncomputable section
+
+{theorem_body}
+
+end
+
+end ConfIA.LeanAuditor.Generated.ITA2025F2Q3.Step
+"""
+
 def render_f2q8_formal_step(step: FormalStep) -> str:
     if step.type == "f2q8_bridge":
         theorem_body = r"""
@@ -377,6 +429,9 @@ def render_formal_step(problem_id: str, step: FormalStep) -> str:
 
     if problem_id == "ITA2025F2Q6":
         return render_f2q6_formal_step(step)
+    if problem_id == "ITA2025F2Q3":
+        return render_f2q3_formal_step(step)
+
     if problem_id == "ITA2025F2Q8":
         return render_f2q8_formal_step(step)
 
