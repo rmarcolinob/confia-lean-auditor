@@ -6,6 +6,9 @@ from confia_lean_auditor.student_claims.schemas import StudentClaim, StudentClai
 from confia_lean_auditor.lean.student_claim_checker import (
     check_student_claims as check_f2q8_student_claims_legacy,
 )
+from confia_lean_auditor.lean.student_claim_checkers.ita2025f2q1 import (
+    check_f2q1_student_claims,
+)
 
 
 def check_student_claims_for_problem(
@@ -25,6 +28,12 @@ def check_student_claims_for_problem(
 
     if problem_id == "ITA2025F2Q8":
         return check_f2q8_student_claims_legacy(
+            student_claims,
+            run_id=run_id,
+        )
+
+    if problem_id == "ITA2025F2Q1":
+        return check_f2q1_student_claims(
             student_claims,
             run_id=run_id,
         )
