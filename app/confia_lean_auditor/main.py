@@ -16,7 +16,8 @@ from confia_lean_auditor.lean.formal_step_evaluator import evaluate_formal_steps
 from confia_lean_auditor.lean.microclaim_evaluator import evaluate_microclaims
 from confia_lean_auditor.lean.run_lean import run_lean_file
 from confia_lean_auditor.reports.report_builder import build_feedback, verdict_from_score
-from confia_lean_auditor.rubric.rubric_evaluator import evaluate_rubric, apply_student_claim_adjustments
+from confia_lean_auditor.rubric.rubric_evaluator import evaluate_rubric
+from confia_lean_auditor.rubric.adjusters.registry import apply_student_claim_adjustments
 from confia_lean_auditor.llm.formal_step_extractor import FormalStepExtractionError
 from confia_lean_auditor.lean.student_claim_checker import check_student_claims
 from confia_lean_auditor.student_claims.registry import extract_student_claims
