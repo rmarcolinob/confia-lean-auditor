@@ -1,0 +1,50 @@
+{
+  "problem_id": "ITA2025F2Q8",
+  "microclaims": [
+    {
+      "id": "f2q8_column_difference",
+      "description": "A matriz original pode ser transformada por diferenças sucessivas de colunas.",
+      "theorem": "generated_bridge_generic",
+      "claim_types": ["matrix_transformation"],
+      "required_formal_step_types": ["f2q8_bridge"],
+      "depends_on_microclaim_ids": [],
+      "supports_rubric_items": ["matrix_transformation"]
+    },
+    {
+      "id": "f2q8_coldiff_det_one",
+      "description": "A matriz de diferenças de colunas tem determinante 1.",
+      "theorem": "generated_coldiff_det_one",
+      "claim_types": ["matrix_transformation"],
+      "required_formal_step_types": ["f2q8_coldiff_det_one"],
+      "depends_on_microclaim_ids": ["f2q8_column_difference"],
+      "supports_rubric_items": ["matrix_transformation"]
+    },
+    {
+      "id": "f2q8_det_formula",
+      "description": "Para todo k>=1, det(A_k)=(-1)^(k-1)k.",
+      "theorem": "generated_determinant_formula",
+      "claim_types": ["determinant_formula"],
+      "required_formal_step_types": ["f2q8_determinant_formula"],
+      "depends_on_microclaim_ids": [],
+      "supports_rubric_items": ["determinant_formula"]
+    },
+    {
+      "id": "f2q8_alternating_sum",
+      "description": "A soma dos determinantes se reduz à soma alternada 1-2+3-4+...+2025.",
+      "theorem": "generated_final_answer",
+      "claim_types": ["alternating_sum"],
+      "required_formal_step_types": ["f2q8_final_sum"],
+      "depends_on_microclaim_ids": [],
+      "supports_rubric_items": ["alternating_sum"]
+    },
+    {
+      "id": "f2q8_final_sum",
+      "description": "A soma alternada final até 2025 é igual a 1013.",
+      "theorem": "generated_final_answer",
+      "claim_types": ["final_answer"],
+      "required_formal_step_types": ["f2q8_final_sum"],
+      "depends_on_microclaim_ids": [],
+      "supports_rubric_items": ["final_answer"]
+    }
+  ]
+}

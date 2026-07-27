@@ -1,0 +1,1 @@
+A soma é alternada: 1-2+3-4+...+2025. Portanto o resultado é 1013.

@@ -1,0 +1,5 @@
+Considere a matriz A_k com entradas a_ij=max{i,j}. Faço operações de colunas: mantenho a primeira coluna e substituo cada coluna j>1 pela diferença C_j-C_{j-1}. Essas operações não alteram o determinante.
+
+A matriz transformada tem primeira coluna 1,2,...,k e, nas demais colunas, aparece 1 acima da diagonal correspondente e 0 a partir da diagonal. Expandindo o determinante pela última linha, obtemos det(A_k)=(-1)^(k-1)k.
+
+Assim, a soma pedida é 1-2+3-4+...+2025. Agrupando em pares, temos (1-2)+(3-4)+...+(2023-2024)+2025 = -1012+2025 = 1013.

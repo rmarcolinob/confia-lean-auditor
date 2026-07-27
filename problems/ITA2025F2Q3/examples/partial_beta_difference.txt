@@ -1,0 +1,1 @@
+Subtraindo as duas equações, obtemos cos beta - sen beta = 1/2. A partir daí seria necessário determinar os sinais usando os intervalos de alpha e beta.

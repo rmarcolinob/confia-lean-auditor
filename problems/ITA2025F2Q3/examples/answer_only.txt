@@ -1,0 +1,1 @@
+A resposta é sen(alpha+beta) = (5+sqrt(7))/8.

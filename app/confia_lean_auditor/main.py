@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+from dataclasses import asdict
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -15,8 +16,10 @@ from confia_lean_auditor.lean.formal_step_evaluator import evaluate_formal_steps
 from confia_lean_auditor.lean.microclaim_evaluator import evaluate_microclaims
 from confia_lean_auditor.lean.run_lean import run_lean_file
 from confia_lean_auditor.reports.report_builder import build_feedback, verdict_from_score
-from confia_lean_auditor.rubric.rubric_evaluator import evaluate_rubric
+from confia_lean_auditor.rubric.rubric_evaluator import evaluate_rubric, apply_student_claim_adjustments
 from confia_lean_auditor.llm.formal_step_extractor import FormalStepExtractionError
+from confia_lean_auditor.student_claims.extract_f2q8_student_claims import extract_f2q8_student_claims
+from confia_lean_auditor.lean.student_claim_checker import check_student_claims
 
 
 app = FastAPI(title="ConfIA Lean Auditor", version="0.4.0")
@@ -104,6 +107,20 @@ def audit(req: AuditRequest) -> AuditResponse:
     except FileNotFoundError as exc:
         raise HTTPException(status_code=500, detail=str(exc)) from exc
 
+
+    student_claims = []
+    student_claim_checks = []
+
+    if req.problem_id == "ITA2025F2Q8":
+        student_claims = extract_f2q8_student_claims(req.solution)
+        student_claim_checks = check_student_claims(
+            student_claims,
+            run_id=f"{run_id}_student_claims",
+        )
+
+    student_claims_payload = [asdict(claim) for claim in student_claims]
+    student_claim_checks_payload = [asdict(check) for check in student_claim_checks]
+
     try:
         rubric = evaluate_rubric(
             repo_root=root,
@@ -115,8 +132,15 @@ def audit(req: AuditRequest) -> AuditResponse:
     except FileNotFoundError as exc:
         raise HTTPException(status_code=404, detail=str(exc)) from exc
 
+    rubric = apply_student_claim_adjustments(
+        rubric=rubric,
+        problem_id=req.problem_id,
+        student_claim_checks=student_claim_checks_payload,
+    )
+
     verdict = verdict_from_score(rubric.score, rubric.max_score)
     feedback = build_feedback(rubric, lean_certificate, microclaims)
+
 
     response = AuditResponse(
         problem_id=req.problem_id,
@@ -128,6 +152,8 @@ def audit(req: AuditRequest) -> AuditResponse:
         rubric_assessment=rubric,
         lean_certificate=lean_certificate,
         microclaims=microclaims,
+        student_claims=student_claims_payload,
+        student_claim_checks=student_claim_checks_payload,
         feedback=feedback,
         artifact_dir=str(artifact_dir),
     )
@@ -140,6 +166,16 @@ def audit(req: AuditRequest) -> AuditResponse:
     (artifact_dir / "solution.txt").write_text(req.solution, encoding="utf-8")
     (artifact_dir / "claims.json").write_text(
         json.dumps(claim_extraction.model_dump(), ensure_ascii=False, indent=2),
+        encoding="utf-8",
+    )
+
+    (artifact_dir / "student_claims.json").write_text(
+        json.dumps(student_claims_payload, ensure_ascii=False, indent=2),
+        encoding="utf-8",
+    )
+
+    (artifact_dir / "student_claim_checks.json").write_text(
+        json.dumps(student_claim_checks_payload, ensure_ascii=False, indent=2),
         encoding="utf-8",
     )
 

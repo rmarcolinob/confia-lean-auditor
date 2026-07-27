@@ -1,0 +1,1 @@
+Como os determinantes são 1,2,3,...,2025, a soma é 1+2+...+2025 = 2051325.

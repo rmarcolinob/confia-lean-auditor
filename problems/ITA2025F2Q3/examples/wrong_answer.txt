@@ -1,0 +1,1 @@
+Subtraindo as equações, suponho que sen(alpha+beta)=1/2. Portanto a resposta é 1/2.
