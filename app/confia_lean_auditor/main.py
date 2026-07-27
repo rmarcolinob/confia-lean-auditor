@@ -19,7 +19,7 @@ from confia_lean_auditor.reports.report_builder import build_feedback, verdict_f
 from confia_lean_auditor.rubric.rubric_evaluator import evaluate_rubric
 from confia_lean_auditor.rubric.adjusters.registry import apply_student_claim_adjustments
 from confia_lean_auditor.llm.formal_step_extractor import FormalStepExtractionError
-from confia_lean_auditor.lean.student_claim_checker import check_student_claims
+from confia_lean_auditor.lean.student_claim_checkers.registry import check_student_claims_for_problem
 from confia_lean_auditor.student_claims.registry import extract_student_claims
 
 
@@ -110,8 +110,9 @@ def audit(req: AuditRequest) -> AuditResponse:
 
 
     student_claims = extract_student_claims(req.problem_id, req.solution)
-    student_claim_checks = check_student_claims(
-        student_claims,
+    student_claim_checks = check_student_claims_for_problem(
+        problem_id=req.problem_id,
+        student_claims=student_claims,
         run_id=f"{run_id}_student_claims",
     )
 
