@@ -63,6 +63,8 @@ class RubricItemResult(BaseModel):
     max_points: float
     evidence: Optional[str] = None
     claim_id: Optional[str] = None
+    student_check_adjusted: bool = False
+    adjustment_notes: List[str] = Field(default_factory=list)
 
 
 class RubricAssessment(BaseModel):

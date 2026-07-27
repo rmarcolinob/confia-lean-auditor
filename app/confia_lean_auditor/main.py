@@ -16,7 +16,7 @@ from confia_lean_auditor.lean.formal_step_evaluator import evaluate_formal_steps
 from confia_lean_auditor.lean.microclaim_evaluator import evaluate_microclaims
 from confia_lean_auditor.lean.run_lean import run_lean_file
 from confia_lean_auditor.reports.report_builder import build_feedback, verdict_from_score
-from confia_lean_auditor.rubric.rubric_evaluator import evaluate_rubric
+from confia_lean_auditor.rubric.rubric_evaluator import evaluate_rubric, apply_student_claim_adjustments
 from confia_lean_auditor.llm.formal_step_extractor import FormalStepExtractionError
 from confia_lean_auditor.student_claims.extract_f2q8_student_claims import extract_f2q8_student_claims
 from confia_lean_auditor.lean.student_claim_checker import check_student_claims
@@ -107,19 +107,6 @@ def audit(req: AuditRequest) -> AuditResponse:
     except FileNotFoundError as exc:
         raise HTTPException(status_code=500, detail=str(exc)) from exc
 
-    try:
-        rubric = evaluate_rubric(
-            repo_root=root,
-            problem_id=req.problem_id,
-            claim_extraction=claim_extraction,
-            microclaims=microclaims,
-            rubric_config=assets.rubric,
-        )
-    except FileNotFoundError as exc:
-        raise HTTPException(status_code=404, detail=str(exc)) from exc
-
-    verdict = verdict_from_score(rubric.score, rubric.max_score)
-    feedback = build_feedback(rubric, lean_certificate, microclaims)
 
     student_claims = []
     student_claim_checks = []
@@ -133,6 +120,27 @@ def audit(req: AuditRequest) -> AuditResponse:
 
     student_claims_payload = [asdict(claim) for claim in student_claims]
     student_claim_checks_payload = [asdict(check) for check in student_claim_checks]
+
+    try:
+        rubric = evaluate_rubric(
+            repo_root=root,
+            problem_id=req.problem_id,
+            claim_extraction=claim_extraction,
+            microclaims=microclaims,
+            rubric_config=assets.rubric,
+        )
+    except FileNotFoundError as exc:
+        raise HTTPException(status_code=404, detail=str(exc)) from exc
+
+    rubric = apply_student_claim_adjustments(
+        rubric=rubric,
+        problem_id=req.problem_id,
+        student_claim_checks=student_claim_checks_payload,
+    )
+
+    verdict = verdict_from_score(rubric.score, rubric.max_score)
+    feedback = build_feedback(rubric, lean_certificate, microclaims)
+
 
     response = AuditResponse(
         problem_id=req.problem_id,
