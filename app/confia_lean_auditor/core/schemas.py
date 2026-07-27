@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, Any
 
 from pydantic import BaseModel, Field
 
@@ -107,5 +107,8 @@ class AuditResponse(BaseModel):
     rubric_assessment: RubricAssessment
     lean_certificate: LeanCertificate
     microclaims: List[MicroclaimResult]
+
+    student_claims: List[Dict[str, Any]] = Field(default_factory=list)
+    student_claim_checks: List[Dict[str, Any]] = Field(default_factory=list)
     feedback: str
     artifact_dir: Optional[str] = None
