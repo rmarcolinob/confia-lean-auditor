@@ -37,6 +37,106 @@ def CandidateMaximizersClaim : Prop :=
 def FinalAnswerClaim : Prop :=
   CandidateMaximizersClaim
 
+
+/-
+Núcleo aritmético-combinatório forte.
+
+Para a quarta cara ocorrer no lançamento n, o fator combinatório é
+C(n-1,3). Para a comparação entre probabilidades consecutivas, o fator
+constante 1/6 pode ser ignorado e usamos o numerador proporcional
+
+  (n-1)(n-2)(n-3).
+
+A razão entre termos consecutivos fica
+
+  P(n+1)/P(n) = n / (2(n-3)) = n / (2n-6).
+
+Aqui formalizamos a identidade algébrica que sustenta essa razão e o
+limiar aritmético que produz o empate em n=6 e n=7.
+-/
+def fourthHeadWeight (n : ℤ) : ℤ :=
+  (n - 1) * (n - 2) * (n - 3)
+
+def strongRatioDenom (n : ℤ) : ℤ :=
+  2 * (n - 3)
+
+def StrongRatioDenomBridgeClaim : Prop :=
+  ∀ n : ℤ, strongRatioDenom n = ratioDenom n
+
+def StrongRatioIdentityClaim : Prop :=
+  ∀ n : ℤ,
+    fourthHeadWeight (n + 1) * strongRatioDenom n =
+      ratioNumer n * (2 * fourthHeadWeight n)
+
+def StrongRatioThresholdClaim : Prop :=
+  (∀ n : ℤ, 4 ≤ n → n < 6 → strongRatioDenom n < ratioNumer n) ∧
+  strongRatioDenom 6 = ratioNumer 6 ∧
+  (∀ n : ℤ, 6 < n → ratioNumer n < strongRatioDenom n)
+
+def StrongF2Q6Claim : Prop :=
+  ProbabilityValuesClaim ∧
+  StrongRatioDenomBridgeClaim ∧
+  StrongRatioIdentityClaim ∧
+  StrongRatioThresholdClaim ∧
+  CandidateMaximizersClaim ∧
+  FinalAnswerClaim
+
+theorem f2q6_probability_values_claim : ProbabilityValuesClaim := by
+  unfold ProbabilityValuesClaim waysBeforeFourthHead denom
+  norm_num
+
+theorem f2q6_ratio_comparison_claim : RatioComparisonClaim := by
+  unfold RatioComparisonClaim ratioNumer ratioDenom
+  constructor
+  · intro n hn hlt
+    omega
+  · constructor
+    · norm_num
+    · intro n hgt
+      omega
+
+theorem f2q6_candidate_maximizers_claim : CandidateMaximizersClaim := by
+  unfold CandidateMaximizersClaim candidateN1 candidateN2
+  norm_num
+
+theorem f2q6_final_answer_claim : FinalAnswerClaim := by
+  unfold FinalAnswerClaim
+  exact f2q6_candidate_maximizers_claim
+
+theorem strong_ratio_denom_bridge : StrongRatioDenomBridgeClaim := by
+  unfold StrongRatioDenomBridgeClaim strongRatioDenom ratioDenom
+  intro n
+  ring
+
+theorem strong_ratio_identity : StrongRatioIdentityClaim := by
+  unfold StrongRatioIdentityClaim fourthHeadWeight strongRatioDenom ratioNumer
+  intro n
+  ring
+
+theorem strong_ratio_threshold : StrongRatioThresholdClaim := by
+  unfold StrongRatioThresholdClaim strongRatioDenom ratioNumer
+  constructor
+  · intro n hn hlt
+    omega
+  · constructor
+    · norm_num
+    · intro n hgt
+      omega
+
+theorem strong_f2q6_claim : StrongF2Q6Claim := by
+  unfold StrongF2Q6Claim
+  constructor
+  · exact f2q6_probability_values_claim
+  constructor
+  · exact strong_ratio_denom_bridge
+  constructor
+  · exact strong_ratio_identity
+  constructor
+  · exact strong_ratio_threshold
+  constructor
+  · exact f2q6_candidate_maximizers_claim
+  · exact f2q6_final_answer_claim
+
 end
 
 end ConfIA.LeanAuditor.ITA2025F2Q6
