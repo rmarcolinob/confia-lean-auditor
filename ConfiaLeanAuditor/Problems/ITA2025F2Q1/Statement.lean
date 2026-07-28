@@ -118,8 +118,7 @@ theorem strong_remainder_formula (a b : ℤ) :
       linPow_57_claim,
       linPow_14_claim,
       linPow_7_claim
-    ] <;>
-    ring_nf
+    ]
 
 theorem strong_candidate_satisfies_target :
     strongRemainder candidateA candidateB = (1, 2) := by

@@ -53,6 +53,12 @@ theorem final_answer : FinalAnswerClaim := by
 '''
 
 
+STRONG_F2Q1_CLAIM = r"""
+theorem generated_strong_f2q1_claim : StrongF2Q1Claim := by
+  exact strong_f2q1_claim
+"""
+
+
 COMMON_FOOTER_F2Q1 = r'''
 end
 
@@ -118,6 +124,9 @@ def build_attempt_ita2025f2q1(
     ):
         parts.append(FINAL_ANSWER)
         generated_theorems.append("final_answer")
+
+        parts.append(STRONG_F2Q1_CLAIM)
+        generated_theorems.append("generated_strong_f2q1_claim")
 
     parts.append(COMMON_FOOTER_F2Q1)
 
