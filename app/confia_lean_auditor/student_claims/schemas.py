@@ -15,6 +15,9 @@ StudentClaimType = Literal[
     "f2q1_student_power_reduction",
     "f2q1_student_reduced_form",
     "f2q1_student_coefficient_system",
+    "f2q6_student_probability_formula",
+    "f2q6_student_ratio_formula",
+    "f2q6_student_final_answer",
 ]
 
 
