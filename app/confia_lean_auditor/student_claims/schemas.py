@@ -20,6 +20,10 @@ StudentClaimType = Literal[
     "f2q5_student_digit_log_bounds",
     "f2q5_student_between_bounds",
     "f2q5_student_final_digit",
+    "f2q3_student_beta_difference",
+    "f2q3_student_candidate_value",
+    "f2q3_student_final_sin_sum",
+    "f2q3_student_final_answer",
 ]
 
 

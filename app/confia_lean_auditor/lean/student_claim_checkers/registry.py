@@ -9,6 +9,9 @@ from confia_lean_auditor.lean.student_claim_checker import (
 from confia_lean_auditor.lean.student_claim_checkers.ita2025f2q1 import (
     check_f2q1_student_claims,
 )
+from confia_lean_auditor.lean.student_claim_checkers.ita2025f2q3 import (
+    check_f2q3_student_claims,
+)
 from confia_lean_auditor.lean.student_claim_checkers.ita2025f2q5 import (
     check_f2q5_student_claims,
 )
@@ -39,6 +42,12 @@ def check_student_claims_for_problem(
 
     if problem_id == "ITA2025F2Q1":
         return check_f2q1_student_claims(
+            student_claims,
+            run_id=run_id,
+        )
+
+    if problem_id == "ITA2025F2Q3":
+        return check_f2q3_student_claims(
             student_claims,
             run_id=run_id,
         )
