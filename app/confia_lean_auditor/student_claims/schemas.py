@@ -11,6 +11,10 @@ StudentClaimType = Literal[
     "f2q8_student_alternating_sum_value",
     "f2q8_student_pair_count",
     "f2q8_student_pair_reduction",
+    "f2q1_student_final_answer",
+    "f2q1_student_power_reduction",
+    "f2q1_student_reduced_form",
+    "f2q1_student_coefficient_system",
 ]
 
 

@@ -16,10 +16,11 @@ from confia_lean_auditor.lean.formal_step_evaluator import evaluate_formal_steps
 from confia_lean_auditor.lean.microclaim_evaluator import evaluate_microclaims
 from confia_lean_auditor.lean.run_lean import run_lean_file
 from confia_lean_auditor.reports.report_builder import build_feedback, verdict_from_score
-from confia_lean_auditor.rubric.rubric_evaluator import evaluate_rubric, apply_student_claim_adjustments
+from confia_lean_auditor.rubric.rubric_evaluator import evaluate_rubric
+from confia_lean_auditor.rubric.adjusters.registry import apply_student_claim_adjustments
 from confia_lean_auditor.llm.formal_step_extractor import FormalStepExtractionError
-from confia_lean_auditor.student_claims.extract_f2q8_student_claims import extract_f2q8_student_claims
-from confia_lean_auditor.lean.student_claim_checker import check_student_claims
+from confia_lean_auditor.lean.student_claim_checkers.registry import check_student_claims_for_problem
+from confia_lean_auditor.student_claims.registry import extract_student_claims
 
 
 app = FastAPI(title="ConfIA Lean Auditor", version="0.4.0")
@@ -108,15 +109,12 @@ def audit(req: AuditRequest) -> AuditResponse:
         raise HTTPException(status_code=500, detail=str(exc)) from exc
 
 
-    student_claims = []
-    student_claim_checks = []
-
-    if req.problem_id == "ITA2025F2Q8":
-        student_claims = extract_f2q8_student_claims(req.solution)
-        student_claim_checks = check_student_claims(
-            student_claims,
-            run_id=f"{run_id}_student_claims",
-        )
+    student_claims = extract_student_claims(req.problem_id, req.solution)
+    student_claim_checks = check_student_claims_for_problem(
+        problem_id=req.problem_id,
+        student_claims=student_claims,
+        run_id=f"{run_id}_student_claims",
+    )
 
     student_claims_payload = [asdict(claim) for claim in student_claims]
     student_claim_checks_payload = [asdict(check) for check in student_claim_checks]
