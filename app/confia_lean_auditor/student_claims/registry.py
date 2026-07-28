@@ -9,6 +9,9 @@ from confia_lean_auditor.student_claims.extract_f2q8_student_claims import (
 from confia_lean_auditor.student_claims.extract_f2q1_student_claims import (
     extract_f2q1_student_claims,
 )
+from confia_lean_auditor.student_claims.extract_f2q5_student_claims import (
+    extract_f2q5_student_claims,
+)
 
 
 def extract_student_claims(problem_id: str, solution: str) -> List[StudentClaim]:
@@ -25,5 +28,8 @@ def extract_student_claims(problem_id: str, solution: str) -> List[StudentClaim]
 
     if problem_id == "ITA2025F2Q1":
         return extract_f2q1_student_claims(solution)
+
+    if problem_id == "ITA2025F2Q5":
+        return extract_f2q5_student_claims(solution)
 
     return []
