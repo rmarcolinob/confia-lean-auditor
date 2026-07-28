@@ -232,7 +232,9 @@ def _extract_coefficient_system(solution: str, claims: List[StudentClaim]) -> No
     if a_equation_kind is None or a_rhs is None:
         return
 
-    raw = f"{sum_lhs} = {sum_rhs}; {a_equation_kind} = {a_rhs}"
+    display_sum_lhs = "a+b" if sum_lhs == "candidateA + candidateB" else "b+a"
+    display_a_lhs = "-a" if a_equation_kind == "neg_a" else "a"
+    raw = f"{display_sum_lhs}={sum_rhs}; {display_a_lhs}={a_rhs}"
 
     claims.append(
         _make_claim(

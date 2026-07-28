@@ -6,6 +6,9 @@ from confia_lean_auditor.core.schemas import RubricAssessment
 from confia_lean_auditor.rubric.adjusters.ita2025f2q8 import (
     apply_f2q8_student_claim_adjustments,
 )
+from confia_lean_auditor.rubric.adjusters.ita2025f2q1 import (
+    apply_f2q1_student_claim_adjustments,
+)
 
 
 RubricAdjuster = Callable[[RubricAssessment, List[Any]], RubricAssessment]
@@ -13,6 +16,7 @@ RubricAdjuster = Callable[[RubricAssessment, List[Any]], RubricAssessment]
 
 ADJUSTERS: Dict[str, RubricAdjuster] = {
     "ITA2025F2Q8": apply_f2q8_student_claim_adjustments,
+    "ITA2025F2Q1": apply_f2q1_student_claim_adjustments,
 }
 
 
