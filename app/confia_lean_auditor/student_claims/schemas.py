@@ -15,6 +15,11 @@ StudentClaimType = Literal[
     "f2q1_student_power_reduction",
     "f2q1_student_reduced_form",
     "f2q1_student_coefficient_system",
+    "f2q5_student_log_power_decomposition",
+    "f2q5_student_mantissa",
+    "f2q5_student_digit_log_bounds",
+    "f2q5_student_between_bounds",
+    "f2q5_student_final_digit",
 ]
 
 

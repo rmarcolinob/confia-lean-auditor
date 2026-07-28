@@ -45,6 +45,12 @@ theorem final_digit_five : FinalDigitFiveClaim := by
 '''
 
 
+STRONG_F2Q5_CLAIM = r'''
+theorem generated_strong_f2q5_claim : StrongF2Q5Claim := by
+  exact strong_f2q5_claim
+'''
+
+
 COMMON_FOOTER_F2Q5 = r'''
 end
 
@@ -111,6 +117,10 @@ def build_attempt_ita2025f2q5(
     ):
         parts.append(FINAL_DIGIT_FIVE)
         generated_theorems.append("final_digit_five")
+
+    if "final_digit_five" in generated_theorems:
+        parts.append(STRONG_F2Q5_CLAIM)
+        generated_theorems.append("generated_strong_f2q5_claim")
 
     parts.append(COMMON_FOOTER_F2Q5)
 
