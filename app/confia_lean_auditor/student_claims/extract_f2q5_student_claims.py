@@ -219,11 +219,13 @@ def _extract_final_digit(solution: str, claims: List[StudentClaim]) -> None:
 
     digit: int | None = None
 
+    # Importante: não usar padrão genérico como "portanto.*?([0-9])",
+    # pois ele captura o 3 de "3^100" antes do algarismo final.
     patterns = [
-        r"primeiro\s+algarismo\s+(?:e|é|=)\s*([0-9])",
-        r"algarismo\s+inicial\s+(?:e|é|=)\s*([0-9])",
-        r"resposta\s+(?:e|é|=)\s*([0-9])",
-        r"portanto.*?([0-9])",
+        r"primeiro\s+algarismo(?:\s+(?:de|do)\s+(?:resultado\s+de\s+)?3\^?100)?\s*(?:e|=)\s*([1-9])",
+        r"algarismo\s+inicial(?:\s+(?:de|do)\s+(?:resultado\s+de\s+)?3\^?100)?\s*(?:e|=)\s*([1-9])",
+        r"resposta\s*(?:e|=)\s*([1-9])",
+        r"conclu\w*\s+(?:que\s+)?(?:o\s+)?(?:primeiro\s+algarismo\s+)?(?:e|=)\s*([1-9])",
     ]
 
     for pattern in patterns:
@@ -247,7 +249,6 @@ def _extract_final_digit(solution: str, claims: List[StudentClaim]) -> None:
             confidence=0.88,
         )
     )
-
 
 def extract_f2q5_student_claims(solution: str) -> List[StudentClaim]:
     claims: List[StudentClaim] = []
