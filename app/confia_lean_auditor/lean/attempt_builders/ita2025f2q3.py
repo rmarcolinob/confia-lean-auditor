@@ -47,6 +47,12 @@ theorem generated_final_answer : FinalAnswerClaim := by
 '''
 
 
+STRONG_F2Q3_CLAIM = r'''
+theorem generated_strong_f2q3_claim : StrongF2Q3Claim := by
+  exact strong_f2q3_claim
+'''
+
+
 COMMON_FOOTER_F2Q3 = r'''
 end
 
@@ -101,6 +107,16 @@ def build_attempt_ita2025f2q3(
     if "final_answer" in types and "f2q3_final_answer" in verified_steps:
         parts.append(FINAL_ANSWER)
         generated_theorems.append("generated_final_answer")
+
+    if (
+        "generated_beta_difference" in generated_theorems
+        and "generated_equations" in generated_theorems
+        and "generated_unit_circle" in generated_theorems
+        and "generated_final_sin_sum" in generated_theorems
+        and "generated_final_answer" in generated_theorems
+    ):
+        parts.append(STRONG_F2Q3_CLAIM)
+        generated_theorems.append("generated_strong_f2q3_claim")
 
     parts.append(COMMON_FOOTER_F2Q3)
 
