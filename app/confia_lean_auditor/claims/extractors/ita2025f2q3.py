@@ -53,67 +53,124 @@ def detect_features(solution: str) -> Dict[str, bool]:
     t = normalize(solution)
     c = compact(t)
 
+    raw = solution.lower()
+    raw = raw.replace("α", "alpha").replace("β", "beta")
+    raw = raw.replace("sen", "sin").replace("seno", "sin")
+    raw = raw.replace("√", "sqrt")
+    raw = raw.replace("−", "-").replace("–", "-").replace("·", "*")
+    raw = raw.replace("{,}", ".").replace(",", ".")
+    raw = unicodedata.normalize("NFKD", raw)
+    raw = "".join(ch for ch in raw if not unicodedata.combining(ch))
+    raw_c = compact(raw)
+
+    latex_free = (
+        raw_c.replace("\\", "")
+        .replace("{", "")
+        .replace("}", "")
+        .replace("*", "")
+    )
+
+    def has_any(*patterns: str) -> bool:
+        return any(p in c or p in raw_c or p in latex_free for p in patterns)
+
+    # ------------------------------------------------------------
+    # Diferença para beta:
+    # cos(beta)-sin(beta)=1/2
+    # ------------------------------------------------------------
     beta_difference = (
-        "cosbeta-sinbeta=1/2" in c
-        or "cos(beta)-sin(beta)=1/2" in c
+        has_any(
+            "cosbeta-sinbeta=1/2",
+            "cos(beta)-sin(beta)=1/2",
+            "cosbeta-senbeta=1/2",
+        )
         or "cos beta - sin beta = 1/2" in t
         or ("subtra" in t and "1/2" in c and "cosbeta" in c and "sinbeta" in c)
     )
 
-    has_sin_beta = (
-        "sinbeta=-(1+sqrt(7))/4" in c
-        or "sinbeta=-(sqrt(7)+1)/4" in c
-        or "sinbeta=(-1-sqrt(7))/4" in c
+    # ------------------------------------------------------------
+    # Valores candidatos.
+    # Aceita sqrt(7), sqrt7, \sqrt{7}.
+    # ------------------------------------------------------------
+    has_sin_beta = has_any(
+        "sinbeta=-(1+sqrt(7))/4",
+        "sinbeta=-(sqrt(7)+1)/4",
+        "sinbeta=(-1-sqrt(7))/4",
+        "sinbeta=-(1+sqrt7)/4",
+        "sinbeta=-(sqrt7+1)/4",
+        "sinbeta=(-1-sqrt7)/4",
+        "sinbeta=-(sqrt7+1)/4",
     )
 
-    has_cos_beta = (
-        "cosbeta=(1-sqrt(7))/4" in c
-        or "cosbeta=-(sqrt(7)-1)/4" in c
+    has_cos_beta = has_any(
+        "cosbeta=(1-sqrt(7))/4",
+        "cosbeta=-(sqrt(7)-1)/4",
+        "cosbeta=(1-sqrt7)/4",
+        "cosbeta=-(sqrt7-1)/4",
     )
 
     has_sin_alpha = (
-        "sinalpha=-sqrt(7)/4" in c
-        or "sinalpha=-(sqrt(7))/4" in c
-        or "sinalpha=sinbeta+1/4=-sqrt(7)/4" in c
-        or ("sinalpha=sinbeta+1/4" in c and "-sqrt(7)/4" in c)
-        or ("sin alpha" in t and "-sqrt(7)/4" in c)
+        has_any(
+            "sinalpha=-sqrt(7)/4",
+            "sinalpha=-(sqrt(7))/4",
+            "sinalpha=-sqrt7/4",
+            "sinalpha=-(sqrt7)/4",
+            "sinalpha=sinbeta+1/4=-sqrt(7)/4",
+            "sinalpha=sinbeta+1/4=-sqrt7/4",
+        )
+        or ("sinalpha=sinbeta+1/4" in c and ("-sqrt(7)/4" in c or "-sqrt7/4" in c))
+        or ("sin alpha" in t and ("-sqrt(7)/4" in c or "-sqrt7/4" in c))
     )
 
-    has_cos_alpha = (
-        "cosalpha=-3/4" in c
+    has_cos_alpha = has_any(
+        "cosalpha=-3/4",
+        "cos(alpha)=-3/4",
     )
 
     candidate_values = has_sin_beta and has_cos_beta and has_sin_alpha and has_cos_alpha
 
-    final_sin_sum = (
-        (
-            "sin(alpha+beta)" in c
-            or "sin(alpha + beta)" in t
-        )
-        and (
-            "sinalpha*cosbeta+cosalpha*sinbeta" in c
-            or "sinalphacosbeta+cosalphasinbeta" in c
-            or "sin alpha cos beta + cos alpha sin beta" in t
-            or "sin alpha*cos beta+cos alpha*sin beta" in t
-        )
-        and (
-            "(5+sqrt(7))/8" in c
-            or "(sqrt(7)+5)/8" in c
-            or "5+sqrt(7)" in c and "/8" in c
-        )
+    # ------------------------------------------------------------
+    # Valor de sin(alpha+beta).
+    # Aceita tanto a fórmula de adição explícita quanto a declaração direta
+    # sin(alpha+beta)=(5+sqrt(7))/8.
+    # ------------------------------------------------------------
+    mentions_sin_sum_target = has_any(
+        "sin(alpha+beta)",
+        "sinalpha+beta",
+    ) or "sin(alpha + beta)" in t
+
+    mentions_addition_formula = (
+        "sinalpha*cosbeta+cosalpha*sinbeta" in c
+        or "sinalphacosbeta+cosalphasinbeta" in c
+        or "sin alpha cos beta + cos alpha sin beta" in t
+        or "sin alpha*cos beta+cos alpha*sin beta" in t
     )
 
-    final_answer = (
-        "(5+sqrt(7))/8" in c
-        or "(sqrt(7)+5)/8" in c
-        or "5+sqrt(7)" in c and "/8" in c
+    mentions_correct_sum_value = has_any(
+        "(5+sqrt(7))/8",
+        "(sqrt(7)+5)/8",
+        "(5+sqrt7)/8",
+        "(sqrt7+5)/8",
+        "5+sqrt(7)",
+        "5+sqrt7",
+    ) and "/8" in c + raw_c + latex_free
+
+    final_sin_sum = mentions_sin_sum_target and mentions_correct_sum_value
+
+    # Se a solução escreve a fórmula de adição e a expressão final correta,
+    # também aceitamos mesmo que a notação de sin(alpha+beta) esteja compacta.
+    final_sin_sum = final_sin_sum or (
+        mentions_addition_formula and mentions_correct_sum_value
     )
+
+    final_answer = mentions_correct_sum_value
 
     wrong_answer = (
         "respostae1/2" in c
         or "resposta=1/2" in c
         or "sen(alpha+beta)=1/2" in c
         or "sin(alpha+beta)=1/2" in c
+        or "sin(alpha+beta)=-1/2" in c
+        or "sin(alpha+beta)=0" in c
     ) and not final_answer
 
     if wrong_answer:
@@ -127,7 +184,6 @@ def detect_features(solution: str) -> Dict[str, bool]:
         "final_sin_sum": final_sin_sum,
         "final_answer": final_answer,
     }
-
 
 def extract_f2q3_formal_steps(solution: str) -> List[FormalStep]:
     features = detect_features(solution)

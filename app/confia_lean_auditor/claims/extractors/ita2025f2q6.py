@@ -55,128 +55,201 @@ def detect_features(solution: str) -> Dict[str, bool]:
     t = normalize(solution)
     c = compact(t)
 
-    # Fórmula P(N=n)=C(n-1,3)/2^n.
-    mentions_binomial = (
-        "c(n-1.3)" in c
-        or "c(n-1,3)" in c
-        or "c(n-1;3)" in c
-        or "c(n-1" in c
-        or "choose(n-1" in c
+    raw = solution.lower()
+    raw = raw.replace("−", "-").replace("–", "-").replace("·", "*")
+    raw = unicodedata.normalize("NFKD", raw)
+    raw = "".join(ch for ch in raw if not unicodedata.combining(ch))
+    raw_c = compact(raw)
+
+    c_no_braces = (
+        c.replace("\\", "")
+        .replace("{", "")
+        .replace("}", "")
+        .replace("*", "")
+    )
+    raw_no_braces = (
+        raw_c.replace("\\", "")
+        .replace("{", "")
+        .replace("}", "")
+        .replace("*", "")
+    )
+
+    # ------------------------------------------------------------------
+    # Fórmula correta:
+    # P(N=n)=C(n-1,3)/2^n
+    # P(n)=binom(n-1,3)(1/2)^n
+    # P(n)=\binom{n-1}{3}2^{-n}
+    # ------------------------------------------------------------------
+    explicit_correct_probability_formula = (
+        "c(n-1.3)/2^n" in c
+        or "c(n-1,3)/2^n" in raw_c
+        or "c(n-1;3)/2^n" in raw_c
+        or "binom(n-1.3)(1/2)^n" in c
+        or "binom(n-1,3)(1/2)^n" in raw_c
+        or "binom(n-1.3)/2^n" in c
+        or "binom(n-1,3)/2^n" in raw_c
+        or "binomn-132^-n" in c_no_braces
+        or "binomn-132^{-n}" in raw_no_braces
+        or (
+            "binom" in c_no_braces
+            and "n-1" in c_no_braces
+            and "3" in c_no_braces
+            and (
+                "2^-n" in c_no_braces
+                or "2^{-n}" in c_no_braces
+                or "(1/2)^n" in c_no_braces
+                or "/2^n" in c_no_braces
+            )
+        )
+    )
+
+    wrong_probability_formula = (
+        "c(n.3)" in c
+        or "c(n,3)" in raw_c
+        or "c(n.4)" in c
+        or "c(n,4)" in raw_c
+        or "2^(n-1)" in c
+        or "2^(n-1)" in raw_c
+    )
+
+    mentions_binomial_structure = (
+        "c(n-1" in c
         or "binom" in c
         or "comb" in c
         or "combinacao" in t
-        or "combinação" in solution.lower()
         or "escolher" in t
     )
 
-    mentions_denominator = (
+    mentions_correct_denominator = (
         "/2^n" in c
-        or "2^n" in c
         or "(1/2)^n" in c
-        or "(1/2)^(n-1)" in c
-        or "1/2" in c
+        or "2^-n" in c
+        or "2^{-n}" in c
     )
 
     mentions_event_structure = (
         "3caras" in c
         or "trescaras" in c
         or "3 caras" in t
-        or "quarta" in t
-        or "quarta cara" in solution.lower()
+        or "quarta cara" in t
         or "n-1primeiros" in c
         or "ultimolancamento" in c
         or "ultimo lancamento" in t
+        or "último lançamento" in solution.lower()
     )
 
     has_probability_formula = (
-        mentions_binomial
-        and mentions_denominator
-        and mentions_event_structure
-    ) or (
-        "p(n)=c(n-1.3)/2^n" in c
-        or "p(n)=c(n-1,3)/2^n" in c
-        or "p(n)=c(n-1;3)/2^n" in c
+        not wrong_probability_formula
+        and (
+            explicit_correct_probability_formula
+            or (
+                mentions_binomial_structure
+                and mentions_correct_denominator
+                and mentions_event_structure
+            )
+        )
     )
 
-    # Razão P(N=n+1)/P(N=n)=n/(2n-6)=n/[2(n-3)].
+    # ------------------------------------------------------------------
+    # Razão:
+    # P(n+1)/P(n)=n/(2n-6)=n/(2(n-3)).
+    # ------------------------------------------------------------------
     mentions_ratio = (
         "p(n+1)/p(n)" in c
         or "pn+1/pn" in c
         or "razao" in t
         or "razão" in solution.lower()
+        or "termosconsecutivos" in c
         or "probabilidadesconsecutivas" in c
+        or "comparandotermos" in c
         or "compararprobabilidades" in c
     )
 
     mentions_ratio_value = (
         "n/(2n-6)" in c
-        or "n/[2(n-3)]" in c
-        or "n/(2(n-3))" in c
-        or "n/2(n-3)" in c
         or "n/[2n-6]" in c
+        or "n/(2(n-3))" in c
+        or "n/[2(n-3)]" in c
+        or "n/2(n-3)" in c
+        or "n/(2*(n-3))" in c
+        or "n/2n-6" in c
     )
 
     has_ratio_formula = mentions_ratio and mentions_ratio_value
 
+    # ------------------------------------------------------------------
+    # Par {6,7}: reconhecer "n=6 e n=7", "n=6,7", "máximo: n=6,7".
+    # ------------------------------------------------------------------
+    mentions_pair_6_7 = (
+        "n=6en=7" in c
+        or "n=6e7" in c
+        or "n=6,7" in raw_c
+        or "n=6.7" in c
+        or "6e7" in c
+        or "6 e 7" in t
+        or "6,7" in raw_c
+        or "p(6)=p(7)" in c
+        or "p6=p7" in c
+    )
+
+    mentions_max_context = (
+        "maximiz" in t
+        or "maximo" in t
+        or "máximo" in solution.lower()
+        or "maxima" in t
+        or "máxima" in solution.lower()
+        or "maioresvalores" in c
+        or "maior valor" in t
+        or "empata" in t
+        or "empate" in t
+        or "p(6)=p(7)" in c
+        or "sobe" in t
+        or "cresce" in t
+        or "cai" in t
+        or "decresce" in t
+        or "depois cai" in t
+        or "depoisdecresce" in c
+    )
+
     has_ratio_analysis = (
         has_ratio_formula
         and (
-            "n<6" in c
-            or "n = 6" in t
+            mentions_max_context
+            or mentions_pair_6_7
+            or "n<6" in c
             or "n=6" in c
-            or "quando n = 6" in t
-        )
-        and (
-            "n>6" in c
-            or "depoisdecresce" in c
-            or "decresce" in t
-            or "menorque1" in c
+            or "n>6" in c
+            or ">1" in c
             or "<1" in c
         )
     )
 
-    has_maximizers = (
-        (
-            "n=6en=7" in c
-            or "n=6e7" in c
-            or "6e7" in c
-            or "6 e 7" in t
-            or "n sao 6 e 7" in t
-            or "n são 6 e 7" in solution.lower()
-        )
-        and (
-            "maximiz" in t
-            or "maxima" in t
-            or "máxima" in solution.lower()
-            or "valoresden" in c
-            or "probabilidade cresce" in t
-            or "depois decresce" in t
-            or (
-                ("maiorque1" in c or "maior que 1" in t or ">1" in c)
-                and ("igual a 1" in t or "igualque1" in c or "=1" in c)
-                and ("menorque1" in c or "menor que 1" in t or "<1" in c)
-            )
-        )
-    )
+    has_maximizers = mentions_pair_6_7 and mentions_max_context
 
     final_answer = (
-        "n=6en=7" in c
-        or "n=6e7" in c
-        or "valoresden sao6e7" in c
-        or "valoresden sao6e7" in t
-        or "valores de n sao 6 e 7" in t
-        or "valores de n são 6 e 7" in solution.lower()
-        or "sao 6 e 7" in t
-        or "são 6 e 7" in solution.lower()
-        or "6 e 7" in t
+        mentions_pair_6_7
+        and (
+            "resposta" in t
+            or "portanto" in t
+            or "logo" in t
+            or "concl" in t
+            or "valoresden" in c
+            or "valores de n" in t
+            or mentions_max_context
+        )
     )
 
     wrong_answer = (
         "n=4" in c
         or "n=5" in c
         or "n=8" in c
+        or "n=6apenas" in c
+        or "n=6 apenas" in t
     ) and not (
-        "n=6" in c and "n=7" in c
+        "n=7" in c
+        or "n=7" in raw_c
+        or "6 e 7" in t
+        or "6,7" in raw_c
     )
 
     if wrong_answer:
@@ -190,7 +263,6 @@ def detect_features(solution: str) -> Dict[str, bool]:
         "has_maximizers": has_maximizers,
         "final_answer": final_answer,
     }
-
 
 def extract_f2q6_formal_steps(solution: str) -> List[FormalStep]:
     features = detect_features(solution)
@@ -211,7 +283,7 @@ def extract_f2q6_formal_steps(solution: str) -> List[FormalStep]:
             )
         )
 
-    if features["has_ratio_analysis"]:
+    if features["has_ratio_formula"] or features["has_ratio_analysis"]:
         steps.append(
             FormalStep(
                 id="f2q6_s2_ratio_comparison",
