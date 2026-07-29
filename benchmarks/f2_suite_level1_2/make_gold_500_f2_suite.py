@@ -1126,10 +1126,118 @@ def normalize_level1_gold_rows_f2q3() -> None:
         row["expected_formal_steps"] = _join_ordered(steps, F2Q3_STEP_ORDER)
 
 
+
+F2Q1_CLAIM_ORDER = [
+    "power_reductions",
+    "reduced_polynomial_form",
+    "coefficient_system",
+    "final_answer",
+]
+
+F2Q1_STEP_ORDER = [
+    "f2q1_power_reductions",
+    "f2q1_reduced_form",
+    "f2q1_coefficient_solution",
+]
+
+
+def _norm_f2q1_text(solution: str) -> tuple[str, str]:
+    t = solution.lower()
+    t = t.replace("²", "^2").replace("³", "^3")
+    t = t.replace("⁶", "^6").replace("⁷", "^7")
+    t = t.replace("¹⁴", "^14").replace("⁵⁷", "^57")
+    t = t.replace("−", "-").replace("–", "-")
+    t = t.replace("≡", "=").replace(",", ".")
+    c = "".join(t.split())
+    return t, c
+
+
+def normalize_level1_gold_rows_f2q1() -> None:
+    """Corrige inconsistências do gold sintético da F2Q1.
+
+    Claims canônicos:
+    - power_reductions exige x^57=-1, x^14=x-1 e x^7=x.
+    - reduced_polynomial_form exige resto (a+b)x-a.
+    - coefficient_system exige a+b=2 e -a=1.
+    - final_answer exige a=-1, b=3 em contexto matemático válido.
+    """
+    for row in ROWS:
+        if row.get("problem_id") != "ITA2025F2Q1":
+            continue
+
+        solution = row.get("solution", "")
+        t, c = _norm_f2q1_text(solution)
+
+        claims = _split_pipe(row.get("expected_claims", ""))
+        steps = _split_pipe(row.get("expected_formal_steps", ""))
+
+        wrong_reductions = (
+            "x^3=1" in c
+            or "x3=1" in c
+            or "x^57=1" in c
+            or "x57=1" in c
+            or "x^14=1-x" in c
+            or "x14=1-x" in c
+            or "x^7=-x" in c
+            or "x7=-x" in c
+        )
+
+        wrong_final = (
+            "a=1" in c and "b=1" in c
+        ) or (
+            "a=3" in c and "b=-1" in c
+        )
+
+        if wrong_reductions:
+            claims.discard("power_reductions")
+            claims.discard("reduced_polynomial_form")
+            claims.discard("coefficient_system")
+            claims.discard("final_answer")
+            steps.discard("f2q1_power_reductions")
+            steps.discard("f2q1_reduced_form")
+            steps.discard("f2q1_coefficient_solution")
+
+        # Erro conceitual: usar x^2=x-1 como identidade real global não
+        # constitui redução correta das potências módulo x^2-x+1.
+        if (
+            "como x^2=x-1" in t
+            and ("todo numero real" in t or "todo número real" in t or "todonumeroreal" in c)
+        ):
+            claims.discard("power_reductions")
+            steps.discard("f2q1_power_reductions")
+
+        # Caso que apresenta apenas o resto reduzido e a resposta final,
+        # sem comparação explícita com 2x+1 e sem sistema a+b=2, -a=1.
+        # Isso não deve contar como coefficient_system no Nível 1.
+        lacks_coefficient_comparison = (
+            "coefficient_system" in claims
+            and "2x+1" not in c
+            and "a+b=2" not in c
+            and "b+a=2" not in c
+            and "-a=1" not in c
+            and "compar" not in t
+            and "igualando" not in t
+            and "coeficient" not in t
+        )
+
+        if lacks_coefficient_comparison:
+            claims.discard("coefficient_system")
+            steps.discard("f2q1_coefficient_solution")
+
+        if wrong_final:
+            claims.discard("coefficient_system")
+            claims.discard("final_answer")
+            steps.discard("f2q1_coefficient_solution")
+
+        row["expected_claims"] = _join_ordered(claims, F2Q1_CLAIM_ORDER)
+        row["expected_formal_steps"] = _join_ordered(steps, F2Q1_STEP_ORDER)
+
+
 def main() -> None:
     normalize_level1_gold_rows()
     normalize_level1_gold_rows_f2q6()
     normalize_level1_gold_rows_f2q3()
+    normalize_level1_gold_rows_f2q1()
 
     OUT.parent.mkdir(parents=True, exist_ok=True)
 

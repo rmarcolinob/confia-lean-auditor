@@ -103,13 +103,66 @@ def detect_features(solution: str) -> Dict[str, bool]:
         )
     )
 
+    # Fórmulas conceitualmente erradas. Cuidado:
+    # - a solução correta pode conter (1/2)^(n-1) * (1/2);
+    # - a razão correta contém C(n,3) no numerador de P(N=n+1).
+    # Portanto, só bloqueamos como fórmula errada quando não há evidência
+    # explícita da fórmula correta P(N=n)=C(n-1,3)/2^n.
+    has_final_correct_denominator = (
+        "/2^n" in c
+        or "/2^n" in raw_c
+        or "(1/2)^n" in c
+        or "2^-n" in c
+        or "2^{-n}" in c
+    )
+
+    has_correct_factorized_probability = (
+        "c(n-1.3)" in c
+        and (
+            "(1/2)^(n-1)*(1/2)" in c
+            or "(1/2)^(n-1)(1/2)" in c
+            or ("(1/2)^(n-1)" in c and "*(1/2)" in c)
+        )
+    )
+
+    has_explicit_canonical_probability = (
+        "c(n-1.3)/2^n" in c
+        or "c(n-1,3)/2^n" in raw_c
+        or "binom(n-1.3)/2^n" in c
+        or "binom(n-1,3)/2^n" in raw_c
+        or (
+            "c(n-1.3)" in c
+            and has_final_correct_denominator
+        )
+        or (
+            "binom" in c_no_braces
+            and "n-1" in c_no_braces
+            and "3" in c_no_braces
+            and (
+                "2^-n" in c_no_braces
+                or "2^{-n}" in c_no_braces
+                or "(1/2)^n" in c_no_braces
+                or "/2^n" in c_no_braces
+            )
+        )
+    )
+
+    has_correct_probability_evidence = (
+        explicit_correct_probability_formula
+        or has_explicit_canonical_probability
+        or has_correct_factorized_probability
+    )
+
     wrong_probability_formula = (
-        "c(n.3)" in c
-        or "c(n,3)" in raw_c
-        or "c(n.4)" in c
-        or "c(n,4)" in raw_c
-        or "2^(n-1)" in c
-        or "2^(n-1)" in raw_c
+        not has_correct_probability_evidence
+        and (
+            "c(n.3)" in c
+            or "c(n,3)" in raw_c
+            or "c(n.4)" in c
+            or "c(n,4)" in raw_c
+            or "2^(n-1)" in c
+            or "2^(n-1)" in raw_c
+        )
     )
 
     mentions_binomial_structure = (

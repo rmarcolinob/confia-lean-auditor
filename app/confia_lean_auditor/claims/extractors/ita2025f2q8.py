@@ -52,12 +52,32 @@ def detect_features(solution: str) -> Dict[str, bool]:
     t = normalize(solution)
     c = compact(t)
 
+    keyword_soup = (
+        "matrizdiferencadeterminantesoma1013formulakcoluna" in c
+        or "matrizdiferencadetsoma1013formulakcoluna" in c
+    )
+
     mentions_column_difference = (
-        "diferenc" in t
-        or "c_j-c_{j-1}" in c
-        or "cj-cj-1" in c
-        or "colunaj-colunaj-1" in c
-        or "colunas" in t and ("substitu" in t or "operacoes" in t or "operações" in solution.lower())
+        not keyword_soup
+        and (
+            "diferencassucessivasdecolunas" in c
+            or "diferencasdecolunas" in c
+            or "diferencadecolunas" in c
+            or "facodiferencasdecolunas" in c
+            or "transformacaoporcolunas" in c
+            or "c_j-c_{j-1}" in c
+            or "cj-cj-1" in c
+            or "colunaj-colunaj-1" in c
+            or (
+                "colunas" in t
+                and (
+                    "substitu" in t
+                    or "operac" in t
+                    or "diferenc" in t
+                    or "transformac" in t
+                )
+            )
+        )
     )
 
     mentions_determinant_formula = (
@@ -66,7 +86,7 @@ def detect_features(solution: str) -> Dict[str, bool]:
         or "det(a_k)=(-1)^{k-1}k" in c
         or "(-1)^(k-1)*k" in c
         or "(-1)^(k-1)k" in c
-        or "det(a" in c and "alternad" in t and "k" in c
+        or ("det(a" in c and "alternad" in t and "k" in c)
     )
 
     mentions_transformed_shape = (
@@ -74,7 +94,7 @@ def detect_features(solution: str) -> Dict[str, bool]:
         or "1,2,...,k" in c
         or "1,2,...,k" in t
         or "acima da diagonal" in t
-        or "expandindo" in t and "ultima linha" in t
+        or ("expandindo" in t and "ultima linha" in t)
         or "cofator" in t
     )
 
@@ -82,37 +102,131 @@ def detect_features(solution: str) -> Dict[str, bool]:
         mentions_column_difference and mentions_transformed_shape and "det" in t
     )
 
+    unable_to_finish_sum = (
+        "naoconseguiterminarasoma" in c
+        or "naoconseguiterminar" in c
+        or "nao consegui terminar a soma" in t
+        or "não consegui terminar a soma" in solution.lower()
+    )
+
+    # Soma alternada exige evidência de soma, agrupamento ou sequência alternada.
+    # A fórmula det(A_k)=(-1)^(k-1)k sozinha não basta.
     has_alternating_sum = (
-        "1-2+3-4" in c
-        or "1 - 2 + 3 - 4" in t
-        or "soma alternada" in t
-        or "alternad" in t
-        or "(-1)^(k-1)k" in c
+        not unable_to_finish_sum
+        and not keyword_soup
+        and (
+            "1-2+3-4" in c
+            or "1 - 2 + 3 - 4" in t
+            or "somaalternada" in c
+            or ("alternad" in t and "soma" in t)
+            or ("agrupei" in t and "par" in t)
+            or ("agrup" in t and "par" in t)
+            or ("2025-1013=1012" in c)
+        )
     )
 
-    has_final_answer = (
-        "1013" in c
-        or "mil e treze" in t
+    wrong_final_context = (
+        "-1013" in c
+        or "= -1013" in t
+        or "=-1013" in c
+        or "2025-1013=1012" in c
+        or ("=1012" in c and "=1013" not in c)
+        or "2051325" in c
+        or "1+2+...+2025" in c
+        or "1 + 2 + ... + 2025" in t
+        or "2025*2026/2" in c
     )
 
-    wrong_answer = (
+    answer_only_like = (
+        len(c) <= 40
+        and (
+            c in {"arespostae1013.", "arespostae1013", "resposta1013", "1013"}
+            or c.startswith("arespostae1013")
+            or c.startswith("resposta:1013")
+            or c.startswith("resultado1013")
+        )
+    )
+
+    explicit_final_1013 = (
+        not wrong_final_context
+        and not keyword_soup
+        and (
+            answer_only_like
+            or (
+                "1013" in c
+                and (
+                    "resposta" in t
+                    or "resultado" in t
+                    or "valor final" in t
+                    or "valorfinal" in c
+                    or "conclu" in t
+                    or "logo" in t
+                    or "portanto" in t
+                    or "soma dos det" in t
+                    or "somadosdet" in c
+                    or "soma=1013" in c
+                    or "total=1013" in c
+                    or ("=1013" in c and ("soma" in t or "agrup" in t or "2025" in c))
+                )
+            )
+            or (
+                "mil e treze" in t
+                and (
+                    "resposta" in t
+                    or "resultado" in t
+                    or "valor final" in t
+                    or "conclu" in t
+                    or "logo" in t
+                    or "portanto" in t
+                )
+            )
+        )
+    )
+
+    # O passo formal f2q8_coldiff_det_one deve aparecer quando há uma
+    # operação concreta de diferenças/operações de colunas. Não deve aparecer
+    # para menção vaga do tipo "a matriz pode ser simplificada por diferenças".
+    active_column_operation = (
+        "facodiferencasdecolunas" in c
+        or "façodiferencasdecolunas" in c
+        or "facodiferencassucessivasdecolunas" in c
+        or "operacoesdecolunas" in c
+        or "operaçõesdecolunas" in solution.lower().replace(" ", "")
+        or "substituocada coluna" in t
+        or "substituocadacoluna" in c
+        or "c_j-c_{j-1}" in c
+        or "cj-cj-1" in c
+    )
+
+    coldiff_det_one = (
+        mentions_column_difference
+        and not keyword_soup
+        and (
+            has_determinant_formula
+            or active_column_operation
+        )
+    )
+
+    wrong_global_sum = (
         "2051325" in c
         or "1+2+...+2025" in c
         or "1 + 2 + ... + 2025" in t
         or "2025*2026/2" in c
     ) and "1013" not in c
 
-    if wrong_answer:
-        has_final_answer = False
+    if wrong_global_sum:
+        explicit_final_1013 = False
         has_alternating_sum = False
         has_determinant_formula = False
         mentions_column_difference = False
+        coldiff_det_one = False
 
     return {
         "matrix_transformation": mentions_column_difference,
+        "coldiff_det_one": coldiff_det_one,
         "determinant_formula": has_determinant_formula,
         "alternating_sum": has_alternating_sum,
-        "final_answer": has_final_answer,
+        "final_answer": explicit_final_1013,
     }
 
 
@@ -134,6 +248,8 @@ def extract_f2q8_formal_steps(solution: str) -> List[FormalStep]:
                 supports_rubric_items=["matrix_transformation"],
             )
         )
+
+    if features["coldiff_det_one"]:
         steps.append(
             FormalStep(
                 id="f2q8_s2_coldiff_det_one",
@@ -179,7 +295,6 @@ def extract_f2q8_formal_steps(solution: str) -> List[FormalStep]:
         )
 
     return steps
-
 
 def extract_claims_ita2025f2q8(solution: str) -> ClaimExtraction:
     features = detect_features(solution)
