@@ -151,6 +151,11 @@ def detect_features(solution: str) -> Dict[str, bool]:
             or "valoresden" in c
             or "probabilidade cresce" in t
             or "depois decresce" in t
+            or (
+                ("maiorque1" in c or "maior que 1" in t or ">1" in c)
+                and ("igual a 1" in t or "igualque1" in c or "=1" in c)
+                and ("menorque1" in c or "menor que 1" in t or "<1" in c)
+            )
         )
     )
 
