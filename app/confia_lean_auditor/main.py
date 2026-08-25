@@ -6,8 +6,15 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 from fastapi import FastAPI, HTTPException
+from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
 
 from confia_lean_auditor.claims.extract_claims import extract_claims
+from confia_lean_auditor.core.problem_catalog import (
+    ProblemCatalogError,
+    get_catalog_example,
+    list_problem_catalog,
+)
 from confia_lean_auditor.core.paths import InvalidProblemId, get_problem_dir, get_repo_root
 from confia_lean_auditor.core.problem_assets import ProblemAssetValidationError, validate_problem_assets
 from confia_lean_auditor.core.schemas import AuditRequest, AuditResponse, LeanCertificate
@@ -28,10 +35,17 @@ from confia_lean_auditor.student_claims.registry import extract_student_claims
 
 
 app = FastAPI(title="ConfIA Lean Auditor", version="0.4.0")
+STATIC_DIR = Path(__file__).resolve().parent / "static"
+app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
 
 
 def repo_root() -> Path:
     return get_repo_root()
+
+
+@app.get("/", include_in_schema=False)
+def index():
+    return FileResponse(STATIC_DIR / "index.html")
 
 
 @app.get("/health")
@@ -41,6 +55,19 @@ def health():
         "service": "ConfIA Lean Auditor",
         "version": "0.4.0"
     }
+
+
+@app.get("/problems")
+def problems():
+    return list_problem_catalog(repo_root())
+
+
+@app.get("/problems/{problem_id}/examples/{example_key}")
+def problem_example(problem_id: str, example_key: str):
+    try:
+        return get_catalog_example(repo_root(), problem_id, example_key)
+    except ProblemCatalogError as exc:
+        raise HTTPException(status_code=404, detail=str(exc)) from exc
 
 
 @app.post("/audit", response_model=AuditResponse)

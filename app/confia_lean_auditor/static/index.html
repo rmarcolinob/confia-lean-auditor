@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>ConfIA MVP</title>
+    <link rel="stylesheet" href="/static/styles.css">
+  </head>
+  <body>
+    <main id="app-root" class="shell">
+      <section class="workspace">
+        <header class="topbar">
+          <div>
+            <p class="eyebrow">MVP ITA 2025</p>
+            <h1>ConfIA</h1>
+          </div>
+          <div id="service-status" class="status-pill">Pronto</div>
+        </header>
+
+        <section class="controls" aria-label="Seleção de questão e exemplo">
+          <label>
+            Questão
+            <select id="problem-select"></select>
+          </label>
+
+          <label>
+            Exemplo
+            <select id="example-select"></select>
+          </label>
+
+          <button id="load-example" type="button">Carregar exemplo</button>
+        </section>
+
+        <label class="solution-area">
+          Solução
+          <textarea id="solution-input" spellcheck="false"></textarea>
+        </label>
+
+        <div class="actions">
+          <button id="audit-button" type="button">Auditar</button>
+        </div>
+      </section>
+
+      <section id="result-panel" class="result-panel" aria-live="polite">
+        <div class="empty-state">
+          Selecione uma questão, carregue um exemplo ou cole uma solução para começar.
+        </div>
+      </section>
+    </main>
+
+    <script src="/static/app.js"></script>
+  </body>
+</html>
