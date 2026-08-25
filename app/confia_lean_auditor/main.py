@@ -15,7 +15,11 @@ from confia_lean_auditor.lean.build_attempt import build_attempt
 from confia_lean_auditor.lean.formal_step_evaluator import evaluate_formal_steps
 from confia_lean_auditor.lean.microclaim_evaluator import evaluate_microclaims
 from confia_lean_auditor.lean.run_lean import run_lean_file
-from confia_lean_auditor.reports.report_builder import build_feedback, verdict_from_score
+from confia_lean_auditor.reports.report_builder import (
+    build_feedback,
+    build_pedagogical_report,
+    verdict_from_score,
+)
 from confia_lean_auditor.rubric.rubric_evaluator import evaluate_rubric
 from confia_lean_auditor.rubric.adjusters.registry import apply_student_claim_adjustments
 from confia_lean_auditor.llm.formal_step_extractor import FormalStepExtractionError
@@ -138,6 +142,16 @@ def audit(req: AuditRequest) -> AuditResponse:
 
     verdict = verdict_from_score(rubric.score, rubric.max_score)
     feedback = build_feedback(rubric, lean_certificate, microclaims)
+    pedagogical_report = build_pedagogical_report(
+        score=rubric.score,
+        max_score=rubric.max_score,
+        verdict=verdict,
+        rubric=rubric,
+        student_claims=student_claims_payload,
+        student_claim_checks=student_claim_checks_payload,
+        microclaims=microclaims,
+        artifact_dir=str(artifact_dir),
+    )
 
 
     response = AuditResponse(
@@ -153,6 +167,7 @@ def audit(req: AuditRequest) -> AuditResponse:
         student_claims=student_claims_payload,
         student_claim_checks=student_claim_checks_payload,
         feedback=feedback,
+        pedagogical_report=pedagogical_report,
         artifact_dir=str(artifact_dir),
     )
 

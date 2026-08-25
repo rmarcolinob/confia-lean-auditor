@@ -99,6 +99,27 @@ class MicroclaimResult(BaseModel):
     supports_rubric_items: List[str] = Field(default_factory=list)
 
 
+class PedagogicalEvidenceItem(BaseModel):
+    id: str
+    title: str
+    result: str
+    evidence: Optional[str] = None
+    reliability: str
+    explanation: str
+
+
+class PedagogicalReport(BaseModel):
+    summary: str
+    result: str
+    score: float
+    max_score: float
+    verdict: str
+    reliability: str
+    evidence_items: List[PedagogicalEvidenceItem] = Field(default_factory=list)
+    attention_points: List[str] = Field(default_factory=list)
+    technical_record_available: bool = False
+
+
 class AuditResponse(BaseModel):
     problem_id: str
     score: float
@@ -113,4 +134,5 @@ class AuditResponse(BaseModel):
     student_claims: List[Dict[str, Any]] = Field(default_factory=list)
     student_claim_checks: List[Dict[str, Any]] = Field(default_factory=list)
     feedback: str
+    pedagogical_report: Optional[PedagogicalReport] = None
     artifact_dir: Optional[str] = None
