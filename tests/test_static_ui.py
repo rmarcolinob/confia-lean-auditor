@@ -34,6 +34,9 @@ def test_root_serves_mvp_html():
     assert response.status_code == 200
     assert "ConfIA" in response.text
     assert "app-root" in response.text
+    assert "problem-statement" in response.text
+    assert "problem-title" in response.text
+    assert "problem-statement-text" in response.text
 
 
 def test_problems_endpoint_lists_10_mvp_questions_with_examples():
@@ -43,11 +46,25 @@ def test_problems_endpoint_lists_10_mvp_questions_with_examples():
     problems = response.json()
 
     assert {problem["id"] for problem in problems} == EXPECTED_PROBLEM_IDS
+    assert {problem["problem_id"] for problem in problems} == EXPECTED_PROBLEM_IDS
+    assert len(problems) == 10
 
     for problem in problems:
+        assert problem["problem_id"]
         assert problem["title"]
+        assert problem["statement"]
         examples = problem["examples"]
         assert {example["key"] for example in examples} == EXPECTED_EXAMPLE_KEYS
+
+
+def test_f2q1_catalog_includes_non_empty_statement():
+    response = CLIENT.get("/problems")
+
+    assert response.status_code == 200
+    problems = response.json()
+    f2q1 = next(problem for problem in problems if problem["problem_id"] == "ITA2025F2Q1")
+
+    assert f2q1["statement"]
 
 
 def test_problem_example_endpoint_returns_solution_text():

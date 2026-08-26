@@ -85,21 +85,43 @@ class ProblemCatalogError(ValueError):
     pass
 
 
-def _problem_title(repo_root: Path, problem_id: str) -> str:
-    path = repo_root / "problems" / problem_id / "problem.json"
+def _problem_path(repo_root: Path, problem_id: str) -> Path:
+    if problem_id not in CATALOG:
+        raise ProblemCatalogError("Problem not available in MVP catalog: " + problem_id)
+
+    problems_dir = (repo_root / "problems").resolve()
+    path = (problems_dir / problem_id / "problem.json").resolve()
+    if not path.is_relative_to(problems_dir):
+        raise ProblemCatalogError("Invalid problem path: " + problem_id)
+    return path
+
+
+def _infer_phase(problem_id: str) -> int:
+    return 2 if "F2" in problem_id else 1
+
+
+def _problem_metadata(repo_root: Path, problem_id: str) -> Dict[str, Any]:
+    path = _problem_path(repo_root, problem_id)
     data = json.loads(path.read_text(encoding="utf-8"))
     title = data.get("title")
-    return title if isinstance(title, str) else problem_id
+    statement = data.get("statement")
+    return {
+        "id": problem_id,
+        "problem_id": problem_id,
+        "title": title if isinstance(title, str) else problem_id,
+        "statement": statement if isinstance(statement, str) else "",
+        "phase": _infer_phase(problem_id),
+    }
 
 
 def list_problem_catalog(repo_root: Path) -> List[Dict[str, Any]]:
     problems: List[Dict[str, Any]] = []
 
     for problem_id, examples in CATALOG.items():
+        metadata = _problem_metadata(repo_root, problem_id)
         problems.append(
             {
-                "id": problem_id,
-                "title": _problem_title(repo_root, problem_id),
+                **metadata,
                 "examples": [
                     {
                         "key": key,

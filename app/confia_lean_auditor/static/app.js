@@ -5,6 +5,8 @@ const auditButton = document.querySelector("#audit-button");
 const solutionInput = document.querySelector("#solution-input");
 const resultPanel = document.querySelector("#result-panel");
 const serviceStatus = document.querySelector("#service-status");
+const problemTitle = document.querySelector("#problem-title");
+const problemStatementText = document.querySelector("#problem-statement-text");
 
 let problems = [];
 
@@ -14,7 +16,7 @@ function setStatus(text, kind = "idle") {
 }
 
 function selectedProblem() {
-  return problems.find((problem) => problem.id === problemSelect.value);
+  return problems.find((problem) => (problem.problem_id || problem.id) === problemSelect.value);
 }
 
 function setBusy(isBusy) {
@@ -53,17 +55,31 @@ function renderExamples() {
   }
 }
 
+function renderProblemStatement() {
+  const problem = selectedProblem();
+  if (!problem) {
+    problemTitle.textContent = "Selecione uma questão";
+    problemStatementText.textContent = "O enunciado da questão selecionada aparecerá aqui.";
+    return;
+  }
+
+  problemTitle.textContent = problem.title || problem.problem_id || problem.id;
+  problemStatementText.textContent = problem.statement || "Enunciado não disponível.";
+}
+
 function renderProblems() {
   clearNode(problemSelect);
 
   for (const problem of problems) {
     const option = document.createElement("option");
-    option.value = problem.id;
-    option.textContent = `${problem.id} - ${problem.title}`;
+    const problemId = problem.problem_id || problem.id;
+    option.value = problemId;
+    option.textContent = `${problemId} - ${problem.title}`;
     problemSelect.appendChild(option);
   }
 
   renderExamples();
+  renderProblemStatement();
 }
 
 function resultLabel(result) {
@@ -279,7 +295,10 @@ async function auditCurrentSolution() {
   }
 }
 
-problemSelect.addEventListener("change", renderExamples);
+problemSelect.addEventListener("change", () => {
+  renderExamples();
+  renderProblemStatement();
+});
 loadExampleButton.addEventListener("click", loadSelectedExample);
 auditButton.addEventListener("click", auditCurrentSolution);
 
