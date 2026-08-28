@@ -379,8 +379,14 @@ theorem final_answer_claim : finalAnswerClaim := by
 def strongF2Q8Claim : Prop :=
   determinantFormulaClaim ∧ finalAnswerClaim
 
+def StrongF2Q8Claim : Prop :=
+  strongF2Q8Claim
+
 theorem strong_f2q8_claim : strongF2Q8Claim := by
   exact ⟨determinant_formula_claim, final_answer_claim⟩
+
+theorem strong_f2q8_claim_standard : StrongF2Q8Claim := by
+  exact strong_f2q8_claim
 
 end
 

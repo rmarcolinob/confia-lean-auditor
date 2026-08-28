@@ -3,9 +3,6 @@ from __future__ import annotations
 from typing import List
 
 from confia_lean_auditor.student_claims.schemas import StudentClaim, StudentClaimCheck
-from confia_lean_auditor.lean.student_claim_checker import (
-    check_student_claims as check_f2q8_student_claims_legacy,
-)
 from confia_lean_auditor.lean.student_claim_checkers.ita2025f2q1 import (
     check_f2q1_student_claims,
 )
@@ -17,6 +14,9 @@ from confia_lean_auditor.lean.student_claim_checkers.ita2025f2q5 import (
 )
 from confia_lean_auditor.lean.student_claim_checkers.ita2025f2q6 import (
     check_f2q6_student_claims,
+)
+from confia_lean_auditor.lean.student_claim_checkers.ita2025f2q8 import (
+    check_f2q8_student_claims,
 )
 
 
@@ -30,7 +30,7 @@ def check_student_claims_for_problem(
         return []
 
     if problem_id == "ITA2025F2Q8":
-        return check_f2q8_student_claims_legacy(
+        return check_f2q8_student_claims(
             student_claims,
             run_id=run_id,
         )
