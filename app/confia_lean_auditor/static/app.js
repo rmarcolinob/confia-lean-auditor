@@ -84,12 +84,34 @@ function renderProblems() {
 
 function resultLabel(result) {
   const labels = {
-    correto: "Correto",
-    parcialmente_correto: "Parcialmente correto",
-    insuficiente: "Insuficiente",
-    incorreto: "Incorreto",
+    correto: "correto",
+    parcialmente_correto: "parcialmente correto",
+    insuficiente: "insuficiente",
+    incorreto: "incorreto",
   };
   return labels[result] || result || "Não avaliado";
+}
+
+function reliabilityKind(text) {
+  const normalized = (text || "").toLowerCase();
+  if (normalized.includes("alta")) {
+    return "high";
+  }
+  if (normalized.includes("média") || normalized.includes("media")) {
+    return "medium";
+  }
+  if (normalized.includes("baixa")) {
+    return "low";
+  }
+  return "unknown";
+}
+
+function makeBadge(text, kind) {
+  const badge = document.createElement("span");
+  badge.className = "badge";
+  badge.dataset.kind = kind || "neutral";
+  badge.textContent = text;
+  return badge;
 }
 
 function renderEvidenceItems(items) {
@@ -117,7 +139,7 @@ function renderEvidenceItems(items) {
     const header = document.createElement("div");
     header.className = "evidence-header";
     appendTextElement(header, "strong", "evidence-title", item.title || "Evidência");
-    appendTextElement(header, "span", "mini-pill", item.result || "avaliada");
+    header.appendChild(makeBadge(item.result || "avaliada", item.result || "neutral"));
     article.appendChild(header);
 
     if (item.evidence) {
@@ -125,7 +147,10 @@ function renderEvidenceItems(items) {
     }
 
     appendTextElement(article, "p", "evidence-explanation", item.explanation || "");
-    appendTextElement(article, "p", "reliability-line", item.reliability || "não avaliada");
+    const reliability = appendTextElement(article, "p", "reliability-line", "");
+    reliability.appendChild(
+      makeBadge(item.reliability || "não avaliada", reliabilityKind(item.reliability))
+    );
     list.appendChild(article);
   }
 
@@ -190,14 +215,32 @@ function renderReport(data) {
   header.className = "result-summary";
   header.dataset.result = report.result;
 
-  appendTextElement(header, "p", "eyebrow", "Resultado");
-  appendTextElement(header, "h2", "result-title", resultLabel(report.result));
+  const titleRow = document.createElement("div");
+  titleRow.className = "result-heading";
+  const titleCopy = document.createElement("div");
+  appendTextElement(titleCopy, "p", "eyebrow", "Auditoria CONFIA");
+  appendTextElement(titleCopy, "h2", "result-title", "Relatório pedagógico");
+  titleRow.appendChild(titleCopy);
+  titleRow.appendChild(makeBadge(resultLabel(report.result), report.result || "neutral"));
+  header.appendChild(titleRow);
+
   appendTextElement(header, "p", "summary-text", report.summary || "");
 
   const metrics = document.createElement("div");
   metrics.className = "metrics";
-  appendTextElement(metrics, "div", "metric", `${report.score} / ${report.max_score}`);
-  appendTextElement(metrics, "div", "metric", report.reliability || "não avaliada");
+  const scoreMetric = appendTextElement(metrics, "div", "metric", "");
+  appendTextElement(scoreMetric, "span", "metric-label", "Pontuação");
+  appendTextElement(scoreMetric, "strong", "metric-value", `${report.score} / ${report.max_score}`);
+
+  const reliabilityMetric = appendTextElement(metrics, "div", "metric", "");
+  appendTextElement(reliabilityMetric, "span", "metric-label", "Confiabilidade");
+  reliabilityMetric.appendChild(
+    makeBadge(report.reliability || "não avaliada", reliabilityKind(report.reliability))
+  );
+
+  const resultMetric = appendTextElement(metrics, "div", "metric", "");
+  appendTextElement(resultMetric, "span", "metric-label", "Resultado");
+  resultMetric.appendChild(makeBadge(resultLabel(report.result), report.result || "neutral"));
   header.appendChild(metrics);
 
   resultPanel.appendChild(header);

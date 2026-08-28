@@ -32,7 +32,14 @@ def test_root_serves_mvp_html():
     response = CLIENT.get("/")
 
     assert response.status_code == 200
-    assert "ConfIA" in response.text
+    assert "CONFIA" in response.text
+    assert "Auditoria matemática confiável" in response.text
+    assert "Da solução discursiva à evidência verificável" in response.text
+    assert "Auditar solução" in response.text
+    assert "Enunciado" in response.text
+    assert "Aluno" in response.text
+    assert "Professor" in response.text
+    assert "Gestão" in response.text
     assert "app-root" in response.text
     assert "problem-statement" in response.text
     assert "problem-title" in response.text

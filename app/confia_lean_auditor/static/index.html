@@ -3,19 +3,50 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>ConfIA MVP</title>
+    <title>CONFIA MVP</title>
     <link rel="stylesheet" href="/static/styles.css">
   </head>
   <body>
-    <main id="app-root" class="shell">
-      <section class="workspace">
-        <header class="topbar">
+    <div class="brand-strip" aria-hidden="true">
+      <span class="strip-blue"></span>
+      <span class="strip-yellow"></span>
+      <span class="strip-red"></span>
+      <span class="strip-green"></span>
+    </div>
+
+    <header class="institutional-header">
+      <div class="header-copy">
+        <p class="eyebrow">MVP ITA 2025</p>
+        <h1>CONFIA</h1>
+        <p class="subtitle">Auditoria matemática confiável</p>
+        <p class="tagline">Da solução discursiva à evidência verificável</p>
+      </div>
+      <div id="service-status" class="status-pill">Pronto</div>
+    </header>
+
+    <main id="app-root" class="shell" aria-label="Interface MVP CONFIA">
+      <aside class="context-panel" aria-label="Uso e contexto">
+        <article class="audience-card student-card">
+          <p class="audience-label">Aluno</p>
+          <p>feedback claro</p>
+        </article>
+        <article class="audience-card teacher-card">
+          <p class="audience-label">Professor</p>
+          <p>evidências e rubrica</p>
+        </article>
+        <article class="audience-card management-card">
+          <p class="audience-label">Gestão</p>
+          <p>rastreabilidade e confiabilidade</p>
+        </article>
+      </aside>
+
+      <section class="workspace" aria-label="Enunciado e solução">
+        <div class="panel-heading">
           <div>
-            <p class="eyebrow">MVP ITA 2025</p>
-            <h1>ConfIA</h1>
+            <p class="eyebrow">Questão e solução</p>
+            <h2>Enunciado + solução</h2>
           </div>
-          <div id="service-status" class="status-pill">Pronto</div>
-        </header>
+        </div>
 
         <section class="controls" aria-label="Seleção de questão e exemplo">
           <label>
@@ -23,12 +54,14 @@
             <select id="problem-select"></select>
           </label>
 
-          <label>
-            Exemplo
-            <select id="example-select"></select>
-          </label>
+          <div class="example-controls">
+            <label>
+              Carregar exemplo para teste rápido
+              <select id="example-select"></select>
+            </label>
 
-          <button id="load-example" type="button">Carregar exemplo</button>
+            <button id="load-example" type="button">Carregar exemplo</button>
+          </div>
         </section>
 
         <section id="problem-statement" class="problem-statement" aria-live="polite">
@@ -41,17 +74,22 @@
 
         <label class="solution-area">
           Solução
-          <textarea id="solution-input" spellcheck="false"></textarea>
+          <textarea
+            id="solution-input"
+            spellcheck="false"
+            placeholder="Digite ou cole aqui a solução do estudante."
+          ></textarea>
         </label>
 
         <div class="actions">
-          <button id="audit-button" type="button">Auditar</button>
+          <button id="audit-button" type="button">Auditar solução</button>
         </div>
       </section>
 
-      <section id="result-panel" class="result-panel" aria-live="polite">
+      <section id="result-panel" class="result-panel" aria-live="polite" aria-label="Auditoria CONFIA">
         <div class="empty-state">
-          Selecione uma questão, carregue um exemplo ou cole uma solução para começar.
+          <p class="eyebrow">Auditoria CONFIA</p>
+          <p>Selecione uma questão, carregue um exemplo ou cole uma solução para começar.</p>
         </div>
       </section>
     </main>
