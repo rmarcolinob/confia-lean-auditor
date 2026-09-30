@@ -36,6 +36,15 @@ def test_root_serves_mvp_html():
     assert "Auditoria matemática confiável" in response.text
     assert "Da solução discursiva à evidência verificável" in response.text
     assert "Auditar solução" in response.text
+    assert "Área do Aluno" in response.text
+    assert "Estudar com feedback" in response.text
+    assert "Enviar solução ao professor" in response.text
+    assert "Área do Professor" in response.text
+    assert "Auditar com ConfIA" in response.text
+    assert "O ConfIA sugere uma auditoria" in response.text
+    assert "Área da Gestão" in response.text
+    assert "Aprovar correção" in response.text
+    assert "Submissões analisadas" in response.text
     assert "Enunciado" in response.text
     assert "Aluno" in response.text
     assert "Professor" in response.text

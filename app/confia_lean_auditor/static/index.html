@@ -25,72 +25,246 @@
     </header>
 
     <main id="app-root" class="shell" aria-label="Interface MVP CONFIA">
-      <aside class="context-panel" aria-label="Uso e contexto">
-        <article class="audience-card student-card">
-          <p class="audience-label">Aluno</p>
-          <p>feedback claro</p>
-        </article>
-        <article class="audience-card teacher-card">
-          <p class="audience-label">Professor</p>
-          <p>evidências e rubrica</p>
-        </article>
-        <article class="audience-card management-card">
-          <p class="audience-label">Gestão</p>
-          <p>rastreabilidade e confiabilidade</p>
-        </article>
-      </aside>
+      <nav class="area-tabs" aria-label="Áreas de trabalho CONFIA">
+        <button
+          class="tab-button is-active"
+          type="button"
+          data-tab-target="student-area"
+          aria-controls="student-area"
+          aria-selected="true"
+        >
+          Área do Aluno
+        </button>
+        <button
+          class="tab-button"
+          type="button"
+          data-tab-target="teacher-area"
+          aria-controls="teacher-area"
+          aria-selected="false"
+        >
+          Área do Professor
+        </button>
+        <button
+          class="tab-button"
+          type="button"
+          data-tab-target="management-area"
+          aria-controls="management-area"
+          aria-selected="false"
+        >
+          Área da Gestão
+        </button>
+      </nav>
 
-      <section class="workspace" aria-label="Enunciado e solução">
-        <div class="panel-heading">
-          <div>
-            <p class="eyebrow">Questão e solução</p>
-            <h2>Enunciado + solução</h2>
+      <section id="student-area" class="tab-panel is-active" aria-label="Área do Aluno">
+        <section class="workspace" aria-label="Enunciado e solução">
+          <div class="panel-heading">
+            <div>
+              <p class="eyebrow">Área do Aluno</p>
+              <h2>Enunciado + solução</h2>
+            </div>
           </div>
-        </div>
 
-        <section class="controls" aria-label="Seleção de questão e exemplo">
-          <label>
-            Questão
-            <select id="problem-select"></select>
-          </label>
+          <div class="mode-switch" aria-label="Modo de uso da Área do Aluno">
+            <button
+              id="study-mode-button"
+              class="mode-button is-active"
+              type="button"
+              data-student-mode="study"
+              aria-pressed="true"
+            >
+              Estudar com feedback
+            </button>
+            <button
+              id="submit-mode-button"
+              class="mode-button"
+              type="button"
+              data-student-mode="submit"
+              aria-pressed="false"
+            >
+              <span>Enviar ao professor</span>
+              <span class="mode-caption">Enviar solução ao professor</span>
+            </button>
+          </div>
 
-          <div class="example-controls">
+          <p id="student-mode-note" class="mode-note">
+            Use o ConfIA para estudar com feedback pedagógico imediato.
+          </p>
+
+          <section class="controls" aria-label="Seleção de questão e exemplo">
             <label>
-              Carregar exemplo para teste rápido
-              <select id="example-select"></select>
+              Questão
+              <select id="problem-select"></select>
             </label>
 
-            <button id="load-example" type="button">Carregar exemplo</button>
+            <div class="example-controls">
+              <label>
+                Carregar exemplo para teste rápido
+                <select id="example-select"></select>
+              </label>
+
+              <button id="load-example" type="button">Carregar exemplo</button>
+            </div>
+          </section>
+
+          <label id="student-name-field" class="student-name-field" hidden>
+            Nome do aluno
+            <input
+              id="student-name-input"
+              type="text"
+              autocomplete="name"
+              placeholder="Digite o nome do aluno"
+            >
+          </label>
+
+          <section id="problem-statement" class="problem-statement" aria-live="polite">
+            <p class="eyebrow">Enunciado</p>
+            <h2 id="problem-title" class="problem-title">Selecione uma questão</h2>
+            <p id="problem-statement-text" class="statement-text">
+              O enunciado da questão selecionada aparecerá aqui.
+            </p>
+          </section>
+
+          <label class="solution-area">
+            Solução
+            <textarea
+              id="solution-input"
+              spellcheck="false"
+              placeholder="Digite ou cole aqui a solução do estudante."
+            ></textarea>
+          </label>
+
+          <div class="actions">
+            <button id="audit-button" type="button">Auditar solução</button>
           </div>
         </section>
 
-        <section id="problem-statement" class="problem-statement" aria-live="polite">
-          <p class="eyebrow">Enunciado</p>
-          <h2 id="problem-title" class="problem-title">Selecione uma questão</h2>
-          <p id="problem-statement-text" class="statement-text">
-            O enunciado da questão selecionada aparecerá aqui.
-          </p>
+        <section id="result-panel" class="result-panel" aria-live="polite" aria-label="Auditoria CONFIA">
+          <div class="empty-state">
+            <p class="eyebrow">Auditoria CONFIA</p>
+            <p>Selecione uma questão, carregue um exemplo ou cole uma solução para começar.</p>
+          </div>
         </section>
-
-        <label class="solution-area">
-          Solução
-          <textarea
-            id="solution-input"
-            spellcheck="false"
-            placeholder="Digite ou cole aqui a solução do estudante."
-          ></textarea>
-        </label>
-
-        <div class="actions">
-          <button id="audit-button" type="button">Auditar solução</button>
-        </div>
       </section>
 
-      <section id="result-panel" class="result-panel" aria-live="polite" aria-label="Auditoria CONFIA">
-        <div class="empty-state">
-          <p class="eyebrow">Auditoria CONFIA</p>
-          <p>Selecione uma questão, carregue um exemplo ou cole uma solução para começar.</p>
-        </div>
+      <section id="teacher-area" class="tab-panel" aria-label="Área do Professor" hidden>
+        <section class="prototype-panel submissions-panel">
+          <div class="panel-heading">
+            <div>
+              <p class="eyebrow">Área do Professor</p>
+              <h2>Submissões para acompanhamento</h2>
+            </div>
+          </div>
+
+          <p class="prototype-note">
+            Submissões enviadas pelo aluno neste navegador aparecem aqui. Sem envios locais, use os exemplos demonstrativos.
+          </p>
+
+          <h3 class="list-title">Submissões recebidas</h3>
+          <div id="real-submission-list" class="submission-list" aria-label="Submissões recebidas"></div>
+
+          <h3 class="list-title">Exemplos demonstrativos</h3>
+          <div
+            id="demo-submission-list"
+            class="submission-list"
+            aria-label="Exemplos demonstrativos de submissões"
+          ></div>
+        </section>
+
+        <section class="prototype-panel correction-panel">
+          <div class="panel-heading">
+            <div>
+              <p class="eyebrow">Correção assistida</p>
+              <h2>Solução do aluno</h2>
+            </div>
+            <span id="teacher-submission-status" class="badge" data-kind="medium">pendente</span>
+          </div>
+
+          <p class="prototype-note">
+            O ConfIA sugere uma auditoria. A decisão pedagógica final é do professor.
+          </p>
+
+          <div class="submission-detail-grid">
+            <article class="submission-detail">
+              <span>Aluno</span>
+              <strong id="teacher-student-name">Selecione uma submissão</strong>
+            </article>
+            <article class="submission-detail">
+              <span>Questão</span>
+              <strong id="teacher-problem-title">-</strong>
+            </article>
+          </div>
+
+          <article id="teacher-solution" class="mock-solution">
+            A solução enviada aparecerá aqui.
+          </article>
+
+          <button id="teacher-audit-button" class="primary-action full-action" type="button">
+            Auditar com ConfIA
+          </button>
+
+          <section
+            id="teacher-correction-panel"
+            class="teacher-correction-panel"
+            aria-live="polite"
+            aria-label="Painel de correção do professor"
+          >
+            <div class="empty-state">
+              <p class="eyebrow">Painel de correção</p>
+              <p>Selecione uma submissão e audite com o ConfIA.</p>
+            </div>
+          </section>
+
+          <div class="teacher-actions">
+            <button id="approve-correction" class="primary-action" type="button">Aprovar correção</button>
+            <button id="request-review" class="secondary-action" type="button">Solicitar revisão</button>
+            <button id="release-feedback" class="secondary-action" type="button">Liberar devolutiva</button>
+          </div>
+          <p id="teacher-decision-message" class="decision-message" aria-live="polite"></p>
+        </section>
+      </section>
+
+      <section id="management-area" class="tab-panel" aria-label="Área da Gestão" hidden>
+        <section class="prototype-panel management-panel">
+          <div class="panel-heading">
+            <div>
+              <p class="eyebrow">Área da Gestão</p>
+              <h2>Visão demonstrativa</h2>
+            </div>
+          </div>
+
+          <p class="prototype-note">
+            Indicadores demonstrativos; dados reais exigem persistência e turmas.
+            Indicadores reais dependerão das submissões, correções docentes e persistência em banco de dados.
+          </p>
+
+          <div class="macro-grid">
+            <article class="macro-card">
+              <span>Submissões analisadas</span>
+              <strong>128</strong>
+            </article>
+            <article class="macro-card">
+              <span>Média geral</span>
+              <strong>7,4</strong>
+            </article>
+            <article class="macro-card">
+              <span>Confiabilidade alta</span>
+              <strong>82%</strong>
+            </article>
+            <article class="macro-card">
+              <span>Revisões humanas recomendadas</span>
+              <strong>19</strong>
+            </article>
+          </div>
+
+          <section class="difficulty-panel">
+            <h3>Dificuldades frequentes</h3>
+            <ul>
+              <li>redução algébrica</li>
+              <li>comparação de coeficientes</li>
+              <li>justificativa incompleta</li>
+            </ul>
+          </section>
+        </section>
       </section>
     </main>
 

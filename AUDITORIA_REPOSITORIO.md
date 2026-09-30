@@ -2,36 +2,252 @@
 
 ## 1. Visão geral do projeto
 
-O projeto se identifica como `confia-lean-auditor`, versão Python `0.1.0`, com domínio descrito como corretor matemático com rubrica e certificados Lean em `pyproject.toml:6`, `pyproject.toml:7` e `pyproject.toml:8`. O pacote Python exige `>=3.9` e declara `fastapi`, `uvicorn`, `pydantic>=2` e `pytest` em `pyproject.toml:9`, `pyproject.toml:11`, `pyproject.toml:12`, `pyproject.toml:13` e `pyproject.toml:14`. O runtime Lean é `leanprover/lean4:v4.28.0` em `lean-toolchain:1`; Lake declara `confia_lean_auditor`, alvo padrão `ConfiaLeanAuditor`, mathlib `v4.28.0` e biblioteca `ConfiaLeanAuditor` em `lakefile.toml:1`, `lakefile.toml:4`, `lakefile.toml:13`, `lakefile.toml:15` e `lakefile.toml:18`.
+O projeto se identifica como `confia-lean-auditor`, versão `0.1.0`, com descrição de corretor matemático com rubrica e certificados Lean em `pyproject.toml:6`, `pyproject.toml:7` e `pyproject.toml:8`. O pacote Python exige `>=3.9` e declara `fastapi`, `uvicorn`, `pydantic>=2`, `pytest`, `httpx` e `openai>=1.0.0` em `pyproject.toml:9` a `pyproject.toml:17`. O runtime Lean fixado é `leanprover/lean4:v4.28.0` em `lean-toolchain:1`, e Lake aponta `defaultTargets = ["ConfiaLeanAuditor"]`, mathlib `v4.28.0` e biblioteca `ConfiaLeanAuditor` em `lakefile.toml:4`, `lakefile.toml:12` a `lakefile.toml:18`.
 
-Terreno detectado: monolito pequeno em camadas, com API FastAPI, heurísticas textuais, contratos JSON em `problems/`, geração de arquivos Lean em `artifacts/`, subprocess `lake env lean` e CI Lean via GitHub Actions. A árvore local contém `.lake/` ignorado por `.gitignore:1` e `.venv/` versionado parcialmente pelo Git; `git ls-files .venv | wc -l` indicou 1870 arquivos rastreados de ambiente, enquanto `pyproject.toml` já declara as dependências de runtime em `pyproject.toml:10`. Esta auditoria aprofunda os 87 arquivos de primeira parte visíveis fora de `.venv/` e `.lake/`; a presença de `.venv/` versionado é tratada como achado transversal, não como código próprio.
+Terreno detectado: monolito em camadas com API FastAPI, extratores heurísticos por problema, contratos JSON em `problems/`, statements Lean em `ConfiaLeanAuditor/Problems/`, geração de artefatos em `artifacts/`, verificação por `lake env lean` e CI em GitHub Actions. A versão pública da API é `0.4.0` no app FastAPI e no `/health`, embora o pacote Python e Lake permaneçam em `0.1.0`, como mostram `app/confia_lean_auditor/main.py:26`, `app/confia_lean_auditor/main.py:33` a `app/confia_lean_auditor/main.py:39`, `pyproject.toml:7` e `lakefile.toml:2`.
 
-Inventário cru operacional: 87 arquivos fora de `.git`, `.lake` e `.venv`, incluindo `.github/`, `.gitignore`, manifestos, código Python, Lean, problemas, exemplos, egg-info, artefatos de execução e este relatório. A árvore completa local também contém caches e dependências materializadas; `.lake` é explicitamente ignorado em `.gitignore:1`, mas `.venv/pyvenv.cfg` existe e fixa Python `3.9.6` em `.venv/pyvenv.cfg:3`.
+Fase 0, inventário cru: `git ls-files` retornou 203 arquivos versionados. `rg --files` retornou 202 arquivos visíveis fora dos diretórios ignorados; a diferença inclui arquivos não versionados em `benchmarks/f2_suite_level1_v2/` e `benchmarks/q_suite_level1_v2/`, confirmados por `git status --short` como caminhos `??`. Diretórios runtime e locais são ignorados por `.gitignore`: `.venv/` em `.gitignore:2`, `.pytest_cache/` em `.gitignore:5`, `artifacts/runs/` em `.gitignore:10`, `.env` em `.gitignore:13` a `.gitignore:14`, `.lake/` em `.gitignore:24`, `Scratch/` em `.gitignore:27`, `artifacts/` em `.gitignore:28` e `benchmarks/**/reports/` em `.gitignore:29`.
 
-Módulos em uma linha: `main.py` expõe `/health` e `/audit` em `app/confia_lean_auditor/main.py:27` e `app/confia_lean_auditor/main.py:36`; `schemas.py` define os contratos Pydantic em `app/confia_lean_auditor/core/schemas.py:8`, `app/confia_lean_auditor/core/schemas.py:13`, `app/confia_lean_auditor/core/schemas.py:100`; `paths.py` resolve raiz e `problem_id` em `app/confia_lean_auditor/core/paths.py:15` e `app/confia_lean_auditor/core/paths.py:34`; `extract_claims.py` extrai claims e passos formais para `ITA2025Q1` em `app/confia_lean_auditor/claims/extract_claims.py:72` e `app/confia_lean_auditor/claims/extract_claims.py:117`; `formal_step_evaluator.py` gera Lean por passo em `app/confia_lean_auditor/lean/formal_step_evaluator.py:19`; `build_attempt.py` gera `Attempt.lean` em `app/confia_lean_auditor/lean/build_attempt.py:127`; `run_lean.py` chama `lake env lean` em `app/confia_lean_auditor/lean/run_lean.py:69`; `microclaim_evaluator.py` lê `microclaims.json` em `app/confia_lean_auditor/lean/microclaim_evaluator.py:47`; `rubric_evaluator.py` lê `rubric.json` em `app/confia_lean_auditor/rubric/rubric_evaluator.py:23`; `report_builder.py` monta feedback em `app/confia_lean_auditor/reports/report_builder.py:31`; `ConfiaLeanAuditor.lean` importa módulos Lean em `ConfiaLeanAuditor.lean:1` e `ConfiaLeanAuditor.lean:2`; `ConfiaLeanAuditor/Basic.lean` mantém scaffold `hello` em `ConfiaLeanAuditor/Basic.lean:1`.
+Inventário versionado completo:
+
+- `.github/workflows/create-release.yml`
+- `.github/workflows/lean_action_ci.yml`
+- `.github/workflows/python_tests.yml`
+- `.github/workflows/update.yml`
+- `.gitignore`
+- `AUDITORIA_REPOSITORIO.md`
+- `ConfiaLeanAuditor.lean`
+- `ConfiaLeanAuditor/Basic.lean`
+- `ConfiaLeanAuditor/Problems/ITA2025F2Q1/Statement.lean`
+- `ConfiaLeanAuditor/Problems/ITA2025F2Q3/Statement.lean`
+- `ConfiaLeanAuditor/Problems/ITA2025F2Q5/Statement.lean`
+- `ConfiaLeanAuditor/Problems/ITA2025F2Q6/Statement.lean`
+- `ConfiaLeanAuditor/Problems/ITA2025F2Q8/Statement.lean`
+- `ConfiaLeanAuditor/Problems/ITA2025Q1/Statement.lean`
+- `ConfiaLeanAuditor/Problems/ITA2025Q3/Statement.lean`
+- `ConfiaLeanAuditor/Problems/ITA2025Q4/Statement.lean`
+- `ConfiaLeanAuditor/Problems/ITA2025Q5/Statement.lean`
+- `ConfiaLeanAuditor/Problems/ITA2025Q8/Statement.lean`
+- `MILESTONE_ITA2025F2.md`
+- `README.md`
+- `app/confia_lean_auditor/__init__.py`
+- `app/confia_lean_auditor/claims/__init__.py`
+- `app/confia_lean_auditor/claims/extract_claims.py`
+- `app/confia_lean_auditor/claims/extractors/__init__.py`
+- `app/confia_lean_auditor/claims/extractors/ita2025f2q1.py`
+- `app/confia_lean_auditor/claims/extractors/ita2025f2q3.py`
+- `app/confia_lean_auditor/claims/extractors/ita2025f2q5.py`
+- `app/confia_lean_auditor/claims/extractors/ita2025f2q6.py`
+- `app/confia_lean_auditor/claims/extractors/ita2025f2q8.py`
+- `app/confia_lean_auditor/claims/extractors/ita2025q1.py`
+- `app/confia_lean_auditor/claims/extractors/ita2025q3.py`
+- `app/confia_lean_auditor/claims/extractors/ita2025q4.py`
+- `app/confia_lean_auditor/claims/extractors/ita2025q5.py`
+- `app/confia_lean_auditor/claims/extractors/ita2025q8.py`
+- `app/confia_lean_auditor/core/__init__.py`
+- `app/confia_lean_auditor/core/paths.py`
+- `app/confia_lean_auditor/core/problem_assets.py`
+- `app/confia_lean_auditor/core/schemas.py`
+- `app/confia_lean_auditor/lean/__init__.py`
+- `app/confia_lean_auditor/lean/attempt_builders/__init__.py`
+- `app/confia_lean_auditor/lean/attempt_builders/ita2025f2q1.py`
+- `app/confia_lean_auditor/lean/attempt_builders/ita2025f2q3.py`
+- `app/confia_lean_auditor/lean/attempt_builders/ita2025f2q5.py`
+- `app/confia_lean_auditor/lean/attempt_builders/ita2025f2q6.py`
+- `app/confia_lean_auditor/lean/attempt_builders/ita2025f2q8.py`
+- `app/confia_lean_auditor/lean/attempt_builders/ita2025q1.py`
+- `app/confia_lean_auditor/lean/attempt_builders/ita2025q3.py`
+- `app/confia_lean_auditor/lean/attempt_builders/ita2025q4.py`
+- `app/confia_lean_auditor/lean/attempt_builders/ita2025q5.py`
+- `app/confia_lean_auditor/lean/attempt_builders/ita2025q8.py`
+- `app/confia_lean_auditor/lean/build_attempt.py`
+- `app/confia_lean_auditor/lean/formal_step_evaluator.py`
+- `app/confia_lean_auditor/lean/microclaim_evaluator.py`
+- `app/confia_lean_auditor/lean/run_lean.py`
+- `app/confia_lean_auditor/lean/safe_formal_step.py`
+- `app/confia_lean_auditor/lean/student_claim_checker.py`
+- `app/confia_lean_auditor/lean/student_claim_checkers/__init__.py`
+- `app/confia_lean_auditor/lean/student_claim_checkers/ita2025f2q1.py`
+- `app/confia_lean_auditor/lean/student_claim_checkers/ita2025f2q3.py`
+- `app/confia_lean_auditor/lean/student_claim_checkers/ita2025f2q5.py`
+- `app/confia_lean_auditor/lean/student_claim_checkers/ita2025f2q6.py`
+- `app/confia_lean_auditor/lean/student_claim_checkers/registry.py`
+- `app/confia_lean_auditor/llm/__init__.py`
+- `app/confia_lean_auditor/llm/formal_step_extractor.py`
+- `app/confia_lean_auditor/main.py`
+- `app/confia_lean_auditor/reports/__init__.py`
+- `app/confia_lean_auditor/reports/report_builder.py`
+- `app/confia_lean_auditor/rubric/__init__.py`
+- `app/confia_lean_auditor/rubric/adjusters/__init__.py`
+- `app/confia_lean_auditor/rubric/adjusters/ita2025f2q1.py`
+- `app/confia_lean_auditor/rubric/adjusters/ita2025f2q3.py`
+- `app/confia_lean_auditor/rubric/adjusters/ita2025f2q5.py`
+- `app/confia_lean_auditor/rubric/adjusters/ita2025f2q6.py`
+- `app/confia_lean_auditor/rubric/adjusters/ita2025f2q8.py`
+- `app/confia_lean_auditor/rubric/adjusters/registry.py`
+- `app/confia_lean_auditor/rubric/rubric_evaluator.py`
+- `app/confia_lean_auditor/student_claims/__init__.py`
+- `app/confia_lean_auditor/student_claims/extract_f2q1_student_claims.py`
+- `app/confia_lean_auditor/student_claims/extract_f2q3_student_claims.py`
+- `app/confia_lean_auditor/student_claims/extract_f2q5_student_claims.py`
+- `app/confia_lean_auditor/student_claims/extract_f2q6_student_claims.py`
+- `app/confia_lean_auditor/student_claims/extract_f2q8_student_claims.py`
+- `app/confia_lean_auditor/student_claims/registry.py`
+- `app/confia_lean_auditor/student_claims/schemas.py`
+- `benchmarks/f2_suite_level1_2/gerar_tabelas_level1_f2_suite.py`
+- `benchmarks/f2_suite_level1_2/gold_500.csv`
+- `benchmarks/f2_suite_level1_2/make_gold_500_f2_suite.py`
+- `benchmarks/f2_suite_level1_2/reports/RELATORIO_TECNICO_LEVEL1_F2_SUITE.md`
+- `benchmarks/f2_suite_level1_2/run_level1_f2_suite.py`
+- `benchmarks/stage1_4/ita2025f2q8/gerar_relatorio_completo_benchmark_f2q8.py`
+- `benchmarks/stage1_4/ita2025f2q8/gerar_relatorio_detalhado_sem_resumo_f2q8.py`
+- `benchmarks/stage1_4/ita2025f2q8/gold_100.csv`
+- `benchmarks/stage1_4/ita2025f2q8/make_gold_100_f2q8.py`
+- `benchmarks/stage1_4/ita2025f2q8/run_stage1_4_f2q8.py`
+- `docs/lean_security_whitelist.md`
+- `lake-manifest.json`
+- `lakefile.toml`
+- `lean-toolchain`
+- `problems/ITA2025F2Q1/examples/answer_only.txt`
+- `problems/ITA2025F2Q1/examples/correct_solution.txt`
+- `problems/ITA2025F2Q1/examples/missing_reduced_form.txt`
+- `problems/ITA2025F2Q1/examples/wrong_answer.txt`
+- `problems/ITA2025F2Q1/microclaims.json`
+- `problems/ITA2025F2Q1/problem.json`
+- `problems/ITA2025F2Q1/rubric.json`
+- `problems/ITA2025F2Q3/examples/answer_only.txt`
+- `problems/ITA2025F2Q3/examples/correct_solution.txt`
+- `problems/ITA2025F2Q3/examples/partial_beta_difference.txt`
+- `problems/ITA2025F2Q3/examples/wrong_answer.txt`
+- `problems/ITA2025F2Q3/microclaims.json`
+- `problems/ITA2025F2Q3/problem.json`
+- `problems/ITA2025F2Q3/rubric.json`
+- `problems/ITA2025F2Q5/examples/answer_only.txt`
+- `problems/ITA2025F2Q5/examples/correct_solution.txt`
+- `problems/ITA2025F2Q5/examples/missing_bounds.txt`
+- `problems/ITA2025F2Q5/examples/wrong_digit.txt`
+- `problems/ITA2025F2Q5/microclaims.json`
+- `problems/ITA2025F2Q5/problem.json`
+- `problems/ITA2025F2Q5/rubric.json`
+- `problems/ITA2025F2Q6/examples/answer_only.txt`
+- `problems/ITA2025F2Q6/examples/correct_solution.txt`
+- `problems/ITA2025F2Q6/examples/missing_ratio.txt`
+- `problems/ITA2025F2Q6/examples/wrong_answer.txt`
+- `problems/ITA2025F2Q6/microclaims.json`
+- `problems/ITA2025F2Q6/problem.json`
+- `problems/ITA2025F2Q6/rubric.json`
+- `problems/ITA2025F2Q8/examples/answer_only.txt`
+- `problems/ITA2025F2Q8/examples/correct_solution.txt`
+- `problems/ITA2025F2Q8/examples/missing_determinant_formula.txt`
+- `problems/ITA2025F2Q8/examples/wrong_answer.txt`
+- `problems/ITA2025F2Q8/microclaims.json`
+- `problems/ITA2025F2Q8/problem.json`
+- `problems/ITA2025F2Q8/rubric.json`
+- `problems/ITA2025Q1/certificate/Statement.lean`
+- `problems/ITA2025Q1/examples/answer_only.txt`
+- `problems/ITA2025Q1/examples/correct_solution.txt`
+- `problems/ITA2025Q1/examples/injection_attempt.txt`
+- `problems/ITA2025Q1/examples/partial_no_positive_root.txt`
+- `problems/ITA2025Q1/examples/wrong_determinant_step.txt`
+- `problems/ITA2025Q1/examples/wrong_solution.txt`
+- `problems/ITA2025Q1/microclaims.json`
+- `problems/ITA2025Q1/problem.json`
+- `problems/ITA2025Q1/rubric.json`
+- `problems/ITA2025Q3/examples/answer_only.txt`
+- `problems/ITA2025Q3/examples/correct_solution.txt`
+- `problems/ITA2025Q3/examples/missing_parity.txt`
+- `problems/ITA2025Q3/examples/wrong_coefficient.txt`
+- `problems/ITA2025Q3/microclaims.json`
+- `problems/ITA2025Q3/problem.json`
+- `problems/ITA2025Q3/rubric.json`
+- `problems/ITA2025Q4/examples/answer_only.txt`
+- `problems/ITA2025Q4/examples/correct_solution.txt`
+- `problems/ITA2025Q4/examples/missing_distinct_inputs.txt`
+- `problems/ITA2025Q4/examples/wrong_target.txt`
+- `problems/ITA2025Q4/examples/wrong_witnesses.txt`
+- `problems/ITA2025Q4/microclaims.json`
+- `problems/ITA2025Q4/problem.json`
+- `problems/ITA2025Q4/rubric.json`
+- `problems/ITA2025Q5/examples/answer_only.txt`
+- `problems/ITA2025Q5/examples/correct_solution.txt`
+- `problems/ITA2025Q5/examples/missing_difference_relation.txt`
+- `problems/ITA2025Q5/examples/missing_factorization.txt`
+- `problems/ITA2025Q5/examples/wrong_direction.txt`
+- `problems/ITA2025Q5/microclaims.json`
+- `problems/ITA2025Q5/problem.json`
+- `problems/ITA2025Q5/rubric.json`
+- `problems/ITA2025Q8/examples/answer_only.txt`
+- `problems/ITA2025Q8/examples/correct_solution.txt`
+- `problems/ITA2025Q8/examples/missing_sign_analysis.txt`
+- `problems/ITA2025Q8/examples/wrong_interval.txt`
+- `problems/ITA2025Q8/microclaims.json`
+- `problems/ITA2025Q8/problem.json`
+- `problems/ITA2025Q8/rubric.json`
+- `pyproject.toml`
+- `tests/test_evaluator_architecture.py`
+- `tests/test_f2q1_rubric_adjustments.py`
+- `tests/test_f2q1_strong_certificate.py`
+- `tests/test_f2q1_student_claim_checks.py`
+- `tests/test_f2q3_rubric_adjustments.py`
+- `tests/test_f2q3_strong_certificate.py`
+- `tests/test_f2q3_student_claim_checks.py`
+- `tests/test_f2q5_rubric_adjustments.py`
+- `tests/test_f2q5_strong_certificate.py`
+- `tests/test_f2q5_student_claim_checks.py`
+- `tests/test_f2q6_rubric_adjustments.py`
+- `tests/test_f2q6_strong_certificate.py`
+- `tests/test_f2q6_student_claim_checks.py`
+- `tests/test_f2q8_student_claim_checks.py`
+- `tests/test_ita2025f2q1_level1.py`
+- `tests/test_ita2025f2q3_level1.py`
+- `tests/test_ita2025f2q5_level1.py`
+- `tests/test_ita2025f2q6_level1.py`
+- `tests/test_ita2025f2q8_level1.py`
+- `tests/test_ita2025q1_level2.py`
+- `tests/test_ita2025q3_level1.py`
+- `tests/test_ita2025q4_level1.py`
+- `tests/test_ita2025q4_level2.py`
+- `tests/test_ita2025q5_level1.py`
+- `tests/test_ita2025q8_level1.py`
+- `tests/test_level1_f2_suite_regressions.py`
+- `tests/test_problem_assets_contracts.py`
+- `tests/test_problem_assets_validation.py`
+- `tests/test_problem_router_coverage.py`
+
+Arquivos visíveis não versionados detectados nesta auditoria:
+
+- `benchmarks/f2_suite_level1_v2/gold_500_v2.csv`
+- `benchmarks/f2_suite_level1_v2/run_level1_f2_suite_v2.py`
+- `benchmarks/q_suite_level1_v2/gold_500.csv`
+- `benchmarks/q_suite_level1_v2/make_gold_500_q_suite_v2.py`
+- `benchmarks/q_suite_level1_v2/run_level1_q_suite_v2.py`
+
+Módulos em uma linha: `main.py` expõe `/health` e `/audit` em `app/confia_lean_auditor/main.py:33` e `app/confia_lean_auditor/main.py:42`; `schemas.py` define `AuditRequest`, `FormalStep`, `LeanCertificate`, `MicroclaimResult` e `AuditResponse` em `app/confia_lean_auditor/core/schemas.py:8`, `app/confia_lean_auditor/core/schemas.py:13`, `app/confia_lean_auditor/core/schemas.py:76`, `app/confia_lean_auditor/core/schemas.py:88` e `app/confia_lean_auditor/core/schemas.py:102`; `problem_assets.py` valida os três JSON obrigatórios em `app/confia_lean_auditor/core/problem_assets.py:103`, `app/confia_lean_auditor/core/problem_assets.py:115`, `app/confia_lean_auditor/core/problem_assets.py:127` e `app/confia_lean_auditor/core/problem_assets.py:154`; `extract_claims.py` roteia dez problemas em `app/confia_lean_auditor/claims/extract_claims.py:41` a `app/confia_lean_auditor/claims/extract_claims.py:75`; `build_attempt.py` roteia builders Lean em `app/confia_lean_auditor/lean/build_attempt.py:44` a `app/confia_lean_auditor/lean/build_attempt.py:123`; `formal_step_evaluator.py` roteia renderizadores em `app/confia_lean_auditor/lean/formal_step_evaluator.py:411` a `app/confia_lean_auditor/lean/formal_step_evaluator.py:441`; `student_claims/registry.py`, `student_claim_checkers/registry.py` e `rubric/adjusters/registry.py` compõem o pipeline F2 em `app/confia_lean_auditor/student_claims/registry.py:23` a `app/confia_lean_auditor/student_claims/registry.py:39`, `app/confia_lean_auditor/lean/student_claim_checkers/registry.py:23` a `app/confia_lean_auditor/lean/student_claim_checkers/registry.py:62` e `app/confia_lean_auditor/rubric/adjusters/registry.py:26` a `app/confia_lean_auditor/rubric/adjusters/registry.py:45`; `run_lean.py` executa `lake env lean` em `app/confia_lean_auditor/lean/run_lean.py:65` a `app/confia_lean_auditor/lean/run_lean.py:98`; `ConfiaLeanAuditor.lean` agrega dez statements Lean em `ConfiaLeanAuditor.lean:1` a `ConfiaLeanAuditor.lean:11`.
 
 ## 2. Diagrama de arquitetura textual
 
-```
+```text
 Cliente HTTP
-  -> FastAPI app
+  -> FastAPI app em app/confia_lean_auditor/main.py
      -> GET /health
      -> POST /audit: AuditRequest(problem_id, solution)
-        -> get_repo_root()
-        -> get_problem_dir(root, problem_id)
-        -> artifacts/runs/{run_id}/
-        -> extract_claims(problem_id, solution)
-        -> evaluate_formal_steps(...): formal_steps/*.lean -> lake env lean
-        -> build_attempt(...): Attempt.lean
-        -> run_lean_file(...): lake env lean Attempt.lean
-        -> evaluate_microclaims(...): problems/{problem_id}/microclaims.json
-        -> evaluate_rubric(...): problems/{problem_id}/rubric.json
+        -> get_repo_root / get_problem_dir
+        -> validate_problem_assets: problem.json + rubric.json + microclaims.json
+        -> extract_claims: dispatcher por problem_id
+        -> evaluate_formal_steps: formal_steps/*.lean -> lake env lean
+        -> build_attempt: Attempt.lean
+        -> run_lean_file: lake env lean Attempt.lean
+        -> evaluate_microclaims: claim types + formal steps + generated_theorems
+        -> extract_student_claims: somente família F2 retorna claims concretos
+        -> check_student_claims_for_problem: Lean dinâmico por claim F2
+        -> evaluate_rubric
+        -> apply_student_claim_adjustments
         -> verdict_from_score + build_feedback
         -> AuditResponse
-        -> audit.json, solution.txt, claims.json
+        -> audit.json, solution.txt, claims.json, student_claims.json, student_claim_checks.json
 
 CLI Python
-  -> python app/confia_lean_auditor/lean/run_lean.py --problem-id X --repo-root .
+  -> app/confia_lean_auditor/lean/run_lean.py --problem-id X --repo-root .
      -> problems/{problem_id}/certificate/Statement.lean
      -> lake env lean
      -> JSON em stdout
@@ -39,949 +255,1727 @@ CLI Python
 Lake / Lean
   -> lakefile.toml defaultTargets ["ConfiaLeanAuditor"]
      -> ConfiaLeanAuditor.lean
-        -> ConfiaLeanAuditor.Basic
-        -> ConfiaLeanAuditor.Problems.ITA2025Q1.Statement
+        -> Basic + Statements ITA2025Q* + ITA2025F2Q*
+
+Benchmarks
+  -> benchmarks/*/*.py
+     -> CSV gold
+     -> extract_claims
+     -> JSON/CSV/Markdown em reports ignorados
 
 GitHub Actions
-  -> lean_action_ci.yml: checkout -> lean-action -> docgen-action
-  -> create-release.yml: lean-release-tag em mudança de lean-toolchain
+  -> python_tests.yml: Lean + Python 3.11 + pip install -e . + pytest
+  -> lean_action_ci.yml: lake build + pytest
+  -> create-release.yml: release quando lean-toolchain muda
   -> update.yml: mathlib-update-action manual
 ```
 
-O fluxo HTTP cria `artifact_dir` em `app/confia_lean_auditor/main.py:48`, `app/confia_lean_auditor/main.py:49` e `app/confia_lean_auditor/main.py:50`, grava `audit.json`, `solution.txt` e `claims.json` em `app/confia_lean_auditor/main.py:123`, `app/confia_lean_auditor/main.py:128` e `app/confia_lean_auditor/main.py:129`, e retorna `AuditResponse` em `app/confia_lean_auditor/main.py:109` e `app/confia_lean_auditor/main.py:134`. O fluxo CLI monta `certificate/Statement.lean` em `app/confia_lean_auditor/lean/run_lean.py:115`, verifica existência em `app/confia_lean_auditor/lean/run_lean.py:117` e imprime JSON em `app/confia_lean_auditor/lean/run_lean.py:138`.
+O fluxo HTTP cria `artifact_dir` em `app/confia_lean_auditor/main.py:59` a `app/confia_lean_auditor/main.py:61`, extrai claims em `app/confia_lean_auditor/main.py:63` a `app/confia_lean_auditor/main.py:66`, avalia formal steps em `app/confia_lean_auditor/main.py:68` a `app/confia_lean_auditor/main.py:76`, constrói e executa Lean em `app/confia_lean_auditor/main.py:78` a `app/confia_lean_auditor/main.py:96`, calcula microclaims em `app/confia_lean_auditor/main.py:98` a `app/confia_lean_auditor/main.py:109`, executa student claims em `app/confia_lean_auditor/main.py:112` a `app/confia_lean_auditor/main.py:120`, avalia e ajusta rubrica em `app/confia_lean_auditor/main.py:122` a `app/confia_lean_auditor/main.py:137`, monta resposta em `app/confia_lean_auditor/main.py:143` a `app/confia_lean_auditor/main.py:157`, e grava cinco saídas em `app/confia_lean_auditor/main.py:159` a `app/confia_lean_auditor/main.py:178`.
 
 ## 3. Grafo de dependências
 
 ### Python: imports estáticos
 
-- `app/confia_lean_auditor/main.py` importa FastAPI em `app/confia_lean_auditor/main.py:7`, extrator em `app/confia_lean_auditor/main.py:9`, paths em `app/confia_lean_auditor/main.py:10`, schemas em `app/confia_lean_auditor/main.py:11`, build Lean em `app/confia_lean_auditor/main.py:12`, avaliação formal em `app/confia_lean_auditor/main.py:13`, microclaims em `app/confia_lean_auditor/main.py:14`, runner Lean em `app/confia_lean_auditor/main.py:15`, report em `app/confia_lean_auditor/main.py:16` e rubrica em `app/confia_lean_auditor/main.py:17`.
-- `claims/extract_claims.py` importa `re`, `unicodedata` e tipos em `app/confia_lean_auditor/claims/extract_claims.py:3`, `app/confia_lean_auditor/claims/extract_claims.py:4` e `app/confia_lean_auditor/claims/extract_claims.py:5`, e importa `ClaimExtraction`, `ExtractedClaim` e `FormalStep` de schemas em `app/confia_lean_auditor/claims/extract_claims.py:7`.
-- `core/paths.py` importa `os`, `re` e `Path` em `app/confia_lean_auditor/core/paths.py:3`, `app/confia_lean_auditor/core/paths.py:4` e `app/confia_lean_auditor/core/paths.py:5`.
-- `core/schemas.py` importa `BaseModel` e `Field` de Pydantic em `app/confia_lean_auditor/core/schemas.py:5`.
-- `lean/build_attempt.py` importa `ClaimExtraction` e `FormalStepResult` em `app/confia_lean_auditor/lean/build_attempt.py:6`.
-- `lean/formal_step_evaluator.py` importa schemas em `app/confia_lean_auditor/lean/formal_step_evaluator.py:6` e `run_lean_file` em `app/confia_lean_auditor/lean/formal_step_evaluator.py:11`.
-- `lean/microclaim_evaluator.py` importa `get_problem_dir` em `app/confia_lean_auditor/lean/microclaim_evaluator.py:7` e schemas em `app/confia_lean_auditor/lean/microclaim_evaluator.py:8`.
-- `lean/run_lean.py` importa `subprocess` em `app/confia_lean_auditor/lean/run_lean.py:6` e `get_problem_dir` em `app/confia_lean_auditor/lean/run_lean.py:10`.
-- `reports/report_builder.py` importa schemas em `app/confia_lean_auditor/reports/report_builder.py:5`.
-- `rubric/rubric_evaluator.py` importa `get_problem_dir` em `app/confia_lean_auditor/rubric/rubric_evaluator.py:7` e schemas em `app/confia_lean_auditor/rubric/rubric_evaluator.py:8`.
+- `app/confia_lean_auditor/main.py` importa FastAPI e todos os módulos de orquestração, incluindo registries de student claims e adjusters, em `app/confia_lean_auditor/main.py:8` a `app/confia_lean_auditor/main.py:23`.
+- `claims/extract_claims.py` importa os extratores Q1/Q3/Q4/Q5/Q8 e F2Q1/F2Q3/F2Q5/F2Q6/F2Q8 em `app/confia_lean_auditor/claims/extract_claims.py:3` a `app/confia_lean_auditor/claims/extract_claims.py:39`, e o dispatcher cobre esses IDs em `app/confia_lean_auditor/claims/extract_claims.py:41` a `app/confia_lean_auditor/claims/extract_claims.py:70`.
+- `lean/build_attempt.py` importa os builders dos mesmos dez problemas em `app/confia_lean_auditor/lean/build_attempt.py:6` a `app/confia_lean_auditor/lean/build_attempt.py:42`, e lança `NotImplementedError` para problema sem builder em `app/confia_lean_auditor/lean/build_attempt.py:123`.
+- `formal_step_evaluator.py` depende de schemas, runner Lean e whitelist em `app/confia_lean_auditor/lean/formal_step_evaluator.py:6` a `app/confia_lean_auditor/lean/formal_step_evaluator.py:15`, renderiza formal steps por problema em `app/confia_lean_auditor/lean/formal_step_evaluator.py:23` a `app/confia_lean_auditor/lean/formal_step_evaluator.py:441`, e escreve arquivos Lean por step em `app/confia_lean_auditor/lean/formal_step_evaluator.py:444` a `app/confia_lean_auditor/lean/formal_step_evaluator.py:493`.
+- O pipeline F2 de claims concretos usa `student_claims/registry.py` para extração em `app/confia_lean_auditor/student_claims/registry.py:5` a `app/confia_lean_auditor/student_claims/registry.py:39`, usa `lean/student_claim_checkers/registry.py` para verificação dinâmica em `app/confia_lean_auditor/lean/student_claim_checkers/registry.py:5` a `app/confia_lean_auditor/lean/student_claim_checkers/registry.py:62`, e usa `rubric/adjusters/registry.py` para ajustes em `app/confia_lean_auditor/rubric/adjusters/registry.py:5` a `app/confia_lean_auditor/rubric/adjusters/registry.py:45`.
+- Benchmarks importam o dispatcher de claims em `benchmarks/f2_suite_level1_2/run_level1_f2_suite.py:9` e `benchmarks/stage1_4/ita2025f2q8/run_stage1_4_f2q8.py:9`, e escrevem relatórios em `benchmarks/f2_suite_level1_2/run_level1_f2_suite.py:172` a `benchmarks/f2_suite_level1_2/run_level1_f2_suite.py:273` e `benchmarks/stage1_4/ita2025f2q8/run_stage1_4_f2q8.py:85` a `benchmarks/stage1_4/ita2025f2q8/run_stage1_4_f2q8.py:242`.
 
 ### Python: imports inversos
 
-- `core/schemas.py` é consumido por extrator, build, formal step, microclaim, report, rubric e main em `app/confia_lean_auditor/claims/extract_claims.py:7`, `app/confia_lean_auditor/lean/build_attempt.py:6`, `app/confia_lean_auditor/lean/formal_step_evaluator.py:6`, `app/confia_lean_auditor/lean/microclaim_evaluator.py:8`, `app/confia_lean_auditor/reports/report_builder.py:5`, `app/confia_lean_auditor/rubric/rubric_evaluator.py:8` e `app/confia_lean_auditor/main.py:11`.
-- `core/paths.py` é consumido por main, microclaims, rubrica e runner Lean em `app/confia_lean_auditor/main.py:10`, `app/confia_lean_auditor/lean/microclaim_evaluator.py:7`, `app/confia_lean_auditor/rubric/rubric_evaluator.py:7` e `app/confia_lean_auditor/lean/run_lean.py:10`.
-- `claims/extract_claims.py`, `lean/build_attempt.py`, `lean/formal_step_evaluator.py`, `lean/microclaim_evaluator.py`, `lean/run_lean.py`, `reports/report_builder.py` e `rubric/rubric_evaluator.py` entram no fluxo HTTP via `main.py` em `app/confia_lean_auditor/main.py:9`, `app/confia_lean_auditor/main.py:12`, `app/confia_lean_auditor/main.py:13`, `app/confia_lean_auditor/main.py:14`, `app/confia_lean_auditor/main.py:15`, `app/confia_lean_auditor/main.py:16` e `app/confia_lean_auditor/main.py:17`.
-- Os `__init__.py` de pacote têm zero linhas na contagem operacional; eles existem para marcação de pacote, sem exportações próprias, e aparecem como pacote raiz em `app/confia_lean_auditor.egg-info/top_level.txt:1`.
+- `core/schemas.py` é contrato central: consumido por `main.py`, `problem_assets.py`, `microclaim_evaluator.py`, `rubric_evaluator.py`, builders e adjusters, com campos de resposta expandidos para `student_claims` e `student_claim_checks` em `app/confia_lean_auditor/core/schemas.py:102` a `app/confia_lean_auditor/core/schemas.py:116`.
+- `core/paths.py` é usado por API, validação, runner e testes: `main.py` chama `get_problem_dir` e `get_repo_root` em `app/confia_lean_auditor/main.py:11`, `run_lean.py` usa `get_problem_dir` em `app/confia_lean_auditor/lean/run_lean.py:10`, e testes de assets importam os helpers em `tests/test_problem_assets_validation.py:7`.
+- `main.py` é consumido por testes via `TestClient`, como em `tests/test_ita2025q1_level2.py:7` e `tests/test_ita2025q8_level1.py:5`, enquanto os testes F2 de student claims exercitam diretamente os checkers e extratores em `tests/test_f2q8_student_claim_checks.py:7` a `tests/test_f2q8_student_claim_checks.py:13` e `tests/test_f2q6_student_claim_checks.py:11` a `tests/test_f2q6_student_claim_checks.py:23`.
 
 ### Lean: imports estáticos e inversos
 
-- `ConfiaLeanAuditor.lean` importa `ConfiaLeanAuditor.Basic` e `ConfiaLeanAuditor.Problems.ITA2025Q1.Statement` em `ConfiaLeanAuditor.lean:1` e `ConfiaLeanAuditor.lean:2`.
-- `ConfiaLeanAuditor/Problems/ITA2025Q1/Statement.lean` importa `Mathlib` em `ConfiaLeanAuditor/Problems/ITA2025Q1/Statement.lean:1` e define o namespace do problema em `ConfiaLeanAuditor/Problems/ITA2025Q1/Statement.lean:3`.
-- `problems/ITA2025Q1/certificate/Statement.lean` importa o statement do pacote em `problems/ITA2025Q1/certificate/Statement.lean:1`; `run_lean.py` procura exatamente este arquivo para o modo CLI em `app/confia_lean_auditor/lean/run_lean.py:115`.
-- `build_attempt.py` e `formal_step_evaluator.py` produzem strings Lean que importam `ConfiaLeanAuditor.Problems.ITA2025Q1.Statement` em `app/confia_lean_auditor/lean/build_attempt.py:10` e `app/confia_lean_auditor/lean/formal_step_evaluator.py:23`.
+- `ConfiaLeanAuditor.lean` importa `Basic`, cinco statements Q e cinco statements F2 em `ConfiaLeanAuditor.lean:1` a `ConfiaLeanAuditor.lean:11`.
+- Cada statement Lean de problema importa `Mathlib`; exemplos F2 estão em `ConfiaLeanAuditor/Problems/ITA2025F2Q3/Statement.lean:1` e `ConfiaLeanAuditor/Problems/ITA2025F2Q5/Statement.lean:1`.
+- Os builders geram imports Lean em strings Python, como `ConfiaLeanAuditor.Problems.ITA2025Q1.Statement` em `app/confia_lean_auditor/lean/attempt_builders/ita2025q1.py:10` e `ConfiaLeanAuditor.Problems.ITA2025F2Q8.Statement` em `app/confia_lean_auditor/lean/attempt_builders/ita2025f2q8.py:10`.
+- O CLI genérico de `run_lean.py` ainda procura `problems/{problem_id}/certificate/Statement.lean` em `app/confia_lean_auditor/lean/run_lean.py:101` a `app/confia_lean_auditor/lean/run_lean.py:128`; no inventário versionado, esse padrão aparece apenas para Q1 em `problems/ITA2025Q1/certificate/Statement.lean:1`.
 
-### Acoplamento dinâmico
+### Acoplamento dinâmico, ciclos e órfãos
 
-- `CONFIA_LEAN_AUDITOR_ROOT` altera a raiz em runtime em `app/confia_lean_auditor/core/paths.py:16`, `app/confia_lean_auditor/core/paths.py:17` e `app/confia_lean_auditor/core/paths.py:18`.
-- `problem_id` vira caminho de filesystem em `app/confia_lean_auditor/core/paths.py:34`, `app/confia_lean_auditor/core/paths.py:37` e `app/confia_lean_auditor/core/paths.py:38`; a regex restringe caracteres em `app/confia_lean_auditor/core/paths.py:8` e `app/confia_lean_auditor/core/paths.py:26`.
-- `rubric_evaluator.py` e `microclaim_evaluator.py` carregam JSON por nome fixo em `app/confia_lean_auditor/rubric/rubric_evaluator.py:23`, `app/confia_lean_auditor/rubric/rubric_evaluator.py:28`, `app/confia_lean_auditor/lean/microclaim_evaluator.py:47` e `app/confia_lean_auditor/lean/microclaim_evaluator.py:52`.
-- `build_attempt.py` escreve `Attempt.lean` em `app/confia_lean_auditor/lean/build_attempt.py:127` e `app/confia_lean_auditor/lean/build_attempt.py:128`; `formal_step_evaluator.py` cria `formal_steps` e escreve um arquivo por passo em `app/confia_lean_auditor/lean/formal_step_evaluator.py:55`, `app/confia_lean_auditor/lean/formal_step_evaluator.py:62` e `app/confia_lean_auditor/lean/formal_step_evaluator.py:63`.
-- `run_lean.py` executa `lake env lean` via subprocess com timeout em `app/confia_lean_auditor/lean/run_lean.py:69`, `app/confia_lean_auditor/lean/run_lean.py:72` e `app/confia_lean_auditor/lean/run_lean.py:78`.
-- CI consome ações externas em `.github/workflows/lean_action_ci.yml:19`, `.github/workflows/lean_action_ci.yml:20`, `.github/workflows/lean_action_ci.yml:21`, `.github/workflows/create-release.yml:19` e `.github/workflows/update.yml:17`.
+Não há ciclo estático interno observado entre módulos Python de produção: a direção principal é `main.py` -> dispatchers/avaliadores -> schemas/assets/runner, e os testes importam a API sem serem importados por ela, conforme `app/confia_lean_auditor/main.py:8` a `app/confia_lean_auditor/main.py:23` e `tests/test_ita2025q1_level2.py:7`. O acoplamento dinâmico inclui env var de raiz em `app/confia_lean_auditor/core/paths.py:15` a `app/confia_lean_auditor/core/paths.py:22`, leitura de JSON fixos em `app/confia_lean_auditor/core/problem_assets.py:103` a `app/confia_lean_auditor/core/problem_assets.py:132`, subprocess Lean com timeout em `app/confia_lean_auditor/lean/run_lean.py:65` a `app/confia_lean_auditor/lean/run_lean.py:98`, artefatos HTTP em `app/confia_lean_auditor/main.py:159` a `app/confia_lean_auditor/main.py:178`, artefatos de student checks em `app/confia_lean_auditor/lean/student_claim_checker.py:12` a `app/confia_lean_auditor/lean/student_claim_checker.py:25`, e LLM condicionado por env var em `app/confia_lean_auditor/llm/formal_step_extractor.py:52` a `app/confia_lean_auditor/llm/formal_step_extractor.py:53`.
 
-### Ciclos e órfãos
-
-Não há ciclo estático entre os módulos Python próprios: `main.py` orquestra dependências e os módulos importados não importam `main.py`, conforme as arestas listadas acima. O arquivo `ConfiaLeanAuditor/Basic.lean` é candidato confirmado a scaffold sem consumidor semântico: ele só é importado pelo agregador `ConfiaLeanAuditor.lean:1` e contém apenas `def hello := "world"` em `ConfiaLeanAuditor/Basic.lean:1`. `README.md` é scaffold de GitHub gerado, com instrução de remoção em `README.md:13`. Os artefatos em `artifacts/runs/**` são saídas versionadas por acidente operacional: `main.py` escreve esses caminhos em `app/confia_lean_auditor/main.py:123`, `app/confia_lean_auditor/main.py:128` e `app/confia_lean_auditor/main.py:129`, e há instâncias versionadas como `artifacts/runs/20260703T144140_097860/audit.json:1`, `artifacts/runs/20260703T144140_097860/claims.json:1` e `artifacts/runs/20260703T144140_097860/solution.txt:1`.
+Candidatos refutados: os extratores F2 não são órfãos porque `extract_claims.py` os importa e roteia em `app/confia_lean_auditor/claims/extract_claims.py:23` a `app/confia_lean_auditor/claims/extract_claims.py:70`; os builders F2 não são órfãos porque `build_attempt.py` os importa e roteia em `app/confia_lean_auditor/lean/build_attempt.py:26` a `app/confia_lean_auditor/lean/build_attempt.py:121`; os problemas implementados são cobrados por teste textual de roteamento em `tests/test_problem_router_coverage.py:12` a `tests/test_problem_router_coverage.py:58`. Confirmados como scaffold/baixo uso semântico: `ConfiaLeanAuditor/Basic.lean` só define `hello` em `ConfiaLeanAuditor/Basic.lean:1` e é importado pelo agregador em `ConfiaLeanAuditor.lean:1`; `README.md` mantém instrução de remover seção de configuração GitHub em `README.md:13`.
 
 ## 4. Pontos de entrada e saída consolidados
 
-Entradas: `GET /health` em `app/confia_lean_auditor/main.py:27`; `POST /audit` com `AuditRequest` em `app/confia_lean_auditor/main.py:36` e `app/confia_lean_auditor/core/schemas.py:8`; CLI `run_lean.py` em `app/confia_lean_auditor/lean/run_lean.py:131` e `app/confia_lean_auditor/lean/run_lean.py:141`; Lake default target em `lakefile.toml:4`; CI em `.github/workflows/lean_action_ci.yml:3`, `.github/workflows/create-release.yml:3` e `.github/workflows/update.yml:3`.
+Entradas: rota `GET /health` em `app/confia_lean_auditor/main.py:33`; rota `POST /audit` em `app/confia_lean_auditor/main.py:42`; CLI `run_lean.py` em `app/confia_lean_auditor/lean/run_lean.py:131` a `app/confia_lean_auditor/lean/run_lean.py:142`; alvo Lake em `lakefile.toml:4`; workflows CI em `.github/workflows/python_tests.yml:3` a `.github/workflows/python_tests.yml:32` e `.github/workflows/lean_action_ci.yml:3` a `.github/workflows/lean_action_ci.yml:37`; release por `lean-toolchain` em `.github/workflows/create-release.yml:3` a `.github/workflows/create-release.yml:22`; update manual em `.github/workflows/update.yml:3` a `.github/workflows/update.yml:41`; scripts de benchmark com `main()` em `benchmarks/f2_suite_level1_2/run_level1_f2_suite.py:155` e `benchmarks/stage1_4/ita2025f2q8/run_stage1_4_f2q8.py:68`.
 
-Saídas: resposta HTTP `AuditResponse` em `app/confia_lean_auditor/core/schemas.py:100` e `app/confia_lean_auditor/main.py:109`; `artifacts/runs/{run_id}/audit.json` em `app/confia_lean_auditor/main.py:123`; `solution.txt` em `app/confia_lean_auditor/main.py:128`; `claims.json` em `app/confia_lean_auditor/main.py:129`; `Attempt.lean` em `app/confia_lean_auditor/lean/build_attempt.py:127`; `formal_steps/*.lean` em `app/confia_lean_auditor/lean/formal_step_evaluator.py:62`; JSON stdout da CLI em `app/confia_lean_auditor/lean/run_lean.py:138`; documentação Pages no CI por `docgen-action` em `.github/workflows/lean_action_ci.yml:21`.
+Saídas: `AuditResponse` em `app/confia_lean_auditor/core/schemas.py:102` a `app/confia_lean_auditor/core/schemas.py:116`; `audit.json`, `solution.txt`, `claims.json`, `student_claims.json` e `student_claim_checks.json` em `app/confia_lean_auditor/main.py:159` a `app/confia_lean_auditor/main.py:178`; `formal_steps/*.lean` e `.rejected.txt` em `app/confia_lean_auditor/lean/formal_step_evaluator.py:450` a `app/confia_lean_auditor/lean/formal_step_evaluator.py:493`; `Attempt.lean` por builder, como `app/confia_lean_auditor/lean/attempt_builders/ita2025q1.py:132`, `app/confia_lean_auditor/lean/attempt_builders/ita2025f2q1.py:134`, `app/confia_lean_auditor/lean/attempt_builders/ita2025f2q8.py:129`; JSON no stdout do CLI em `app/confia_lean_auditor/lean/run_lean.py:137` a `app/confia_lean_auditor/lean/run_lean.py:138`; relatórios de benchmark em `benchmarks/f2_suite_level1_2/run_level1_f2_suite.py:273` e `benchmarks/stage1_4/ita2025f2q8/run_stage1_4_f2q8.py:242`.
 
-Contratos produtor/consumidor: `ClaimExtraction.formal_steps` é produzido em `app/confia_lean_auditor/claims/extract_claims.py:207` e consumido em `app/confia_lean_auditor/lean/formal_step_evaluator.py:60`; `FormalStepResult.status` é produzido em `app/confia_lean_auditor/lean/formal_step_evaluator.py:67` e consumido para liberar teorema de área em `app/confia_lean_auditor/lean/build_attempt.py:93` e `app/confia_lean_auditor/lean/build_attempt.py:113`; `generated_theorems` é produzido em `app/confia_lean_auditor/lean/build_attempt.py:107`, `app/confia_lean_auditor/lean/build_attempt.py:111`, `app/confia_lean_auditor/lean/build_attempt.py:115`, `app/confia_lean_auditor/lean/build_attempt.py:119` e `app/confia_lean_auditor/lean/build_attempt.py:123`, depois consumido em `app/confia_lean_auditor/lean/microclaim_evaluator.py:55` e `app/confia_lean_auditor/lean/microclaim_evaluator.py:74`; `required_microclaim_ids` vem de `problems/ITA2025Q1/rubric.json:10`, `problems/ITA2025Q1/rubric.json:17`, `problems/ITA2025Q1/rubric.json:24`, `problems/ITA2025Q1/rubric.json:31` e `problems/ITA2025Q1/rubric.json:38`, e é consumido em `app/confia_lean_auditor/rubric/rubric_evaluator.py:49` e `app/confia_lean_auditor/rubric/rubric_evaluator.py:54`.
+Contratos que batem: `ProblemConfig`, `RubricConfig`, `MicroclaimConfig`, `MicroclaimsConfig` e `ProblemAssets` proíbem campos extras em `app/confia_lean_auditor/core/problem_assets.py:14` a `app/confia_lean_auditor/core/problem_assets.py:69`; `validate_problem_assets` cruza IDs, referências de microclaims, dependências e soma de pontos em `app/confia_lean_auditor/core/problem_assets.py:154` a `app/confia_lean_auditor/core/problem_assets.py:219`; há teste para contratos sem parsing JSON direto em avaliadores em `tests/test_evaluator_architecture.py:4` a `tests/test_evaluator_architecture.py:14`; há teste de cobertura dos roteadores por inventário de `problems/ITA2025*/problem.json` em `tests/test_problem_router_coverage.py:12` a `tests/test_problem_router_coverage.py:58`.
+
+Contratos que divergem por desenho ou risco de sincronização: `AuditResponse` inclui `student_claims` e `student_claim_checks` em `app/confia_lean_auditor/core/schemas.py:113` a `app/confia_lean_auditor/core/schemas.py:114`, mas esses dados são produzidos por dataclasses em `app/confia_lean_auditor/student_claims/schemas.py:41` a `app/confia_lean_auditor/student_claims/schemas.py:68` e serializados via `asdict` em `app/confia_lean_auditor/main.py:119` a `app/confia_lean_auditor/main.py:120`; F2 tem adjusters registrados apenas para F2Q1/F2Q3/F2Q5/F2Q6/F2Q8 em `app/confia_lean_auditor/rubric/adjusters/registry.py:26` a `app/confia_lean_auditor/rubric/adjusters/registry.py:32`, enquanto problemas Q retornam lista vazia de student claims em `app/confia_lean_auditor/student_claims/registry.py:23` a `app/confia_lean_auditor/student_claims/registry.py:39`.
 
 ## 5. Análise módulo a módulo
 
-### Lote 1: arquivos 1-10
-
-#### Analisado 1 de 87 — .github/workflows/create-release.yml
-Responsabilidade: cria tag/release Lean quando `lean-toolchain` muda nos branches `main` ou `master`, conforme `.github/workflows/create-release.yml:3`, `.github/workflows/create-release.yml:5` e `.github/workflows/create-release.yml:9`.
-Fluxo de dados: consome evento de push e `GITHUB_TOKEN`, chama ação externa em `.github/workflows/create-release.yml:18` e `.github/workflows/create-release.yml:19`.
-Entradas/saídas: entrada é push em `lean-toolchain`; saída é release/tag pela action com `do-release: true` em `.github/workflows/create-release.yml:21`.
-Padrões: workflow declarativo de automação CI.
-Anti-padrões e smells: permissão `contents: write` concede escrita ao job em `.github/workflows/create-release.yml:16`; ação externa é fixada só por major `@v1` em `.github/workflows/create-release.yml:19`.
-Risco de refatoração: MÉDIO, por escrever no repositório via token.
-<file-analyzed/>
-
-#### Analisado 2 de 87 — .github/workflows/lean_action_ci.yml
-Responsabilidade: executa build Lean e geração de documentação em push, pull request e dispatch em `.github/workflows/lean_action_ci.yml:3`, `.github/workflows/lean_action_ci.yml:4`, `.github/workflows/lean_action_ci.yml:5` e `.github/workflows/lean_action_ci.yml:6`.
-Fluxo de dados: checkout do repositório, Lean Action e docgen em `.github/workflows/lean_action_ci.yml:19`, `.github/workflows/lean_action_ci.yml:20` e `.github/workflows/lean_action_ci.yml:21`.
-Entradas/saídas: entrada é evento GitHub; saída é build e possível Pages/docgen com permissões em `.github/workflows/lean_action_ci.yml:9`, `.github/workflows/lean_action_ci.yml:11` e `.github/workflows/lean_action_ci.yml:12`.
-Padrões: CI declarativo.
-Anti-padrões e smells: `actions/checkout@v5`, `lean-action@v1` e `docgen-action@v1` são referências por major, não por SHA, em `.github/workflows/lean_action_ci.yml:19`, `.github/workflows/lean_action_ci.yml:20` e `.github/workflows/lean_action_ci.yml:21`.
-Risco de refatoração: MÉDIO, por impactar validação Lean e publicação de docs.
-<file-analyzed/>
-
-#### Analisado 3 de 87 — .github/workflows/update.yml
-Responsabilidade: workflow manual para procurar e aplicar updates de mathlib em `.github/workflows/update.yml:1`, `.github/workflows/update.yml:6`, `.github/workflows/update.yml:17` e `.github/workflows/update.yml:35`.
-Fluxo de dados: job `check-for-updates` produz outputs em `.github/workflows/update.yml:11`, `.github/workflows/update.yml:12` e `.github/workflows/update.yml:13`; job `do-update` consome matriz de tags em `.github/workflows/update.yml:30` e `.github/workflows/update.yml:31`.
-Entradas/saídas: entrada manual; saídas são PR ou issue em `.github/workflows/update.yml:39` e `.github/workflows/update.yml:40`.
-Padrões: pipeline de atualização com job dependente.
-Anti-padrões e smells: schedule comentado deixa atualização automática inativa em `.github/workflows/update.yml:4`; permissões de escrita para contents, issues e pull-requests aparecem em `.github/workflows/update.yml:23`, `.github/workflows/update.yml:24` e `.github/workflows/update.yml:25`.
-Risco de refatoração: MÉDIO, por automatizar mudanças em dependência central.
-<file-analyzed/>
-
-#### Analisado 4 de 87 — .gitignore
-Responsabilidade: ignora somente diretório Lake local em `.gitignore:1`.
-Fluxo de dados: afeta rastreamento Git.
-Entradas/saídas: entrada é padrão `/.lake`; saída é exclusão desse cache.
-Padrões: configuração de VCS.
-Anti-padrões e smells: `.venv/` não é ignorado enquanto `.venv/pyvenv.cfg` existe em `.venv/pyvenv.cfg:1`, `.venv/pyvenv.cfg:2` e `.venv/pyvenv.cfg:3`.
-Risco de refatoração: ALTO, porque a omissão está associada a 1870 arquivos de ambiente rastreados no Git.
-<file-analyzed/>
-
-#### Analisado 5 de 87 — AUDITORIA_REPOSITORIO.md
-Responsabilidade: relatório de auditoria atual, iniciado pelo título em `AUDITORIA_REPOSITORIO.md:1`.
-Fluxo de dados: sintetiza leitura de código, manifestos, workflows, contratos JSON e artefatos.
-Entradas/saídas: entrada é o repositório; saída é este documento.
-Padrões: documentação diagnóstica.
-Anti-padrões e smells: por ser documento gerado, não participa do runtime; sua presença no inventário cria auto-referência documental em `AUDITORIA_REPOSITORIO.md:1`.
-Risco de refatoração: BAIXO, por não ser consumido pelo código.
-<file-analyzed/>
-
-#### Analisado 6 de 87 — ConfiaLeanAuditor.lean
-Responsabilidade: módulo agregador Lean que importa `Basic` e statement do problema em `ConfiaLeanAuditor.lean:1` e `ConfiaLeanAuditor.lean:2`.
-Fluxo de dados: alimenta o alvo Lake `ConfiaLeanAuditor` declarado em `lakefile.toml:18`.
-Entradas/saídas: exporta o conjunto de imports Lean para o build.
-Padrões: módulo raiz agregador.
-Anti-padrões e smells: importa scaffold `Basic` cuja única definição é `hello` em `ConfiaLeanAuditor/Basic.lean:1`.
-Risco de refatoração: BAIXO, mas qualquer mudança altera o alvo padrão de Lake.
-<file-analyzed/>
-
-#### Analisado 7 de 87 — ConfiaLeanAuditor/Basic.lean
-Responsabilidade: contém apenas `def hello := "world"` em `ConfiaLeanAuditor/Basic.lean:1`.
-Fluxo de dados: é importado pelo agregador em `ConfiaLeanAuditor.lean:1`.
-Entradas/saídas: exporta símbolo `hello`.
-Padrões: scaffold Lean.
-Anti-padrões e smells: boilerplate de scaffold presente em `ConfiaLeanAuditor/Basic.lean:1`.
-Risco de refatoração: BAIXO, porque não há consumidor semântico observado além do agregador.
-<file-analyzed/>
-
-#### Analisado 8 de 87 — ConfiaLeanAuditor/Problems/ITA2025Q1/Statement.lean
-Responsabilidade: define funções e proposições formais do problema ITA2025Q1 em `ConfiaLeanAuditor/Problems/ITA2025Q1/Statement.lean:7`, `ConfiaLeanAuditor/Problems/ITA2025Q1/Statement.lean:10`, `ConfiaLeanAuditor/Problems/ITA2025Q1/Statement.lean:13`, `ConfiaLeanAuditor/Problems/ITA2025Q1/Statement.lean:18`, `ConfiaLeanAuditor/Problems/ITA2025Q1/Statement.lean:22` e `ConfiaLeanAuditor/Problems/ITA2025Q1/Statement.lean:28`.
-Fluxo de dados: é consumido pelo agregador, certificado e geradores em `ConfiaLeanAuditor.lean:2`, `problems/ITA2025Q1/certificate/Statement.lean:1`, `app/confia_lean_auditor/lean/build_attempt.py:10` e `app/confia_lean_auditor/lean/formal_step_evaluator.py:23`.
-Entradas/saídas: entrada é Mathlib em `ConfiaLeanAuditor/Problems/ITA2025Q1/Statement.lean:1`; saída são definições no namespace em `ConfiaLeanAuditor/Problems/ITA2025Q1/Statement.lean:3`.
-Padrões: especificação formal.
-Anti-padrões e smells: fórmula `triangleArea` depende de `signedDoubleArea` por valor absoluto em `ConfiaLeanAuditor/Problems/ITA2025Q1/Statement.lean:10` e `ConfiaLeanAuditor/Problems/ITA2025Q1/Statement.lean:11`; consumidores gerados reimplementam helper de área em string em `app/confia_lean_auditor/lean/build_attempt.py:18`.
-Risco de refatoração: ALTO, por ser contrato formal central.
-<file-analyzed/>
-
-#### Analisado 9 de 87 — README.md
-Responsabilidade: README de setup GitHub, com título em `README.md:1`.
-Fluxo de dados: não é consumido pelo runtime observado.
-Entradas/saídas: documentação manual.
-Padrões: scaffold de repositório.
-Anti-padrões e smells: texto instrui remover a seção depois do setup em `README.md:13`, indicando boilerplate de scaffold ainda presente.
-Risco de refatoração: BAIXO.
-<file-analyzed/>
-
-#### Analisado 10 de 87 — app/confia_lean_auditor.egg-info/PKG-INFO
-Responsabilidade: metadata gerado do pacote, com nome, versão e dependências em `app/confia_lean_auditor.egg-info/PKG-INFO:2`, `app/confia_lean_auditor.egg-info/PKG-INFO:3`, `app/confia_lean_auditor.egg-info/PKG-INFO:6`, `app/confia_lean_auditor.egg-info/PKG-INFO:7`, `app/confia_lean_auditor.egg-info/PKG-INFO:8` e `app/confia_lean_auditor.egg-info/PKG-INFO:9`.
-Fluxo de dados: deriva de `pyproject.toml` em `pyproject.toml:5` a `pyproject.toml:15`.
-Entradas/saídas: artefato de empacotamento.
-Padrões: egg-info gerado.
-Anti-padrões e smells: saída de build/metadata versionada; `SOURCES.txt` inclui o próprio egg-info em `app/confia_lean_auditor.egg-info/SOURCES.txt:4` e `app/confia_lean_auditor.egg-info/SOURCES.txt:5`.
-Risco de refatoração: BAIXO para runtime, MÉDIO para distribuição.
-<file-analyzed/>
-
-### Lote 2: arquivos 11-20
-
-#### Analisado 11 de 87 — app/confia_lean_auditor.egg-info/SOURCES.txt
-Responsabilidade: lista fontes incluídas no pacote em `app/confia_lean_auditor.egg-info/SOURCES.txt:1` a `app/confia_lean_auditor.egg-info/SOURCES.txt:12`.
-Fluxo de dados: reflete empacotamento setuptools configurado em `pyproject.toml:17`, `pyproject.toml:18`, `pyproject.toml:20` e `pyproject.toml:21`.
-Entradas/saídas: artefato gerado de distribuição.
-Padrões: manifest de build.
-Anti-padrões e smells: omite vários módulos Python atuais, como `app/confia_lean_auditor/main.py`, embora o código importe esse módulo como API em `app/confia_lean_auditor/main.py:20`; isso indica metadata desatualizada.
-Risco de refatoração: MÉDIO, por poder enganar diagnóstico de distribuição.
-<file-analyzed/>
-
-#### Analisado 12 de 87 — app/confia_lean_auditor.egg-info/dependency_links.txt
-Responsabilidade: arquivo egg-info vazio, sem links de dependência.
-Fluxo de dados: artefato de build sem conteúdo.
-Entradas/saídas: nenhuma entrada runtime observada.
-Padrões: metadata gerado.
-Anti-padrões e smells: arquivo gerado versionado aparece em `app/confia_lean_auditor.egg-info/SOURCES.txt:6`.
-Risco de refatoração: BAIXO.
-<file-analyzed/>
-
-#### Analisado 13 de 87 — app/confia_lean_auditor.egg-info/requires.txt
-Responsabilidade: registra dependências Python em `app/confia_lean_auditor.egg-info/requires.txt:1`, `app/confia_lean_auditor.egg-info/requires.txt:2`, `app/confia_lean_auditor.egg-info/requires.txt:3` e `app/confia_lean_auditor.egg-info/requires.txt:4`.
-Fluxo de dados: duplica `pyproject.toml:11`, `pyproject.toml:12`, `pyproject.toml:13` e `pyproject.toml:14`.
-Entradas/saídas: metadata de pacote.
-Padrões: arquivo gerado.
-Anti-padrões e smells: dependência `pytest` é declarada como runtime em `pyproject.toml:14`, mas não há diretório de testes próprio no inventário operacional; o uso observado de `pytest` está em `.venv/bin/pytest`, não no código do projeto.
-Risco de refatoração: BAIXO para código, MÉDIO para empacotamento.
-<file-analyzed/>
-
-#### Analisado 14 de 87 — app/confia_lean_auditor.egg-info/top_level.txt
-Responsabilidade: declara pacote top-level `confia_lean_auditor` em `app/confia_lean_auditor.egg-info/top_level.txt:1`.
-Fluxo de dados: usado por ferramentas de empacotamento.
-Entradas/saídas: metadata de distribuição.
-Padrões: arquivo gerado.
-Anti-padrões e smells: artefato de build versionado.
-Risco de refatoração: BAIXO.
-<file-analyzed/>
-
-#### Analisado 15 de 87 — app/confia_lean_auditor/__init__.py
-Responsabilidade: marcador de pacote; não possui linhas de código e o pacote é identificado em `app/confia_lean_auditor.egg-info/top_level.txt:1`.
-Fluxo de dados: habilita imports `confia_lean_auditor.*` usados em `app/confia_lean_auditor/main.py:9`.
-Entradas/saídas: não exporta API própria.
-Padrões: pacote Python.
-Anti-padrões e smells: nenhum comportamento próprio observado.
-Risco de refatoração: BAIXO.
-<file-analyzed/>
-
-#### Analisado 16 de 87 — app/confia_lean_auditor/claims/__init__.py
-Responsabilidade: marcador do subpacote `claims`, consumido pelo import absoluto em `app/confia_lean_auditor/main.py:9`.
-Fluxo de dados: não transforma dados.
-Entradas/saídas: não exporta nomes próprios.
-Padrões: pacote Python.
-Anti-padrões e smells: nenhum comportamento próprio observado.
-Risco de refatoração: BAIXO.
-<file-analyzed/>
-
-#### Analisado 17 de 87 — app/confia_lean_auditor/claims/extract_claims.py
-Responsabilidade: normaliza texto, detecta claims do problema ITA2025Q1 e extrai passo formal de determinante em `app/confia_lean_auditor/claims/extract_claims.py:14`, `app/confia_lean_auditor/claims/extract_claims.py:72`, `app/confia_lean_auditor/claims/extract_claims.py:117` e `app/confia_lean_auditor/claims/extract_claims.py:214`.
-Fluxo de dados: recebe `solution`, produz `ClaimExtraction` com `claims` e `formal_steps` em `app/confia_lean_auditor/claims/extract_claims.py:207`, `app/confia_lean_auditor/claims/extract_claims.py:208`, `app/confia_lean_auditor/claims/extract_claims.py:209` e `app/confia_lean_auditor/claims/extract_claims.py:210`.
-Entradas/saídas: exporta `extract_claims`; chama `extract_claims_ita2025q1` só quando `problem_id == "ITA2025Q1"` em `app/confia_lean_auditor/claims/extract_claims.py:215`.
-Padrões: parser heurístico por regex/string.
-Anti-padrões e smells: strings mágicas de problema e claim types aparecem em `app/confia_lean_auditor/claims/extract_claims.py:100`, `app/confia_lean_auditor/claims/extract_claims.py:132`, `app/confia_lean_auditor/claims/extract_claims.py:147`, `app/confia_lean_auditor/claims/extract_claims.py:165`, `app/confia_lean_auditor/claims/extract_claims.py:180`, `app/confia_lean_auditor/claims/extract_claims.py:199` e `app/confia_lean_auditor/claims/extract_claims.py:215`; fallback para problema desconhecido retorna claims vazios em `app/confia_lean_auditor/claims/extract_claims.py:218`.
-Risco de refatoração: ALTO, por definir a fronteira textual que alimenta rubrica e Lean.
-<file-analyzed/>
-
-#### Analisado 18 de 87 — app/confia_lean_auditor/core/__init__.py
-Responsabilidade: marcador do subpacote `core`, usado por imports em `app/confia_lean_auditor/main.py:10` e `app/confia_lean_auditor/main.py:11`.
-Fluxo de dados: não transforma dados.
-Entradas/saídas: não exporta nomes próprios.
-Padrões: pacote Python.
-Anti-padrões e smells: nenhum comportamento próprio observado.
-Risco de refatoração: BAIXO.
-<file-analyzed/>
-
-#### Analisado 19 de 87 — app/confia_lean_auditor/core/paths.py
-Responsabilidade: resolve raiz do repositório e valida/monta diretório de problema em `app/confia_lean_auditor/core/paths.py:15`, `app/confia_lean_auditor/core/paths.py:25` e `app/confia_lean_auditor/core/paths.py:34`.
-Fluxo de dados: lê env var `CONFIA_LEAN_AUDITOR_ROOT` em `app/confia_lean_auditor/core/paths.py:16`, senão deriva a raiz de `__file__` em `app/confia_lean_auditor/core/paths.py:20`, `app/confia_lean_auditor/core/paths.py:21` e `app/confia_lean_auditor/core/paths.py:22`.
-Entradas/saídas: exporta `InvalidProblemId`, `get_repo_root`, `validate_problem_id` e `get_problem_dir`.
-Padrões: utilitário de paths com validação.
-Anti-padrões e smells: caminho de raiz depende da profundidade fixa `parents[3]` em `app/confia_lean_auditor/core/paths.py:22`.
-Risco de refatoração: ALTO, por ser usado por API, rubrica, microclaims e CLI.
-<file-analyzed/>
-
-#### Analisado 20 de 87 — app/confia_lean_auditor/core/schemas.py
-Responsabilidade: define modelos Pydantic de request, claims, rubrica, certificado Lean, microclaims e response em `app/confia_lean_auditor/core/schemas.py:8`, `app/confia_lean_auditor/core/schemas.py:13`, `app/confia_lean_auditor/core/schemas.py:25`, `app/confia_lean_auditor/core/schemas.py:43`, `app/confia_lean_auditor/core/schemas.py:52`, `app/confia_lean_auditor/core/schemas.py:58`, `app/confia_lean_auditor/core/schemas.py:68`, `app/confia_lean_auditor/core/schemas.py:74`, `app/confia_lean_auditor/core/schemas.py:86` e `app/confia_lean_auditor/core/schemas.py:100`.
-Fluxo de dados: os modelos tipam a resposta HTTP em `app/confia_lean_auditor/main.py:36` e a persistência JSON em `app/confia_lean_auditor/main.py:124`.
-Entradas/saídas: exporta classes de contrato interno.
-Padrões: DTOs Pydantic.
-Anti-padrões e smells: status de Lean e strings de resultado são campos livres `str` em `app/confia_lean_auditor/core/schemas.py:75`, `app/confia_lean_auditor/core/schemas.py:96` e `app/confia_lean_auditor/core/schemas.py:104`.
-Risco de refatoração: ALTO, por ser contrato compartilhado.
-<file-analyzed/>
-
-### Lote 3: arquivos 21-30
-
-#### Analisado 21 de 87 — app/confia_lean_auditor/lean/__init__.py
-Responsabilidade: marcador do subpacote `lean`, usado por imports em `app/confia_lean_auditor/main.py:12`, `app/confia_lean_auditor/main.py:13`, `app/confia_lean_auditor/main.py:14` e `app/confia_lean_auditor/main.py:15`.
-Fluxo de dados: não transforma dados.
-Entradas/saídas: não exporta nomes próprios.
-Padrões: pacote Python.
-Anti-padrões e smells: nenhum comportamento próprio observado.
-Risco de refatoração: BAIXO.
-<file-analyzed/>
-
-#### Analisado 22 de 87 — app/confia_lean_auditor/lean/build_attempt.py
-Responsabilidade: monta código Lean completo a partir das claims e dos passos formais verificados em `app/confia_lean_auditor/lean/build_attempt.py:98`, `app/confia_lean_auditor/lean/build_attempt.py:103`, `app/confia_lean_auditor/lean/build_attempt.py:104` e `app/confia_lean_auditor/lean/build_attempt.py:106`.
-Fluxo de dados: recebe `ClaimExtraction`, `artifact_dir` e `formal_step_results`; escreve `Attempt.lean` em `app/confia_lean_auditor/lean/build_attempt.py:127` e `app/confia_lean_auditor/lean/build_attempt.py:128`; retorna caminho e teoremas em `app/confia_lean_auditor/lean/build_attempt.py:130`, `app/confia_lean_auditor/lean/build_attempt.py:131` e `app/confia_lean_auditor/lean/build_attempt.py:132`.
-Entradas/saídas: exporta `build_attempt`.
-Padrões: gerador de código por templates string.
-Anti-padrões e smells: strings Lean grandes embutidas em Python em `app/confia_lean_auditor/lean/build_attempt.py:9`, `app/confia_lean_auditor/lean/build_attempt.py:36`, `app/confia_lean_auditor/lean/build_attempt.py:44`, `app/confia_lean_auditor/lean/build_attempt.py:52` e `app/confia_lean_auditor/lean/build_attempt.py:70`; `problem_id` desconhecido levanta `NotImplementedError` em `app/confia_lean_auditor/lean/build_attempt.py:150`.
-Risco de refatoração: ALTO, por acoplar texto extraído, teoremas, Lean e artefatos.
-<file-analyzed/>
-
-#### Analisado 23 de 87 — app/confia_lean_auditor/lean/formal_step_evaluator.py
-Responsabilidade: renderiza e verifica passos formais extraídos da solução em arquivos Lean individuais em `app/confia_lean_auditor/lean/formal_step_evaluator.py:19` e `app/confia_lean_auditor/lean/formal_step_evaluator.py:49`.
-Fluxo de dados: cria `formal_steps/`, escreve `{step.id}.lean`, executa Lean e transforma resultado em `FormalStepResult` em `app/confia_lean_auditor/lean/formal_step_evaluator.py:55`, `app/confia_lean_auditor/lean/formal_step_evaluator.py:62`, `app/confia_lean_auditor/lean/formal_step_evaluator.py:63`, `app/confia_lean_auditor/lean/formal_step_evaluator.py:65` e `app/confia_lean_auditor/lean/formal_step_evaluator.py:70`.
-Entradas/saídas: exporta `evaluate_formal_steps`.
-Padrões: gerador e executor de verificação por item.
-Anti-padrões e smells: `step.lhs`, `step.rhs` e `step.lean_method` entram diretamente no template Lean em `app/confia_lean_auditor/lean/formal_step_evaluator.py:31`, `app/confia_lean_auditor/lean/formal_step_evaluator.py:32`, `app/confia_lean_auditor/lean/formal_step_evaluator.py:33` e `app/confia_lean_auditor/lean/formal_step_evaluator.py:34`; `problem_id` desconhecido levanta `NotImplementedError` em `app/confia_lean_auditor/lean/formal_step_evaluator.py:46`.
-Risco de refatoração: ALTO, por aceitar texto derivado da solução dentro de código Lean gerado.
-<file-analyzed/>
-
-#### Analisado 24 de 87 — app/confia_lean_auditor/lean/microclaim_evaluator.py
-Responsabilidade: cruza evidência textual, teoremas gerados, status Lean e dependências de microclaims em `app/confia_lean_auditor/lean/microclaim_evaluator.py:38`.
-Fluxo de dados: lê `microclaims.json`, computa `present_claim_types`, `generated` e `verified_step_types`, produz lista de `MicroclaimResult` em `app/confia_lean_auditor/lean/microclaim_evaluator.py:52`, `app/confia_lean_auditor/lean/microclaim_evaluator.py:54`, `app/confia_lean_auditor/lean/microclaim_evaluator.py:55`, `app/confia_lean_auditor/lean/microclaim_evaluator.py:56` e `app/confia_lean_auditor/lean/microclaim_evaluator.py:121`.
-Entradas/saídas: exporta `evaluate_microclaims`.
-Padrões: avaliador de grafo simples de dependências.
-Anti-padrões e smells: status são strings montadas dinamicamente em `app/confia_lean_auditor/lean/microclaim_evaluator.py:82`, `app/confia_lean_auditor/lean/microclaim_evaluator.py:84`, `app/confia_lean_auditor/lean/microclaim_evaluator.py:86`, `app/confia_lean_auditor/lean/microclaim_evaluator.py:88`, `app/confia_lean_auditor/lean/microclaim_evaluator.py:90` e `app/confia_lean_auditor/lean/microclaim_evaluator.py:119`.
-Risco de refatoração: ALTO, por mediar rubrica e certificado.
-<file-analyzed/>
-
-#### Analisado 25 de 87 — app/confia_lean_auditor/lean/run_lean.py
-Responsabilidade: detecta tokens proibidos, classifica saída Lean, executa Lean por subprocess e oferece CLI em `app/confia_lean_auditor/lean/run_lean.py:21`, `app/confia_lean_auditor/lean/run_lean.py:27`, `app/confia_lean_auditor/lean/run_lean.py:38`, `app/confia_lean_auditor/lean/run_lean.py:65`, `app/confia_lean_auditor/lean/run_lean.py:101` e `app/confia_lean_auditor/lean/run_lean.py:131`.
-Fluxo de dados: lê arquivo Lean em `app/confia_lean_auditor/lean/run_lean.py:66`, chama `lake env lean` em `app/confia_lean_auditor/lean/run_lean.py:69`, captura stdout/stderr em `app/confia_lean_auditor/lean/run_lean.py:75`, `app/confia_lean_auditor/lean/run_lean.py:76`, `app/confia_lean_auditor/lean/run_lean.py:81` e `app/confia_lean_auditor/lean/run_lean.py:82`.
-Entradas/saídas: exporta `run_lean_file`, `run_problem` e CLI.
-Padrões: adapter de subprocess.
-Anti-padrões e smells: mensagens de classificação dependem de substrings de stderr/stdout em `app/confia_lean_auditor/lean/run_lean.py:44`, `app/confia_lean_auditor/lean/run_lean.py:50`, `app/confia_lean_auditor/lean/run_lean.py:53`, `app/confia_lean_auditor/lean/run_lean.py:56` e `app/confia_lean_auditor/lean/run_lean.py:59`.
-Risco de refatoração: ALTO, por fronteira externa com Lake/Lean.
-<file-analyzed/>
-
-#### Analisado 26 de 87 — app/confia_lean_auditor/main.py
-Responsabilidade: orquestra API FastAPI, valida problema, executa pipeline de claims, Lean, microclaims, rubrica, feedback e persistência em `app/confia_lean_auditor/main.py:20`, `app/confia_lean_auditor/main.py:27` e `app/confia_lean_auditor/main.py:36`.
-Fluxo de dados: request `AuditRequest` entra em `app/confia_lean_auditor/main.py:37`; resposta `AuditResponse` sai em `app/confia_lean_auditor/main.py:109` e `app/confia_lean_auditor/main.py:134`; artefatos são gravados em `app/confia_lean_auditor/main.py:123`, `app/confia_lean_auditor/main.py:128` e `app/confia_lean_auditor/main.py:129`.
-Entradas/saídas: rotas HTTP `/health` e `/audit`.
-Padrões: controller/orquestrador.
-Anti-padrões e smells: versão da API `0.4.0` diverge da versão do pacote `0.1.0` em `app/confia_lean_auditor/main.py:20`, `app/confia_lean_auditor/main.py:32` e `pyproject.toml:7`; exceções de arquivo viram 500/404 conforme origem em `app/confia_lean_auditor/main.py:93`, `app/confia_lean_auditor/main.py:94`, `app/confia_lean_auditor/main.py:103` e `app/confia_lean_auditor/main.py:104`.
-Risco de refatoração: ALTO, por concentrar o fluxo completo.
-<file-analyzed/>
-
-#### Analisado 27 de 87 — app/confia_lean_auditor/reports/__init__.py
-Responsabilidade: marcador do subpacote `reports`, usado pelo import em `app/confia_lean_auditor/main.py:16`.
-Fluxo de dados: não transforma dados.
-Entradas/saídas: não exporta nomes próprios.
-Padrões: pacote Python.
-Anti-padrões e smells: nenhum comportamento próprio observado.
-Risco de refatoração: BAIXO.
-<file-analyzed/>
-
-#### Analisado 28 de 87 — app/confia_lean_auditor/reports/report_builder.py
-Responsabilidade: converte rubrica, certificado Lean e microclaims em veredito e feedback textual em `app/confia_lean_auditor/reports/report_builder.py:19` e `app/confia_lean_auditor/reports/report_builder.py:31`.
-Fluxo de dados: consome `RubricAssessment`, `LeanCertificate` e lista de `MicroclaimResult`; retorna string em `app/confia_lean_auditor/reports/report_builder.py:31`, `app/confia_lean_auditor/reports/report_builder.py:32`, `app/confia_lean_auditor/reports/report_builder.py:33`, `app/confia_lean_auditor/reports/report_builder.py:34` e `app/confia_lean_auditor/reports/report_builder.py:75`.
-Entradas/saídas: exporta `verdict_from_score` e `build_feedback`.
-Padrões: builder de apresentação textual.
-Anti-padrões e smells: limiares de veredito são números mágicos em `app/confia_lean_auditor/reports/report_builder.py:22`, `app/confia_lean_auditor/reports/report_builder.py:24` e `app/confia_lean_auditor/reports/report_builder.py:26`; strings de status são acopladas a `verified_by_lean` e `verified` em `app/confia_lean_auditor/reports/report_builder.py:42` e `app/confia_lean_auditor/reports/report_builder.py:68`.
-Risco de refatoração: MÉDIO, por afetar saída ao usuário.
-<file-analyzed/>
-
-#### Analisado 29 de 87 — app/confia_lean_auditor/rubric/__init__.py
-Responsabilidade: marcador do subpacote `rubric`, usado pelo import em `app/confia_lean_auditor/main.py:17`.
-Fluxo de dados: não transforma dados.
-Entradas/saídas: não exporta nomes próprios.
-Padrões: pacote Python.
-Anti-padrões e smells: nenhum comportamento próprio observado.
-Risco de refatoração: BAIXO.
-<file-analyzed/>
-
-#### Analisado 30 de 87 — app/confia_lean_auditor/rubric/rubric_evaluator.py
-Responsabilidade: avalia itens de rubrica a partir de claims e microclaims verificados em `app/confia_lean_auditor/rubric/rubric_evaluator.py:16`.
-Fluxo de dados: lê `rubric.json` em `app/confia_lean_auditor/rubric/rubric_evaluator.py:23` e `app/confia_lean_auditor/rubric/rubric_evaluator.py:28`; acumula score em `app/confia_lean_auditor/rubric/rubric_evaluator.py:43` e `app/confia_lean_auditor/rubric/rubric_evaluator.py:63`; retorna `RubricAssessment` em `app/confia_lean_auditor/rubric/rubric_evaluator.py:84`.
-Entradas/saídas: exporta `evaluate_rubric`.
-Padrões: avaliador orientado por configuração JSON.
-Anti-padrões e smells: acesso a `data["items"]`, `item["points"]`, `item["id"]` e `data["max_score"]` não valida schema antes de usar em `app/confia_lean_auditor/rubric/rubric_evaluator.py:45`, `app/confia_lean_auditor/rubric/rubric_evaluator.py:62`, `app/confia_lean_auditor/rubric/rubric_evaluator.py:74` e `app/confia_lean_auditor/rubric/rubric_evaluator.py:86`.
-Risco de refatoração: ALTO, por definir pontuação.
-<file-analyzed/>
-
-### Lote 4: arquivos 31-40
-
-#### Analisado 31 de 87 — artifacts/runs/20260702T181631_332331/audit.json
-Responsabilidade: saída versionada de auditoria para `ITA2025Q1`, com score 10 em `artifacts/runs/20260702T181631_332331/audit.json:2`, `artifacts/runs/20260702T181631_332331/audit.json:3` e `artifacts/runs/20260702T181631_332331/audit.json:5`.
-Fluxo de dados: corresponde ao tipo de saída gravado por `main.py` em `app/confia_lean_auditor/main.py:123`.
-Entradas/saídas: artefato final, consumido por humanos ou inspeção.
-Padrões: snapshot JSON.
-Anti-padrões e smells: saída de execução versionada.
-Risco de refatoração: BAIXO para código, MÉDIO para higiene de repositório.
-<file-analyzed/>
-
-#### Analisado 32 de 87 — artifacts/runs/20260702T181631_332331/solution.txt
-Responsabilidade: solução correta usada como entrada de execução, com resposta final em `artifacts/runs/20260702T181631_332331/solution.txt:23`.
-Fluxo de dados: corresponde à saída `solution.txt` gravada por `main.py` em `app/confia_lean_auditor/main.py:128`.
-Entradas/saídas: fixture/snapshot de entrada.
-Padrões: texto de exemplo versionado em artefatos.
-Anti-padrões e smells: duplica `problems/ITA2025Q1/examples/correct_solution.txt:1` a `problems/ITA2025Q1/examples/correct_solution.txt:23`.
-Risco de refatoração: BAIXO.
-<file-analyzed/>
-
-#### Analisado 33 de 87 — artifacts/runs/20260702T235936_589547/audit.json
-Responsabilidade: saída de auditoria correta, com `extracted_claims` em `artifacts/runs/20260702T235936_589547/audit.json:6` e score 10 em `artifacts/runs/20260702T235936_589547/audit.json:3`.
-Fluxo de dados: snapshot de `AuditResponse`.
-Entradas/saídas: artefato gerado.
-Padrões: snapshot JSON.
-Anti-padrões e smells: saída de execução versionada por acidente; contém schema antigo/atual misturado ao longo dos runs, visível pela presença de `extracted_claims` aqui em `artifacts/runs/20260702T235936_589547/audit.json:6` e sua ausência inicial no run anterior até `artifacts/runs/20260702T181631_332331/audit.json:6`.
-Risco de refatoração: BAIXO.
-<file-analyzed/>
-
-#### Analisado 34 de 87 — artifacts/runs/20260702T235936_589547/claims.json
-Responsabilidade: claims extraídas para solução correta, com cinco claims em `artifacts/runs/20260702T235936_589547/claims.json:5`, `artifacts/runs/20260702T235936_589547/claims.json:16`, `artifacts/runs/20260702T235936_589547/claims.json:26`, `artifacts/runs/20260702T235936_589547/claims.json:36` e `artifacts/runs/20260702T235936_589547/claims.json:46`.
-Fluxo de dados: saída de `extract_claims`, produzida por `main.py` em `app/confia_lean_auditor/main.py:129`.
-Entradas/saídas: artefato intermediário.
-Padrões: snapshot JSON.
-Anti-padrões e smells: saída gerada versionada.
-Risco de refatoração: BAIXO.
-<file-analyzed/>
-
-#### Analisado 35 de 87 — artifacts/runs/20260702T235936_589547/solution.txt
-Responsabilidade: solução correta, com determinante em `artifacts/runs/20260702T235936_589547/solution.txt:12` e resposta em `artifacts/runs/20260702T235936_589547/solution.txt:23`.
-Fluxo de dados: snapshot de input.
-Entradas/saídas: texto de solução.
-Padrões: fixture operacional.
-Anti-padrões e smells: duplicata literal de exemplo correto visível pela mesma abertura em `problems/ITA2025Q1/examples/correct_solution.txt:1` e `artifacts/runs/20260702T235936_589547/solution.txt:1`.
-Risco de refatoração: BAIXO.
-<file-analyzed/>
-
-#### Analisado 36 de 87 — artifacts/runs/20260703T005732_426318/Attempt.lean
-Responsabilidade: tentativa Lean gerada com definições próprias de área e teoremas em `artifacts/runs/20260703T005732_426318/Attempt.lean:8`, `artifacts/runs/20260703T005732_426318/Attempt.lean:14`, `artifacts/runs/20260703T005732_426318/Attempt.lean:19`, `artifacts/runs/20260703T005732_426318/Attempt.lean:32`, `artifacts/runs/20260703T005732_426318/Attempt.lean:37` e `artifacts/runs/20260703T005732_426318/Attempt.lean:55`.
-Fluxo de dados: artefato gerado por versão anterior do gerador, pois o gerador atual importa statement em `app/confia_lean_auditor/lean/build_attempt.py:10`.
-Entradas/saídas: entrada para `lake env lean`.
-Padrões: código gerado.
-Anti-padrões e smells: arquivo gerado versionado; diverge do template atual que abre namespace do statement em `app/confia_lean_auditor/lean/build_attempt.py:14`.
-Risco de refatoração: BAIXO para código fonte, MÉDIO como evidência histórica.
-<file-analyzed/>
-
-#### Analisado 37 de 87 — artifacts/runs/20260703T005732_426318/audit.json
-Responsabilidade: auditoria gerada com score 10 e claims completas em `artifacts/runs/20260703T005732_426318/audit.json:3` e `artifacts/runs/20260703T005732_426318/audit.json:6`.
-Fluxo de dados: snapshot de `AuditResponse`.
-Entradas/saídas: artefato final.
-Padrões: JSON de saída.
-Anti-padrões e smells: saída versionada por acidente.
-Risco de refatoração: BAIXO.
-<file-analyzed/>
-
-#### Analisado 38 de 87 — artifacts/runs/20260703T005732_426318/claims.json
-Responsabilidade: claims completas geradas para solução correta em `artifacts/runs/20260703T005732_426318/claims.json:2` e `artifacts/runs/20260703T005732_426318/claims.json:3`.
-Fluxo de dados: saída intermediária de claims.
-Entradas/saídas: artefato JSON.
-Padrões: snapshot.
-Anti-padrões e smells: saída gerada versionada.
-Risco de refatoração: BAIXO.
-<file-analyzed/>
-
-#### Analisado 39 de 87 — artifacts/runs/20260703T005732_426318/solution.txt
-Responsabilidade: solução correta duplicada, com determinante correto em `artifacts/runs/20260703T005732_426318/solution.txt:12`.
-Fluxo de dados: input persistido.
-Entradas/saídas: texto de solução.
-Padrões: fixture operacional.
-Anti-padrões e smells: duplicata de `problems/ITA2025Q1/examples/correct_solution.txt:12`.
-Risco de refatoração: BAIXO.
-<file-analyzed/>
-
-#### Analisado 40 de 87 — artifacts/runs/20260703T005858_740365/Attempt.lean
-Responsabilidade: tentativa Lean gerada apenas com `answer_check` em `artifacts/runs/20260703T005858_740365/Attempt.lean:32`.
-Fluxo de dados: corresponde a solução com resposta isolada em `artifacts/runs/20260703T005858_740365/solution.txt:1`.
-Entradas/saídas: entrada para Lean.
-Padrões: código gerado condicional por claims.
-Anti-padrões e smells: versão antiga do gerador reimplementa `triangleArea` em `artifacts/runs/20260703T005858_740365/Attempt.lean:8` e `artifacts/runs/20260703T005858_740365/Attempt.lean:11`.
-Risco de refatoração: BAIXO.
-<file-analyzed/>
-
-### Lote 5: arquivos 41-50
-
-#### Analisado 41 de 87 — artifacts/runs/20260703T005858_740365/audit.json
-Responsabilidade: auditoria de resposta apenas, com score 1 e veredito insuficiente em `artifacts/runs/20260703T005858_740365/audit.json:3` e `artifacts/runs/20260703T005858_740365/audit.json:5`.
-Fluxo de dados: snapshot de avaliação.
-Entradas/saídas: artefato final.
-Padrões: JSON de saída.
-Anti-padrões e smells: saída gerada versionada.
-Risco de refatoração: BAIXO.
-<file-analyzed/>
-
-#### Analisado 42 de 87 — artifacts/runs/20260703T005858_740365/claims.json
-Responsabilidade: claims de resposta apenas, com `final_answer` em `artifacts/runs/20260703T005858_740365/claims.json:5` e `artifacts/runs/20260703T005858_740365/claims.json:6`.
-Fluxo de dados: saída intermediária de extrator.
-Entradas/saídas: JSON gerado.
-Padrões: snapshot.
-Anti-padrões e smells: saída gerada versionada.
-Risco de refatoração: BAIXO.
-<file-analyzed/>
-
-#### Analisado 43 de 87 — artifacts/runs/20260703T005858_740365/solution.txt
-Responsabilidade: input mínimo com resposta final em `artifacts/runs/20260703T005858_740365/solution.txt:1`.
-Fluxo de dados: corresponde a `problems/ITA2025Q1/examples/answer_only.txt:1`.
-Entradas/saídas: texto de solução.
-Padrões: fixture operacional.
-Anti-padrões e smells: duplicata de exemplo versionado.
-Risco de refatoração: BAIXO.
-<file-analyzed/>
-
-#### Analisado 44 de 87 — artifacts/runs/20260703T011235_219542/Attempt.lean
-Responsabilidade: tentativa Lean com teorema de coordenadas em `artifacts/runs/20260703T011235_219542/Attempt.lean:32`.
-Fluxo de dados: código gerado de execução parcial.
-Entradas/saídas: entrada Lean.
-Padrões: código gerado.
-Anti-padrões e smells: saída gerada versionada.
-Risco de refatoração: BAIXO.
-<file-analyzed/>
-
-#### Analisado 45 de 87 — artifacts/runs/20260703T011235_219542/audit.json
-Responsabilidade: auditoria parcial com score 7 em `artifacts/runs/20260703T011235_219542/audit.json:3`.
-Fluxo de dados: snapshot de avaliação parcial.
-Entradas/saídas: artefato final.
-Padrões: JSON de saída.
-Anti-padrões e smells: saída gerada versionada.
-Risco de refatoração: BAIXO.
-<file-analyzed/>
-
-#### Analisado 46 de 87 — artifacts/runs/20260703T011235_219542/claims.json
-Responsabilidade: claims parciais para solução sem raiz positiva, com `problem_id` em `artifacts/runs/20260703T011235_219542/claims.json:2`.
-Fluxo de dados: saída intermediária de claims.
-Entradas/saídas: JSON gerado.
-Padrões: snapshot.
-Anti-padrões e smells: saída gerada versionada.
-Risco de refatoração: BAIXO.
-<file-analyzed/>
-
-#### Analisado 47 de 87 — artifacts/runs/20260703T011235_219542/solution.txt
-Responsabilidade: solução parcial, semelhante ao exemplo `partial_no_positive_root`, com equação em `artifacts/runs/20260703T011235_219542/solution.txt:8` e fatoração em `artifacts/runs/20260703T011235_219542/solution.txt:10`.
-Fluxo de dados: input persistido.
-Entradas/saídas: texto de solução.
-Padrões: fixture operacional.
-Anti-padrões e smells: duplicata de exemplo em `problems/ITA2025Q1/examples/partial_no_positive_root.txt:1`.
-Risco de refatoração: BAIXO.
-<file-analyzed/>
-
-#### Analisado 48 de 87 — artifacts/runs/20260703T011304_967627/Attempt.lean
-Responsabilidade: tentativa Lean mínima com helper de área e sem teoremas de claims em `artifacts/runs/20260703T011304_967627/Attempt.lean:14`.
-Fluxo de dados: código gerado para solução errada.
-Entradas/saídas: entrada Lean.
-Padrões: código gerado.
-Anti-padrões e smells: saída gerada versionada.
-Risco de refatoração: BAIXO.
-<file-analyzed/>
-
-#### Analisado 49 de 87 — artifacts/runs/20260703T011304_967627/audit.json
-Responsabilidade: auditoria de solução errada, com score 0 em `artifacts/runs/20260703T011304_967627/audit.json:3`.
-Fluxo de dados: snapshot final.
-Entradas/saídas: JSON gerado.
-Padrões: saída de execução.
-Anti-padrões e smells: saída gerada versionada.
-Risco de refatoração: BAIXO.
-<file-analyzed/>
-
-#### Analisado 50 de 87 — artifacts/runs/20260703T011304_967627/claims.json
-Responsabilidade: claims vazias para `ITA2025Q1`, com `claims` vazio em `artifacts/runs/20260703T011304_967627/claims.json:2` e `artifacts/runs/20260703T011304_967627/claims.json:3`.
-Fluxo de dados: saída do extrator sem detecção.
-Entradas/saídas: JSON intermediário.
-Padrões: snapshot.
-Anti-padrões e smells: saída gerada versionada.
-Risco de refatoração: BAIXO.
-<file-analyzed/>
-
-### Lote 6: arquivos 51-60
-
-#### Analisado 51 de 87 — artifacts/runs/20260703T011304_967627/solution.txt
-Responsabilidade: solução errada com área `2a + 5` e resposta `97,5` em `artifacts/runs/20260703T011304_967627/solution.txt:1` e `artifacts/runs/20260703T011304_967627/solution.txt:2`.
-Fluxo de dados: input persistido.
-Entradas/saídas: texto de solução.
-Padrões: fixture operacional.
-Anti-padrões e smells: duplicata de `problems/ITA2025Q1/examples/wrong_solution.txt:1` e `problems/ITA2025Q1/examples/wrong_solution.txt:2`.
-Risco de refatoração: BAIXO.
-<file-analyzed/>
-
-#### Analisado 52 de 87 — artifacts/runs/20260703T013701_387917/Attempt.lean
-Responsabilidade: tentativa Lean completa de versão antiga, com namespace gerado em `artifacts/runs/20260703T013701_387917/Attempt.lean:4`.
-Fluxo de dados: código gerado.
-Entradas/saídas: entrada Lean.
-Padrões: snapshot de código gerado.
-Anti-padrões e smells: saída gerada versionada.
-Risco de refatoração: BAIXO.
-<file-analyzed/>
-
-#### Analisado 53 de 87 — artifacts/runs/20260703T013701_387917/audit.json
-Responsabilidade: auditoria correta com score 10 em `artifacts/runs/20260703T013701_387917/audit.json:3`.
-Fluxo de dados: snapshot final.
-Entradas/saídas: JSON gerado.
-Padrões: saída de execução.
-Anti-padrões e smells: saída gerada versionada.
-Risco de refatoração: BAIXO.
-<file-analyzed/>
-
-#### Analisado 54 de 87 — artifacts/runs/20260703T013701_387917/claims.json
-Responsabilidade: claims completas para solução correta, com `problem_id` em `artifacts/runs/20260703T013701_387917/claims.json:2`.
-Fluxo de dados: saída intermediária.
-Entradas/saídas: JSON gerado.
-Padrões: snapshot.
-Anti-padrões e smells: saída gerada versionada.
-Risco de refatoração: BAIXO.
-<file-analyzed/>
-
-#### Analisado 55 de 87 — artifacts/runs/20260703T013701_387917/solution.txt
-Responsabilidade: solução correta duplicada, com resposta em `artifacts/runs/20260703T013701_387917/solution.txt:23`.
-Fluxo de dados: input persistido.
-Entradas/saídas: texto de solução.
-Padrões: fixture operacional.
-Anti-padrões e smells: duplicata de `problems/ITA2025Q1/examples/correct_solution.txt:23`.
-Risco de refatoração: BAIXO.
-<file-analyzed/>
-
-#### Analisado 56 de 87 — artifacts/runs/20260703T032116_301877/Attempt.lean
-Responsabilidade: tentativa Lean completa, com import do statement em `artifacts/runs/20260703T032116_301877/Attempt.lean:2`.
-Fluxo de dados: código gerado.
-Entradas/saídas: entrada Lean.
-Padrões: snapshot de código gerado.
-Anti-padrões e smells: saída gerada versionada.
-Risco de refatoração: BAIXO.
-<file-analyzed/>
-
-#### Analisado 57 de 87 — artifacts/runs/20260703T032116_301877/audit.json
-Responsabilidade: auditoria correta com score 10 em `artifacts/runs/20260703T032116_301877/audit.json:3`.
-Fluxo de dados: snapshot final.
-Entradas/saídas: JSON gerado.
-Padrões: saída de execução.
-Anti-padrões e smells: saída gerada versionada.
-Risco de refatoração: BAIXO.
-<file-analyzed/>
-
-#### Analisado 58 de 87 — artifacts/runs/20260703T032116_301877/claims.json
-Responsabilidade: claims completas para `ITA2025Q1`, com `problem_id` em `artifacts/runs/20260703T032116_301877/claims.json:2`.
-Fluxo de dados: saída intermediária.
-Entradas/saídas: JSON gerado.
-Padrões: snapshot.
-Anti-padrões e smells: saída gerada versionada.
-Risco de refatoração: BAIXO.
-<file-analyzed/>
-
-#### Analisado 59 de 87 — artifacts/runs/20260703T032116_301877/solution.txt
-Responsabilidade: solução correta duplicada, com determinante em `artifacts/runs/20260703T032116_301877/solution.txt:12`.
-Fluxo de dados: input persistido.
-Entradas/saídas: texto de solução.
-Padrões: fixture operacional.
-Anti-padrões e smells: duplicata de `problems/ITA2025Q1/examples/correct_solution.txt:12`.
-Risco de refatoração: BAIXO.
-<file-analyzed/>
-
-#### Analisado 60 de 87 — artifacts/runs/20260703T034756_205958/Attempt.lean
-Responsabilidade: tentativa Lean atual com import do statement e teoremas gerados em `artifacts/runs/20260703T034756_205958/Attempt.lean:2`, `artifacts/runs/20260703T034756_205958/Attempt.lean:27`, `artifacts/runs/20260703T034756_205958/Attempt.lean:33`, `artifacts/runs/20260703T034756_205958/Attempt.lean:39` e `artifacts/runs/20260703T034756_205958/Attempt.lean:55`.
-Fluxo de dados: artefato produzido pelo gerador atual.
-Entradas/saídas: entrada Lean.
-Padrões: código gerado.
-Anti-padrões e smells: saída gerada versionada.
-Risco de refatoração: BAIXO.
-<file-analyzed/>
-
-### Lote 7: arquivos 61-70
-
-#### Analisado 61 de 87 — artifacts/runs/20260703T034756_205958/audit.json
-Responsabilidade: auditoria correta com formal steps e score 10 em `artifacts/runs/20260703T034756_205958/audit.json:3`, `artifacts/runs/20260703T034756_205958/audit.json:61` e `artifacts/runs/20260703T034756_205958/audit.json:79`.
-Fluxo de dados: snapshot final.
-Entradas/saídas: JSON gerado.
-Padrões: saída de execução.
-Anti-padrões e smells: saída gerada versionada.
-Risco de refatoração: BAIXO.
-<file-analyzed/>
-
-#### Analisado 62 de 87 — artifacts/runs/20260703T034756_205958/claims.json
-Responsabilidade: claims completas com `formal_steps` em `artifacts/runs/20260703T034756_205958/claims.json:56` e passo `q1_s1_determinant_expansion` em `artifacts/runs/20260703T034756_205958/claims.json:58`.
-Fluxo de dados: saída de extração.
-Entradas/saídas: JSON intermediário.
-Padrões: snapshot.
-Anti-padrões e smells: saída gerada versionada.
-Risco de refatoração: BAIXO.
-<file-analyzed/>
-
-#### Analisado 63 de 87 — artifacts/runs/20260703T034756_205958/formal_steps/q1_s1_determinant_expansion.lean
-Responsabilidade: teorema Lean individual do passo de determinante, importando statement em `artifacts/runs/20260703T034756_205958/formal_steps/q1_s1_determinant_expansion.lean:2`.
-Fluxo de dados: produzido por `formal_step_evaluator.py` em `app/confia_lean_auditor/lean/formal_step_evaluator.py:62` e `app/confia_lean_auditor/lean/formal_step_evaluator.py:63`.
-Entradas/saídas: entrada para Lean.
-Padrões: código gerado por item.
-Anti-padrões e smells: saída gerada versionada.
-Risco de refatoração: BAIXO.
-<file-analyzed/>
-
-#### Analisado 64 de 87 — artifacts/runs/20260703T034756_205958/solution.txt
-Responsabilidade: solução correta duplicada, com resposta em `artifacts/runs/20260703T034756_205958/solution.txt:23`.
-Fluxo de dados: input persistido.
-Entradas/saídas: texto.
-Padrões: fixture operacional.
-Anti-padrões e smells: duplicata de `problems/ITA2025Q1/examples/correct_solution.txt:23`.
-Risco de refatoração: BAIXO.
-<file-analyzed/>
-
-#### Analisado 65 de 87 — artifacts/runs/20260703T035633_483787/Attempt.lean
-Responsabilidade: tentativa Lean para solução com determinante errado, sem teorema `triangleArea_formula`, com `z_squared_coordinates`, `answer_unique` e `answer_check` em `artifacts/runs/20260703T035633_483787/Attempt.lean:27`, `artifacts/runs/20260703T035633_483787/Attempt.lean:33` e `artifacts/runs/20260703T035633_483787/Attempt.lean:49`.
-Fluxo de dados: gerado após formal step não verificado, pois `build_attempt.py` só adiciona `TRIANGLE_AREA_FORMULA` se `determinant_expansion` está verificado em `app/confia_lean_auditor/lean/build_attempt.py:113`.
-Entradas/saídas: entrada Lean.
-Padrões: código gerado condicional.
-Anti-padrões e smells: `answer_unique` é gerado sem o microclaim de área formalizado no arquivo, evidência de acoplamento por claim types em `app/confia_lean_auditor/lean/build_attempt.py:117` e `app/confia_lean_auditor/lean/build_attempt.py:118`.
-Risco de refatoração: MÉDIO.
-<file-analyzed/>
-
-#### Analisado 66 de 87 — artifacts/runs/20260703T035633_483787/audit.json
-Responsabilidade: auditoria parcial com score 7, erro de formal step e `formal_steps_not_verified` em `artifacts/runs/20260703T035633_483787/audit.json:3`, `artifacts/runs/20260703T035633_483787/audit.json:98`, `artifacts/runs/20260703T035633_483787/audit.json:194` e `artifacts/runs/20260703T035633_483787/audit.json:196`.
-Fluxo de dados: evidencia divergência entre claim textual de área e passo formal.
-Entradas/saídas: JSON final.
-Padrões: snapshot diagnóstico.
-Anti-padrões e smells: stdout com caminho absoluto local aparece em `artifacts/runs/20260703T035633_483787/audit.json:98`.
-Risco de refatoração: BAIXO para runtime, MÉDIO para privacidade de artefatos.
-<file-analyzed/>
-
-#### Analisado 67 de 87 — artifacts/runs/20260703T035633_483787/claims.json
-Responsabilidade: claims completas com formal step extraído para solução de determinante errado em `artifacts/runs/20260703T035633_483787/claims.json:56`, `artifacts/runs/20260703T035633_483787/claims.json:58` e `artifacts/runs/20260703T035633_483787/claims.json:59`.
-Fluxo de dados: saída intermediária.
-Entradas/saídas: JSON de claims.
-Padrões: snapshot.
-Anti-padrões e smells: evidencia que a heurística textual detecta `area_formula` mesmo quando a linha de determinante contém coeficiente errado em `artifacts/runs/20260703T035633_483787/solution.txt:6` e `artifacts/runs/20260703T035633_483787/claims.json:16`.
-Risco de refatoração: MÉDIO.
-<file-analyzed/>
-
-#### Analisado 68 de 87 — artifacts/runs/20260703T035633_483787/formal_steps/q1_s1_determinant_expansion.lean
-Responsabilidade: teorema Lean gerado para passo de determinante em solução errada, com import em `artifacts/runs/20260703T035633_483787/formal_steps/q1_s1_determinant_expansion.lean:2`.
-Fluxo de dados: entrada para Lean que gerou erro registrado em `artifacts/runs/20260703T035633_483787/audit.json:98`.
-Entradas/saídas: código gerado.
-Padrões: formal step.
-Anti-padrões e smells: saída gerada versionada com erro associado.
-Risco de refatoração: BAIXO.
-<file-analyzed/>
-
-#### Analisado 69 de 87 — artifacts/runs/20260703T035633_483787/solution.txt
-Responsabilidade: solução com determinante errado, linha `(a-1)4a - 2(a^2-5) = 2a^2 - 2a + 10` em `artifacts/runs/20260703T035633_483787/solution.txt:6`.
-Fluxo de dados: input persistido.
-Entradas/saídas: texto.
-Padrões: fixture operacional.
-Anti-padrões e smells: duplica `problems/ITA2025Q1/examples/wrong_determinant_step.txt:6`.
-Risco de refatoração: BAIXO.
-<file-analyzed/>
-
-#### Analisado 70 de 87 — artifacts/runs/20260703T144140_097860/Attempt.lean
-Responsabilidade: tentativa Lean para solução com determinante errado, com import do statement em `artifacts/runs/20260703T144140_097860/Attempt.lean:2`.
-Fluxo de dados: código gerado condicional.
-Entradas/saídas: entrada Lean.
-Padrões: snapshot de código gerado.
-Anti-padrões e smells: saída gerada versionada.
-Risco de refatoração: BAIXO.
-<file-analyzed/>
-
-### Lote 8: arquivos 71-80
-
-#### Analisado 71 de 87 — artifacts/runs/20260703T144140_097860/audit.json
-Responsabilidade: auditoria com score 3 e falha formal registrada em `artifacts/runs/20260703T144140_097860/audit.json:3`, `artifacts/runs/20260703T144140_097860/audit.json:98` e `artifacts/runs/20260703T144140_097860/audit.json:200`.
-Fluxo de dados: snapshot final de execução.
-Entradas/saídas: JSON final.
-Padrões: diagnóstico persistido.
-Anti-padrões e smells: stdout inclui caminho absoluto local em `artifacts/runs/20260703T144140_097860/audit.json:98`.
-Risco de refatoração: BAIXO para código, MÉDIO para exposição de ambiente.
-<file-analyzed/>
-
-#### Analisado 72 de 87 — artifacts/runs/20260703T144140_097860/claims.json
-Responsabilidade: claims completas com formal step para solução errada em `artifacts/runs/20260703T144140_097860/claims.json:56` e `artifacts/runs/20260703T144140_097860/claims.json:58`.
-Fluxo de dados: saída intermediária.
-Entradas/saídas: JSON de claims.
-Padrões: snapshot.
-Anti-padrões e smells: saída gerada versionada.
-Risco de refatoração: BAIXO.
-<file-analyzed/>
-
-#### Analisado 73 de 87 — artifacts/runs/20260703T144140_097860/formal_steps/q1_s1_determinant_expansion.lean
-Responsabilidade: formal step Lean de determinante, importando statement em `artifacts/runs/20260703T144140_097860/formal_steps/q1_s1_determinant_expansion.lean:2`.
-Fluxo de dados: entrada Lean para erro capturado em `artifacts/runs/20260703T144140_097860/audit.json:98`.
-Entradas/saídas: código gerado.
-Padrões: formal step gerado.
-Anti-padrões e smells: saída gerada versionada.
-Risco de refatoração: BAIXO.
-<file-analyzed/>
-
-#### Analisado 74 de 87 — artifacts/runs/20260703T144140_097860/solution.txt
-Responsabilidade: solução com determinante errado, linha incorreta em `artifacts/runs/20260703T144140_097860/solution.txt:6`.
-Fluxo de dados: input persistido.
-Entradas/saídas: texto.
-Padrões: fixture operacional.
-Anti-padrões e smells: duplicata de `problems/ITA2025Q1/examples/wrong_determinant_step.txt:6`.
-Risco de refatoração: BAIXO.
-<file-analyzed/>
-
-#### Analisado 75 de 87 — lake-manifest.json
-Responsabilidade: lock de dependências Lake, com `mathlib` e dependências herdadas em `lake-manifest.json:4`, `lake-manifest.json:9`, `lake-manifest.json:14`, `lake-manifest.json:24`, `lake-manifest.json:34`, `lake-manifest.json:44`, `lake-manifest.json:54`, `lake-manifest.json:64`, `lake-manifest.json:74` e `lake-manifest.json:84`.
-Fluxo de dados: Lake usa o lock para materializar `.lake/packages`, cujo diretório está configurado em `lake-manifest.json:2`.
-Entradas/saídas: manifesto de resolução.
-Padrões: lockfile.
-Anti-padrões e smells: dependências herdadas usam `inputRev` como `main` ou `master` em `lake-manifest.json:21`, `lake-manifest.json:31`, `lake-manifest.json:41`, `lake-manifest.json:61`, `lake-manifest.json:71` e `lake-manifest.json:81`, ainda que o lock trave hashes.
-Risco de refatoração: MÉDIO, por afetar build Lean.
-<file-analyzed/>
-
-#### Analisado 76 de 87 — lakefile.toml
-Responsabilidade: define pacote Lake, opções Lean, dependência mathlib e biblioteca em `lakefile.toml:1`, `lakefile.toml:4`, `lakefile.toml:6`, `lakefile.toml:12` e `lakefile.toml:17`.
-Fluxo de dados: controla build Lean usado por CI e subprocess.
-Entradas/saídas: entrada para Lake; saída é biblioteca `ConfiaLeanAuditor`.
-Padrões: manifesto Lake.
-Anti-padrões e smells: opções e dependência centralizadas; nenhum smell funcional além do acoplamento a `ConfiaLeanAuditor` em `lakefile.toml:18`.
-Risco de refatoração: ALTO, por reger build formal.
-<file-analyzed/>
-
-#### Analisado 77 de 87 — lean-toolchain
-Responsabilidade: fixa toolchain Lean em `lean-toolchain:1`.
-Fluxo de dados: consumido por Lake/Lean Action.
-Entradas/saídas: runtime Lean.
-Padrões: pin de toolchain.
-Anti-padrões e smells: sem smell observado; release workflow observa este arquivo em `.github/workflows/create-release.yml:9`.
-Risco de refatoração: ALTO, por trocar compilador e mathlib.
-<file-analyzed/>
-
-#### Analisado 78 de 87 — problems/ITA2025Q1/certificate/Statement.lean
-Responsabilidade: certificado Lean mínimo que importa statement do problema em `problems/ITA2025Q1/certificate/Statement.lean:1`.
-Fluxo de dados: é alvo do CLI `run_problem` em `app/confia_lean_auditor/lean/run_lean.py:115`.
-Entradas/saídas: entrada para `lake env lean`.
-Padrões: certificado manual.
-Anti-padrões e smells: arquivo não declara teoremas próprios, só import; isso torna o CLI uma checagem de import, não de prova específica, conforme `problems/ITA2025Q1/certificate/Statement.lean:1`.
-Risco de refatoração: MÉDIO.
-<file-analyzed/>
-
-#### Analisado 79 de 87 — problems/ITA2025Q1/examples/answer_only.txt
-Responsabilidade: exemplo de solução só com resposta em `problems/ITA2025Q1/examples/answer_only.txt:1`.
-Fluxo de dados: fixture textual; não há consumidor automático observado no código.
-Entradas/saídas: input humano/teste manual.
-Padrões: fixture.
-Anti-padrões e smells: fixture sem teste automatizado associado no inventário operacional.
-Risco de refatoração: BAIXO.
-<file-analyzed/>
-
-#### Analisado 80 de 87 — problems/ITA2025Q1/examples/correct_solution.txt
-Responsabilidade: exemplo de solução correta completa em `problems/ITA2025Q1/examples/correct_solution.txt:1`, com resposta em `problems/ITA2025Q1/examples/correct_solution.txt:23`.
-Fluxo de dados: fixture textual.
-Entradas/saídas: input manual.
-Padrões: fixture de caso feliz.
-Anti-padrões e smells: não há teste automatizado próprio no inventário que consuma este arquivo.
-Risco de refatoração: BAIXO.
-<file-analyzed/>
-
-### Lote 9: arquivos 81-87
-
-#### Analisado 81 de 87 — problems/ITA2025Q1/examples/partial_no_positive_root.txt
-Responsabilidade: exemplo parcial sem descarte explícito da raiz negativa, com fatoração em `problems/ITA2025Q1/examples/partial_no_positive_root.txt:10`.
-Fluxo de dados: fixture textual.
-Entradas/saídas: input manual.
-Padrões: fixture negativa/parcial.
-Anti-padrões e smells: sem consumidor automatizado observado.
-Risco de refatoração: BAIXO.
-<file-analyzed/>
-
-#### Analisado 82 de 87 — problems/ITA2025Q1/examples/wrong_determinant_step.txt
-Responsabilidade: exemplo com passo de determinante incorreto em `problems/ITA2025Q1/examples/wrong_determinant_step.txt:6`.
-Fluxo de dados: fixture que evidencia divergência formal capturada nos artefatos em `artifacts/runs/20260703T144140_097860/audit.json:98`.
-Entradas/saídas: input manual.
-Padrões: fixture de erro sutil.
-Anti-padrões e smells: sem teste automatizado observado.
-Risco de refatoração: BAIXO.
-<file-analyzed/>
-
-#### Analisado 83 de 87 — problems/ITA2025Q1/examples/wrong_solution.txt
-Responsabilidade: exemplo errado simples, com área `2a + 5` e resposta `97,5` em `problems/ITA2025Q1/examples/wrong_solution.txt:1` e `problems/ITA2025Q1/examples/wrong_solution.txt:2`.
-Fluxo de dados: fixture textual.
-Entradas/saídas: input manual.
-Padrões: fixture negativa.
-Anti-padrões e smells: sem teste automatizado observado.
-Risco de refatoração: BAIXO.
-<file-analyzed/>
-
-#### Analisado 84 de 87 — problems/ITA2025Q1/microclaims.json
-Responsabilidade: contrato de microclaims para ITA2025Q1 em `problems/ITA2025Q1/microclaims.json:2` e `problems/ITA2025Q1/microclaims.json:3`.
-Fluxo de dados: consumido por `microclaim_evaluator.py` em `app/confia_lean_auditor/lean/microclaim_evaluator.py:47` e `app/confia_lean_auditor/lean/microclaim_evaluator.py:52`.
-Entradas/saídas: define ids, teoremas, claim types, dependências e supports em `problems/ITA2025Q1/microclaims.json:5`, `problems/ITA2025Q1/microclaims.json:7`, `problems/ITA2025Q1/microclaims.json:8`, `problems/ITA2025Q1/microclaims.json:16`, `problems/ITA2025Q1/microclaims.json:24` e `problems/ITA2025Q1/microclaims.json:25`.
-Padrões: configuração de grafo de validação.
-Anti-padrões e smells: não há validação de schema antes de `data["microclaims"]` em `app/confia_lean_auditor/lean/microclaim_evaluator.py:62`.
-Risco de refatoração: ALTO, por acoplar rubrica, claims e teoremas.
-<file-analyzed/>
-
-#### Analisado 85 de 87 — problems/ITA2025Q1/problem.json
-Responsabilidade: metadata do problema, com id, enunciado, resposta e pontuação em `problems/ITA2025Q1/problem.json:2`, `problems/ITA2025Q1/problem.json:4`, `problems/ITA2025Q1/problem.json:6` e `problems/ITA2025Q1/problem.json:7`.
-Fluxo de dados: o código atual verifica existência do diretório do problema em `app/confia_lean_auditor/main.py:45`, mas não lê `problem.json` no fluxo auditado.
-Entradas/saídas: contrato documental do problema.
-Padrões: metadata JSON.
-Anti-padrões e smells: arquivo órfão funcional no runtime atual, pois buscas por `problem.json` não aparecem nos imports/acoplamentos do código próprio.
-Risco de refatoração: MÉDIO, por conter enunciado e resposta oficial fora do fluxo de validação.
-<file-analyzed/>
-
-#### Analisado 86 de 87 — problems/ITA2025Q1/rubric.json
-Responsabilidade: rubrica de pontuação com max score e itens em `problems/ITA2025Q1/rubric.json:2`, `problems/ITA2025Q1/rubric.json:3` e `problems/ITA2025Q1/rubric.json:4`.
-Fluxo de dados: consumido por `rubric_evaluator.py` em `app/confia_lean_auditor/rubric/rubric_evaluator.py:23` e `app/confia_lean_auditor/rubric/rubric_evaluator.py:28`.
-Entradas/saídas: define ids de rubrica, claim types e microclaims obrigatórios em `problems/ITA2025Q1/rubric.json:6`, `problems/ITA2025Q1/rubric.json:9`, `problems/ITA2025Q1/rubric.json:10`, `problems/ITA2025Q1/rubric.json:16`, `problems/ITA2025Q1/rubric.json:17`, `problems/ITA2025Q1/rubric.json:23`, `problems/ITA2025Q1/rubric.json:24`, `problems/ITA2025Q1/rubric.json:30`, `problems/ITA2025Q1/rubric.json:31`, `problems/ITA2025Q1/rubric.json:37` e `problems/ITA2025Q1/rubric.json:38`.
-Padrões: configuração declarativa.
-Anti-padrões e smells: schema não é validado antes do uso em `app/confia_lean_auditor/rubric/rubric_evaluator.py:45`.
-Risco de refatoração: ALTO, por reger score e feedback.
-<file-analyzed/>
-
-#### Analisado 87 de 87 — pyproject.toml
-Responsabilidade: manifesto Python, build backend setuptools, metadados e dependências em `pyproject.toml:1`, `pyproject.toml:3`, `pyproject.toml:5`, `pyproject.toml:6`, `pyproject.toml:7`, `pyproject.toml:9` e `pyproject.toml:10`.
-Fluxo de dados: configura pacote a partir de `app` em `pyproject.toml:17`, `pyproject.toml:18`, `pyproject.toml:20` e `pyproject.toml:21`.
-Entradas/saídas: entrada para build Python.
-Padrões: PEP 621 com setuptools.
-Anti-padrões e smells: `pytest` está em dependências runtime em `pyproject.toml:14`, e não há testes próprios observados no inventário operacional.
-Risco de refatoração: MÉDIO, por afetar instalação e distribuição.
+Formato desta seção: cada linha cobre um arquivo versionado do inventário; arquivos vazios de pacote usam como evidência a linha de import ou consumo mais próxima. Risco: ALTO para contratos runtime, geração/verificação Lean e assets formais; MÉDIO para CI, testes, benchmarks e configurações; BAIXO para documentação, fixtures e scaffolds.
+
+#### Analisado 1 de 203 — `.github/workflows/create-release.yml`
+**Responsabilidade:** workflow GitHub Actions de CI, release ou atualização. Evidência: `.github/workflows/create-release.yml:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** MÉDIO.
+<file-analyzed/>
+#### Analisado 2 de 203 — `.github/workflows/lean_action_ci.yml`
+**Responsabilidade:** workflow GitHub Actions de CI, release ou atualização. Evidência: `.github/workflows/lean_action_ci.yml:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** MÉDIO.
+<file-analyzed/>
+#### Analisado 3 de 203 — `.github/workflows/python_tests.yml`
+**Responsabilidade:** workflow GitHub Actions de CI, release ou atualização. Evidência: `.github/workflows/python_tests.yml:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** MÉDIO.
+<file-analyzed/>
+#### Analisado 4 de 203 — `.github/workflows/update.yml`
+**Responsabilidade:** workflow GitHub Actions de CI, release ou atualização. Evidência: `.github/workflows/update.yml:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** MÉDIO.
+<file-analyzed/>
+#### Analisado 5 de 203 — `.gitignore`
+**Responsabilidade:** configuração de exclusões Git para ambientes, artefatos e caches. Evidência: `.gitignore:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** BAIXO.
+<file-analyzed/>
+#### Analisado 6 de 203 — `AUDITORIA_REPOSITORIO.md`
+**Responsabilidade:** documentação técnica. Evidência: `AUDITORIA_REPOSITORIO.md:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** BAIXO.
+<file-analyzed/>
+#### Analisado 7 de 203 — `ConfiaLeanAuditor.lean`
+**Responsabilidade:** módulo raiz Lean que agrega statements. Evidência: `ConfiaLeanAuditor.lean:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** BAIXO.
+<file-analyzed/>
+#### Analisado 8 de 203 — `ConfiaLeanAuditor/Basic.lean`
+**Responsabilidade:** scaffold Lean mínimo com definição hello. Evidência: `ConfiaLeanAuditor/Basic.lean:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** scaffold confirmado, pois só define `hello`.
+**Risco de refatoração:** BAIXO.
+<file-analyzed/>
+#### Analisado 9 de 203 — `ConfiaLeanAuditor/Problems/ITA2025F2Q1/Statement.lean`
+**Responsabilidade:** statement Lean de problema. Evidência: `ConfiaLeanAuditor/Problems/ITA2025F2Q1/Statement.lean:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** ALTO.
+<file-analyzed/>
+#### Analisado 10 de 203 — `ConfiaLeanAuditor/Problems/ITA2025F2Q3/Statement.lean`
+**Responsabilidade:** statement Lean de problema. Evidência: `ConfiaLeanAuditor/Problems/ITA2025F2Q3/Statement.lean:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** ALTO.
+<file-analyzed/>
+#### Analisado 11 de 203 — `ConfiaLeanAuditor/Problems/ITA2025F2Q5/Statement.lean`
+**Responsabilidade:** statement Lean de problema. Evidência: `ConfiaLeanAuditor/Problems/ITA2025F2Q5/Statement.lean:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** ALTO.
+<file-analyzed/>
+#### Analisado 12 de 203 — `ConfiaLeanAuditor/Problems/ITA2025F2Q6/Statement.lean`
+**Responsabilidade:** statement Lean de problema. Evidência: `ConfiaLeanAuditor/Problems/ITA2025F2Q6/Statement.lean:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** ALTO.
+<file-analyzed/>
+#### Analisado 13 de 203 — `ConfiaLeanAuditor/Problems/ITA2025F2Q8/Statement.lean`
+**Responsabilidade:** statement Lean de problema. Evidência: `ConfiaLeanAuditor/Problems/ITA2025F2Q8/Statement.lean:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** ALTO.
+<file-analyzed/>
+#### Analisado 14 de 203 — `ConfiaLeanAuditor/Problems/ITA2025Q1/Statement.lean`
+**Responsabilidade:** statement Lean de problema. Evidência: `ConfiaLeanAuditor/Problems/ITA2025Q1/Statement.lean:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** ALTO.
+<file-analyzed/>
+#### Analisado 15 de 203 — `ConfiaLeanAuditor/Problems/ITA2025Q3/Statement.lean`
+**Responsabilidade:** statement Lean de problema. Evidência: `ConfiaLeanAuditor/Problems/ITA2025Q3/Statement.lean:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** ALTO.
+<file-analyzed/>
+#### Analisado 16 de 203 — `ConfiaLeanAuditor/Problems/ITA2025Q4/Statement.lean`
+**Responsabilidade:** statement Lean de problema. Evidência: `ConfiaLeanAuditor/Problems/ITA2025Q4/Statement.lean:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** ALTO.
+<file-analyzed/>
+#### Analisado 17 de 203 — `ConfiaLeanAuditor/Problems/ITA2025Q5/Statement.lean`
+**Responsabilidade:** statement Lean de problema. Evidência: `ConfiaLeanAuditor/Problems/ITA2025Q5/Statement.lean:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** ALTO.
+<file-analyzed/>
+#### Analisado 18 de 203 — `ConfiaLeanAuditor/Problems/ITA2025Q8/Statement.lean`
+**Responsabilidade:** statement Lean de problema. Evidência: `ConfiaLeanAuditor/Problems/ITA2025Q8/Statement.lean:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** ALTO.
+<file-analyzed/>
+#### Analisado 19 de 203 — `MILESTONE_ITA2025F2.md`
+**Responsabilidade:** documentação técnica. Evidência: `MILESTONE_ITA2025F2.md:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** BAIXO.
+<file-analyzed/>
+#### Analisado 20 de 203 — `README.md`
+**Responsabilidade:** documentação técnica. Evidência: `README.md:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** README ainda contém texto de setup removível.
+**Risco de refatoração:** BAIXO.
+<file-analyzed/>
+#### Analisado 21 de 203 — `app/confia_lean_auditor/__init__.py`
+**Responsabilidade:** marcador de pacote Python. Evidência: `app/confia_lean_auditor/main.py:10`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** BAIXO.
+<file-analyzed/>
+#### Analisado 22 de 203 — `app/confia_lean_auditor/claims/__init__.py`
+**Responsabilidade:** marcador de pacote Python. Evidência: `app/confia_lean_auditor/main.py:10`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** BAIXO.
+<file-analyzed/>
+#### Analisado 23 de 203 — `app/confia_lean_auditor/claims/extract_claims.py`
+**Responsabilidade:** dispatcher de extração por problem_id. Evidência: `app/confia_lean_auditor/claims/extract_claims.py:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** BAIXO.
+<file-analyzed/>
+#### Analisado 24 de 203 — `app/confia_lean_auditor/claims/extractors/__init__.py`
+**Responsabilidade:** extrator heurístico de claims por problema. Evidência: `app/confia_lean_auditor/claims/extract_claims.py:4`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** heurísticas locais por strings/regex e acoplamento por problem_id.
+**Risco de refatoração:** ALTO.
+<file-analyzed/>
+#### Analisado 25 de 203 — `app/confia_lean_auditor/claims/extractors/ita2025f2q1.py`
+**Responsabilidade:** extrator heurístico de claims por problema. Evidência: `app/confia_lean_auditor/claims/extractors/ita2025f2q1.py:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** heurísticas locais por strings/regex e acoplamento por problem_id.
+**Risco de refatoração:** ALTO.
+<file-analyzed/>
+#### Analisado 26 de 203 — `app/confia_lean_auditor/claims/extractors/ita2025f2q3.py`
+**Responsabilidade:** extrator heurístico de claims por problema. Evidência: `app/confia_lean_auditor/claims/extractors/ita2025f2q3.py:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** heurísticas locais por strings/regex e acoplamento por problem_id.
+**Risco de refatoração:** ALTO.
+<file-analyzed/>
+#### Analisado 27 de 203 — `app/confia_lean_auditor/claims/extractors/ita2025f2q5.py`
+**Responsabilidade:** extrator heurístico de claims por problema. Evidência: `app/confia_lean_auditor/claims/extractors/ita2025f2q5.py:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** heurísticas locais por strings/regex e acoplamento por problem_id.
+**Risco de refatoração:** ALTO.
+<file-analyzed/>
+#### Analisado 28 de 203 — `app/confia_lean_auditor/claims/extractors/ita2025f2q6.py`
+**Responsabilidade:** extrator heurístico de claims por problema. Evidência: `app/confia_lean_auditor/claims/extractors/ita2025f2q6.py:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** heurísticas locais por strings/regex e acoplamento por problem_id.
+**Risco de refatoração:** ALTO.
+<file-analyzed/>
+#### Analisado 29 de 203 — `app/confia_lean_auditor/claims/extractors/ita2025f2q8.py`
+**Responsabilidade:** extrator heurístico de claims por problema. Evidência: `app/confia_lean_auditor/claims/extractors/ita2025f2q8.py:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** heurísticas locais por strings/regex e acoplamento por problem_id.
+**Risco de refatoração:** ALTO.
+<file-analyzed/>
+#### Analisado 30 de 203 — `app/confia_lean_auditor/claims/extractors/ita2025q1.py`
+**Responsabilidade:** extrator heurístico de claims por problema. Evidência: `app/confia_lean_auditor/claims/extractors/ita2025q1.py:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** heurísticas locais por strings/regex e acoplamento por problem_id.
+**Risco de refatoração:** ALTO.
+<file-analyzed/>
+#### Analisado 31 de 203 — `app/confia_lean_auditor/claims/extractors/ita2025q3.py`
+**Responsabilidade:** extrator heurístico de claims por problema. Evidência: `app/confia_lean_auditor/claims/extractors/ita2025q3.py:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** heurísticas locais por strings/regex e acoplamento por problem_id.
+**Risco de refatoração:** ALTO.
+<file-analyzed/>
+#### Analisado 32 de 203 — `app/confia_lean_auditor/claims/extractors/ita2025q4.py`
+**Responsabilidade:** extrator heurístico de claims por problema. Evidência: `app/confia_lean_auditor/claims/extractors/ita2025q4.py:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** heurísticas locais por strings/regex e acoplamento por problem_id.
+**Risco de refatoração:** ALTO.
+<file-analyzed/>
+#### Analisado 33 de 203 — `app/confia_lean_auditor/claims/extractors/ita2025q5.py`
+**Responsabilidade:** extrator heurístico de claims por problema. Evidência: `app/confia_lean_auditor/claims/extractors/ita2025q5.py:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** heurísticas locais por strings/regex e acoplamento por problem_id.
+**Risco de refatoração:** ALTO.
+<file-analyzed/>
+#### Analisado 34 de 203 — `app/confia_lean_auditor/claims/extractors/ita2025q8.py`
+**Responsabilidade:** extrator heurístico de claims por problema. Evidência: `app/confia_lean_auditor/claims/extractors/ita2025q8.py:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** heurísticas locais por strings/regex e acoplamento por problem_id.
+**Risco de refatoração:** ALTO.
+<file-analyzed/>
+#### Analisado 35 de 203 — `app/confia_lean_auditor/core/__init__.py`
+**Responsabilidade:** marcador de pacote Python. Evidência: `app/confia_lean_auditor/main.py:11`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** BAIXO.
+<file-analyzed/>
+#### Analisado 36 de 203 — `app/confia_lean_auditor/core/paths.py`
+**Responsabilidade:** resolução de raiz e problem_id. Evidência: `app/confia_lean_auditor/core/paths.py:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** BAIXO.
+<file-analyzed/>
+#### Analisado 37 de 203 — `app/confia_lean_auditor/core/problem_assets.py`
+**Responsabilidade:** validação de assets de problema. Evidência: `app/confia_lean_auditor/core/problem_assets.py:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** ALTO.
+<file-analyzed/>
+#### Analisado 38 de 203 — `app/confia_lean_auditor/core/schemas.py`
+**Responsabilidade:** schemas Pydantic ou dataclasses de contratos internos. Evidência: `app/confia_lean_auditor/core/schemas.py:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** ALTO.
+<file-analyzed/>
+#### Analisado 39 de 203 — `app/confia_lean_auditor/lean/__init__.py`
+**Responsabilidade:** marcador de pacote Python. Evidência: `app/confia_lean_auditor/main.py:14`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** BAIXO.
+<file-analyzed/>
+#### Analisado 40 de 203 — `app/confia_lean_auditor/lean/attempt_builders/__init__.py`
+**Responsabilidade:** builder de Attempt.lean por problema. Evidência: `app/confia_lean_auditor/lean/build_attempt.py:7`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** strings Lean embutidas no Python e acoplamento com statement Lean específico.
+**Risco de refatoração:** BAIXO.
+<file-analyzed/>
+#### Analisado 41 de 203 — `app/confia_lean_auditor/lean/attempt_builders/ita2025f2q1.py`
+**Responsabilidade:** builder de Attempt.lean por problema. Evidência: `app/confia_lean_auditor/lean/attempt_builders/ita2025f2q1.py:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** strings Lean embutidas no Python e acoplamento com statement Lean específico.
+**Risco de refatoração:** ALTO.
+<file-analyzed/>
+#### Analisado 42 de 203 — `app/confia_lean_auditor/lean/attempt_builders/ita2025f2q3.py`
+**Responsabilidade:** builder de Attempt.lean por problema. Evidência: `app/confia_lean_auditor/lean/attempt_builders/ita2025f2q3.py:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** strings Lean embutidas no Python e acoplamento com statement Lean específico.
+**Risco de refatoração:** ALTO.
+<file-analyzed/>
+#### Analisado 43 de 203 — `app/confia_lean_auditor/lean/attempt_builders/ita2025f2q5.py`
+**Responsabilidade:** builder de Attempt.lean por problema. Evidência: `app/confia_lean_auditor/lean/attempt_builders/ita2025f2q5.py:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** strings Lean embutidas no Python e acoplamento com statement Lean específico.
+**Risco de refatoração:** ALTO.
+<file-analyzed/>
+#### Analisado 44 de 203 — `app/confia_lean_auditor/lean/attempt_builders/ita2025f2q6.py`
+**Responsabilidade:** builder de Attempt.lean por problema. Evidência: `app/confia_lean_auditor/lean/attempt_builders/ita2025f2q6.py:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** strings Lean embutidas no Python e acoplamento com statement Lean específico.
+**Risco de refatoração:** ALTO.
+<file-analyzed/>
+#### Analisado 45 de 203 — `app/confia_lean_auditor/lean/attempt_builders/ita2025f2q8.py`
+**Responsabilidade:** builder de Attempt.lean por problema. Evidência: `app/confia_lean_auditor/lean/attempt_builders/ita2025f2q8.py:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** strings Lean embutidas no Python e acoplamento com statement Lean específico.
+**Risco de refatoração:** ALTO.
+<file-analyzed/>
+#### Analisado 46 de 203 — `app/confia_lean_auditor/lean/attempt_builders/ita2025q1.py`
+**Responsabilidade:** builder de Attempt.lean por problema. Evidência: `app/confia_lean_auditor/lean/attempt_builders/ita2025q1.py:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** strings Lean embutidas no Python e acoplamento com statement Lean específico.
+**Risco de refatoração:** ALTO.
+<file-analyzed/>
+#### Analisado 47 de 203 — `app/confia_lean_auditor/lean/attempt_builders/ita2025q3.py`
+**Responsabilidade:** builder de Attempt.lean por problema. Evidência: `app/confia_lean_auditor/lean/attempt_builders/ita2025q3.py:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** strings Lean embutidas no Python e acoplamento com statement Lean específico.
+**Risco de refatoração:** ALTO.
+<file-analyzed/>
+#### Analisado 48 de 203 — `app/confia_lean_auditor/lean/attempt_builders/ita2025q4.py`
+**Responsabilidade:** builder de Attempt.lean por problema. Evidência: `app/confia_lean_auditor/lean/attempt_builders/ita2025q4.py:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** strings Lean embutidas no Python e acoplamento com statement Lean específico.
+**Risco de refatoração:** ALTO.
+<file-analyzed/>
+#### Analisado 49 de 203 — `app/confia_lean_auditor/lean/attempt_builders/ita2025q5.py`
+**Responsabilidade:** builder de Attempt.lean por problema. Evidência: `app/confia_lean_auditor/lean/attempt_builders/ita2025q5.py:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** strings Lean embutidas no Python e acoplamento com statement Lean específico.
+**Risco de refatoração:** ALTO.
+<file-analyzed/>
+#### Analisado 50 de 203 — `app/confia_lean_auditor/lean/attempt_builders/ita2025q8.py`
+**Responsabilidade:** builder de Attempt.lean por problema. Evidência: `app/confia_lean_auditor/lean/attempt_builders/ita2025q8.py:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** strings Lean embutidas no Python e acoplamento com statement Lean específico.
+**Risco de refatoração:** ALTO.
+<file-analyzed/>
+#### Analisado 51 de 203 — `app/confia_lean_auditor/lean/build_attempt.py`
+**Responsabilidade:** dispatcher de builders Lean por problem_id. Evidência: `app/confia_lean_auditor/lean/build_attempt.py:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** ALTO.
+<file-analyzed/>
+#### Analisado 52 de 203 — `app/confia_lean_auditor/lean/formal_step_evaluator.py`
+**Responsabilidade:** renderizador e avaliador de formal steps Lean. Evidência: `app/confia_lean_auditor/lean/formal_step_evaluator.py:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** ALTO.
+<file-analyzed/>
+#### Analisado 53 de 203 — `app/confia_lean_auditor/lean/microclaim_evaluator.py`
+**Responsabilidade:** avaliador de microclaims. Evidência: `app/confia_lean_auditor/lean/microclaim_evaluator.py:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** ALTO.
+<file-analyzed/>
+#### Analisado 54 de 203 — `app/confia_lean_auditor/lean/run_lean.py`
+**Responsabilidade:** runner Lean e CLI por subprocess. Evidência: `app/confia_lean_auditor/lean/run_lean.py:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** ALTO.
+<file-analyzed/>
+#### Analisado 55 de 203 — `app/confia_lean_auditor/lean/safe_formal_step.py`
+**Responsabilidade:** arquivo versionado do projeto. Evidência: `app/confia_lean_auditor/lean/safe_formal_step.py:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** ALTO.
+<file-analyzed/>
+#### Analisado 56 de 203 — `app/confia_lean_auditor/lean/student_claim_checker.py`
+**Responsabilidade:** verificador Lean legado de student claims F2Q8. Evidência: `app/confia_lean_auditor/lean/student_claim_checker.py:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** ALTO.
+<file-analyzed/>
+#### Analisado 57 de 203 — `app/confia_lean_auditor/lean/student_claim_checkers/__init__.py`
+**Responsabilidade:** verificador Lean de student claims por problema F2. Evidência: `app/confia_lean_auditor/lean/student_claim_checkers/registry.py:9`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** BAIXO.
+<file-analyzed/>
+#### Analisado 58 de 203 — `app/confia_lean_auditor/lean/student_claim_checkers/ita2025f2q1.py`
+**Responsabilidade:** verificador Lean de student claims por problema F2. Evidência: `app/confia_lean_auditor/lean/student_claim_checkers/ita2025f2q1.py:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** ALTO.
+<file-analyzed/>
+#### Analisado 59 de 203 — `app/confia_lean_auditor/lean/student_claim_checkers/ita2025f2q3.py`
+**Responsabilidade:** verificador Lean de student claims por problema F2. Evidência: `app/confia_lean_auditor/lean/student_claim_checkers/ita2025f2q3.py:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** ALTO.
+<file-analyzed/>
+#### Analisado 60 de 203 — `app/confia_lean_auditor/lean/student_claim_checkers/ita2025f2q5.py`
+**Responsabilidade:** verificador Lean de student claims por problema F2. Evidência: `app/confia_lean_auditor/lean/student_claim_checkers/ita2025f2q5.py:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** ALTO.
+<file-analyzed/>
+#### Analisado 61 de 203 — `app/confia_lean_auditor/lean/student_claim_checkers/ita2025f2q6.py`
+**Responsabilidade:** verificador Lean de student claims por problema F2. Evidência: `app/confia_lean_auditor/lean/student_claim_checkers/ita2025f2q6.py:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** ALTO.
+<file-analyzed/>
+#### Analisado 62 de 203 — `app/confia_lean_auditor/lean/student_claim_checkers/registry.py`
+**Responsabilidade:** verificador Lean de student claims por problema F2. Evidência: `app/confia_lean_auditor/lean/student_claim_checkers/registry.py:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** ALTO.
+<file-analyzed/>
+#### Analisado 63 de 203 — `app/confia_lean_auditor/llm/__init__.py`
+**Responsabilidade:** marcador de pacote Python. Evidência: `app/confia_lean_auditor/main.py:21`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** BAIXO.
+<file-analyzed/>
+#### Analisado 64 de 203 — `app/confia_lean_auditor/llm/formal_step_extractor.py`
+**Responsabilidade:** fallback opcional de extração por LLM. Evidência: `app/confia_lean_auditor/llm/formal_step_extractor.py:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** BAIXO.
+<file-analyzed/>
+#### Analisado 65 de 203 — `app/confia_lean_auditor/main.py`
+**Responsabilidade:** API FastAPI e orquestrador ponta a ponta. Evidência: `app/confia_lean_auditor/main.py:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** ALTO.
+<file-analyzed/>
+#### Analisado 66 de 203 — `app/confia_lean_auditor/reports/__init__.py`
+**Responsabilidade:** marcador de pacote Python. Evidência: `app/confia_lean_auditor/main.py:18`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** BAIXO.
+<file-analyzed/>
+#### Analisado 67 de 203 — `app/confia_lean_auditor/reports/report_builder.py`
+**Responsabilidade:** montagem de verdict e feedback textual. Evidência: `app/confia_lean_auditor/reports/report_builder.py:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** BAIXO.
+<file-analyzed/>
+#### Analisado 68 de 203 — `app/confia_lean_auditor/rubric/__init__.py`
+**Responsabilidade:** marcador de pacote Python. Evidência: `app/confia_lean_auditor/main.py:19`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** BAIXO.
+<file-analyzed/>
+#### Analisado 69 de 203 — `app/confia_lean_auditor/rubric/adjusters/__init__.py`
+**Responsabilidade:** ajustador de rubrica por student_claim_checks. Evidência: `app/confia_lean_auditor/rubric/adjusters/registry.py:6`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** BAIXO.
+<file-analyzed/>
+#### Analisado 70 de 203 — `app/confia_lean_auditor/rubric/adjusters/ita2025f2q1.py`
+**Responsabilidade:** ajustador de rubrica por student_claim_checks. Evidência: `app/confia_lean_auditor/rubric/adjusters/ita2025f2q1.py:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** BAIXO.
+<file-analyzed/>
+#### Analisado 71 de 203 — `app/confia_lean_auditor/rubric/adjusters/ita2025f2q3.py`
+**Responsabilidade:** ajustador de rubrica por student_claim_checks. Evidência: `app/confia_lean_auditor/rubric/adjusters/ita2025f2q3.py:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** BAIXO.
+<file-analyzed/>
+#### Analisado 72 de 203 — `app/confia_lean_auditor/rubric/adjusters/ita2025f2q5.py`
+**Responsabilidade:** ajustador de rubrica por student_claim_checks. Evidência: `app/confia_lean_auditor/rubric/adjusters/ita2025f2q5.py:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** BAIXO.
+<file-analyzed/>
+#### Analisado 73 de 203 — `app/confia_lean_auditor/rubric/adjusters/ita2025f2q6.py`
+**Responsabilidade:** ajustador de rubrica por student_claim_checks. Evidência: `app/confia_lean_auditor/rubric/adjusters/ita2025f2q6.py:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** BAIXO.
+<file-analyzed/>
+#### Analisado 74 de 203 — `app/confia_lean_auditor/rubric/adjusters/ita2025f2q8.py`
+**Responsabilidade:** ajustador de rubrica por student_claim_checks. Evidência: `app/confia_lean_auditor/rubric/adjusters/ita2025f2q8.py:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** BAIXO.
+<file-analyzed/>
+#### Analisado 75 de 203 — `app/confia_lean_auditor/rubric/adjusters/registry.py`
+**Responsabilidade:** ajustador de rubrica por student_claim_checks. Evidência: `app/confia_lean_auditor/rubric/adjusters/registry.py:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** BAIXO.
+<file-analyzed/>
+#### Analisado 76 de 203 — `app/confia_lean_auditor/rubric/rubric_evaluator.py`
+**Responsabilidade:** avaliador de rubrica por claims e microclaims. Evidência: `app/confia_lean_auditor/rubric/rubric_evaluator.py:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** BAIXO.
+<file-analyzed/>
+#### Analisado 77 de 203 — `app/confia_lean_auditor/student_claims/__init__.py`
+**Responsabilidade:** schema, extrator ou registry de student claims. Evidência: `app/confia_lean_auditor/main.py:23`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** BAIXO.
+<file-analyzed/>
+#### Analisado 78 de 203 — `app/confia_lean_auditor/student_claims/extract_f2q1_student_claims.py`
+**Responsabilidade:** schema, extrator ou registry de student claims. Evidência: `app/confia_lean_auditor/student_claims/extract_f2q1_student_claims.py:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** BAIXO.
+<file-analyzed/>
+#### Analisado 79 de 203 — `app/confia_lean_auditor/student_claims/extract_f2q3_student_claims.py`
+**Responsabilidade:** schema, extrator ou registry de student claims. Evidência: `app/confia_lean_auditor/student_claims/extract_f2q3_student_claims.py:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** BAIXO.
+<file-analyzed/>
+#### Analisado 80 de 203 — `app/confia_lean_auditor/student_claims/extract_f2q5_student_claims.py`
+**Responsabilidade:** schema, extrator ou registry de student claims. Evidência: `app/confia_lean_auditor/student_claims/extract_f2q5_student_claims.py:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** BAIXO.
+<file-analyzed/>
+#### Analisado 81 de 203 — `app/confia_lean_auditor/student_claims/extract_f2q6_student_claims.py`
+**Responsabilidade:** schema, extrator ou registry de student claims. Evidência: `app/confia_lean_auditor/student_claims/extract_f2q6_student_claims.py:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** BAIXO.
+<file-analyzed/>
+#### Analisado 82 de 203 — `app/confia_lean_auditor/student_claims/extract_f2q8_student_claims.py`
+**Responsabilidade:** schema, extrator ou registry de student claims. Evidência: `app/confia_lean_auditor/student_claims/extract_f2q8_student_claims.py:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** BAIXO.
+<file-analyzed/>
+#### Analisado 83 de 203 — `app/confia_lean_auditor/student_claims/registry.py`
+**Responsabilidade:** schema, extrator ou registry de student claims. Evidência: `app/confia_lean_auditor/student_claims/registry.py:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** BAIXO.
+<file-analyzed/>
+#### Analisado 84 de 203 — `app/confia_lean_auditor/student_claims/schemas.py`
+**Responsabilidade:** schema, extrator ou registry de student claims. Evidência: `app/confia_lean_auditor/student_claims/schemas.py:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** ALTO.
+<file-analyzed/>
+#### Analisado 85 de 203 — `benchmarks/f2_suite_level1_2/gerar_tabelas_level1_f2_suite.py`
+**Responsabilidade:** script de geração, execução ou relatório de benchmark. Evidência: `benchmarks/f2_suite_level1_2/gerar_tabelas_level1_f2_suite.py:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** script escreve relatórios em diretórios ignorados, portanto é harness auxiliar e não runtime HTTP.
+**Risco de refatoração:** MÉDIO.
+<file-analyzed/>
+#### Analisado 86 de 203 — `benchmarks/f2_suite_level1_2/gold_500.csv`
+**Responsabilidade:** massa gold/resultado de benchmark em CSV. Evidência: `benchmarks/f2_suite_level1_2/gold_500.csv:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** MÉDIO.
+<file-analyzed/>
+#### Analisado 87 de 203 — `benchmarks/f2_suite_level1_2/make_gold_500_f2_suite.py`
+**Responsabilidade:** script de geração, execução ou relatório de benchmark. Evidência: `benchmarks/f2_suite_level1_2/make_gold_500_f2_suite.py:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** script escreve relatórios em diretórios ignorados, portanto é harness auxiliar e não runtime HTTP.
+**Risco de refatoração:** MÉDIO.
+<file-analyzed/>
+#### Analisado 88 de 203 — `benchmarks/f2_suite_level1_2/reports/RELATORIO_TECNICO_LEVEL1_F2_SUITE.md`
+**Responsabilidade:** documentação técnica. Evidência: `benchmarks/f2_suite_level1_2/reports/RELATORIO_TECNICO_LEVEL1_F2_SUITE.md:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** MÉDIO.
+<file-analyzed/>
+#### Analisado 89 de 203 — `benchmarks/f2_suite_level1_2/run_level1_f2_suite.py`
+**Responsabilidade:** script de geração, execução ou relatório de benchmark. Evidência: `benchmarks/f2_suite_level1_2/run_level1_f2_suite.py:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** script escreve relatórios em diretórios ignorados, portanto é harness auxiliar e não runtime HTTP.
+**Risco de refatoração:** MÉDIO.
+<file-analyzed/>
+#### Analisado 90 de 203 — `benchmarks/stage1_4/ita2025f2q8/gerar_relatorio_completo_benchmark_f2q8.py`
+**Responsabilidade:** script de geração, execução ou relatório de benchmark. Evidência: `benchmarks/stage1_4/ita2025f2q8/gerar_relatorio_completo_benchmark_f2q8.py:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** script escreve relatórios em diretórios ignorados, portanto é harness auxiliar e não runtime HTTP.
+**Risco de refatoração:** MÉDIO.
+<file-analyzed/>
+#### Analisado 91 de 203 — `benchmarks/stage1_4/ita2025f2q8/gerar_relatorio_detalhado_sem_resumo_f2q8.py`
+**Responsabilidade:** script de geração, execução ou relatório de benchmark. Evidência: `benchmarks/stage1_4/ita2025f2q8/gerar_relatorio_detalhado_sem_resumo_f2q8.py:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** script escreve relatórios em diretórios ignorados, portanto é harness auxiliar e não runtime HTTP.
+**Risco de refatoração:** MÉDIO.
+<file-analyzed/>
+#### Analisado 92 de 203 — `benchmarks/stage1_4/ita2025f2q8/gold_100.csv`
+**Responsabilidade:** massa gold/resultado de benchmark em CSV. Evidência: `benchmarks/stage1_4/ita2025f2q8/gold_100.csv:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** MÉDIO.
+<file-analyzed/>
+#### Analisado 93 de 203 — `benchmarks/stage1_4/ita2025f2q8/make_gold_100_f2q8.py`
+**Responsabilidade:** script de geração, execução ou relatório de benchmark. Evidência: `benchmarks/stage1_4/ita2025f2q8/make_gold_100_f2q8.py:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** script escreve relatórios em diretórios ignorados, portanto é harness auxiliar e não runtime HTTP.
+**Risco de refatoração:** MÉDIO.
+<file-analyzed/>
+#### Analisado 94 de 203 — `benchmarks/stage1_4/ita2025f2q8/run_stage1_4_f2q8.py`
+**Responsabilidade:** script de geração, execução ou relatório de benchmark. Evidência: `benchmarks/stage1_4/ita2025f2q8/run_stage1_4_f2q8.py:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** script escreve relatórios em diretórios ignorados, portanto é harness auxiliar e não runtime HTTP.
+**Risco de refatoração:** MÉDIO.
+<file-analyzed/>
+#### Analisado 95 de 203 — `docs/lean_security_whitelist.md`
+**Responsabilidade:** documentação técnica. Evidência: `docs/lean_security_whitelist.md:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** BAIXO.
+<file-analyzed/>
+#### Analisado 96 de 203 — `lake-manifest.json`
+**Responsabilidade:** manifesto Lean/Lake ou toolchain. Evidência: `lake-manifest.json:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** MÉDIO.
+<file-analyzed/>
+#### Analisado 97 de 203 — `lakefile.toml`
+**Responsabilidade:** manifesto Lean/Lake ou toolchain. Evidência: `lakefile.toml:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** MÉDIO.
+<file-analyzed/>
+#### Analisado 98 de 203 — `lean-toolchain`
+**Responsabilidade:** manifesto Lean/Lake ou toolchain. Evidência: `lean-toolchain:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** MÉDIO.
+<file-analyzed/>
+#### Analisado 99 de 203 — `problems/ITA2025F2Q1/examples/answer_only.txt`
+**Responsabilidade:** fixture textual de solução. Evidência: `problems/ITA2025F2Q1/examples/answer_only.txt:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** BAIXO.
+<file-analyzed/>
+#### Analisado 100 de 203 — `problems/ITA2025F2Q1/examples/correct_solution.txt`
+**Responsabilidade:** fixture textual de solução. Evidência: `problems/ITA2025F2Q1/examples/correct_solution.txt:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** BAIXO.
+<file-analyzed/>
+#### Analisado 101 de 203 — `problems/ITA2025F2Q1/examples/missing_reduced_form.txt`
+**Responsabilidade:** fixture textual de solução. Evidência: `problems/ITA2025F2Q1/examples/missing_reduced_form.txt:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** BAIXO.
+<file-analyzed/>
+#### Analisado 102 de 203 — `problems/ITA2025F2Q1/examples/wrong_answer.txt`
+**Responsabilidade:** fixture textual de solução. Evidência: `problems/ITA2025F2Q1/examples/wrong_answer.txt:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** BAIXO.
+<file-analyzed/>
+#### Analisado 103 de 203 — `problems/ITA2025F2Q1/microclaims.json`
+**Responsabilidade:** contrato JSON de microclaims e dependências. Evidência: `problems/ITA2025F2Q1/microclaims.json:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** ALTO.
+<file-analyzed/>
+#### Analisado 104 de 203 — `problems/ITA2025F2Q1/problem.json`
+**Responsabilidade:** contrato JSON de enunciado e resposta esperada. Evidência: `problems/ITA2025F2Q1/problem.json:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** MÉDIO.
+<file-analyzed/>
+#### Analisado 105 de 203 — `problems/ITA2025F2Q1/rubric.json`
+**Responsabilidade:** contrato JSON de rubrica pontuada. Evidência: `problems/ITA2025F2Q1/rubric.json:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** ALTO.
+<file-analyzed/>
+#### Analisado 106 de 203 — `problems/ITA2025F2Q3/examples/answer_only.txt`
+**Responsabilidade:** fixture textual de solução. Evidência: `problems/ITA2025F2Q3/examples/answer_only.txt:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** BAIXO.
+<file-analyzed/>
+#### Analisado 107 de 203 — `problems/ITA2025F2Q3/examples/correct_solution.txt`
+**Responsabilidade:** fixture textual de solução. Evidência: `problems/ITA2025F2Q3/examples/correct_solution.txt:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** BAIXO.
+<file-analyzed/>
+#### Analisado 108 de 203 — `problems/ITA2025F2Q3/examples/partial_beta_difference.txt`
+**Responsabilidade:** fixture textual de solução. Evidência: `problems/ITA2025F2Q3/examples/partial_beta_difference.txt:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** BAIXO.
+<file-analyzed/>
+#### Analisado 109 de 203 — `problems/ITA2025F2Q3/examples/wrong_answer.txt`
+**Responsabilidade:** fixture textual de solução. Evidência: `problems/ITA2025F2Q3/examples/wrong_answer.txt:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** BAIXO.
+<file-analyzed/>
+#### Analisado 110 de 203 — `problems/ITA2025F2Q3/microclaims.json`
+**Responsabilidade:** contrato JSON de microclaims e dependências. Evidência: `problems/ITA2025F2Q3/microclaims.json:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** ALTO.
+<file-analyzed/>
+#### Analisado 111 de 203 — `problems/ITA2025F2Q3/problem.json`
+**Responsabilidade:** contrato JSON de enunciado e resposta esperada. Evidência: `problems/ITA2025F2Q3/problem.json:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** MÉDIO.
+<file-analyzed/>
+#### Analisado 112 de 203 — `problems/ITA2025F2Q3/rubric.json`
+**Responsabilidade:** contrato JSON de rubrica pontuada. Evidência: `problems/ITA2025F2Q3/rubric.json:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** ALTO.
+<file-analyzed/>
+#### Analisado 113 de 203 — `problems/ITA2025F2Q5/examples/answer_only.txt`
+**Responsabilidade:** fixture textual de solução. Evidência: `problems/ITA2025F2Q5/examples/answer_only.txt:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** BAIXO.
+<file-analyzed/>
+#### Analisado 114 de 203 — `problems/ITA2025F2Q5/examples/correct_solution.txt`
+**Responsabilidade:** fixture textual de solução. Evidência: `problems/ITA2025F2Q5/examples/correct_solution.txt:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** BAIXO.
+<file-analyzed/>
+#### Analisado 115 de 203 — `problems/ITA2025F2Q5/examples/missing_bounds.txt`
+**Responsabilidade:** fixture textual de solução. Evidência: `problems/ITA2025F2Q5/examples/missing_bounds.txt:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** BAIXO.
+<file-analyzed/>
+#### Analisado 116 de 203 — `problems/ITA2025F2Q5/examples/wrong_digit.txt`
+**Responsabilidade:** fixture textual de solução. Evidência: `problems/ITA2025F2Q5/examples/wrong_digit.txt:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** BAIXO.
+<file-analyzed/>
+#### Analisado 117 de 203 — `problems/ITA2025F2Q5/microclaims.json`
+**Responsabilidade:** contrato JSON de microclaims e dependências. Evidência: `problems/ITA2025F2Q5/microclaims.json:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** ALTO.
+<file-analyzed/>
+#### Analisado 118 de 203 — `problems/ITA2025F2Q5/problem.json`
+**Responsabilidade:** contrato JSON de enunciado e resposta esperada. Evidência: `problems/ITA2025F2Q5/problem.json:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** MÉDIO.
+<file-analyzed/>
+#### Analisado 119 de 203 — `problems/ITA2025F2Q5/rubric.json`
+**Responsabilidade:** contrato JSON de rubrica pontuada. Evidência: `problems/ITA2025F2Q5/rubric.json:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** ALTO.
+<file-analyzed/>
+#### Analisado 120 de 203 — `problems/ITA2025F2Q6/examples/answer_only.txt`
+**Responsabilidade:** fixture textual de solução. Evidência: `problems/ITA2025F2Q6/examples/answer_only.txt:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** BAIXO.
+<file-analyzed/>
+#### Analisado 121 de 203 — `problems/ITA2025F2Q6/examples/correct_solution.txt`
+**Responsabilidade:** fixture textual de solução. Evidência: `problems/ITA2025F2Q6/examples/correct_solution.txt:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** BAIXO.
+<file-analyzed/>
+#### Analisado 122 de 203 — `problems/ITA2025F2Q6/examples/missing_ratio.txt`
+**Responsabilidade:** fixture textual de solução. Evidência: `problems/ITA2025F2Q6/examples/missing_ratio.txt:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** BAIXO.
+<file-analyzed/>
+#### Analisado 123 de 203 — `problems/ITA2025F2Q6/examples/wrong_answer.txt`
+**Responsabilidade:** fixture textual de solução. Evidência: `problems/ITA2025F2Q6/examples/wrong_answer.txt:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** BAIXO.
+<file-analyzed/>
+#### Analisado 124 de 203 — `problems/ITA2025F2Q6/microclaims.json`
+**Responsabilidade:** contrato JSON de microclaims e dependências. Evidência: `problems/ITA2025F2Q6/microclaims.json:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** ALTO.
+<file-analyzed/>
+#### Analisado 125 de 203 — `problems/ITA2025F2Q6/problem.json`
+**Responsabilidade:** contrato JSON de enunciado e resposta esperada. Evidência: `problems/ITA2025F2Q6/problem.json:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** MÉDIO.
+<file-analyzed/>
+#### Analisado 126 de 203 — `problems/ITA2025F2Q6/rubric.json`
+**Responsabilidade:** contrato JSON de rubrica pontuada. Evidência: `problems/ITA2025F2Q6/rubric.json:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** ALTO.
+<file-analyzed/>
+#### Analisado 127 de 203 — `problems/ITA2025F2Q8/examples/answer_only.txt`
+**Responsabilidade:** fixture textual de solução. Evidência: `problems/ITA2025F2Q8/examples/answer_only.txt:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** BAIXO.
+<file-analyzed/>
+#### Analisado 128 de 203 — `problems/ITA2025F2Q8/examples/correct_solution.txt`
+**Responsabilidade:** fixture textual de solução. Evidência: `problems/ITA2025F2Q8/examples/correct_solution.txt:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** BAIXO.
+<file-analyzed/>
+#### Analisado 129 de 203 — `problems/ITA2025F2Q8/examples/missing_determinant_formula.txt`
+**Responsabilidade:** fixture textual de solução. Evidência: `problems/ITA2025F2Q8/examples/missing_determinant_formula.txt:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** BAIXO.
+<file-analyzed/>
+#### Analisado 130 de 203 — `problems/ITA2025F2Q8/examples/wrong_answer.txt`
+**Responsabilidade:** fixture textual de solução. Evidência: `problems/ITA2025F2Q8/examples/wrong_answer.txt:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** BAIXO.
+<file-analyzed/>
+#### Analisado 131 de 203 — `problems/ITA2025F2Q8/microclaims.json`
+**Responsabilidade:** contrato JSON de microclaims e dependências. Evidência: `problems/ITA2025F2Q8/microclaims.json:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** ALTO.
+<file-analyzed/>
+#### Analisado 132 de 203 — `problems/ITA2025F2Q8/problem.json`
+**Responsabilidade:** contrato JSON de enunciado e resposta esperada. Evidência: `problems/ITA2025F2Q8/problem.json:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** MÉDIO.
+<file-analyzed/>
+#### Analisado 133 de 203 — `problems/ITA2025F2Q8/rubric.json`
+**Responsabilidade:** contrato JSON de rubrica pontuada. Evidência: `problems/ITA2025F2Q8/rubric.json:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** ALTO.
+<file-analyzed/>
+#### Analisado 134 de 203 — `problems/ITA2025Q1/certificate/Statement.lean`
+**Responsabilidade:** arquivo versionado do projeto. Evidência: `problems/ITA2025Q1/certificate/Statement.lean:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** BAIXO.
+<file-analyzed/>
+#### Analisado 135 de 203 — `problems/ITA2025Q1/examples/answer_only.txt`
+**Responsabilidade:** fixture textual de solução. Evidência: `problems/ITA2025Q1/examples/answer_only.txt:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** BAIXO.
+<file-analyzed/>
+#### Analisado 136 de 203 — `problems/ITA2025Q1/examples/correct_solution.txt`
+**Responsabilidade:** fixture textual de solução. Evidência: `problems/ITA2025Q1/examples/correct_solution.txt:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** BAIXO.
+<file-analyzed/>
+#### Analisado 137 de 203 — `problems/ITA2025Q1/examples/injection_attempt.txt`
+**Responsabilidade:** fixture textual de solução. Evidência: `problems/ITA2025Q1/examples/injection_attempt.txt:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** BAIXO.
+<file-analyzed/>
+#### Analisado 138 de 203 — `problems/ITA2025Q1/examples/partial_no_positive_root.txt`
+**Responsabilidade:** fixture textual de solução. Evidência: `problems/ITA2025Q1/examples/partial_no_positive_root.txt:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** BAIXO.
+<file-analyzed/>
+#### Analisado 139 de 203 — `problems/ITA2025Q1/examples/wrong_determinant_step.txt`
+**Responsabilidade:** fixture textual de solução. Evidência: `problems/ITA2025Q1/examples/wrong_determinant_step.txt:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** BAIXO.
+<file-analyzed/>
+#### Analisado 140 de 203 — `problems/ITA2025Q1/examples/wrong_solution.txt`
+**Responsabilidade:** fixture textual de solução. Evidência: `problems/ITA2025Q1/examples/wrong_solution.txt:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** BAIXO.
+<file-analyzed/>
+#### Analisado 141 de 203 — `problems/ITA2025Q1/microclaims.json`
+**Responsabilidade:** contrato JSON de microclaims e dependências. Evidência: `problems/ITA2025Q1/microclaims.json:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** ALTO.
+<file-analyzed/>
+#### Analisado 142 de 203 — `problems/ITA2025Q1/problem.json`
+**Responsabilidade:** contrato JSON de enunciado e resposta esperada. Evidência: `problems/ITA2025Q1/problem.json:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** MÉDIO.
+<file-analyzed/>
+#### Analisado 143 de 203 — `problems/ITA2025Q1/rubric.json`
+**Responsabilidade:** contrato JSON de rubrica pontuada. Evidência: `problems/ITA2025Q1/rubric.json:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** ALTO.
+<file-analyzed/>
+#### Analisado 144 de 203 — `problems/ITA2025Q3/examples/answer_only.txt`
+**Responsabilidade:** fixture textual de solução. Evidência: `problems/ITA2025Q3/examples/answer_only.txt:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** BAIXO.
+<file-analyzed/>
+#### Analisado 145 de 203 — `problems/ITA2025Q3/examples/correct_solution.txt`
+**Responsabilidade:** fixture textual de solução. Evidência: `problems/ITA2025Q3/examples/correct_solution.txt:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** BAIXO.
+<file-analyzed/>
+#### Analisado 146 de 203 — `problems/ITA2025Q3/examples/missing_parity.txt`
+**Responsabilidade:** fixture textual de solução. Evidência: `problems/ITA2025Q3/examples/missing_parity.txt:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** BAIXO.
+<file-analyzed/>
+#### Analisado 147 de 203 — `problems/ITA2025Q3/examples/wrong_coefficient.txt`
+**Responsabilidade:** fixture textual de solução. Evidência: `problems/ITA2025Q3/examples/wrong_coefficient.txt:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** BAIXO.
+<file-analyzed/>
+#### Analisado 148 de 203 — `problems/ITA2025Q3/microclaims.json`
+**Responsabilidade:** contrato JSON de microclaims e dependências. Evidência: `problems/ITA2025Q3/microclaims.json:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** ALTO.
+<file-analyzed/>
+#### Analisado 149 de 203 — `problems/ITA2025Q3/problem.json`
+**Responsabilidade:** contrato JSON de enunciado e resposta esperada. Evidência: `problems/ITA2025Q3/problem.json:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** MÉDIO.
+<file-analyzed/>
+#### Analisado 150 de 203 — `problems/ITA2025Q3/rubric.json`
+**Responsabilidade:** contrato JSON de rubrica pontuada. Evidência: `problems/ITA2025Q3/rubric.json:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** ALTO.
+<file-analyzed/>
+#### Analisado 151 de 203 — `problems/ITA2025Q4/examples/answer_only.txt`
+**Responsabilidade:** fixture textual de solução. Evidência: `problems/ITA2025Q4/examples/answer_only.txt:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** BAIXO.
+<file-analyzed/>
+#### Analisado 152 de 203 — `problems/ITA2025Q4/examples/correct_solution.txt`
+**Responsabilidade:** fixture textual de solução. Evidência: `problems/ITA2025Q4/examples/correct_solution.txt:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** BAIXO.
+<file-analyzed/>
+#### Analisado 153 de 203 — `problems/ITA2025Q4/examples/missing_distinct_inputs.txt`
+**Responsabilidade:** fixture textual de solução. Evidência: `problems/ITA2025Q4/examples/missing_distinct_inputs.txt:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** BAIXO.
+<file-analyzed/>
+#### Analisado 154 de 203 — `problems/ITA2025Q4/examples/wrong_target.txt`
+**Responsabilidade:** fixture textual de solução. Evidência: `problems/ITA2025Q4/examples/wrong_target.txt:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** BAIXO.
+<file-analyzed/>
+#### Analisado 155 de 203 — `problems/ITA2025Q4/examples/wrong_witnesses.txt`
+**Responsabilidade:** fixture textual de solução. Evidência: `problems/ITA2025Q4/examples/wrong_witnesses.txt:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** BAIXO.
+<file-analyzed/>
+#### Analisado 156 de 203 — `problems/ITA2025Q4/microclaims.json`
+**Responsabilidade:** contrato JSON de microclaims e dependências. Evidência: `problems/ITA2025Q4/microclaims.json:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** ALTO.
+<file-analyzed/>
+#### Analisado 157 de 203 — `problems/ITA2025Q4/problem.json`
+**Responsabilidade:** contrato JSON de enunciado e resposta esperada. Evidência: `problems/ITA2025Q4/problem.json:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** MÉDIO.
+<file-analyzed/>
+#### Analisado 158 de 203 — `problems/ITA2025Q4/rubric.json`
+**Responsabilidade:** contrato JSON de rubrica pontuada. Evidência: `problems/ITA2025Q4/rubric.json:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** ALTO.
+<file-analyzed/>
+#### Analisado 159 de 203 — `problems/ITA2025Q5/examples/answer_only.txt`
+**Responsabilidade:** fixture textual de solução. Evidência: `problems/ITA2025Q5/examples/answer_only.txt:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** BAIXO.
+<file-analyzed/>
+#### Analisado 160 de 203 — `problems/ITA2025Q5/examples/correct_solution.txt`
+**Responsabilidade:** fixture textual de solução. Evidência: `problems/ITA2025Q5/examples/correct_solution.txt:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** BAIXO.
+<file-analyzed/>
+#### Analisado 161 de 203 — `problems/ITA2025Q5/examples/missing_difference_relation.txt`
+**Responsabilidade:** fixture textual de solução. Evidência: `problems/ITA2025Q5/examples/missing_difference_relation.txt:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** BAIXO.
+<file-analyzed/>
+#### Analisado 162 de 203 — `problems/ITA2025Q5/examples/missing_factorization.txt`
+**Responsabilidade:** fixture textual de solução. Evidência: `problems/ITA2025Q5/examples/missing_factorization.txt:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** BAIXO.
+<file-analyzed/>
+#### Analisado 163 de 203 — `problems/ITA2025Q5/examples/wrong_direction.txt`
+**Responsabilidade:** fixture textual de solução. Evidência: `problems/ITA2025Q5/examples/wrong_direction.txt:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** BAIXO.
+<file-analyzed/>
+#### Analisado 164 de 203 — `problems/ITA2025Q5/microclaims.json`
+**Responsabilidade:** contrato JSON de microclaims e dependências. Evidência: `problems/ITA2025Q5/microclaims.json:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** ALTO.
+<file-analyzed/>
+#### Analisado 165 de 203 — `problems/ITA2025Q5/problem.json`
+**Responsabilidade:** contrato JSON de enunciado e resposta esperada. Evidência: `problems/ITA2025Q5/problem.json:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** MÉDIO.
+<file-analyzed/>
+#### Analisado 166 de 203 — `problems/ITA2025Q5/rubric.json`
+**Responsabilidade:** contrato JSON de rubrica pontuada. Evidência: `problems/ITA2025Q5/rubric.json:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** ALTO.
+<file-analyzed/>
+#### Analisado 167 de 203 — `problems/ITA2025Q8/examples/answer_only.txt`
+**Responsabilidade:** fixture textual de solução. Evidência: `problems/ITA2025Q8/examples/answer_only.txt:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** BAIXO.
+<file-analyzed/>
+#### Analisado 168 de 203 — `problems/ITA2025Q8/examples/correct_solution.txt`
+**Responsabilidade:** fixture textual de solução. Evidência: `problems/ITA2025Q8/examples/correct_solution.txt:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** BAIXO.
+<file-analyzed/>
+#### Analisado 169 de 203 — `problems/ITA2025Q8/examples/missing_sign_analysis.txt`
+**Responsabilidade:** fixture textual de solução. Evidência: `problems/ITA2025Q8/examples/missing_sign_analysis.txt:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** BAIXO.
+<file-analyzed/>
+#### Analisado 170 de 203 — `problems/ITA2025Q8/examples/wrong_interval.txt`
+**Responsabilidade:** fixture textual de solução. Evidência: `problems/ITA2025Q8/examples/wrong_interval.txt:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** BAIXO.
+<file-analyzed/>
+#### Analisado 171 de 203 — `problems/ITA2025Q8/microclaims.json`
+**Responsabilidade:** contrato JSON de microclaims e dependências. Evidência: `problems/ITA2025Q8/microclaims.json:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** ALTO.
+<file-analyzed/>
+#### Analisado 172 de 203 — `problems/ITA2025Q8/problem.json`
+**Responsabilidade:** contrato JSON de enunciado e resposta esperada. Evidência: `problems/ITA2025Q8/problem.json:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** MÉDIO.
+<file-analyzed/>
+#### Analisado 173 de 203 — `problems/ITA2025Q8/rubric.json`
+**Responsabilidade:** contrato JSON de rubrica pontuada. Evidência: `problems/ITA2025Q8/rubric.json:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** ALTO.
+<file-analyzed/>
+#### Analisado 174 de 203 — `pyproject.toml`
+**Responsabilidade:** manifesto Python do pacote e dependências. Evidência: `pyproject.toml:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** MÉDIO.
+<file-analyzed/>
+#### Analisado 175 de 203 — `tests/test_evaluator_architecture.py`
+**Responsabilidade:** teste pytest de API, contratos, regressão ou verificação Lean. Evidência: `tests/test_evaluator_architecture.py:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** MÉDIO.
+<file-analyzed/>
+#### Analisado 176 de 203 — `tests/test_f2q1_rubric_adjustments.py`
+**Responsabilidade:** teste pytest de API, contratos, regressão ou verificação Lean. Evidência: `tests/test_f2q1_rubric_adjustments.py:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** MÉDIO.
+<file-analyzed/>
+#### Analisado 177 de 203 — `tests/test_f2q1_strong_certificate.py`
+**Responsabilidade:** teste pytest de API, contratos, regressão ou verificação Lean. Evidência: `tests/test_f2q1_strong_certificate.py:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** MÉDIO.
+<file-analyzed/>
+#### Analisado 178 de 203 — `tests/test_f2q1_student_claim_checks.py`
+**Responsabilidade:** teste pytest de API, contratos, regressão ou verificação Lean. Evidência: `tests/test_f2q1_student_claim_checks.py:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** MÉDIO.
+<file-analyzed/>
+#### Analisado 179 de 203 — `tests/test_f2q3_rubric_adjustments.py`
+**Responsabilidade:** teste pytest de API, contratos, regressão ou verificação Lean. Evidência: `tests/test_f2q3_rubric_adjustments.py:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** MÉDIO.
+<file-analyzed/>
+#### Analisado 180 de 203 — `tests/test_f2q3_strong_certificate.py`
+**Responsabilidade:** teste pytest de API, contratos, regressão ou verificação Lean. Evidência: `tests/test_f2q3_strong_certificate.py:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** MÉDIO.
+<file-analyzed/>
+#### Analisado 181 de 203 — `tests/test_f2q3_student_claim_checks.py`
+**Responsabilidade:** teste pytest de API, contratos, regressão ou verificação Lean. Evidência: `tests/test_f2q3_student_claim_checks.py:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** MÉDIO.
+<file-analyzed/>
+#### Analisado 182 de 203 — `tests/test_f2q5_rubric_adjustments.py`
+**Responsabilidade:** teste pytest de API, contratos, regressão ou verificação Lean. Evidência: `tests/test_f2q5_rubric_adjustments.py:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** MÉDIO.
+<file-analyzed/>
+#### Analisado 183 de 203 — `tests/test_f2q5_strong_certificate.py`
+**Responsabilidade:** teste pytest de API, contratos, regressão ou verificação Lean. Evidência: `tests/test_f2q5_strong_certificate.py:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** MÉDIO.
+<file-analyzed/>
+#### Analisado 184 de 203 — `tests/test_f2q5_student_claim_checks.py`
+**Responsabilidade:** teste pytest de API, contratos, regressão ou verificação Lean. Evidência: `tests/test_f2q5_student_claim_checks.py:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** MÉDIO.
+<file-analyzed/>
+#### Analisado 185 de 203 — `tests/test_f2q6_rubric_adjustments.py`
+**Responsabilidade:** teste pytest de API, contratos, regressão ou verificação Lean. Evidência: `tests/test_f2q6_rubric_adjustments.py:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** MÉDIO.
+<file-analyzed/>
+#### Analisado 186 de 203 — `tests/test_f2q6_strong_certificate.py`
+**Responsabilidade:** teste pytest de API, contratos, regressão ou verificação Lean. Evidência: `tests/test_f2q6_strong_certificate.py:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** MÉDIO.
+<file-analyzed/>
+#### Analisado 187 de 203 — `tests/test_f2q6_student_claim_checks.py`
+**Responsabilidade:** teste pytest de API, contratos, regressão ou verificação Lean. Evidência: `tests/test_f2q6_student_claim_checks.py:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** MÉDIO.
+<file-analyzed/>
+#### Analisado 188 de 203 — `tests/test_f2q8_student_claim_checks.py`
+**Responsabilidade:** teste pytest de API, contratos, regressão ou verificação Lean. Evidência: `tests/test_f2q8_student_claim_checks.py:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** MÉDIO.
+<file-analyzed/>
+#### Analisado 189 de 203 — `tests/test_ita2025f2q1_level1.py`
+**Responsabilidade:** teste pytest de API, contratos, regressão ou verificação Lean. Evidência: `tests/test_ita2025f2q1_level1.py:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** MÉDIO.
+<file-analyzed/>
+#### Analisado 190 de 203 — `tests/test_ita2025f2q3_level1.py`
+**Responsabilidade:** teste pytest de API, contratos, regressão ou verificação Lean. Evidência: `tests/test_ita2025f2q3_level1.py:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** MÉDIO.
+<file-analyzed/>
+#### Analisado 191 de 203 — `tests/test_ita2025f2q5_level1.py`
+**Responsabilidade:** teste pytest de API, contratos, regressão ou verificação Lean. Evidência: `tests/test_ita2025f2q5_level1.py:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** MÉDIO.
+<file-analyzed/>
+#### Analisado 192 de 203 — `tests/test_ita2025f2q6_level1.py`
+**Responsabilidade:** teste pytest de API, contratos, regressão ou verificação Lean. Evidência: `tests/test_ita2025f2q6_level1.py:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** MÉDIO.
+<file-analyzed/>
+#### Analisado 193 de 203 — `tests/test_ita2025f2q8_level1.py`
+**Responsabilidade:** teste pytest de API, contratos, regressão ou verificação Lean. Evidência: `tests/test_ita2025f2q8_level1.py:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** MÉDIO.
+<file-analyzed/>
+#### Analisado 194 de 203 — `tests/test_ita2025q1_level2.py`
+**Responsabilidade:** teste pytest de API, contratos, regressão ou verificação Lean. Evidência: `tests/test_ita2025q1_level2.py:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** MÉDIO.
+<file-analyzed/>
+#### Analisado 195 de 203 — `tests/test_ita2025q3_level1.py`
+**Responsabilidade:** teste pytest de API, contratos, regressão ou verificação Lean. Evidência: `tests/test_ita2025q3_level1.py:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** MÉDIO.
+<file-analyzed/>
+#### Analisado 196 de 203 — `tests/test_ita2025q4_level1.py`
+**Responsabilidade:** teste pytest de API, contratos, regressão ou verificação Lean. Evidência: `tests/test_ita2025q4_level1.py:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** MÉDIO.
+<file-analyzed/>
+#### Analisado 197 de 203 — `tests/test_ita2025q4_level2.py`
+**Responsabilidade:** teste pytest de API, contratos, regressão ou verificação Lean. Evidência: `tests/test_ita2025q4_level2.py:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** MÉDIO.
+<file-analyzed/>
+#### Analisado 198 de 203 — `tests/test_ita2025q5_level1.py`
+**Responsabilidade:** teste pytest de API, contratos, regressão ou verificação Lean. Evidência: `tests/test_ita2025q5_level1.py:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** MÉDIO.
+<file-analyzed/>
+#### Analisado 199 de 203 — `tests/test_ita2025q8_level1.py`
+**Responsabilidade:** teste pytest de API, contratos, regressão ou verificação Lean. Evidência: `tests/test_ita2025q8_level1.py:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** MÉDIO.
+<file-analyzed/>
+#### Analisado 200 de 203 — `tests/test_level1_f2_suite_regressions.py`
+**Responsabilidade:** teste pytest de API, contratos, regressão ou verificação Lean. Evidência: `tests/test_level1_f2_suite_regressions.py:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** MÉDIO.
+<file-analyzed/>
+#### Analisado 201 de 203 — `tests/test_problem_assets_contracts.py`
+**Responsabilidade:** teste pytest de API, contratos, regressão ou verificação Lean. Evidência: `tests/test_problem_assets_contracts.py:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** MÉDIO.
+<file-analyzed/>
+#### Analisado 202 de 203 — `tests/test_problem_assets_validation.py`
+**Responsabilidade:** teste pytest de API, contratos, regressão ou verificação Lean. Evidência: `tests/test_problem_assets_validation.py:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** MÉDIO.
+<file-analyzed/>
+#### Analisado 203 de 203 — `tests/test_problem_router_coverage.py`
+**Responsabilidade:** teste pytest de API, contratos, regressão ou verificação Lean. Evidência: `tests/test_problem_router_coverage.py:1`.
+**Fluxo de dados:** participa do fluxo descrito nas seções 2 a 4 quando importado, executado por CLI/CI/teste ou lido por filesystem; quando é fixture/documento, atua como entrada de teste, benchmark ou referência documental.
+**Entradas/saídas:** entradas e saídas consolidadas aparecem na seção 4; arquivos de problema entram via `validate_problem_assets`, scripts de benchmark entram por CSV/CLI, e módulos runtime entram pela rota `/audit`.
+**Anti-padrões e smells:** sem smell isolado confirmado além dos transversais citados nas seções 6 e 9.
+**Risco de refatoração:** MÉDIO.
 <file-analyzed/>
 
 ## 6. Preocupações transversais
 
-Roteamento entre pipelines: há dois caminhos Lean. O HTTP gera `Attempt.lean` e `formal_steps/*.lean` em `app/confia_lean_auditor/lean/build_attempt.py:127`, `app/confia_lean_auditor/lean/formal_step_evaluator.py:62` e `app/confia_lean_auditor/main.py:78`; a CLI verifica `problems/{problem_id}/certificate/Statement.lean` em `app/confia_lean_auditor/lean/run_lean.py:115`. Esses caminhos validam alvos diferentes.
+Roteamento paralelo por problema ocorre em três planos obrigatórios: extração em `app/confia_lean_auditor/claims/extract_claims.py:41` a `app/confia_lean_auditor/claims/extract_claims.py:75`, builders em `app/confia_lean_auditor/lean/build_attempt.py:44` a `app/confia_lean_auditor/lean/build_attempt.py:123`, e renderização de formal steps em `app/confia_lean_auditor/lean/formal_step_evaluator.py:411` a `app/confia_lean_auditor/lean/formal_step_evaluator.py:441`. Para a família F2 há ainda três planos adicionais: extração de student claims em `app/confia_lean_auditor/student_claims/registry.py:23` a `app/confia_lean_auditor/student_claims/registry.py:39`, verificação Lean dessas claims em `app/confia_lean_auditor/lean/student_claim_checkers/registry.py:23` a `app/confia_lean_auditor/lean/student_claim_checkers/registry.py:62`, e ajuste de rubrica em `app/confia_lean_auditor/rubric/adjusters/registry.py:26` a `app/confia_lean_auditor/rubric/adjusters/registry.py:45`.
 
-Configuração: a raiz pode vir de `CONFIA_LEAN_AUDITOR_ROOT` em `app/confia_lean_auditor/core/paths.py:16`; não há `.env.example` no inventário operacional. A versão do app diverge da versão do pacote em `app/confia_lean_auditor/main.py:20`, `app/confia_lean_auditor/main.py:32` e `pyproject.toml:7`.
+Configuração e ambiente: `CONFIA_LEAN_AUDITOR_ROOT` altera a raiz em `app/confia_lean_auditor/core/paths.py:15` a `app/confia_lean_auditor/core/paths.py:22`; `CONFIA_ENABLE_LLM_FORMAL_STEPS` ativa LLM em `app/confia_lean_auditor/llm/formal_step_extractor.py:52` a `app/confia_lean_auditor/llm/formal_step_extractor.py:53`; `CONFIA_LLM_MODEL` escolhe modelo em `app/confia_lean_auditor/llm/formal_step_extractor.py:238`; CI desativa LLM com `CONFIA_ENABLE_LLM_FORMAL_STEPS: "0"` em `.github/workflows/python_tests.yml:11` a `.github/workflows/python_tests.yml:12` e `.github/workflows/lean_action_ci.yml:11` a `.github/workflows/lean_action_ci.yml:12`; `.env` é ignorado em `.gitignore:13` a `.gitignore:14`.
 
-Logging e diagnóstico: não há logger estruturado no código próprio; a CLI imprime JSON com `print` em `app/confia_lean_auditor/lean/run_lean.py:138`. Saídas Lean inteiras entram em resposta/artefatos por `stdout` e `stderr` em `app/confia_lean_auditor/core/schemas.py:80`, `app/confia_lean_auditor/core/schemas.py:81`, `app/confia_lean_auditor/core/schemas.py:39` e `app/confia_lean_auditor/core/schemas.py:40`.
+Logging e diagnóstico: não há logger estruturado no app; o runner Lean retorna `stdout` e `stderr` em `app/confia_lean_auditor/lean/run_lean.py:90` a `app/confia_lean_auditor/lean/run_lean.py:98`, e esses campos entram em `LeanCertificate` em `app/confia_lean_auditor/core/schemas.py:76` a `app/confia_lean_auditor/core/schemas.py:85`. Student claims também preservam `stdout` e `stderr` em dataclass própria em `app/confia_lean_auditor/student_claims/schemas.py:54` a `app/confia_lean_auditor/student_claims/schemas.py:68`.
 
-Tratamento de erro: `main.py` converte `InvalidProblemId` para 400 em `app/confia_lean_auditor/main.py:40`, `app/confia_lean_auditor/main.py:42` e `app/confia_lean_auditor/main.py:43`; problema inexistente vira 404 em `app/confia_lean_auditor/main.py:45` e `app/confia_lean_auditor/main.py:46`; `NotImplementedError` de geradores vira 501 em `app/confia_lean_auditor/main.py:61`, `app/confia_lean_auditor/main.py:62`, `app/confia_lean_auditor/main.py:72` e `app/confia_lean_auditor/main.py:73`; falta de microclaims vira 500 em `app/confia_lean_auditor/main.py:93` e `app/confia_lean_auditor/main.py:94`.
+Segurança: `problem_id` é validado por regex em `app/confia_lean_auditor/core/paths.py:8` e confinado por `relative_to` em `app/confia_lean_auditor/core/paths.py:34` a `app/confia_lean_auditor/core/paths.py:45`; tokens Lean proibidos incluem `sorry`, `admit`, `unsafe` e `axiom` em `app/confia_lean_auditor/lean/run_lean.py:13` a `app/confia_lean_auditor/lean/run_lean.py:18`; subprocess Lean usa timeout em `app/confia_lean_auditor/lean/run_lean.py:65` a `app/confia_lean_auditor/lean/run_lean.py:88`; formal steps são validados antes da escrita em `app/confia_lean_auditor/lean/formal_step_evaluator.py:455` a `app/confia_lean_auditor/lean/formal_step_evaluator.py:493`. Autenticação, autorização, rate-limit e CORS não aparecem na criação simples de `FastAPI` em `app/confia_lean_auditor/main.py:8` a `app/confia_lean_auditor/main.py:26`.
 
-Segurança: `problem_id` tem regex e checagem de `relative_to` em `app/confia_lean_auditor/core/paths.py:8`, `app/confia_lean_auditor/core/paths.py:26`, `app/confia_lean_auditor/core/paths.py:40` e `app/confia_lean_auditor/core/paths.py:41`. O código Lean gerado insere `step.lhs`, `step.rhs` e `step.lean_method` vindos da extração em `app/confia_lean_auditor/lean/formal_step_evaluator.py:31`, `app/confia_lean_auditor/lean/formal_step_evaluator.py:32`, `app/confia_lean_auditor/lean/formal_step_evaluator.py:33` e `app/confia_lean_auditor/lean/formal_step_evaluator.py:34`; tokens proibidos são filtrados por regex em `app/confia_lean_auditor/lean/run_lean.py:13` a `app/confia_lean_auditor/lean/run_lean.py:18` e `app/confia_lean_auditor/lean/run_lean.py:27`.
-
-Testes: `pytest` é declarado em `pyproject.toml:14`, mas não há arquivo de teste próprio no inventário operacional. Os exemplos em `problems/ITA2025Q1/examples/` não são referenciados pelo código de runtime; buscas por seus caminhos não aparecem fora dos próprios arquivos e artefatos.
-
-Idioma e branding: nome do pacote usa `confia-lean-auditor` em `pyproject.toml:6`, Lake usa `confia_lean_auditor` em `lakefile.toml:1`, descrição usa `ConfIA Lean Auditor` em `pyproject.toml:8`, API expõe `ConfIA Lean Auditor` em `app/confia_lean_auditor/main.py:20` e `README.md` usa `confia_lean_auditor` em `README.md:1`.
-
-Código morto e artefatos: `ConfiaLeanAuditor/Basic.lean` contém scaffold em `ConfiaLeanAuditor/Basic.lean:1`; `README.md` contém scaffold removível em `README.md:13`; `app/confia_lean_auditor.egg-info/*` são metadata gerada em `app/confia_lean_auditor.egg-info/PKG-INFO:1`; `artifacts/runs/**` são saídas produzidas pelo runtime em `app/confia_lean_auditor/main.py:123`, `app/confia_lean_auditor/main.py:128` e `app/confia_lean_auditor/main.py:129`; `.venv/` está rastreado apesar de não estar ignorado em `.gitignore:1`.
+Testes e efeitos colaterais: os testes de API usam `TestClient` e podem acionar a escrita de artefatos pela rota `/audit`, pois `main.py` sempre cria `artifact_dir` em `app/confia_lean_auditor/main.py:59` a `app/confia_lean_auditor/main.py:61`; os testes de assets alteram cópias temporárias via `tmp_path`, não a árvore original, em `tests/test_problem_assets_validation.py:14` a `tests/test_problem_assets_validation.py:55`; os testes de router são textuais e leem arquivos fonte em `tests/test_problem_router_coverage.py:34` a `tests/test_problem_router_coverage.py:58`. Não executei a suíte nesta auditoria para respeitar a restrição de não criar artefatos runtime; essa decisão é ancorada no comportamento de escrita de `app/confia_lean_auditor/main.py:159` a `app/confia_lean_auditor/main.py:178` e `app/confia_lean_auditor/lean/student_claim_checker.py:168` a `app/confia_lean_auditor/lean/student_claim_checker.py:193`.
 
 ## 7. Tabela de risco
 
-| Arquivo | Risco | Razão principal |
+| arquivo | risco | razão principal |
 |---|---:|---|
-| .github/workflows/create-release.yml | MÉDIO | Escreve release/tag com `contents: write` em `.github/workflows/create-release.yml:16`. |
-| .github/workflows/lean_action_ci.yml | MÉDIO | Define validação Lean e docgen em `.github/workflows/lean_action_ci.yml:20` e `.github/workflows/lean_action_ci.yml:21`. |
-| .github/workflows/update.yml | MÉDIO | Atualiza mathlib por action externa em `.github/workflows/update.yml:17` e `.github/workflows/update.yml:35`. |
-| .gitignore | ALTO | Não ignora `.venv/`, enquanto só ignora `/.lake` em `.gitignore:1`. |
-| AUDITORIA_REPOSITORIO.md | BAIXO | Documento diagnóstico, sem consumo runtime em `AUDITORIA_REPOSITORIO.md:1`. |
-| ConfiaLeanAuditor.lean | BAIXO | Agregador Lean em `ConfiaLeanAuditor.lean:1` e `ConfiaLeanAuditor.lean:2`. |
-| ConfiaLeanAuditor/Basic.lean | BAIXO | Scaffold `hello` em `ConfiaLeanAuditor/Basic.lean:1`. |
-| ConfiaLeanAuditor/Problems/ITA2025Q1/Statement.lean | ALTO | Contrato formal central em `ConfiaLeanAuditor/Problems/ITA2025Q1/Statement.lean:7` a `ConfiaLeanAuditor/Problems/ITA2025Q1/Statement.lean:28`. |
-| README.md | BAIXO | Scaffold documental em `README.md:13`. |
-| app/confia_lean_auditor.egg-info/PKG-INFO | BAIXO | Metadata gerada em `app/confia_lean_auditor.egg-info/PKG-INFO:1`. |
-| app/confia_lean_auditor.egg-info/SOURCES.txt | MÉDIO | Metadata desatualizada não lista `main.py`, embora liste fontes em `app/confia_lean_auditor.egg-info/SOURCES.txt:1`. |
-| app/confia_lean_auditor.egg-info/dependency_links.txt | BAIXO | Metadata vazia referida em `app/confia_lean_auditor.egg-info/SOURCES.txt:6`. |
-| app/confia_lean_auditor.egg-info/requires.txt | MÉDIO | Duplica dependências e inclui `pytest` em `app/confia_lean_auditor.egg-info/requires.txt:4`. |
-| app/confia_lean_auditor.egg-info/top_level.txt | BAIXO | Metadata top-level em `app/confia_lean_auditor.egg-info/top_level.txt:1`. |
-| app/confia_lean_auditor/__init__.py | BAIXO | Marcador de pacote consumido por imports como `app/confia_lean_auditor/main.py:9`. |
-| app/confia_lean_auditor/claims/__init__.py | BAIXO | Marcador de subpacote consumido por `app/confia_lean_auditor/main.py:9`. |
-| app/confia_lean_auditor/claims/extract_claims.py | ALTO | Extrai claims que alimentam rubrica e Lean em `app/confia_lean_auditor/claims/extract_claims.py:117`. |
-| app/confia_lean_auditor/core/__init__.py | BAIXO | Marcador de subpacote core. |
-| app/confia_lean_auditor/core/paths.py | ALTO | Resolve raiz e problema em `app/confia_lean_auditor/core/paths.py:15` e `app/confia_lean_auditor/core/paths.py:34`. |
-| app/confia_lean_auditor/core/schemas.py | ALTO | Contratos Pydantic compartilhados em `app/confia_lean_auditor/core/schemas.py:100`. |
-| app/confia_lean_auditor/lean/__init__.py | BAIXO | Marcador de subpacote Lean. |
-| app/confia_lean_auditor/lean/build_attempt.py | ALTO | Gera `Attempt.lean` em `app/confia_lean_auditor/lean/build_attempt.py:127`. |
-| app/confia_lean_auditor/lean/formal_step_evaluator.py | ALTO | Insere formal steps em Lean gerado em `app/confia_lean_auditor/lean/formal_step_evaluator.py:31`. |
-| app/confia_lean_auditor/lean/microclaim_evaluator.py | ALTO | Cruza microclaims e teoremas em `app/confia_lean_auditor/lean/microclaim_evaluator.py:62`. |
-| app/confia_lean_auditor/lean/run_lean.py | ALTO | Executa subprocess Lean em `app/confia_lean_auditor/lean/run_lean.py:72`. |
-| app/confia_lean_auditor/main.py | ALTO | Orquestra rota `/audit` em `app/confia_lean_auditor/main.py:36`. |
-| app/confia_lean_auditor/reports/__init__.py | BAIXO | Marcador de subpacote reports. |
-| app/confia_lean_auditor/reports/report_builder.py | MÉDIO | Define vereditos e feedback em `app/confia_lean_auditor/reports/report_builder.py:19` e `app/confia_lean_auditor/reports/report_builder.py:31`. |
-| app/confia_lean_auditor/rubric/__init__.py | BAIXO | Marcador de subpacote rubric. |
-| app/confia_lean_auditor/rubric/rubric_evaluator.py | ALTO | Calcula score em `app/confia_lean_auditor/rubric/rubric_evaluator.py:62` e `app/confia_lean_auditor/rubric/rubric_evaluator.py:63`. |
-| artifacts/runs/** | BAIXO | Saídas geradas pelo runtime em `app/confia_lean_auditor/main.py:123`, `app/confia_lean_auditor/main.py:128` e `app/confia_lean_auditor/main.py:129`; risco de higiene/privacidade MÉDIO quando stdout inclui caminho absoluto em `artifacts/runs/20260703T144140_097860/audit.json:98`. |
-| lake-manifest.json | MÉDIO | Lock de dependências Lean em `lake-manifest.json:4` a `lake-manifest.json:93`. |
-| lakefile.toml | ALTO | Configura build Lean em `lakefile.toml:4`, `lakefile.toml:13` e `lakefile.toml:18`. |
-| lean-toolchain | ALTO | Fixa compilador Lean em `lean-toolchain:1`. |
-| problems/ITA2025Q1/certificate/Statement.lean | MÉDIO | CLI valida este arquivo em `app/confia_lean_auditor/lean/run_lean.py:115`. |
-| problems/ITA2025Q1/examples/*.txt | BAIXO | Fixtures sem consumidor automatizado observado; exemplo correto começa em `problems/ITA2025Q1/examples/correct_solution.txt:1`. |
-| problems/ITA2025Q1/microclaims.json | ALTO | Contrato de microclaims em `problems/ITA2025Q1/microclaims.json:3`. |
-| problems/ITA2025Q1/problem.json | MÉDIO | Metadata oficial não lida no runtime auditado em `problems/ITA2025Q1/problem.json:2`. |
-| problems/ITA2025Q1/rubric.json | ALTO | Contrato de pontuação em `problems/ITA2025Q1/rubric.json:4`. |
-| pyproject.toml | MÉDIO | Define instalação e dependências em `pyproject.toml:10`. |
+| `.github/workflows/create-release.yml` | MÉDIO | workflow GitHub Actions de CI, release ou atualização; evidência `.github/workflows/create-release.yml:1`. |
+| `.github/workflows/lean_action_ci.yml` | MÉDIO | workflow GitHub Actions de CI, release ou atualização; evidência `.github/workflows/lean_action_ci.yml:1`. |
+| `.github/workflows/python_tests.yml` | MÉDIO | workflow GitHub Actions de CI, release ou atualização; evidência `.github/workflows/python_tests.yml:1`. |
+| `.github/workflows/update.yml` | MÉDIO | workflow GitHub Actions de CI, release ou atualização; evidência `.github/workflows/update.yml:1`. |
+| `.gitignore` | BAIXO | configuração de exclusões Git para ambientes, artefatos e caches; evidência `.gitignore:1`. |
+| `AUDITORIA_REPOSITORIO.md` | BAIXO | documentação técnica; evidência `AUDITORIA_REPOSITORIO.md:1`. |
+| `ConfiaLeanAuditor.lean` | BAIXO | módulo raiz Lean que agrega statements; evidência `ConfiaLeanAuditor.lean:1`. |
+| `ConfiaLeanAuditor/Basic.lean` | BAIXO | scaffold Lean mínimo com definição hello; evidência `ConfiaLeanAuditor/Basic.lean:1`. |
+| `ConfiaLeanAuditor/Problems/ITA2025F2Q1/Statement.lean` | ALTO | statement Lean de problema; evidência `ConfiaLeanAuditor/Problems/ITA2025F2Q1/Statement.lean:1`. |
+| `ConfiaLeanAuditor/Problems/ITA2025F2Q3/Statement.lean` | ALTO | statement Lean de problema; evidência `ConfiaLeanAuditor/Problems/ITA2025F2Q3/Statement.lean:1`. |
+| `ConfiaLeanAuditor/Problems/ITA2025F2Q5/Statement.lean` | ALTO | statement Lean de problema; evidência `ConfiaLeanAuditor/Problems/ITA2025F2Q5/Statement.lean:1`. |
+| `ConfiaLeanAuditor/Problems/ITA2025F2Q6/Statement.lean` | ALTO | statement Lean de problema; evidência `ConfiaLeanAuditor/Problems/ITA2025F2Q6/Statement.lean:1`. |
+| `ConfiaLeanAuditor/Problems/ITA2025F2Q8/Statement.lean` | ALTO | statement Lean de problema; evidência `ConfiaLeanAuditor/Problems/ITA2025F2Q8/Statement.lean:1`. |
+| `ConfiaLeanAuditor/Problems/ITA2025Q1/Statement.lean` | ALTO | statement Lean de problema; evidência `ConfiaLeanAuditor/Problems/ITA2025Q1/Statement.lean:1`. |
+| `ConfiaLeanAuditor/Problems/ITA2025Q3/Statement.lean` | ALTO | statement Lean de problema; evidência `ConfiaLeanAuditor/Problems/ITA2025Q3/Statement.lean:1`. |
+| `ConfiaLeanAuditor/Problems/ITA2025Q4/Statement.lean` | ALTO | statement Lean de problema; evidência `ConfiaLeanAuditor/Problems/ITA2025Q4/Statement.lean:1`. |
+| `ConfiaLeanAuditor/Problems/ITA2025Q5/Statement.lean` | ALTO | statement Lean de problema; evidência `ConfiaLeanAuditor/Problems/ITA2025Q5/Statement.lean:1`. |
+| `ConfiaLeanAuditor/Problems/ITA2025Q8/Statement.lean` | ALTO | statement Lean de problema; evidência `ConfiaLeanAuditor/Problems/ITA2025Q8/Statement.lean:1`. |
+| `MILESTONE_ITA2025F2.md` | BAIXO | documentação técnica; evidência `MILESTONE_ITA2025F2.md:1`. |
+| `README.md` | BAIXO | documentação técnica; evidência `README.md:1`. |
+| `app/confia_lean_auditor/__init__.py` | BAIXO | marcador de pacote Python; evidência `app/confia_lean_auditor/main.py:10`. |
+| `app/confia_lean_auditor/claims/__init__.py` | BAIXO | marcador de pacote Python; evidência `app/confia_lean_auditor/main.py:10`. |
+| `app/confia_lean_auditor/claims/extract_claims.py` | BAIXO | dispatcher de extração por problem_id; evidência `app/confia_lean_auditor/claims/extract_claims.py:1`. |
+| `app/confia_lean_auditor/claims/extractors/__init__.py` | ALTO | extrator heurístico de claims por problema; evidência `app/confia_lean_auditor/claims/extract_claims.py:4`. |
+| `app/confia_lean_auditor/claims/extractors/ita2025f2q1.py` | ALTO | extrator heurístico de claims por problema; evidência `app/confia_lean_auditor/claims/extractors/ita2025f2q1.py:1`. |
+| `app/confia_lean_auditor/claims/extractors/ita2025f2q3.py` | ALTO | extrator heurístico de claims por problema; evidência `app/confia_lean_auditor/claims/extractors/ita2025f2q3.py:1`. |
+| `app/confia_lean_auditor/claims/extractors/ita2025f2q5.py` | ALTO | extrator heurístico de claims por problema; evidência `app/confia_lean_auditor/claims/extractors/ita2025f2q5.py:1`. |
+| `app/confia_lean_auditor/claims/extractors/ita2025f2q6.py` | ALTO | extrator heurístico de claims por problema; evidência `app/confia_lean_auditor/claims/extractors/ita2025f2q6.py:1`. |
+| `app/confia_lean_auditor/claims/extractors/ita2025f2q8.py` | ALTO | extrator heurístico de claims por problema; evidência `app/confia_lean_auditor/claims/extractors/ita2025f2q8.py:1`. |
+| `app/confia_lean_auditor/claims/extractors/ita2025q1.py` | ALTO | extrator heurístico de claims por problema; evidência `app/confia_lean_auditor/claims/extractors/ita2025q1.py:1`. |
+| `app/confia_lean_auditor/claims/extractors/ita2025q3.py` | ALTO | extrator heurístico de claims por problema; evidência `app/confia_lean_auditor/claims/extractors/ita2025q3.py:1`. |
+| `app/confia_lean_auditor/claims/extractors/ita2025q4.py` | ALTO | extrator heurístico de claims por problema; evidência `app/confia_lean_auditor/claims/extractors/ita2025q4.py:1`. |
+| `app/confia_lean_auditor/claims/extractors/ita2025q5.py` | ALTO | extrator heurístico de claims por problema; evidência `app/confia_lean_auditor/claims/extractors/ita2025q5.py:1`. |
+| `app/confia_lean_auditor/claims/extractors/ita2025q8.py` | ALTO | extrator heurístico de claims por problema; evidência `app/confia_lean_auditor/claims/extractors/ita2025q8.py:1`. |
+| `app/confia_lean_auditor/core/__init__.py` | BAIXO | marcador de pacote Python; evidência `app/confia_lean_auditor/main.py:11`. |
+| `app/confia_lean_auditor/core/paths.py` | BAIXO | resolução de raiz e problem_id; evidência `app/confia_lean_auditor/core/paths.py:1`. |
+| `app/confia_lean_auditor/core/problem_assets.py` | ALTO | validação de assets de problema; evidência `app/confia_lean_auditor/core/problem_assets.py:1`. |
+| `app/confia_lean_auditor/core/schemas.py` | ALTO | schemas Pydantic ou dataclasses de contratos internos; evidência `app/confia_lean_auditor/core/schemas.py:1`. |
+| `app/confia_lean_auditor/lean/__init__.py` | BAIXO | marcador de pacote Python; evidência `app/confia_lean_auditor/main.py:14`. |
+| `app/confia_lean_auditor/lean/attempt_builders/__init__.py` | BAIXO | builder de Attempt.lean por problema; evidência `app/confia_lean_auditor/lean/build_attempt.py:7`. |
+| `app/confia_lean_auditor/lean/attempt_builders/ita2025f2q1.py` | ALTO | builder de Attempt.lean por problema; evidência `app/confia_lean_auditor/lean/attempt_builders/ita2025f2q1.py:1`. |
+| `app/confia_lean_auditor/lean/attempt_builders/ita2025f2q3.py` | ALTO | builder de Attempt.lean por problema; evidência `app/confia_lean_auditor/lean/attempt_builders/ita2025f2q3.py:1`. |
+| `app/confia_lean_auditor/lean/attempt_builders/ita2025f2q5.py` | ALTO | builder de Attempt.lean por problema; evidência `app/confia_lean_auditor/lean/attempt_builders/ita2025f2q5.py:1`. |
+| `app/confia_lean_auditor/lean/attempt_builders/ita2025f2q6.py` | ALTO | builder de Attempt.lean por problema; evidência `app/confia_lean_auditor/lean/attempt_builders/ita2025f2q6.py:1`. |
+| `app/confia_lean_auditor/lean/attempt_builders/ita2025f2q8.py` | ALTO | builder de Attempt.lean por problema; evidência `app/confia_lean_auditor/lean/attempt_builders/ita2025f2q8.py:1`. |
+| `app/confia_lean_auditor/lean/attempt_builders/ita2025q1.py` | ALTO | builder de Attempt.lean por problema; evidência `app/confia_lean_auditor/lean/attempt_builders/ita2025q1.py:1`. |
+| `app/confia_lean_auditor/lean/attempt_builders/ita2025q3.py` | ALTO | builder de Attempt.lean por problema; evidência `app/confia_lean_auditor/lean/attempt_builders/ita2025q3.py:1`. |
+| `app/confia_lean_auditor/lean/attempt_builders/ita2025q4.py` | ALTO | builder de Attempt.lean por problema; evidência `app/confia_lean_auditor/lean/attempt_builders/ita2025q4.py:1`. |
+| `app/confia_lean_auditor/lean/attempt_builders/ita2025q5.py` | ALTO | builder de Attempt.lean por problema; evidência `app/confia_lean_auditor/lean/attempt_builders/ita2025q5.py:1`. |
+| `app/confia_lean_auditor/lean/attempt_builders/ita2025q8.py` | ALTO | builder de Attempt.lean por problema; evidência `app/confia_lean_auditor/lean/attempt_builders/ita2025q8.py:1`. |
+| `app/confia_lean_auditor/lean/build_attempt.py` | ALTO | dispatcher de builders Lean por problem_id; evidência `app/confia_lean_auditor/lean/build_attempt.py:1`. |
+| `app/confia_lean_auditor/lean/formal_step_evaluator.py` | ALTO | renderizador e avaliador de formal steps Lean; evidência `app/confia_lean_auditor/lean/formal_step_evaluator.py:1`. |
+| `app/confia_lean_auditor/lean/microclaim_evaluator.py` | ALTO | avaliador de microclaims; evidência `app/confia_lean_auditor/lean/microclaim_evaluator.py:1`. |
+| `app/confia_lean_auditor/lean/run_lean.py` | ALTO | runner Lean e CLI por subprocess; evidência `app/confia_lean_auditor/lean/run_lean.py:1`. |
+| `app/confia_lean_auditor/lean/safe_formal_step.py` | ALTO | arquivo versionado do projeto; evidência `app/confia_lean_auditor/lean/safe_formal_step.py:1`. |
+| `app/confia_lean_auditor/lean/student_claim_checker.py` | ALTO | verificador Lean legado de student claims F2Q8; evidência `app/confia_lean_auditor/lean/student_claim_checker.py:1`. |
+| `app/confia_lean_auditor/lean/student_claim_checkers/__init__.py` | BAIXO | verificador Lean de student claims por problema F2; evidência `app/confia_lean_auditor/lean/student_claim_checkers/registry.py:9`. |
+| `app/confia_lean_auditor/lean/student_claim_checkers/ita2025f2q1.py` | ALTO | verificador Lean de student claims por problema F2; evidência `app/confia_lean_auditor/lean/student_claim_checkers/ita2025f2q1.py:1`. |
+| `app/confia_lean_auditor/lean/student_claim_checkers/ita2025f2q3.py` | ALTO | verificador Lean de student claims por problema F2; evidência `app/confia_lean_auditor/lean/student_claim_checkers/ita2025f2q3.py:1`. |
+| `app/confia_lean_auditor/lean/student_claim_checkers/ita2025f2q5.py` | ALTO | verificador Lean de student claims por problema F2; evidência `app/confia_lean_auditor/lean/student_claim_checkers/ita2025f2q5.py:1`. |
+| `app/confia_lean_auditor/lean/student_claim_checkers/ita2025f2q6.py` | ALTO | verificador Lean de student claims por problema F2; evidência `app/confia_lean_auditor/lean/student_claim_checkers/ita2025f2q6.py:1`. |
+| `app/confia_lean_auditor/lean/student_claim_checkers/registry.py` | ALTO | verificador Lean de student claims por problema F2; evidência `app/confia_lean_auditor/lean/student_claim_checkers/registry.py:1`. |
+| `app/confia_lean_auditor/llm/__init__.py` | BAIXO | marcador de pacote Python; evidência `app/confia_lean_auditor/main.py:21`. |
+| `app/confia_lean_auditor/llm/formal_step_extractor.py` | BAIXO | fallback opcional de extração por LLM; evidência `app/confia_lean_auditor/llm/formal_step_extractor.py:1`. |
+| `app/confia_lean_auditor/main.py` | ALTO | API FastAPI e orquestrador ponta a ponta; evidência `app/confia_lean_auditor/main.py:1`. |
+| `app/confia_lean_auditor/reports/__init__.py` | BAIXO | marcador de pacote Python; evidência `app/confia_lean_auditor/main.py:18`. |
+| `app/confia_lean_auditor/reports/report_builder.py` | BAIXO | montagem de verdict e feedback textual; evidência `app/confia_lean_auditor/reports/report_builder.py:1`. |
+| `app/confia_lean_auditor/rubric/__init__.py` | BAIXO | marcador de pacote Python; evidência `app/confia_lean_auditor/main.py:19`. |
+| `app/confia_lean_auditor/rubric/adjusters/__init__.py` | BAIXO | ajustador de rubrica por student_claim_checks; evidência `app/confia_lean_auditor/rubric/adjusters/registry.py:6`. |
+| `app/confia_lean_auditor/rubric/adjusters/ita2025f2q1.py` | BAIXO | ajustador de rubrica por student_claim_checks; evidência `app/confia_lean_auditor/rubric/adjusters/ita2025f2q1.py:1`. |
+| `app/confia_lean_auditor/rubric/adjusters/ita2025f2q3.py` | BAIXO | ajustador de rubrica por student_claim_checks; evidência `app/confia_lean_auditor/rubric/adjusters/ita2025f2q3.py:1`. |
+| `app/confia_lean_auditor/rubric/adjusters/ita2025f2q5.py` | BAIXO | ajustador de rubrica por student_claim_checks; evidência `app/confia_lean_auditor/rubric/adjusters/ita2025f2q5.py:1`. |
+| `app/confia_lean_auditor/rubric/adjusters/ita2025f2q6.py` | BAIXO | ajustador de rubrica por student_claim_checks; evidência `app/confia_lean_auditor/rubric/adjusters/ita2025f2q6.py:1`. |
+| `app/confia_lean_auditor/rubric/adjusters/ita2025f2q8.py` | BAIXO | ajustador de rubrica por student_claim_checks; evidência `app/confia_lean_auditor/rubric/adjusters/ita2025f2q8.py:1`. |
+| `app/confia_lean_auditor/rubric/adjusters/registry.py` | BAIXO | ajustador de rubrica por student_claim_checks; evidência `app/confia_lean_auditor/rubric/adjusters/registry.py:1`. |
+| `app/confia_lean_auditor/rubric/rubric_evaluator.py` | BAIXO | avaliador de rubrica por claims e microclaims; evidência `app/confia_lean_auditor/rubric/rubric_evaluator.py:1`. |
+| `app/confia_lean_auditor/student_claims/__init__.py` | BAIXO | schema, extrator ou registry de student claims; evidência `app/confia_lean_auditor/main.py:23`. |
+| `app/confia_lean_auditor/student_claims/extract_f2q1_student_claims.py` | BAIXO | schema, extrator ou registry de student claims; evidência `app/confia_lean_auditor/student_claims/extract_f2q1_student_claims.py:1`. |
+| `app/confia_lean_auditor/student_claims/extract_f2q3_student_claims.py` | BAIXO | schema, extrator ou registry de student claims; evidência `app/confia_lean_auditor/student_claims/extract_f2q3_student_claims.py:1`. |
+| `app/confia_lean_auditor/student_claims/extract_f2q5_student_claims.py` | BAIXO | schema, extrator ou registry de student claims; evidência `app/confia_lean_auditor/student_claims/extract_f2q5_student_claims.py:1`. |
+| `app/confia_lean_auditor/student_claims/extract_f2q6_student_claims.py` | BAIXO | schema, extrator ou registry de student claims; evidência `app/confia_lean_auditor/student_claims/extract_f2q6_student_claims.py:1`. |
+| `app/confia_lean_auditor/student_claims/extract_f2q8_student_claims.py` | BAIXO | schema, extrator ou registry de student claims; evidência `app/confia_lean_auditor/student_claims/extract_f2q8_student_claims.py:1`. |
+| `app/confia_lean_auditor/student_claims/registry.py` | BAIXO | schema, extrator ou registry de student claims; evidência `app/confia_lean_auditor/student_claims/registry.py:1`. |
+| `app/confia_lean_auditor/student_claims/schemas.py` | ALTO | schema, extrator ou registry de student claims; evidência `app/confia_lean_auditor/student_claims/schemas.py:1`. |
+| `benchmarks/f2_suite_level1_2/gerar_tabelas_level1_f2_suite.py` | MÉDIO | script de geração, execução ou relatório de benchmark; evidência `benchmarks/f2_suite_level1_2/gerar_tabelas_level1_f2_suite.py:1`. |
+| `benchmarks/f2_suite_level1_2/gold_500.csv` | MÉDIO | massa gold/resultado de benchmark em CSV; evidência `benchmarks/f2_suite_level1_2/gold_500.csv:1`. |
+| `benchmarks/f2_suite_level1_2/make_gold_500_f2_suite.py` | MÉDIO | script de geração, execução ou relatório de benchmark; evidência `benchmarks/f2_suite_level1_2/make_gold_500_f2_suite.py:1`. |
+| `benchmarks/f2_suite_level1_2/reports/RELATORIO_TECNICO_LEVEL1_F2_SUITE.md` | MÉDIO | documentação técnica; evidência `benchmarks/f2_suite_level1_2/reports/RELATORIO_TECNICO_LEVEL1_F2_SUITE.md:1`. |
+| `benchmarks/f2_suite_level1_2/run_level1_f2_suite.py` | MÉDIO | script de geração, execução ou relatório de benchmark; evidência `benchmarks/f2_suite_level1_2/run_level1_f2_suite.py:1`. |
+| `benchmarks/stage1_4/ita2025f2q8/gerar_relatorio_completo_benchmark_f2q8.py` | MÉDIO | script de geração, execução ou relatório de benchmark; evidência `benchmarks/stage1_4/ita2025f2q8/gerar_relatorio_completo_benchmark_f2q8.py:1`. |
+| `benchmarks/stage1_4/ita2025f2q8/gerar_relatorio_detalhado_sem_resumo_f2q8.py` | MÉDIO | script de geração, execução ou relatório de benchmark; evidência `benchmarks/stage1_4/ita2025f2q8/gerar_relatorio_detalhado_sem_resumo_f2q8.py:1`. |
+| `benchmarks/stage1_4/ita2025f2q8/gold_100.csv` | MÉDIO | massa gold/resultado de benchmark em CSV; evidência `benchmarks/stage1_4/ita2025f2q8/gold_100.csv:1`. |
+| `benchmarks/stage1_4/ita2025f2q8/make_gold_100_f2q8.py` | MÉDIO | script de geração, execução ou relatório de benchmark; evidência `benchmarks/stage1_4/ita2025f2q8/make_gold_100_f2q8.py:1`. |
+| `benchmarks/stage1_4/ita2025f2q8/run_stage1_4_f2q8.py` | MÉDIO | script de geração, execução ou relatório de benchmark; evidência `benchmarks/stage1_4/ita2025f2q8/run_stage1_4_f2q8.py:1`. |
+| `docs/lean_security_whitelist.md` | BAIXO | documentação técnica; evidência `docs/lean_security_whitelist.md:1`. |
+| `lake-manifest.json` | MÉDIO | manifesto Lean/Lake ou toolchain; evidência `lake-manifest.json:1`. |
+| `lakefile.toml` | MÉDIO | manifesto Lean/Lake ou toolchain; evidência `lakefile.toml:1`. |
+| `lean-toolchain` | MÉDIO | manifesto Lean/Lake ou toolchain; evidência `lean-toolchain:1`. |
+| `problems/ITA2025F2Q1/examples/answer_only.txt` | BAIXO | fixture textual de solução; evidência `problems/ITA2025F2Q1/examples/answer_only.txt:1`. |
+| `problems/ITA2025F2Q1/examples/correct_solution.txt` | BAIXO | fixture textual de solução; evidência `problems/ITA2025F2Q1/examples/correct_solution.txt:1`. |
+| `problems/ITA2025F2Q1/examples/missing_reduced_form.txt` | BAIXO | fixture textual de solução; evidência `problems/ITA2025F2Q1/examples/missing_reduced_form.txt:1`. |
+| `problems/ITA2025F2Q1/examples/wrong_answer.txt` | BAIXO | fixture textual de solução; evidência `problems/ITA2025F2Q1/examples/wrong_answer.txt:1`. |
+| `problems/ITA2025F2Q1/microclaims.json` | ALTO | contrato JSON de microclaims e dependências; evidência `problems/ITA2025F2Q1/microclaims.json:1`. |
+| `problems/ITA2025F2Q1/problem.json` | MÉDIO | contrato JSON de enunciado e resposta esperada; evidência `problems/ITA2025F2Q1/problem.json:1`. |
+| `problems/ITA2025F2Q1/rubric.json` | ALTO | contrato JSON de rubrica pontuada; evidência `problems/ITA2025F2Q1/rubric.json:1`. |
+| `problems/ITA2025F2Q3/examples/answer_only.txt` | BAIXO | fixture textual de solução; evidência `problems/ITA2025F2Q3/examples/answer_only.txt:1`. |
+| `problems/ITA2025F2Q3/examples/correct_solution.txt` | BAIXO | fixture textual de solução; evidência `problems/ITA2025F2Q3/examples/correct_solution.txt:1`. |
+| `problems/ITA2025F2Q3/examples/partial_beta_difference.txt` | BAIXO | fixture textual de solução; evidência `problems/ITA2025F2Q3/examples/partial_beta_difference.txt:1`. |
+| `problems/ITA2025F2Q3/examples/wrong_answer.txt` | BAIXO | fixture textual de solução; evidência `problems/ITA2025F2Q3/examples/wrong_answer.txt:1`. |
+| `problems/ITA2025F2Q3/microclaims.json` | ALTO | contrato JSON de microclaims e dependências; evidência `problems/ITA2025F2Q3/microclaims.json:1`. |
+| `problems/ITA2025F2Q3/problem.json` | MÉDIO | contrato JSON de enunciado e resposta esperada; evidência `problems/ITA2025F2Q3/problem.json:1`. |
+| `problems/ITA2025F2Q3/rubric.json` | ALTO | contrato JSON de rubrica pontuada; evidência `problems/ITA2025F2Q3/rubric.json:1`. |
+| `problems/ITA2025F2Q5/examples/answer_only.txt` | BAIXO | fixture textual de solução; evidência `problems/ITA2025F2Q5/examples/answer_only.txt:1`. |
+| `problems/ITA2025F2Q5/examples/correct_solution.txt` | BAIXO | fixture textual de solução; evidência `problems/ITA2025F2Q5/examples/correct_solution.txt:1`. |
+| `problems/ITA2025F2Q5/examples/missing_bounds.txt` | BAIXO | fixture textual de solução; evidência `problems/ITA2025F2Q5/examples/missing_bounds.txt:1`. |
+| `problems/ITA2025F2Q5/examples/wrong_digit.txt` | BAIXO | fixture textual de solução; evidência `problems/ITA2025F2Q5/examples/wrong_digit.txt:1`. |
+| `problems/ITA2025F2Q5/microclaims.json` | ALTO | contrato JSON de microclaims e dependências; evidência `problems/ITA2025F2Q5/microclaims.json:1`. |
+| `problems/ITA2025F2Q5/problem.json` | MÉDIO | contrato JSON de enunciado e resposta esperada; evidência `problems/ITA2025F2Q5/problem.json:1`. |
+| `problems/ITA2025F2Q5/rubric.json` | ALTO | contrato JSON de rubrica pontuada; evidência `problems/ITA2025F2Q5/rubric.json:1`. |
+| `problems/ITA2025F2Q6/examples/answer_only.txt` | BAIXO | fixture textual de solução; evidência `problems/ITA2025F2Q6/examples/answer_only.txt:1`. |
+| `problems/ITA2025F2Q6/examples/correct_solution.txt` | BAIXO | fixture textual de solução; evidência `problems/ITA2025F2Q6/examples/correct_solution.txt:1`. |
+| `problems/ITA2025F2Q6/examples/missing_ratio.txt` | BAIXO | fixture textual de solução; evidência `problems/ITA2025F2Q6/examples/missing_ratio.txt:1`. |
+| `problems/ITA2025F2Q6/examples/wrong_answer.txt` | BAIXO | fixture textual de solução; evidência `problems/ITA2025F2Q6/examples/wrong_answer.txt:1`. |
+| `problems/ITA2025F2Q6/microclaims.json` | ALTO | contrato JSON de microclaims e dependências; evidência `problems/ITA2025F2Q6/microclaims.json:1`. |
+| `problems/ITA2025F2Q6/problem.json` | MÉDIO | contrato JSON de enunciado e resposta esperada; evidência `problems/ITA2025F2Q6/problem.json:1`. |
+| `problems/ITA2025F2Q6/rubric.json` | ALTO | contrato JSON de rubrica pontuada; evidência `problems/ITA2025F2Q6/rubric.json:1`. |
+| `problems/ITA2025F2Q8/examples/answer_only.txt` | BAIXO | fixture textual de solução; evidência `problems/ITA2025F2Q8/examples/answer_only.txt:1`. |
+| `problems/ITA2025F2Q8/examples/correct_solution.txt` | BAIXO | fixture textual de solução; evidência `problems/ITA2025F2Q8/examples/correct_solution.txt:1`. |
+| `problems/ITA2025F2Q8/examples/missing_determinant_formula.txt` | BAIXO | fixture textual de solução; evidência `problems/ITA2025F2Q8/examples/missing_determinant_formula.txt:1`. |
+| `problems/ITA2025F2Q8/examples/wrong_answer.txt` | BAIXO | fixture textual de solução; evidência `problems/ITA2025F2Q8/examples/wrong_answer.txt:1`. |
+| `problems/ITA2025F2Q8/microclaims.json` | ALTO | contrato JSON de microclaims e dependências; evidência `problems/ITA2025F2Q8/microclaims.json:1`. |
+| `problems/ITA2025F2Q8/problem.json` | MÉDIO | contrato JSON de enunciado e resposta esperada; evidência `problems/ITA2025F2Q8/problem.json:1`. |
+| `problems/ITA2025F2Q8/rubric.json` | ALTO | contrato JSON de rubrica pontuada; evidência `problems/ITA2025F2Q8/rubric.json:1`. |
+| `problems/ITA2025Q1/certificate/Statement.lean` | BAIXO | arquivo versionado do projeto; evidência `problems/ITA2025Q1/certificate/Statement.lean:1`. |
+| `problems/ITA2025Q1/examples/answer_only.txt` | BAIXO | fixture textual de solução; evidência `problems/ITA2025Q1/examples/answer_only.txt:1`. |
+| `problems/ITA2025Q1/examples/correct_solution.txt` | BAIXO | fixture textual de solução; evidência `problems/ITA2025Q1/examples/correct_solution.txt:1`. |
+| `problems/ITA2025Q1/examples/injection_attempt.txt` | BAIXO | fixture textual de solução; evidência `problems/ITA2025Q1/examples/injection_attempt.txt:1`. |
+| `problems/ITA2025Q1/examples/partial_no_positive_root.txt` | BAIXO | fixture textual de solução; evidência `problems/ITA2025Q1/examples/partial_no_positive_root.txt:1`. |
+| `problems/ITA2025Q1/examples/wrong_determinant_step.txt` | BAIXO | fixture textual de solução; evidência `problems/ITA2025Q1/examples/wrong_determinant_step.txt:1`. |
+| `problems/ITA2025Q1/examples/wrong_solution.txt` | BAIXO | fixture textual de solução; evidência `problems/ITA2025Q1/examples/wrong_solution.txt:1`. |
+| `problems/ITA2025Q1/microclaims.json` | ALTO | contrato JSON de microclaims e dependências; evidência `problems/ITA2025Q1/microclaims.json:1`. |
+| `problems/ITA2025Q1/problem.json` | MÉDIO | contrato JSON de enunciado e resposta esperada; evidência `problems/ITA2025Q1/problem.json:1`. |
+| `problems/ITA2025Q1/rubric.json` | ALTO | contrato JSON de rubrica pontuada; evidência `problems/ITA2025Q1/rubric.json:1`. |
+| `problems/ITA2025Q3/examples/answer_only.txt` | BAIXO | fixture textual de solução; evidência `problems/ITA2025Q3/examples/answer_only.txt:1`. |
+| `problems/ITA2025Q3/examples/correct_solution.txt` | BAIXO | fixture textual de solução; evidência `problems/ITA2025Q3/examples/correct_solution.txt:1`. |
+| `problems/ITA2025Q3/examples/missing_parity.txt` | BAIXO | fixture textual de solução; evidência `problems/ITA2025Q3/examples/missing_parity.txt:1`. |
+| `problems/ITA2025Q3/examples/wrong_coefficient.txt` | BAIXO | fixture textual de solução; evidência `problems/ITA2025Q3/examples/wrong_coefficient.txt:1`. |
+| `problems/ITA2025Q3/microclaims.json` | ALTO | contrato JSON de microclaims e dependências; evidência `problems/ITA2025Q3/microclaims.json:1`. |
+| `problems/ITA2025Q3/problem.json` | MÉDIO | contrato JSON de enunciado e resposta esperada; evidência `problems/ITA2025Q3/problem.json:1`. |
+| `problems/ITA2025Q3/rubric.json` | ALTO | contrato JSON de rubrica pontuada; evidência `problems/ITA2025Q3/rubric.json:1`. |
+| `problems/ITA2025Q4/examples/answer_only.txt` | BAIXO | fixture textual de solução; evidência `problems/ITA2025Q4/examples/answer_only.txt:1`. |
+| `problems/ITA2025Q4/examples/correct_solution.txt` | BAIXO | fixture textual de solução; evidência `problems/ITA2025Q4/examples/correct_solution.txt:1`. |
+| `problems/ITA2025Q4/examples/missing_distinct_inputs.txt` | BAIXO | fixture textual de solução; evidência `problems/ITA2025Q4/examples/missing_distinct_inputs.txt:1`. |
+| `problems/ITA2025Q4/examples/wrong_target.txt` | BAIXO | fixture textual de solução; evidência `problems/ITA2025Q4/examples/wrong_target.txt:1`. |
+| `problems/ITA2025Q4/examples/wrong_witnesses.txt` | BAIXO | fixture textual de solução; evidência `problems/ITA2025Q4/examples/wrong_witnesses.txt:1`. |
+| `problems/ITA2025Q4/microclaims.json` | ALTO | contrato JSON de microclaims e dependências; evidência `problems/ITA2025Q4/microclaims.json:1`. |
+| `problems/ITA2025Q4/problem.json` | MÉDIO | contrato JSON de enunciado e resposta esperada; evidência `problems/ITA2025Q4/problem.json:1`. |
+| `problems/ITA2025Q4/rubric.json` | ALTO | contrato JSON de rubrica pontuada; evidência `problems/ITA2025Q4/rubric.json:1`. |
+| `problems/ITA2025Q5/examples/answer_only.txt` | BAIXO | fixture textual de solução; evidência `problems/ITA2025Q5/examples/answer_only.txt:1`. |
+| `problems/ITA2025Q5/examples/correct_solution.txt` | BAIXO | fixture textual de solução; evidência `problems/ITA2025Q5/examples/correct_solution.txt:1`. |
+| `problems/ITA2025Q5/examples/missing_difference_relation.txt` | BAIXO | fixture textual de solução; evidência `problems/ITA2025Q5/examples/missing_difference_relation.txt:1`. |
+| `problems/ITA2025Q5/examples/missing_factorization.txt` | BAIXO | fixture textual de solução; evidência `problems/ITA2025Q5/examples/missing_factorization.txt:1`. |
+| `problems/ITA2025Q5/examples/wrong_direction.txt` | BAIXO | fixture textual de solução; evidência `problems/ITA2025Q5/examples/wrong_direction.txt:1`. |
+| `problems/ITA2025Q5/microclaims.json` | ALTO | contrato JSON de microclaims e dependências; evidência `problems/ITA2025Q5/microclaims.json:1`. |
+| `problems/ITA2025Q5/problem.json` | MÉDIO | contrato JSON de enunciado e resposta esperada; evidência `problems/ITA2025Q5/problem.json:1`. |
+| `problems/ITA2025Q5/rubric.json` | ALTO | contrato JSON de rubrica pontuada; evidência `problems/ITA2025Q5/rubric.json:1`. |
+| `problems/ITA2025Q8/examples/answer_only.txt` | BAIXO | fixture textual de solução; evidência `problems/ITA2025Q8/examples/answer_only.txt:1`. |
+| `problems/ITA2025Q8/examples/correct_solution.txt` | BAIXO | fixture textual de solução; evidência `problems/ITA2025Q8/examples/correct_solution.txt:1`. |
+| `problems/ITA2025Q8/examples/missing_sign_analysis.txt` | BAIXO | fixture textual de solução; evidência `problems/ITA2025Q8/examples/missing_sign_analysis.txt:1`. |
+| `problems/ITA2025Q8/examples/wrong_interval.txt` | BAIXO | fixture textual de solução; evidência `problems/ITA2025Q8/examples/wrong_interval.txt:1`. |
+| `problems/ITA2025Q8/microclaims.json` | ALTO | contrato JSON de microclaims e dependências; evidência `problems/ITA2025Q8/microclaims.json:1`. |
+| `problems/ITA2025Q8/problem.json` | MÉDIO | contrato JSON de enunciado e resposta esperada; evidência `problems/ITA2025Q8/problem.json:1`. |
+| `problems/ITA2025Q8/rubric.json` | ALTO | contrato JSON de rubrica pontuada; evidência `problems/ITA2025Q8/rubric.json:1`. |
+| `pyproject.toml` | MÉDIO | manifesto Python do pacote e dependências; evidência `pyproject.toml:1`. |
+| `tests/test_evaluator_architecture.py` | MÉDIO | teste pytest de API, contratos, regressão ou verificação Lean; evidência `tests/test_evaluator_architecture.py:1`. |
+| `tests/test_f2q1_rubric_adjustments.py` | MÉDIO | teste pytest de API, contratos, regressão ou verificação Lean; evidência `tests/test_f2q1_rubric_adjustments.py:1`. |
+| `tests/test_f2q1_strong_certificate.py` | MÉDIO | teste pytest de API, contratos, regressão ou verificação Lean; evidência `tests/test_f2q1_strong_certificate.py:1`. |
+| `tests/test_f2q1_student_claim_checks.py` | MÉDIO | teste pytest de API, contratos, regressão ou verificação Lean; evidência `tests/test_f2q1_student_claim_checks.py:1`. |
+| `tests/test_f2q3_rubric_adjustments.py` | MÉDIO | teste pytest de API, contratos, regressão ou verificação Lean; evidência `tests/test_f2q3_rubric_adjustments.py:1`. |
+| `tests/test_f2q3_strong_certificate.py` | MÉDIO | teste pytest de API, contratos, regressão ou verificação Lean; evidência `tests/test_f2q3_strong_certificate.py:1`. |
+| `tests/test_f2q3_student_claim_checks.py` | MÉDIO | teste pytest de API, contratos, regressão ou verificação Lean; evidência `tests/test_f2q3_student_claim_checks.py:1`. |
+| `tests/test_f2q5_rubric_adjustments.py` | MÉDIO | teste pytest de API, contratos, regressão ou verificação Lean; evidência `tests/test_f2q5_rubric_adjustments.py:1`. |
+| `tests/test_f2q5_strong_certificate.py` | MÉDIO | teste pytest de API, contratos, regressão ou verificação Lean; evidência `tests/test_f2q5_strong_certificate.py:1`. |
+| `tests/test_f2q5_student_claim_checks.py` | MÉDIO | teste pytest de API, contratos, regressão ou verificação Lean; evidência `tests/test_f2q5_student_claim_checks.py:1`. |
+| `tests/test_f2q6_rubric_adjustments.py` | MÉDIO | teste pytest de API, contratos, regressão ou verificação Lean; evidência `tests/test_f2q6_rubric_adjustments.py:1`. |
+| `tests/test_f2q6_strong_certificate.py` | MÉDIO | teste pytest de API, contratos, regressão ou verificação Lean; evidência `tests/test_f2q6_strong_certificate.py:1`. |
+| `tests/test_f2q6_student_claim_checks.py` | MÉDIO | teste pytest de API, contratos, regressão ou verificação Lean; evidência `tests/test_f2q6_student_claim_checks.py:1`. |
+| `tests/test_f2q8_student_claim_checks.py` | MÉDIO | teste pytest de API, contratos, regressão ou verificação Lean; evidência `tests/test_f2q8_student_claim_checks.py:1`. |
+| `tests/test_ita2025f2q1_level1.py` | MÉDIO | teste pytest de API, contratos, regressão ou verificação Lean; evidência `tests/test_ita2025f2q1_level1.py:1`. |
+| `tests/test_ita2025f2q3_level1.py` | MÉDIO | teste pytest de API, contratos, regressão ou verificação Lean; evidência `tests/test_ita2025f2q3_level1.py:1`. |
+| `tests/test_ita2025f2q5_level1.py` | MÉDIO | teste pytest de API, contratos, regressão ou verificação Lean; evidência `tests/test_ita2025f2q5_level1.py:1`. |
+| `tests/test_ita2025f2q6_level1.py` | MÉDIO | teste pytest de API, contratos, regressão ou verificação Lean; evidência `tests/test_ita2025f2q6_level1.py:1`. |
+| `tests/test_ita2025f2q8_level1.py` | MÉDIO | teste pytest de API, contratos, regressão ou verificação Lean; evidência `tests/test_ita2025f2q8_level1.py:1`. |
+| `tests/test_ita2025q1_level2.py` | MÉDIO | teste pytest de API, contratos, regressão ou verificação Lean; evidência `tests/test_ita2025q1_level2.py:1`. |
+| `tests/test_ita2025q3_level1.py` | MÉDIO | teste pytest de API, contratos, regressão ou verificação Lean; evidência `tests/test_ita2025q3_level1.py:1`. |
+| `tests/test_ita2025q4_level1.py` | MÉDIO | teste pytest de API, contratos, regressão ou verificação Lean; evidência `tests/test_ita2025q4_level1.py:1`. |
+| `tests/test_ita2025q4_level2.py` | MÉDIO | teste pytest de API, contratos, regressão ou verificação Lean; evidência `tests/test_ita2025q4_level2.py:1`. |
+| `tests/test_ita2025q5_level1.py` | MÉDIO | teste pytest de API, contratos, regressão ou verificação Lean; evidência `tests/test_ita2025q5_level1.py:1`. |
+| `tests/test_ita2025q8_level1.py` | MÉDIO | teste pytest de API, contratos, regressão ou verificação Lean; evidência `tests/test_ita2025q8_level1.py:1`. |
+| `tests/test_level1_f2_suite_regressions.py` | MÉDIO | teste pytest de API, contratos, regressão ou verificação Lean; evidência `tests/test_level1_f2_suite_regressions.py:1`. |
+| `tests/test_problem_assets_contracts.py` | MÉDIO | teste pytest de API, contratos, regressão ou verificação Lean; evidência `tests/test_problem_assets_contracts.py:1`. |
+| `tests/test_problem_assets_validation.py` | MÉDIO | teste pytest de API, contratos, regressão ou verificação Lean; evidência `tests/test_problem_assets_validation.py:1`. |
+| `tests/test_problem_router_coverage.py` | MÉDIO | teste pytest de API, contratos, regressão ou verificação Lean; evidência `tests/test_problem_router_coverage.py:1`. |
 
-## 8. Ordem recomendada de investigação
+## 8. Código morto, duplicado ou suspeito
 
-1. Investigar artefatos gerados e metadata de build: `artifacts/runs/**`, `app/confia_lean_auditor.egg-info/*`, `README.md` e `ConfiaLeanAuditor/Basic.lean`, pois são baixo acoplamento runtime, mas revelam higiene e scaffold em `app/confia_lean_auditor/main.py:123`, `app/confia_lean_auditor.egg-info/PKG-INFO:1`, `README.md:13` e `ConfiaLeanAuditor/Basic.lean:1`.
-2. Investigar fixtures e contratos de problema: `problems/ITA2025Q1/examples/*.txt`, `problem.json`, `rubric.json` e `microclaims.json`, porque fixtures não têm consumidor automatizado observado e os contratos JSON são lidos sem validação em `app/confia_lean_auditor/rubric/rubric_evaluator.py:45` e `app/confia_lean_auditor/lean/microclaim_evaluator.py:62`.
-3. Investigar fronteira de paths e empacotamento: `.gitignore`, `.venv/`, `pyproject.toml`, `core/paths.py` e egg-info, porque `.venv` aparece rastreado enquanto `.gitignore:1` ignora só `.lake`, e `get_repo_root` depende de `parents[3]` em `app/confia_lean_auditor/core/paths.py:22`.
-4. Investigar extração textual e contratos Pydantic: `extract_claims.py` e `schemas.py`, porque `ClaimExtraction` alimenta formal steps, rubrica e microclaims em `app/confia_lean_auditor/claims/extract_claims.py:207`.
-5. Investigar pipeline Lean: `formal_step_evaluator.py`, `build_attempt.py`, `run_lean.py` e `Statement.lean`, porque há geração de código, subprocess e classificação por string em `app/confia_lean_auditor/lean/formal_step_evaluator.py:31`, `app/confia_lean_auditor/lean/build_attempt.py:127`, `app/confia_lean_auditor/lean/run_lean.py:69` e `app/confia_lean_auditor/lean/run_lean.py:50`.
-6. Investigar orquestração HTTP e decisões de produto: `main.py`, `rubric_evaluator.py`, `microclaim_evaluator.py` e `report_builder.py`, porque a partir daqui as decisões deixam de ser locais e afetam score, veredito, status público e contrato de API em `app/confia_lean_auditor/main.py:36`, `app/confia_lean_auditor/rubric/rubric_evaluator.py:60`, `app/confia_lean_auditor/lean/microclaim_evaluator.py:81` e `app/confia_lean_auditor/reports/report_builder.py:19`.
-7. Investigar CI e toolchain por último quando a semântica local estiver entendida: `lakefile.toml`, `lean-toolchain`, `lake-manifest.json` e `.github/workflows/*`, porque mudanças aqui afetam build e release em `lakefile.toml:18`, `lean-toolchain:1`, `lake-manifest.json:4` e `.github/workflows/create-release.yml:19`.
+- `ConfiaLeanAuditor/Basic.lean` é scaffold confirmado: só contém `def hello := "world"` em `ConfiaLeanAuditor/Basic.lean:1`, e o único consumo detectado é o import agregador em `ConfiaLeanAuditor.lean:1`.
+- `README.md` permanece como scaffold de configuração GitHub, com instrução explícita de remoção da seção em `README.md:13`.
+- O CLI `run_problem` procura certificados em `problems/{problem_id}/certificate/Statement.lean` em `app/confia_lean_auditor/lean/run_lean.py:101` a `app/confia_lean_auditor/lean/run_lean.py:128`, mas o inventário versionado contém certificado nesse formato apenas em `problems/ITA2025Q1/certificate/Statement.lean:1`; para os demais problemas, o caminho normal da API é `Attempt.lean` gerado por builders em `app/confia_lean_auditor/main.py:78` a `app/confia_lean_auditor/main.py:96`.
+- Existem scripts de benchmark não versionados em `benchmarks/f2_suite_level1_v2/` e `benchmarks/q_suite_level1_v2/`, detectados por `git status --short` como `??`; o runner F2 v2 escreve saídas em `benchmarks/f2_suite_level1_v2/reports` e gold em `benchmarks/f2_suite_level1_v2/gold_500_v2.csv` em `benchmarks/f2_suite_level1_v2/run_level1_f2_suite_v2.py:15` a `benchmarks/f2_suite_level1_v2/run_level1_f2_suite_v2.py:16`.
+- Há duplicação estrutural por problema em extratores, builders, renderizadores, student checkers e adjusters: as rotas repetidas aparecem em `app/confia_lean_auditor/claims/extract_claims.py:41` a `app/confia_lean_auditor/claims/extract_claims.py:75`, `app/confia_lean_auditor/lean/build_attempt.py:44` a `app/confia_lean_auditor/lean/build_attempt.py:123`, `app/confia_lean_auditor/lean/formal_step_evaluator.py:411` a `app/confia_lean_auditor/lean/formal_step_evaluator.py:441`, `app/confia_lean_auditor/student_claims/registry.py:23` a `app/confia_lean_auditor/student_claims/registry.py:39`, `app/confia_lean_auditor/lean/student_claim_checkers/registry.py:23` a `app/confia_lean_auditor/lean/student_claim_checkers/registry.py:62` e `app/confia_lean_auditor/rubric/adjusters/registry.py:26` a `app/confia_lean_auditor/rubric/adjusters/registry.py:45`.
+- A versão do pacote e a versão da API divergem: `pyproject.toml` e `lakefile.toml` indicam `0.1.0` em `pyproject.toml:7` e `lakefile.toml:2`, enquanto `main.py` expõe `0.4.0` em `app/confia_lean_auditor/main.py:26` e `app/confia_lean_auditor/main.py:38`.
+- `MILESTONE_ITA2025F2.md` declara estado operacional e validação recente em `MILESTONE_ITA2025F2.md:25` a `MILESTONE_ITA2025F2.md:31`, mas esta auditoria não executou `pytest` nem `lake build`; portanto essas afirmações ficam registradas como documentação existente, não como resultado desta execução.
 
-## 9. Diário de revisão
+## 9. Ordem recomendada de investigação
 
-- Hipótese inicial: `formal_step_evaluator.py` parecia órfão por ser arquivo novo não listado no egg-info; foi refutada porque `main.py` o importa em `app/confia_lean_auditor/main.py:13` e o chama em `app/confia_lean_auditor/main.py:55`.
-- Hipótese inicial: `problems/ITA2025Q1/examples/*.txt` poderiam ser fixtures de teste; após busca, não há consumidor automatizado no código próprio, enquanto os runs duplicam os textos em `artifacts/runs/20260703T005858_740365/solution.txt:1`, `artifacts/runs/20260703T035633_483787/solution.txt:6` e `problems/ITA2025Q1/examples/wrong_determinant_step.txt:6`.
-- Hipótese inicial: `problem.json` seria contrato runtime do problema; foi rebaixado a órfão funcional porque o fluxo valida apenas o diretório em `app/confia_lean_auditor/main.py:45` e os consumidores leem `rubric.json` e `microclaims.json` em `app/confia_lean_auditor/rubric/rubric_evaluator.py:23` e `app/confia_lean_auditor/lean/microclaim_evaluator.py:47`.
-- Hipótese inicial: `ConfiaLeanAuditor/Basic.lean` seria módulo útil por ser importado em `ConfiaLeanAuditor.lean:1`; o conteúdo refutou uso semântico, pois a única definição é `def hello := "world"` em `ConfiaLeanAuditor/Basic.lean:1`.
-- Hipótese inicial: artefatos em `artifacts/runs` seriam apenas exemplos manuais; a refutação mostrou que são saídas do próprio runtime, pois `main.py` grava `audit.json`, `solution.txt` e `claims.json` em `app/confia_lean_auditor/main.py:123`, `app/confia_lean_auditor/main.py:128` e `app/confia_lean_auditor/main.py:129`.
-- Hipótese inicial: o contrato de área dependia apenas de claim textual; a Fase 4 mostrou o encontro com formal steps: `microclaims.json` exige `determinant_expansion` em `problems/ITA2025Q1/microclaims.json:16`, `formal_step_evaluator.py` marca status em `app/confia_lean_auditor/lean/formal_step_evaluator.py:67`, e runs com determinante errado registram `formal_steps_not_verified` em `artifacts/runs/20260703T144140_097860/audit.json:200`.
-- Hipótese inicial: o inventário poderia ser apenas os 87 arquivos de primeira parte; a checagem com Git mostrou `.venv/` versionado com Python `3.9.6` em `.venv/pyvenv.cfg:3` e `.gitignore` sem regra para `.venv` em `.gitignore:1`, alterando o diagnóstico para incluir um achado transversal de dependências materializadas.
+1. Mapear divergência de versão entre pacote/Lake e API: evidências em `pyproject.toml:7`, `lakefile.toml:2`, `app/confia_lean_auditor/main.py:26` e `app/confia_lean_auditor/main.py:38`.
+2. Auditar sincronização dos dez `problem_id` entre assets, extratores, builders, renderizadores, statements Lean, student claims F2 e adjusters: evidências em `tests/test_problem_router_coverage.py:12` a `tests/test_problem_router_coverage.py:58`, `app/confia_lean_auditor/claims/extract_claims.py:41` a `app/confia_lean_auditor/claims/extract_claims.py:75`, `app/confia_lean_auditor/lean/build_attempt.py:44` a `app/confia_lean_auditor/lean/build_attempt.py:123` e `app/confia_lean_auditor/lean/formal_step_evaluator.py:411` a `app/confia_lean_auditor/lean/formal_step_evaluator.py:441`.
+3. Investigar a fronteira entre microclaims formais e `student_claim_checks`, porque a pontuação primeiro usa `evaluate_rubric` e depois aplica adjusters F2 em `app/confia_lean_auditor/main.py:122` a `app/confia_lean_auditor/main.py:137`, enquanto `RubricItemResult` carrega flags de ajuste em `app/confia_lean_auditor/core/schemas.py:58` a `app/confia_lean_auditor/core/schemas.py:68`.
+4. Auditar a escrita de artefatos em rotas e checkers, incluindo retenção e isolamento por `run_id`: evidências em `app/confia_lean_auditor/main.py:59` a `app/confia_lean_auditor/main.py:61`, `app/confia_lean_auditor/main.py:159` a `app/confia_lean_auditor/main.py:178`, `app/confia_lean_auditor/lean/student_claim_checker.py:168` a `app/confia_lean_auditor/lean/student_claim_checker.py:193` e `.gitignore:9` a `.gitignore:29`.
+5. Auditar superfície Lean dinâmica e whitelists: evidências em `app/confia_lean_auditor/lean/run_lean.py:13` a `app/confia_lean_auditor/lean/run_lean.py:35`, `app/confia_lean_auditor/lean/run_lean.py:65` a `app/confia_lean_auditor/lean/run_lean.py:98`, `app/confia_lean_auditor/lean/formal_step_evaluator.py:455` a `app/confia_lean_auditor/lean/formal_step_evaluator.py:493` e `app/confia_lean_auditor/lean/student_claim_checker.py:145` a `app/confia_lean_auditor/lean/student_claim_checker.py:159`.
+6. Separar documentação/scaffold e superfície operacional: evidências em `README.md:13`, `ConfiaLeanAuditor/Basic.lean:1`, `MILESTONE_ITA2025F2.md:25` a `MILESTONE_ITA2025F2.md:31` e `ConfiaLeanAuditor.lean:1`.
+7. Auditar benchmarks como ferramentas auxiliares e não como runtime: evidências em `benchmarks/f2_suite_level1_2/run_level1_f2_suite.py:155` a `benchmarks/f2_suite_level1_2/run_level1_f2_suite.py:273`, `benchmarks/stage1_4/ita2025f2q8/run_stage1_4_f2q8.py:68` a `benchmarks/stage1_4/ita2025f2q8/run_stage1_4_f2q8.py:242`, e arquivos não versionados listados por `git status --short` sob `benchmarks/f2_suite_level1_v2/` e `benchmarks/q_suite_level1_v2/`.
+
+Fim da auditoria descritiva. Não foram executados comandos de teste/build que acionassem o pipeline da aplicação, e nenhum arquivo do projeto foi alterado além deste `AUDITORIA_REPOSITORIO.md`, conforme permitido pela solicitação.
