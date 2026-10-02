@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>ConfIA — Caderno de resolução</title>
+    <link rel="stylesheet" href="/static/capture/vendor/katex-0.18.9/katex.min.css">
+    <link rel="stylesheet" href="/static/capture/tablet.css?v=p2-ui-01">
+  </head>
+  <body>
+    <div class="brand-strip" aria-hidden="true">
+      <span></span><span></span><span></span><span></span>
+    </div>
+
+    <header class="capture-header">
+      <div>
+        <p class="eyebrow">Produto 2 · Laboratório de captura</p>
+        <h1>ConfIA — Caderno de resolução</h1>
+        <p class="subtitle">Escrita manuscrita preservada como traços locais e imagem.</p>
+      </div>
+      <a class="back-link" href="/">Voltar ao ConfIA</a>
+    </header>
+
+    <main class="capture-shell">
+      <section class="notice" aria-label="Aviso experimental">
+        <strong>Ambiente experimental de captura. Não realiza correção automática.</strong>
+        <span>Os dados ficam neste navegador e não constituem entrega ao professor.</span>
+      </section>
+
+      <section class="setup-card" aria-label="Questão e rascunhos locais">
+        <label>
+          Selecionar questão cadastrada
+          <select id="problem-select" aria-describedby="problem-help"></select>
+        </label>
+        <p id="problem-help" class="help-text">
+          Ao trocar de questão, o rascunho atual é salvo antes de abrir uma área separada.
+        </p>
+
+        <div id="draft-recovery" class="saved-row">
+          <label>
+            Recuperar uma versão salva desta questão
+            <select id="saved-document-select">
+              <option value="">Nenhuma versão aberta</option>
+            </select>
+          </label>
+          <button id="open-document" type="button">Recuperar rascunho</button>
+          <button id="new-draft" class="secondary" type="button">Novo rascunho</button>
+        </div>
+        <p class="help-text">
+          A restauração é sempre explícita. Em dispositivo compartilhado, não há isolamento por usuário neste protótipo.
+        </p>
+      </section>
+
+      <section id="problem-dock" class="problem-dock" aria-label="Enunciado da questão">
+        <div class="problem-dock__summary">
+          <div class="problem-dock__heading" aria-live="polite">
+            <p class="eyebrow">Questão cadastrada · <span id="problem-code">—</span></p>
+            <h2 id="problem-title">Carregando catálogo…</h2>
+          </div>
+          <button
+            id="toggle-problem"
+            class="secondary problem-toggle"
+            type="button"
+            aria-expanded="true"
+            aria-controls="problem-statement-wrap"
+          >
+            Recolher enunciado
+          </button>
+        </div>
+        <div id="problem-statement-wrap" class="problem-dock__body">
+          <div id="problem-statement" class="problem-statement"></div>
+          <p id="problem-math-message" class="math-message" role="status" hidden></p>
+        </div>
+        <div class="draft-persistence-bar">
+          <p id="draft-persistence" class="draft-persistence" role="status" aria-live="polite" aria-atomic="true" data-state="idle">
+            Comece a escrever — salvamento automático
+          </p>
+          <a class="recovery-link" href="#draft-recovery">Recuperar rascunho</a>
+        </div>
+      </section>
+
+      <section class="notebook-card" aria-label="Área de escrita">
+        <div class="notebook-controls">
+          <div class="toolbar" aria-label="Ferramentas do caderno">
+            <div class="tool-group" aria-label="Origem de entrada">
+              <button id="pen-mode" class="is-active" type="button" aria-pressed="true">Caneta</button>
+              <button id="mouse-mode" type="button" aria-pressed="false">Mouse (teste)</button>
+            </div>
+            <div class="tool-group" aria-label="Ferramenta de edição">
+              <button id="draw-tool" class="is-active" type="button" aria-pressed="true">Escrever</button>
+              <button id="erase-tool" type="button" aria-pressed="false">Borracha de traço</button>
+            </div>
+            <div class="tool-group">
+              <button id="undo" type="button">Desfazer</button>
+              <button id="redo" type="button">Refazer</button>
+            </div>
+          </div>
+
+          <div class="page-toolbar">
+            <button id="previous-page" class="secondary" type="button">Página anterior</button>
+            <strong id="page-indicator">Página 1 de 1</strong>
+            <button id="next-page" class="secondary" type="button">Próxima página</button>
+            <button id="add-page" class="secondary" type="button">Adicionar página</button>
+          </div>
+        </div>
+
+        <div id="canvas-frame" class="canvas-frame">
+          <canvas
+            id="ink-canvas"
+            width="1200"
+            height="1600"
+            aria-label="Página manuscrita. Use caneta ou habilite o modo mouse para teste."
+          ></canvas>
+        </div>
+        <p id="input-hint" class="input-hint">
+          Modo caneta: toque e mouse não desenham. A rejeição de palma depende do dispositivo e ainda precisa de teste físico.
+        </p>
+
+        <details id="technical-details" class="technical-details">
+          <summary>
+            <span>
+              <strong>Detalhes técnicos</strong>
+              <small>Estado local, identificador do rascunho e prévia PNG</small>
+            </span>
+            <span class="details-action" aria-hidden="true">Mostrar</span>
+          </summary>
+          <div class="technical-grid">
+            <section class="status-card" aria-label="Estado local">
+              <p class="eyebrow">Estado local</p>
+              <h2 id="document-state">Rascunho editável</h2>
+              <dl>
+                <div><dt>Questão</dt><dd id="document-problem">—</dd></div>
+                <div><dt>Identificador</dt><dd id="document-id">—</dd></div>
+                <div><dt>Armazenamento</dt><dd id="storage-state">Ainda não salvo</dd></div>
+              </dl>
+              <p id="status-message" class="status-message" aria-live="polite"></p>
+              <button id="continue-draft" class="secondary" type="button" hidden>
+                Continuar em nova versão
+              </button>
+            </section>
+
+            <section class="preview-card" aria-label="Prévia sem grade">
+              <div>
+                <p class="eyebrow">Prévia da exportação</p>
+                <h2>PNG da página atual</h2>
+              </div>
+              <canvas id="export-preview" width="1200" height="1600" aria-label="Prévia em fundo branco, sem grade"></canvas>
+              <p class="help-text">Fundo branco, sem grade e somente traços ativos.</p>
+            </section>
+          </div>
+        </details>
+      </section>
+
+      <section class="export-card" aria-label="Preparação e exportação local">
+        <div>
+          <p class="eyebrow">Cópia local e artefatos</p>
+          <h2>Preparar e exportar</h2>
+          <p>
+            A preparação congela uma cópia independente no IndexedDB. Não autentica autoria e não gera recibo de servidor.
+          </p>
+        </div>
+        <div class="export-actions">
+          <button id="prepare-snapshot" type="button">Preparar versão para envio</button>
+          <button id="export-json" class="secondary" type="button">Exportar traços</button>
+          <button id="export-png" class="secondary" type="button">Exportar PNG da página</button>
+        </div>
+        <p id="snapshot-message" class="snapshot-message" aria-live="polite"></p>
+      </section>
+
+      <section class="limits-card" aria-label="Limitações do protótipo">
+        <h2>Limites deste incremento</h2>
+        <p>
+          Até três páginas por rascunho. Sem OCR, transcrição, auditoria, Lean, nota, autenticação ou envio ao professor.
+          Use somente dados fictícios ou testes autorizados. Compatibilidade com caneta, rotação e palma deve ser verificada
+          em cada tablet real.
+        </p>
+      </section>
+    </main>
+
+    <script src="/static/capture/vendor/katex-0.18.9/katex.min.js"></script>
+    <script src="/static/capture/vendor/katex-0.18.9/contrib/auto-render.min.js"></script>
+    <script src="/static/capture/problem-math.js?v=p2-ui-01"></script>
+    <script src="/static/capture/ink-model.js"></script>
+    <script src="/static/capture/ink-canvas.js"></script>
+    <script src="/static/capture/draft-store.js"></script>
+    <script src="/static/capture/tablet.js?v=p2-ui-01"></script>
+  </body>
+</html>

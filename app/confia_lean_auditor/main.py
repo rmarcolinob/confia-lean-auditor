@@ -48,6 +48,11 @@ def index():
     return FileResponse(STATIC_DIR / "index.html")
 
 
+@app.get("/capture", include_in_schema=False)
+def capture_notebook():
+    return FileResponse(STATIC_DIR / "capture" / "tablet.html")
+
+
 @app.get("/health")
 def health():
     return {

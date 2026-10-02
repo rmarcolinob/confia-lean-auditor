@@ -1,0 +1,184 @@
+[
+  {
+    "problem_id": "ITA2025Q1",
+    "source_statement": "Seja z = a + 2i um número complexo, em que a ∈ R é positivo. Determine o valor de a para que as representações de 1, z e z² no plano de Argand-Gauss formem um triângulo de área 200.",
+    "display_version": 1,
+    "segments": [
+      {"type": "text", "content": "Seja "},
+      {"type": "math", "content": "z = a + 2i"},
+      {"type": "text", "content": " um número complexo, em que "},
+      {"type": "math", "content": "a \\in \\mathbb{R}"},
+      {"type": "text", "content": " é positivo. Determine o valor de "},
+      {"type": "math", "content": "a"},
+      {"type": "text", "content": " para que as representações de "},
+      {"type": "math", "content": "1"},
+      {"type": "text", "content": ", "},
+      {"type": "math", "content": "z"},
+      {"type": "text", "content": " e "},
+      {"type": "math", "content": "z^{2}"},
+      {"type": "text", "content": " no plano de Argand-Gauss formem um triângulo de área "},
+      {"type": "math", "content": "200"},
+      {"type": "text", "content": "."}
+    ]
+  },
+  {
+    "problem_id": "ITA2025Q3",
+    "source_statement": "Determine, com justificativa, o termo independente da expansão de (x + 1/x)^6 (x - 2/x)^5.",
+    "display_version": 1,
+    "segments": [
+      {"type": "text", "content": "Determine, com justificativa, o termo independente da expansão de "},
+      {"type": "math", "content": "\\left(x + \\frac{1}{x}\\right)^{6} \\left(x - \\frac{2}{x}\\right)^{5}"},
+      {"type": "text", "content": "."}
+    ]
+  },
+  {
+    "problem_id": "ITA2025Q4",
+    "source_statement": "Sejam f : R -> R e g : R -> R funções reais definidas em todo R. Suponha que, para todo x > 0, vale g(x^2) = f(2x^2 - x + 1). Prove que g não é injetora.",
+    "display_version": 1,
+    "segments": [
+      {"type": "text", "content": "Sejam "},
+      {"type": "math", "content": "f : \\mathbb{R} \\to \\mathbb{R}"},
+      {"type": "text", "content": " e "},
+      {"type": "math", "content": "g : \\mathbb{R} \\to \\mathbb{R}"},
+      {"type": "text", "content": " funções reais definidas em todo "},
+      {"type": "math", "content": "\\mathbb{R}"},
+      {"type": "text", "content": ". Suponha que, para todo "},
+      {"type": "math", "content": "x > 0"},
+      {"type": "text", "content": ", vale "},
+      {"type": "math", "content": "g(x^{2}) = f(2x^{2} - x + 1)"},
+      {"type": "text", "content": ". Prove que "},
+      {"type": "math", "content": "g"},
+      {"type": "text", "content": " não é injetora."}
+    ]
+  },
+  {
+    "problem_id": "ITA2025Q5",
+    "source_statement": "Sejam (a_n) e (b_n) duas sequências reais tais que S_n = ∑_{k=1}^n a_k = b_{n+1} - b_1 para todo n ≥ 1. Prove que, se (b_n) é uma progressão geométrica, então (a_n) também é uma progressão geométrica.",
+    "display_version": 1,
+    "segments": [
+      {"type": "text", "content": "Sejam "},
+      {"type": "math", "content": "(a_n)"},
+      {"type": "text", "content": " e "},
+      {"type": "math", "content": "(b_n)"},
+      {"type": "text", "content": " duas sequências reais tais que "},
+      {"type": "math", "content": "S_n = \\sum_{k=1}^{n} a_k = b_{n+1} - b_1"},
+      {"type": "text", "content": " para todo "},
+      {"type": "math", "content": "n \\ge 1"},
+      {"type": "text", "content": ". Prove que, se "},
+      {"type": "math", "content": "(b_n)"},
+      {"type": "text", "content": " é uma progressão geométrica, então "},
+      {"type": "math", "content": "(a_n)"},
+      {"type": "text", "content": " também é uma progressão geométrica."}
+    ]
+  },
+  {
+    "problem_id": "ITA2025Q8",
+    "source_statement": "Considere a função f(x) = sqrt((2sen(2x) + 2sen(x) - 2cos(x) - 1) / (8(cos(2x) + 1))). Determine, com justificativa, o intervalo aberto I = (a,b) de maior comprimento contido em [-π,2π] tal que f(x) está definida para todo x ∈ I. Calcule também a+b.",
+    "display_version": 1,
+    "segments": [
+      {"type": "text", "content": "Considere a função "},
+      {"type": "math", "content": "f(x) = \\sqrt{\\frac{2\\operatorname{sen}(2x) + 2\\operatorname{sen}(x) - 2\\cos(x) - 1}{8(\\cos(2x) + 1)}}"},
+      {"type": "text", "content": ". Determine, com justificativa, o intervalo aberto "},
+      {"type": "math", "content": "I = (a,b)"},
+      {"type": "text", "content": " de maior comprimento contido em "},
+      {"type": "math", "content": "[-\\pi,2\\pi]"},
+      {"type": "text", "content": " tal que "},
+      {"type": "math", "content": "f(x)"},
+      {"type": "text", "content": " está definida para todo "},
+      {"type": "math", "content": "x \\in I"},
+      {"type": "text", "content": ". Calcule também "},
+      {"type": "math", "content": "a+b"},
+      {"type": "text", "content": "."}
+    ]
+  },
+  {
+    "problem_id": "ITA2025F2Q1",
+    "source_statement": "Encontre os valores reais a e b tais que o polinômio p(x)=x^57+a x^14+b x^7+1, ao ser dividido por x^2-x+1, deixe resto 2x+1.",
+    "display_version": 1,
+    "segments": [
+      {"type": "text", "content": "Encontre os valores reais "},
+      {"type": "math", "content": "a"},
+      {"type": "text", "content": " e "},
+      {"type": "math", "content": "b"},
+      {"type": "text", "content": " tais que o polinômio "},
+      {"type": "math", "content": "p(x)=x^{57}+a x^{14}+b x^{7}+1"},
+      {"type": "text", "content": ", ao ser dividido por "},
+      {"type": "math", "content": "x^{2}-x+1"},
+      {"type": "text", "content": ", deixe resto "},
+      {"type": "math", "content": "2x+1"},
+      {"type": "text", "content": "."}
+    ]
+  },
+  {
+    "problem_id": "ITA2025F2Q3",
+    "source_statement": "Dados alpha e beta em [pi/2, 3pi/2], tais que sen alpha - sen beta = 1/4 e sen alpha - 2 sen beta + cos beta = 3/4, calcule sen(alpha+beta).",
+    "display_version": 1,
+    "segments": [
+      {"type": "text", "content": "Dados "},
+      {"type": "math", "content": "\\alpha"},
+      {"type": "text", "content": " e "},
+      {"type": "math", "content": "\\beta"},
+      {"type": "text", "content": " em "},
+      {"type": "math", "content": "\\left[\\frac{\\pi}{2}, \\frac{3\\pi}{2}\\right]"},
+      {"type": "text", "content": ", tais que "},
+      {"type": "math", "content": "\\operatorname{sen}\\alpha - \\operatorname{sen}\\beta = \\frac{1}{4}"},
+      {"type": "text", "content": " e "},
+      {"type": "math", "content": "\\operatorname{sen}\\alpha - 2\\operatorname{sen}\\beta + \\cos\\beta = \\frac{3}{4}"},
+      {"type": "text", "content": ", calcule "},
+      {"type": "math", "content": "\\operatorname{sen}(\\alpha+\\beta)"},
+      {"type": "text", "content": "."}
+    ]
+  },
+  {
+    "problem_id": "ITA2025F2Q5",
+    "source_statement": "Usando as aproximações log10 2 = 0,3010, log10 3 = 0,4771 e log10 7 = 0,8450, determine o primeiro algarismo, da esquerda para a direita, do resultado de 3^100.",
+    "display_version": 1,
+    "segments": [
+      {"type": "text", "content": "Usando as aproximações "},
+      {"type": "math", "content": "\\log_{10} 2 = 0{,}3010"},
+      {"type": "text", "content": ", "},
+      {"type": "math", "content": "\\log_{10} 3 = 0{,}4771"},
+      {"type": "text", "content": " e "},
+      {"type": "math", "content": "\\log_{10} 7 = 0{,}8450"},
+      {"type": "text", "content": ", determine o primeiro algarismo, da esquerda para a direita, do resultado de "},
+      {"type": "math", "content": "3^{100}"},
+      {"type": "text", "content": "."}
+    ]
+  },
+  {
+    "problem_id": "ITA2025F2Q6",
+    "source_statement": "Uma moeda não viciada é lançada n vezes. Encontre os valores de n que maximizam a probabilidade de sair cara pela quarta vez exatamente no enésimo lançamento.",
+    "display_version": 1,
+    "segments": [
+      {"type": "text", "content": "Uma moeda não viciada é lançada "},
+      {"type": "math", "content": "n"},
+      {"type": "text", "content": " vezes. Encontre os valores de "},
+      {"type": "math", "content": "n"},
+      {"type": "text", "content": " que maximizam a probabilidade de sair cara pela quarta vez exatamente no enésimo lançamento."}
+    ]
+  },
+  {
+    "problem_id": "ITA2025F2Q8",
+    "source_statement": "Seja A_k=(a_ij) uma matriz quadrada de ordem k tal que a_ij=max{i,j}, para i,j em {1,...,k}. Determine a soma de det(A_k), para k=1 até 2025.",
+    "display_version": 1,
+    "segments": [
+      {"type": "text", "content": "Seja "},
+      {"type": "math", "content": "A_k=(a_{ij})"},
+      {"type": "text", "content": " uma matriz quadrada de ordem "},
+      {"type": "math", "content": "k"},
+      {"type": "text", "content": " tal que "},
+      {"type": "math", "content": "a_{ij}=\\max\\{i,j\\}"},
+      {"type": "text", "content": ", para "},
+      {"type": "math", "content": "i,j"},
+      {"type": "text", "content": " em "},
+      {"type": "math", "content": "\\{1,\\ldots,k\\}"},
+      {"type": "text", "content": ". Determine a soma de "},
+      {"type": "math", "content": "\\det(A_k)"},
+      {"type": "text", "content": ", para "},
+      {"type": "math", "content": "k=1"},
+      {"type": "text", "content": " até "},
+      {"type": "math", "content": "2025"},
+      {"type": "text", "content": "."}
+    ]
+  }
+]

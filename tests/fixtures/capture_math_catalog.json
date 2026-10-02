@@ -1,0 +1,22 @@
+[
+  {
+    "problem_id": "TESTE_MISTO",
+    "title": "Enunciado misto — quatro delimitadores",
+    "statement": "Texto comum antes de $x^2 + y^2 = z^2$ e depois.\nUma fração inline: \\(\\frac{1}{2}\\).\nEquação em destaque: $$\\sum_{k=1}^{n} k = \\frac{n(n+1)}{2}$$\nOutra equação: \\[\\sqrt{a^2+b^2} = c\\].\nTexto comum ao final."
+  },
+  {
+    "problem_id": "TESTE_INVALIDO",
+    "title": "LaTeX inválido com continuação válida",
+    "statement": "Texto antes de $\\frac{1}$; a expressão seguinte $x^2$ deve continuar renderizada."
+  },
+  {
+    "problem_id": "TESTE_LARGO",
+    "title": "Expressão larga em espaço reduzido",
+    "statement": "O enunciado deve permanecer dentro da tela. $$\\underbrace{x+x+x+x+x+x+x+x+x+x+x+x+x+x+x+x+x+x+x+x+x+x+x+x+x+x+x+x+x+x+x+x+x+x+x+x+x+x+x+x}_{\\text{expressão larga para teste}}$$ Texto final preservado."
+  },
+  {
+    "problem_id": "TESTE_TEXTO",
+    "title": "Texto literal",
+    "statement": "Texto comum: x < y. A sequência <img src=x onerror=alert(1)> deve aparecer como texto, sem criar uma imagem."
+  }
+]
