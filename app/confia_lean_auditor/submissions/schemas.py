@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import Annotated, Literal, Optional
 from datetime import datetime
 
-from pydantic import BaseModel, ConfigDict, Field, StringConstraints
+from pydantic import BaseModel, ConfigDict, Field, StringConstraints, model_validator
 
 from confia_lean_auditor.capture.schemas import (
     CaptureDocument, Identifier, MAX_IMPORT_BYTES, MAX_PAGES, SCHEMA_VERSION,
@@ -13,11 +13,18 @@ MAX_PNG_BYTES = 8 * 1024 * 1024
 MAX_REQUEST_BYTES = 64 * 1024 * 1024
 MAX_PNG_BASE64 = ((MAX_PNG_BYTES + 2) // 3) * 4
 SubmissionId = Annotated[str, StringConstraints(pattern=r"^sub_[0-9a-f]{32}$")]
+TranscriptionId = Annotated[str, StringConstraints(pattern=r"^tr_[0-9a-f]{32}$")]
+AcceptanceId = Annotated[str, StringConstraints(pattern=r"^acc_[0-9a-f]{32}$")]
 Sha256 = Annotated[str, StringConstraints(pattern=r"^[0-9a-f]{64}$")]
+ReviewerReference = Annotated[str, StringConstraints(strip_whitespace=True, min_length=1, max_length=80)]
+TranscriptionSource = Literal["manual", "mathpix_strokes", "mathpix_image", "vision_model"]
+TranscriptionStatus = Literal["DRAFT", "NEEDS_REVIEW", "ACCEPTED"]
+EditableTranscriptionStatus = Literal["DRAFT", "NEEDS_REVIEW"]
+SegmentKind = Literal["text", "math", "mixed", "diagram", "unknown"]
 
 
 class SubmissionModel(BaseModel):
-    model_config = ConfigDict(extra="forbid")
+    model_config = ConfigDict(extra="forbid", allow_inf_nan=False)
 
 
 class CaptureSnapshot(CaptureDocument):
@@ -76,3 +83,126 @@ class SubmissionDetail(SubmissionModel):
     submission: SubmissionRecord
     receipt: SubmissionReceipt
     integrity: list[ArtifactIntegrity]
+
+
+class TranscriptionSourceRegion(SubmissionModel):
+    """Optional measured bounding box; omitted when the manual review has no mapping."""
+
+    x: float = Field(ge=0)
+    y: float = Field(ge=0)
+    width: float = Field(gt=0)
+    height: float = Field(gt=0)
+    coordinate_system: Literal["top_left_css_pixels"] = "top_left_css_pixels"
+
+
+class TranscriptionSegment(SubmissionModel):
+    segment_id: Identifier
+    page_index: int = Field(ge=0, lt=MAX_PAGES)
+    order: int = Field(ge=0)
+    kind: SegmentKind
+    text: Optional[str] = Field(default=None, min_length=1, max_length=20_000)
+    latex: Optional[str] = Field(default=None, min_length=1, max_length=20_000)
+    confidence: Optional[float] = Field(default=None, ge=0, le=1)
+    source_region: Optional[TranscriptionSourceRegion] = None
+    source_stroke_refs: Optional[list[Identifier]] = Field(default=None, max_length=2_000)
+
+    @model_validator(mode="after")
+    def validate_stroke_references(self) -> "TranscriptionSegment":
+        if self.source_stroke_refs is not None and len(self.source_stroke_refs) != len(set(self.source_stroke_refs)):
+            raise ValueError("source stroke references must be unique")
+        return self
+
+
+class TranscriptionRecord(SubmissionModel):
+    transcription_id: TranscriptionId
+    submission_id: SubmissionId
+    created_at: datetime
+    source: TranscriptionSource
+    recognizer: Optional[str] = Field(default=None, min_length=1, max_length=120)
+    recognizer_version: Optional[str] = Field(default=None, min_length=1, max_length=80)
+
+
+class TranscriptionRevision(TranscriptionRecord):
+    """ACCEPTED means faithful transcription only, never mathematical validity."""
+
+    revision_number: int = Field(ge=1)
+    based_on_revision_number: Optional[int] = Field(default=None, ge=1)
+    reviewer_reference: ReviewerReference
+    reviewer_identity_verified: Literal[False] = False
+    change_type: Literal["initial_transcription", "reading_correction", "other_transcription_edit"]
+    change_reason: Optional[str] = Field(default=None, min_length=1, max_length=500)
+    segments: list[TranscriptionSegment] = Field(min_length=1, max_length=2_000)
+    status: TranscriptionStatus
+
+    @model_validator(mode="after")
+    def validate_revision(self) -> "TranscriptionRevision":
+        segment_ids = [segment.segment_id for segment in self.segments]
+        if len(segment_ids) != len(set(segment_ids)):
+            raise ValueError("segment IDs must be unique within a revision")
+        positions = [(segment.page_index, segment.order) for segment in self.segments]
+        if len(positions) != len(set(positions)):
+            raise ValueError("segment order must be unique within each page")
+        if self.revision_number == 1:
+            if self.based_on_revision_number is not None or self.change_type != "initial_transcription":
+                raise ValueError("the first revision must be an initial transcription")
+        elif self.based_on_revision_number != self.revision_number - 1:
+            raise ValueError("a revision must be based on its immediate predecessor")
+        return self
+
+
+class CreateTranscriptionRequest(SubmissionModel):
+    source: Literal["manual"] = "manual"
+    recognizer: None = None
+    recognizer_version: None = None
+    reviewer_reference: ReviewerReference
+    reviewer_identity_verified: Literal[False] = False
+    segments: list[TranscriptionSegment] = Field(min_length=1, max_length=2_000)
+    status: EditableTranscriptionStatus = "NEEDS_REVIEW"
+
+
+class CreateTranscriptionRevisionRequest(SubmissionModel):
+    based_on_revision_number: int = Field(ge=1)
+    reviewer_reference: ReviewerReference
+    reviewer_identity_verified: Literal[False] = False
+    change_type: Literal["reading_correction", "other_transcription_edit"] = "reading_correction"
+    change_reason: Optional[str] = Field(default=None, min_length=1, max_length=500)
+    segments: list[TranscriptionSegment] = Field(min_length=1, max_length=2_000)
+    status: EditableTranscriptionStatus = "NEEDS_REVIEW"
+
+
+class AcceptTranscriptionRequest(SubmissionModel):
+    revision_number: int = Field(ge=1)
+    reviewer_reference: ReviewerReference
+    reviewer_identity_verified: Literal[False] = False
+    acceptance_note: Optional[str] = Field(default=None, min_length=1, max_length=500)
+
+
+class TranscriptionAcceptance(SubmissionModel):
+    """Records representation fidelity; it deliberately has no mathematical result."""
+
+    acceptance_id: AcceptanceId
+    transcription_id: TranscriptionId
+    submission_id: SubmissionId
+    revision_number: int = Field(ge=1)
+    accepted_at: datetime
+    reviewer_reference: ReviewerReference
+    reviewer_identity_verified: Literal[False] = False
+    acceptance_note: Optional[str] = None
+    meaning: Literal["faithful_representation_of_manuscript_only"] = "faithful_representation_of_manuscript_only"
+    mathematical_validity_assessed: Literal[False] = False
+
+
+class TranscriptionSummary(SubmissionModel):
+    transcription: TranscriptionRecord
+    latest_revision: TranscriptionRevision
+
+
+class TranscriptionHistory(SubmissionModel):
+    transcription: TranscriptionRecord
+    revisions: list[TranscriptionRevision]
+    acceptances: list[TranscriptionAcceptance]
+
+
+class AcceptedTranscription(SubmissionModel):
+    revision: TranscriptionRevision
+    acceptance: TranscriptionAcceptance

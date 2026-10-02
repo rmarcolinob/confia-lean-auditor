@@ -32,13 +32,19 @@ from confia_lean_auditor.rubric.adjusters.registry import apply_student_claim_ad
 from confia_lean_auditor.llm.formal_step_extractor import FormalStepExtractionError
 from confia_lean_auditor.lean.student_claim_checkers.registry import check_student_claims_for_problem
 from confia_lean_auditor.student_claims.registry import extract_student_claims
-from confia_lean_auditor.submissions.router import router as submissions_router
+from confia_lean_auditor.submissions.router import (
+    router as submissions_router,
+    transcriptions_router,
+)
+from confia_lean_auditor.submissions.body_limit import TranscriptionBodyLimitMiddleware
 
 
 app = FastAPI(title="ConfIA Lean Auditor", version="0.4.0")
+app.add_middleware(TranscriptionBodyLimitMiddleware)
 STATIC_DIR = Path(__file__).resolve().parent / "static"
 app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
 app.include_router(submissions_router)
+app.include_router(transcriptions_router)
 
 
 def repo_root() -> Path:

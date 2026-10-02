@@ -9,20 +9,30 @@ from starlette.concurrency import run_in_threadpool
 
 from confia_lean_auditor.core.paths import get_repo_root
 from confia_lean_auditor.submissions.schemas import (
+    AcceptedTranscription,
+    AcceptTranscriptionRequest,
+    CreateTranscriptionRequest,
+    CreateTranscriptionRevisionRequest,
     MAX_REQUEST_BYTES,
     SubmissionDetail,
     SubmissionReceipt,
     SubmissionRecord,
     SubmissionRequest,
+    TranscriptionHistory,
+    TranscriptionRevision,
+    TranscriptionSummary,
 )
 from confia_lean_auditor.submissions.store import (
     InvalidSubmissionProblem,
     SubmissionConflict,
+    SubmissionIntegrityConflict,
     SubmissionStore,
     SubmissionTooLarge,
+    TranscriptionConflict,
 )
 
 router = APIRouter(prefix="/submissions", tags=["experimental submissions"])
+transcriptions_router = APIRouter(prefix="/transcriptions", tags=["manual transcriptions"])
 
 
 def store() -> SubmissionStore:
@@ -34,8 +44,12 @@ def store() -> SubmissionStore:
 def guarded(operation, *args):
     try:
         return operation(*args)
+    except SubmissionIntegrityConflict:
+        raise HTTPException(409, "Integridade da submissão original inválida; transcrição, revisão ou aceite não publicado.") from None
     except SubmissionConflict:
         raise HTTPException(409, "Snapshot já recebido com conteúdo diferente ou integridade divergente.") from None
+    except TranscriptionConflict:
+        raise HTTPException(409, "A transcrição foi alterada ou aceita a partir de outra versão.") from None
     except SubmissionTooLarge:
         raise HTTPException(413, "Artefato acima do limite permitido.") from None
     except InvalidSubmissionProblem:
@@ -112,3 +126,37 @@ def get_snapshot(submission_id: str):
         path, media_type="application/json", filename=ref.filename,
         headers={"Cache-Control": "no-store", "X-Content-Type-Options": "nosniff"},
     )
+
+
+@router.post("/{submission_id}/transcriptions", response_model=TranscriptionRevision, status_code=201)
+def create_transcription(submission_id: str, request: CreateTranscriptionRequest, response: Response):
+    response.headers["Cache-Control"] = "no-store"
+    return guarded(store().create_transcription, submission_id, request)
+
+
+@router.get("/{submission_id}/transcriptions", response_model=list[TranscriptionSummary])
+def list_transcriptions(submission_id: str, response: Response):
+    response.headers["Cache-Control"] = "no-store"
+    return guarded(store().list_transcriptions, submission_id)
+
+
+@transcriptions_router.get("/{transcription_id}", response_model=TranscriptionHistory)
+def get_transcription(transcription_id: str, response: Response):
+    response.headers["Cache-Control"] = "no-store"
+    return guarded(store().transcription_history, transcription_id)
+
+
+@transcriptions_router.post("/{transcription_id}/revisions", response_model=TranscriptionRevision, status_code=201)
+def create_transcription_revision(
+    transcription_id: str, request: CreateTranscriptionRevisionRequest, response: Response,
+):
+    response.headers["Cache-Control"] = "no-store"
+    return guarded(store().create_transcription_revision, transcription_id, request)
+
+
+@transcriptions_router.post("/{transcription_id}/accept", response_model=AcceptedTranscription)
+def accept_transcription(
+    transcription_id: str, request: AcceptTranscriptionRequest, response: Response,
+):
+    response.headers["Cache-Control"] = "no-store"
+    return guarded(store().accept_transcription, transcription_id, request)
