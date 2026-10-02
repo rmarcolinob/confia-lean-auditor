@@ -63,6 +63,7 @@ async function page(options = {}) {
     ConfiaInkModel: Model,
     ConfiaInkCanvas: { render() {} },
     ConfiaDraftStore: Store,
+    ConfiaSubmissionClient: options.sender ? { create: () => options.sender } : undefined,
     ConfiaProblemMath: { render(target, message, presentation) {
       mathRenders.push(target.textContent);
       mathContexts.push(presentation);
@@ -88,6 +89,10 @@ async function page(options = {}) {
     statement: getElement("#problem-statement"),
     statementWrap: getElement("#problem-statement-wrap"),
     indicator: getElement("#draft-persistence"),
+    sendButton: getElement("#send-solution"),
+    sendMessage: getElement("#submission-message"),
+    receipt: getElement("#submission-receipt"),
+    snapshotMessage: getElement("#snapshot-message"),
     click: (id) => getElement(`#${id}`).click(),
     async changeProblem(id) {
       const select = getElement("#problem-select");
@@ -226,4 +231,63 @@ test("a failed presentation fetch does not disable capture or automatic saving",
   ui.saves[0].resolve();
   await flush();
   assert.equal(ui.indicator.textContent, "Rascunho salvo neste dispositivo");
+});
+
+test("submission is disabled for drafts and receipt is shown only after the server confirms", async () => {
+  const response = deferred();
+  let sent = null;
+  const ui = await page({ sender: { send(snapshot) { sent = snapshot; return response.promise; } } });
+  assert.equal(ui.sendButton.disabled, true);
+  const snapshot = Model.freeze(Model.createDraft("ITA2025Q1"));
+  await ui.recover(snapshot);
+  assert.equal(ui.sendButton.disabled, false);
+  assert.equal(ui.receipt.hidden, true);
+  assert.equal(ui.indicator.textContent, "Cópia local salva neste dispositivo");
+  const sending = ui.click("send-solution");
+  assert.equal(ui.sendButton.disabled, true);
+  assert.match(ui.sendMessage.textContent, /Enviando/);
+  assert.equal(ui.receipt.hidden, true);
+  assert.equal(sent.local_snapshot_id, snapshot.local_snapshot_id);
+  assert.notEqual(sent, snapshot);
+  response.resolve({ submission_id: "sub_" + "a".repeat(32), received_at: "2026-10-01T12:00:00Z", problem_id: "ITA2025Q1" });
+  await sending;
+  assert.equal(ui.sendMessage.textContent, "Solução recebida pelo ConfIA");
+  assert.equal(ui.receipt.hidden, false);
+  assert.equal(ui.snapshotMessage.textContent, "Versão congelada preservada neste dispositivo.");
+  assert.match(ui.receipt.textContent, /sub_a{32}/);
+  assert.equal(ui.indicator.textContent, "Cópia local salva neste dispositivo");
+});
+
+test("failed submission preserves snapshot/local status and allows a retry", async () => {
+  const calls = [];
+  const ui = await page({ sender: { async send(snapshot) { calls.push(snapshot); throw new Error("Sem confirmação do servidor"); } } });
+  const snapshot = Model.freeze(Model.createDraft("ITA2025Q1"));
+  await ui.recover(snapshot);
+  const localSaveCount = ui.saves.length;
+  await ui.click("send-solution");
+  assert.match(ui.sendMessage.textContent, /Sem confirmação/);
+  assert.equal(ui.receipt.hidden, true);
+  assert.equal(ui.sendButton.disabled, false);
+  assert.match(ui.snapshotMessage.textContent, /recebimento pelo servidor ainda não confirmado/);
+  await ui.click("send-solution");
+  assert.equal(calls.length, 2);
+  assert.equal(calls[0].local_snapshot_id, calls[1].local_snapshot_id);
+  assert.equal(ui.saves.length, localSaveCount);
+  assert.equal(ui.indicator.textContent, "Cópia local salva neste dispositivo");
+});
+
+test("receipt for an earlier snapshot cannot appear on a new editable draft", async () => {
+  const response = deferred();
+  const ui = await page({ sender: { send: () => response.promise } });
+  await ui.recover(Model.freeze(Model.createDraft("ITA2025Q1")));
+  const sending = ui.click("send-solution");
+  ui.click("continue-draft");
+  response.resolve({ submission_id: "sub_" + "b".repeat(32), received_at: "2026-10-01T12:00:00Z", problem_id: "ITA2025Q1" });
+  await sending;
+  assert.equal(ui.receipt.hidden, true);
+  assert.equal(ui.sendButton.disabled, true);
+  assert.doesNotMatch(ui.sendMessage.textContent, /Solução recebida/);
+  await flush();
+  ui.saves.at(-1).resolve();
+  await flush();
 });

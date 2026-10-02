@@ -2,9 +2,9 @@
 
 ## Escopo
 
-Este incremento acrescenta uma superfície local de engenharia para preservar escrita manuscrita. A página lê as questões do catálogo existente em `GET /problems`, mas não chama `/audit`, não reconhece escrita, não executa Lean, não produz nota e não envia dados ao professor.
+O P2-CAP-01 acrescentou uma superfície local de engenharia para preservar escrita manuscrita. A página lê as questões do catálogo existente em `GET /problems`, mas não chama `/audit`, não reconhece escrita, não executa Lean e não produz nota. O recebimento explícito pelo servidor e a visualização pelo professor foram acrescentados no P2-CAP-02, descrito ao final deste documento.
 
-O rascunho e as cópias congeladas ficam no IndexedDB do navegador. A mensagem “Salvo neste dispositivo” significa apenas que a escrita foi persistida localmente. A preparação exibe, de forma separada: “Versão preparada localmente; ainda não enviada.”
+O rascunho e as cópias congeladas ficam no IndexedDB do navegador. A mensagem “Salvo neste dispositivo” significa apenas que a escrita foi persistida localmente. A preparação exibe, de forma separada: “Versão preparada localmente. Envie para confirmar o recebimento.”
 
 ## Como iniciar
 
@@ -214,4 +214,170 @@ Use `docs/tablet/03_TESTE_MANUAL_TABLET.md` como registro. Permanecem pendentes 
 - frações, expoentes, sinais pequenos, páginas e operações de edição;
 - recuperação após recarga, quota/armazenamento indisponível e acesso pela rede local.
 
-Não se deve concluir compatibilidade geral, rejeição de palma ou segurança para avaliação escolar sem esses ensaios e sem a camada futura de autenticação/recebimento.
+Não se deve concluir compatibilidade geral, rejeição de palma ou segurança para avaliação escolar sem esses ensaios e sem a camada futura de autenticação.
+
+## P2-CAP-02 — recebimento de artefatos originais
+
+### Arquitetura e contratos
+
+O módulo `app/confia_lean_auditor/submissions/` é independente da lógica matemática.
+A separação é `CaptureSnapshot → Submission → futuro Transcription → futuro AuditRun`.
+Nenhuma transcrição ou execução de auditoria faz parte deste fluxo.
+
+O ambiente do projeto usa Pydantic 2, não v1. Os contratos usam `extra="forbid"`
+via `ConfigDict`, sem acrescentar dependências ou alterar o schema de captura:
+
+- `CaptureSnapshot`: especializa `CaptureDocument` exigindo `local_snapshot` e ID de snapshot;
+- `SubmissionRequest` / `SubmittedPage`: string `snapshot_json` e lista de `{page_id, png_base64}`;
+- `ArtifactReference`: nome controlado pelo servidor, tipo, tamanho e SHA-256;
+- `SubmissionRecord` / `SubmissionReceipt`: IDs, horário UTC do servidor, source `tablet`, schema 1.0,
+  status `RECEIVED`, artefatos e versão do recibo;
+- `SubmissionDetail` / `ArtifactIntegrity`: registro, recibo e conferência dos hashes atuais.
+
+`student_reference` é opcional e não é preenchido pela interface neste incremento.
+Quando fornecido para testes, é explicitamente não autenticado:
+`student_reference_verified=false`. Não há score, verdict, rubrica ou resultado Lean.
+
+Foi escolhido JSON com PNGs em base64: o ambiente não tem `python-multipart` e
+não foi adicionada dependência de upload. `snapshot_json` é salvo exatamente como
+bytes UTF-8 da string recebida, incluindo formatação; não é substituído por um dump
+Pydantic. Cada PNG é decodificado e salvo sem alterações. O backend não reconstrói
+imagens, não corrige strokes e não compara matematicamente imagem e traços.
+
+### Endpoints
+
+| Método e rota | Resultado |
+| --- | --- |
+| `POST /submissions` | 201 + recibo novo; 200 + recibo existente em retry idêntico |
+| `GET /submissions` | Lista de registros recebidos, mais recentes primeiro |
+| `GET /submissions/{submission_id}` | Registro, recibo e integridade dos artefatos |
+| `GET /submissions/{submission_id}/pages/{page_index}` | PNG original, índice começando em zero |
+| `GET /submissions/{submission_id}/snapshot` | Download do snapshot JSON original |
+
+Erros: 400 para questão fora do catálogo; 413 para limites de bytes;
+415 para Content-Type diferente de JSON; 422 para estrutura/conteúdo inválido;
+409 para snapshot conflitante ou artefato corrompido; 404 para ID/página ausente;
+503 para falha de armazenamento. Respostas de validação são genéricas, sem copiar
+strokes ou payloads para a resposta. Logs normais não registram o corpo da solução.
+As respostas de consulta/artefatos usam `Cache-Control: no-store`.
+
+### Persistência, limites e falhas
+
+Diretório padrão: `runtime/submissions/`, ignorado pelo Git, separado de `artifacts/`.
+O operador pode definir `CONFIA_SUBMISSIONS_DIR` para um diretório persistente no
+mesmo filesystem dos arquivos temporários. Estrutura:
+
+```text
+runtime/submissions/
+  .lock
+  sub_<UUID gerado pelo servidor>/
+    submission.json
+    snapshot.json
+    page_1.png
+    page_2.png  (quando presente)
+    page_3.png  (quando presente)
+    receipt.json
+```
+
+O servidor valida primeiro os contratos, questão, correspondência 1:1 das páginas,
+base64 e estrutura PNG. São aceitos PNGs Canvas RGB/RGBA de 8 bits, não entrelaçados,
+com CRC, dimensões e fluxo comprimido válidos; a descompressão de validação é limitada
+e não renderiza os pixels. Limites: três páginas, 10 MiB de snapshot UTF-8, 8 MiB por
+PNG, 64 MiB de requisição JSON (incluindo base64/escapes), além dos limites de captura.
+
+As gravações usam diretório `.pending-*`, arquivos exclusivos e `fsync`; a pasta
+completa é publicada por rename atômico. Um lock POSIX (`fcntl.flock`) serializa
+publicações e retries concorrentes, inclusive entre workers no mesmo host/filesystem.
+Falhas anteriores à publicação removem a pasta temporária e não produzem recibo.
+Uma queda abrupta pode deixar `.pending-*`, ignoradas pela listagem: precisam de
+inspeção/limpeza operacional posterior. Se a publicação ocorreu, mas a resposta ou
+o último `fsync` falhou, um retry reencontra a pasta publicada e devolve seu recibo.
+Não há índice separado que possa divergir dos registros.
+
+### Idempotência e integridade
+
+`snapshot_id` é a chave lógica. SHA-256 dos bytes exatos do snapshot e de cada PNG,
+IDs/ordem das páginas e a referência opcional determinam o conteúdo do retry.
+Conteúdo idêntico devolve o mesmo `submission_id`, horário e recibo. Conteúdo
+diferente retorna 409, inclusive JSON semanticamente igual com formatação diferente.
+Não é feita normalização silenciosa.
+
+A interface reutiliza o mesmo corpo JSON e os mesmos PNGs em retries enquanto a
+versão permanece no cache em memória. Depois de recarga, o snapshot pode ser
+recuperado do IndexedDB e enviado novamente; o recibo não é guardado no IndexedDB.
+Se outro navegador/renderizador produzir bytes PNG diferentes para o mesmo snapshot,
+o servidor retorna 409. Preserve as exportações locais e solicite revisão técnica;
+não há substituição de artefatos recebidos nem resolução automática do conflito.
+
+Hashes são guardados no registro e no recibo. A consulta recalcula os hashes; PNGs
+com integridade divergente não são servidos. Os hashes não provam autoria, identidade,
+correspondência visual aos strokes, validade matemática ou certificação. Não são
+assinaturas digitais; um operador com acesso ao filesystem pode alterar também os registros.
+
+### Interface e roteiro tablet → professor na rede local
+
+1. Inicie o servidor com `--host 0.0.0.0 --port 8000` somente na rede local autorizada,
+   como indicado acima. Professor e tablet devem acessar **o mesmo servidor** pelo IP local.
+2. No tablet, abra `/capture`, escolha a questão e escreva marcas fictícias em duas
+   ou três páginas. Confira “Rascunho salvo neste dispositivo”: isso não é entrega.
+3. Toque “Preparar versão para envio”. A cópia fica congelada e salva localmente.
+4. Toque “Enviar solução”. Enquanto aguarda, a página não anuncia recebimento.
+   Só um recibo válido do servidor mostra “Solução recebida pelo ConfIA”, ID, questão
+   e horário. O envio usa o renderizador já existente, sem grade, em todas as páginas.
+5. Abra o link “Ver manuscritos na área do professor”, ou `/` → “Área do Professor”
+   → “Manuscritos recebidos”. Atualize a lista, localize o `submission_id` e abra-o.
+6. Compare cada PNG original com a versão preparada/exportada. Confira a mensagem
+   de integridade e, se necessário, os SHA-256 em “Detalhes de integridade e recibo”.
+   Não há controles de auditoria neste modo; o protótipo textual anterior fica separado.
+7. Teste perda de rede/resposta: a cópia congelada deve permanecer recuperável, sem
+   falso recibo; “Enviar solução” deve permitir nova tentativa. Retry idêntico não
+   aumenta a listagem. Depois de recarga, recupere explicitamente a cópia congelada.
+8. Reabra a visão do professor após reiniciar o servidor usando o mesmo diretório:
+   os registros e imagens devem continuar disponíveis.
+
+Valide armazenamento, caneta, rotação e recuperação no navegador/dispositivo real,
+incluindo quotas, modo privado e diferenças entre localhost e acesso pelo IP de rede.
+Não use dados pessoais reais. Não exponha esse servidor à Internet.
+
+Limitações: sem autenticação, autorização, TLS, isolamento entre usuários, quotas
+institucionais, rate limiting, busca/paginação, política de retenção, criptografia,
+backup institucional ou assinatura do recibo. A listagem varre os registros e
+a integridade lê os artefatos; isso é adequado apenas ao MVP de baixo volume.
+Lock/durabilidade dependem de filesystem local POSIX; Windows e filesystem de rede
+não são suportados por esta implementação. A requisição base64 ocupa memória e
+pode bloquear brevemente a UI ao preparar imagens grandes. O timeout de envio é
+30 segundos; uma resposta perdida pode ter publicado a submissão, e o retry resolve
+essa ambiguidade. Não foram alterados os problem assets/apresentações, IndexedDB,
+strokes, largura da caneta, exportação local, checkers, benchmarks ou `/audit`.
+
+### Validação local do P2-CAP-02 — 02/10/2026
+
+Passaram 62 testes Python e 102 testes JavaScript:
+
+```bash
+.venv/bin/pytest -q tests/test_submissions.py tests/test_submissions_ui.py tests/test_capture_contracts.py tests/test_capture_static.py tests/test_static_ui.py::test_root_serves_mvp_html tests/test_static_ui.py::test_problems_endpoint_lists_10_mvp_questions_with_examples tests/test_static_ui.py::test_f2q1_catalog_includes_non_empty_statement
+node --test tests/js/*.cjs
+git diff --check
+```
+
+Os novos testes cobrem bytes originais, três páginas, SHA-256, recibo, geração de ID,
+listagem/consulta/download, retries sequenciais/concorrentes, 409, payloads inválidos,
+questão ausente, limites, falha de disco sem publicação parcial, artefato adulterado,
+interface sem falso recibo, cache do retry, recuperação, isolamento do protótipo
+textual, conteúdo semelhante a HTML inserido como texto e respostas antigas ignoradas.
+Não foram executados `/audit` nem benchmarks.
+
+No navegador local, marcas fictícias foram escritas com mouse em duas páginas,
+preparadas, enviadas e visualizadas pelo professor nos PNGs originais de 1200 × 1600.
+A recuperação após recarga retornou o mesmo recibo (200), sem duplicar o registro.
+Após interromper o servidor, o navegador integrado respondeu HTTP 404 no envio;
+a interface recusou confirmar recebimento, preservou a versão e habilitou retry.
+Reiniciar o servidor no mesmo diretório manteve o registro anterior e permitiu
+receber a nova versão. A falha de rede propriamente dita também tem teste unitário.
+Foram conferidas larguras de 390, 1024 e 1366 px sem overflow horizontal;
+expandir/recolher em 1024 px manteve o enquadramento. Isso não substitui validação
+física de caneta, rede, navegador e rotação no tablet.
+
+Se um registro/recibo persistido ficar ilegível ou inconsistente, a consulta retorna
+erro em vez de ignorá-lo ou corrigi-lo silenciosamente. Preserve a pasta para revisão
+técnica; a recuperação de metadata corrompida não faz parte deste MVP.

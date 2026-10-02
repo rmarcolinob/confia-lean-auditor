@@ -380,3 +380,10 @@ select {
 @media (prefers-reduced-motion: reduce) {
   * { scroll-behavior: auto !important; }
 }
+/* Submission feedback is separate from local persistence and never widens the canvas. */
+.export-card.submission-card { display: block; }
+.submission-card .export-actions { margin: 14px 0; }
+.submission-card .back-link { white-space: normal; }
+.submission-card .submission-receipt { max-width: none; overflow-wrap: anywhere; font-size: 0.95rem; }
+.submission-card [data-kind="error"] { color: #9b2727; }
+.submission-card [data-kind="saved"] { color: #246644; font-weight: 650; }

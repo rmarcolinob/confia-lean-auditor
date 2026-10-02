@@ -78,7 +78,7 @@ def test_capture_loads_pinned_local_katex_assets_and_fonts_in_order():
         assert response.status_code == 200, asset
         assert response.content
     assert html.index(prefix + "katex.min.js") < html.index(prefix + "contrib/auto-render.min.js")
-    assert html.index("problem-math.js") < html.index('src="/static/capture/tablet.js?v=p2-ui-01"')
+    assert html.index("problem-math.js") < html.index('src="/static/capture/tablet.js?v=p2-cap-02"')
     css = CLIENT.get(prefix + "katex.min.css").text
     fonts = re.findall(r"url\((fonts/[^)]+)\)", css)
     assert fonts
@@ -88,8 +88,8 @@ def test_capture_loads_pinned_local_katex_assets_and_fonts_in_order():
 
 def test_capture_loads_current_presentation_assets_despite_a_cached_previous_ui():
     html = CLIENT.get("/capture").text
-    for asset in ("tablet.css", "problem-math.js", "tablet.js"):
-        url = f"/static/capture/{asset}?v=p2-ui-01"
+    for asset, version in (("tablet.css", "p2-cap-02"), ("problem-math.js", "p2-ui-01"), ("tablet.js", "p2-cap-02")):
+        url = f"/static/capture/{asset}?v={version}"
         assert url in html
         assert CLIENT.get(url).status_code == 200
 

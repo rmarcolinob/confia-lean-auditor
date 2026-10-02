@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>CONFIA MVP</title>
     <link rel="stylesheet" href="/static/styles.css">
+    <link rel="stylesheet" href="/static/submissions/teacher.css?v=p2-cap-02">
   </head>
   <body>
     <div class="brand-strip" aria-hidden="true">
@@ -147,6 +148,21 @@
       </section>
 
       <section id="teacher-area" class="tab-panel" aria-label="Área do Professor" hidden>
+        <nav class="teacher-submission-modes" aria-label="Modo da área do professor">
+          <button id="show-manuscripts" class="secondary-action" type="button" aria-pressed="true">Manuscritos recebidos</button>
+          <button id="show-text-prototype" class="secondary-action" type="button" aria-pressed="false">Protótipo de correção textual</button>
+        </nav>
+        <section id="manuscript-inbox" class="prototype-panel" aria-label="Manuscritos recebidos pelo servidor">
+          <div class="panel-heading">
+            <div><p class="eyebrow">Produto 2 · Recebimento experimental</p><h2>Manuscritos recebidos</h2></div>
+            <button id="refresh-manuscripts" class="secondary-action" type="button">Atualizar lista</button>
+          </div>
+          <p class="prototype-note">Artefatos originais, sem interpretação ou correção. Não há autenticação: use somente dados fictícios ou testes autorizados.</p>
+          <p id="manuscript-message" role="status" aria-live="polite">Abra esta área para consultar o servidor.</p>
+          <div id="manuscript-list" class="submission-list" aria-label="Lista de manuscritos"></div>
+          <section id="manuscript-detail" aria-label="Manuscrito original recebido" hidden></section>
+        </section>
+        <div id="teacher-text-prototype" hidden>
         <section class="prototype-panel submissions-panel">
           <div class="panel-heading">
             <div>
@@ -221,6 +237,7 @@
           </div>
           <p id="teacher-decision-message" class="decision-message" aria-live="polite"></p>
         </section>
+        </div>
       </section>
 
       <section id="management-area" class="tab-panel" aria-label="Área da Gestão" hidden>
@@ -269,5 +286,6 @@
     </main>
 
     <script src="/static/app.js"></script>
+    <script src="/static/submissions/teacher.js?v=p2-cap-02"></script>
   </body>
 </html>

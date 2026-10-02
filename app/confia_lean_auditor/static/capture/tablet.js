@@ -4,6 +4,7 @@
   const Model = globalThis.ConfiaInkModel;
   const Canvas = globalThis.ConfiaInkCanvas;
   const Store = globalThis.ConfiaDraftStore;
+  const Sender = globalThis.ConfiaSubmissionClient?.create(Canvas, (...args) => fetch(...args));
 
   const elements = {
     problemSelect: document.querySelector("#problem-select"),
@@ -42,6 +43,9 @@
     exportPng: document.querySelector("#export-png"),
     snapshotMessage: document.querySelector("#snapshot-message"),
     technicalDetails: document.querySelector("#technical-details"),
+    sendSolution: document.querySelector("#send-solution"),
+    submissionMessage: document.querySelector("#submission-message"),
+    submissionReceipt: document.querySelector("#submission-receipt"),
   };
 
   let problems = [];
@@ -56,6 +60,25 @@
   let saveQueue = Promise.resolve();
   // UI-only sequence: an older save must not announce that newer changes are saved.
   let persistenceRequest = 0;
+  let submissionBusy = false;
+  const submissionStates = new Map();
+
+  function renderSubmission() {
+    const frozen = captureDocument?.document_kind === "local_snapshot";
+    const state = submissionStates.get(captureDocument?.local_snapshot_id);
+    elements.sendSolution.disabled = !Sender || !frozen || submissionBusy || Boolean(state?.receipt);
+    elements.sendSolution.textContent = state?.receipt ? "Solução recebida" : "Enviar solução";
+    elements.submissionMessage.dataset.kind = state?.kind || "info";
+    elements.submissionMessage.textContent = state?.message || (frozen
+      ? "Versão preparada neste dispositivo. Envie para receber confirmação do servidor."
+      : "Prepare uma versão antes de enviar. Salvar o rascunho neste dispositivo não envia a solução.");
+    elements.submissionReceipt.hidden = !state?.receipt;
+    elements.submissionReceipt.textContent = state?.receipt
+      ? `submission_id: ${state.receipt.submission_id} · Questão: ${state.receipt.problem_id} · Recebida em: ${new Date(state.receipt.received_at).toLocaleString("pt-BR")}`
+      : "";
+    if (state?.receipt) elements.snapshotMessage.textContent = "Versão congelada preservada neste dispositivo.";
+    else if (state) elements.snapshotMessage.textContent = "Versão local preservada; recebimento pelo servidor ainda não confirmado.";
+  }
 
   function selectedProblem() {
     return problems.find((problem) => (problem.problem_id || problem.id) === elements.problemSelect.value);
@@ -149,6 +172,7 @@
         ? "Modo caneta: toque e mouse não desenham. A rejeição de palma depende do dispositivo e ainda precisa de teste físico."
         : "Modo mouse ativado explicitamente para teste em computador. Toque não desenha.";
     renderCanvas();
+    renderSubmission();
   }
 
   async function refreshSavedDocuments() {
@@ -440,8 +464,8 @@
       setDocument(snapshot, pageIndex);
       elements.storageState.textContent = "Cópia congelada neste dispositivo";
       setPersistenceState("saved");
-      elements.snapshotMessage.textContent = "Versão preparada localmente; ainda não enviada.";
-      setStatus("A cópia congelada foi salva localmente. Não houve envio ao servidor.", "saved");
+      elements.snapshotMessage.textContent = "Versão preparada localmente. Envie para confirmar o recebimento.";
+      setStatus("A cópia congelada foi salva localmente. Use Enviar solução para solicitar recebimento pelo servidor.", "saved");
       await refreshSavedDocuments();
       elements.savedSelect.value = snapshot.local_snapshot_id;
     } catch (error) {
@@ -453,6 +477,23 @@
     setDocument(nextDraft, pageIndex);
     setStatus("Nova versão editável criada; a cópia congelada permanece inalterada.");
     persist(nextDraft);
+  });
+  elements.sendSolution.addEventListener("click", async () => {
+    if (!Sender || submissionBusy || captureDocument?.document_kind !== "local_snapshot") return;
+    const snapshot = Model.exportClone(captureDocument);
+    const id = snapshot.local_snapshot_id;
+    submissionBusy = true;
+    submissionStates.set(id, { message: "Enviando solução… aguarde o recibo do servidor.", kind: "pending" });
+    renderSubmission();
+    try {
+      const receipt = await Sender.send(snapshot);
+      submissionStates.set(id, { receipt, message: "Solução recebida pelo ConfIA", kind: "saved" });
+    } catch (error) {
+      submissionStates.set(id, { message: error.message, kind: "error" });
+    } finally {
+      submissionBusy = false;
+      renderSubmission();
+    }
   });
   elements.exportJson.addEventListener("click", () => {
     const exported = Model.exportClone(captureDocument);

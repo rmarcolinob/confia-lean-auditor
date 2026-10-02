@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>ConfIA — Caderno de resolução</title>
     <link rel="stylesheet" href="/static/capture/vendor/katex-0.18.9/katex.min.css">
-    <link rel="stylesheet" href="/static/capture/tablet.css?v=p2-ui-01">
+    <link rel="stylesheet" href="/static/capture/tablet.css?v=p2-cap-02">
   </head>
   <body>
     <div class="brand-strip" aria-hidden="true">
@@ -24,7 +24,7 @@
     <main class="capture-shell">
       <section class="notice" aria-label="Aviso experimental">
         <strong>Ambiente experimental de captura. Não realiza correção automática.</strong>
-        <span>Os dados ficam neste navegador e não constituem entrega ao professor.</span>
+        <span>O salvamento é local. A solução só é recebida pelo servidor após envio e confirmação por recibo.</span>
       </section>
 
       <section class="setup-card" aria-label="Questão e rascunhos locais">
@@ -167,10 +167,24 @@
         <p id="snapshot-message" class="snapshot-message" aria-live="polite"></p>
       </section>
 
+      <section class="export-card submission-card" aria-label="Envio experimental ao servidor">
+        <div>
+          <p class="eyebrow">Recebimento pelo ConfIA</p>
+          <h2>Enviar versão preparada</h2>
+          <p>Envia os traços e os PNGs de todas as páginas. O recibo confirma armazenamento, não autoria nem correção matemática.</p>
+        </div>
+        <div class="export-actions">
+          <button id="send-solution" type="button" disabled>Enviar solução</button>
+          <a class="back-link" href="/?area=teacher">Ver manuscritos na área do professor</a>
+        </div>
+        <p id="submission-message" role="status" aria-live="polite">Prepare uma versão antes de enviar.</p>
+        <p id="submission-receipt" class="submission-receipt" hidden></p>
+      </section>
+
       <section class="limits-card" aria-label="Limitações do protótipo">
         <h2>Limites deste incremento</h2>
         <p>
-          Até três páginas por rascunho. Sem OCR, transcrição, auditoria, Lean, nota, autenticação ou envio ao professor.
+          Até três páginas por rascunho. Recebimento experimental, sem OCR, transcrição, auditoria, Lean, nota ou autenticação.
           Use somente dados fictícios ou testes autorizados. Compatibilidade com caneta, rotação e palma deve ser verificada
           em cada tablet real.
         </p>
@@ -183,6 +197,7 @@
     <script src="/static/capture/ink-model.js"></script>
     <script src="/static/capture/ink-canvas.js"></script>
     <script src="/static/capture/draft-store.js"></script>
-    <script src="/static/capture/tablet.js?v=p2-ui-01"></script>
+    <script src="/static/capture/submission-client.js?v=p2-cap-02"></script>
+    <script src="/static/capture/tablet.js?v=p2-cap-02"></script>
   </body>
 </html>
