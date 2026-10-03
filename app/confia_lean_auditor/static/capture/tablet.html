@@ -5,23 +5,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>ConfIA — Caderno de resolução</title>
     <link rel="stylesheet" href="/static/capture/vendor/katex-0.18.9/katex.min.css">
-    <link rel="stylesheet" href="/static/capture/tablet.css?v=p2-cap-02">
+    <link rel="stylesheet" href="/static/design-system.css?v=ui-01">
+    <link rel="stylesheet" href="/static/capture/tablet.css?v=p2-cap-02&amp;ui=ui-01">
+    <link rel="stylesheet" href="/static/capture/identity.css?v=ui-01">
   </head>
   <body>
+    <a class="skip-link" href="#capture-main">Ir para o conteúdo principal</a>
     <div class="brand-strip" aria-hidden="true">
       <span></span><span></span><span></span><span></span>
     </div>
 
     <header class="capture-header">
       <div>
-        <p class="eyebrow">Produto 2 · Laboratório de captura</p>
+        <p class="eyebrow">ConfIA · Confiabilidade e Explicabilidade em Matemática</p>
         <h1>ConfIA — Caderno de resolução</h1>
         <p class="subtitle">Escrita manuscrita preservada como traços locais e imagem.</p>
       </div>
-      <a class="back-link" href="/">Voltar ao ConfIA</a>
+      <a class="back-link" href="/#student/resolve">Voltar ao ConfIA</a>
     </header>
 
-    <main class="capture-shell">
+    <main id="capture-main" class="capture-shell" tabindex="-1">
       <section class="notice" aria-label="Aviso experimental">
         <strong>Ambiente experimental de captura. Não realiza correção automática.</strong>
         <span>O salvamento é local. A solução só é recebida pelo servidor após envio e confirmação por recibo.</span>
@@ -190,6 +193,8 @@
         </p>
       </section>
     </main>
+
+    <footer class="institutional-footer capture-footer"><div><strong>ConfIA</strong><span>Confiabilidade e Explicabilidade em Matemática</span></div><p class="institutional-partners" aria-label="Instituições">Governo do Piauí · FAPEPI · SIA</p></footer>
 
     <script src="/static/capture/vendor/katex-0.18.9/katex.min.js"></script>
     <script src="/static/capture/vendor/katex-0.18.9/contrib/auto-render.min.js"></script>

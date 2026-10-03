@@ -1,0 +1,14 @@
+/* External identity for UI-01. Canvas, frame, dock body and input logic stay in tablet.css. */
+body { background: var(--color-background); line-height: 1.5; }
+.capture-header { align-items: center; }
+.capture-header h1 { font-size: clamp(1.45rem, 3vw, 2rem); font-weight: 650; line-height: 1.25; }
+.capture-header .eyebrow { font-size: .75rem; font-weight: 500; text-transform: none; color: var(--color-text-muted); }
+.capture-header .subtitle { font-size: .875rem; }
+.back-link { display: inline-flex; align-items: center; min-height: var(--control-height); }
+.capture-header .back-link { display: inline-flex; align-items: center; min-height: var(--control-height); padding: 8px 12px; border: 1px solid var(--color-border); border-radius: var(--radius-control); background: var(--color-surface); text-decoration: none; }
+.capture-footer { width: min(1500px, calc(100% - 24px)); }
+:is(button, a, input, select, textarea, summary):focus-visible { outline: 3px solid var(--color-focus); outline-offset: 3px; }
+.notice { color: var(--color-warning); background: var(--color-warning-subtle); }
+.notice strong { font-weight: 600; }
+.tool-group button, .problem-toggle { min-height: var(--control-height); }
+@media (max-width: 620px) { .capture-header { align-items: start; } }

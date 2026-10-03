@@ -213,10 +213,11 @@ function writeLocalSubmissions(submissions) {
 }
 
 function activateArea(targetId) {
+  if (typeof window !== "undefined" && window.ConfIATeacher && !window.ConfIATeacher.canLeave()) return false;
   for (const button of tabButtons) {
     const isActive = button.dataset.tabTarget === targetId;
     button.classList.toggle("is-active", isActive);
-    button.setAttribute("aria-selected", String(isActive));
+    button.setAttribute("aria-pressed", String(isActive));
   }
 
   for (const panel of tabPanels) {
@@ -228,6 +229,8 @@ function activateArea(targetId) {
   if (targetId === "teacher-area") {
     renderTeacherArea();
   }
+  if (typeof window !== "undefined") window.ConfIAShell?.activateProfile(targetId);
+  return true;
 }
 
 function renderStudentStudyEmptyState() {
@@ -450,11 +453,11 @@ function renderTechnicalDetails(data) {
 function renderRubricSection(rubric) {
   const section = document.createElement("section");
   section.className = "rubric-section";
-  appendTextElement(section, "h3", "section-title", "Critérios/lacunas");
+  appendTextElement(section, "h3", "section-title", "Critérios de avaliação");
 
   const items = rubric && Array.isArray(rubric.items) ? rubric.items : [];
   if (items.length === 0) {
-    appendTextElement(section, "p", "muted", "Critérios da rubrica não disponíveis neste retorno.");
+    appendTextElement(section, "p", "muted", "Critérios de avaliação não disponíveis neste retorno.");
     return section;
   }
 
@@ -778,7 +781,8 @@ function submitSolutionToTeacher() {
   writeLocalSubmissions(submissions);
   selectedTeacherSubmission = { ...submission, source: "real" };
   renderTeacherArea();
-  setStatus("Registro salvo neste navegador", "idle");
+  setStatus("Registro salvo neste navegador", "success");
+  if (typeof window !== "undefined") window.ConfIAShell?.refreshLocalSubmissions();
   renderStudentSubmitInfo(
     "Registro salvo neste navegador. Este modo de demonstração ainda não envia a solução ao servidor."
   );
@@ -866,7 +870,7 @@ async function auditCurrentSolution() {
     if (context.sequence !== studentAuditSequence) return;
     studentAnalysis = { context, data };
     renderStudentAnalysis();
-    setStatus("Análise concluída para a solução enviada", "idle");
+    setStatus("Análise concluída para a solução enviada", "success");
   } catch (error) {
     console.error("ConfIA: análise do aluno", context, error);
     studentValidationMessage.textContent = ANALYSIS_ERROR;
@@ -902,7 +906,7 @@ async function auditTeacherSubmission() {
     analysis.data = data;
     // The operation owns the original reference, never the current selection.
     submission.analysis = { context, data };
-    setStatus(`Análise concluída para o envio de ${submission.student_name || "Aluno"}`, "idle");
+    setStatus(`Análise concluída para o envio de ${submission.student_name || "Aluno"}`, "success");
   } catch (error) {
     console.error("ConfIA: análise do professor", context, error);
     analysis.error = error;

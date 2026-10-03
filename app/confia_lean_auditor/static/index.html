@@ -3,11 +3,13 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>CONFIA MVP</title>
-    <link rel="stylesheet" href="/static/styles.css?v=ui-p0-2">
-    <link rel="stylesheet" href="/static/submissions/teacher.css?v=ui-p0-2">
+    <title>ConfIA — Matemática com confiança</title>
+    <link rel="stylesheet" href="/static/design-system.css?v=ui-01">
+    <link rel="stylesheet" href="/static/styles.css?v=ui-01">
+    <link rel="stylesheet" href="/static/submissions/teacher.css?v=ui-01">
   </head>
   <body>
+    <a class="skip-link" href="#app-root">Ir para o conteúdo principal</a>
     <div class="brand-strip" aria-hidden="true">
       <span class="strip-blue"></span>
       <span class="strip-yellow"></span>
@@ -16,48 +18,68 @@
     </div>
 
     <header class="institutional-header">
-      <div class="header-copy">
-        <p class="eyebrow">MVP ITA 2025</p>
-        <h1>CONFIA</h1>
-        <p class="subtitle">Auditoria matemática confiável</p>
-        <p class="tagline">Da solução discursiva à evidência verificável</p>
+      <a class="brand" href="#student/home" data-shell-link aria-label="ConfIA — início">
+        <span class="brand-mark" aria-hidden="true">C<span>IA</span></span>
+        <span class="header-copy"><strong class="brand-name">ConfIA</strong><span class="subtitle">Confiabilidade e Explicabilidade em Matemática</span></span>
+      </a>
+      <div class="header-context">
+        <span class="badge">Ambiente de demonstração</span>
+        <div id="service-status" class="status-pill" role="status" aria-live="polite" aria-atomic="true">Pronto</div>
       </div>
-      <div id="service-status" class="status-pill" role="status" aria-live="polite" aria-atomic="true">Pronto</div>
     </header>
 
-    <main id="app-root" class="shell" aria-label="Interface MVP CONFIA">
-      <nav class="area-tabs" aria-label="Áreas de trabalho CONFIA">
-        <button
-          class="tab-button is-active"
-          type="button"
-          data-tab-target="student-area"
-          aria-controls="student-area"
-          aria-selected="true"
-        >
-          Área do Aluno
-        </button>
-        <button
-          class="tab-button"
-          type="button"
-          data-tab-target="teacher-area"
-          aria-controls="teacher-area"
-          aria-selected="false"
-        >
-          Área do Professor
-        </button>
-        <button
-          class="tab-button"
-          type="button"
-          data-tab-target="management-area"
-          aria-controls="management-area"
-          aria-selected="false"
-        >
-          Área da Gestão
-        </button>
-      </nav>
+    <div class="app-layout">
+      <aside class="shell-sidebar" aria-label="Contexto e navegação">
+        <p class="eyebrow">Perfil de demonstração</p>
+        <div class="profile-switch" role="group" aria-label="Escolher perfil de demonstração">
+          <button class="profile-button is-active" type="button" data-tab-target="student-area" aria-controls="student-area" aria-pressed="true">Aluno</button>
+          <button class="profile-button" type="button" data-tab-target="teacher-area" aria-controls="teacher-area" aria-pressed="false">Professor</button>
+          <button class="profile-button" type="button" data-tab-target="management-area" aria-controls="management-area" aria-pressed="false">Gestão</button>
+        </div>
+        <p id="active-profile" class="profile-context" role="status" aria-live="polite" aria-atomic="true">Perfil de demonstração: Aluno</p>
+        <nav id="profile-navigation" class="profile-navigation" aria-label="Navegação do Aluno">
+          <div data-profile-menu="student">
+            <a href="#student/home" data-shell-link aria-current="page">Início</a>
+            <a href="#student/resolve" data-shell-link>Questões / Resolver</a>
+            <a href="#student/feedback" data-shell-link>Feedback</a>
+            <a href="/capture">Caderno de resolução <span aria-hidden="true">↗</span></a>
+            <a href="#student/submissions" data-shell-link>Envios</a>
+          </div>
+          <div data-profile-menu="teacher" hidden>
+            <a href="#teacher/home" data-shell-link>Início</a>
+            <a href="#teacher/submissions" data-shell-link>Soluções recebidas</a>
+            <a href="#teacher/transcriptions" data-shell-link>Transcrições</a>
+            <a href="#teacher/analysis" data-shell-link>Correção / Análise ConfIA</a>
+          </div>
+          <div data-profile-menu="management" hidden>
+            <a href="#management/home" data-shell-link>Início</a>
+            <a href="#management/overview" data-shell-link>Painel demonstrativo</a>
+          </div>
+        </nav>
+        <p class="sidebar-note">A troca de perfil altera apenas o contexto de demonstração.</p>
+      </aside>
 
+      <main id="app-root" class="shell" tabindex="-1" aria-label="Áreas de trabalho CONFIA">
+        <div class="page-heading">
+          <p id="page-eyebrow" class="eyebrow">Área do Aluno</p>
+          <h1 id="page-title" class="page-title" tabindex="-1">Início</h1>
+          <p id="page-description" class="page-description">Um espaço para resolver, compreender e conferir sua solução matemática.</p>
+        </div>
       <section id="student-area" class="tab-panel is-active" aria-label="Área do Aluno">
-        <section class="workspace" aria-label="Enunciado e solução">
+        <section id="student-home" class="home-panel">
+          <div class="welcome-card card">
+            <p class="eyebrow">Matemática com confiança</p>
+            <h2>Da solução discursiva à evidência verificável</h2>
+            <p>Auditoria matemática confiável para apoiar o estudo. Escolha uma questão, escreva sua solução e consulte a Análise ConfIA.</p>
+            <a class="button button-primary" href="#student/resolve" data-shell-link>Começar a resolver <span aria-hidden="true">→</span></a>
+          </div>
+          <div class="home-grid">
+            <article class="card"><span class="step-label">01 · Resolver</span><h2>Questões e soluções</h2><p>Use o catálogo atual e os exemplos para explorar uma questão.</p><a href="#student/resolve" data-shell-link>Ver questões</a></article>
+            <article class="card"><span class="step-label">02 · Compreender</span><h2>Feedback da solução</h2><p>Consulte a análise da solução enviada e suas evidências.</p><a href="#student/feedback" data-shell-link>Abrir feedback</a></article>
+            <article class="card"><span class="step-label">03 · Escrever</span><h2>Caderno de resolução</h2><p>Escreva com caneta, recupere rascunhos e prepare uma versão para envio.</p><a href="/capture">Abrir caderno <span aria-hidden="true">↗</span></a></article>
+          </div>
+        </section>
+        <section id="student-workspace" class="workspace" aria-label="Enunciado e solução" hidden>
           <div class="panel-heading">
             <div>
               <p class="eyebrow">Área do Aluno</p>
@@ -103,7 +125,7 @@
                 <select id="example-select"></select>
               </label>
 
-              <button id="load-example" type="button">Carregar exemplo</button>
+              <button id="load-example" class="button-secondary" type="button">Carregar exemplo</button>
             </div>
           </section>
 
@@ -120,7 +142,7 @@
 
           <section id="problem-statement" class="problem-statement" aria-live="polite">
             <p class="eyebrow">Enunciado</p>
-            <h2 id="problem-title" class="problem-title">Selecione uma questão</h2>
+            <h3 id="problem-title" class="problem-title">Selecione uma questão</h3>
             <p id="problem-statement-text" class="statement-text">
               O enunciado da questão selecionada aparecerá aqui.
             </p>
@@ -139,29 +161,44 @@
           <div class="actions">
             <button id="audit-button" type="button">Analisar minha solução</button>
           </div>
+          <a class="workspace-feedback-link" href="#student/feedback" data-shell-link>Consultar feedback da solução enviada →</a>
           <p id="student-validation-message" class="validation-message" role="status" aria-live="polite"></p>
         </section>
 
-        <section id="result-panel" class="result-panel" aria-live="polite" aria-label="Análise ConfIA">
+        <section id="result-panel" class="result-panel" hidden aria-live="polite" aria-label="Análise ConfIA">
           <div class="empty-state">
             <p class="eyebrow">Análise ConfIA</p>
             <p>Selecione uma questão, carregue um exemplo ou cole uma solução para começar.</p>
           </div>
         </section>
+
+        <section id="student-local-envios" class="card" aria-label="Soluções salvas neste navegador" hidden>
+          <h2>Soluções salvas neste navegador</h2>
+          <p class="auxiliary-text">Registros locais de demonstração. Consulte no caderno o recibo dos envios manuscritos recebidos pelo ConfIA.</p>
+          <div id="student-local-list" class="submission-list"></div>
+        </section>
       </section>
 
       <section id="teacher-area" class="tab-panel" aria-label="Área do Professor" hidden>
-        <nav class="teacher-submission-modes" aria-label="Modo da área do professor">
-          <button id="show-manuscripts" class="secondary-action" type="button" aria-pressed="true">Manuscritos recebidos</button>
+        <section id="teacher-home" class="home-panel" hidden>
+          <div class="welcome-card card"><p class="eyebrow">Acompanhamento da solução</p><h2>Da leitura à decisão pedagógica</h2><p>Abra uma solução recebida, compare o manuscrito com a transcrição e confira a fidelidade da leitura.</p><a class="button button-primary" href="#teacher/submissions" data-shell-link>Abrir soluções recebidas →</a></div>
+          <div class="home-grid">
+            <article class="card"><h2>Soluções recebidas</h2><p>Consulte manuscritos enviados pelo caderno e seus arquivos originais.</p><a href="#teacher/submissions" data-shell-link>Consultar soluções</a></article>
+            <article class="card"><h2>Transcrições</h2><p>Confira a leitura junto ao original, preservando o que o aluno escreveu.</p><a href="#teacher/transcriptions" data-shell-link>Conferir transcrições</a></article>
+            <article class="card"><h2>Análise ConfIA</h2><p>Explore a correção textual demonstrativa. A decisão pedagógica é do professor.</p><a href="#teacher/analysis" data-shell-link>Abrir correção textual</a></article>
+          </div>
+        </section>
+        <div class="teacher-submission-modes" aria-label="Modo da área do professor">
+          <button id="show-manuscripts" class="secondary-action" type="button" aria-pressed="true">Soluções recebidas</button>
           <button id="show-text-prototype" class="secondary-action" type="button" aria-pressed="false">Protótipo de correção textual</button>
-        </nav>
+        </div>
         <section id="manuscript-inbox" class="prototype-panel" aria-label="Manuscritos recebidos pelo servidor">
           <div class="panel-heading">
-            <div><p class="eyebrow">Produto 2 · Transcrição versionada</p><h2>Manuscritos recebidos</h2></div>
+            <div><p class="eyebrow">Soluções enviadas pelo caderno</p><h2>Soluções recebidas</h2></div>
             <button id="refresh-manuscripts" class="secondary-action" type="button">Atualizar lista</button>
           </div>
           <p class="prototype-note">Compare o manuscrito original com a transcrição, preserve inclusive afirmações matematicamente falsas e aceite somente a fidelidade da leitura. Não há autenticação: use somente dados fictícios ou testes autorizados.</p>
-          <p id="manuscript-message" role="status" aria-live="polite">Abra esta área para consultar o servidor.</p>
+          <p id="manuscript-message" tabindex="-1" role="status" aria-live="polite">Abra esta área para consultar o servidor.</p>
           <div id="manuscript-list" class="submission-list" aria-label="Lista de manuscritos"></div>
           <section id="manuscript-detail" aria-label="Manuscrito original recebido" hidden></section>
         </section>
@@ -245,40 +282,41 @@
       </section>
 
       <section id="management-area" class="tab-panel" aria-label="Área da Gestão" hidden>
-        <section class="prototype-panel management-panel">
+        <section id="management-home" class="welcome-card card" hidden><p class="eyebrow">Área da Gestão</p><h2>Visão demonstrativa de gestão</h2><p>Esta área apresenta somente dados ilustrativos fixos. Não representa acompanhamento de alunos, turmas ou escolas.</p><a class="button button-primary" href="#management/overview" data-shell-link>Explorar painel demonstrativo →</a></section>
+        <section id="management-overview" class="prototype-panel management-panel">
           <div class="panel-heading">
             <div>
               <p class="eyebrow">Área da Gestão</p>
-              <h2>Visão demonstrativa</h2>
+              <h2>Visão demonstrativa de gestão</h2>
+              <span class="badge" data-kind="warning">Dados ilustrativos</span>
             </div>
           </div>
 
           <p class="prototype-note">
-            Indicadores demonstrativos; dados reais exigem persistência e turmas.
-            Indicadores reais dependerão dos envios, correções docentes e persistência em banco de dados.
+            Dados ilustrativos fixos, sem conexão com envios ou correções reais. Este painel demonstra a apresentação de informações de gestão.
           </p>
 
           <div class="macro-grid">
             <article class="macro-card">
               <span>Soluções analisadas</span>
-              <strong>128</strong>
+              <strong>128</strong><small>Dados ilustrativos</small>
             </article>
             <article class="macro-card">
               <span>Média geral</span>
-              <strong>7,4</strong>
+              <strong>7,4</strong><small>Dados ilustrativos</small>
             </article>
             <article class="macro-card">
               <span>Confiabilidade alta</span>
-              <strong>82%</strong>
+              <strong>82%</strong><small>Dados ilustrativos</small>
             </article>
             <article class="macro-card">
               <span>Revisões humanas recomendadas</span>
-              <strong>19</strong>
+              <strong>19</strong><small>Dados ilustrativos</small>
             </article>
           </div>
 
           <section class="difficulty-panel">
-            <h3>Dificuldades frequentes</h3>
+            <h3>Dificuldades frequentes · exemplo ilustrativo</h3>
             <ul>
               <li>redução algébrica</li>
               <li>comparação de coeficientes</li>
@@ -287,9 +325,16 @@
           </section>
         </section>
       </section>
-    </main>
+      </main>
+    </div>
+    <footer class="institutional-footer">
+      <div><strong>ConfIA</strong><span>Confiabilidade e Explicabilidade em Matemática</span></div>
+      <p class="institutional-partners" aria-label="Instituições">Governo do Piauí <span aria-hidden="true">·</span> FAPEPI <span aria-hidden="true">·</span> SIA</p>
+    </footer>
+    <noscript><p class="alert">Ative o JavaScript para navegar pelos perfis de demonstração e carregar as questões.</p></noscript>
 
-    <script src="/static/app.js?v=ui-p0-2"></script>
-    <script src="/static/submissions/teacher.js?v=ui-p0-2"></script>
+    <script src="/static/app.js?v=ui-01"></script>
+    <script src="/static/submissions/teacher.js?v=ui-01"></script>
+    <script src="/static/shell.js?v=ui-01"></script>
   </body>
 </html>

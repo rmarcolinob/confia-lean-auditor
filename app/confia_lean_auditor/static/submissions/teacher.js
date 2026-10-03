@@ -71,10 +71,12 @@
     if (!activeEditor) return true;
     if (activeEditor.busy) {
       message.textContent = "Aguarde a operação desta transcrição terminar antes de trocar o contexto.";
+      message.focus();
       return false;
     }
     if (!activeEditor.isDirty()) return true;
     message.textContent = "Alterações não salvas. Salve uma nova revisão ou use “Descartar alterações não salvas” antes de trocar o contexto.";
+    message.focus();
     return false;
   }
 
@@ -232,7 +234,10 @@
     panel.appendChild(node("p", "Transcrição conferida significa somente fidelidade ao manuscrito; não significa solução correta nem avaliação do professor."));
     panel.appendChild(node("p", latest ? `Transcrição: ${statusLabel(latest.status)} · revisão persistida ${latest.revision_number}` : "Transcrição: ainda não criada"));
     if (latest?.recognizer_run_id) {
-      panel.appendChild(node("p", `Origem automática · provider: ${latest.provider} · execução: ${latest.recognizer_run_id} · adapter: ${latest.recognizer} ${latest.recognizer_version}`));
+      const origin = node("details");
+      origin.appendChild(node("summary", "Detalhes técnicos do reconhecimento do manuscrito"));
+      origin.appendChild(node("p", `Origem automática · provider: ${latest.provider} · execução: ${latest.recognizer_run_id} · adapter: ${latest.recognizer} ${latest.recognizer_version}`));
+      panel.appendChild(origin);
       panel.appendChild(node("p", "Revise cada segmento com o manuscrito original antes de aceitar a fidelidade."));
     }
     const generateButtons = [];
@@ -461,7 +466,7 @@
         if (history.transcription.submission_id !== id) throw new Error("Transcrição pertence a outro envio.");
       }
       detail.appendChild(node("h2", "Revisão do manuscrito recebido"));
-      detail.appendChild(node("p", `Envio: ${id}`));
+      detail.appendChild(node("p", `Número do envio: ${id}`));
       detail.appendChild(node("p", `Questão: ${record.problem_id} · Recebida em: ${when(record.received_at)} · Solução: ${statusLabel(record.status)}`));
       if (record.student_reference) detail.appendChild(node("p", `Referência não verificada (sem autenticação): ${record.student_reference}`));
       detail.appendChild(integrityDetails(data, id));
@@ -534,17 +539,19 @@
   }
 
   function mode(manuscripts) {
-    if (!canLeaveEditor()) return;
+    if (!canLeaveEditor()) return false;
     inbox.hidden = !manuscripts;
     legacy.hidden = manuscripts;
     showInk.setAttribute("aria-pressed", String(manuscripts));
     showText.setAttribute("aria-pressed", String(!manuscripts));
-    if (manuscripts) refresh();
+    if (manuscripts && !list.children.length && detail.hidden) refresh();
+    return true;
   }
+  window.ConfIATeacher = { canLeave: canLeaveEditor, showManuscripts: () => mode(true), showText: () => mode(false) };
   showInk.addEventListener("click", () => mode(true));
   showText.addEventListener("click", () => mode(false));
   refreshButton.addEventListener("click", refresh);
-  document.querySelector('[data-tab-target="teacher-area"]').addEventListener("click", () => { if (!inbox.hidden) refresh(); });
+  document.querySelector('[data-tab-target="teacher-area"]').addEventListener("click", () => { if (!document.querySelector("#teacher-area").hidden && !inbox.hidden && detail.hidden && !list.children.length) refresh(); });
   if (new URLSearchParams(location.search).get("area") === "teacher") document.querySelector('[data-tab-target="teacher-area"]').click();
   window.addEventListener("beforeunload", (event) => {
     if (activeEditor?.isDirty() || activeEditor?.busy) {

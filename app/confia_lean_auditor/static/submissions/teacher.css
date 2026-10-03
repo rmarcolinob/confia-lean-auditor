@@ -27,3 +27,16 @@
 @media (max-width: 980px) {
   #teacher-text-prototype, .transcription-workspace { grid-template-columns: minmax(0, 1fr); }
 }
+
+/* Shared UI-01 tokens; allow both review columns to shrink within the shell. */
+#teacher-text-prototype { grid-template-columns: minmax(0, .85fr) minmax(0, 1.35fr); gap: var(--spacing-5); }
+.original-manuscript-panel, .transcription-panel { padding: var(--spacing-5); border-color: var(--color-border); border-radius: var(--radius-card); background: var(--color-background); }
+.transcription-panel input, .transcription-panel select, .transcription-panel textarea { border-color: var(--color-border); border-radius: var(--radius-control); padding: var(--spacing-3); background: var(--color-surface); }
+.transcription-panel textarea { min-height: 120px; }
+.transcription-segment, .transcription-history article { border-color: var(--color-border); }
+.transcription-segment legend, .transcription-panel > label, .transcription-segment label { font-weight: 600; }
+.transcription-warning { color: var(--color-warning); background: var(--color-warning-subtle); border-color: var(--color-warning); }
+.transcription-dirty-message[data-dirty="true"] { color: var(--color-warning); background: var(--color-warning-subtle); border-color: var(--color-warning); font-weight: 600; }
+@media (max-width: 1200px) {
+  #teacher-text-prototype, .transcription-workspace { grid-template-columns: minmax(0, 1fr); }
+}
