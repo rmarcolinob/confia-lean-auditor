@@ -1,0 +1,240 @@
+{
+  "$defs": {
+    "RecognitionSegment": {
+      "additionalProperties": false,
+      "properties": {
+        "page_index": {
+          "exclusiveMaximum": 3,
+          "minimum": 0,
+          "title": "Page Index",
+          "type": "integer"
+        },
+        "order": {
+          "minimum": 0,
+          "title": "Order",
+          "type": "integer"
+        },
+        "kind": {
+          "enum": [
+            "text",
+            "math",
+            "mixed",
+            "diagram",
+            "unknown"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "text": {
+          "anyOf": [
+            {
+              "maxLength": 20000,
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Text"
+        },
+        "latex": {
+          "anyOf": [
+            {
+              "maxLength": 20000,
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Latex"
+        },
+        "confidence": {
+          "anyOf": [
+            {
+              "maximum": 1,
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Confidence"
+        },
+        "source_region": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/TranscriptionSourceRegion"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "source_stroke_refs": {
+          "anyOf": [
+            {
+              "items": {
+                "maxLength": 128,
+                "minLength": 1,
+                "pattern": "^[A-Za-z0-9._:-]+$",
+                "type": "string"
+              },
+              "maxItems": 2000,
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Source Stroke Refs"
+        }
+      },
+      "required": [
+        "page_index",
+        "order",
+        "kind"
+      ],
+      "title": "RecognitionSegment",
+      "type": "object"
+    },
+    "SampleArtifact": {
+      "additionalProperties": false,
+      "properties": {
+        "path": {
+          "maxLength": 240,
+          "minLength": 1,
+          "title": "Path",
+          "type": "string"
+        },
+        "sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Sha256",
+          "type": "string"
+        }
+      },
+      "required": [
+        "path",
+        "sha256"
+      ],
+      "title": "SampleArtifact",
+      "type": "object"
+    },
+    "TranscriptionSourceRegion": {
+      "additionalProperties": false,
+      "description": "Optional measured bounding box; omitted when the manual review has no mapping.",
+      "properties": {
+        "x": {
+          "minimum": 0,
+          "title": "X",
+          "type": "number"
+        },
+        "y": {
+          "minimum": 0,
+          "title": "Y",
+          "type": "number"
+        },
+        "width": {
+          "exclusiveMinimum": 0,
+          "title": "Width",
+          "type": "number"
+        },
+        "height": {
+          "exclusiveMinimum": 0,
+          "title": "Height",
+          "type": "number"
+        },
+        "coordinate_system": {
+          "const": "top_left_css_pixels",
+          "default": "top_left_css_pixels",
+          "title": "Coordinate System",
+          "type": "string"
+        }
+      },
+      "required": [
+        "x",
+        "y",
+        "width",
+        "height"
+      ],
+      "title": "TranscriptionSourceRegion",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "sample_id": {
+      "maxLength": 128,
+      "minLength": 1,
+      "pattern": "^[A-Za-z0-9._:-]+$",
+      "title": "Sample Id",
+      "type": "string"
+    },
+    "artificial": {
+      "default": true,
+      "title": "Artificial",
+      "type": "boolean"
+    },
+    "png": {
+      "$ref": "#/$defs/SampleArtifact"
+    },
+    "input_strokes": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/SampleArtifact"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "gold_segments": {
+      "items": {
+        "$ref": "#/$defs/RecognitionSegment"
+      },
+      "maxItems": 2000,
+      "minItems": 1,
+      "title": "Gold Segments",
+      "type": "array"
+    },
+    "recognized_segments": {
+      "anyOf": [
+        {
+          "items": {
+            "$ref": "#/$defs/RecognitionSegment"
+          },
+          "maxItems": 2000,
+          "type": "array"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Recognized Segments"
+    },
+    "description": {
+      "maxLength": 500,
+      "minLength": 1,
+      "title": "Description",
+      "type": "string"
+    }
+  },
+  "required": [
+    "sample_id",
+    "png",
+    "gold_segments",
+    "description"
+  ],
+  "title": "RecognitionSample",
+  "type": "object"
+}

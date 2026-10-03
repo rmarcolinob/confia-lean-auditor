@@ -8,6 +8,9 @@ from pydantic import ValidationError
 from starlette.concurrency import run_in_threadpool
 
 from confia_lean_auditor.core.paths import get_repo_root
+from confia_lean_auditor.recognition.registry import configured_registry, UnknownRecognizer
+from confia_lean_auditor.recognition.schemas import RecognitionRequest, RecognitionResponse, RecognitionRun
+from confia_lean_auditor.recognition.service import RecognitionService, RecognitionConflict
 from confia_lean_auditor.submissions.schemas import (
     AcceptedTranscription,
     AcceptTranscriptionRequest,
@@ -45,7 +48,11 @@ def guarded(operation, *args):
     try:
         return operation(*args)
     except SubmissionIntegrityConflict:
-        raise HTTPException(409, "Integridade da submissão original inválida; transcrição, revisão ou aceite não publicado.") from None
+        raise HTTPException(409, "Integridade da submissão original inválida; reconhecimento, transcrição, revisão ou aceite não publicado.") from None
+    except UnknownRecognizer:
+        raise HTTPException(422, "Reconhecedor indisponível neste ambiente.") from None
+    except RecognitionConflict:
+        raise HTTPException(409, "Chave de idempotência reutilizada com outra configuração.") from None
     except SubmissionConflict:
         raise HTTPException(409, "Snapshot já recebido com conteúdo diferente ou integridade divergente.") from None
     except TranscriptionConflict:
@@ -98,6 +105,42 @@ async def receive_submission(request: Request, response: Response):
 def list_submissions(response: Response):
     response.headers["Cache-Control"] = "no-store"
     return guarded(store().list)
+
+
+@router.get("/recognition-providers")
+def recognition_providers(response: Response):
+    response.headers["Cache-Control"] = "no-store"
+    registry = configured_registry()
+    return [{"provider": name, "label": registry.create(name).display_label} for name in registry.providers()]
+
+
+def recognize_body(submission_id, raw):
+    request = RecognitionRequest.model_validate_json(raw)
+    return RecognitionService(store(), configured_registry()).recognize(submission_id, request)
+
+
+@router.post("/{submission_id}/recognitions", response_model=RecognitionResponse)
+async def recognize_submission(submission_id: str, request: Request, response: Response):
+    # The body limiter bounds reads. Parse within guarded so rejected extras cannot
+    # echo possible secrets/manuscript in FastAPI's default validation errors.
+    if request.headers.get("content-type", "").split(";")[0].strip().lower() != "application/json":
+        raise HTTPException(415, "Use application/json.")
+    run, created = await run_in_threadpool(guarded, recognize_body, submission_id, await request.body())
+    response.status_code = 201 if created else 200
+    response.headers["Cache-Control"] = "no-store"
+    return RecognitionResponse.from_run(run)
+
+
+@router.get("/{submission_id}/recognitions", response_model=list[RecognitionRun])
+def list_recognitions(submission_id: str, response: Response):
+    response.headers["Cache-Control"] = "no-store"
+    return guarded(RecognitionService(store(), configured_registry()).list, submission_id)
+
+
+@router.get("/{submission_id}/recognitions/{recognizer_run_id}", response_model=RecognitionRun)
+def get_recognition(submission_id: str, recognizer_run_id: str, response: Response):
+    response.headers["Cache-Control"] = "no-store"
+    return guarded(RecognitionService(store(), configured_registry()).get, submission_id, recognizer_run_id)
 
 
 @router.get("/{submission_id}", response_model=SubmissionDetail)

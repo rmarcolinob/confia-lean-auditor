@@ -181,3 +181,73 @@ test("teacher creates a manual transcription and accepts fidelity without an aud
   assert.equal(accepted, true);
   assert(ui.calls.every(c => c.url !== "/audit"));
 });
+
+test("teacher development action labels artificial recognition and opens NEEDS_REVIEW without accepting", async () => {
+  let generated = false;
+  const automatic = { ...revision, source: "automatic", provider: "fake_test", recognizer: "confia_fake_test", recognizer_version: "1.0.0", recognizer_run_id: "run_" + "c".repeat(32), reviewer_reference: "automatic:pending-human-review" };
+  const transport = async (url, options = {}) => {
+    if (url === "/submissions/recognition-providers") return { ok: true, json: async () => [{ provider: "fake_test", label: "Reconhecedor de teste" }] };
+    if (options.method === "POST" && url.endsWith("/recognitions")) {
+      const body = JSON.parse(options.body);
+      assert.equal(body.provider, "fake_test");
+      assert.match(body.idempotency_key, /^teacher:/);
+      assert.equal(body.status, undefined);
+      generated = true;
+      return { ok: true, json: async () => ({ recognizer_run_id: automatic.recognizer_run_id, status: "NEEDS_REVIEW", transcription_id: transcriptionId, revision_number: 1 }) };
+    }
+    return { ok: true, json: async () => {
+      if (url === "/submissions") return [record];
+      if (url.endsWith("/transcriptions")) return generated ? [{ transcription: { ...summary.transcription, source: "automatic" }, latest_revision: automatic }] : [];
+      if (url.startsWith("/transcriptions/")) return { transcription: { ...summary.transcription, source: "automatic" }, revisions: [automatic], acceptances: [] };
+      return detailData();
+    } };
+  };
+  const ui = page(transport);
+  await ui.get("#refresh-manuscripts").click();
+  await ui.get("#manuscript-list").children[0].click();
+  let tree = descendants(ui.get("#manuscript-detail"));
+  assert(tree.some(n => /não é OCR real/.test(n.textContent)));
+  await tree.find(n => n.tag === "button" && /Gerar transcrição automática/.test(n.textContent)).click();
+  tree = descendants(ui.get("#manuscript-detail"));
+  assert(generated);
+  assert(tree.some(n => /Origem automática.*fake_test.*run_c/.test(n.textContent)));
+  assert(tree.some(n => /NEEDS_REVIEW/.test(n.textContent)));
+  assert.equal(tree.find(n => n.tag === "input").value, "professor-teste-01");
+  assert(ui.calls.every(c => c.url !== "/audit" && !c.url.endsWith("/accept")));
+});
+
+test("teacher hides recognition action when no provider is enabled and disables it for corrupt source", async () => {
+  for (const available of [false, true]) {
+    const base = transportFor(false);
+    const ui = page(async (url, options) => url === "/submissions/recognition-providers"
+      ? { ok: true, json: async () => available ? [{ provider: "fake_test", label: "Reconhecedor de teste" }] : [] }
+      : base(url, options));
+    await ui.get("#refresh-manuscripts").click();
+    await ui.get("#manuscript-list").children[0].click();
+    const button = descendants(ui.get("#manuscript-detail")).find(n => n.tag === "button" && /Gerar transcrição automática/.test(n.textContent));
+    assert.equal(Boolean(button), available);
+    if (available) assert.equal(button.disabled, true);
+  }
+});
+
+test("teacher preserves retry key and explains provider failure", async () => {
+  const keys = [];
+  const base = transportFor();
+  const ui = page(async (url, options = {}) => {
+    if (url === "/submissions/recognition-providers") return { ok: true, json: async () => [{ provider: "fake_test", label: "Reconhecedor de teste" }] };
+    if (url.endsWith("/recognitions")) {
+      keys.push(JSON.parse(options.body).idempotency_key);
+      return { ok: true, json: async () => ({ status: "FAILED", error_code: "PROVIDER_FAILED" }) };
+    }
+    return base(url, options);
+  });
+  await ui.get("#refresh-manuscripts").click();
+  await ui.get("#manuscript-list").children[0].click();
+  const tree = descendants(ui.get("#manuscript-detail"));
+  const button = tree.find(n => n.tag === "button" && /Gerar transcrição automática/.test(n.textContent));
+  await button.click();
+  assert.equal(button.disabled, false);
+  assert(tree.some(n => /Nenhuma transcrição criada/.test(n.textContent)));
+  await button.click();
+  assert.equal(keys[0], keys[1]);
+});

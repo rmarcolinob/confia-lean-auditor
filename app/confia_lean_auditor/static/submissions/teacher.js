@@ -186,7 +186,7 @@
     panel.appendChild(disclosure);
   }
 
-  function renderTranscription(panel, data, id, history) {
+  function renderTranscription(panel, data, id, history, providers) {
     const pageCount = data.submission.page_images.length;
     const latest = history?.revisions?.[history.revisions.length - 1] || null;
     panel.appendChild(node("h3", "Transcrição"));
@@ -194,10 +194,40 @@
     warning.className = "transcription-warning";
     panel.appendChild(warning);
     panel.appendChild(node("p", "ACCEPTED significa somente que a transcrição foi aceita como representação do manuscrito; não significa solução correta."));
+    if (latest?.recognizer_run_id) {
+      panel.appendChild(node("p", `Origem automática · provider: ${latest.provider} · execução: ${latest.recognizer_run_id} · adapter: ${latest.recognizer} ${latest.recognizer_version}`));
+      panel.appendChild(node("p", "Revise cada segmento com o manuscrito original antes de aceitar a fidelidade."));
+    }
+    for (const provider of providers) {
+      const generate = node("button", `Gerar transcrição automática — ${provider.label}`);
+      generate.type = "button";
+      generate.className = "secondary-action";
+      generate.disabled = !data.integrity.every(item => item.matches);
+      panel.appendChild(generate);
+      panel.appendChild(node("p", "Disponível em desenvolvimento/teste. Produz conteúdo artificial constante; não é OCR real."));
+      const recognitionMessage = node("p");
+      recognitionMessage.setAttribute("role", "status");
+      panel.appendChild(recognitionMessage);
+      // Keep the same key across a failed transport/retry of this user action.
+      const key = `teacher:${Date.now()}:${++segmentSequence}`;
+      generate.addEventListener("click", async () => {
+        generate.disabled = true;
+        recognitionMessage.textContent = "Executando reconhecedor de teste…";
+        try {
+          const run = await write(`/submissions/${id}/recognitions`, { provider: provider.provider, idempotency_key: key });
+          if (run.status === "FAILED") throw new Error(`Reconhecimento falhou (${run.error_code}). Nenhuma transcrição criada.`);
+          recognitionMessage.textContent = `${run.status}: transcrição criada para revisão humana.`;
+          await open(id);
+        } catch (error) {
+          generate.disabled = false;
+          recognitionMessage.textContent = error.message;
+        }
+      });
+    }
     const reviewer = node("input");
     reviewer.type = "text";
     reviewer.maxLength = 80;
-    reviewer.value = latest?.reviewer_reference || "professor-teste-01";
+    reviewer.value = latest?.reviewer_reference === "automatic:pending-human-review" ? "professor-teste-01" : latest?.reviewer_reference || "professor-teste-01";
     panel.appendChild(labeled("Referência do revisor (identidade não verificada)", reviewer));
     const reason = node("input");
     reason.type = "text";
@@ -277,7 +307,10 @@
     detail.replaceChildren();
     message.textContent = "Carregando manuscrito, transcrição e integridade…";
     try {
-      const [data, summaries] = await Promise.all([request(`/submissions/${id}`), request(`/submissions/${id}/transcriptions`)]);
+      const [data, summaries, available] = await Promise.all([
+        request(`/submissions/${id}`), request(`/submissions/${id}/transcriptions`),
+        request("/submissions/recognition-providers"),
+      ]);
       if (sequence !== detailSequence) return;
       if (!Array.isArray(summaries)) throw new Error("Lista de transcrições inválida.");
       const record = data.submission;
@@ -299,7 +332,7 @@
       const transcription = node("section");
       transcription.className = "transcription-panel";
       renderOriginal(original, data, id);
-      renderTranscription(transcription, data, id, history);
+      renderTranscription(transcription, data, id, history, Array.isArray(available) ? available : []);
       workspace.appendChild(original);
       workspace.appendChild(transcription);
       detail.appendChild(workspace);

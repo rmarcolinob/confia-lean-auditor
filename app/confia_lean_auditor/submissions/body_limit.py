@@ -6,7 +6,7 @@ from starlette.responses import JSONResponse
 
 MAX_TRANSCRIPTION_BODY_BYTES = 8 * 1024 * 1024
 WRITE_PATH = re.compile(
-    r"^(?:/submissions/[^/]+/transcriptions|/transcriptions/[^/]+/(?:revisions|accept))/?$"
+    r"^(?:/submissions/[^/]+/(?:transcriptions|recognitions)|/transcriptions/[^/]+/(?:revisions|accept))/?$"
 )
 
 

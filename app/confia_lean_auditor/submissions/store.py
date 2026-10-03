@@ -346,22 +346,76 @@ class SubmissionStore:
                 reviewer_identity_verified=request.reviewer_identity_verified,
                 change_type="initial_transcription", segments=request.segments, status=request.status,
             )
-            root = self._transcriptions_folder(submission_id, create=True)
-            pending = Path(tempfile.mkdtemp(prefix=".pending-transcription-", dir=root))
-            try:
-                (pending / "revisions").mkdir()
-                (pending / "acceptances").mkdir()
-                self._write(pending / "transcription.json", transcription.model_dump_json(indent=2).encode("utf-8"))
-                self._write(self._revision_path(pending, 1), revision.model_dump_json(indent=2).encode("utf-8"))
-                self._sync_directory(pending / "revisions")
-                self._sync_directory(pending / "acceptances")
-                self._sync_directory(pending)
-                os.replace(pending, root / transcription.transcription_id)
-                self._sync_directory(root)
-            finally:
-                if pending.exists():
-                    shutil.rmtree(pending)
-            return revision
+            return self._publish_transcription(transcription, revision)
+
+    def _publish_transcription(self, transcription, revision, recognition_run=None):
+        """Shared atomic publication for manual and automatic initial revisions.
+
+        Caller holds the exclusive lock. An automatic result and its first
+        revision are published together, so a retry never finds a partial run.
+        """
+        # Revalidate even model_copy/model_construct values supplied by internal callers.
+        transcription = TranscriptionRecord.model_validate(transcription.model_dump())
+        revision = TranscriptionRevision.model_validate(revision.model_dump())
+        initial_record = TranscriptionRecord.model_validate(
+            revision.model_dump(include=set(TranscriptionRecord.model_fields)))
+        if (initial_record != transcription or revision.revision_number != 1
+                or revision.status == "ACCEPTED"):
+            raise ValueError("invalid initial transcription revision")
+        if transcription.source == "manual":
+            if recognition_run is not None or any(value is not None for value in (
+                    transcription.recognizer_run_id, transcription.provider, transcription.provenance,
+                    transcription.recognizer, transcription.recognizer_version)):
+                raise ValueError("manual transcription cannot publish a recognition run")
+        elif transcription.source == "automatic":
+            if recognition_run is None or revision.status != "NEEDS_REVIEW":
+                raise ValueError("automatic transcription requires a run and human review")
+        else:
+            raise ValueError("unsupported initial transcription source")
+        submission = self.assert_submission_integrity(transcription.submission_id)
+        self._validate_segment_pages(revision.segments, submission)
+        if transcription.source == "automatic":
+            from confia_lean_auditor.recognition.validation import validate_automatic_pair
+            recognition_run = validate_automatic_pair(transcription, revision, recognition_run, submission)
+        existing = self._folder(transcription.submission_id) / "transcriptions" / transcription.transcription_id
+        if existing.exists() or existing.is_symlink():
+            raise TranscriptionConflict("initial transcription already published")
+        root = self._transcriptions_folder(transcription.submission_id, create=True)
+        pending = Path(tempfile.mkdtemp(prefix=".pending-transcription-", dir=root))
+        try:
+            (pending / "revisions").mkdir()
+            (pending / "acceptances").mkdir()
+            self._write(pending / "transcription.json", transcription.model_dump_json(indent=2).encode("utf-8"))
+            self._write(self._revision_path(pending, 1), revision.model_dump_json(indent=2).encode("utf-8"))
+            if recognition_run is not None:
+                self._write(pending / "recognition.json", recognition_run.model_dump_json(indent=2).encode("utf-8"))
+            self._sync_directory(pending / "revisions")
+            self._sync_directory(pending / "acceptances")
+            self._sync_directory(pending)
+            os.replace(pending, root / transcription.transcription_id)
+            self._sync_directory(root)
+        finally:
+            if pending.exists():
+                shutil.rmtree(pending)
+        return revision
+
+    def _read_automatic_run(self, folder, transcription=None, revisions=None):
+        """Verify the persisted initial pair, independently of later human acceptance."""
+        from confia_lean_auditor.recognition.schemas import RecognitionRun
+        from confia_lean_auditor.recognition.validation import validate_automatic_pair
+        path = folder / "recognition.json"
+        if folder.is_symlink() or path.is_symlink() or not path.is_file():
+            raise ValueError("automatic transcription has no valid recognition run")
+        try:
+            transcription = transcription or self._read_transcription_record(folder)
+            revisions = revisions if revisions is not None else self._read_revisions(folder)
+            if not revisions:
+                raise ValueError("recognition run has no initial revision")
+            run = RecognitionRun.model_validate_json(path.read_bytes())
+            submission, _ = self._read(transcription.submission_id)
+            return validate_automatic_pair(transcription, revisions[0], run, submission)
+        except FileNotFoundError as exc:
+            raise ValueError("incomplete automatic transcription pair") from exc
 
     def list_transcriptions(self, submission_id: str):
         with self._locked():
@@ -383,10 +437,17 @@ class SubmissionStore:
         record = self._read_transcription_record(folder)
         acceptances = self._read_acceptances(folder)
         revisions = self._read_revisions(folder)
+        if record.source == "automatic":
+            self._read_automatic_run(folder, record, revisions)
+        elif (folder / "recognition.json").exists():
+            raise ValueError("manual transcription has a recognition run")
         if any(
             revision.transcription_id != record.transcription_id
             or revision.submission_id != record.submission_id
             or revision.source != record.source
+            or revision.recognizer_run_id != record.recognizer_run_id
+            or revision.provider != record.provider
+            or revision.provenance != record.provenance
             for revision in revisions
         ):
             raise ValueError("revision is not bound to its transcription")

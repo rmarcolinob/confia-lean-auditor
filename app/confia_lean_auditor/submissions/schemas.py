@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Annotated, Literal, Optional
+from typing import Annotated, Literal, Optional, Union
 from datetime import datetime
 
 from pydantic import BaseModel, ConfigDict, Field, StringConstraints, model_validator
@@ -17,7 +17,7 @@ TranscriptionId = Annotated[str, StringConstraints(pattern=r"^tr_[0-9a-f]{32}$")
 AcceptanceId = Annotated[str, StringConstraints(pattern=r"^acc_[0-9a-f]{32}$")]
 Sha256 = Annotated[str, StringConstraints(pattern=r"^[0-9a-f]{64}$")]
 ReviewerReference = Annotated[str, StringConstraints(strip_whitespace=True, min_length=1, max_length=80)]
-TranscriptionSource = Literal["manual", "mathpix_strokes", "mathpix_image", "vision_model"]
+TranscriptionSource = Literal["manual", "automatic", "mathpix_strokes", "mathpix_image", "vision_model"]
 TranscriptionStatus = Literal["DRAFT", "NEEDS_REVIEW", "ACCEPTED"]
 EditableTranscriptionStatus = Literal["DRAFT", "NEEDS_REVIEW"]
 SegmentKind = Literal["text", "math", "mixed", "diagram", "unknown"]
@@ -113,6 +113,19 @@ class TranscriptionSegment(SubmissionModel):
         return self
 
 
+class RecognitionProvenance(SubmissionModel):
+    submission_id: SubmissionId
+    artifacts: list[ArtifactReference] = Field(min_length=1, max_length=MAX_PAGES + 1)
+    adapter: Identifier
+    adapter_version: Annotated[str, StringConstraints(min_length=1, max_length=80)]
+    provider: Identifier
+    input_mode: Literal["strokes", "image", "strokes_and_image"]
+    # Only adapter-declared, non-secret parameters. Credentials never enter this model.
+    parameters: dict[str, Union[str, int, float, bool, None]] = Field(default_factory=dict)
+    created_at: datetime
+    input_hash: Sha256
+
+
 class TranscriptionRecord(SubmissionModel):
     transcription_id: TranscriptionId
     submission_id: SubmissionId
@@ -120,6 +133,19 @@ class TranscriptionRecord(SubmissionModel):
     source: TranscriptionSource
     recognizer: Optional[str] = Field(default=None, min_length=1, max_length=120)
     recognizer_version: Optional[str] = Field(default=None, min_length=1, max_length=80)
+    provider: Optional[Identifier] = None
+    recognizer_run_id: Optional[Annotated[str, StringConstraints(pattern=r"^run_[0-9a-f]{32}$")]] = None
+    provenance: Optional[RecognitionProvenance] = None
+
+    @model_validator(mode="after")
+    def automatic_provenance_required(self):
+        if self.source == "automatic":
+            p = self.provenance
+            if (p is None or self.recognizer_run_id is None or self.provider != p.provider
+                    or self.submission_id != p.submission_id or self.recognizer != p.adapter
+                    or self.recognizer_version != p.adapter_version):
+                raise ValueError("automatic transcription requires consistent recognition provenance")
+        return self
 
 
 class TranscriptionRevision(TranscriptionRecord):

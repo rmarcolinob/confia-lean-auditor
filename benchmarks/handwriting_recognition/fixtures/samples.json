@@ -1,0 +1,153 @@
+[
+  {
+    "sample_id": "A-preservation",
+    "artificial": true,
+    "png": {
+      "path": "artificial_blank.png",
+      "sha256": "1e62ec5b106dab85d2dce19f55261a84c778ae53aafe343a3f6bd9cb2b7e1cd4"
+    },
+    "input_strokes": {
+      "path": "artificial_strokes.json",
+      "sha256": "822de9bb777173d7cee535a89f299f47b07219f48f272adf0fa23a27497a6e05"
+    },
+    "gold_segments": [
+      {
+        "page_index": 0,
+        "order": 0,
+        "kind": "math",
+        "latex": "2 + 2 = 5"
+      }
+    ],
+    "recognized_segments": [
+      {
+        "page_index": 0,
+        "order": 0,
+        "kind": "math",
+        "latex": "2 + 2 = 5"
+      }
+    ],
+    "description": "Preserva fielmente a matemática escrita, mesmo incorreta."
+  },
+  {
+    "sample_id": "B-sign",
+    "artificial": true,
+    "png": {
+      "path": "artificial_blank.png",
+      "sha256": "1e62ec5b106dab85d2dce19f55261a84c778ae53aafe343a3f6bd9cb2b7e1cd4"
+    },
+    "input_strokes": {
+      "path": "artificial_strokes.json",
+      "sha256": "822de9bb777173d7cee535a89f299f47b07219f48f272adf0fa23a27497a6e05"
+    },
+    "gold_segments": [
+      {
+        "page_index": 0,
+        "order": 0,
+        "kind": "math",
+        "latex": "x^2 - 5x + 6 = 0"
+      }
+    ],
+    "recognized_segments": [
+      {
+        "page_index": 0,
+        "order": 0,
+        "kind": "math",
+        "latex": "x^2 - 5x - 6 = 0"
+      }
+    ],
+    "description": "Troca de sinal crítico."
+  },
+  {
+    "sample_id": "C-exponent",
+    "artificial": true,
+    "png": {
+      "path": "artificial_blank.png",
+      "sha256": "1e62ec5b106dab85d2dce19f55261a84c778ae53aafe343a3f6bd9cb2b7e1cd4"
+    },
+    "input_strokes": {
+      "path": "artificial_strokes.json",
+      "sha256": "822de9bb777173d7cee535a89f299f47b07219f48f272adf0fa23a27497a6e05"
+    },
+    "gold_segments": [
+      {
+        "page_index": 0,
+        "order": 0,
+        "kind": "math",
+        "latex": "x^57"
+      }
+    ],
+    "recognized_segments": [
+      {
+        "page_index": 0,
+        "order": 0,
+        "kind": "math",
+        "latex": "x^5 7"
+      }
+    ],
+    "description": "Perda da estrutura do expoente."
+  },
+  {
+    "sample_id": "D-subscript",
+    "artificial": true,
+    "png": {
+      "path": "artificial_blank.png",
+      "sha256": "1e62ec5b106dab85d2dce19f55261a84c778ae53aafe343a3f6bd9cb2b7e1cd4"
+    },
+    "input_strokes": {
+      "path": "artificial_strokes.json",
+      "sha256": "822de9bb777173d7cee535a89f299f47b07219f48f272adf0fa23a27497a6e05"
+    },
+    "gold_segments": [
+      {
+        "page_index": 0,
+        "order": 0,
+        "kind": "math",
+        "latex": "a_n"
+      }
+    ],
+    "recognized_segments": [
+      {
+        "page_index": 0,
+        "order": 0,
+        "kind": "math",
+        "latex": "a n"
+      }
+    ],
+    "description": "Perda de índice."
+  },
+  {
+    "sample_id": "E-missing",
+    "artificial": true,
+    "png": {
+      "path": "artificial_blank.png",
+      "sha256": "1e62ec5b106dab85d2dce19f55261a84c778ae53aafe343a3f6bd9cb2b7e1cd4"
+    },
+    "input_strokes": {
+      "path": "artificial_strokes.json",
+      "sha256": "822de9bb777173d7cee535a89f299f47b07219f48f272adf0fa23a27497a6e05"
+    },
+    "gold_segments": [
+      {
+        "page_index": 0,
+        "order": 0,
+        "kind": "math",
+        "latex": "x=1"
+      },
+      {
+        "page_index": 0,
+        "order": 1,
+        "kind": "math",
+        "latex": "y=2"
+      }
+    ],
+    "recognized_segments": [
+      {
+        "page_index": 0,
+        "order": 0,
+        "kind": "math",
+        "latex": "x=1"
+      }
+    ],
+    "description": "Segundo segmento ausente."
+  }
+]
