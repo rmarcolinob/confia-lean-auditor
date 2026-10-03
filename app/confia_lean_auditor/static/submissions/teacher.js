@@ -7,9 +7,13 @@
   const message = document.querySelector("#manuscript-message");
   const showInk = document.querySelector("#show-manuscripts");
   const showText = document.querySelector("#show-text-prototype");
+  const refreshButton = document.querySelector("#refresh-manuscripts");
   let listSequence = 0;
   let detailSequence = 0;
   let segmentSequence = 0;
+  let activeEditor = null;
+  const labels = { RECEIVED: "Recebida pelo ConfIA", NEEDS_REVIEW: "Aguardando conferência", ACCEPTED: "Transcrição conferida" };
+  const statusLabel = (status) => labels[status] || "Estado indisponível";
   const validId = (id) => typeof id === "string" && /^sub_[0-9a-f]{32}$/.test(id);
   const when = (value) => new Date(value).toLocaleString("pt-BR");
 
@@ -35,16 +39,43 @@
   async function request(url, options = {}) {
     const response = await fetch(url, { cache: "no-store", ...options });
     if (!response.ok) {
-      let explanation = "";
+      let diagnostic = null;
       try {
-        const body = await response.json();
-        explanation = body.detail ? ` ${body.detail}` : "";
+        diagnostic = await response.json();
       } catch (_error) {
-        // HTTP status remains a safe, useful fallback.
+        // Keep the status available in the diagnostic log.
       }
-      throw new Error(`Consulta indisponível (HTTP ${response.status}).${explanation} Tente atualizar novamente.`);
+      const error = new Error(`HTTP ${response.status}`);
+      error.status = response.status;
+      error.diagnostic = diagnostic;
+      throw error;
     }
     return response.json();
+  }
+
+  function productError(error, action = "load") {
+    console.error("ConfIA: manuscritos/transcrição", action, error, error.diagnostic);
+    if (error.status === 404) return "Não foi possível carregar esta solução. Ela pode não estar mais disponível. Atualize a lista e tente novamente.";
+    if (error.status === 409) {
+      const diagnostic = JSON.stringify(error.diagnostic || {});
+      if (/integrity|hash|artifact|snapshot|png/i.test(diagnostic)) return "Os arquivos deste manuscrito não puderam ser conferidos. Reabra a solução e confira os detalhes de integridade antes de continuar.";
+      return "Há uma versão mais recente desta transcrição. Reabra antes de salvar suas alterações.";
+    }
+    if (action === "recognize") return "Não foi possível gerar a transcrição automática. Nenhuma transcrição criada. Tente novamente.";
+    if (action === "save") return "Não foi possível salvar a transcrição agora. Suas alterações continuam nesta tela. Confira os campos e tente novamente.";
+    if (action === "accept") return "Não foi possível registrar a conferência desta transcrição. Reabra e tente novamente.";
+    return "Não foi possível consultar as soluções agora. Atualize a lista e tente novamente.";
+  }
+
+  function canLeaveEditor() {
+    if (!activeEditor) return true;
+    if (activeEditor.busy) {
+      message.textContent = "Aguarde a operação desta transcrição terminar antes de trocar o contexto.";
+      return false;
+    }
+    if (!activeEditor.isDirty()) return true;
+    message.textContent = "Alterações não salvas. Salve uma nova revisão ou use “Descartar alterações não salvas” antes de trocar o contexto.";
+    return false;
   }
 
   function write(url, body) {
@@ -69,7 +100,7 @@
       items.appendChild(node("li", `${artifact.filename}: ${artifact.matches ? "confere" : "divergente/ausente"} · SHA-256 esperado: ${artifact.expected_sha256} · atual: ${artifact.actual_sha256 || "ausente"}`));
     }
     hashes.appendChild(items);
-    const download = node("a", "Baixar snapshot original (JSON)");
+    const download = node("a", "Baixar versão preparada original (JSON)");
     download.href = `/submissions/${id}/snapshot`;
     hashes.appendChild(download);
     block.appendChild(hashes);
@@ -129,13 +160,14 @@
     draw();
   }
 
-  function editableSegment(segment, pageCount) {
+  function editableSegment(segment, pageCount, onChange) {
     const row = node("fieldset");
     row.className = "transcription-segment";
     row.dataset.segmentId = segment.segment_id || `manual:${Date.now()}:${++segmentSequence}`;
     row.appendChild(node("legend", `Segmento ${segment.order + 1}`));
     const kind = node("select");
-    for (const value of ["text", "math", "mixed", "diagram", "unknown"]) kind.appendChild(option(value, value));
+    const kinds = { text: "Texto", math: "Matemática", mixed: "Misto", diagram: "Diagrama", unknown: "Não identificado" };
+    for (const value of Object.keys(kinds)) kind.appendChild(option(value, kinds[value]));
     kind.value = segment.kind || "mixed";
     const page = node("select");
     for (let index = 0; index < pageCount; index += 1) page.appendChild(option(String(index), `Página ${index + 1}`));
@@ -153,6 +185,10 @@
     row.appendChild(labeled("Texto (opcional)", text));
     row.appendChild(labeled("Matemática / LaTeX (opcional)", latex));
     row.controls = { kind, page, text, latex };
+    if (onChange) for (const control of Object.values(row.controls)) {
+      control.addEventListener("input", onChange);
+      control.addEventListener("change", onChange);
+    }
     return row;
   }
 
@@ -173,7 +209,7 @@
     disclosure.appendChild(node("summary", `Histórico de revisões (${history.revisions.length})`));
     for (const revision of [...history.revisions].reverse()) {
       const article = node("article");
-      article.appendChild(node("h4", `Revisão ${revision.revision_number} · ${revision.status}`));
+      article.appendChild(node("h4", `Revisão ${revision.revision_number} · ${statusLabel(revision.status)}`));
       article.appendChild(node("p", `${when(revision.created_at)} · revisor não verificado: ${revision.reviewer_reference} · alteração: ${revision.change_type}`));
       if (revision.change_reason) article.appendChild(node("p", `Motivo: ${revision.change_reason}`));
       const items = node("ol");
@@ -193,16 +229,19 @@
     const warning = node("p", "Transcrever é representar fielmente o manuscrito. Não corrija a matemática: se o aluno escreveu “2 + 2 = 5”, preserve “2 + 2 = 5”.");
     warning.className = "transcription-warning";
     panel.appendChild(warning);
-    panel.appendChild(node("p", "ACCEPTED significa somente que a transcrição foi aceita como representação do manuscrito; não significa solução correta."));
+    panel.appendChild(node("p", "Transcrição conferida significa somente fidelidade ao manuscrito; não significa solução correta nem avaliação do professor."));
+    panel.appendChild(node("p", latest ? `Transcrição: ${statusLabel(latest.status)} · revisão persistida ${latest.revision_number}` : "Transcrição: ainda não criada"));
     if (latest?.recognizer_run_id) {
       panel.appendChild(node("p", `Origem automática · provider: ${latest.provider} · execução: ${latest.recognizer_run_id} · adapter: ${latest.recognizer} ${latest.recognizer_version}`));
       panel.appendChild(node("p", "Revise cada segmento com o manuscrito original antes de aceitar a fidelidade."));
     }
+    const generateButtons = [];
     for (const provider of providers) {
       const generate = node("button", `Gerar transcrição automática — ${provider.label}`);
       generate.type = "button";
       generate.className = "secondary-action";
       generate.disabled = !data.integrity.every(item => item.matches);
+      generateButtons.push(generate);
       panel.appendChild(generate);
       panel.appendChild(node("p", "Disponível em desenvolvimento/teste. Produz conteúdo artificial constante; não é OCR real."));
       const recognitionMessage = node("p");
@@ -211,16 +250,25 @@
       // Keep the same key across a failed transport/retry of this user action.
       const key = `teacher:${Date.now()}:${++segmentSequence}`;
       generate.addEventListener("click", async () => {
-        generate.disabled = true;
-        recognitionMessage.textContent = "Executando reconhecedor de teste…";
+        if (editor.busy || !canLeaveEditor()) return;
+        setEditorBusy(true);
+        generate.setAttribute("aria-busy", "true");
+        recognitionMessage.textContent = "Gerando transcrição automática de teste…";
         try {
           const run = await write(`/submissions/${id}/recognitions`, { provider: provider.provider, idempotency_key: key });
-          if (run.status === "FAILED") throw new Error(`Reconhecimento falhou (${run.error_code}). Nenhuma transcrição criada.`);
-          recognitionMessage.textContent = `${run.status}: transcrição criada para revisão humana.`;
-          await open(id);
+          if (run.status === "FAILED") {
+            const error = new Error("Reconhecedor indisponível");
+            error.diagnostic = run;
+            throw error;
+          }
+          recognitionMessage.textContent = "Transcrição criada. Aguardando conferência humana.";
+          setEditorBusy(false);
+          await open(id, run.transcription_id);
         } catch (error) {
-          generate.disabled = false;
-          recognitionMessage.textContent = error.message;
+          recognitionMessage.textContent = productError(error, "recognize");
+        } finally {
+          setEditorBusy(false);
+          generate.setAttribute("aria-busy", "false");
         }
       });
     }
@@ -237,7 +285,7 @@
     const segmentHost = node("div");
     segmentHost.className = "transcription-segments";
     const initialSegments = latest?.segments || [{ segment_id: "", page_index: 0, order: 0, kind: "mixed" }];
-    for (const segment of initialSegments) segmentHost.appendChild(editableSegment(segment, pageCount));
+    for (const segment of initialSegments) segmentHost.appendChild(editableSegment(segment, pageCount, updateDirty));
     panel.appendChild(segmentHost);
     const actions = node("div");
     actions.className = "transcription-actions";
@@ -251,20 +299,95 @@
     accept.type = "button";
     accept.className = "secondary-action";
     accept.disabled = !latest || latest.status === "ACCEPTED";
+    const discard = node("button", "Descartar alterações não salvas");
+    discard.type = "button";
+    discard.className = "secondary-action";
+    discard.hidden = true;
     actions.appendChild(add);
     actions.appendChild(save);
     actions.appendChild(accept);
+    actions.appendChild(discard);
     panel.appendChild(actions);
+    const dirtyMessage = node("p");
+    dirtyMessage.className = "transcription-dirty-message";
+    dirtyMessage.setAttribute("role", "status");
+    dirtyMessage.setAttribute("aria-live", "polite");
+    panel.appendChild(dirtyMessage);
     const editorMessage = node("p");
     editorMessage.className = "transcription-message";
     editorMessage.setAttribute("role", "status");
     editorMessage.setAttribute("aria-live", "polite");
+    editorMessage.id = `transcription-error-${++segmentSequence}`;
+    reviewer.setAttribute("aria-describedby", editorMessage.id);
     panel.appendChild(editorMessage);
+    const initialReviewer = reviewer.value;
+    const fingerprint = () => JSON.stringify({
+      reviewer: reviewer.value, reason: reason.value,
+      segments: Array.from(segmentHost.children).map(row => ({
+        id: row.dataset.segmentId,
+        values: Object.fromEntries(Object.entries(row.controls).map(([key, control]) => [key, control.value])),
+      })),
+    });
+    let baseline = fingerprint();
+    const editor = {
+      busy: false,
+      isDirty: () => fingerprint() !== baseline,
+      discard: () => {
+        reviewer.value = initialReviewer;
+        reviewer.setAttribute("aria-invalid", "false");
+        reason.value = "";
+        segmentHost.replaceChildren();
+        for (const segment of initialSegments) segmentHost.appendChild(editableSegment(segment, pageCount, updateDirty));
+        baseline = fingerprint();
+        editorMessage.textContent = "Alterações descartadas. A revisão persistida permanece disponível.";
+        updateDirty();
+      },
+    };
+    activeEditor = editor;
+
+    function updateDirty() {
+      const dirty = editor.isDirty();
+      dirtyMessage.textContent = dirty ? "Alterações não salvas. Salve uma nova revisão antes de conferir a transcrição." : "Sem alterações não salvas.";
+      dirtyMessage.dataset.dirty = String(dirty);
+      accept.disabled = editor.busy || dirty || !latest || latest.status === "ACCEPTED";
+      accept.title = dirty ? "Salve ou descarte as alterações antes de conferir a revisão persistida." : "Conferir somente a revisão persistida";
+      discard.hidden = !dirty;
+      discard.disabled = editor.busy;
+    }
+
+    function setEditorBusy(busy) {
+      editor.busy = busy;
+      for (const control of [reviewer, reason, add, save, ...generateButtons,
+        ...Array.from(segmentHost.children).flatMap(row => Object.values(row.controls))]) {
+        control.disabled = busy;
+      }
+      for (const button of generateButtons) button.disabled = busy || !data.integrity.every(item => item.matches);
+      updateDirty();
+    }
+
+    function validateReviewer() {
+      const invalid = !reviewer.value.trim();
+      reviewer.setAttribute("aria-invalid", String(invalid));
+      if (invalid) {
+        editorMessage.textContent = "Informe uma referência para o revisor antes de continuar.";
+        reviewer.focus();
+      }
+      return !invalid;
+    }
+
+    reviewer.addEventListener("input", () => { reviewer.setAttribute("aria-invalid", "false"); updateDirty(); });
+    reason.addEventListener("input", updateDirty);
+    discard.addEventListener("click", () => { if (!editor.busy) editor.discard(); });
+    updateDirty();
     add.addEventListener("click", () => {
-      segmentHost.appendChild(editableSegment({ segment_id: "", page_index: 0, order: segmentHost.children.length, kind: "mixed" }, pageCount));
+      if (editor.busy) return;
+      segmentHost.appendChild(editableSegment({ segment_id: "", page_index: 0, order: segmentHost.children.length, kind: "mixed" }, pageCount, updateDirty));
+      updateDirty();
     });
     save.addEventListener("click", async () => {
-      save.disabled = true;
+      if (editor.busy || !validateReviewer()) return;
+      setEditorBusy(true);
+      save.setAttribute("aria-busy", "true");
       editorMessage.textContent = latest ? "Salvando nova revisão sem alterar a anterior…" : "Criando transcrição manual…";
       try {
         const common = { reviewer_reference: reviewer.value.trim(), reviewer_identity_verified: false, segments: collectSegments(segmentHost), status: "NEEDS_REVIEW" };
@@ -276,33 +399,48 @@
         } else {
           await write(`/submissions/${id}/transcriptions`, { ...common, source: "manual", recognizer: null, recognizer_version: null });
         }
+        baseline = fingerprint();
         editorMessage.textContent = "Revisão salva. Atualizando histórico…";
-        await open(id);
+        setEditorBusy(false);
+        await open(id, history?.transcription.transcription_id);
       } catch (error) {
-        save.disabled = false;
-        editorMessage.textContent = error.message;
+        editorMessage.textContent = productError(error, "save");
+      } finally {
+        setEditorBusy(false);
+        save.setAttribute("aria-busy", "false");
       }
     });
     accept.addEventListener("click", async () => {
-      accept.disabled = true;
+      updateDirty();
+      if (editor.busy || editor.isDirty() || !latest || latest.status === "ACCEPTED") {
+        editorMessage.textContent = "Salve ou descarte as alterações. A conferência usa somente uma revisão persistida.";
+        return;
+      }
+      if (!validateReviewer()) return;
+      setEditorBusy(true);
+      accept.setAttribute("aria-busy", "true");
       editorMessage.textContent = "Registrando aceite de fidelidade — sem avaliar a matemática…";
       try {
         await write(`/transcriptions/${history.transcription.transcription_id}/accept`, {
           revision_number: latest.revision_number, reviewer_reference: reviewer.value.trim(), reviewer_identity_verified: false,
           acceptance_note: "Conferida visualmente com o manuscrito original.",
         });
-        await open(id);
+        setEditorBusy(false);
+        await open(id, history.transcription.transcription_id);
       } catch (error) {
-        accept.disabled = false;
-        editorMessage.textContent = error.message;
+        editorMessage.textContent = productError(error, "accept");
+      } finally {
+        setEditorBusy(false);
+        accept.setAttribute("aria-busy", "false");
       }
     });
     if (history) renderHistory(panel, history);
   }
 
-  async function open(id) {
-    if (!validId(id)) return;
+  async function open(id, transcriptionId = null) {
+    if (!validId(id) || !canLeaveEditor()) return;
     const sequence = ++detailSequence;
+    activeEditor = null;
     detail.hidden = true;
     detail.replaceChildren();
     message.textContent = "Carregando manuscrito, transcrição e integridade…";
@@ -317,14 +455,27 @@
       if (record.submission_id !== id) throw new Error("Registro retornado não corresponde à submissão selecionada.");
       let history = null;
       if (summaries.length) {
-        history = await request(`/transcriptions/${summaries[0].transcription.transcription_id}`);
+        const selected = summaries.find(item => item.transcription.transcription_id === transcriptionId) || summaries[0];
+        history = await request(`/transcriptions/${selected.transcription.transcription_id}`);
         if (sequence !== detailSequence) return;
+        if (history.transcription.submission_id !== id) throw new Error("Transcrição pertence a outro envio.");
       }
       detail.appendChild(node("h2", "Revisão do manuscrito recebido"));
-      detail.appendChild(node("p", `submission_id: ${id}`));
-      detail.appendChild(node("p", `Questão: ${record.problem_id} · Recebida em: ${when(record.received_at)} · Status: ${record.status}`));
+      detail.appendChild(node("p", `Envio: ${id}`));
+      detail.appendChild(node("p", `Questão: ${record.problem_id} · Recebida em: ${when(record.received_at)} · Solução: ${statusLabel(record.status)}`));
       if (record.student_reference) detail.appendChild(node("p", `Referência não verificada (sem autenticação): ${record.student_reference}`));
       detail.appendChild(integrityDetails(data, id));
+      if (summaries.length > 1) {
+        const selection = node("select");
+        for (const item of summaries) selection.appendChild(option(item.transcription.transcription_id, `Transcrição ${item.transcription.transcription_id} · ${statusLabel(item.latest_revision.status)}`));
+        selection.value = history.transcription.transcription_id;
+        selection.addEventListener("change", async () => {
+          const chosen = selection.value;
+          selection.value = history.transcription.transcription_id;
+          await open(id, chosen);
+        });
+        detail.appendChild(labeled("Abrir transcrição", selection));
+      }
       const workspace = node("div");
       workspace.className = "transcription-workspace";
       const original = node("section");
@@ -337,42 +488,53 @@
       workspace.appendChild(transcription);
       detail.appendChild(workspace);
       detail.hidden = false;
-      message.textContent = history ? "Submissão e histórico de transcrição abertos." : "Submissão aberta. Crie uma transcrição manual fiel ao manuscrito.";
+      message.textContent = history ? "Solução enviada e histórico de transcrição abertos." : "Solução enviada aberta. Crie uma transcrição manual fiel ao manuscrito.";
     } catch (error) {
       if (sequence === detailSequence) {
+        activeEditor = null;
         detail.replaceChildren();
         detail.hidden = true;
-        message.textContent = error.message;
+        message.textContent = productError(error);
       }
     }
   }
 
   async function refresh() {
+    if (!canLeaveEditor()) return;
     const sequence = ++listSequence;
     ++detailSequence;
+    activeEditor = null;
     detail.hidden = true;
     detail.replaceChildren();
     list.replaceChildren();
-    message.textContent = "Consultando submissões recebidas…";
+    refreshButton.disabled = true;
+    refreshButton.setAttribute("aria-busy", "true");
+    message.textContent = "Carregando soluções recebidas…";
     try {
       const records = await request("/submissions");
       if (sequence !== listSequence) return;
       if (!Array.isArray(records)) throw new Error("Lista de submissões inválida.");
       for (const record of records) {
         if (!validId(record.submission_id)) continue;
-        const button = node("button", `${record.problem_id} · ${record.status} · ${when(record.received_at)} · ${record.submission_id}`);
+        const button = node("button", `${record.problem_id} · ${statusLabel(record.status)} · ${when(record.received_at)} · ${record.submission_id}`);
         button.type = "button";
         button.className = "secondary-action";
         button.addEventListener("click", () => open(record.submission_id));
         list.appendChild(button);
       }
-      message.textContent = records.length ? `${records.length} submissão(ões) no servidor. Selecione para abrir.` : "Nenhuma submissão recebida pelo servidor.";
+      message.textContent = records.length ? `${records.length} solução(ões) recebida(s) no servidor. Selecione para abrir.` : "Nenhuma solução recebida pelo servidor.";
     } catch (error) {
-      if (sequence === listSequence) message.textContent = error.message;
+      if (sequence === listSequence) message.textContent = productError(error);
+    } finally {
+      if (sequence === listSequence) {
+        refreshButton.disabled = false;
+        refreshButton.setAttribute("aria-busy", "false");
+      }
     }
   }
 
   function mode(manuscripts) {
+    if (!canLeaveEditor()) return;
     inbox.hidden = !manuscripts;
     legacy.hidden = manuscripts;
     showInk.setAttribute("aria-pressed", String(manuscripts));
@@ -381,7 +543,13 @@
   }
   showInk.addEventListener("click", () => mode(true));
   showText.addEventListener("click", () => mode(false));
-  document.querySelector("#refresh-manuscripts").addEventListener("click", refresh);
+  refreshButton.addEventListener("click", refresh);
   document.querySelector('[data-tab-target="teacher-area"]').addEventListener("click", () => { if (!inbox.hidden) refresh(); });
   if (new URLSearchParams(location.search).get("area") === "teacher") document.querySelector('[data-tab-target="teacher-area"]').click();
+  window.addEventListener("beforeunload", (event) => {
+    if (activeEditor?.isDirty() || activeEditor?.busy) {
+      event.preventDefault();
+      event.returnValue = "";
+    }
+  });
 })();

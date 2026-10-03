@@ -19,16 +19,7 @@ const revision = { transcription_id: transcriptionId, submission_id: id, created
   ] };
 const summary = { transcription: { transcription_id: transcriptionId, submission_id: id, created_at: revision.created_at, source: "manual", recognizer: null, recognizer_version: null }, latest_revision: revision };
 const history = { transcription: summary.transcription, revisions: [revision], acceptances: [] };
-const flush = () => new Promise(resolve => setImmediate(resolve));
-function element(tag) {
-  return { tag, textContent: "", children: [], hidden: false, attributes: {}, listeners: {}, dataset: {},
-    setAttribute(k, v) { this.attributes[k] = v; },
-    appendChild(child) { this.children.push(child); },
-    replaceChildren() { this.children = []; },
-    addEventListener(event, fn) { this.listeners[event] = fn; },
-    click() { return this.listeners.click?.(); },
-  };
-}
+const { element, descendants, flush, deferred } = require("./ui-dom.cjs");
 function page(transport, search = "") {
   const elements = new Map(), calls = [];
   const get = (selector) => {
@@ -37,14 +28,16 @@ function page(transport, search = "") {
   };
   get("#teacher-text-prototype").hidden = true;
   get("#manuscript-detail").hidden = true;
+  const logs = [];
   vm.runInNewContext(source, {
+    console: { error: (...args) => logs.push(args) },
+    window: { addEventListener() {} },
     document: { querySelector: get, createElement: element },
     location: { search }, URLSearchParams,
     fetch: async (url, options) => { calls.push({ url, options }); return transport(url, options); },
   });
-  return { get, calls };
+  return { get, calls, logs };
 }
-function descendants(node) { return [node, ...node.children.flatMap(descendants)]; }
 function transportFor(matches = true, withTranscription = false) {
   return async url => ({ ok: true, json: async () => {
     if (url === "/submissions") return [record];
@@ -60,7 +53,7 @@ test("teacher opens server inbox lazily, lists metadata and shows only original 
   await ui.get('[data-tab-target="teacher-area"]').click();
   await flush();
   const button = ui.get("#manuscript-list").children[0];
-  assert.match(button.textContent, /ITA2025Q1.*RECEIVED.*sub_a{32}/);
+  assert.match(button.textContent, /ITA2025Q1.*Recebida pelo ConfIA.*sub_a{32}/);
   await button.click();
   const tree = descendants(ui.get("#manuscript-detail"));
   const image = tree.find(n => n.tag === "img");
@@ -92,7 +85,7 @@ test("inbox and existing correction prototype are mutually exclusive without new
   await flush();
   assert.equal(ui.get("#teacher-text-prototype").hidden, true);
   assert.equal(ui.get("#manuscript-inbox").hidden, false);
-  assert.match(ui.get("#manuscript-message").textContent, /Nenhuma submissão/);
+  assert.match(ui.get("#manuscript-message").textContent, /Nenhuma solução/);
 });
 
 test("failed list and detail requests do not leave stale received artifacts on screen", async () => {
@@ -107,7 +100,7 @@ test("failed list and detail requests do not leave stale received artifacts on s
   assert.equal(ui.get("#manuscript-detail").children.length, 0);
   await ui.get("#refresh-manuscripts").click();
   assert.equal(ui.get("#manuscript-list").children.length, 0);
-  assert.match(ui.get("#manuscript-message").textContent, /HTTP 503/);
+  assert.match(ui.get("#manuscript-message").textContent, /Não foi possível consultar as soluções/);
 });
 
 test("refresh invalidates an older pending detail response", async () => {
@@ -132,7 +125,7 @@ test("teacher shows original and editable transcription side by side with histor
   assert(tree.some(n => n.className === "original-manuscript-panel"));
   assert(tree.some(n => n.className === "transcription-panel"));
   assert.match(tree.map(n => n.textContent).join(" "), /2 \+ 2 = 5/);
-  assert.match(tree.map(n => n.textContent).join(" "), /ACCEPTED.*não significa solução correta/);
+  assert.match(tree.map(n => n.textContent).join(" "), /Transcrição conferida.*não significa solução correta/);
   assert(ui.calls.some(c => c.url === `/transcriptions/${transcriptionId}`), JSON.stringify(ui.calls));
   assert(ui.calls.every(c => c.url !== "/audit"));
 });
@@ -211,7 +204,7 @@ test("teacher development action labels artificial recognition and opens NEEDS_R
   tree = descendants(ui.get("#manuscript-detail"));
   assert(generated);
   assert(tree.some(n => /Origem automática.*fake_test.*run_c/.test(n.textContent)));
-  assert(tree.some(n => /NEEDS_REVIEW/.test(n.textContent)));
+  assert(tree.some(n => /Aguardando conferência/.test(n.textContent)));
   assert.equal(tree.find(n => n.tag === "input").value, "professor-teste-01");
   assert(ui.calls.every(c => c.url !== "/audit" && !c.url.endsWith("/accept")));
 });
@@ -250,4 +243,179 @@ test("teacher preserves retry key and explains provider failure", async () => {
   assert(tree.some(n => /Nenhuma transcrição criada/.test(n.textContent)));
   await button.click();
   assert.equal(keys[0], keys[1]);
+});
+
+const editorTree = ui => descendants(ui.get("#manuscript-detail"));
+const control = (ui, text) => editorTree(ui).find(n => n.tag === "button" && n.textContent === text);
+async function opened(transport = transportFor(true, true)) {
+  const ui = page(transport);
+  await ui.get("#refresh-manuscripts").click();
+  await ui.get("#manuscript-list").children[0].click();
+  return ui;
+}
+function editLatex(ui, content = "2 + 2 = 6") {
+  const textarea = editorTree(ui).find(n => n.tag === "textarea" && /LaTeX/.test(n.placeholder));
+  textarea.value = content;
+  textarea.emit("input");
+  return textarea;
+}
+
+test("ACCEPTED is presented as Transcrição conferida and RECEIVED as Recebida pelo ConfIA", async () => {
+  const base = transportFor(true, true);
+  const ui = await opened(async url => url.startsWith("/transcriptions/")
+    ? { ok: true, json: async () => ({ ...history, revisions: [{ ...revision, status: "ACCEPTED" }] }) }
+    : base(url));
+  assert.match(ui.get("#manuscript-list").textContent, /Recebida pelo ConfIA/);
+  assert.match(ui.get("#manuscript-detail").textContent, /Transcrição conferida/);
+  assert.doesNotMatch(ui.get("#manuscript-detail").textContent, /ACCEPTED|RECEIVED|solução aprovada/);
+  assert.equal(control(ui, "Aceitar como fiel ao manuscrito").disabled, true);
+});
+
+test("edited transcription detects unsaved changes, blocks acceptance and preserves content when refresh is blocked", async () => {
+  const ui = await opened();
+  const edited = editLatex(ui);
+  assert.match(ui.get("#manuscript-detail").textContent, /Alterações não salvas/);
+  assert.equal(control(ui, "Aceitar como fiel ao manuscrito").disabled, true);
+  const count = ui.calls.length;
+  // Exercise the defensive handler even if a caller bypasses the disabled control.
+  await control(ui, "Aceitar como fiel ao manuscrito").emit("click");
+  await ui.get("#refresh-manuscripts").click();
+  assert.equal(ui.calls.length, count);
+  assert.equal(edited.value, "2 + 2 = 6");
+  assert.equal(ui.get("#manuscript-detail").hidden, false);
+  assert.match(ui.get("#manuscript-message").textContent, /Alterações não salvas.*antes de trocar o contexto/);
+});
+
+test("submission switch and mode switch are blocked while transcription is dirty", async () => {
+  const idB = "sub_" + "c".repeat(32);
+  const base = transportFor(true, true);
+  const ui = await opened(async url => url === "/submissions"
+    ? { ok: true, json: async () => [record, { ...record, submission_id: idB }] }
+    : base(url));
+  const edited = editLatex(ui);
+  const count = ui.calls.length;
+  await ui.get("#manuscript-list").children[1].click();
+  await ui.get("#show-text-prototype").click();
+  assert.equal(ui.calls.length, count);
+  assert.equal(ui.get("#manuscript-inbox").hidden, false);
+  assert.equal(edited.value, "2 + 2 = 6");
+  assert.match(ui.get("#manuscript-message").textContent, /Alterações não salvas/);
+});
+
+test("explicit discard permits context switch and opens only the selected submission", async () => {
+  const idB = "sub_" + "c".repeat(32);
+  const base = transportFor(true, true);
+  const ui = await opened(async url => {
+    if (url === "/submissions") return { ok: true, json: async () => [record, { ...record, submission_id: idB }] };
+    if (url === `/submissions/${idB}`) return { ok: true, json: async () => ({ ...detailData(), submission: { ...record, submission_id: idB, problem_id: "ITA2025Q4" } }) };
+    if (url === `/submissions/${idB}/transcriptions`) return { ok: true, json: async () => [] };
+    return base(url);
+  });
+  editLatex(ui);
+  await control(ui, "Descartar alterações não salvas").click();
+  await ui.get("#manuscript-list").children[1].click();
+  assert.match(ui.get("#manuscript-detail").textContent, /ITA2025Q4/);
+  assert.doesNotMatch(ui.get("#manuscript-detail").textContent, /2 \+ 2 = 6/);
+});
+
+test("discard restores the persisted revision and acceptance sends only its revision number", async () => {
+  const ui = await opened();
+  editLatex(ui);
+  await control(ui, "Descartar alterações não salvas").click();
+  assert.equal(editorTree(ui).find(n => n.tag === "textarea" && /LaTeX/.test(n.placeholder)).value, "2 + 2 = 5");
+  assert.equal(control(ui, "Aceitar como fiel ao manuscrito").disabled, false);
+  await control(ui, "Aceitar como fiel ao manuscrito").click();
+  const call = ui.calls.find(c => c.url.endsWith("/accept"));
+  const payload = JSON.parse(call.options.body);
+  assert.equal(payload.revision_number, 1);
+  assert.equal(payload.segments, undefined);
+});
+
+test("save creates a persisted revision before that revision can be accepted", async () => {
+  let saved = revision;
+  const base = transportFor(true, true);
+  const ui = await opened(async (url, options = {}) => {
+    if (options.method === "POST" && url.endsWith("/revisions")) {
+      const body = JSON.parse(options.body);
+      assert.equal(body.based_on_revision_number, 1);
+      saved = { ...revision, revision_number: 2, segments: body.segments };
+      return { ok: true, json: async () => saved };
+    }
+    if (url.startsWith("/transcriptions/") && !options.method) return { ok: true, json: async () => ({ ...history, revisions: [revision, saved] }) };
+    return base(url, options);
+  });
+  editLatex(ui);
+  await control(ui, "Salvar como nova revisão").click();
+  assert.equal(control(ui, "Aceitar como fiel ao manuscrito").disabled, false);
+  assert.match(ui.get("#manuscript-detail").textContent, /revisão persistida 2/);
+  await control(ui, "Aceitar como fiel ao manuscrito").click();
+  assert.equal(JSON.parse(ui.calls.find(c => c.url.endsWith("/accept")).options.body).revision_number, 2);
+});
+
+test("all editable transcription fields and added segments mark pending changes", async () => {
+  for (const field of ["reviewer", "reason", "kind", "page", "text", "latex", "add"]) {
+    const ui = await opened();
+    const tree = editorTree(ui);
+    let item;
+    if (field === "add") await control(ui, "Adicionar segmento").click();
+    else {
+      if (field === "reviewer" || field === "reason") item = tree.filter(n => n.tag === "input")[field === "reviewer" ? 0 : 1];
+      else item = tree.find(n => n.className === "transcription-segment").controls[field];
+      item.value += " "; // Raw edits, including whitespace, must be detected.
+      await item.emit("input");
+    }
+    assert.equal(control(ui, "Aceitar como fiel ao manuscrito").disabled, true, field);
+    assert.match(tree.find(n => n.className === "transcription-dirty-message").textContent, /Alterações não salvas/);
+  }
+});
+
+test("404 and revision conflict are translated while diagnostics stay in the console log", async () => {
+  const base = transportFor(true, true);
+  const ui404 = page(async url => url === "/submissions" ? base(url) : { ok: false, status: 404, json: async () => ({ detail: "missing_internal_record" }) });
+  await ui404.get("#refresh-manuscripts").click();
+  await ui404.get("#manuscript-list").children[0].click();
+  assert.match(ui404.get("#manuscript-message").textContent, /Ela pode não estar mais disponível/);
+  assert.doesNotMatch(ui404.get("#manuscript-message").textContent, /HTTP|missing_internal_record/);
+  assert.equal(ui404.logs.length, 1);
+  const ui409 = await opened(async (url, options = {}) => options.method === "POST"
+    ? { ok: false, status: 409, json: async () => ({ detail: "revision_conflict" }) }
+    : base(url));
+  const edited = editLatex(ui409);
+  await control(ui409, "Salvar como nova revisão").click();
+  assert.match(ui409.get("#manuscript-detail").textContent, /Há uma versão mais recente desta transcrição/);
+  assert.doesNotMatch(ui409.get("#manuscript-detail").textContent, /HTTP|revision_conflict/);
+  assert.equal(edited.value, "2 + 2 = 6");
+  assert.equal(control(ui409, "Aceitar como fiel ao manuscrito").disabled, true);
+});
+
+test("switching transcription is guarded before loading another persisted history", async () => {
+  const otherId = "tr_" + "d".repeat(32);
+  const base = transportFor(true, true);
+  const ui = await opened(async url => url.endsWith("/transcriptions")
+    ? { ok: true, json: async () => [summary, { ...summary, transcription: { ...summary.transcription, transcription_id: otherId } }] }
+    : base(url));
+  const selection = editorTree(ui).find(n => n.tag === "select" && n.children.some(child => child.value === otherId));
+  editLatex(ui);
+  const count = ui.calls.length;
+  selection.value = otherId;
+  await selection.emit("change");
+  assert.equal(selection.value, transcriptionId);
+  assert.equal(ui.calls.length, count);
+  assert.match(ui.get("#manuscript-message").textContent, /Alterações não salvas/);
+});
+
+test("pending save locks only incompatible editor changes and blocks a context refresh", async () => {
+  const pending = deferred();
+  const base = transportFor(true, true);
+  const ui = await opened(async (url, options = {}) => options.method === "POST" ? pending.promise : base(url));
+  const textarea = editLatex(ui);
+  const saving = control(ui, "Salvar como nova revisão").click();
+  assert.equal(textarea.disabled, true);
+  assert.equal(control(ui, "Aceitar como fiel ao manuscrito").disabled, true);
+  const count = ui.calls.length;
+  await ui.get("#refresh-manuscripts").click();
+  assert.equal(ui.calls.length, count);
+  assert.match(ui.get("#manuscript-message").textContent, /Aguarde a operação/);
+  pending.resolve({ ok: false, status: 503, json: async () => ({}) }); await saving;
+  assert.equal(textarea.disabled, false);
 });

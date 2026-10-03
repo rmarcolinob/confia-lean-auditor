@@ -22,6 +22,8 @@
 .transcription-segment legend { padding: 0 6px; font-weight: 800; }
 .transcription-history article { margin: 14px 0; padding: 12px; border-top: 1px solid #c9d5e2; background: white; }
 .transcription-message { min-height: 1.5em; }
+.transcription-dirty-message { padding: 10px; border: 1px solid #c9d5e2; }
+.transcription-dirty-message[data-dirty="true"] { color: #6f4c00; background: #fff7e7; border-color: #b66a13; font-weight: 700; }
 @media (max-width: 980px) {
   #teacher-text-prototype, .transcription-workspace { grid-template-columns: minmax(0, 1fr); }
 }

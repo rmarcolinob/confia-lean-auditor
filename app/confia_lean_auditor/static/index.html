@@ -4,8 +4,8 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>CONFIA MVP</title>
-    <link rel="stylesheet" href="/static/styles.css">
-    <link rel="stylesheet" href="/static/submissions/teacher.css?v=p2-cap-03a">
+    <link rel="stylesheet" href="/static/styles.css?v=ui-p0-2">
+    <link rel="stylesheet" href="/static/submissions/teacher.css?v=ui-p0-2">
   </head>
   <body>
     <div class="brand-strip" aria-hidden="true">
@@ -22,7 +22,7 @@
         <p class="subtitle">Auditoria matemática confiável</p>
         <p class="tagline">Da solução discursiva à evidência verificável</p>
       </div>
-      <div id="service-status" class="status-pill">Pronto</div>
+      <div id="service-status" class="status-pill" role="status" aria-live="polite" aria-atomic="true">Pronto</div>
     </header>
 
     <main id="app-root" class="shell" aria-label="Interface MVP CONFIA">
@@ -82,8 +82,8 @@
               data-student-mode="submit"
               aria-pressed="false"
             >
-              <span>Enviar ao professor</span>
-              <span class="mode-caption">Enviar solução ao professor</span>
+              <span>Envio de demonstração</span>
+              <span class="mode-caption">Salvar somente neste navegador</span>
             </button>
           </div>
 
@@ -94,7 +94,7 @@
           <section class="controls" aria-label="Seleção de questão e exemplo">
             <label>
               Questão
-              <select id="problem-select"></select>
+              <select id="problem-select" aria-describedby="student-validation-message"></select>
             </label>
 
             <div class="example-controls">
@@ -114,6 +114,7 @@
               type="text"
               autocomplete="name"
               placeholder="Digite o nome do aluno"
+              aria-describedby="student-validation-message"
             >
           </label>
 
@@ -131,17 +132,19 @@
               id="solution-input"
               spellcheck="false"
               placeholder="Digite ou cole aqui a solução do estudante."
+              aria-describedby="student-validation-message"
             ></textarea>
           </label>
 
           <div class="actions">
-            <button id="audit-button" type="button">Auditar solução</button>
+            <button id="audit-button" type="button">Analisar minha solução</button>
           </div>
+          <p id="student-validation-message" class="validation-message" role="status" aria-live="polite"></p>
         </section>
 
-        <section id="result-panel" class="result-panel" aria-live="polite" aria-label="Auditoria CONFIA">
+        <section id="result-panel" class="result-panel" aria-live="polite" aria-label="Análise ConfIA">
           <div class="empty-state">
-            <p class="eyebrow">Auditoria CONFIA</p>
+            <p class="eyebrow">Análise ConfIA</p>
             <p>Selecione uma questão, carregue um exemplo ou cole uma solução para começar.</p>
           </div>
         </section>
@@ -167,22 +170,22 @@
           <div class="panel-heading">
             <div>
               <p class="eyebrow">Área do Professor</p>
-              <h2>Submissões para acompanhamento</h2>
+              <h2>Envios locais para acompanhamento</h2>
             </div>
           </div>
 
           <p class="prototype-note">
-            Submissões enviadas pelo aluno neste navegador aparecem aqui. Sem envios locais, use os exemplos demonstrativos.
+            Registros de demonstração salvos neste navegador aparecem aqui. Este fluxo textual ainda não envia soluções ao servidor. Sem registros locais, use os exemplos demonstrativos.
           </p>
 
-          <h3 class="list-title">Submissões recebidas</h3>
-          <div id="real-submission-list" class="submission-list" aria-label="Submissões recebidas"></div>
+          <h3 class="list-title">Envios de demonstração neste navegador</h3>
+          <div id="real-submission-list" class="submission-list" aria-label="Envios de demonstração neste navegador"></div>
 
           <h3 class="list-title">Exemplos demonstrativos</h3>
           <div
             id="demo-submission-list"
             class="submission-list"
-            aria-label="Exemplos demonstrativos de submissões"
+            aria-label="Exemplos demonstrativos de envios"
           ></div>
         </section>
 
@@ -192,17 +195,17 @@
               <p class="eyebrow">Correção assistida</p>
               <h2>Solução do aluno</h2>
             </div>
-            <span id="teacher-submission-status" class="badge" data-kind="medium">pendente</span>
+            <span id="teacher-submission-status" class="badge" data-kind="medium">Avaliação do professor: pendente</span>
           </div>
 
           <p class="prototype-note">
-            O ConfIA sugere uma auditoria. A decisão pedagógica final é do professor.
+            O ConfIA sugere uma análise. A decisão pedagógica final é do professor.
           </p>
 
           <div class="submission-detail-grid">
             <article class="submission-detail">
               <span>Aluno</span>
-              <strong id="teacher-student-name">Selecione uma submissão</strong>
+              <strong id="teacher-student-name">Selecione um envio</strong>
             </article>
             <article class="submission-detail">
               <span>Questão</span>
@@ -215,8 +218,9 @@
           </article>
 
           <button id="teacher-audit-button" class="primary-action full-action" type="button">
-            Auditar com ConfIA
+            Analisar com ConfIA
           </button>
+          <p id="teacher-analysis-status" role="status" aria-live="polite">Análise ConfIA: ainda não realizada</p>
 
           <section
             id="teacher-correction-panel"
@@ -226,7 +230,7 @@
           >
             <div class="empty-state">
               <p class="eyebrow">Painel de correção</p>
-              <p>Selecione uma submissão e audite com o ConfIA.</p>
+              <p>Selecione um envio e analise com o ConfIA.</p>
             </div>
           </section>
 
@@ -235,7 +239,7 @@
             <button id="request-review" class="secondary-action" type="button">Solicitar revisão</button>
             <button id="release-feedback" class="secondary-action" type="button">Liberar devolutiva</button>
           </div>
-          <p id="teacher-decision-message" class="decision-message" aria-live="polite"></p>
+          <p id="teacher-decision-message" class="decision-message" role="status" aria-live="polite"></p>
         </section>
         </div>
       </section>
@@ -251,12 +255,12 @@
 
           <p class="prototype-note">
             Indicadores demonstrativos; dados reais exigem persistência e turmas.
-            Indicadores reais dependerão das submissões, correções docentes e persistência em banco de dados.
+            Indicadores reais dependerão dos envios, correções docentes e persistência em banco de dados.
           </p>
 
           <div class="macro-grid">
             <article class="macro-card">
-              <span>Submissões analisadas</span>
+              <span>Soluções analisadas</span>
               <strong>128</strong>
             </article>
             <article class="macro-card">
@@ -285,7 +289,7 @@
       </section>
     </main>
 
-    <script src="/static/app.js"></script>
-    <script src="/static/submissions/teacher.js?v=p2-cap-03b-1"></script>
+    <script src="/static/app.js?v=ui-p0-2"></script>
+    <script src="/static/submissions/teacher.js?v=ui-p0-2"></script>
   </body>
 </html>

@@ -26,10 +26,20 @@ const approveCorrectionButton = document.querySelector("#approve-correction");
 const requestReviewButton = document.querySelector("#request-review");
 const releaseFeedbackButton = document.querySelector("#release-feedback");
 const teacherDecisionMessage = document.querySelector("#teacher-decision-message");
+const teacherAnalysisStatus = document.querySelector("#teacher-analysis-status");
+const studentValidationMessage = document.querySelector("#student-validation-message");
 
 let problems = [];
 let studentMode = "study";
 let selectedTeacherSubmission = null;
+let studentVersion = 0;
+let studentAnalysis = null;
+let studentAuditPending = false;
+let studentAuditSequence = 0;
+let exampleSequence = 0;
+let examplePending = false;
+const teacherAnalyses = new Map();
+const ANALYSIS_ERROR = "Não foi possível analisar esta solução agora. Confira a questão e tente novamente.";
 
 const STUDENT_SUBMISSIONS_KEY = "confia_student_submissions";
 
@@ -79,17 +89,87 @@ function selectedProblem() {
 }
 
 function setBusy(isBusy) {
-  auditButton.disabled = isBusy;
-  loadExampleButton.disabled = isBusy;
-  problemSelect.disabled = isBusy;
-  exampleSelect.disabled = isBusy;
-  studentNameInput.disabled = isBusy;
-  for (const button of studentModeButtons) {
-    button.disabled = isBusy;
+  studentAuditPending = isBusy;
+  updateStudentAction();
+}
+
+function studentResultIsStale() {
+  return Boolean(studentAnalysis && (
+    studentAnalysis.context.version !== studentVersion ||
+    studentAnalysis.context.problem_id !== problemSelect.value ||
+    studentAnalysis.context.solution !== solutionInput.value.trim()
+  ));
+}
+
+function updateStudentAction() {
+  const analyzing = studentMode === "study" && studentAuditPending;
+  auditButton.disabled = analyzing || !selectedProblem();
+  auditButton.setAttribute("aria-busy", String(analyzing));
+  auditButton.textContent = studentMode === "submit"
+    ? "Salvar como envio de demonstração neste navegador"
+    : analyzing ? "Analisando…" : studentResultIsStale() ? "Analisar novamente" : "Analisar minha solução";
+  loadExampleButton.disabled = examplePending || !selectedProblem() || !exampleSelect.value;
+}
+
+function clearStudentValidation() {
+  studentValidationMessage.textContent = "";
+  for (const field of [problemSelect, solutionInput, studentNameInput]) {
+    field.setAttribute("aria-invalid", "false");
+  }
+}
+
+function studentValidation(field, message) {
+  clearStudentValidation();
+  field.setAttribute("aria-invalid", "true");
+  studentValidationMessage.textContent = message;
+  field.focus();
+}
+
+function studentContextChanged() {
+  studentVersion += 1;
+  clearStudentValidation();
+  renderStudentAnalysis();
+  updateStudentAction();
+}
+
+function renderAnalysisContext(panel, context, stale, analyzeAgain) {
+  const block = appendTextElement(panel, "section", "analysis-context", "");
+  block.dataset.stale = String(stale);
+  appendTextElement(block, "strong", "", stale ? "Análise de versão anterior" : "Análise atual");
+  appendTextElement(block, "p", "", `Questão analisada: ${context.problem_id}`);
+  if (stale) {
+    appendTextElement(block, "p", "", "Esta análise corresponde a uma versão anterior da solução. Você alterou a solução ou trocou a questão depois de iniciar esta análise.");
+    const again = appendTextElement(block, "button", "secondary-action", "Analisar novamente");
+    again.type = "button";
+    again.disabled = panel === resultPanel ? studentAuditPending : Boolean(teacherAnalyses.get(context.submission_id)?.pending);
+    again.addEventListener("click", analyzeAgain);
+  }
+  const original = appendTextElement(block, "details", "", "");
+  appendTextElement(original, "summary", "", "Solução enviada para esta análise");
+  appendTextElement(original, "pre", "", context.solution);
+}
+
+function renderStudentAnalysis() {
+  if (studentMode !== "study") return;
+  if (studentAnalysis) {
+    const stale = studentResultIsStale();
+    const renderKey = `${studentAnalysis.context.sequence}:${stale}:${studentAuditPending}`;
+    // Repeated typing must not rebuild the report or collapse its disclosures.
+    if (resultPanel.dataset.analysisRenderKey === renderKey) return;
+    renderReport(studentAnalysis.data, resultPanel, {
+      analysis: studentAnalysis, stale, analyzeAgain: auditCurrentSolution,
+    });
+    resultPanel.dataset.analysisRenderKey = renderKey;
+  } else if (studentAuditPending) {
+    clearNode(resultPanel);
+    appendTextElement(resultPanel, "p", "empty-state", "Analisando a solução enviada. Este processo pode levar alguns instantes.");
+  } else {
+    renderStudentStudyEmptyState();
   }
 }
 
 function clearNode(node) {
+  if (node === resultPanel) delete node.dataset.analysisRenderKey;
   while (node.firstChild) {
     node.removeChild(node.firstChild);
   }
@@ -154,7 +234,7 @@ function renderStudentStudyEmptyState() {
   clearNode(resultPanel);
   const empty = document.createElement("div");
   empty.className = "empty-state";
-  appendTextElement(empty, "p", "eyebrow", "Auditoria CONFIA");
+  appendTextElement(empty, "p", "eyebrow", "Análise ConfIA");
   appendTextElement(
     empty,
     "p",
@@ -168,18 +248,18 @@ function renderStudentSubmitInfo(message) {
   clearNode(resultPanel);
   const empty = document.createElement("div");
   empty.className = "empty-state submit-state";
-  appendTextElement(empty, "p", "eyebrow", "Envio ao professor");
+  appendTextElement(empty, "p", "eyebrow", "Envio de demonstração local");
   appendTextElement(
     empty,
     "p",
     "",
-    message || "Neste modo, o aluno não recebe a correção automaticamente."
+    message || "Salve uma solução de demonstração somente neste navegador."
   );
   appendTextElement(
     empty,
     "p",
     "",
-    "A solução ficará disponível na Área do Professor para auditoria e decisão docente."
+    "Este modo de demonstração ainda não envia a solução ao servidor. O registro pode ser consultado na Área do Professor neste mesmo navegador."
   );
   resultPanel.appendChild(empty);
 }
@@ -196,15 +276,16 @@ function setStudentMode(mode) {
   const isSubmitMode = mode === "submit";
   studentNameField.hidden = !isSubmitMode;
   exampleControls.hidden = isSubmitMode;
-  auditButton.textContent = isSubmitMode ? "Enviar solução ao professor" : "Auditar solução";
+  updateStudentAction();
+  clearStudentValidation();
   studentModeNote.textContent = isSubmitMode
-    ? "Neste modo, o aluno não recebe a correção automaticamente."
+    ? "Envio de demonstração salvo somente neste navegador, sem envio ao servidor."
     : "Use o ConfIA para estudar com feedback pedagógico imediato.";
 
   if (isSubmitMode) {
     renderStudentSubmitInfo();
   } else {
-    renderStudentStudyEmptyState();
+    renderStudentAnalysis();
   }
 }
 
@@ -248,6 +329,7 @@ function renderProblems() {
 
   renderExamples();
   renderProblemStatement();
+  updateStudentAction();
 }
 
 function resultLabel(result) {
@@ -356,6 +438,7 @@ function renderTechnicalDetails(data) {
   const summary = document.createElement("summary");
   summary.textContent = "Detalhes técnicos";
   details.appendChild(summary);
+  appendTextElement(details, "p", "", "Verificação formal com Lean: consulte abaixo os dados técnicos desta análise.");
 
   const pre = document.createElement("pre");
   pre.textContent = JSON.stringify(data, null, 2);
@@ -415,13 +498,16 @@ function renderRubricSection(rubric) {
 function renderReport(data, targetPanel = resultPanel, options = {}) {
   const report = data.pedagogical_report;
   clearNode(targetPanel);
+  if (options.analysis) {
+    renderAnalysisContext(targetPanel, options.analysis.context, options.stale, options.analyzeAgain);
+  }
 
   if (!report) {
     appendTextElement(
       targetPanel,
       "div",
       "empty-state",
-      "A auditoria terminou, mas não retornou relatório pedagógico."
+      "A análise terminou, mas não retornou relatório pedagógico."
     );
     targetPanel.appendChild(renderTechnicalDetails(data));
     return;
@@ -435,7 +521,7 @@ function renderReport(data, targetPanel = resultPanel, options = {}) {
   const titleRow = document.createElement("div");
   titleRow.className = "result-heading";
   const titleCopy = document.createElement("div");
-  appendTextElement(titleCopy, "p", "eyebrow", isTeacher ? "Correção assistida" : "Auditoria CONFIA");
+  appendTextElement(titleCopy, "p", "eyebrow", "Análise ConfIA");
   appendTextElement(
     titleCopy,
     "h2",
@@ -478,7 +564,7 @@ function renderError(message, targetPanel = resultPanel) {
   clearNode(targetPanel);
   const panel = document.createElement("section");
   panel.className = "error-panel";
-  appendTextElement(panel, "h2", "result-title", "Não foi possível auditar");
+  appendTextElement(panel, "h2", "result-title", "Não foi possível concluir");
   appendTextElement(panel, "p", "summary-text", message);
   targetPanel.appendChild(panel);
 }
@@ -504,7 +590,7 @@ function createSubmissionButton(submission) {
   name.title = submission.student_name || "Aluno";
   appendTextElement(button, "span", "", submission.problem_title || submission.problem_id || "Questão");
   appendTextElement(button, "span", "submission-date", formatDateTime(submission.submitted_at));
-  button.appendChild(makeBadge(submission.status || "pendente", statusKind(submission.status)));
+  button.appendChild(makeBadge(`Avaliação do professor: ${teacherEvaluationLabel(submission.status)}`, statusKind(submission.status)));
 
   button.addEventListener("click", () => {
     selectedTeacherSubmission = submission;
@@ -542,7 +628,7 @@ function renderSubmissionList(target, submissions, emptyText) {
   }
 }
 
-function renderTeacherCorrectionEmpty(text = "Selecione uma submissão e audite com o ConfIA.") {
+function renderTeacherCorrectionEmpty(text = "Selecione um envio e analise com o ConfIA.") {
   clearNode(teacherCorrectionPanel);
   const empty = document.createElement("div");
   empty.className = "empty-state";
@@ -551,15 +637,49 @@ function renderTeacherCorrectionEmpty(text = "Selecione uma submissão e audite 
   teacherCorrectionPanel.appendChild(empty);
 }
 
+function teacherEvaluationLabel(status) {
+  // Old local records may include the analysis status in the same field.
+  return !status || status === "auditada" ? "pendente" : status;
+}
+
+function renderTeacherAnalysis(submission) {
+  const analysis = teacherAnalyses.get(submission.id);
+  teacherAuditButton.disabled = Boolean(analysis?.pending);
+  teacherAuditButton.setAttribute("aria-busy", String(Boolean(analysis?.pending)));
+  teacherAuditButton.textContent = analysis?.pending ? "Analisando…" : "Analisar com ConfIA";
+  teacherAnalysisStatus.textContent = analysis?.pending ? "Análise ConfIA: processando"
+    : analysis?.error ? "Análise ConfIA: indisponível" : analysis?.data ? "Análise ConfIA: concluída" : "Análise ConfIA: ainda não realizada";
+  if (analysis?.data) {
+    const stale = analysis.context.problem_id !== submission.problem_id || analysis.context.solution !== submission.solution;
+    renderReport(analysis.data, teacherCorrectionPanel, {
+      context: "teacher", analysis, stale, analyzeAgain: auditTeacherSubmission,
+    });
+    if (stale) teacherAnalysisStatus.textContent = analysis.pending ? "Análise ConfIA: processando · resultado exibido de versão anterior" : "Análise ConfIA: versão anterior";
+    if (analysis.error) appendTextElement(teacherCorrectionPanel, "p", "validation-message", ANALYSIS_ERROR);
+  } else if (analysis?.pending) {
+    renderTeacherCorrectionEmpty(`Analisando o envio de ${submission.student_name || "Aluno"} com o ConfIA.`);
+  } else if (analysis?.error) {
+    renderError(ANALYSIS_ERROR, teacherCorrectionPanel);
+  } else {
+    renderTeacherCorrectionEmpty("Análise ConfIA ainda não realizada para este envio.");
+  }
+  for (const button of [approveCorrectionButton, requestReviewButton, releaseFeedbackButton]) {
+    button.disabled = Boolean(analysis?.pending);
+  }
+}
+
 function renderSelectedSubmission() {
   const submission = selectedTeacherSubmission;
   if (!submission) {
-    teacherStudentName.textContent = "Selecione uma submissão";
+    teacherStudentName.textContent = "Selecione um envio";
     teacherProblemTitle.textContent = "-";
     teacherSubmissionStatus.textContent = "sem seleção";
     teacherSubmissionStatus.dataset.kind = "neutral";
     teacherSolution.textContent = "A solução enviada aparecerá aqui.";
     teacherAuditButton.disabled = true;
+    teacherAuditButton.setAttribute("aria-busy", "false");
+    teacherAnalysisStatus.textContent = "Análise ConfIA: falta selecionar um envio";
+    for (const button of [approveCorrectionButton, requestReviewButton, releaseFeedbackButton]) button.disabled = true;
     teacherDecisionMessage.textContent = "";
     renderTeacherCorrectionEmpty();
     return;
@@ -567,10 +687,10 @@ function renderSelectedSubmission() {
 
   teacherStudentName.textContent = submission.student_name || "Aluno";
   teacherProblemTitle.textContent = submission.problem_title || currentProblemTitle(submission.problem_id);
-  teacherSubmissionStatus.textContent = submission.status || "pendente";
+  teacherSubmissionStatus.textContent = `Avaliação do professor: ${teacherEvaluationLabel(submission.status)}`;
   teacherSubmissionStatus.dataset.kind = statusKind(submission.status);
   teacherSolution.textContent = submission.solution || "Solução não informada.";
-  teacherAuditButton.disabled = false;
+  renderTeacherAnalysis(submission);
 }
 
 function renderTeacherArea() {
@@ -592,14 +712,14 @@ function renderTeacherArea() {
   renderSubmissionList(
     realSubmissionList,
     realSubmissions,
-    "Nenhuma submissão real foi enviada neste navegador."
+    "Nenhum envio de demonstração foi salvo neste navegador."
   );
   renderSubmissionList(
     demoSubmissionList,
     visibleDemoSubmissions,
     realSubmissions.length > 0
-      ? "Exemplos demonstrativos ficam ocultos quando há submissões recebidas neste navegador."
-      : "Use estes exemplos enquanto não houver submissões recebidas."
+      ? "Exemplos demonstrativos ficam ocultos quando há registros locais neste navegador."
+      : "Use estes exemplos enquanto não houver registros locais."
   );
   renderSelectedSubmission();
 }
@@ -628,18 +748,18 @@ function submitSolutionToTeacher() {
   const problem = selectedProblem();
   const solution = solutionInput.value.trim();
   const studentName = studentNameInput.value.trim();
+  clearStudentValidation();
 
   if (!problem) {
-    renderStudentSubmitInfo("Selecione uma questão antes de enviar ao professor.");
+    studentValidation(problemSelect, "Selecione uma questão antes de salvar o registro de demonstração.");
     return;
   }
   if (!studentName) {
-    renderStudentSubmitInfo("Informe o Nome do aluno antes de enviar ao professor.");
-    studentNameInput.focus();
+    studentValidation(studentNameInput, "Informe o nome do aluno antes de salvar o registro de demonstração.");
     return;
   }
   if (!solution) {
-    renderStudentSubmitInfo("Digite ou cole uma solução antes de enviar ao professor.");
+    studentValidation(solutionInput, "Digite ou cole uma solução antes de salvar o registro de demonstração.");
     return;
   }
 
@@ -658,9 +778,9 @@ function submitSolutionToTeacher() {
   writeLocalSubmissions(submissions);
   selectedTeacherSubmission = { ...submission, source: "real" };
   renderTeacherArea();
-  setStatus("Solução enviada", "idle");
+  setStatus("Registro salvo neste navegador", "idle");
   renderStudentSubmitInfo(
-    "Solução enviada ao professor. A correção será realizada na Área do Professor."
+    "Registro salvo neste navegador. Este modo de demonstração ainda não envia a solução ao servidor."
   );
 }
 
@@ -679,117 +799,129 @@ async function loadProblems() {
 async function loadSelectedExample() {
   const problemId = problemSelect.value;
   const exampleKey = exampleSelect.value;
-
-  setBusy(true);
+  const version = studentVersion;
+  const sequence = ++exampleSequence;
+  examplePending = true;
+  loadExampleButton.disabled = true;
+  loadExampleButton.setAttribute("aria-busy", "true");
   setStatus("Carregando exemplo", "busy");
   try {
     const response = await fetch(`/problems/${problemId}/examples/${exampleKey}`);
-    if (!response.ok) {
-      throw new Error("Não foi possível carregar o exemplo selecionado.");
-    }
+    if (!response.ok) throw new Error(`Exemplo: HTTP ${response.status}`);
     const payload = await response.json();
+    if (sequence !== exampleSequence || version !== studentVersion || problemSelect.value !== problemId || exampleSelect.value !== exampleKey) {
+      setStatus("Exemplo não aplicado: a seleção ou a solução foi alterada", "idle");
+      return;
+    }
     solutionInput.value = payload.solution || "";
+    studentContextChanged();
     setStatus("Exemplo carregado", "idle");
   } catch (error) {
-    renderError(error.message);
-    setStatus("Erro", "error");
+    console.error("ConfIA: carregamento de exemplo", error);
+    studentValidationMessage.textContent = "Não foi possível carregar o exemplo selecionado. Tente novamente.";
+    setStatus("Exemplo indisponível", "error");
   } finally {
-    setBusy(false);
+    if (sequence === exampleSequence) {
+      examplePending = false;
+      updateStudentAction();
+      loadExampleButton.setAttribute("aria-busy", "false");
+    }
   }
 }
 
-async function auditCurrentSolution() {
-  const problemId = problemSelect.value;
-  const solution = solutionInput.value.trim();
+async function requestAnalysis(context) {
+  const response = await fetch("/audit", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ problem_id: context.problem_id, solution: context.solution }),
+  });
+  if (!response.ok) throw new Error(`Análise: HTTP ${response.status}: ${await response.text()}`);
+  const data = await response.json();
+  if (data.problem_id !== context.problem_id) throw new Error("A questão retornada não corresponde à questão analisada.");
+  return data;
+}
 
-  if (!solution) {
-    renderError("Digite ou carregue uma solução antes de auditar.");
+async function auditCurrentSolution() {
+  if (studentAuditPending) return;
+  clearStudentValidation();
+  const context = Object.freeze({
+    problem_id: problemSelect.value,
+    solution: solutionInput.value.trim(),
+    version: studentVersion,
+    sequence: ++studentAuditSequence,
+  });
+  if (!selectedProblem()) {
+    studentValidation(problemSelect, "Selecione uma questão antes de analisar.");
     return;
   }
-
+  if (!context.solution) {
+    studentValidation(solutionInput, "Digite ou carregue uma solução antes de analisar.");
+    return;
+  }
   setBusy(true);
-  setStatus("Auditando", "busy");
-  clearNode(resultPanel);
-  appendTextElement(
-    resultPanel,
-    "div",
-    "empty-state",
-    "Auditando a solução. Este processo pode levar alguns instantes."
-  );
-
+  setStatus(`Analisando a questão ${context.problem_id}`, "busy");
+  renderStudentAnalysis();
   try {
-    const response = await fetch("/audit", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        problem_id: problemId,
-        solution,
-      }),
-    });
-
-    if (!response.ok) {
-      const text = await response.text();
-      throw new Error(text || "A auditoria não foi concluída.");
-    }
-
-    const data = await response.json();
-    renderReport(data);
-    setStatus("Auditoria concluída", "idle");
+    const data = await requestAnalysis(context);
+    if (context.sequence !== studentAuditSequence) return;
+    studentAnalysis = { context, data };
+    renderStudentAnalysis();
+    setStatus("Análise concluída para a solução enviada", "idle");
   } catch (error) {
-    renderError(error.message);
-    setStatus("Erro", "error");
+    console.error("ConfIA: análise do aluno", context, error);
+    studentValidationMessage.textContent = ANALYSIS_ERROR;
+    // Keep a previous report available if a retry fails.
+    if (!studentAnalysis && studentMode === "study") renderError(ANALYSIS_ERROR);
+    setStatus("Análise indisponível", "error");
   } finally {
     setBusy(false);
+    if (studentAnalysis) renderStudentAnalysis();
   }
 }
 
 async function auditTeacherSubmission() {
-  if (!selectedTeacherSubmission) {
-    renderTeacherCorrectionEmpty("Selecione uma submissão antes de auditar.");
+  const submission = selectedTeacherSubmission;
+  if (!submission) {
+    renderTeacherCorrectionEmpty("Selecione um envio antes de analisar.");
     return;
   }
-
-  teacherAuditButton.disabled = true;
-  setStatus("Auditando para o professor", "busy");
-  renderTeacherCorrectionEmpty("Auditando a submissão com o ConfIA.");
-
+  if (teacherAnalyses.get(submission.id)?.pending) return;
+  const context = Object.freeze({
+    submission_id: submission.id,
+    problem_id: submission.problem_id,
+    solution: submission.solution,
+  });
+  const previous = teacherAnalyses.get(submission.id);
+  const analysis = { context: previous?.data ? previous.context : context, pending: true, data: previous?.data || null, error: null };
+  teacherAnalyses.set(submission.id, analysis);
+  renderSelectedSubmission();
+  setStatus(`Analisando o envio de ${submission.student_name || "Aluno"}`, "busy");
   try {
-    const response = await fetch("/audit", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        problem_id: selectedTeacherSubmission.problem_id,
-        solution: selectedTeacherSubmission.solution,
-      }),
-    });
-
-    if (!response.ok) {
-      const text = await response.text();
-      throw new Error(text || "A auditoria não foi concluída.");
-    }
-
-    const data = await response.json();
-    renderReport(data, teacherCorrectionPanel, { context: "teacher" });
-    updateSelectedSubmissionStatus(
-      "auditada",
-      "Auditoria sugerida pelo ConfIA registrada localmente para decisão do professor."
-    );
-    setStatus("Auditoria concluída", "idle");
+    const data = await requestAnalysis(context);
+    analysis.context = context;
+    analysis.data = data;
+    // The operation owns the original reference, never the current selection.
+    submission.analysis = { context, data };
+    setStatus(`Análise concluída para o envio de ${submission.student_name || "Aluno"}`, "idle");
   } catch (error) {
-    renderError(error.message, teacherCorrectionPanel);
-    setStatus("Erro", "error");
+    console.error("ConfIA: análise do professor", context, error);
+    analysis.error = error;
+    setStatus(`Análise indisponível para o envio de ${submission.student_name || "Aluno"}`, "error");
   } finally {
-    teacherAuditButton.disabled = false;
+    analysis.pending = false;
+    if (selectedTeacherSubmission?.id === context.submission_id) renderSelectedSubmission();
   }
 }
 
 function handleStudentPrimaryAction() {
   if (studentMode === "submit") {
-    submitSolutionToTeacher();
+    try {
+      submitSolutionToTeacher();
+    } catch (error) {
+      console.error("ConfIA: registro local", error);
+      studentValidationMessage.textContent = "Não foi possível salvar o registro neste navegador. Tente novamente.";
+      setStatus("Registro local indisponível", "error");
+    }
     return;
   }
   auditCurrentSolution();
@@ -798,7 +930,10 @@ function handleStudentPrimaryAction() {
 problemSelect.addEventListener("change", () => {
   renderExamples();
   renderProblemStatement();
+  studentContextChanged();
 });
+solutionInput.addEventListener("input", studentContextChanged);
+studentNameInput.addEventListener("input", clearStudentValidation);
 for (const button of tabButtons) {
   button.addEventListener("click", () => activateArea(button.dataset.tabTarget));
 }
@@ -818,7 +953,9 @@ releaseFeedbackButton.addEventListener("click", () =>
   updateSelectedSubmissionStatus("devolutiva liberada", "Devolutiva liberada localmente pelo professor.")
 );
 
+updateStudentAction();
 loadProblems().catch((error) => {
-  renderError(error.message);
-  setStatus("Erro", "error");
+  console.error("ConfIA: carregamento de questões", error);
+  renderError("Não foi possível carregar as questões. Atualize a página e tente novamente.");
+  setStatus("Questões indisponíveis", "error");
 });
