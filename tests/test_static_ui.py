@@ -34,16 +34,17 @@ def test_root_serves_mvp_html():
     assert response.status_code == 200
     assert "CONFIA" in response.text
     assert "Auditoria matemática confiável" in response.text
-    assert "Da solução discursiva à evidência verificável" in response.text
+    assert "Uma questão, um caderno de resolução" in response.text
     assert "Analisar minha solução" in response.text
     assert "Área do Aluno" in response.text
-    assert "Estudar com feedback" in response.text
-    assert "Envio de demonstração" in response.text
+    assert "Praticar com feedback" in response.text
+    assert "Envios de demonstração neste navegador" in response.text
     assert "Área do Professor" in response.text
     assert "Analisar com ConfIA" in response.text
     assert "O ConfIA sugere uma análise" in response.text
     assert "Área da Gestão" in response.text
-    assert "Aprovar correção" in response.text
+    assert "Avaliação docente — integração em desenvolvimento" in response.text
+    assert "Aprovar correção" not in response.text
     assert "Soluções analisadas" in response.text
     assert "Enunciado" in response.text
     assert "Aluno" in response.text

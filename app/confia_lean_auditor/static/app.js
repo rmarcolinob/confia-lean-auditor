@@ -22,9 +22,6 @@ const teacherSubmissionStatus = document.querySelector("#teacher-submission-stat
 const teacherSolution = document.querySelector("#teacher-solution");
 const teacherAuditButton = document.querySelector("#teacher-audit-button");
 const teacherCorrectionPanel = document.querySelector("#teacher-correction-panel");
-const approveCorrectionButton = document.querySelector("#approve-correction");
-const requestReviewButton = document.querySelector("#request-review");
-const releaseFeedbackButton = document.querySelector("#release-feedback");
 const teacherDecisionMessage = document.querySelector("#teacher-decision-message");
 const teacherAnalysisStatus = document.querySelector("#teacher-analysis-status");
 const studentValidationMessage = document.querySelector("#student-validation-message");
@@ -598,7 +595,7 @@ function createSubmissionButton(submission) {
   name.title = submission.student_name || "Aluno";
   appendTextElement(button, "span", "", submission.problem_title || submission.problem_id || "Questão");
   appendTextElement(button, "span", "submission-date", formatDateTime(submission.submitted_at));
-  button.appendChild(makeBadge(`Avaliação do professor: ${teacherEvaluationLabel(submission.status)}`, statusKind(submission.status)));
+  button.appendChild(makeBadge("Demonstração textual local", "neutral"));
 
   button.addEventListener("click", () => {
     selectedTeacherSubmission = submission;
@@ -608,20 +605,6 @@ function createSubmissionButton(submission) {
   });
 
   return button;
-}
-
-function statusKind(status) {
-  const normalized = (status || "").toLowerCase();
-  if (normalized.includes("aprov")) {
-    return "high";
-  }
-  if (normalized.includes("revis") || normalized.includes("pendente")) {
-    return "medium";
-  }
-  if (normalized.includes("devolutiva") || normalized.includes("audit")) {
-    return "high";
-  }
-  return "neutral";
 }
 
 function renderSubmissionList(target, submissions, emptyText) {
@@ -645,24 +628,21 @@ function renderTeacherCorrectionEmpty(text = "Selecione um envio e analise com o
   teacherCorrectionPanel.appendChild(empty);
 }
 
-function teacherEvaluationLabel(status) {
-  // Old local records may include the analysis status in the same field.
-  return !status || status === "auditada" ? "pendente" : status;
-}
-
 function renderTeacherAnalysis(submission) {
   const analysis = teacherAnalyses.get(submission.id);
   teacherAuditButton.disabled = Boolean(analysis?.pending);
   teacherAuditButton.setAttribute("aria-busy", String(Boolean(analysis?.pending)));
   teacherAuditButton.textContent = analysis?.pending ? "Analisando…" : "Analisar com ConfIA";
-  teacherAnalysisStatus.textContent = analysis?.pending ? "Análise ConfIA: processando"
-    : analysis?.error ? "Análise ConfIA: indisponível" : analysis?.data ? "Análise ConfIA: concluída" : "Análise ConfIA: ainda não realizada";
+  const state = analysis?.pending ? "processing" : analysis?.error ? "failed" : analysis?.data ? "completed" : "not-run";
+  teacherAnalysisStatus.dataset.analysisState = state;
+  teacherAnalysisStatus.textContent = analysis?.pending ? "Análise ConfIA: Processando"
+    : analysis?.error ? "Análise ConfIA: Não foi possível concluir" : analysis?.data ? "Análise ConfIA: Concluída" : "Análise ConfIA: Não executada";
   if (analysis?.data) {
     const stale = analysis.context.problem_id !== submission.problem_id || analysis.context.solution !== submission.solution;
     renderReport(analysis.data, teacherCorrectionPanel, {
       context: "teacher", analysis, stale, analyzeAgain: auditTeacherSubmission,
     });
-    if (stale) teacherAnalysisStatus.textContent = analysis.pending ? "Análise ConfIA: processando · resultado exibido de versão anterior" : "Análise ConfIA: versão anterior";
+    if (stale) teacherAnalysisStatus.textContent += " · resultado exibido de versão anterior";
     if (analysis.error) appendTextElement(teacherCorrectionPanel, "p", "validation-message", ANALYSIS_ERROR);
   } else if (analysis?.pending) {
     renderTeacherCorrectionEmpty(`Analisando o envio de ${submission.student_name || "Aluno"} com o ConfIA.`);
@@ -670,9 +650,6 @@ function renderTeacherAnalysis(submission) {
     renderError(ANALYSIS_ERROR, teacherCorrectionPanel);
   } else {
     renderTeacherCorrectionEmpty("Análise ConfIA ainda não realizada para este envio.");
-  }
-  for (const button of [approveCorrectionButton, requestReviewButton, releaseFeedbackButton]) {
-    button.disabled = Boolean(analysis?.pending);
   }
 }
 
@@ -687,7 +664,7 @@ function renderSelectedSubmission() {
     teacherAuditButton.disabled = true;
     teacherAuditButton.setAttribute("aria-busy", "false");
     teacherAnalysisStatus.textContent = "Análise ConfIA: falta selecionar um envio";
-    for (const button of [approveCorrectionButton, requestReviewButton, releaseFeedbackButton]) button.disabled = true;
+    teacherAnalysisStatus.dataset.analysisState = "not-run";
     teacherDecisionMessage.textContent = "";
     renderTeacherCorrectionEmpty();
     return;
@@ -695,8 +672,8 @@ function renderSelectedSubmission() {
 
   teacherStudentName.textContent = submission.student_name || "Aluno";
   teacherProblemTitle.textContent = submission.problem_title || currentProblemTitle(submission.problem_id);
-  teacherSubmissionStatus.textContent = `Avaliação do professor: ${teacherEvaluationLabel(submission.status)}`;
-  teacherSubmissionStatus.dataset.kind = statusKind(submission.status);
+  teacherSubmissionStatus.textContent = "Demonstração textual local";
+  teacherSubmissionStatus.dataset.kind = "neutral";
   teacherSolution.textContent = submission.solution || "Solução não informada.";
   renderTeacherAnalysis(submission);
 }
@@ -730,26 +707,6 @@ function renderTeacherArea() {
       : "Use estes exemplos enquanto não houver registros locais."
   );
   renderSelectedSubmission();
-}
-
-function updateSelectedSubmissionStatus(status, message) {
-  if (!selectedTeacherSubmission) {
-    return;
-  }
-
-  selectedTeacherSubmission.status = status;
-  if (selectedTeacherSubmission.source === "real") {
-    const submissions = readLocalSubmissions().map((submission) => {
-      if (submission.id === selectedTeacherSubmission.id) {
-        return { ...submission, status };
-      }
-      return submission;
-    });
-    writeLocalSubmissions(submissions);
-  }
-
-  teacherDecisionMessage.textContent = message;
-  renderTeacherArea();
 }
 
 function submitSolutionToTeacher() {
@@ -963,15 +920,6 @@ for (const button of studentModeButtons) {
 loadExampleButton.addEventListener("click", loadSelectedExample);
 auditButton.addEventListener("click", handleStudentPrimaryAction);
 teacherAuditButton.addEventListener("click", auditTeacherSubmission);
-approveCorrectionButton.addEventListener("click", () =>
-  updateSelectedSubmissionStatus("correção aprovada", "Correção aprovada localmente pelo professor.")
-);
-requestReviewButton.addEventListener("click", () =>
-  updateSelectedSubmissionStatus("revisão solicitada", "Revisão solicitada localmente pelo professor.")
-);
-releaseFeedbackButton.addEventListener("click", () =>
-  updateSelectedSubmissionStatus("devolutiva liberada", "Devolutiva liberada localmente pelo professor.")
-);
 
 updateStudentAction();
 loadProblems().catch((error) => {

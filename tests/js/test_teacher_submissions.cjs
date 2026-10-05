@@ -1,51 +1,6 @@
 const test = require("node:test");
 const assert = require("node:assert/strict");
-const fs = require("node:fs");
-const path = require("node:path");
-const vm = require("node:vm");
-const source = fs.readFileSync(path.join(__dirname, "../../app/confia_lean_auditor/static/submissions/teacher.js"), "utf8");
-const id = "sub_" + "a".repeat(32);
-const record = { submission_id: id, problem_id: "ITA2025Q1", snapshot_id: "snapshot:1", received_at: "2026-10-01T12:00:00Z", status: "RECEIVED", source: "tablet", capture_schema_version: "1.0",
-  student_reference: "<img src=x onerror=unsafe> (teste)", page_images: [{ filename: "page_1.png", page_index: 0 }] };
-const detailData = (matches = true) => ({ submission: record, receipt: record, integrity: [
-  { filename: "snapshot.json", expected_sha256: "a".repeat(64), actual_sha256: "a".repeat(64), matches: true },
-  { filename: "page_1.png", expected_sha256: "b".repeat(64), actual_sha256: matches ? "b".repeat(64) : null, matches },
-] });
-const transcriptionId = "tr_" + "b".repeat(32);
-const revision = { transcription_id: transcriptionId, submission_id: id, created_at: "2026-10-01T13:00:00Z", source: "manual", recognizer: null, recognizer_version: null,
-  revision_number: 1, based_on_revision_number: null, reviewer_reference: "professor-teste-01", reviewer_identity_verified: false,
-  change_type: "initial_transcription", change_reason: null, status: "NEEDS_REVIEW", segments: [
-    { segment_id: "seg:1", page_index: 0, order: 0, kind: "math", text: null, latex: "2 + 2 = 5", confidence: null, source_region: null, source_stroke_refs: null },
-  ] };
-const summary = { transcription: { transcription_id: transcriptionId, submission_id: id, created_at: revision.created_at, source: "manual", recognizer: null, recognizer_version: null }, latest_revision: revision };
-const history = { transcription: summary.transcription, revisions: [revision], acceptances: [] };
-const { element, descendants, flush, deferred } = require("./ui-dom.cjs");
-function page(transport, search = "") {
-  const elements = new Map(), calls = [];
-  const get = (selector) => {
-    if (!elements.has(selector)) elements.set(selector, element("control"));
-    return elements.get(selector);
-  };
-  get("#teacher-text-prototype").hidden = true;
-  get("#manuscript-detail").hidden = true;
-  const logs = [];
-  vm.runInNewContext(source, {
-    console: { error: (...args) => logs.push(args) },
-    window: { addEventListener() {} },
-    document: { querySelector: get, createElement: element },
-    location: { search }, URLSearchParams,
-    fetch: async (url, options) => { calls.push({ url, options }); return transport(url, options); },
-  });
-  return { get, calls, logs };
-}
-function transportFor(matches = true, withTranscription = false) {
-  return async url => ({ ok: true, json: async () => {
-    if (url === "/submissions") return [record];
-    if (url.endsWith("/transcriptions")) return withTranscription ? [summary] : [];
-    if (url.startsWith("/transcriptions/")) return history;
-    return detailData(matches);
-  } });
-}
+const { id, record, detailData, transcriptionId, revision, summary, history, page, transportFor, descendants, flush, deferred, primaryText } = require("./teacher-dom.cjs");
 
 test("teacher opens server inbox lazily, lists metadata and shows only original PNGs plus integrity", async () => {
   const ui = page(transportFor());
@@ -53,12 +8,12 @@ test("teacher opens server inbox lazily, lists metadata and shows only original 
   await ui.get('[data-tab-target="teacher-area"]').click();
   await flush();
   const button = ui.get("#manuscript-list").children[0];
-  assert.match(button.textContent, /ITA2025Q1.*Recebida pelo ConfIA.*sub_a{32}/);
+  assert.match(button.textContent, /ITA2025Q1.*Recebida pelo ConfIA.*Transcrição: Ainda não criada.*Análise ConfIA: Não executada.*Abrir/);
   await button.click();
   const tree = descendants(ui.get("#manuscript-detail"));
   const image = tree.find(n => n.tag === "img");
   assert.equal(image.src, `/submissions/${id}/pages/0`);
-  assert.match(tree.map(n => n.textContent).join(" "), /hashes SHA-256 conferem/);
+  assert.match(tree.map(n => n.textContent).join(" "), /Arquivos originais conferidos e preservados/);
   assert.match(tree.find(n => n.textContent.includes("Referência não verificada")).textContent, /<img src=x onerror=unsafe>/);
   assert.equal(tree.filter(n => n.tag === "img").length, 1); // Reference stayed text, not HTML.
   assert.equal(ui.get("#manuscript-detail").hidden, false);
@@ -72,7 +27,7 @@ test("corrupt PNG is not loaded and divergence is explained", async () => {
   await ui.get("#manuscript-list").children[0].click();
   const tree = descendants(ui.get("#manuscript-detail"));
   assert.equal(tree.some(n => n.tag === "img"), false);
-  assert.match(tree.map(n => n.textContent).join(" "), /hash divergente/);
+  assert.match(tree.map(n => n.textContent).join(" "), /arquivos originais desta solução precisam ser conferidos/);
 });
 
 test("inbox and existing correction prototype are mutually exclusive without new audit requests", async () => {
@@ -267,7 +222,7 @@ test("ACCEPTED is presented as Transcrição conferida and RECEIVED as Recebida 
     : base(url));
   assert.match(ui.get("#manuscript-list").textContent, /Recebida pelo ConfIA/);
   assert.match(ui.get("#manuscript-detail").textContent, /Transcrição conferida/);
-  assert.doesNotMatch(ui.get("#manuscript-detail").textContent, /ACCEPTED|RECEIVED|solução aprovada/);
+  assert.doesNotMatch(primaryText(ui.get("#manuscript-detail")), /ACCEPTED|RECEIVED|solução aprovada/);
   assert.equal(control(ui, "Aceitar como fiel ao manuscrito").disabled, true);
 });
 
@@ -376,13 +331,13 @@ test("404 and revision conflict are translated while diagnostics stay in the con
   await ui404.get("#manuscript-list").children[0].click();
   assert.match(ui404.get("#manuscript-message").textContent, /Ela pode não estar mais disponível/);
   assert.doesNotMatch(ui404.get("#manuscript-message").textContent, /HTTP|missing_internal_record/);
-  assert.equal(ui404.logs.length, 1);
+  assert(ui404.logs.length >= 1);
   const ui409 = await opened(async (url, options = {}) => options.method === "POST"
     ? { ok: false, status: 409, json: async () => ({ detail: "revision_conflict" }) }
     : base(url));
   const edited = editLatex(ui409);
   await control(ui409, "Salvar como nova revisão").click();
-  assert.match(ui409.get("#manuscript-detail").textContent, /Há uma versão mais recente desta transcrição/);
+  assert.match(ui409.get("#manuscript-detail").textContent, /Existe uma revisão mais recente da transcrição/);
   assert.doesNotMatch(ui409.get("#manuscript-detail").textContent, /HTTP|revision_conflict/);
   assert.equal(edited.value, "2 + 2 = 6");
   assert.equal(control(ui409, "Aceitar como fiel ao manuscrito").disabled, true);

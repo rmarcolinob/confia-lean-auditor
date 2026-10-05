@@ -88,7 +88,7 @@ test("teacher response for A does not update B and remains available when return
   pending.resolve(response(report("A", "Resposta exclusiva A")));
   await analysis;
   assert.doesNotMatch(text(ui, "#teacher-correction-panel"), /Resposta exclusiva A/);
-  assert.match(ui.get("#teacher-submission-status").textContent, /Avaliação do professor: pendente/);
+  assert.match(ui.get("#teacher-submission-status").textContent, /Demonstração textual local/);
   await ui.get("#real-submission-list").children[0].click();
   assert.match(text(ui, "#teacher-correction-panel"), /Questão analisada: A.*Resposta exclusiva A/);
   assert.deepEqual(JSON.parse(ui.store.get("confia_student_submissions")), localSubmissions);
@@ -102,7 +102,7 @@ test("teacher concurrent A and B analyses keep independent processing and result
   const runB = ui.get("#teacher-audit-button").click();
   requests.A.resolve(response(report("A", "Resposta A"))); await runA;
   assert.equal(ui.get("#teacher-audit-button").disabled, true);
-  assert.match(ui.get("#teacher-analysis-status").textContent, /processando/);
+  assert.match(ui.get("#teacher-analysis-status").textContent, /Processando/);
   requests.B.resolve(response(report("B", "Resposta B"))); await runB;
   assert.match(text(ui, "#teacher-correction-panel"), /Resposta B/);
   assert.doesNotMatch(text(ui, "#teacher-correction-panel"), /Resposta A/);
@@ -202,7 +202,7 @@ test("teacher retry failure keeps the earlier report and announces unavailable a
   await ui.get("#teacher-audit-button").click();
   assert.match(text(ui, "#teacher-correction-panel"), /Relatório anterior A/);
   assert.match(text(ui, "#teacher-correction-panel"), /Não foi possível analisar/);
-  assert.match(ui.get("#teacher-analysis-status").textContent, /indisponível/);
+  assert.match(ui.get("#teacher-analysis-status").textContent, /Não foi possível concluir/);
 });
 
 test("student response compares current field values even if an external edit emits no input event", async () => {
@@ -213,4 +213,26 @@ test("student response compares current field values even if an external edit em
   ui.get("#solution-input").value = "Texto atual B";
   pending.resolve(response(report("A"))); await flush();
   assert.match(text(ui), /Análise de versão anterior.*Questão analisada: A/);
+});
+
+test('UI-03 text analysis states reflect actual mocked requests and never change local evaluation data', async () => {
+  const pending = deferred();
+  let fail = false;
+  let complete = false;
+  const ui = await page(() => fail ? { ok: false, status: 503, text: async () => 'unavailable' } : complete ? response(report('A')) : pending.promise, localSubmissions);
+  const status = ui.get('#teacher-analysis-status');
+  assert.equal(status.dataset.analysisState, 'not-run');
+  assert.equal(status.textContent, 'Análise ConfIA: Não executada');
+  assert.equal(ui.calls.some(c => c.url === '/audit'), false);
+  const run = ui.get('#teacher-audit-button').click();
+  assert.equal(status.dataset.analysisState, 'processing');
+  assert.equal(status.textContent, 'Análise ConfIA: Processando');
+  pending.resolve(response(report('A'))); await run;
+  complete = true;
+  assert.equal(status.dataset.analysisState, 'completed');
+  assert.equal(status.textContent, 'Análise ConfIA: Concluída');
+  fail = true; await ui.get('#teacher-audit-button').click();
+  assert.equal(status.dataset.analysisState, 'failed');
+  assert.equal(status.textContent, 'Análise ConfIA: Não foi possível concluir');
+  assert.deepEqual(JSON.parse(ui.store.get('confia_student_submissions')), localSubmissions);
 });

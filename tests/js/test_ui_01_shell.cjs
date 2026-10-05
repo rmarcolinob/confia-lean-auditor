@@ -93,7 +93,7 @@ test('every existing destination stays reachable, and profile/current-page seman
   assert.match(ui.get('#page-description').textContent, /Dados ilustrativos.*não são indicadores reais/);
 });
 
-test('teacher inbox and correction remain mutually exclusive and expose original/transcription together', async () => {
+test('teacher routes converge on the same solution and keep the local text demonstration separate', async () => {
   const ui = await page({ records: [record] });
   await ui.visit('#teacher/submissions');
   await ui.get('#manuscript-list').children[0].click();
@@ -103,6 +103,11 @@ test('teacher inbox and correction remain mutually exclusive and expose original
   assert.equal(ui.get('#manuscript-detail').children, originalDetail);
   assert(descendants(ui.get('#manuscript-detail')).some(n => n.className === 'transcription-workspace'));
   await ui.visit('#teacher/analysis');
+  assert.equal(ui.get('#manuscript-inbox').hidden, false);
+  assert.equal(ui.get('#teacher-text-prototype').hidden, true);
+  assert.equal(ui.get('#manuscript-detail').children, originalDetail);
+  await ui.get('#show-text-prototype').click(); await flush();
+  assert.equal(ui.location.hash, '#teacher/text');
   assert.equal(ui.get('#manuscript-inbox').hidden, true);
   assert.equal(ui.get('#teacher-text-prototype').hidden, false);
 });

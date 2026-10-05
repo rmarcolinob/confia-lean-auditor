@@ -6,8 +6,8 @@
     <title>ConfIA — Matemática com confiança</title>
     <link rel="stylesheet" href="/static/capture/vendor/katex-0.18.9/katex.min.css">
     <link rel="stylesheet" href="/static/design-system.css?v=ui-01">
-    <link rel="stylesheet" href="/static/styles.css?v=ui-02-parent-sticky">
-    <link rel="stylesheet" href="/static/submissions/teacher.css?v=ui-01">
+    <link rel="stylesheet" href="/static/styles.css?v=ui-03">
+    <link rel="stylesheet" href="/static/submissions/teacher.css?v=ui-03">
   </head>
   <body>
     <a class="skip-link" href="#app-root">Ir para o conteúdo principal</a>
@@ -175,26 +175,36 @@
 
       <section id="teacher-area" class="tab-panel" aria-label="Área do Professor" hidden>
         <section id="teacher-home" class="home-panel" hidden>
-          <div class="welcome-card card"><p class="eyebrow">Acompanhamento da solução</p><h2>Da leitura à decisão pedagógica</h2><p>Abra uma solução recebida, compare o manuscrito com a transcrição e confira a fidelidade da leitura.</p><a class="button button-primary" href="#teacher/submissions" data-shell-link>Abrir soluções recebidas →</a></div>
+          <div class="welcome-card card"><p class="eyebrow">Acompanhamento da solução</p><h2>Da solução recebida à avaliação do professor</h2><p>Abra a solução do aluno, compare o manuscrito com a transcrição e confira a fidelidade da leitura. A análise matemática e a avaliação docente dos manuscritos aguardam integração.</p><a class="button button-primary" href="#teacher/submissions" data-shell-link>Abrir soluções recebidas →</a></div>
           <div class="home-grid">
             <article class="card"><h2>Soluções recebidas</h2><p>Consulte manuscritos enviados pelo caderno e seus arquivos originais.</p><a href="#teacher/submissions" data-shell-link>Consultar soluções</a></article>
             <article class="card"><h2>Transcrições</h2><p>Confira a leitura junto ao original, preservando o que o aluno escreveu.</p><a href="#teacher/transcriptions" data-shell-link>Conferir transcrições</a></article>
-            <article class="card"><h2>Análise ConfIA</h2><p>Explore a correção textual demonstrativa. A decisão pedagógica é do professor.</p><a href="#teacher/analysis" data-shell-link>Abrir correção textual</a></article>
+            <article class="card"><h2>Análise ConfIA</h2><p>Consulte a etapa de análise das mesmas soluções recebidas e o que falta integrar.</p><a href="#teacher/analysis" data-shell-link>Consultar etapa de análise</a></article>
           </div>
         </section>
-        <div class="teacher-submission-modes" aria-label="Modo da área do professor">
+        <div class="teacher-submission-modes" aria-label="Origem das soluções">
           <button id="show-manuscripts" class="secondary-action" type="button" aria-pressed="true">Soluções recebidas</button>
-          <button id="show-text-prototype" class="secondary-action" type="button" aria-pressed="false">Protótipo de correção textual</button>
+          <button id="show-text-prototype" class="secondary-action" type="button" aria-pressed="false">Demonstração textual local</button>
         </div>
         <section id="manuscript-inbox" class="prototype-panel" aria-label="Manuscritos recebidos pelo servidor">
           <div class="panel-heading">
-            <div><p class="eyebrow">Soluções enviadas pelo caderno</p><h2>Soluções recebidas</h2></div>
+            <div><p class="eyebrow">Soluções enviadas pelo caderno</p><h2 id="manuscript-queue-title">Soluções recebidas</h2></div>
             <button id="refresh-manuscripts" class="secondary-action" type="button">Atualizar lista</button>
           </div>
-          <p class="prototype-note">Compare o manuscrito original com a transcrição, preserve inclusive afirmações matematicamente falsas e aceite somente a fidelidade da leitura. Não há autenticação: use somente dados fictícios ou testes autorizados.</p>
+          <p id="manuscript-queue-note" class="prototype-note">Confira a leitura com o manuscrito original. A conferência da transcrição preserva o que o aluno escreveu.</p>
+          <div id="manuscript-queue">
+            <label class="queue-filter">Estado da transcrição
+              <select id="transcription-filter">
+                <option value="all">Todos os estados</option>
+                <option value="pending">Para conferir ou transcrever</option>
+                <option value="uncreated">Ainda não criada</option>
+                <option value="accepted">Transcrição conferida</option>
+              </select>
+            </label>
+            <div id="manuscript-list" class="submission-list" aria-label="Lista de manuscritos"></div>
+          </div>
           <p id="manuscript-message" tabindex="-1" role="status" aria-live="polite">Abra esta área para consultar o servidor.</p>
-          <div id="manuscript-list" class="submission-list" aria-label="Lista de manuscritos"></div>
-          <section id="manuscript-detail" aria-label="Manuscrito original recebido" hidden></section>
+          <section id="manuscript-detail" aria-label="Solução do aluno e etapas do acompanhamento" hidden></section>
         </section>
         <div id="teacher-text-prototype" hidden>
         <section class="prototype-panel submissions-panel">
@@ -206,7 +216,7 @@
           </div>
 
           <p class="prototype-note">
-            Registros de demonstração salvos neste navegador aparecem aqui. Este fluxo textual ainda não envia soluções ao servidor. Sem registros locais, use os exemplos demonstrativos.
+            Registros de demonstração salvos neste navegador aparecem aqui. A análise usa apenas este texto; não corresponde aos manuscritos persistidos. Sem registros locais, use os exemplos demonstrativos.
           </p>
 
           <h3 class="list-title">Envios de demonstração neste navegador</h3>
@@ -226,7 +236,7 @@
               <p class="eyebrow">Correção assistida</p>
               <h2>Solução do aluno</h2>
             </div>
-            <span id="teacher-submission-status" class="badge" data-kind="medium">Avaliação do professor: pendente</span>
+            <span id="teacher-submission-status" class="badge">Demonstração textual local</span>
           </div>
 
           <p class="prototype-note">
@@ -265,11 +275,10 @@
             </div>
           </section>
 
-          <div class="teacher-actions">
-            <button id="approve-correction" class="primary-action" type="button">Aprovar correção</button>
-            <button id="request-review" class="secondary-action" type="button">Solicitar revisão</button>
-            <button id="release-feedback" class="secondary-action" type="button">Liberar devolutiva</button>
-          </div>
+          <section class="teacher-evaluation-panel" aria-label="Avaliação docente">
+            <h3>Avaliação do professor</h3>
+            <p>Avaliação docente — integração em desenvolvimento.</p>
+          </section>
           <p id="teacher-decision-message" class="decision-message" role="status" aria-live="polite"></p>
         </section>
         </div>
@@ -330,9 +339,9 @@
     <script src="/static/capture/vendor/katex-0.18.9/katex.min.js"></script>
     <script src="/static/capture/vendor/katex-0.18.9/contrib/auto-render.min.js"></script>
     <script src="/static/capture/problem-math.js?v=p2-ui-01"></script>
-    <script src="/static/app.js?v=ui-02"></script>
+    <script src="/static/app.js?v=ui-03"></script>
     <script src="/static/resolution-workspace.js?v=ui-02-persistence-bottom"></script>
-    <script src="/static/submissions/teacher.js?v=ui-01"></script>
-    <script src="/static/shell.js?v=ui-02"></script>
+    <script src="/static/submissions/teacher.js?v=ui-03"></script>
+    <script src="/static/shell.js?v=ui-03"></script>
   </body>
 </html>

@@ -1010,6 +1010,10 @@ button[aria-busy="true"] {
 }
 
 /* UI-01 shell: conventional navigation. Existing feature controls retain their IDs. */
+#teacher-analysis-status { padding: var(--spacing-3); border: 1px solid var(--color-border); border-radius: var(--radius-control); background: var(--color-background); }
+#teacher-analysis-status[data-analysis-state="processing"] { color: var(--color-info); background: var(--color-surface-subtle); }
+#teacher-analysis-status[data-analysis-state="completed"] { color: var(--color-success); background: var(--color-success-subtle); }
+#teacher-analysis-status[data-analysis-state="failed"] { color: var(--color-danger); background: var(--color-danger-subtle); }
 body { background: var(--color-background); }
 .institutional-header { width: min(1440px, calc(100% - 48px)); align-items: center; padding: var(--spacing-6) 0; min-height: 102px; position: relative; z-index: var(--z-header); }
 .brand { display: flex; align-items: center; gap: var(--spacing-3); color: var(--color-primary-strong); text-decoration: none; min-width: 0; }

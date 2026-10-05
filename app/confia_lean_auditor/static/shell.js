@@ -9,10 +9,11 @@
       submissions: ["Envios", "Consulte os recibos de envios confirmados nesta sessão."],
     } },
     teacher: { area: "teacher-area", label: "Professor", views: {
-      home: ["Início", "Receba soluções, confira transcrições e explore a análise textual demonstrativa."],
+      home: ["Início", "Acompanhe cada solução: recebimento, transcrição, Análise ConfIA e avaliação docente."],
       submissions: ["Soluções recebidas", "Manuscritos recebidos pelo ConfIA. Abra uma solução para visualizar o original."],
       transcriptions: ["Transcrições", "Selecione uma solução recebida para comparar a transcrição com o manuscrito original."],
-      analysis: ["Correção / Análise ConfIA", "Protótipo de correção textual com registros locais e exemplos demonstrativos."],
+      analysis: ["Correção / Análise ConfIA", "Consulte as etapas das soluções recebidas. A análise dos manuscritos aguarda integração."],
+      text: ["Demonstração textual local", "Análise de textos locais e exemplos. Este fluxo não corresponde aos manuscritos persistidos."],
     } },
     management: { area: "management-area", label: "Gestão", views: {
       home: ["Visão demonstrativa de gestão", "Apresentação de gestão com dados ilustrativos fixos."],
@@ -55,8 +56,8 @@
     visible("teacher-home", profile === "teacher" && view === "home");
     document.querySelector(".teacher-submission-modes").hidden = profile !== "teacher" || view === "home";
     if (profile === "teacher" && view !== "home") {
-      if (view === "analysis") window.ConfIATeacher.showText();
-      else window.ConfIATeacher.showManuscripts();
+      if (view === "text") window.ConfIATeacher.showText();
+      else window.ConfIATeacher.showView(view);
     } else {
       visible("manuscript-inbox", false);
       visible("teacher-text-prototype", false);
@@ -103,7 +104,7 @@
     if (!document.querySelector("#manuscript-inbox").hidden) navigate("teacher", "submissions");
   });
   document.querySelector("#show-text-prototype").addEventListener("click", () => {
-    if (!document.querySelector("#teacher-text-prototype").hidden) navigate("teacher", "analysis");
+    if (!document.querySelector("#teacher-text-prototype").hidden) navigate("teacher", "text");
   });
   window.addEventListener("hashchange", () => {
     if (location.hash === "#app-root") return; // Native skip link keeps its normal focus behavior.

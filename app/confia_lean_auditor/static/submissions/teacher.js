@@ -3,16 +3,22 @@
   const inbox = document.querySelector("#manuscript-inbox");
   const legacy = document.querySelector("#teacher-text-prototype");
   const list = document.querySelector("#manuscript-list");
+  const queuePanel = document.querySelector("#manuscript-queue");
   const detail = document.querySelector("#manuscript-detail");
   const message = document.querySelector("#manuscript-message");
   const showInk = document.querySelector("#show-manuscripts");
   const showText = document.querySelector("#show-text-prototype");
   const refreshButton = document.querySelector("#refresh-manuscripts");
+  const filter = document.querySelector("#transcription-filter");
+  const queueTitle = document.querySelector("#manuscript-queue-title");
+  const queueNote = document.querySelector("#manuscript-queue-note");
+  let queue = [];
+  let queueLoaded = false;
   let listSequence = 0;
   let detailSequence = 0;
   let segmentSequence = 0;
   let activeEditor = null;
-  const labels = { RECEIVED: "Recebida pelo ConfIA", NEEDS_REVIEW: "Aguardando conferência", ACCEPTED: "Transcrição conferida" };
+  const labels = { RECEIVED: "Recebida pelo ConfIA", DRAFT: "Rascunho da transcrição", NEEDS_REVIEW: "Aguardando conferência", ACCEPTED: "Transcrição conferida" };
   const statusLabel = (status) => labels[status] || "Estado indisponível";
   const validId = (id) => typeof id === "string" && /^sub_[0-9a-f]{32}$/.test(id);
   const when = (value) => new Date(value).toLocaleString("pt-BR");
@@ -58,8 +64,8 @@
     if (error.status === 404) return "Não foi possível carregar esta solução. Ela pode não estar mais disponível. Atualize a lista e tente novamente.";
     if (error.status === 409) {
       const diagnostic = JSON.stringify(error.diagnostic || {});
-      if (/integrity|hash|artifact|snapshot|png/i.test(diagnostic)) return "Os arquivos deste manuscrito não puderam ser conferidos. Reabra a solução e confira os detalhes de integridade antes de continuar.";
-      return "Há uma versão mais recente desta transcrição. Reabra antes de salvar suas alterações.";
+      if (/integridade|artefato|integrity|hash|artifact|snapshot|png/i.test(diagnostic)) return "Os arquivos originais desta solução precisam ser conferidos. Reabra a solução e consulte a integridade dos arquivos.";
+      return "Existe uma revisão mais recente da transcrição. Salve uma cópia das suas alterações e reabra a solução para conferir o histórico.";
     }
     if (action === "recognize") return "Não foi possível gerar a transcrição automática. Nenhuma transcrição criada. Tente novamente.";
     if (action === "save") return "Não foi possível salvar a transcrição agora. Suas alterações continuam nesta tela. Confira os campos e tente novamente.";
@@ -90,13 +96,10 @@
 
   function integrityDetails(data, id) {
     const record = data.submission;
-    const block = node("div");
-    const intact = data.integrity.length === record.page_images.length + 1 && data.integrity.every((item) => item.matches);
-    block.appendChild(node("p", intact ? "Integridade técnica: hashes SHA-256 conferem." : "Alerta: há artefato ausente ou com hash divergente."));
-    block.appendChild(node("p", "Hashes indicam somente integridade técnica; não comprovam autoria nem validade matemática."));
     const hashes = node("details");
-    hashes.appendChild(node("summary", "Detalhes de integridade e recibo"));
-    hashes.appendChild(node("p", `snapshot_id: ${record.snapshot_id} · schema: ${record.capture_schema_version} · source: ${record.source}`));
+    hashes.className = "disclosure";
+    hashes.appendChild(node("summary", "Integridade dos arquivos"));
+    hashes.appendChild(node("p", "Hashes indicam somente integridade técnica; não comprovam autoria nem validade matemática."));
     const items = node("ul");
     for (const artifact of data.integrity) {
       items.appendChild(node("li", `${artifact.filename}: ${artifact.matches ? "confere" : "divergente/ausente"} · SHA-256 esperado: ${artifact.expected_sha256} · atual: ${artifact.actual_sha256 || "ausente"}`));
@@ -105,22 +108,35 @@
     const download = node("a", "Baixar versão preparada original (JSON)");
     download.href = `/submissions/${id}/snapshot`;
     hashes.appendChild(download);
-    block.appendChild(hashes);
-    return block;
+    return hashes;
+  }
+
+  function originalsIntact(data) {
+    const expected = ["snapshot.json", ...data.submission.page_images.map(page => page.filename)];
+    return data.integrity.length === expected.length && expected.every(filename =>
+      data.integrity.some(item => item.filename === filename && item.matches));
   }
 
   function renderOriginal(panel, data, id) {
     const record = data.submission;
     const pages = [...record.page_images].sort((a, b) => a.page_index - b.page_index);
     let current = 0;
+    panel.setAttribute("aria-label", "Solução do aluno — manuscrito original");
+    panel.appendChild(node("p", "Solução do aluno")).className = "eyebrow";
     panel.appendChild(node("h3", "Manuscrito original"));
-    panel.appendChild(node("p", "PNG recebido do tablet. Esta visualização e a transcrição não alteram o arquivo original."));
+    panel.appendChild(node("p", "Solução enviada pelo caderno. O arquivo original permanece preservado."));
+    const integrity = node("p", originalsIntact(data) ? "✓ Arquivos originais conferidos e preservados." : "! Os arquivos originais desta solução precisam ser conferidos.");
+    integrity.className = "alert";
+    integrity.dataset.kind = originalsIntact(data) ? "success" : "warning";
+    panel.appendChild(integrity);
     const navigation = node("div");
     navigation.className = "page-navigation";
     const previous = node("button", "Página anterior");
     previous.type = "button";
     previous.className = "secondary-action";
     const pageLabel = node("span");
+    pageLabel.setAttribute("role", "status");
+    pageLabel.setAttribute("aria-live", "polite");
     const next = node("button", "Próxima página");
     next.type = "button";
     next.className = "secondary-action";
@@ -149,17 +165,21 @@
         image.alt = `Manuscrito original da questão ${record.problem_id}, página ${page.page_index + 1}`;
         image.src = `/submissions/${id}/pages/${page.page_index}`;
         image.addEventListener("error", () => {
-          figure.appendChild(node("p", "Não foi possível carregar este PNG. Atualize a consulta para conferir a integridade."));
+          image.hidden = true;
+          const warning = node("p", "Não foi possível carregar esta página. Atualize a consulta para conferir os arquivos originais.");
+          warning.setAttribute("role", "status");
+          figure.appendChild(warning);
         });
         figure.appendChild(image);
       } else {
-        figure.appendChild(node("p", "PNG indisponível por divergência de integridade."));
+        figure.appendChild(node("p", "Esta página está indisponível. Os arquivos originais precisam ser conferidos."));
       }
       pageHost.appendChild(figure);
     }
     previous.addEventListener("click", () => { if (current > 0) { current -= 1; draw(); } });
     next.addEventListener("click", () => { if (current + 1 < pages.length) { current += 1; draw(); } });
     draw();
+    panel.appendChild(integrityDetails(data, id));
   }
 
   function editableSegment(segment, pageCount, onChange) {
@@ -208,18 +228,28 @@
   function renderHistory(panel, history) {
     const disclosure = node("details");
     disclosure.className = "transcription-history";
-    disclosure.appendChild(node("summary", `Histórico de revisões (${history.revisions.length})`));
+    disclosure.appendChild(node("summary", `Histórico da transcrição (${history.revisions.length} ${history.revisions.length === 1 ? "revisão" : "revisões"})`));
+    const changes = { initial_transcription: "Transcrição criada", reading_correction: "Leitura corrigida", other_transcription_edit: "Transcrição editada" };
+    const kinds = { text: "Texto", math: "Matemática", mixed: "Misto", diagram: "Diagrama", unknown: "Não identificado" };
     for (const revision of [...history.revisions].reverse()) {
       const article = node("article");
       article.appendChild(node("h4", `Revisão ${revision.revision_number} · ${statusLabel(revision.status)}`));
-      article.appendChild(node("p", `${when(revision.created_at)} · revisor não verificado: ${revision.reviewer_reference} · alteração: ${revision.change_type}`));
+      article.appendChild(node("p", `${when(revision.created_at)} · revisor não verificado: ${revision.reviewer_reference} · ${changes[revision.change_type] || "Revisão registrada"}`));
       if (revision.change_reason) article.appendChild(node("p", `Motivo: ${revision.change_reason}`));
       const items = node("ol");
       for (const segment of revision.segments) {
-        items.appendChild(node("li", `Página ${segment.page_index + 1} · ${segment.kind} · texto: ${segment.text || "—"} · LaTeX: ${segment.latex || "—"}`));
+        items.appendChild(node("li", `Página ${segment.page_index + 1} · ${kinds[segment.kind] || "Não identificado"} · texto: ${segment.text || "—"} · LaTeX: ${segment.latex || "—"}`));
       }
       article.appendChild(items);
+      const technical = node("details");
+      technical.appendChild(node("summary", "Detalhes técnicos da revisão"));
+      technical.appendChild(node("pre", JSON.stringify(revision, null, 2)));
+      article.appendChild(technical);
       disclosure.appendChild(article);
+    }
+    for (const acceptance of history.acceptances || []) {
+      disclosure.appendChild(node("p", `Conferência da revisão ${acceptance.revision_number} · ${when(acceptance.accepted_at)} · revisor não verificado: ${acceptance.reviewer_reference}`));
+      if (acceptance.acceptance_note) disclosure.appendChild(node("p", acceptance.acceptance_note));
     }
     panel.appendChild(disclosure);
   }
@@ -227,31 +257,39 @@
   function renderTranscription(panel, data, id, history, providers) {
     const pageCount = data.submission.page_images.length;
     const latest = history?.revisions?.[history.revisions.length - 1] || null;
+    panel.setAttribute("aria-label", "Transcrição da solução");
     panel.appendChild(node("h3", "Transcrição"));
     const warning = node("p", "Transcrever é representar fielmente o manuscrito. Não corrija a matemática: se o aluno escreveu “2 + 2 = 5”, preserve “2 + 2 = 5”.");
     warning.className = "transcription-warning";
     panel.appendChild(warning);
     panel.appendChild(node("p", "Transcrição conferida significa somente fidelidade ao manuscrito; não significa solução correta nem avaliação do professor."));
-    panel.appendChild(node("p", latest ? `Transcrição: ${statusLabel(latest.status)} · revisão persistida ${latest.revision_number}` : "Transcrição: ainda não criada"));
+    panel.appendChild(node("p", latest ? `${statusLabel(latest.status)} · revisão persistida ${latest.revision_number}` : "Transcrição: ainda não criada"));
     if (latest?.recognizer_run_id) {
+      if (latest.provider === "fake_test") panel.appendChild(node("p", "Transcrição de teste artificial. Conteúdo constante; não é OCR real. Confira cada segmento com o original.")).className = "transcription-warning";
       const origin = node("details");
-      origin.appendChild(node("summary", "Detalhes técnicos do reconhecimento do manuscrito"));
+      origin.appendChild(node("summary", "Detalhes do reconhecimento"));
       origin.appendChild(node("p", `Origem automática · provider: ${latest.provider} · execução: ${latest.recognizer_run_id} · adapter: ${latest.recognizer} ${latest.recognizer_version}`));
+      origin.appendChild(node("p", "Proveniência do reconhecimento do manuscrito"));
+      origin.appendChild(node("pre", JSON.stringify(latest.provenance || history.transcription.provenance || {}, null, 2)));
       panel.appendChild(origin);
       panel.appendChild(node("p", "Revise cada segmento com o manuscrito original antes de aceitar a fidelidade."));
     }
+    const recognition = node("details");
+    recognition.className = "recognition-assistance disclosure";
+    recognition.appendChild(node("summary", "Auxiliar de transcrição — teste artificial"));
     const generateButtons = [];
-    for (const provider of providers) {
-      const generate = node("button", `Gerar transcrição automática — ${provider.label}`);
+    // The only current adapter is explicitly artificial and gated by the server.
+    for (const provider of providers.filter(item => item.provider === "fake_test")) {
+      const generate = node("button", `Gerar transcrição automática — ${provider.label} (artificial)`);
       generate.type = "button";
       generate.className = "secondary-action";
-      generate.disabled = !data.integrity.every(item => item.matches);
+      generate.disabled = !originalsIntact(data);
       generateButtons.push(generate);
-      panel.appendChild(generate);
-      panel.appendChild(node("p", "Disponível em desenvolvimento/teste. Produz conteúdo artificial constante; não é OCR real."));
+      recognition.appendChild(node("p", "Disponível em desenvolvimento/teste. Produz conteúdo artificial constante; não é OCR real."));
+      recognition.appendChild(generate);
       const recognitionMessage = node("p");
       recognitionMessage.setAttribute("role", "status");
-      panel.appendChild(recognitionMessage);
+      recognition.appendChild(recognitionMessage);
       // Keep the same key across a failed transport/retry of this user action.
       const key = `teacher:${Date.now()}:${++segmentSequence}`;
       generate.addEventListener("click", async () => {
@@ -277,6 +315,7 @@
         }
       });
     }
+    if (generateButtons.length) panel.appendChild(recognition);
     const reviewer = node("input");
     reviewer.type = "text";
     reviewer.maxLength = 80;
@@ -366,7 +405,7 @@
         ...Array.from(segmentHost.children).flatMap(row => Object.values(row.controls))]) {
         control.disabled = busy;
       }
-      for (const button of generateButtons) button.disabled = busy || !data.integrity.every(item => item.matches);
+      for (const button of generateButtons) button.disabled = busy || !originalsIntact(data);
       updateDirty();
     }
 
@@ -465,43 +504,141 @@
         if (sequence !== detailSequence) return;
         if (history.transcription.submission_id !== id) throw new Error("Transcrição pertence a outro envio.");
       }
-      detail.appendChild(node("h2", "Revisão do manuscrito recebido"));
-      detail.appendChild(node("p", `Número do envio: ${id}`));
-      detail.appendChild(node("p", `Questão: ${record.problem_id} · Recebida em: ${when(record.received_at)} · Solução: ${statusLabel(record.status)}`));
-      if (record.student_reference) detail.appendChild(node("p", `Referência não verificada (sem autenticação): ${record.student_reference}`));
-      detail.appendChild(integrityDetails(data, id));
+      const heading = node("h2", `Solução recebida · ${record.problem_id}`);
+      heading.tabIndex = -1;
+      const back = node("button", "Voltar à fila de soluções");
+      back.type = "button";
+      back.className = "secondary-action";
+      back.addEventListener("click", () => {
+        if (!canLeaveEditor()) return;
+        ++detailSequence;
+        activeEditor = null;
+        detail.hidden = true;
+        queuePanel.hidden = false;
+        message.textContent = "Fila de soluções aberta. Selecione uma solução para continuar.";
+        filter.focus();
+      });
+      detail.appendChild(back);
+      detail.appendChild(heading);
+      detail.appendChild(node("p", `${statusLabel(record.status)} · ${when(record.received_at)}`)).className = "auxiliary-text";
+      const technical = node("details");
+      technical.className = "disclosure submission-technical";
+      technical.appendChild(node("summary", "Detalhes técnicos"));
+      technical.appendChild(node("p", `Número do envio: ${id}`));
+      technical.appendChild(node("p", `snapshot_id: ${record.snapshot_id} · schema: ${record.capture_schema_version} · source: ${record.source}`));
+      if (record.student_reference) technical.appendChild(node("p", `Referência não verificada (sem autenticação): ${record.student_reference}`));
+      const workspace = node("div");
+      workspace.className = "transcription-workspace";
+      const original = node("section");
+      original.className = "original-manuscript-panel";
+      const flow = node("div");
+      flow.className = "teacher-solution-flow";
+      const transcription = node("section");
+      transcription.className = "transcription-panel";
+      renderOriginal(original, data, id);
+      flow.appendChild(renderStages(history));
       if (summaries.length > 1) {
         const selection = node("select");
-        for (const item of summaries) selection.appendChild(option(item.transcription.transcription_id, `Transcrição ${item.transcription.transcription_id} · ${statusLabel(item.latest_revision.status)}`));
+        summaries.forEach((item, index) => selection.appendChild(option(item.transcription.transcription_id, `Transcrição ${summaries.length - index} · ${when(item.transcription.created_at)} · ${statusLabel(item.latest_revision.status)}`)));
         selection.value = history.transcription.transcription_id;
         selection.addEventListener("change", async () => {
           const chosen = selection.value;
           selection.value = history.transcription.transcription_id;
           await open(id, chosen);
         });
-        detail.appendChild(labeled("Abrir transcrição", selection));
+        transcription.appendChild(labeled("Abrir transcrição", selection));
       }
-      const workspace = node("div");
-      workspace.className = "transcription-workspace";
-      const original = node("section");
-      original.className = "original-manuscript-panel";
-      const transcription = node("section");
-      transcription.className = "transcription-panel";
-      renderOriginal(original, data, id);
       renderTranscription(transcription, data, id, history, Array.isArray(available) ? available : []);
       workspace.appendChild(original);
-      workspace.appendChild(transcription);
+      flow.appendChild(transcription);
+      const analysis = node("section");
+      analysis.className = "manuscript-analysis-panel";
+      analysis.setAttribute("aria-label", "Análise ConfIA desta solução");
+      analysis.appendChild(node("h3", "Análise ConfIA"));
+      analysis.appendChild(node("p", "○ Não executada")).className = "status";
+      analysis.appendChild(node("p", "Esta solução ainda não foi encaminhada para análise matemática."));
+      flow.appendChild(analysis);
+      const evaluation = node("section");
+      evaluation.className = "teacher-evaluation-panel";
+      evaluation.appendChild(node("h3", "Avaliação do professor"));
+      evaluation.appendChild(node("p", "Avaliação docente — integração em desenvolvimento."));
+      flow.appendChild(evaluation);
+      workspace.appendChild(flow);
       detail.appendChild(workspace);
+      detail.appendChild(technical);
       detail.hidden = false;
+      queuePanel.hidden = true;
+      const item = queue.find(item => item.record.submission_id === id);
+      if (item) { item.summaries = summaries; item.failed = false; renderQueue(); }
       message.textContent = history ? "Solução enviada e histórico de transcrição abertos." : "Solução enviada aberta. Crie uma transcrição manual fiel ao manuscrito.";
+      heading.focus();
     } catch (error) {
       if (sequence === detailSequence) {
         activeEditor = null;
         detail.replaceChildren();
         detail.hidden = true;
+        queuePanel.hidden = false;
         message.textContent = productError(error);
       }
     }
+  }
+
+  function renderStages(history) {
+    const latest = history?.revisions?.[history.revisions.length - 1];
+    const stages = node("section");
+    stages.className = "teacher-workflow-stages";
+    stages.setAttribute("aria-label", "Etapas desta solução");
+    stages.appendChild(node("h3", "Etapas"));
+    const steps = node("ol");
+    const labels = [
+      ["Recebimento", "✓ Recebida pelo ConfIA", true],
+      ["Transcrição", latest ? `${latest.status === "ACCEPTED" ? "✓" : "○"} ${statusLabel(latest.status)}` : "○ Ainda não criada", latest?.status === "ACCEPTED"],
+      ["Análise ConfIA", "○ Não executada", false],
+      ["Avaliação do professor", "○ Integração em desenvolvimento", false],
+    ];
+    for (const [title, state, complete] of labels) {
+      const step = node("li");
+      step.dataset.complete = String(Boolean(complete));
+      step.appendChild(node("strong", title));
+      step.appendChild(node("span", state));
+      steps.appendChild(step);
+    }
+    stages.appendChild(steps);
+    return stages;
+  }
+
+  function renderQueue() {
+    list.replaceChildren();
+    if (!queueLoaded) return;
+    const chosen = filter.value || "all";
+    const visible = queue.filter(item => {
+      const revision = item.summaries?.[0]?.latest_revision;
+      if (item.failed || chosen === "all") return true;
+      if (chosen === "uncreated") return !revision;
+      if (chosen === "accepted") return revision?.status === "ACCEPTED";
+      return !revision || revision.status !== "ACCEPTED";
+    });
+    for (const item of visible) {
+      const { record, summaries, failed } = item;
+      const revision = summaries?.[0]?.latest_revision;
+      const transcription = failed ? "Não foi possível consultar" : revision ? statusLabel(revision.status) : "Ainda não criada";
+      const button = node("button");
+      button.type = "button";
+      button.className = "manuscript-queue-row secondary-action";
+      button.appendChild(node("strong", `Questão ${record.problem_id}`)).className = "queue-question";
+      button.appendChild(node("span", when(record.received_at))).className = "submission-date";
+      button.appendChild(node("span", statusLabel(record.status))).className = "queue-receipt";
+      const state = node("span", revision?.status === "ACCEPTED" && !failed ? transcription : `Transcrição: ${transcription}`);
+      state.className = "status queue-transcription";
+      state.dataset.kind = failed ? "error" : revision?.status === "ACCEPTED" ? "success" : "warning";
+      button.appendChild(state);
+      button.appendChild(node("span", "Análise ConfIA: Não executada")).className = "queue-analysis";
+      button.appendChild(node("span", "Abrir →")).className = "queue-open";
+      button.setAttribute("aria-label", `Abrir solução da questão ${record.problem_id}, ${when(record.received_at)}. ${statusLabel(record.status)}. Transcrição: ${transcription}. Análise ConfIA: Não executada.`);
+      button.addEventListener("click", () => open(record.submission_id));
+      list.appendChild(button);
+    }
+    if (!visible.length) list.appendChild(node("p", queue.length ? "Nenhuma solução neste filtro. Consulte todos os estados da transcrição." : "Nenhuma solução recebida pelo servidor.")).className = "empty-state";
   }
 
   async function refresh() {
@@ -512,6 +649,9 @@
     detail.hidden = true;
     detail.replaceChildren();
     list.replaceChildren();
+    queuePanel.hidden = false;
+    queue = [];
+    queueLoaded = false;
     refreshButton.disabled = true;
     refreshButton.setAttribute("aria-busy", "true");
     message.textContent = "Carregando soluções recebidas…";
@@ -519,15 +659,18 @@
       const records = await request("/submissions");
       if (sequence !== listSequence) return;
       if (!Array.isArray(records)) throw new Error("Lista de submissões inválida.");
-      for (const record of records) {
-        if (!validId(record.submission_id)) continue;
-        const button = node("button", `${record.problem_id} · ${statusLabel(record.status)} · ${when(record.received_at)} · ${record.submission_id}`);
-        button.type = "button";
-        button.className = "secondary-action";
-        button.addEventListener("click", () => open(record.submission_id));
-        list.appendChild(button);
-      }
-      message.textContent = records.length ? `${records.length} solução(ões) recebida(s) no servidor. Selecione para abrir.` : "Nenhuma solução recebida pelo servidor.";
+      const valid = records.filter(record => validId(record.submission_id));
+      const summaries = await Promise.allSettled(valid.map(record => request(`/submissions/${record.submission_id}/transcriptions`)));
+      if (sequence !== listSequence) return;
+      queue = valid.map((record, index) => {
+        const result = summaries[index];
+        const failed = result.status === "rejected" || !Array.isArray(result.value);
+        if (result.status === "rejected") console.error("ConfIA: resumo da transcrição", result.reason);
+        return { record, summaries: failed ? [] : result.value, failed };
+      });
+      queueLoaded = true;
+      renderQueue();
+      message.textContent = valid.length ? `${valid.length} solução(ões) recebida(s) no servidor. Selecione para abrir.${queue.some(item => item.failed) ? " Alguns estados de transcrição não puderam ser consultados. Atualize a lista." : ""}` : "Nenhuma solução recebida pelo servidor.";
     } catch (error) {
       if (sequence === listSequence) message.textContent = productError(error);
     } finally {
@@ -544,10 +687,19 @@
     legacy.hidden = manuscripts;
     showInk.setAttribute("aria-pressed", String(manuscripts));
     showText.setAttribute("aria-pressed", String(!manuscripts));
-    if (manuscripts && !list.children.length && detail.hidden) refresh();
+    if (manuscripts && !queueLoaded && !refreshButton.disabled) refresh();
     return true;
   }
-  window.ConfIATeacher = { canLeave: canLeaveEditor, showManuscripts: () => mode(true), showText: () => mode(false) };
+  function showView(view) {
+    if (!mode(true)) return false;
+    filter.value = view === "transcriptions" ? "pending" : "all";
+    queueTitle.textContent = view === "transcriptions" ? "Transcrições para conferir" : view === "analysis" ? "Soluções e Análise ConfIA" : "Soluções recebidas";
+    queueNote.textContent = view === "analysis" ? "Abra uma solução para consultar suas etapas. A análise matemática dos manuscritos ainda não está integrada." : "Confira a leitura com o manuscrito original. A conferência da transcrição preserva o que o aluno escreveu.";
+    renderQueue();
+    return true;
+  }
+  window.ConfIATeacher = { canLeave: canLeaveEditor, showView, showManuscripts: () => mode(true), showText: () => mode(false) };
+  filter.addEventListener("change", renderQueue);
   showInk.addEventListener("click", () => mode(true));
   showText.addEventListener("click", () => mode(false));
   refreshButton.addEventListener("click", refresh);
