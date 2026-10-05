@@ -127,18 +127,15 @@ test('UI-P0 dirty editor protects profile switches, shell links and browser hist
   assert.equal(ui.location.hash, '#teacher/analysis');
 });
 
-test('local submission mode and shell destination stay in sync without a server write', async () => {
-  const ui = await page(); await ui.visit('#student/resolve');
-  await ui.modes[1].click();
-  assert.equal(ui.location.hash, '#student/submissions');
-  assert.equal(ui.get('#student-name-field').hidden, false);
-  ui.get('#student-name-input').value = 'Aluno fictício';
-  ui.get('#solution-input').value = 'Solução de teste';
-  await ui.get('#audit-button').click();
-  assert.match(ui.get('#student-local-list').textContent, /Aluno fictício.*Registro local de demonstração/);
+test('Envios exposes session receipts and no legacy local submission editor', async () => {
+  const ui = await page(); await ui.visit('#student/submissions');
+  assert.equal(ui.get('#student-session-envios').hidden, false);
+  assert.equal(ui.get('#student-workspace').hidden, true);
+  assert.equal(ui.modes.length, 0);
   assert.equal(ui.calls.some(call => call.options?.method === 'POST'), false);
-  await ui.modes[0].click(); assert.equal(ui.location.hash, '#student/resolve');
-  await ui.visit('#student/feedback'); assert.equal(ui.get('#result-panel').hidden, false);
+  await ui.visit('#student/feedback');
+  assert.equal(ui.get('#student-feedback').hidden, false);
+  assert.equal(ui.get('#student-workspace').hidden, true);
 });
 
 test('capture return query, deep links, invalid links and skip link preserve consistent state', async () => {

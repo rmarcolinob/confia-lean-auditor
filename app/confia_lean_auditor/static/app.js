@@ -35,6 +35,7 @@ let selectedTeacherSubmission = null;
 let studentVersion = 0;
 let studentAnalysis = null;
 let studentAuditPending = false;
+let studentAuditContext = null;
 let studentAuditSequence = 0;
 let exampleSequence = 0;
 let examplePending = false;
@@ -97,7 +98,8 @@ function studentResultIsStale() {
   return Boolean(studentAnalysis && (
     studentAnalysis.context.version !== studentVersion ||
     studentAnalysis.context.problem_id !== problemSelect.value ||
-    studentAnalysis.context.solution !== solutionInput.value.trim()
+    studentAnalysis.context.solution !== solutionInput.value.trim() ||
+    (typeof window !== "undefined" && window.ConfIAWorkspace?.contextIsStale(studentAnalysis.context))
   ));
 }
 
@@ -108,6 +110,7 @@ function updateStudentAction() {
   auditButton.textContent = studentMode === "submit"
     ? "Salvar como envio de demonstração neste navegador"
     : analyzing ? "Analisando…" : studentResultIsStale() ? "Analisar novamente" : "Analisar minha solução";
+  if (typeof window !== "undefined") window.ConfIAWorkspace?.display();
   loadExampleButton.disabled = examplePending || !selectedProblem() || !exampleSelect.value;
 }
 
@@ -127,6 +130,7 @@ function studentValidation(field, message) {
 
 function studentContextChanged() {
   studentVersion += 1;
+  if (typeof window !== "undefined") window.ConfIAWorkspace?.rememberText();
   clearStudentValidation();
   renderStudentAnalysis();
   updateStudentAction();
@@ -150,7 +154,7 @@ function renderAnalysisContext(panel, context, stale, analyzeAgain) {
 }
 
 function renderStudentAnalysis() {
-  if (studentMode !== "study") return;
+  if (studentMode !== "study" || (typeof window !== "undefined" && window.ConfIAWorkspace && window.ConfIAWorkspace.mode !== "practice")) return;
   if (studentAnalysis) {
     const stale = studentResultIsStale();
     const renderKey = `${studentAnalysis.context.sequence}:${stale}:${studentAuditPending}`;
@@ -160,7 +164,7 @@ function renderStudentAnalysis() {
       analysis: studentAnalysis, stale, analyzeAgain: auditCurrentSolution,
     });
     resultPanel.dataset.analysisRenderKey = renderKey;
-  } else if (studentAuditPending) {
+  } else if (studentAuditPending && (typeof window === "undefined" || !window.ConfIAWorkspace || window.ConfIAWorkspace.owns(studentAuditContext))) {
     clearNode(resultPanel);
     appendTextElement(resultPanel, "p", "empty-state", "Analisando a solução enviada. Este processo pode levar alguns instantes.");
   } else {
@@ -317,6 +321,7 @@ function renderProblemStatement() {
 
   problemTitle.textContent = problem.title || problem.problem_id || problem.id;
   problemStatementText.textContent = problem.statement || "Enunciado não disponível.";
+  if (typeof window !== "undefined") window.ConfIAWorkspace?.renderMath();
 }
 
 function renderProblems() {
@@ -782,7 +787,7 @@ function submitSolutionToTeacher() {
   selectedTeacherSubmission = { ...submission, source: "real" };
   renderTeacherArea();
   setStatus("Registro salvo neste navegador", "success");
-  if (typeof window !== "undefined") window.ConfIAShell?.refreshLocalSubmissions();
+  if (typeof window !== "undefined") window.ConfIAShell?.refreshLocalSubmissions?.();
   renderStudentSubmitInfo(
     "Registro salvo neste navegador. Este modo de demonstração ainda não envia a solução ao servidor."
   );
@@ -797,6 +802,7 @@ async function loadProblems() {
   problems = await response.json();
   renderProblems();
   renderTeacherArea();
+  if (typeof window !== "undefined") window.ConfIAWorkspace?.catalogReady();
   setStatus("Pronto", "idle");
 }
 
@@ -847,12 +853,14 @@ async function requestAnalysis(context) {
 
 async function auditCurrentSolution() {
   if (studentAuditPending) return;
+  if (typeof window !== "undefined" && window.ConfIAWorkspace && !window.ConfIAWorkspace.canAnalyze()) return;
   clearStudentValidation();
   const context = Object.freeze({
     problem_id: problemSelect.value,
     solution: solutionInput.value.trim(),
     version: studentVersion,
     sequence: ++studentAuditSequence,
+    ...(typeof window !== "undefined" ? window.ConfIAWorkspace?.analysisContext() : {}),
   });
   if (!selectedProblem()) {
     studentValidation(problemSelect, "Selecione uma questão antes de analisar.");
@@ -862,24 +870,30 @@ async function auditCurrentSolution() {
     studentValidation(solutionInput, "Digite ou carregue uma solução antes de analisar.");
     return;
   }
+  studentAuditContext = context;
   setBusy(true);
   setStatus(`Analisando a questão ${context.problem_id}`, "busy");
   renderStudentAnalysis();
   try {
     const data = await requestAnalysis(context);
     if (context.sequence !== studentAuditSequence) return;
-    studentAnalysis = { context, data };
+    if (typeof window !== "undefined" && window.ConfIAWorkspace) window.ConfIAWorkspace.recordAnalysis({ context, data });
+    else studentAnalysis = { context, data };
     renderStudentAnalysis();
-    setStatus("Análise concluída para a solução enviada", "success");
+    if (typeof window === "undefined" || !window.ConfIAWorkspace || window.ConfIAWorkspace.owns(context)) setStatus(`Análise concluída para a questão ${context.problem_id}`, "success");
   } catch (error) {
     console.error("ConfIA: análise do aluno", context, error);
-    studentValidationMessage.textContent = ANALYSIS_ERROR;
-    // Keep a previous report available if a retry fails.
-    if (!studentAnalysis && studentMode === "study") renderError(ANALYSIS_ERROR);
-    setStatus("Análise indisponível", "error");
+    const currentContext = typeof window === "undefined" || !window.ConfIAWorkspace || window.ConfIAWorkspace.owns(context);
+    if (currentContext) {
+      studentValidationMessage.textContent = ANALYSIS_ERROR;
+      // Keep a previous report available if a retry fails.
+      if (!studentAnalysis && studentMode === "study") renderError(ANALYSIS_ERROR);
+    }
+    if (currentContext) setStatus(`Análise indisponível para a questão ${context.problem_id}`, "error");
   } finally {
     setBusy(false);
     if (studentAnalysis) renderStudentAnalysis();
+    if (typeof window !== "undefined") window.ConfIAShell?.refreshStudent();
   }
 }
 
@@ -918,6 +932,7 @@ async function auditTeacherSubmission() {
 }
 
 function handleStudentPrimaryAction() {
+  if (typeof window !== "undefined" && window.ConfIAWorkspace) { auditCurrentSolution(); return; }
   if (studentMode === "submit") {
     try {
       submitSolutionToTeacher();
@@ -934,6 +949,7 @@ function handleStudentPrimaryAction() {
 problemSelect.addEventListener("change", () => {
   renderExamples();
   renderProblemStatement();
+  if (typeof window !== "undefined") window.ConfIAWorkspace?.onProblemSelected();
   studentContextChanged();
 });
 solutionInput.addEventListener("input", studentContextChanged);

@@ -207,18 +207,22 @@ select {
 }
 
 .draft-persistence-bar {
+  width: min(100%, 1180px);
+  margin-inline: auto;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
   gap: 4px 16px;
   padding: 4px 14px;
-  border-top: 1px solid var(--border);
+  border: 1px solid var(--border);
+  border-top: 0;
+  border-radius: 0 0 8px 8px;
   background: #f8fbff;
   font-size: 0.88rem;
 }
 
-.draft-persistence { margin: 0; color: var(--muted); font-weight: 650; }
+.draft-persistence { min-width: 0; margin: 0; color: var(--muted); font-weight: 650; overflow-wrap: anywhere; }
 .draft-persistence[data-state="saving"] { color: var(--navy); }
 .draft-persistence[data-state="saved"] { color: #126c39; }
 .draft-persistence[data-state="error"],
@@ -360,6 +364,7 @@ select {
 @media (max-width: 620px) {
   .capture-header { display: grid; }
   .saved-row { grid-template-columns: 1fr; }
+  .draft-persistence-bar { flex-direction: column; align-items: stretch; padding: 10px 12px 4px; }
   .problem-dock { top: 4px; }
   .problem-dock__summary { align-items: flex-start; gap: 8px; padding: 10px; }
   .problem-dock__heading .eyebrow { font-size: 0.7rem; }
@@ -386,3 +391,30 @@ select {
 .submission-card .submission-receipt { max-width: none; overflow-wrap: anywhere; font-size: 0.95rem; }
 .submission-card [data-kind="error"] { color: #9b2727; }
 .submission-card [data-kind="saved"] { color: #246644; font-weight: 650; }
+
+/* Embedded mode removes repeated shell chrome, never changes ink geometry. */
+body[data-embedded="true"] .capture-header,
+body[data-embedded="true"] .brand-strip,
+body[data-embedded="true"] .notice,
+body[data-embedded="true"] .capture-footer,
+body[data-embedded="true"] .limits-card,
+body[data-embedded="true"] #capture-purpose,
+body[data-embedded="true"] #capture-question-field,
+body[data-embedded="true"] #problem-help { display: none; }
+body[data-embedded="true"] .capture-shell { padding-top: 8px; }
+body[data-embedded="true"] .setup-card { order: 5; }
+/* Handwritten practice presents the question in the parent document.
+   Persistence and recovery sit below the canvas, outside this hidden dock. */
+body[data-embedded="true"][data-workspace-mode="practice"] #problem-dock { display: none; }
+/* Compact only the embedded chrome; never stretch or crop the ink page. */
+body[data-embedded="true"] .notebook-controls { padding: 6px; margin-bottom: 8px; }
+body[data-embedded="true"] .toolbar { margin-bottom: 6px; }
+body[data-embedded="true"] .tool-group { padding: 2px; }
+body[data-embedded="true"] .tool-group button { min-height: 44px; }
+@media (max-width: 620px) {
+  body[data-embedded="true"] .toolbar,
+  body[data-embedded="true"] .tool-group { gap: 6px; }
+  body[data-embedded="true"] .toolbar button,
+  body[data-embedded="true"] .page-toolbar button { padding: 6px; }
+}
+#continue-draft { margin-top: 12px; }

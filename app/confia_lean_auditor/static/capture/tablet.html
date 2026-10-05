@@ -6,7 +6,7 @@
     <title>ConfIA — Caderno de resolução</title>
     <link rel="stylesheet" href="/static/capture/vendor/katex-0.18.9/katex.min.css">
     <link rel="stylesheet" href="/static/design-system.css?v=ui-01">
-    <link rel="stylesheet" href="/static/capture/tablet.css?v=p2-cap-02&amp;ui=ui-01">
+    <link rel="stylesheet" href="/static/capture/tablet.css?v=p2-cap-02&amp;ui=ui-02-persistence-bottom">
     <link rel="stylesheet" href="/static/capture/identity.css?v=ui-01">
   </head>
   <body>
@@ -30,8 +30,16 @@
         <span>O salvamento é local. A solução só é recebida pelo servidor após envio e confirmação por recibo.</span>
       </section>
 
+      <section id="capture-purpose" class="setup-card" aria-label="Finalidade da resolução">
+        <p class="eyebrow">Caderno de Resolução ConfIA</p>
+        <h2 id="capture-mode-title">Solução para envio</h2>
+        <p>Como você quer trabalhar esta questão?</p>
+        <button id="direct-practice" type="button">Praticar com feedback</button>
+        <p class="help-text">A prática abre este mesmo caderno no contexto da questão, com a versão digitada para análise.</p>
+      </section>
+
       <section class="setup-card" aria-label="Questão e rascunhos locais">
-        <label>
+        <label id="capture-question-field">
           Selecionar questão cadastrada
           <select id="problem-select" aria-describedby="problem-help"></select>
         </label>
@@ -74,12 +82,6 @@
           <div id="problem-statement" class="problem-statement"></div>
           <p id="problem-math-message" class="math-message" role="status" hidden></p>
         </div>
-        <div class="draft-persistence-bar">
-          <p id="draft-persistence" class="draft-persistence" role="status" aria-live="polite" aria-atomic="true" data-state="idle">
-            Comece a escrever — salvamento automático
-          </p>
-          <a class="recovery-link" href="#draft-recovery">Recuperar rascunho</a>
-        </div>
       </section>
 
       <section class="notebook-card" aria-label="Área de escrita">
@@ -115,9 +117,17 @@
             aria-label="Página manuscrita. Use caneta ou habilite o modo mouse para teste."
           ></canvas>
         </div>
+        <div class="draft-persistence-bar">
+          <p id="draft-persistence" class="draft-persistence" role="status" aria-live="polite" aria-atomic="true" data-state="idle">
+            Comece a escrever — salvamento automático
+          </p>
+          <a class="recovery-link" href="#draft-recovery">Recuperar rascunho</a>
+        </div>
         <p id="input-hint" class="input-hint">
           Modo caneta: toque e mouse não desenham. A rejeição de palma depende do dispositivo e ainda precisa de teste físico.
         </p>
+
+        <button id="continue-draft" class="secondary" type="button" hidden>Continuar em nova versão</button>
 
         <details id="technical-details" class="technical-details">
           <summary>
@@ -137,9 +147,7 @@
                 <div><dt>Armazenamento</dt><dd id="storage-state">Ainda não salvo</dd></div>
               </dl>
               <p id="status-message" class="status-message" aria-live="polite"></p>
-              <button id="continue-draft" class="secondary" type="button" hidden>
-                Continuar em nova versão
-              </button>
+
             </section>
 
             <section class="preview-card" aria-label="Prévia sem grade">
@@ -157,20 +165,20 @@
       <section class="export-card" aria-label="Preparação e exportação local">
         <div>
           <p class="eyebrow">Cópia local e artefatos</p>
-          <h2>Preparar e exportar</h2>
-          <p>
+          <h2 id="export-title">Preparar e exportar</h2>
+          <p id="export-note">
             A preparação congela uma cópia independente no IndexedDB. Não autentica autoria e não gera recibo de servidor.
           </p>
         </div>
         <div class="export-actions">
-          <button id="prepare-snapshot" type="button">Preparar versão para envio</button>
+          <button id="prepare-snapshot" type="button" data-submission-only>Preparar versão para envio</button>
           <button id="export-json" class="secondary" type="button">Exportar traços</button>
           <button id="export-png" class="secondary" type="button">Exportar PNG da página</button>
         </div>
         <p id="snapshot-message" class="snapshot-message" aria-live="polite"></p>
       </section>
 
-      <section class="export-card submission-card" aria-label="Envio experimental ao servidor">
+      <section class="export-card submission-card" data-submission-only aria-label="Envio experimental ao servidor">
         <div>
           <p class="eyebrow">Recebimento pelo ConfIA</p>
           <h2>Enviar versão preparada</h2>
@@ -178,7 +186,7 @@
         </div>
         <div class="export-actions">
           <button id="send-solution" type="button" disabled>Enviar solução</button>
-          <a class="back-link" href="/?area=teacher">Ver manuscritos na área do professor</a>
+          <a id="open-teacher" class="back-link" href="/?area=teacher">Ver manuscritos na área do professor</a>
         </div>
         <p id="submission-message" role="status" aria-live="polite">Prepare uma versão antes de enviar.</p>
         <p id="submission-receipt" class="submission-receipt" hidden></p>
@@ -203,6 +211,6 @@
     <script src="/static/capture/ink-canvas.js"></script>
     <script src="/static/capture/draft-store.js"></script>
     <script src="/static/capture/submission-client.js?v=p2-cap-02"></script>
-    <script src="/static/capture/tablet.js?v=p2-cap-02"></script>
+    <script src="/static/capture/tablet.js?v=p2-cap-02&amp;ui=ui-02-parent-sticky"></script>
   </body>
 </html>

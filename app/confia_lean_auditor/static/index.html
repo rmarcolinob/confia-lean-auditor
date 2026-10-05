@@ -4,8 +4,9 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>ConfIA — Matemática com confiança</title>
+    <link rel="stylesheet" href="/static/capture/vendor/katex-0.18.9/katex.min.css">
     <link rel="stylesheet" href="/static/design-system.css?v=ui-01">
-    <link rel="stylesheet" href="/static/styles.css?v=ui-01">
+    <link rel="stylesheet" href="/static/styles.css?v=ui-02-parent-sticky">
     <link rel="stylesheet" href="/static/submissions/teacher.css?v=ui-01">
   </head>
   <body>
@@ -42,7 +43,6 @@
             <a href="#student/home" data-shell-link aria-current="page">Início</a>
             <a href="#student/resolve" data-shell-link>Questões / Resolver</a>
             <a href="#student/feedback" data-shell-link>Feedback</a>
-            <a href="/capture">Caderno de resolução <span aria-hidden="true">↗</span></a>
             <a href="#student/submissions" data-shell-link>Envios</a>
           </div>
           <div data-profile-menu="teacher" hidden>
@@ -69,113 +69,107 @@
         <section id="student-home" class="home-panel">
           <div class="welcome-card card">
             <p class="eyebrow">Matemática com confiança</p>
-            <h2>Da solução discursiva à evidência verificável</h2>
-            <p>Auditoria matemática confiável para apoiar o estudo. Escolha uma questão, escreva sua solução e consulte a Análise ConfIA.</p>
+            <h2>Uma questão, um caderno de resolução</h2>
+            <p>Auditoria matemática confiável para apoiar o estudo. Escolha uma questão e use o caderno para praticar com feedback ou preparar uma solução para envio.</p>
             <a class="button button-primary" href="#student/resolve" data-shell-link>Começar a resolver <span aria-hidden="true">→</span></a>
           </div>
           <div class="home-grid">
             <article class="card"><span class="step-label">01 · Resolver</span><h2>Questões e soluções</h2><p>Use o catálogo atual e os exemplos para explorar uma questão.</p><a href="#student/resolve" data-shell-link>Ver questões</a></article>
             <article class="card"><span class="step-label">02 · Compreender</span><h2>Feedback da solução</h2><p>Consulte a análise da solução enviada e suas evidências.</p><a href="#student/feedback" data-shell-link>Abrir feedback</a></article>
-            <article class="card"><span class="step-label">03 · Escrever</span><h2>Caderno de resolução</h2><p>Escreva com caneta, recupere rascunhos e prepare uma versão para envio.</p><a href="/capture">Abrir caderno <span aria-hidden="true">↗</span></a></article>
+            <article class="card"><span class="step-label">03 · Escrever</span><h2>Caderno de resolução</h2><p>Escreva com caneta, recupere rascunhos e prepare uma versão para envio.</p><a href="#student/resolve" data-shell-link>Resolver no caderno →</a></article>
           </div>
         </section>
-        <section id="student-workspace" class="workspace" aria-label="Enunciado e solução" hidden>
-          <div class="panel-heading">
-            <div>
-              <p class="eyebrow">Área do Aluno</p>
-              <h2>Enunciado + solução</h2>
-            </div>
-          </div>
-
-          <div class="mode-switch" aria-label="Modo de uso da Área do Aluno">
-            <button
-              id="study-mode-button"
-              class="mode-button is-active"
-              type="button"
-              data-student-mode="study"
-              aria-pressed="true"
-            >
-              Estudar com feedback
-            </button>
-            <button
-              id="submit-mode-button"
-              class="mode-button"
-              type="button"
-              data-student-mode="submit"
-              aria-pressed="false"
-            >
-              <span>Envio de demonstração</span>
-              <span class="mode-caption">Salvar somente neste navegador</span>
-            </button>
-          </div>
-
-          <p id="student-mode-note" class="mode-note">
-            Use o ConfIA para estudar com feedback pedagógico imediato.
-          </p>
-
-          <section class="controls" aria-label="Seleção de questão e exemplo">
-            <label>
-              Questão
+        <section id="student-workspace" class="workspace" aria-label="Questões e Caderno de Resolução ConfIA" hidden>
+          <div id="question-picker">
+            <h2>Escolha uma questão</h2>
+            <label class="solution-area">Questão
               <select id="problem-select" aria-describedby="student-validation-message"></select>
             </label>
+            <section id="problem-statement" class="problem-statement" aria-live="polite">
+              <p class="eyebrow">Enunciado</p>
+              <h3 id="problem-title" class="problem-title">Selecione uma questão</h3>
+              <div id="problem-statement-text" class="statement-text"></div>
+              <p id="catalog-math-message" role="status" hidden></p>
+            </section>
+            <button id="resolve-question" type="button" disabled>Resolver</button>
+          </div>
 
-            <div class="example-controls">
-              <label>
-                Carregar exemplo para teste rápido
-                <select id="example-select"></select>
-              </label>
-
-              <button id="load-example" class="button-secondary" type="button">Carregar exemplo</button>
+          <section id="resolution-workspace" aria-label="Caderno de Resolução ConfIA" hidden>
+            <section id="notebook-problem-context" aria-label="Questão da resolução manuscrita" hidden>
+              <div class="notebook-problem-heading">
+                <div><p class="eyebrow">Questão · <span id="notebook-problem-code"></span></p><h3 id="notebook-problem-title"></h3></div>
+                <button id="toggle-notebook-problem" class="secondary-action" type="button" aria-expanded="true" aria-controls="notebook-problem-body">Recolher enunciado</button>
+              </div>
+              <div id="notebook-problem-body">
+                <div id="notebook-problem-statement" class="statement-text"></div>
+                <p id="notebook-math-message" role="status" hidden></p>
+              </div>
+            </section>
+            <div class="resolution-heading">
+              <div><p class="eyebrow">Caderno de Resolução ConfIA</p><h2 id="resolution-title" tabindex="-1">Como você quer trabalhar esta questão?</h2></div>
+              <button id="change-question" class="secondary-action" type="button">Escolher outra questão</button>
             </div>
+            <div class="mode-switch" role="group" aria-label="Como você quer trabalhar esta questão?">
+              <button id="practice-mode" class="mode-button" type="button" aria-pressed="false">Praticar com feedback</button>
+              <button id="submission-mode" class="mode-button" type="button" aria-pressed="false">Preparar solução para envio</button>
+            </div>
+            <p id="workspace-status" role="status" aria-live="polite">Escolha a finalidade da resolução.</p>
+            <div id="response-switch" class="mode-switch" role="group" aria-label="Forma de resolver" hidden>
+              <button id="notebook-response" class="mode-button is-active" type="button" aria-pressed="true">Escrever no caderno</button>
+              <button id="typed-response" class="mode-button" type="button" aria-pressed="false">Digitar solução</button>
+            </div>
+            <div id="notebook-surface" hidden>
+              <iframe id="resolution-notebook" title="Caderno da questão selecionada: enunciado, escrita, páginas e rascunhos"></iframe>
+            </div>
+            <section id="typed-problem-context" class="problem-statement" aria-label="Questão da solução digitada" hidden>
+              <p class="eyebrow">Enunciado</p><h3 id="typed-problem-title"></h3>
+              <div id="typed-problem-statement" class="statement-text"></div>
+              <p id="typed-math-message" role="status" hidden></p>
+            </section>
+            <details id="practice-response" class="practice-response" aria-label="Representação digitada para análise" hidden>
+              <summary id="prepare-analysis">
+                <span id="prepare-analysis-label">Preparar análise</span>
+                <small id="prepare-analysis-note">A análise atual usa sua versão digitada.</small>
+              </summary>
+              <div class="practice-response-content">
+                <h3 id="typed-solution-heading">Representação digitada para análise</h3>
+                <p id="handwriting-analysis-note">O ConfIA ainda utiliza a versão digitada para analisar esta solução manuscrita. Digite o que deseja analisar; a escrita do caderno permanece preservada.</p>
+                <div class="example-controls">
+                  <label>Carregar exemplo para teste rápido <select id="example-select"></select></label>
+                  <button id="load-example" class="button-secondary" type="button">Carregar exemplo</button>
+                </div>
+                <label class="solution-area">Solução digitada
+                  <textarea id="solution-input" spellcheck="false" placeholder="Digite sua solução ou sua representação textual para análise." aria-describedby="student-validation-message"></textarea>
+                </label>
+                <div class="actions"><button id="audit-button" type="button">Analisar minha solução</button></div>
+              </div>
+            </details>
           </section>
-
-          <label id="student-name-field" class="student-name-field" hidden>
-            Nome do aluno
-            <input
-              id="student-name-input"
-              type="text"
-              autocomplete="name"
-              placeholder="Digite o nome do aluno"
-              aria-describedby="student-validation-message"
-            >
-          </label>
-
-          <section id="problem-statement" class="problem-statement" aria-live="polite">
-            <p class="eyebrow">Enunciado</p>
-            <h3 id="problem-title" class="problem-title">Selecione uma questão</h3>
-            <p id="problem-statement-text" class="statement-text">
-              O enunciado da questão selecionada aparecerá aqui.
-            </p>
-          </section>
-
-          <label class="solution-area">
-            Solução
-            <textarea
-              id="solution-input"
-              spellcheck="false"
-              placeholder="Digite ou cole aqui a solução do estudante."
-              aria-describedby="student-validation-message"
-            ></textarea>
-          </label>
-
-          <div class="actions">
-            <button id="audit-button" type="button">Analisar minha solução</button>
-          </div>
-          <a class="workspace-feedback-link" href="#student/feedback" data-shell-link>Consultar feedback da solução enviada →</a>
           <p id="student-validation-message" class="validation-message" role="status" aria-live="polite"></p>
-        </section>
-
-        <section id="result-panel" class="result-panel" hidden aria-live="polite" aria-label="Análise ConfIA">
-          <div class="empty-state">
-            <p class="eyebrow">Análise ConfIA</p>
-            <p>Selecione uma questão, carregue um exemplo ou cole uma solução para começar.</p>
+          <!-- Dependencies of the teacher's legacy text demonstration; no student entry point. -->
+          <div hidden>
+            <p id="student-mode-note"></p>
+            <label id="student-name-field">Nome do aluno <input id="student-name-input" type="text" autocomplete="name" aria-describedby="student-validation-message"></label>
           </div>
         </section>
 
-        <section id="student-local-envios" class="card" aria-label="Soluções salvas neste navegador" hidden>
-          <h2>Soluções salvas neste navegador</h2>
-          <p class="auxiliary-text">Registros locais de demonstração. Consulte no caderno o recibo dos envios manuscritos recebidos pelo ConfIA.</p>
-          <div id="student-local-list" class="submission-list"></div>
+        <section id="student-feedback" aria-label="Feedback da resolução atual" hidden>
+          <h2>Análise ConfIA</h2>
+          <p>Esta área mostra a análise atual desta resolução na sessão. Ainda não há histórico persistente de análises.</p>
+          <section id="result-panel" class="result-panel" aria-live="polite" aria-label="Análise ConfIA"></section>
+          <div id="feedback-actions" class="actions" hidden>
+            <button id="continue-solving" class="secondary-action" type="button">Continuar resolvendo</button>
+            <button id="edit-solution" class="secondary-action" type="button">Alterar solução</button>
+            <button id="reanalyze-solution" type="button">Analisar novamente</button>
+          </div>
+        </section>
+
+        <section id="student-session-envios" class="card" aria-label="Recibos desta sessão" hidden>
+          <h2>Recibos desta sessão</h2>
+          <p>Envie a versão preparada no caderno para receber confirmação. Sem autenticação, esta área reúne somente recibos confirmados nesta sessão; ainda não há histórico pessoal.</p>
+          <div id="student-receipt-list" class="submission-list"><p>Nenhum recibo nesta sessão.</p></div>
+          <a href="#student/resolve" data-shell-link>Preparar solução no caderno →</a>
+          <details><summary>Acesso direto ao caderno</summary><p>O caderno é o ambiente utilizado para resolver questões. A entrada direta continua disponível para compatibilidade.</p><a href="/capture">Abrir caderno</a></details>
         </section>
       </section>
 
@@ -333,8 +327,12 @@
     </footer>
     <noscript><p class="alert">Ative o JavaScript para navegar pelos perfis de demonstração e carregar as questões.</p></noscript>
 
-    <script src="/static/app.js?v=ui-01"></script>
+    <script src="/static/capture/vendor/katex-0.18.9/katex.min.js"></script>
+    <script src="/static/capture/vendor/katex-0.18.9/contrib/auto-render.min.js"></script>
+    <script src="/static/capture/problem-math.js?v=p2-ui-01"></script>
+    <script src="/static/app.js?v=ui-02"></script>
+    <script src="/static/resolution-workspace.js?v=ui-02-persistence-bottom"></script>
     <script src="/static/submissions/teacher.js?v=ui-01"></script>
-    <script src="/static/shell.js?v=ui-01"></script>
+    <script src="/static/shell.js?v=ui-02"></script>
   </body>
 </html>

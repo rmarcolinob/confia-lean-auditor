@@ -43,7 +43,7 @@ def test_shell_landmarks_and_profile_navigation_are_conventional():
     assert page.ids['profile-navigation'][0] == 'nav'
 
 
-def test_every_menu_destination_is_available_and_capture_is_separate():
+def test_every_menu_destination_is_available_and_capture_is_reused():
     page = Page(CLIENT.get('/').text)
     links = [attrs['href'] for tag, attrs in page.elements if tag == 'a' and 'href' in attrs]
     expected = {'#student/home', '#student/resolve', '#student/feedback', '#student/submissions', '/capture',
@@ -53,7 +53,10 @@ def test_every_menu_destination_is_available_and_capture_is_separate():
     for forbidden in ('#classes', '#progress', '#achievements', '#assignments', '#grades'):
         assert forbidden not in links
     assert CLIENT.get('/capture').status_code == 200
-    assert not any(tag in ('iframe', 'canvas') for tag, _ in page.elements)
+    assert not any(tag == 'canvas' for tag, _ in page.elements)
+    frames = [attrs for tag, attrs in page.elements if tag == 'iframe']
+    assert len(frames) == 1 and frames[0]['id'] == 'resolution-notebook'
+    assert frames[0]['title']
     for asset in ('design-system.css', 'shell.js', 'capture/identity.css'):
         assert CLIENT.get(f'/static/{asset}?v=ui-01').status_code == 200
 

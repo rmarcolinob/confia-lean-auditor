@@ -1,6 +1,19 @@
 (function startCapturePage() {
   "use strict";
 
+  const params = globalThis.location ? new URLSearchParams(globalThis.location.search) : null;
+  const embedded = params?.get("embedded") === "1" && globalThis.parent !== globalThis;
+  let resolutionMode = embedded && params?.get("mode") === "practice" ? "practice" : "submission";
+  let transitionQueue = Promise.resolve();
+  let initialized = false;
+  let preparing = false;
+  let preparationFinished = Promise.resolve();
+  let finishPreparation = () => {};
+  if (embedded) {
+    document.body.dataset.embedded = "true";
+    document.body.dataset.workspaceMode = resolutionMode;
+  }
+
   const Model = globalThis.ConfiaInkModel;
   const Canvas = globalThis.ConfiaInkCanvas;
   const Store = globalThis.ConfiaDraftStore;
@@ -46,6 +59,11 @@
     sendSolution: document.querySelector("#send-solution"),
     submissionMessage: document.querySelector("#submission-message"),
     submissionReceipt: document.querySelector("#submission-receipt"),
+    exportTitle: document.querySelector("#export-title"),
+    exportNote: document.querySelector("#export-note"),
+    modeTitle: document.querySelector("#capture-mode-title"),
+    openTeacher: document.querySelector("#open-teacher"),
+    directPractice: document.querySelector("#direct-practice"),
   };
 
   let problems = [];
@@ -60,13 +78,27 @@
   let saveQueue = Promise.resolve();
   // UI-only sequence: an older save must not announce that newer changes are saved.
   let persistenceRequest = 0;
+  let savedDocumentsRequest = 0;
   let submissionBusy = false;
   const submissionStates = new Map();
+
+  function notifyContext(value = captureDocument, receipt = null, mode = resolutionMode) {
+    if (!embedded || !value) return;
+    const presentation = problemPresentations.find(item => item.problem_id === value.problem_id && item.source_statement === problems.find(p => (p.problem_id || p.id) === value.problem_id)?.statement);
+    const state = submissionStates.get(value.local_snapshot_id);
+    globalThis.parent.postMessage({ type: "confia-notebook-context", context: {
+      problem_id: value.problem_id, mode, draft_id: value.draft_id,
+      local_snapshot_id: value.local_snapshot_id || null,
+      question_presentation_version: presentation?.display_version ?? null,
+      ink_version: `${value.operations.length}:${value.pages.length}:${value.active_stroke_ids.length}`,
+      receipt: receipt || state?.receipt || null,
+    } }, globalThis.location.origin);
+  }
 
   function renderSubmission() {
     const frozen = captureDocument?.document_kind === "local_snapshot";
     const state = submissionStates.get(captureDocument?.local_snapshot_id);
-    elements.sendSolution.disabled = !Sender || !frozen || submissionBusy || Boolean(state?.receipt);
+    elements.sendSolution.disabled = resolutionMode !== "submission" || !Sender || !frozen || submissionBusy || Boolean(state?.receipt);
     elements.sendSolution.textContent = state?.receipt ? "Solução recebida" : "Enviar solução";
     elements.submissionMessage.dataset.kind = state?.kind || "info";
     elements.submissionMessage.textContent = state?.message || (frozen
@@ -148,6 +180,7 @@
 
   function renderState() {
     if (!captureDocument) return;
+    if (embedded) document.body.dataset.workspaceMode = resolutionMode;
     pageIndex = Math.max(0, Math.min(pageIndex, captureDocument.pages.length - 1));
     const frozen = captureDocument.document_kind === "local_snapshot";
     const stacks = Model.historyStacks(captureDocument);
@@ -164,19 +197,27 @@
     elements.mouseMode.disabled = frozen;
     elements.drawTool.disabled = frozen;
     elements.eraseTool.disabled = frozen;
-    elements.prepareSnapshot.disabled = frozen;
+    elements.prepareSnapshot.disabled = frozen || preparing || resolutionMode !== "submission";
     elements.continueDraft.hidden = !frozen;
     elements.inputHint.textContent = frozen
       ? "Esta cópia está congelada. Para editar, crie uma nova versão de rascunho."
       : inputMode === "pen"
         ? "Modo caneta: toque e mouse não desenham. A rejeição de palma depende do dispositivo e ainda precisa de teste físico."
         : "Modo mouse ativado explicitamente para teste em computador. Toque não desenha.";
+    for (const control of document.querySelectorAll("[data-submission-only]")) control.hidden = resolutionMode !== "submission";
+    elements.exportTitle.textContent = resolutionMode === "practice" ? "Exportar cópia local" : "Preparar e exportar";
+    elements.exportNote.textContent = resolutionMode === "practice"
+      ? "Guarde uma cópia dos traços ou da imagem da página. A análise utiliza somente a versão digitada no workspace."
+      : "A preparação congela uma cópia independente no IndexedDB. Não autentica autoria e não gera recibo de servidor.";
+    elements.modeTitle.textContent = resolutionMode === "practice" ? "Prática com feedback" : "Solução para envio";
     renderCanvas();
     renderSubmission();
+    notifyContext();
   }
 
   async function refreshSavedDocuments() {
     const problemId = elements.problemSelect.value;
+    const request = ++savedDocumentsRequest;
     elements.savedSelect.replaceChildren();
     const placeholder = document.createElement("option");
     placeholder.value = "";
@@ -184,6 +225,7 @@
     elements.savedSelect.appendChild(placeholder);
     try {
       const records = await Store.list(problemId);
+      if (request !== savedDocumentsRequest || problemId !== elements.problemSelect.value) return;
       for (const record of records) {
         const option = document.createElement("option");
         option.value = record.storage_id;
@@ -217,6 +259,7 @@
           if (settings.announce) setStatus("Salvo neste dispositivo.", "saved");
         }
         if (settings.refresh) await refreshSavedDocuments();
+        return true;
       })
       .catch((error) => {
         if (captureDocument && documentStorageId(captureDocument) === savedId && request === persistenceRequest) {
@@ -224,6 +267,7 @@
           setPersistenceState("error");
           setStatus(`Não foi possível salvar localmente: ${error.message} Exporte os traços para não perder esta versão.`, "error");
         }
+        return false;
       });
     return saveQueue;
   }
@@ -241,6 +285,8 @@
   }
 
   async function changeProblem(problemId) {
+    if (!problems.some(p => (p.problem_id || p.id) === problemId)) return;
+    stopStroke(true);
     if (captureDocument && captureDocument.document_kind === "draft") await persist(captureDocument, { announce: false });
     elements.problemSelect.value = problemId;
     renderProblem();
@@ -259,6 +305,7 @@
   }
 
   function allowedPointer(event) {
+    if (preparing) return false;
     return !captureDocument || captureDocument.document_kind === "draft"
       ? event.pointerType === inputMode
       : false;
@@ -364,17 +411,60 @@
         elements.problemSelect.appendChild(option);
       }
       if (!problems.length) throw new Error("O catálogo não contém questões.");
+      const requested = params?.get("problem_id");
+      if (requested && !problems.some(p => (p.problem_id || p.id) === requested)) throw new Error("A questão solicitada não está no catálogo. Volte às questões para selecionar uma questão disponível.");
+      if (requested) elements.problemSelect.value = requested;
       renderProblem();
-      setDocument(Model.createDraft(elements.problemSelect.value), 0);
+      // The catalog already presents the statement. Keep it available in the
+      // sticky dock while giving handwriting the initial viewport priority.
+      if (embedded) setProblemExpanded(false);
+      const requestedDraft = params?.get("draft_id");
+      let restored = null;
+      if (requestedDraft) {
+        restored = await Store.get(requestedDraft);
+        if (!restored || restored.problem_id !== elements.problemSelect.value) throw new Error("O rascunho solicitado não pertence a esta questão ou não está disponível neste dispositivo.");
+      }
+      setDocument(restored || Model.createDraft(elements.problemSelect.value), 0);
+      initialized = true;
       await refreshSavedDocuments();
       setStatus("Escolha uma versão salva ou comece um novo rascunho.");
+      notifyContext();
     } catch (error) {
       setStatus(error.message, "error");
       for (const button of document.querySelectorAll("button")) button.disabled = true;
     }
   }
 
-  elements.problemSelect.addEventListener("change", () => changeProblem(elements.problemSelect.value));
+  function queueTransition(action) {
+    transitionQueue = transitionQueue.catch(() => undefined).then(action);
+    return transitionQueue;
+  }
+  elements.problemSelect.addEventListener("change", () => {
+    const id = elements.problemSelect.value;
+    return queueTransition(() => changeProblem(id));
+  });
+  globalThis.addEventListener("message", event => {
+    if (!embedded || !initialized || event.origin !== globalThis.location.origin || event.source !== globalThis.parent || event.data?.type !== "confia-workspace-command" || event.data.action !== "configure") return;
+    const { problem_id: problemId, mode } = event.data;
+    if (!["practice", "submission"].includes(mode)) return;
+    queueTransition(async () => {
+      await preparationFinished;
+      if (captureDocument.problem_id !== problemId) await changeProblem(problemId);
+      resolutionMode = mode;
+      renderState();
+    });
+  });
+  elements.openTeacher.addEventListener("click", event => {
+    if (!embedded) return;
+    event.preventDefault();
+    globalThis.parent.postMessage({ type: "confia-workspace-navigation", destination: "teacher-submissions" }, globalThis.location.origin);
+  });
+  elements.directPractice.addEventListener("click", async () => {
+    if (!captureDocument || preparing) return;
+    stopStroke(true);
+    if (!await persist(captureDocument, { announce: false })) return;
+    globalThis.location.href = `/?problem_id=${encodeURIComponent(captureDocument.problem_id)}&draft_id=${encodeURIComponent(documentStorageId(captureDocument))}&workspace_mode=practice#student/resolve`;
+  });
   elements.toggleProblem.addEventListener("click", () => {
     setProblemExpanded(elements.toggleProblem.getAttribute("aria-expanded") !== "true");
   });
@@ -382,11 +472,15 @@
     if (elements.technicalDetails.open) requestAnimationFrame(renderCanvas);
   });
   elements.newDraft.addEventListener("click", async () => {
+    if (preparing) return;
+    stopStroke(true);
     if (captureDocument && captureDocument.document_kind === "draft") await persist(captureDocument, { announce: false });
     setDocument(Model.createDraft(elements.problemSelect.value), 0);
     setStatus("Novo rascunho criado sem substituir as versões anteriores.");
   });
   elements.openDocument.addEventListener("click", async () => {
+    if (preparing) return;
+    stopStroke(true);
     const id = elements.savedSelect.value;
     if (!id) {
       setStatus("Selecione uma versão salva para abrir.", "error");
@@ -396,6 +490,7 @@
     try {
       const stored = await Store.get(id);
       if (!stored) throw new Error("A versão selecionada não foi encontrada.");
+      if (stored.problem_id !== elements.problemSelect.value) throw new Error("Este rascunho pertence a outra questão.");
       setDocument(stored, 0);
       elements.storageState.textContent = "Recuperado deste dispositivo";
       setPersistenceState("saved");
@@ -457,10 +552,17 @@
   });
 
   elements.prepareSnapshot.addEventListener("click", async () => {
+    if (resolutionMode !== "submission" || preparing || captureDocument?.document_kind !== "draft") return;
+    stopStroke(true);
+    preparing = true;
+    preparationFinished = new Promise(resolve => { finishPreparation = resolve; });
+    const source = captureDocument;
+    renderState();
     try {
-      await persist(captureDocument, { announce: false });
-      const snapshot = Model.freeze(captureDocument);
+      await persist(source, { announce: false });
+      const snapshot = Model.freeze(source);
       await Store.save(snapshot);
+      if (captureDocument !== source) return;
       setDocument(snapshot, pageIndex);
       elements.storageState.textContent = "Cópia congelada neste dispositivo";
       setPersistenceState("saved");
@@ -470,6 +572,10 @@
       elements.savedSelect.value = snapshot.local_snapshot_id;
     } catch (error) {
       setStatus(`Não foi possível preparar a cópia local: ${error.message}`, "error");
+    } finally {
+      preparing = false;
+      finishPreparation();
+      renderState();
     }
   });
   elements.continueDraft.addEventListener("click", () => {
@@ -479,7 +585,7 @@
     persist(nextDraft);
   });
   elements.sendSolution.addEventListener("click", async () => {
-    if (!Sender || submissionBusy || captureDocument?.document_kind !== "local_snapshot") return;
+    if (resolutionMode !== "submission" || !Sender || submissionBusy || captureDocument?.document_kind !== "local_snapshot" || submissionStates.get(captureDocument.local_snapshot_id)?.receipt) return;
     const snapshot = Model.exportClone(captureDocument);
     const id = snapshot.local_snapshot_id;
     submissionBusy = true;
@@ -488,11 +594,13 @@
     try {
       const receipt = await Sender.send(snapshot);
       submissionStates.set(id, { receipt, message: "Solução recebida pelo ConfIA", kind: "saved" });
+      notifyContext(snapshot, receipt, "submission");
     } catch (error) {
       submissionStates.set(id, { message: error.message, kind: "error" });
     } finally {
       submissionBusy = false;
       renderSubmission();
+      notifyContext();
     }
   });
   elements.exportJson.addEventListener("click", () => {

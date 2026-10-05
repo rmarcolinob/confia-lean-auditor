@@ -78,7 +78,7 @@ def test_capture_loads_pinned_local_katex_assets_and_fonts_in_order():
         assert response.status_code == 200, asset
         assert response.content
     assert html.index(prefix + "katex.min.js") < html.index(prefix + "contrib/auto-render.min.js")
-    assert html.index("problem-math.js") < html.index('src="/static/capture/tablet.js?v=p2-cap-02"')
+    assert html.index("problem-math.js") < html.index('src="/static/capture/tablet.js?v=p2-cap-02&amp;ui=ui-02-parent-sticky"')
     css = CLIENT.get(prefix + "katex.min.css").text
     fonts = re.findall(r"url\((fonts/[^)]+)\)", css)
     assert fonts
@@ -120,12 +120,55 @@ def test_capture_exposes_persistence_and_recovery_outside_technical_details():
     assert not inside_details
     assert indicator["role"] == "status"
     assert indicator["aria-live"] == "polite"
+    assert indicator["aria-atomic"] == "true"
     assert not parser.controls["open-document"][1]
     assert not parser.controls["saved-document-select"][1]
     assert "Recuperar rascunho" in response.text
     assert 'href="#draft-recovery"' in response.text
     assert parser.controls["document-id"][1]
     assert parser.controls["export-preview"][1]
+
+
+def test_draft_status_and_recovery_are_directly_below_the_writing_area():
+    class CaptureTree(HTMLParser):
+        def __init__(self):
+            super().__init__()
+            self.root = {"children": []}
+            self.stack = [self.root]
+            self.nodes = []
+
+        def handle_starttag(self, tag, attrs):
+            node = {"tag": tag, "attrs": dict(attrs), "children": [], "parent": self.stack[-1]}
+            self.stack[-1]["children"].append(node)
+            self.nodes.append(node)
+            if tag not in {"meta", "link", "input", "br", "img"}:
+                self.stack.append(node)
+
+        def handle_endtag(self, tag):
+            if self.stack[-1].get("tag") == tag:
+                self.stack.pop()
+
+        def by_id(self, identifier):
+            matches = [node for node in self.nodes if node["attrs"].get("id") == identifier]
+            assert len(matches) == 1
+            return matches[0]
+
+    tree = CaptureTree()
+    tree.feed(CLIENT.get("/capture").text)
+    frame = tree.by_id("canvas-frame")
+    notebook = frame["parent"]
+    assert notebook["attrs"]["class"] == "notebook-card"
+    siblings = notebook["children"]
+    bar = siblings[siblings.index(frame) + 1]
+    assert bar["attrs"]["class"] == "draft-persistence-bar"
+    indicator = tree.by_id("draft-persistence")
+    assert indicator["parent"] is bar
+    recovery_links = [node for node in tree.nodes if node["attrs"].get("class") == "recovery-link"]
+    assert len(recovery_links) == 1
+    assert recovery_links[0]["parent"] is bar
+    assert recovery_links[0]["attrs"]["href"] == "#draft-recovery"
+    assert tree.by_id("draft-recovery")["attrs"]["class"] == "saved-row"
+    assert siblings.index(bar) < siblings.index(tree.by_id("input-hint")) < siblings.index(tree.by_id("technical-details"))
 
 
 def test_capture_layout_prioritizes_canvas_and_collapses_secondary_information():

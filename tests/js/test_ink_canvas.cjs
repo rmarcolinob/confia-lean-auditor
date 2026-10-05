@@ -9,8 +9,9 @@ const source = fs.readFileSync(path.join(__dirname, "../../app/confia_lean_audit
 
 function canvas(width = 1200) {
   const commands = [];
+  const transforms = [];
   const context = {
-    setTransform() {}, clearRect() {}, fillRect() {}, beginPath() {},
+    setTransform(...args) { transforms.push(args); }, clearRect() {}, fillRect() {}, beginPath() {},
     moveTo(...args) { commands.push(["moveTo", ...args]); },
     lineTo(...args) { commands.push(["lineTo", ...args]); },
     arc(...args) { commands.push(["arc", ...args]); },
@@ -18,7 +19,7 @@ function canvas(width = 1200) {
     fill() { commands.push(["fill", this.fillStyle]); },
   };
   return {
-    style: {}, commands,
+    style: {}, commands, transforms,
     getBoundingClientRect: () => ({ width, height: width * 4 / 3 }),
     getContext: () => context,
     toBlob(callback, type) { callback({ type }); },
@@ -101,4 +102,45 @@ test("viewport resizing and scrolling preserve logical pointer alignment and rep
       assert.equal(point.pressure_reported, 0.37);
     }
   }
+});
+
+test("landscape/portrait rotation keeps recovered ink, pointer alignment and PNG geometry", async () => {
+  const pngCanvas = canvas();
+  const runtime = { ConfiaInkModel: Model, devicePixelRatio: 2, document: { createElement: () => pngCanvas } };
+  vm.runInNewContext(source, runtime);
+  let draft = Model.createDraft("ITA2025Q1");
+  const page = draft.pages[0];
+  draft = Model.addStroke(draft, {stroke_id:"stroke:recovered",page_id:page.page_id,pointer_type:"pen",color:"#17355c",width:4,
+    points:[{x:30,y:50,t_ms:0,pressure_reported:.3},{x:900,y:1500,t_ms:10,pressure_reported:.8}]});
+  // Existing persisted documents have the same schema; CSS cannot rewrite them.
+  const persisted = JSON.stringify(draft);
+  draft = JSON.parse(persisted);
+  const target = canvas();
+  const expected = [["moveTo",30,50],["lineTo",900,1500],["stroke",3,"#17355c"]];
+  // Canvas widths measured in the requested responsive layouts, then back to landscape.
+  for (const width of [896,1152,632,278,896]) {
+    for (const top of [283,-400]) {
+      const rect = {left:42,top,width,height:width * 4 / 3};
+      target.getBoundingClientRect = () => rect;
+      target.commands.length = 0;
+      runtime.ConfiaInkCanvas.render(target,draft,page.page_id,{grid:false});
+      assert.deepEqual(target.commands,expected);
+      assert.equal(target.width,Math.round(rect.width * 2));
+      assert.equal(target.height,Math.round(rect.height * 2));
+      assert.deepEqual(target.transforms.at(-1),[target.width/1200,0,0,target.height/1600,0,0]);
+      for (const [x,y] of [[0,0],[30,50],[900,1500],[1200,1600]]) {
+        const mapped = runtime.ConfiaInkCanvas.eventPoint({clientX:rect.left+x/1200*rect.width,clientY:rect.top+y/1600*rect.height,
+          pointerType:"pen",pressure:.6,timeStamp:10},target,page,0);
+        assert.ok(Math.abs(mapped.x-x)<1e-9);
+        assert.ok(Math.abs(mapped.y-y)<1e-9);
+      }
+      assert.equal(JSON.stringify(draft),persisted);
+    }
+  }
+  const png = await runtime.ConfiaInkCanvas.pngBlob(draft,page.page_id);
+  assert.equal(png.type,"image/png");
+  assert.equal(pngCanvas.width,1200);
+  assert.equal(pngCanvas.height,1600);
+  assert.deepEqual(pngCanvas.commands,expected);
+  assert.equal(JSON.stringify(draft),persisted);
 });

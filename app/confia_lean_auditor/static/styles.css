@@ -1091,3 +1091,66 @@ body { background: var(--color-background); }
 }
 
 .status-pill[data-kind="success"] { color: var(--color-success); background: var(--color-success-subtle); }
+
+/* UI-02: the existing /capture page is the only notebook surface. */
+#student-area[data-view="resolve"], #student-area[data-view="submissions"] { grid-template-columns: minmax(0, 1fr); }
+#resolution-workspace { min-width: 0; }
+.resolution-heading { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: var(--spacing-4); margin-bottom: var(--spacing-4); }
+/* Reserve one viewport for the notebook, including its sticky question and tools.
+   The canvas itself keeps its original width-driven 3:4 geometry. */
+#resolution-notebook { display: block; width: 100%; height: clamp(640px, 100vh, 1200px); height: clamp(640px, 100dvh, 1200px); border: 1px solid var(--color-border); border-radius: var(--radius-card); background: var(--color-surface); }
+.practice-response { margin-top: var(--spacing-3); border: 1px solid var(--color-border); border-radius: var(--radius-card); background: var(--color-background); }
+.practice-response > summary { min-height: 56px; padding: var(--spacing-3) var(--spacing-4); cursor: pointer; color: var(--color-primary); font-weight: 650; }
+.practice-response > summary::marker { color: var(--color-primary); }
+.practice-response > summary small { margin-left: var(--spacing-3); color: var(--color-text-muted); font-weight: 400; }
+.practice-response > summary:focus-visible { outline: 3px solid var(--color-primary); outline-offset: 3px; }
+.practice-response-content { padding: var(--spacing-5); border-top: 1px solid var(--color-border); }
+.practice-response h3 { margin-top: 0; }
+.practice-response-content > p { color: var(--color-text-muted); max-width: 78ch; }
+#student-session-envios { padding: var(--spacing-6); }
+body[data-resolution-active="true"] .app-layout { grid-template-columns: minmax(0, 1fr); gap: var(--spacing-4); }
+body[data-resolution-active="true"] .shell-sidebar { position: static; display: flex; flex-wrap: wrap; align-items: center; gap: var(--spacing-3); padding: var(--spacing-2) var(--spacing-3); }
+body[data-resolution-active="true"] .shell-sidebar > .eyebrow,
+body[data-resolution-active="true"] .profile-context,
+body[data-resolution-active="true"] .sidebar-note { display: none; }
+body[data-resolution-active="true"] .profile-switch { display: flex; flex-wrap: wrap; margin: 0; }
+body[data-resolution-active="true"] .profile-navigation { border: 0; padding: 0; }
+body[data-resolution-active="true"] .profile-navigation > div { display: flex; flex-wrap: wrap; }
+body[data-resolution-active="true"] .page-heading { margin-bottom: var(--spacing-3); }
+body[data-resolution-active="true"] #student-workspace { padding: var(--spacing-4); }
+@media (max-width: 1280px) and (orientation: landscape) {
+  body[data-resolution-active="true"] .institutional-header { min-height: 72px; padding-block: var(--spacing-3); }
+  body[data-resolution-active="true"] .page-description { display: none; }
+}
+@media (max-width: 620px) {
+  .practice-response-content { padding: var(--spacing-3); }
+  .practice-response > summary small { display: block; margin-left: 0; }
+}
+
+/* Parent-page sticky and focus chrome belong exclusively to handwritten practice.
+   The approved typed view and the iframe's ink dimensions keep their existing rules. */
+body[data-handwriting-focus="true"] .shell-sidebar,
+body[data-handwriting-focus="true"] .page-heading { display: none; }
+body[data-handwriting-focus="true"] .institutional-header { min-height: 56px; padding-block: var(--spacing-2); }
+body[data-handwriting-focus="true"] .resolution-heading { margin-bottom: var(--spacing-2); }
+body[data-handwriting-focus="true"] .resolution-heading .eyebrow { display: none; }
+body[data-handwriting-focus="true"] #notebook-problem-context {
+  position: sticky;
+  top: 0;
+  z-index: var(--z-sticky);
+  min-width: 0;
+  margin-bottom: var(--spacing-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-card);
+}
+body[data-handwriting-focus="true"] .notebook-problem-heading { display: flex; align-items: center; justify-content: space-between; gap: var(--spacing-3); padding: var(--spacing-3); background: var(--color-surface-subtle); border-radius: var(--radius-card); }
+body[data-handwriting-focus="true"] .notebook-problem-heading > div { min-width: 0; }
+body[data-handwriting-focus="true"] #notebook-problem-title { margin: var(--spacing-1) 0 0; font-size: 1rem; overflow-wrap: anywhere; }
+body[data-handwriting-focus="true"] #toggle-notebook-problem { flex: 0 0 auto; }
+body[data-handwriting-focus="true"] #notebook-problem-body { max-height: min(28vh, 240px); max-height: min(28dvh, 240px); overflow-y: auto; padding: var(--spacing-3); border-top: 1px solid var(--color-border); }
+body[data-handwriting-focus="true"] #notebook-math-message { margin-bottom: 0; color: var(--color-danger); }
+@media (max-width: 620px) {
+  body[data-handwriting-focus="true"] .notebook-problem-heading { flex-wrap: wrap; }
+}

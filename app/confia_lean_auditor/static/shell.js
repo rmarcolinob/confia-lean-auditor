@@ -1,13 +1,12 @@
-/* UI-01 presentation router. UI-02 will place /capture within response flows;
- * this shell deliberately keeps the notebook as a separate route and contract. */
+/* Institutional navigation; student responses converge on the UI-02 workspace. */
 (function institutionalShell() {
   "use strict";
   const profiles = {
     student: { area: "student-area", label: "Aluno", views: {
       home: ["Início", "Um espaço para resolver, compreender e conferir sua solução matemática."],
-      resolve: ["Questões / Resolver", "Escolha uma questão e prepare sua solução para a Análise ConfIA."],
-      feedback: ["Feedback", "Consulte a análise da solução enviada. Edições posteriores continuam identificadas."],
-      submissions: ["Envios", "Salve e consulte soluções textuais de demonstração neste navegador."],
+      resolve: ["Questões / Resolver", "Escolha uma questão e resolva no Caderno de Resolução ConfIA."],
+      feedback: ["Feedback", "Consulte a análise atual da resolução nesta sessão."],
+      submissions: ["Envios", "Consulte os recibos de envios confirmados nesta sessão."],
     } },
     teacher: { area: "teacher-area", label: "Professor", views: {
       home: ["Início", "Receba soluções, confira transcrições e explore a análise textual demonstrativa."],
@@ -27,20 +26,13 @@
   let navigating = false;
 
   function visible(id, show) { document.querySelector(`#${id}`).hidden = !show; }
-  function refreshLocalSubmissions() {
-    const list = document.querySelector("#student-local-list");
-    list.replaceChildren();
-    const records = readLocalSubmissions();
-    if (!records.length) {
-      appendTextElement(list, "p", "empty-state", "Nenhuma solução salva neste navegador. Use o formulário para criar um envio de demonstração.");
-      return;
-    }
-    for (const record of records) {
-      const article = appendTextElement(list, "article", "local-submission", "");
-      appendTextElement(article, "h3", "", record.problem_title || record.problem_id);
-      appendTextElement(article, "p", "", `Solução enviada por ${record.student_name || "Aluno"} · ${formatDateTime(record.submitted_at)}`);
-      appendTextElement(article, "span", "badge", "Registro local de demonstração");
-    }
+  function refreshStudent() {
+    const student = current.profile === "student";
+    const workspace = window.ConfIAWorkspace;
+    visible("student-feedback", student && (current.view === "feedback" || (current.view === "resolve" && workspace?.mode === "practice" && Boolean(studentAnalysis))));
+    visible("student-session-envios", student && current.view === "submissions");
+    if (student && current.view === "feedback" && !studentAnalysis) renderStudentStudyEmptyState();
+    workspace?.display();
   }
 
   function render(profile, view, focus) {
@@ -58,10 +50,8 @@
       else link.removeAttribute("aria-current");
     }
     visible("student-home", profile === "student" && view === "home");
-    visible("student-workspace", profile === "student" && ["resolve", "submissions"].includes(view));
-    visible("result-panel", profile === "student" && view !== "home");
-    visible("student-local-envios", profile === "student" && view === "submissions");
-    if (profile === "student" && view !== "home") setStudentMode(view === "submissions" ? "submit" : "study");
+    visible("student-workspace", profile === "student" && view === "resolve");
+    refreshStudent();
     visible("teacher-home", profile === "teacher" && view === "home");
     document.querySelector(".teacher-submission-modes").hidden = profile !== "teacher" || view === "home";
     if (profile === "teacher" && view !== "home") {
@@ -73,7 +63,6 @@
     }
     visible("management-home", profile === "management" && view === "home");
     visible("management-overview", profile === "management" && view === "overview");
-    if (view === "submissions" && profile === "student") refreshLocalSubmissions();
     document.title = `ConfIA — ${config.views[view][0]}`;
     if (focus) title.focus();
   }
@@ -96,7 +85,7 @@
   }
 
   window.ConfIAShell = {
-    refreshLocalSubmissions,
+    refreshStudent, navigate,
     activateProfile(area) {
       if (navigating) return;
       const profile = Object.keys(profiles).find(key => profiles[key].area === area) || "student";
@@ -109,9 +98,6 @@
     event.preventDefault();
     const [profile, view] = link.getAttribute("href").slice(1).split("/");
     navigate(profile, view);
-  });
-  for (const button of document.querySelectorAll("[data-student-mode]")) button.addEventListener("click", () => {
-    navigate("student", button.dataset.studentMode === "submit" ? "submissions" : "resolve", { focus: false });
   });
   document.querySelector("#show-manuscripts").addEventListener("click", () => {
     if (!document.querySelector("#manuscript-inbox").hidden) navigate("teacher", "submissions");
