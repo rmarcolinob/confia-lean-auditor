@@ -52,7 +52,7 @@ def _base_rubric() -> RubricAssessment:
     )
 
 
-def _failed_check(claim_type: str, raw_text: str) -> StudentClaimCheck:
+def _refuted_check(claim_type: str, raw_text: str) -> StudentClaimCheck:
     return StudentClaimCheck(
         id="student_claim_0",
         problem_id="ITA2025F2Q1",
@@ -61,7 +61,9 @@ def _failed_check(claim_type: str, raw_text: str) -> StudentClaimCheck:
         normalized_text=raw_text,
         lean_statement="False",
         method="norm_num",
-        status="failed",
+        status="refuted",
+        refutation_verified=True,
+        refutation_lean_file="/test/formal_negation.lean",
         compiled=False,
         lean_file=None,
         stdout="",
@@ -88,12 +90,12 @@ def _verified_check(claim_type: str, raw_text: str) -> StudentClaimCheck:
     )
 
 
-def test_f2q1_failed_power_reduction_zeros_power_item_only():
+def test_f2q1_refuted_power_reduction_zeros_power_item_only():
     rubric = _base_rubric()
 
     adjusted = apply_f2q1_student_claim_adjustments(
         rubric,
-        [_failed_check("f2q1_student_power_reduction", "x^14=1-x")],
+        [_refuted_check("f2q1_student_power_reduction", "x^14=1-x")],
     )
 
     by_id = {item.id: item for item in adjusted.items}
@@ -108,12 +110,12 @@ def test_f2q1_failed_power_reduction_zeros_power_item_only():
     assert by_id["final_answer"].points == 2.0
 
 
-def test_f2q1_failed_reduced_form_zeros_reduced_form_item_only():
+def test_f2q1_refuted_reduced_form_zeros_reduced_form_item_only():
     rubric = _base_rubric()
 
     adjusted = apply_f2q1_student_claim_adjustments(
         rubric,
-        [_failed_check("f2q1_student_reduced_form", "(a-b)x-a")],
+        [_refuted_check("f2q1_student_reduced_form", "(a-b)x-a")],
     )
 
     by_id = {item.id: item for item in adjusted.items}
@@ -124,12 +126,12 @@ def test_f2q1_failed_reduced_form_zeros_reduced_form_item_only():
     assert "(a-b)x-a" in by_id["reduced_polynomial_form"].adjustment_notes[0]
 
 
-def test_f2q1_failed_coefficient_system_zeros_system_item_only():
+def test_f2q1_refuted_coefficient_system_zeros_system_item_only():
     rubric = _base_rubric()
 
     adjusted = apply_f2q1_student_claim_adjustments(
         rubric,
-        [_failed_check("f2q1_student_coefficient_system", "a+b=2; a=1")],
+        [_refuted_check("f2q1_student_coefficient_system", "a+b=2; a=1")],
     )
 
     by_id = {item.id: item for item in adjusted.items}
@@ -140,12 +142,12 @@ def test_f2q1_failed_coefficient_system_zeros_system_item_only():
     assert "a+b=2; a=1" in by_id["coefficient_system"].adjustment_notes[0]
 
 
-def test_f2q1_failed_final_answer_zeros_final_answer_item_only():
+def test_f2q1_refuted_final_answer_zeros_final_answer_item_only():
     rubric = _base_rubric()
 
     adjusted = apply_f2q1_student_claim_adjustments(
         rubric,
-        [_failed_check("f2q1_student_final_answer", "a=1, b=1")],
+        [_refuted_check("f2q1_student_final_answer", "a=1, b=1")],
     )
 
     by_id = {item.id: item for item in adjusted.items}

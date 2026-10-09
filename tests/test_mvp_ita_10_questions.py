@@ -6,6 +6,7 @@ import pytest
 from fastapi.testclient import TestClient
 
 from confia_lean_auditor.main import app
+from audit_contract import assert_score_contract, assert_incomplete
 
 
 CLIENT = TestClient(app)
@@ -15,6 +16,7 @@ VALID_VERDICTS = {
     "parcialmente_correto",
     "insuficiente",
     "incorreto",
+    "inconclusivo",
 }
 
 MVP_PROBLEM_IDS = [
@@ -73,9 +75,8 @@ def audit_example(problem_id: str, filename: str) -> dict:
 
 def assert_audit_contract(data: dict, problem_id: str) -> None:
     assert data["problem_id"] == problem_id
-    assert isinstance(data["score"], (int, float))
     assert isinstance(data["max_score"], (int, float))
-    assert 0 <= data["score"] <= data["max_score"]
+    assert_score_contract(data)
     assert data["verdict"] in VALID_VERDICTS
 
     assert isinstance(data["feedback"], str)
@@ -117,11 +118,15 @@ def test_mvp_partial_and_wrong_examples_keep_audit_contract(
 ):
     partial_data = audit_example(problem_id, partial_filename)
     assert_audit_contract(partial_data, problem_id)
-    assert partial_data["score"] < partial_data["max_score"]
+    assert partial_data["score"] is None
+    assert partial_data["verdict"] == "inconclusivo"
+    assert partial_data["rubric_assessment"]["evaluated_max_score"] < partial_data["max_score"]
 
     wrong_data = audit_example(problem_id, wrong_filename)
     assert_audit_contract(wrong_data, problem_id)
-    assert wrong_data["score"] < wrong_data["max_score"]
+    assert wrong_data["score"] is None
+    assert wrong_data["verdict"] == "inconclusivo"
+    assert wrong_data["rubric_assessment"]["evaluated_max_score"] < wrong_data["max_score"]
 
 
 @pytest.mark.parametrize("problem_id", MVP_PROBLEM_IDS)
@@ -129,7 +134,7 @@ def test_mvp_synthetic_adversarial_inputs_do_not_crash(problem_id: str):
     data = audit_solution(problem_id, ADVERSARIAL_SOLUTION)
 
     assert_audit_contract(data, problem_id)
-    assert data["score"] < data["max_score"]
+    assert_incomplete(data, 0, 0)
     assert data["pedagogical_report"] is not None
     assert data["feedback"]
     assert isinstance(data["student_claims"], list)

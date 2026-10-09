@@ -3,6 +3,7 @@ from pathlib import Path
 from fastapi.testclient import TestClient
 
 from confia_lean_auditor.main import app
+from audit_contract import assert_score_contract, assert_incomplete
 
 
 CLIENT = TestClient(app)
@@ -21,7 +22,9 @@ def audit_solution(solution: str):
         },
     )
     assert response.status_code == 200, response.text
-    return response.json()
+    data = response.json()
+    assert_score_contract(data)
+    return data
 
 
 def rubric_item_by_id(data, item_id: str):
@@ -63,11 +66,11 @@ def test_q8_correct_solution_scores_10_and_verifies_lean():
 def test_q8_answer_only_scores_interval_and_sum_only():
     data = audit_solution(read_example("answer_only.txt"))
 
-    assert data["score"] == 3.5
+    assert_incomplete(data, 3.5, 3.5)
 
-    assert rubric_item_by_id(data, "numerator_factorization")["points"] == 0.0
-    assert rubric_item_by_id(data, "denominator_condition")["points"] == 0.0
-    assert rubric_item_by_id(data, "sign_analysis")["points"] == 0.0
+    assert rubric_item_by_id(data, "numerator_factorization")["points"] is None
+    assert rubric_item_by_id(data, "denominator_condition")["points"] is None
+    assert rubric_item_by_id(data, "sign_analysis")["points"] is None
     assert rubric_item_by_id(data, "longest_interval")["points"] == 2.0
     assert rubric_item_by_id(data, "endpoint_sum")["points"] == 1.5
 
@@ -77,16 +80,16 @@ def test_q8_missing_sign_analysis_loses_sign_points():
 
     assert rubric_item_by_id(data, "numerator_factorization")["points"] == 2.5
     assert rubric_item_by_id(data, "denominator_condition")["points"] == 2.0
-    assert rubric_item_by_id(data, "sign_analysis")["points"] == 0.0
+    assert rubric_item_by_id(data, "sign_analysis")["points"] is None
     assert rubric_item_by_id(data, "longest_interval")["points"] == 2.0
     assert rubric_item_by_id(data, "endpoint_sum")["points"] == 1.5
 
-    assert data["score"] == 8.0
+    assert_incomplete(data, 8, 8)
 
 
-def test_q8_wrong_interval_scores_zero():
+def test_q8_wrong_interval_keeps_undecided_criteria_and_decided_subtotal():
     data = audit_solution(read_example("wrong_interval.txt"))
 
-    assert data["score"] == 0.0
-    assert rubric_item_by_id(data, "longest_interval")["points"] == 0.0
-    assert rubric_item_by_id(data, "endpoint_sum")["points"] == 0.0
+    assert_incomplete(data, 0, 0)
+    assert rubric_item_by_id(data, "longest_interval")["points"] is None
+    assert rubric_item_by_id(data, "endpoint_sum")["points"] is None

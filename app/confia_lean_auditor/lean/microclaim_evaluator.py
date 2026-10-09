@@ -14,25 +14,32 @@ from confia_lean_auditor.core.schemas import (
     LeanCertificate,
     MicroclaimResult,
 )
+from confia_lean_auditor.lean.verification import verification_state
 
 
 def locally_verified(result: MicroclaimResult) -> bool:
     return (
         result.textual_evidence
         and result.formal_steps_verified
-        and result.lean_status == "verified_by_lean"
+        and result.lean_status in {"verified_by_lean", "verified_by_formal_steps"}
     )
 
 
 def dependencies_are_verified(
     depends_on_microclaim_ids: List[str],
     results_by_id: Dict[str, MicroclaimResult],
+    visiting=None,
 ) -> bool:
+    visiting = set() if visiting is None else visiting
     for dep_id in depends_on_microclaim_ids:
+        if dep_id in visiting:
+            return False
         dep = results_by_id.get(dep_id)
         if dep is None:
             return False
         if not locally_verified(dep):
+            return False
+        if not dependencies_are_verified(dep.depends_on_microclaim_ids, results_by_id, visiting | {dep_id}):
             return False
 
     return True
@@ -54,7 +61,8 @@ def evaluate_microclaims(
     present_claim_types = set(claim.type for claim in claim_extraction.claims)
     generated = set(generated_theorems)
     verified_step_types = {
-        step.type for step in formal_step_results if step.status == "verified"
+        step.type for step in formal_step_results
+        if step.status == "verified" and step.compiled and step.exit_code == 0
     }
 
     first_pass: List[MicroclaimResult] = []
@@ -86,6 +94,10 @@ def evaluate_microclaims(
             lean_status = "not_generated"
         elif lean_certificate.status == "verified":
             lean_status = "verified_by_lean"
+        elif required_formal_step_types:
+            # These independent witnesses prove the required step propositions
+            # even when compiling the combined attempt is unavailable.
+            lean_status = "verified_by_formal_steps"
         else:
             lean_status = "not_verified_" + lean_certificate.status
 
@@ -102,6 +114,11 @@ def evaluate_microclaims(
                 textual_evidence=textual_evidence,
                 lean_status=lean_status,
                 supports_rubric_items=item.supports_rubric_items,
+                verification_status="available" if lean_status in {"verified_by_lean", "verified_by_formal_steps"}
+                else "technical_error" if textual_evidence and (
+                    verification_state(lean_certificate) == "technical_error" or any(
+                        verification_state(step) == "technical_error" for step in formal_step_results
+                        if step.type in required_formal_step_types)) else "partial",
             )
         )
 
@@ -115,7 +132,7 @@ def evaluate_microclaims(
         )
 
         lean_status = mc.lean_status
-        if mc.textual_evidence and mc.lean_status == "verified_by_lean" and not dependencies_verified:
+        if mc.textual_evidence and locally_verified(mc) and not dependencies_verified:
             lean_status = "dependency_not_verified"
 
         final_results.append(
@@ -131,6 +148,7 @@ def evaluate_microclaims(
                 textual_evidence=mc.textual_evidence,
                 lean_status=lean_status,
                 supports_rubric_items=mc.supports_rubric_items,
+                verification_status=mc.verification_status if dependencies_verified or mc.verification_status == "technical_error" else "partial",
             )
         )
 

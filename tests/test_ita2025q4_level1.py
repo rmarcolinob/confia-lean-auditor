@@ -3,6 +3,7 @@ from pathlib import Path
 from fastapi.testclient import TestClient
 
 from confia_lean_auditor.main import app
+from audit_contract import assert_score_contract, assert_incomplete
 
 
 CLIENT = TestClient(app)
@@ -21,7 +22,9 @@ def audit_solution(solution: str):
         },
     )
     assert response.status_code == 200, response.text
-    return response.json()
+    data = response.json()
+    assert_score_contract(data)
+    return data
 
 
 def rubric_item_by_id(data, item_id: str):
@@ -68,13 +71,13 @@ def test_q4_correct_solution_scores_10_and_verifies_lean():
 def test_q4_answer_only_scores_conclusion_point_only():
     data = audit_solution(read_example("answer_only.txt"))
 
-    assert data["score"] == 1.0
+    assert_incomplete(data, 1, 1)
 
     conclusion = rubric_item_by_id(data, "not_injective_conclusion")
     assert conclusion["detected"] is True
     assert conclusion["points"] == 1.0
 
-    assert rubric_item_by_id(data, "positive_witnesses")["points"] == 0.0
-    assert rubric_item_by_id(data, "same_f_argument")["points"] == 0.0
-    assert rubric_item_by_id(data, "distinct_g_inputs")["points"] == 0.0
-    assert rubric_item_by_id(data, "equal_g_values")["points"] == 0.0
+    assert rubric_item_by_id(data, "positive_witnesses")["points"] is None
+    assert rubric_item_by_id(data, "same_f_argument")["points"] is None
+    assert rubric_item_by_id(data, "distinct_g_inputs")["points"] is None
+    assert rubric_item_by_id(data, "equal_g_values")["points"] is None

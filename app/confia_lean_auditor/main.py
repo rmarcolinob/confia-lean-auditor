@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import shutil
 from dataclasses import asdict
 from datetime import datetime, timezone
 from pathlib import Path
@@ -22,6 +23,7 @@ from confia_lean_auditor.lean.build_attempt import build_attempt
 from confia_lean_auditor.lean.formal_step_evaluator import evaluate_formal_steps
 from confia_lean_auditor.lean.microclaim_evaluator import evaluate_microclaims
 from confia_lean_auditor.lean.run_lean import run_lean_file
+from confia_lean_auditor.lean.verification import verification_state
 from confia_lean_auditor.reports.report_builder import (
     build_feedback,
     build_pedagogical_report,
@@ -37,6 +39,7 @@ from confia_lean_auditor.submissions.router import (
     transcriptions_router,
 )
 from confia_lean_auditor.submissions.body_limit import TranscriptionBodyLimitMiddleware
+from confia_lean_auditor.submission_audits.router import router as submission_audits_router
 
 
 app = FastAPI(title="ConfIA Lean Auditor", version="0.4.0")
@@ -45,6 +48,7 @@ STATIC_DIR = Path(__file__).resolve().parent / "static"
 app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
 app.include_router(submissions_router)
 app.include_router(transcriptions_router)
+app.include_router(submission_audits_router)
 
 
 def repo_root() -> Path:
@@ -85,6 +89,11 @@ def problem_example(problem_id: str, example_key: str):
 
 @app.post("/audit", response_model=AuditResponse)
 def audit(req: AuditRequest) -> AuditResponse:
+    return execute_audit(req)
+
+
+def execute_audit(req: AuditRequest) -> AuditResponse:
+    """The same engine serves typed solutions and the accepted-source bridge."""
     root = repo_root()
 
     try:
@@ -162,6 +171,19 @@ def audit(req: AuditRequest) -> AuditResponse:
 
     student_claims_payload = [asdict(claim) for claim in student_claims]
     student_claim_checks_payload = [asdict(check) for check in student_claim_checks]
+    # Keep mandatory proof witnesses inside this run's controlled directory.
+    witnesses_dir = artifact_dir / "student_claim_checks"
+    for index, check in enumerate(student_claim_checks_payload):
+        field = "lean_file" if check["status"] == "verified" else (
+            "refutation_lean_file" if check["status"] == "refuted" else None)
+        if field:
+            witnesses_dir.mkdir(exist_ok=True)
+            source_path = Path(check[field])
+            if source_path.is_symlink():
+                raise ValueError("invalid student proof witness")
+            destination = witnesses_dir / f"student_check_{index}_{field}.lean"
+            shutil.copyfile(source_path, destination)
+            check[field] = str(destination)
 
     try:
         rubric = evaluate_rubric(
@@ -191,7 +213,9 @@ def audit(req: AuditRequest) -> AuditResponse:
         student_claim_checks=student_claim_checks_payload,
         microclaims=microclaims,
         artifact_dir=str(artifact_dir),
+        verification_status=verification_state(lean_certificate),
     )
+    verdict = pedagogical_report.verdict
 
 
     response = AuditResponse(

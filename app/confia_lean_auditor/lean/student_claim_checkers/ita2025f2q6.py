@@ -1,12 +1,12 @@
 from __future__ import annotations
 
-import subprocess
 import time
 from dataclasses import asdict
 from typing import List
 
 from confia_lean_auditor.lean.student_claim_checker import CHECK_DIR, _run_lean_file
 from confia_lean_auditor.student_claims.schemas import StudentClaim, StudentClaimCheck
+from confia_lean_auditor.lean.student_proof import evaluate_student_proof, negation_method
 
 
 def _build_f2q6_lean_code(
@@ -215,44 +215,11 @@ def check_one_f2q6_student_claim(
 
     lean_file = out_dir / f"{theorem_name}.lean"
     lean_code = _build_f2q6_lean_code(claim, theorem_name, lean_statement, method)
-    lean_file.write_text(lean_code, encoding="utf-8")
-
-    try:
-        proc = _run_lean_file(lean_file, timeout_seconds=timeout_seconds)
-        compiled = proc.returncode == 0
-
-        return StudentClaimCheck(
-            id=claim.id,
-            problem_id=claim.problem_id,
-            claim_type=claim.claim_type,
-            raw_text=claim.raw_text,
-            normalized_text=claim.normalized_text,
-            lean_statement=lean_statement,
-            method=method,
-            status="verified" if compiled else "failed",
-            compiled=compiled,
-            lean_file=str(lean_file),
-            stdout=proc.stdout,
-            stderr=proc.stderr,
-            data=claim.data,
-        )
-
-    except subprocess.TimeoutExpired as exc:
-        return StudentClaimCheck(
-            id=claim.id,
-            problem_id=claim.problem_id,
-            claim_type=claim.claim_type,
-            raw_text=claim.raw_text,
-            normalized_text=claim.normalized_text,
-            lean_statement=lean_statement,
-            method=method,
-            status="error",
-            compiled=False,
-            lean_file=str(lean_file),
-            stdout=exc.stdout or "",
-            stderr=f"timeout after {timeout_seconds}s",
-            data=claim.data,
-        )
+    negative = _build_f2q6_lean_code(claim, theorem_name + "_refutation",
+        f"¬ ({lean_statement})", negation_method(claim, method))
+    return evaluate_student_proof(claim=claim, lean_file=lean_file,
+        lean_statement=lean_statement, method=method, lean_code=lean_code,
+        negation_code=negative, runner=_run_lean_file, timeout_seconds=timeout_seconds)
 
 
 def check_f2q6_student_claims(

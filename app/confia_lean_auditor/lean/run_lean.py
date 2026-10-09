@@ -84,6 +84,12 @@ def run_lean_file(repo_root: Path, lean_file: Path, timeout_seconds: int = 30) -
         exit_code = 124
         stdout = exc.stdout or ""
         stderr = exc.stderr or "Lean timeout"
+        if isinstance(stdout, bytes):
+            stdout = stdout.decode("utf-8", errors="replace")
+        if isinstance(stderr, bytes):
+            stderr = stderr.decode("utf-8", errors="replace")
+    except OSError:
+        exit_code, stdout, stderr = -1, "", "Formal verification unavailable: process error"
 
     status = classify(exit_code, forbidden, stdout, stderr)
 

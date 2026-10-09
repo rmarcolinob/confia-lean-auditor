@@ -45,7 +45,7 @@ def test_f2q1_wrong_final_answer_is_rejected():
 
     by_type = _checks_by_type(solution)
 
-    assert by_type["f2q1_student_final_answer"][0].status == "failed"
+    assert by_type["f2q1_student_final_answer"][0].status == "refuted"
 
 
 def test_f2q1_wrong_power_reduction_is_rejected():
@@ -57,7 +57,7 @@ def test_f2q1_wrong_power_reduction_is_rejected():
     by_type = _checks_by_type(solution)
 
     power_checks = by_type["f2q1_student_power_reduction"]
-    assert any(c.raw_text == "x^14=1-x" and c.status == "failed" for c in power_checks)
+    assert any(c.raw_text == "x^14=1-x" and c.status == "refuted" for c in power_checks)
 
 
 def test_f2q1_wrong_reduced_form_is_rejected():
@@ -68,7 +68,7 @@ def test_f2q1_wrong_reduced_form_is_rejected():
 
     by_type = _checks_by_type(solution)
 
-    assert by_type["f2q1_student_reduced_form"][0].status == "failed"
+    assert by_type["f2q1_student_reduced_form"][0].status == "refuted"
 
 
 def test_f2q1_wrong_coefficient_system_is_rejected():
@@ -80,5 +80,5 @@ def test_f2q1_wrong_coefficient_system_is_rejected():
 
     by_type = _checks_by_type(solution)
 
-    assert by_type["f2q1_student_coefficient_system"][0].status == "failed"
-    assert by_type["f2q1_student_final_answer"][0].status == "failed"
+    assert by_type["f2q1_student_coefficient_system"][0].status == "refuted"
+    assert by_type["f2q1_student_final_answer"][0].status == "refuted"

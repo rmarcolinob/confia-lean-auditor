@@ -17,7 +17,7 @@ async function open(transport) {
 
 for (const [state, label] of [['NEEDS_REVIEW', 'Aguardando conferência'], ['ACCEPTED', 'Transcrição conferida'], ['DRAFT', 'Rascunho da transcrição']]) {
   test(`queue uses the persisted ${state} transcription separately from RECEIVED and analysis`, async () => {
-    const ui = await load(async url => url === '/submissions' ? ok([record]) : ok([{ ...summary, latest_revision: { ...revision, status: state } }]));
+    const ui = await load(async url => url === '/submissions' ? ok([record]) : url.endsWith('/audits') ? ok([]) : ok([{ ...summary, latest_revision: { ...revision, status: state } }]));
     const row = ui.get('#manuscript-list').children[0];
     assert.match(row.textContent, /Questão ITA2025Q1.*Recebida pelo ConfIA/);
     assert(row.textContent.includes(label));
@@ -63,7 +63,7 @@ test('accepted fidelity completes only transcription; no audit, grade or institu
   const evaluation = byClass(ui, 'teacher-evaluation-panel');
   assert.match(evaluation.textContent, /integração em desenvolvimento/);
   assert.equal(descendants(evaluation).some(n => ['button', 'input', 'select'].includes(n.tag)), false);
-  assert.equal(ui.calls.some(c => /audit|decision|grade/.test(c.url) || c.options.method), false);
+  assert.equal(ui.calls.some(c => c.url === '/audit' || /decision|grade/.test(c.url) || c.options.method), false);
 });
 
 test('IDs, hashes and enums stay in closed disclosures and acceptance history remains available', async () => {

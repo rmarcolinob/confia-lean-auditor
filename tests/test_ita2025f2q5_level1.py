@@ -3,6 +3,7 @@ from pathlib import Path
 from fastapi.testclient import TestClient
 
 from confia_lean_auditor.main import app
+from audit_contract import assert_score_contract, assert_incomplete
 
 
 CLIENT = TestClient(app)
@@ -21,7 +22,9 @@ def audit_solution(solution: str):
         },
     )
     assert response.status_code == 200, response.text
-    return response.json()
+    data = response.json()
+    assert_score_contract(data)
+    return data
 
 
 def rubric_item_by_id(data, item_id: str):
@@ -67,9 +70,9 @@ def test_f2q5_correct_solution_scores_10_and_verifies_lean():
 def test_f2q5_answer_only_scores_final_points_only():
     data = audit_solution(read_example("answer_only.txt"))
 
-    assert data["score"] == 2.0
+    assert_incomplete(data, 2, 2)
     assert rubric_item_by_id(data, "final_digit")["points"] == 2.0
-    assert rubric_item_by_id(data, "log_power_decomposition")["points"] == 0.0
+    assert rubric_item_by_id(data, "log_power_decomposition")["points"] is None
 
 
 def test_f2q5_missing_bounds_scores_partial():
@@ -77,10 +80,10 @@ def test_f2q5_missing_bounds_scores_partial():
 
     assert rubric_item_by_id(data, "log_power_decomposition")["points"] == 2.0
     assert rubric_item_by_id(data, "mantissa_identification")["points"] == 2.0
-    assert rubric_item_by_id(data, "digit_log_bounds")["points"] == 0.0
-    assert rubric_item_by_id(data, "mantissa_between_bounds")["points"] == 0.0
+    assert rubric_item_by_id(data, "digit_log_bounds")["points"] is None
+    assert rubric_item_by_id(data, "mantissa_between_bounds")["points"] is None
     assert rubric_item_by_id(data, "final_digit")["points"] == 2.0
-    assert data["score"] == 6.0
+    assert_incomplete(data, 6, 6)
 
     generated = set(data["lean_certificate"]["generated_theorems"])
     assert "log_power_decomposition" in generated
@@ -89,8 +92,8 @@ def test_f2q5_missing_bounds_scores_partial():
     assert "final_digit_five" not in generated
 
 
-def test_f2q5_wrong_digit_scores_zero():
+def test_f2q5_wrong_digit_keeps_undecided_criteria_and_decided_subtotal():
     data = audit_solution(read_example("wrong_digit.txt"))
 
-    assert data["score"] == 0.0
+    assert_incomplete(data, 0, 2)
     assert rubric_item_by_id(data, "final_digit")["points"] == 0.0

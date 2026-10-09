@@ -61,7 +61,7 @@ test("failed list and detail requests do not leave stale received artifacts on s
 test("refresh invalidates an older pending detail response", async () => {
   let resolve;
   const pending = new Promise(yes => { resolve = yes; });
-  const ui = page(async url => ({ ok: true, json: async () => url === "/submissions" ? [record] : url.endsWith("/transcriptions") ? [] : pending }));
+  const ui = page(async url => ({ ok: true, json: async () => url === "/submissions" ? [record] : /\/(transcriptions|audits)$/.test(url) ? [] : pending }));
   await ui.get("#refresh-manuscripts").click();
   const opening = ui.get("#manuscript-list").children[0].click();
   await ui.get("#refresh-manuscripts").click();
@@ -112,6 +112,7 @@ test("teacher creates a manual transcription and accepts fidelity without an aud
     }
     return { ok: true, json: async () => {
       if (url === "/submissions") return [record];
+      if (url.endsWith("/audits")) return [];
       if (url.endsWith("/transcriptions")) return created ? [localSummary] : [];
       if (url.startsWith("/transcriptions/")) return localHistory;
       return detailData();
@@ -145,6 +146,7 @@ test("teacher development action labels artificial recognition and opens NEEDS_R
     }
     return { ok: true, json: async () => {
       if (url === "/submissions") return [record];
+      if (url.endsWith("/audits")) return [];
       if (url.endsWith("/transcriptions")) return generated ? [{ transcription: { ...summary.transcription, source: "automatic" }, latest_revision: automatic }] : [];
       if (url.startsWith("/transcriptions/")) return { transcription: { ...summary.transcription, source: "automatic" }, revisions: [automatic], acceptances: [] };
       return detailData();

@@ -3,6 +3,7 @@ from pathlib import Path
 from fastapi.testclient import TestClient
 
 from confia_lean_auditor.main import app
+from audit_contract import assert_score_contract, assert_incomplete
 
 
 CLIENT = TestClient(app)
@@ -21,7 +22,9 @@ def audit_solution(solution: str):
         },
     )
     assert response.status_code == 200, response.text
-    return response.json()
+    data = response.json()
+    assert_score_contract(data)
+    return data
 
 
 def rubric_item_by_id(data, item_id: str):
@@ -72,26 +75,34 @@ def test_f2q3_correct_solution_scores_10_and_verifies_lean():
 def test_f2q3_answer_only_scores_final_points_only():
     data = audit_solution(read_example("answer_only.txt"))
 
-    assert data["score"] == 2.0
+    assert_incomplete(data, 2, 2)
     assert rubric_item_by_id(data, "final_answer")["points"] == 2.0
-    assert rubric_item_by_id(data, "beta_difference")["points"] == 0.0
-    assert rubric_item_by_id(data, "candidate_values")["points"] == 0.0
-    assert rubric_item_by_id(data, "final_sin_sum")["points"] == 0.0
+    assert rubric_item_by_id(data, "beta_difference")["points"] is None
+    assert rubric_item_by_id(data, "candidate_values")["points"] is None
+    assert rubric_item_by_id(data, "final_sin_sum")["points"] is None
 
 
 def test_f2q3_partial_beta_difference_scores_partial():
     data = audit_solution(read_example("partial_beta_difference.txt"))
 
-    assert data["score"] == 2.0
+    assert_incomplete(data, 2, 4)
     assert rubric_item_by_id(data, "beta_difference")["points"] == 2.0
-    assert rubric_item_by_id(data, "candidate_values")["points"] == 0.0
-    assert rubric_item_by_id(data, "final_sin_sum")["points"] == 0.0
-    assert rubric_item_by_id(data, "final_answer")["points"] == 0.0
+    assert rubric_item_by_id(data, "candidate_values")["points"] is None
+    assert rubric_item_by_id(data, "final_sin_sum")["points"] is None
+    # The existing checker also decides the extracted final-answer claim by refutation.
+    # Its zero belongs to the decided capacity; missing criteria remain pending.
+    final = rubric_item_by_id(data, "final_answer")
+    assert final["points"] == 0.0
+    assert final["mathematical_status"] == "refuted"
+    check = next(check for check in data["student_claim_checks"]
+                 if check["claim_type"] == "f2q3_student_final_answer")
+    assert check["status"] == "refuted" and check["refutation_verified"] is True
+    assert check["refutation_lean_file"]
 
 
-def test_f2q3_wrong_answer_scores_zero():
+def test_f2q3_wrong_answer_keeps_undecided_criteria_and_decided_subtotal():
     data = audit_solution(read_example("wrong_answer.txt"))
 
-    assert data["score"] == 0.0
+    assert_incomplete(data, 0, 5)
     assert rubric_item_by_id(data, "final_answer")["points"] == 0.0
     assert rubric_item_by_id(data, "final_sin_sum")["points"] == 0.0

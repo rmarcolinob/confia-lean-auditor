@@ -52,7 +52,7 @@ def _base_rubric() -> RubricAssessment:
     )
 
 
-def _failed_check(claim_type: str, raw_text: str) -> StudentClaimCheck:
+def _refuted_check(claim_type: str, raw_text: str) -> StudentClaimCheck:
     return StudentClaimCheck(
         id="student_claim_0",
         problem_id="ITA2025F2Q6",
@@ -61,7 +61,9 @@ def _failed_check(claim_type: str, raw_text: str) -> StudentClaimCheck:
         normalized_text=raw_text,
         lean_statement="False",
         method="norm_num",
-        status="failed",
+        status="refuted",
+        refutation_verified=True,
+        refutation_lean_file="/test/formal_negation.lean",
         compiled=False,
         lean_file=None,
         stdout="",
@@ -93,7 +95,7 @@ def test_f2q6_failed_probability_formula_zeros_probability_item_only():
 
     adjusted = apply_f2q6_student_claim_adjustments(
         rubric,
-        [_failed_check("f2q6_student_probability_formula", "C(n,3)/2^n")],
+        [_refuted_check("f2q6_student_probability_formula", "C(n,3)/2^n")],
     )
 
     by_id = {item.id: item for item in adjusted.items}
@@ -113,7 +115,7 @@ def test_f2q6_failed_ratio_formula_zeros_ratio_and_maximizer_items():
 
     adjusted = apply_f2q6_student_claim_adjustments(
         rubric,
-        [_failed_check("f2q6_student_ratio_formula", "(n-1)/(2n)")],
+        [_refuted_check("f2q6_student_ratio_formula", "(n-1)/(2n)")],
     )
 
     by_id = {item.id: item for item in adjusted.items}
@@ -135,7 +137,7 @@ def test_f2q6_failed_final_answer_zeros_final_answer_item_only():
 
     adjusted = apply_f2q6_student_claim_adjustments(
         rubric,
-        [_failed_check("f2q6_student_final_answer", "n=7,8")],
+        [_refuted_check("f2q6_student_final_answer", "n=7,8")],
     )
 
     by_id = {item.id: item for item in adjusted.items}

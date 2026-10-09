@@ -28,12 +28,12 @@ def test_teacher_inbox_is_integrated_and_separate_from_textual_correction():
         assert CLIENT.get(f"/static/submissions/{asset}?v=p2-cap-03a").status_code == 200
 
 
-def test_submission_frontends_use_text_nodes_original_pngs_and_never_audit():
+def test_submission_frontends_use_text_nodes_original_pngs_and_no_direct_audit():
     sources = [(Path(STATIC_DIR) / "capture/submission-client.js").read_text(),
                (Path(STATIC_DIR) / "submissions/teacher.js").read_text()]
     for source in sources:
         assert "innerHTML" not in source
-        for forbidden in ("/audit", "run_lean", "claims", "score", "verdict", "rubric"):
+        for forbidden in ('fetch("/audit"', 'write("/audit"', "run_lean"):
             assert forbidden not in source
     assert "textContent" in sources[1]
     assert 'image.src = `/submissions/${id}/pages/${page.page_index}`' in sources[1]

@@ -9,6 +9,7 @@ __pycache__/
 # Runtime artifacts
 artifacts/runs/
 runtime/submissions/
+runtime/submission_audits/
 
 # Local environment files
 .env

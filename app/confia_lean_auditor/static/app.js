@@ -343,6 +343,7 @@ function resultLabel(result) {
     parcialmente_correto: "parcialmente correto",
     insuficiente: "insuficiente",
     incorreto: "incorreto",
+    inconclusivo: "inconclusivo",
   };
   return labels[result] || result || "Não avaliado";
 }
@@ -452,6 +453,35 @@ function renderTechnicalDetails(data) {
   return details;
 }
 
+function renderFormalChecks(data) {
+  const section = document.createElement("section");
+  section.className = "formal-checks-section";
+  appendTextElement(section, "h3", "section-title", "Verificações formais");
+  appendTextElement(section, "p", "muted", "Lean verifica somente os claims e passos formalizados pelo auditor. Isso não verifica toda a solução nem substitui a avaliação do professor.");
+  const details = document.createElement("details");
+  details.appendChild(document.createElement("summary")).textContent = "Consultar claims, passos e resultados formais";
+  const entries = [...(data.formal_steps || []), ...(data.student_claim_checks || [])];
+  if (!entries.length) appendTextElement(details, "p", "", "Nenhum passo ou claim do aluno foi selecionado para essas verificações.");
+  for (const item of entries) {
+    const statuses = { verified: "Afirmação verificada", refuted: "Erro matemático identificado",
+      unverified: "Não foi possível verificar formalmente", technical_error: "Verificação formal indisponível",
+      failed: "Não foi possível verificar formalmente", error: "Verificação formal indisponível",
+      lean_timeout: "Verificação formal indisponível", lean_error: "Verificação formal indisponível",
+      lean_error_unknown_identifier: "Verificação formal indisponível",
+      lean_error_unsolved_goals: "Não foi possível verificar formalmente",
+      lean_error_synthesis_failed: "Não foi possível verificar formalmente",
+      invalid_formal_step: "Não foi possível verificar formalmente",
+      unsupported: "Afirmação fora da cobertura formal" };
+    const label = item.status === "refuted" && (!item.refutation_verified || !item.refutation_lean_file)
+      ? statuses.unverified : statuses[item.status] || item.result || "Resultado nos detalhes técnicos";
+    appendTextElement(details, "p", "", `${item.description || item.claim_id || item.id || "Verificação"}: ${label}`);
+  }
+  appendTextElement(details, "pre", "", JSON.stringify({ lean_certificate: data.lean_certificate,
+    formal_steps: data.formal_steps, student_claim_checks: data.student_claim_checks, microclaims: data.microclaims }, null, 2));
+  section.appendChild(details);
+  return section;
+}
+
 function renderRubricSection(rubric) {
   const section = document.createElement("section");
   section.className = "rubric-section";
@@ -473,12 +503,14 @@ function renderRubricSection(rubric) {
 
   const gapCard = document.createElement("article");
   gapCard.className = "review-card";
-  appendTextElement(gapCard, "h3", "", "Lacunas");
+  appendTextElement(gapCard, "h3", "", "Lacunas e critérios pendentes");
   const gapList = document.createElement("ul");
 
   for (const item of items) {
-    const label = `${item.description || item.id}: ${item.points} / ${item.max_points}`;
-    if (Number(item.points) >= Number(item.max_points)) {
+    const label = item.points == null
+      ? `${item.description || item.id}: Indeterminado — ${item.assessment_note || "verificação não concluída nesta execução"}`
+      : `${item.description || item.id}: ${item.points} / ${item.max_points}`;
+    if (item.points != null && Number(item.points) >= Number(item.max_points)) {
       appendTextElement(metList, "li", "", label);
     } else {
       appendTextElement(gapList, "li", "", label);
@@ -514,6 +546,7 @@ function renderReport(data, targetPanel = resultPanel, options = {}) {
       "empty-state",
       "A análise terminou, mas não retornou relatório pedagógico."
     );
+    targetPanel.appendChild(renderFormalChecks(data));
     targetPanel.appendChild(renderTechnicalDetails(data));
     return;
   }
@@ -543,7 +576,11 @@ function renderReport(data, targetPanel = resultPanel, options = {}) {
   metrics.className = "metrics";
   const scoreMetric = appendTextElement(metrics, "div", "metric", "");
   appendTextElement(scoreMetric, "span", "metric-label", isTeacher ? "Nota sugerida" : "Pontuação");
-  appendTextElement(scoreMetric, "strong", "metric-value", `${report.score} / ${report.max_score}`);
+  appendTextElement(scoreMetric, "strong", "metric-value", report.score == null
+    ? "Avaliação incompleta" : `${report.score} / ${report.max_score}`);
+  if (report.score == null && report.evaluated_max_score > 0) {
+    appendTextElement(scoreMetric, "p", "muted", `Critérios decididos: ${report.evaluated_score} / ${report.evaluated_max_score}; sem nota global.`);
+  }
 
   const reliabilityMetric = appendTextElement(metrics, "div", "metric", "");
   appendTextElement(reliabilityMetric, "span", "metric-label", "Confiabilidade");
@@ -562,8 +599,11 @@ function renderReport(data, targetPanel = resultPanel, options = {}) {
   if (isTeacher) {
     targetPanel.appendChild(renderRubricSection(data.rubric_assessment));
   }
+  targetPanel.appendChild(renderFormalChecks(data));
   targetPanel.appendChild(renderTechnicalDetails(data));
 }
+
+if (typeof window !== "undefined") window.ConfIAReport = { render: renderReport };
 
 function renderError(message, targetPanel = resultPanel) {
   clearNode(targetPanel);

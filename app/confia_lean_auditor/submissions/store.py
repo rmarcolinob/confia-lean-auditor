@@ -19,9 +19,10 @@ from confia_lean_auditor.submissions.schemas import (
     ArtifactReference, CaptureSnapshot, CreateTranscriptionRequest,
     CreateTranscriptionRevisionRequest, MAX_PNG_BYTES, SubmissionDetail,
     SubmissionReceipt, SubmissionRecord, SubmissionRequest,
-    TranscriptionAcceptance, TranscriptionHistory, TranscriptionRecord,
+    TranscriptionAcceptance, TranscriptionAcceptanceReceipt, TranscriptionHistory, TranscriptionRecord,
     TranscriptionRevision, TranscriptionSummary,
 )
+from confia_lean_auditor.submissions.integrity import model_sha256
 
 
 class SubmissionConflict(ValueError):
@@ -41,6 +42,10 @@ class InvalidSubmissionProblem(ValueError):
 
 
 class TranscriptionConflict(ValueError):
+    pass
+
+
+class TranscriptionIntegrityConflict(TranscriptionConflict):
     pass
 
 
@@ -278,6 +283,27 @@ class SubmissionStore:
     def _acceptance_path(folder, revision_number):
         return folder / "acceptances" / f"acceptance_{revision_number:06d}.json"
 
+    @staticmethod
+    def _acceptance_receipt_path(folder, revision_number):
+        return folder / "acceptance_receipts" / f"acceptance_{revision_number:06d}.json"
+
+    def assert_acceptance_integrity(self, folder, revision, acceptance):
+        """Validate the original persisted revision, before projecting ACCEPTED."""
+        path = self._acceptance_receipt_path(folder, acceptance.revision_number)
+        try:
+            if path.parent.is_symlink() or path.is_symlink() or not path.is_file():
+                raise TranscriptionIntegrityConflict()
+            receipt = TranscriptionAcceptanceReceipt.model_validate_json(path.read_bytes())
+            if (receipt.acceptance_id != acceptance.acceptance_id
+                    or receipt.created_at != acceptance.accepted_at
+                    or receipt.acceptance_sha256 != model_sha256(acceptance)
+                    or receipt.accepted_revision_sha256 != acceptance.accepted_revision_sha256
+                    or model_sha256(revision) != acceptance.accepted_revision_sha256):
+                raise TranscriptionIntegrityConflict()
+            return receipt
+        except (ValueError, FileNotFoundError, IsADirectoryError) as exc:
+            raise TranscriptionIntegrityConflict() from exc
+
     def _read_transcription_record(self, folder):
         record = TranscriptionRecord.model_validate_json((folder / "transcription.json").read_bytes())
         if record.transcription_id != folder.name or folder.parent.parent.name != record.submission_id:
@@ -311,7 +337,10 @@ class SubmissionStore:
         for path in sorted(root.glob("acceptance_*.json")):
             if path.is_symlink() or not re.fullmatch(r"acceptance_[0-9]{6}\.json", path.name):
                 continue
-            acceptance = TranscriptionAcceptance.model_validate_json(path.read_bytes())
+            try:
+                acceptance = TranscriptionAcceptance.model_validate_json(path.read_bytes())
+            except ValueError as exc:
+                raise TranscriptionIntegrityConflict() from exc
             expected_number = int(path.stem.removeprefix("acceptance_"))
             if acceptance.revision_number != expected_number:
                 raise ValueError("inconsistent transcription acceptance")
@@ -320,7 +349,8 @@ class SubmissionStore:
 
     @staticmethod
     def _accepted_revisions(revisions, acceptances):
-        accepted = {acceptance.revision_number for acceptance in acceptances}
+        accepted = {acceptance.revision_number for acceptance in acceptances
+                    if acceptance.accepted_revision_sha256 is not None}
         return [revision.model_copy(update={"status": "ACCEPTED"}) if revision.revision_number in accepted else revision
                 for revision in revisions]
 
@@ -458,6 +488,14 @@ class SubmissionStore:
             for acceptance in acceptances
         ):
             raise ValueError("acceptance is not bound to its transcription revision")
+        for acceptance in acceptances:
+            if acceptance.accepted_revision_sha256 is None:
+                path = self._acceptance_receipt_path(folder, acceptance.revision_number)
+                if path.exists() or path.is_symlink():
+                    raise TranscriptionIntegrityConflict()
+                # Keep legacy history readable; never promote it or backfill hashes.
+                continue
+            self.assert_acceptance_integrity(folder, revisions[acceptance.revision_number - 1], acceptance)
         revisions = self._accepted_revisions(revisions, acceptances)
         return TranscriptionHistory(transcription=record, revisions=revisions, acceptances=acceptances)
 
@@ -502,6 +540,8 @@ class SubmissionStore:
                 raise FileNotFoundError()
             existing = next((item for item in history.acceptances if item.revision_number == request.revision_number), None)
             if existing is not None:
+                if existing.accepted_revision_sha256 is None:
+                    raise TranscriptionIntegrityConflict()
                 if (existing.reviewer_reference != request.reviewer_reference
                         or existing.acceptance_note != request.acceptance_note):
                     raise TranscriptionConflict("revision already accepted with different metadata")
@@ -513,7 +553,19 @@ class SubmissionStore:
                 reviewer_reference=request.reviewer_reference,
                 reviewer_identity_verified=request.reviewer_identity_verified,
                 acceptance_note=request.acceptance_note,
+                accepted_revision_sha256=model_sha256(revision),
             )
+            receipt = TranscriptionAcceptanceReceipt(
+                acceptance_id=acceptance.acceptance_id, acceptance_sha256=model_sha256(acceptance),
+                accepted_revision_sha256=acceptance.accepted_revision_sha256, created_at=acceptance.accepted_at,
+            )
+            # Receipt first, acceptance last: a visible acceptance always has its
+            # reference. An interrupted publication fails closed; never repair it.
+            receipt_path = self._acceptance_receipt_path(folder, request.revision_number)
+            if (receipt_path.parent.is_symlink() or receipt_path.exists() or receipt_path.is_symlink()
+                    or (receipt_path.parent.exists() and not receipt_path.parent.is_dir())):
+                raise TranscriptionIntegrityConflict()
+            self._write_atomic_new(receipt_path, receipt.model_dump_json(indent=2).encode("utf-8"))
             self._write_atomic_new(
                 self._acceptance_path(folder, request.revision_number),
                 acceptance.model_dump_json(indent=2).encode("utf-8"),

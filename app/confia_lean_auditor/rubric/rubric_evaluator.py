@@ -11,6 +11,7 @@ from confia_lean_auditor.core.schemas import (
     RubricAssessment,
     RubricItemResult,
 )
+from confia_lean_auditor.rubric.assessment import refresh_assessment
 
 
 def evaluate_rubric(
@@ -28,16 +29,17 @@ def evaluate_rubric(
     for claim in claim_extraction.claims:
         claims_by_type.setdefault(claim.type, claim)
 
+    microclaims_by_id = {mc.id: mc for mc in microclaims or []}
     verified_microclaim_ids = set()
     if microclaims is not None:
         verified_microclaim_ids = {
             mc.id
             for mc in microclaims
-            if mc.textual_evidence and mc.lean_status == "verified_by_lean"
+            if mc.textual_evidence and mc.lean_status in {"verified_by_lean", "verified_by_formal_steps"}
+            and mc.dependencies_verified
         }
 
     items: List[RubricItemResult] = []
-    score = 0.0
 
     for item in rubric_config.items:
         claim_type = item.claim_type
@@ -56,8 +58,13 @@ def evaluate_rubric(
 
         detected = has_claim and has_required_microclaims
 
-        points = float(item.points) if detected else 0.0
-        score += points
+        # Neither an absent proof nor an absent extracted claim refutes the
+        # student's mathematics. Keep undecidable criteria out of the score.
+        points = float(item.points) if detected else None
+        required = [microclaims_by_id.get(mc_id) for mc_id in required_microclaim_ids]
+        availability = "available" if detected else (
+            "technical_error" if any(mc and mc.verification_status == "technical_error" for mc in required)
+            else "partial")
 
         evidence = None
         claim_id = None
@@ -75,11 +82,16 @@ def evaluate_rubric(
                 max_points=float(item.points),
                 evidence=evidence,
                 claim_id=claim_id,
+                mathematical_status="supported" if detected else "indeterminate",
+                verification_status=availability,
+                assessment_note=None if detected else (
+                    "Verificação formal indisponível nesta execução." if availability == "technical_error"
+                    else "Evidência insuficiente para decidir este critério nesta execução."),
             )
         )
 
-    return RubricAssessment(
-        score=score,
+    return refresh_assessment(RubricAssessment(
+        score=None,
         max_score=float(rubric_config.max_score),
         items=items,
-    )
+    ))

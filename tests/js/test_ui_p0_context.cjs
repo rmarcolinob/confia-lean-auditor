@@ -10,6 +10,7 @@ const report = (id, summary = `Relatório ${id}`) => ({ problem_id: id, pedagogi
 const response = data => ({ ok: true, json: async () => data });
 async function page(auditTransport, submissions = []) {
   const nodes = new Map(), calls = [], logs = [];
+  const window = {};
   const get = selector => {
     if (!nodes.has(selector)) nodes.set(selector, element(selector.endsWith("-select") ? "select" : "control"));
     return nodes.get(selector);
@@ -20,6 +21,7 @@ async function page(auditTransport, submissions = []) {
   const modes = ["study", "submit"].map(mode => { const button = element("button"); button.dataset.studentMode = mode; return button; });
   const store = new Map([["confia_student_submissions", JSON.stringify(submissions)]]);
   vm.runInNewContext(source, {
+    window,
     document: { querySelector: get, createElement: element, querySelectorAll: selector => selector === "[data-tab-target]" ? tabs : selector === ".tab-panel" ? panels : modes },
     console: { error: (...args) => logs.push(args) },
     localStorage: { getItem: key => store.get(key), setItem: (key, value) => store.set(key, value) },
@@ -30,12 +32,99 @@ async function page(auditTransport, submissions = []) {
     },
   });
   await flush();
-  return { get, tabs, modes, store, calls, logs };
+  return { get, tabs, modes, store, calls, logs, render: window.ConfIAReport.render };
 }
 const localSubmissions = ["A", "B"].map(id => ({ id: `local-${id}`, student_name: `Aluno ${id}`, problem_id: id, solution: `Solução ${id}`, status: "pendente", submitted_at: "2026-10-03T12:00:00Z" }));
 function write(ui, text) { ui.get("#solution-input").value = text; return ui.get("#solution-input").emit("input"); }
 function select(ui, id) { ui.get("#problem-select").value = id; return ui.get("#problem-select").emit("change"); }
 function text(ui, selector = "#result-panel") { return ui.get(selector).textContent; }
+
+test("shared report explicitly limits formal verification to selected claims and steps", async () => {
+  const data = { ...report("A"), student_claim_checks: [{ id: 'student_claim_0', status: 'failed' }],
+    formal_steps: [{ id: 'step_1', description: 'Passo selecionado', status: 'verified' }] };
+  const ui = await page(() => response(data));
+  await write(ui, 'Solução de teste');
+  await ui.get('#audit-button').click(); await flush();
+  const section = descendants(ui.get('#result-panel')).find(n => n.className === 'formal-checks-section');
+  assert.match(section.textContent, /Verificações formais.*somente os claims e passos.*não verifica toda a solução/);
+  const details = section.children.find(n => n.tag === 'details');
+  assert.equal(Boolean(details.open), false);
+  assert.match(details.textContent, /Passo selecionado: Afirmação verificada.*student_claim_0: Não foi possível verificar formalmente/);
+});
+
+test("formal details distinguish proven refutations from unavailable or inconclusive checks", async () => {
+  const data = { ...report("A"), student_claim_checks: [
+    { id: "technical", status: "technical_error" },
+    { id: "unproved", status: "unverified" },
+    { id: "false", status: "refuted", refutation_verified: true, refutation_lean_file: "/test/negation.lean" },
+    { id: "unsupported-refutation", status: "refuted" },
+  ], formal_steps: [{ id: "timeout-step", status: "lean_timeout" },
+                    { id: "goals-step", status: "lean_error_unsolved_goals" }] };
+  const ui = await page(() => response(data));
+  await write(ui, "Solução de teste");
+  await ui.get("#audit-button").click(); await flush();
+  const section = descendants(ui.get("#result-panel")).find(n => n.className === "formal-checks-section");
+  assert.match(section.textContent, /technical: Verificação formal indisponível/);
+  assert.match(section.textContent, /unproved: Não foi possível verificar formalmente/);
+  assert.match(section.textContent, /false: Erro matemático identificado/);
+  assert.match(section.textContent, /unsupported-refutation: Não foi possível verificar formalmente/);
+  assert.match(section.textContent, /timeout-step: Verificação formal indisponível/);
+  assert.match(section.textContent, /goals-step: Não foi possível verificar formalmente/);
+});
+
+test("incomplete assessment shows no global numeric grade and keeps pending criteria explicit", async () => {
+  const data = { ...report("A"), score: null, verdict: "inconclusivo", rubric_assessment: { items: [
+    { id: "pending", description: "Critério pendente", points: null, max_points: 5,
+      assessment_note: "Verificação formal indisponível nesta execução." },
+    { id: "supported", description: "Critério decidido", points: 5, max_points: 5 },
+  ] } };
+  Object.assign(data.pedagogical_report, { score: null, verdict: "inconclusivo", result: "inconclusivo",
+    summary: "Avaliação inconclusiva; verificação formal indisponível.", evaluated_score: 5, evaluated_max_score: 5 });
+  const ui = await page(() => response(data));
+  await write(ui, "Solução de teste");
+  await ui.get("#audit-button").click(); await flush();
+  const visible = text(ui);
+  assert.match(visible, /inconclusivo/);
+  assert.match(visible, /Avaliação incompleta/);
+  assert.match(visible, /Critérios decididos: 5 \/ 5; sem nota global/);
+  assert.doesNotMatch(visible, /null \/ 10|0 \/ 10/);
+  const target = element("section");
+  ui.render(data, target, { context: "teacher" });
+  assert.match(target.textContent, /Avaliação incompleta/);
+  assert.match(target.textContent, /Critérios decididos: 5 \/ 5; sem nota global/);
+  assert.doesNotMatch(target.textContent, /null\s*\/\s*10|0\s*\/\s*10|5\s*\/\s*10/);
+  assert.equal(data.score, null);
+  assert.equal(data.pedagogical_report.score, null);
+  assert.match(target.textContent, /Critério pendente: Indeterminado.*indisponível/);
+  assert.match(target.textContent, /Critério decidido: 5 \/ 5/);
+});
+
+for (const context of ["student", "teacher"]) {
+  for (const subtotal of [0, 5]) {
+    test(`${context} renders a null/inconclusive score without turning subtotal ${subtotal} into a final grade`, async () => {
+      const data = { ...report("A"), score: null, verdict: "inconclusivo",
+        rubric_assessment: { score: null, max_score: 10, assessment_status: "partial",
+          evaluated_score: subtotal, evaluated_max_score: subtotal, items: [
+            { id: "pending", description: "Critério pendente", points: null, max_points: 5,
+              mathematical_status: "indeterminate" },
+            ...(subtotal ? [{ id: "decided", description: "Critério decidido", points: 5, max_points: 5 }] : []),
+          ] } };
+      Object.assign(data.pedagogical_report, { score: null, verdict: "inconclusivo", result: "inconclusivo",
+        summary: "A avaliação não foi concluída.", evaluated_score: subtotal, evaluated_max_score: subtotal });
+      const original = JSON.stringify(data);
+      const ui = await page(() => response(data));
+      const target = element("section");
+      ui.render(data, target, { context });
+      assert.match(target.textContent, /Avaliação incompleta/);
+      assert.match(target.textContent, /inconclusivo/i);
+      assert.doesNotMatch(target.textContent, /(?:0|5|null)\s*\/\s*10/);
+      if (subtotal) assert.match(target.textContent, /Critérios decididos: 5 \/ 5; sem nota global/);
+      else assert.doesNotMatch(target.textContent, /Critérios decididos:/);
+      if (context === "teacher") assert.match(target.textContent, /Critério pendente: Indeterminado/);
+      assert.equal(JSON.stringify(data), original);
+    });
+  }
+}
 
 test("student request and report retain original problem and solution when selection changes during analysis", async () => {
   const pending = deferred();

@@ -3,6 +3,7 @@ from pathlib import Path
 from fastapi.testclient import TestClient
 
 from confia_lean_auditor.main import app
+from audit_contract import assert_score_contract
 
 
 CLIENT = TestClient(app)
@@ -21,7 +22,9 @@ def audit_solution(solution: str):
         },
     )
     assert response.status_code == 200, response.text
-    return response.json()
+    data = response.json()
+    assert_score_contract(data)
+    return data
 
 
 def rubric_item_by_id(data, item_id: str):
@@ -49,7 +52,7 @@ def test_q4_wrong_target_does_not_get_not_injective_conclusion():
 
     conclusion = rubric_item_by_id(data, "not_injective_conclusion")
     assert conclusion["detected"] is False
-    assert conclusion["points"] == 0.0
+    assert conclusion["points"] is None
 
     generated = set(data["lean_certificate"]["generated_theorems"])
     assert "g_not_injective" not in generated
@@ -84,11 +87,11 @@ def test_q4_wrong_witnesses_do_not_verify_same_argument():
 
     same_argument = rubric_item_by_id(data, "same_f_argument")
     assert same_argument["detected"] is False
-    assert same_argument["points"] == 0.0
+    assert same_argument["points"] is None
 
     equal_values = rubric_item_by_id(data, "equal_g_values")
     assert equal_values["detected"] is False
-    assert equal_values["points"] == 0.0
+    assert equal_values["points"] is None
 
     generated = set(data["lean_certificate"]["generated_theorems"])
     assert "same_f_argument" not in generated

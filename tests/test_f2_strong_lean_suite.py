@@ -6,6 +6,7 @@ import pytest
 from fastapi.testclient import TestClient
 
 from confia_lean_auditor.main import app
+from audit_contract import assert_incomplete
 
 
 CLIENT = TestClient(app)
@@ -61,9 +62,11 @@ def test_f2_correct_solution_has_full_operational_strong_lean_contract(problem_i
 def test_f2_wrong_answer_stays_below_full_score(problem_id: str):
     data = audit_solution(problem_id, read_example(problem_id, WRONG_EXAMPLES[problem_id]))
 
-    assert data["score"] < data["max_score"]
+    decided_max = {"ITA2025F2Q1": 2, "ITA2025F2Q3": 5, "ITA2025F2Q5": 2,
+                   "ITA2025F2Q6": 2, "ITA2025F2Q8": 0}[problem_id]
+    assert_incomplete(data, 0, decided_max)
     assert data["pedagogical_report"] is not None
 
     if data["student_claim_checks"]:
         statuses = {check["status"] for check in data["student_claim_checks"]}
-        assert statuses & {"failed", "rejected"}
+        assert "refuted" in statuses

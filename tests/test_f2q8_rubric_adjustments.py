@@ -58,7 +58,7 @@ def _base_rubric() -> RubricAssessment:
     )
 
 
-def _failed_check(claim_type: str, raw_text: str) -> StudentClaimCheck:
+def _refuted_check(claim_type: str, raw_text: str) -> StudentClaimCheck:
     return StudentClaimCheck(
         id="student_claim_0",
         problem_id="ITA2025F2Q8",
@@ -67,7 +67,9 @@ def _failed_check(claim_type: str, raw_text: str) -> StudentClaimCheck:
         normalized_text=raw_text,
         lean_statement="False",
         method="norm_num",
-        status="failed",
+        status="refuted",
+        refutation_verified=True,
+        refutation_lean_file="/test/formal_negation.lean",
         compiled=False,
         lean_file=None,
         stdout="",
@@ -99,7 +101,7 @@ def test_f2q8_failed_final_answer_zeros_final_answer_item_only():
 
     adjusted = apply_f2q8_student_claim_adjustments(
         rubric,
-        [_failed_check("f2q8_student_final_answer", "resposta = 1014")],
+        [_refuted_check("f2q8_student_final_answer", "resposta = 1014")],
     )
 
     by_id = {item.id: item for item in adjusted.items}
@@ -119,7 +121,7 @@ def test_f2q8_failed_det_formula_zeros_determinant_item_only():
 
     adjusted = apply_f2q8_student_claim_adjustments(
         rubric,
-        [_failed_check("f2q8_student_det_formula", "det(A_k)=(-1)^k k")],
+        [_refuted_check("f2q8_student_det_formula", "det(A_k)=(-1)^k k")],
     )
 
     by_id = {item.id: item for item in adjusted.items}
@@ -139,7 +141,7 @@ def test_f2q8_failed_pair_reduction_zeros_final_answer_item():
 
     adjusted = apply_f2q8_student_claim_adjustments(
         rubric,
-        [_failed_check("f2q8_student_pair_reduction", "2025 - 1012 = 1014")],
+        [_refuted_check("f2q8_student_pair_reduction", "2025 - 1012 = 1014")],
     )
 
     by_id = {item.id: item for item in adjusted.items}
@@ -175,6 +177,8 @@ def test_f2q8_adversarial_solution_does_not_receive_max_score():
     assert response.status_code == 200
     data = response.json()
 
-    assert data["score"] < data["max_score"]
-    assert data["score"] == 0.0
+    assert data["score"] is None
+    assert data["verdict"] == "inconclusivo"
+    assert data["rubric_assessment"]["assessment_status"] == "indeterminate"
+    assert all(item["points"] is None for item in data["rubric_assessment"]["items"])
     assert data["pedagogical_report"] is not None

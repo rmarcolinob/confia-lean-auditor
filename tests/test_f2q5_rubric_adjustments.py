@@ -61,7 +61,7 @@ def _base_rubric() -> RubricAssessment:
     )
 
 
-def _failed_check(claim_type: str, raw_text: str) -> StudentClaimCheck:
+def _refuted_check(claim_type: str, raw_text: str) -> StudentClaimCheck:
     return StudentClaimCheck(
         id="student_claim_0",
         problem_id="ITA2025F2Q5",
@@ -70,7 +70,9 @@ def _failed_check(claim_type: str, raw_text: str) -> StudentClaimCheck:
         normalized_text=raw_text,
         lean_statement="False",
         method="norm_num",
-        status="failed",
+        status="refuted",
+        refutation_verified=True,
+        refutation_lean_file="/test/formal_negation.lean",
         compiled=False,
         lean_file=None,
         stdout="",
@@ -102,7 +104,7 @@ def test_f2q5_failed_log_power_decomposition_zeros_log_item_only():
 
     adjusted = apply_f2q5_student_claim_adjustments(
         rubric,
-        [_failed_check("f2q5_student_log_power_decomposition", "log total = 47.7000")],
+        [_refuted_check("f2q5_student_log_power_decomposition", "log total = 47.7000")],
     )
 
     by_id = {item.id: item for item in adjusted.items}
@@ -123,7 +125,7 @@ def test_f2q5_failed_mantissa_zeros_mantissa_item_only():
 
     adjusted = apply_f2q5_student_claim_adjustments(
         rubric,
-        [_failed_check("f2q5_student_mantissa", "mantissa = 0.7000")],
+        [_refuted_check("f2q5_student_mantissa", "mantissa = 0.7000")],
     )
 
     by_id = {item.id: item for item in adjusted.items}
@@ -139,7 +141,7 @@ def test_f2q5_failed_digit_log_bounds_zeros_bounds_item_only():
 
     adjusted = apply_f2q5_student_claim_adjustments(
         rubric,
-        [_failed_check("f2q5_student_digit_log_bounds", "log5=0.6900; log6=0.7781")],
+        [_refuted_check("f2q5_student_digit_log_bounds", "log5=0.6900; log6=0.7781")],
     )
 
     by_id = {item.id: item for item in adjusted.items}
@@ -155,7 +157,7 @@ def test_f2q5_failed_between_bounds_zeros_comparison_item_only():
 
     adjusted = apply_f2q5_student_claim_adjustments(
         rubric,
-        [_failed_check("f2q5_student_between_bounds", "0.7100<0.6990<0.7781")],
+        [_refuted_check("f2q5_student_between_bounds", "0.7100<0.6990<0.7781")],
     )
 
     by_id = {item.id: item for item in adjusted.items}
@@ -171,7 +173,7 @@ def test_f2q5_failed_final_digit_zeros_final_digit_item_only():
 
     adjusted = apply_f2q5_student_claim_adjustments(
         rubric,
-        [_failed_check("f2q5_student_final_digit", "primeiro algarismo = 6")],
+        [_refuted_check("f2q5_student_final_digit", "primeiro algarismo = 6")],
     )
 
     by_id = {item.id: item for item in adjusted.items}

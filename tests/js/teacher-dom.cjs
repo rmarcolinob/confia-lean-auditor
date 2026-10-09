@@ -26,19 +26,23 @@ function page(transport, search = "") {
   };
   get("#teacher-text-prototype").hidden = true;
   get("#manuscript-detail").hidden = true;
-  const logs = [];
+  const logs = [], reports = [];
   vm.runInNewContext(source, {
     console: { error: (...args) => logs.push(args) },
-    window: { addEventListener() {} },
+    window: { addEventListener() {}, ConfIAReport: { render(data, target, options) {
+      reports.push({ data, target, options });
+      target.appendChild(element("p")).textContent = data.pedagogical_report?.summary || "Resultado do auditor";
+    } } },
     document: { querySelector: get, createElement: element },
     location: { search }, URLSearchParams,
     fetch: async (url, options) => { calls.push({ url, options }); return transport(url, options); },
   });
-  return { get, calls, logs };
+  return { get, calls, logs, reports };
 }
 function transportFor(matches = true, withTranscription = false) {
   return async url => ({ ok: true, json: async () => {
     if (url === "/submissions") return [record];
+    if (url.endsWith("/audits")) return [];
     if (url.endsWith("/transcriptions")) return withTranscription ? [summary] : [];
     if (url.startsWith("/transcriptions/")) return history;
     return detailData(matches);

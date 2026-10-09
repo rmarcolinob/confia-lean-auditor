@@ -48,7 +48,7 @@ def test_f2q3_wrong_beta_difference_is_rejected():
 
     by_type = _checks_by_type(solution)
 
-    assert by_type["f2q3_student_beta_difference"][0].status == "failed"
+    assert by_type["f2q3_student_beta_difference"][0].status == "refuted"
     assert by_type["f2q3_student_final_answer"][0].status == "verified"
 
 
@@ -62,7 +62,7 @@ def test_f2q3_wrong_candidate_signs_are_rejected():
     by_type = _checks_by_type(solution)
 
     assert all(
-        check.status == "failed"
+        check.status == "refuted"
         for check in by_type["f2q3_student_candidate_value"]
     )
     assert by_type["f2q3_student_final_answer"][0].status == "verified"
@@ -76,8 +76,8 @@ def test_f2q3_wrong_final_sin_sum_is_rejected():
 
     by_type = _checks_by_type(solution)
 
-    assert by_type["f2q3_student_final_sin_sum"][0].status == "failed"
-    assert by_type["f2q3_student_final_answer"][0].status == "failed"
+    assert by_type["f2q3_student_final_sin_sum"][0].status == "refuted"
+    assert by_type["f2q3_student_final_answer"][0].status == "refuted"
 
 
 def test_f2q3_correct_final_answer_alone_is_verified():

@@ -51,7 +51,7 @@ async function page({ hash = "", search = "", records = [] } = {}) {
       let data;
       if (url === '/problems') data = [{ problem_id: 'ITA2025Q1', title: 'Questão de teste', statement: 'Enunciado', examples: [{ key: 'correct', label: 'Exemplo' }] }];
       else if (url === '/submissions') data = records;
-      else if (url === '/submissions/recognition-providers' || url.endsWith('/transcriptions')) data = [];
+      else if (url === '/submissions/recognition-providers' || /\/(transcriptions|audits)$/.test(url)) data = [];
       else data = { submission: record, integrity: [{ filename: 'snapshot.json', matches: true }, { filename: 'page_1.png', matches: true }] };
       return { ok: true, json: async () => data };
     },

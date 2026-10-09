@@ -7,6 +7,7 @@ from dataclasses import asdict
 from pathlib import Path
 
 from confia_lean_auditor.student_claims.schemas import StudentClaim, StudentClaimCheck
+from confia_lean_auditor.lean.student_proof import evaluate_student_proof, negation_method
 
 
 ROOT_DIR = Path(__file__).resolve().parents[3]
@@ -142,16 +143,17 @@ def _lean_statement_for_claim(claim: StudentClaim) -> tuple[str | None, str]:
 
     return None, f"unsupported claim_type: {claim.claim_type}"
 
-def _build_lean_code(claim: StudentClaim, theorem_name: str, lean_statement: str) -> str:
+def _build_lean_code(claim: StudentClaim, theorem_name: str, lean_statement: str, method=None) -> str:
     lines: list[str] = []
     lines.append("import Mathlib")
     lines.append("")
     lines.append("namespace ConfiaStudentClaimCheck")
     lines.append("")
-    lines.append(f"/-- Afirmação extraída do aluno: {claim.raw_text} -/")
+    safe_raw = claim.raw_text.replace("-/", "-∕")
+    lines.append(f"/-- Afirmação extraída do aluno: {safe_raw} -/")
     lines.append(f"theorem {theorem_name} :")
     lines.append(f"    {lean_statement} := by")
-    lines.append(f"  {claim.method}")
+    lines.append(f"  {method or claim.method}")
     lines.append("")
     lines.append("end ConfiaStudentClaimCheck")
     lines.append("")
@@ -188,46 +190,14 @@ def check_one_student_claim(
             data=claim.data,
         )
 
+    method = claim.method
     lean_file = out_dir / f"{theorem_name}.lean"
-    lean_code = _build_lean_code(claim, theorem_name, lean_statement)
-    lean_file.write_text(lean_code, encoding="utf-8")
-
-    try:
-        proc = _run_lean_file(lean_file, timeout_seconds=timeout_seconds)
-        compiled = proc.returncode == 0
-
-        return StudentClaimCheck(
-            id=claim.id,
-            problem_id=claim.problem_id,
-            claim_type=claim.claim_type,
-            raw_text=claim.raw_text,
-            normalized_text=claim.normalized_text,
-            lean_statement=lean_statement,
-            method=claim.method,
-            status="verified" if compiled else "failed",
-            compiled=compiled,
-            lean_file=str(lean_file),
-            stdout=proc.stdout,
-            stderr=proc.stderr,
-            data=claim.data,
-        )
-
-    except subprocess.TimeoutExpired as exc:
-        return StudentClaimCheck(
-            id=claim.id,
-            problem_id=claim.problem_id,
-            claim_type=claim.claim_type,
-            raw_text=claim.raw_text,
-            normalized_text=claim.normalized_text,
-            lean_statement=lean_statement,
-            method=claim.method,
-            status="error",
-            compiled=False,
-            lean_file=str(lean_file),
-            stdout=exc.stdout or "",
-            stderr=f"timeout after {timeout_seconds}s",
-            data=claim.data,
-        )
+    lean_code = _build_lean_code(claim, theorem_name, lean_statement, method)
+    negative = _build_lean_code(claim, theorem_name + "_refutation",
+        f"¬ ({lean_statement})", negation_method(claim, method))
+    return evaluate_student_proof(claim=claim, lean_file=lean_file,
+        lean_statement=lean_statement, method=method, lean_code=lean_code,
+        negation_code=negative, runner=_run_lean_file, timeout_seconds=timeout_seconds)
 
 
 def check_student_claims(

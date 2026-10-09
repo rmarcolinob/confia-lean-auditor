@@ -45,7 +45,7 @@ def test_no_official_decision_controls_or_local_decision_writes_remain():
         assert forbidden not in html + source
     assert 'Avaliação docente — integração em desenvolvimento' in html
     manuscript = (STATIC / 'submissions/teacher.js').read_text()
-    for forbidden in ('localStorage', '/audit', 'TeacherDecision', 'StructuredSolution'):
+    for forbidden in ('localStorage', 'fetch("/audit"', 'write("/audit"', 'TeacherDecision', 'StructuredSolution'):
         assert forbidden not in manuscript
 
 

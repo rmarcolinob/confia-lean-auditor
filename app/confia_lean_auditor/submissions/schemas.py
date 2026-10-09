@@ -216,6 +216,15 @@ class TranscriptionAcceptance(SubmissionModel):
     acceptance_note: Optional[str] = None
     meaning: Literal["faithful_representation_of_manuscript_only"] = "faithful_representation_of_manuscript_only"
     mathematical_validity_assessed: Literal[False] = False
+    # Legacy events remain readable, but cannot authorize a new AuditSource.
+    accepted_revision_sha256: Optional[Sha256] = None
+
+
+class TranscriptionAcceptanceReceipt(SubmissionModel):
+    acceptance_id: AcceptanceId
+    acceptance_sha256: Sha256
+    accepted_revision_sha256: Sha256
+    created_at: datetime
 
 
 class TranscriptionSummary(SubmissionModel):

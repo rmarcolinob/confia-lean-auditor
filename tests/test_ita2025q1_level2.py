@@ -5,6 +5,7 @@ from pathlib import Path
 from fastapi.testclient import TestClient
 
 from confia_lean_auditor.main import app
+from audit_contract import assert_score_contract, assert_incomplete
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -26,7 +27,9 @@ def audit_solution(solution: str):
         },
     )
     assert response.status_code == 200
-    return response.json()
+    data = response.json()
+    assert_score_contract(data)
+    return data
 
 
 def microclaim_by_id(data, microclaim_id: str):
@@ -63,8 +66,7 @@ def test_q1_correct_solution_scores_10_and_verifies_formal_step():
 def test_q1_wrong_determinant_step_blocks_area_and_dependencies():
     data = audit_solution(read_example("wrong_determinant_step.txt"))
 
-    assert data["score"] == 3.0
-    assert data["verdict"] == "insuficiente"
+    assert_incomplete(data, 3, 3)
 
     assert len(data["formal_steps"]) == 1
     assert data["formal_steps"][0]["type"] == "determinant_expansion"
@@ -72,15 +74,15 @@ def test_q1_wrong_determinant_step_blocks_area_and_dependencies():
 
     area_item = rubric_item_by_id(data, "area_formula")
     assert area_item["detected"] is False
-    assert area_item["points"] == 0.0
+    assert area_item["points"] is None
 
     equation_item = rubric_item_by_id(data, "equation")
     assert equation_item["detected"] is False
-    assert equation_item["points"] == 0.0
+    assert equation_item["points"] is None
 
     positive_root_item = rubric_item_by_id(data, "positive_root")
     assert positive_root_item["detected"] is False
-    assert positive_root_item["points"] == 0.0
+    assert positive_root_item["points"] is None
 
     area_mc = microclaim_by_id(data, "mc_area_formula")
     assert area_mc["lean_status"] == "formal_steps_not_verified"
@@ -96,11 +98,10 @@ def test_q1_wrong_determinant_step_blocks_area_and_dependencies():
     assert unique_mc["dependencies_verified"] is False
 
 
-def test_q1_answer_only_scores_1():
+def test_q1_answer_only_preserves_subtotal_without_global_score():
     data = audit_solution(read_example("answer_only.txt"))
 
-    assert data["score"] == 1.0
-    assert data["verdict"] == "insuficiente"
+    assert_incomplete(data, 1, 1)
 
     assert data["formal_steps"] == []
 

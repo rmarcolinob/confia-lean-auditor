@@ -43,7 +43,7 @@ def test_f2q6_wrong_probability_formula_is_rejected():
 
     by_type = _checks_by_type(solution)
 
-    assert by_type["f2q6_student_probability_formula"][0].status == "failed"
+    assert by_type["f2q6_student_probability_formula"][0].status == "refuted"
     assert by_type["f2q6_student_ratio_formula"][0].status == "verified"
     assert by_type["f2q6_student_final_answer"][0].status == "verified"
 
@@ -57,7 +57,7 @@ def test_f2q6_wrong_ratio_formula_is_rejected():
     by_type = _checks_by_type(solution)
 
     assert by_type["f2q6_student_probability_formula"][0].status == "verified"
-    assert by_type["f2q6_student_ratio_formula"][0].status == "failed"
+    assert by_type["f2q6_student_ratio_formula"][0].status == "refuted"
     assert by_type["f2q6_student_final_answer"][0].status == "verified"
 
 
@@ -71,7 +71,7 @@ def test_f2q6_wrong_final_answer_is_rejected():
 
     assert by_type["f2q6_student_probability_formula"][0].status == "verified"
     assert by_type["f2q6_student_ratio_formula"][0].status == "verified"
-    assert by_type["f2q6_student_final_answer"][0].status == "failed"
+    assert by_type["f2q6_student_final_answer"][0].status == "refuted"
 
 
 def test_f2q6_single_maximizer_answer_is_rejected():
@@ -82,4 +82,4 @@ def test_f2q6_single_maximizer_answer_is_rejected():
 
     by_type = _checks_by_type(solution)
 
-    assert by_type["f2q6_student_final_answer"][0].status == "failed"
+    assert by_type["f2q6_student_final_answer"][0].status == "refuted"

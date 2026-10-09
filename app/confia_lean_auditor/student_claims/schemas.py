@@ -32,6 +32,10 @@ StudentClaimType = Literal[
 
 StudentClaimStatus = Literal[
     "verified",
+    "refuted",
+    "unverified",
+    "technical_error",
+    # Legacy outcomes are inconclusive, never mathematical refutations.
     "failed",
     "unsupported",
     "error",
@@ -66,3 +70,15 @@ class StudentClaimCheck:
     stdout: str
     stderr: str
     data: dict[str, Any] = field(default_factory=dict)
+    failure_category: str | None = None
+    refutation_lean_file: str | None = None
+    refutation_verified: bool = False
+    refutation_stdout: str = ""
+    refutation_stderr: str = ""
+
+
+def is_mathematically_refuted(check) -> bool:
+    def value(name):
+        return check.get(name) if isinstance(check, dict) else getattr(check, name, None)
+    return (value("status") == "refuted" and value("refutation_verified") is True
+            and bool(value("refutation_lean_file")))

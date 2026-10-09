@@ -46,6 +46,13 @@
 .transcription-message { min-height: 1.5em; }
 .transcription-dirty-message { padding: var(--spacing-3); border: 1px solid var(--color-border); font-size: .85rem; }
 .transcription-dirty-message[data-dirty="true"] { color: var(--color-warning); background: var(--color-warning-subtle); border-color: var(--color-warning); font-weight: 600; }
+.manuscript-analysis-panel > button { margin: var(--spacing-2) var(--spacing-2) var(--spacing-2) 0; }
+.manuscript-analysis-panel > label { display: grid; gap: var(--spacing-2); margin: var(--spacing-3) 0; }
+.manuscript-analysis-panel select { width: 100%; min-width: 0; padding: var(--spacing-2); font: inherit; }
+.manuscript-analysis-panel .metrics, .manuscript-analysis-panel .teacher-grid { grid-template-columns: minmax(0, 1fr); }
+.manuscript-analysis-panel .result-heading { flex-wrap: wrap; }
+.manuscript-analysis-panel .evidence-header { flex-wrap: wrap; }
+.manuscript-analysis-panel .badge { flex-shrink: 0; max-width: 100%; }
 @media (min-width: 901px) {
   .original-manuscript-panel { position: sticky; top: var(--spacing-5); }
 }

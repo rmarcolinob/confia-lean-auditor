@@ -46,8 +46,8 @@ def test_f2q5_wrong_log_power_decomposition_is_rejected():
 
     by_type = _checks_by_type(solution)
 
-    assert by_type["f2q5_student_log_power_decomposition"][0].status == "failed"
-    assert by_type["f2q5_student_mantissa"][0].status == "failed"
+    assert by_type["f2q5_student_log_power_decomposition"][0].status == "refuted"
+    assert by_type["f2q5_student_mantissa"][0].status == "refuted"
     assert by_type["f2q5_student_digit_log_bounds"][0].status == "verified"
     assert by_type["f2q5_student_final_digit"][0].status == "verified"
 
@@ -61,7 +61,7 @@ def test_f2q5_wrong_digit_log_bounds_are_rejected():
 
     by_type = _checks_by_type(solution)
 
-    assert by_type["f2q5_student_digit_log_bounds"][0].status == "failed"
+    assert by_type["f2q5_student_digit_log_bounds"][0].status == "refuted"
 
 
 def test_f2q5_wrong_between_bounds_are_rejected():
@@ -73,7 +73,7 @@ def test_f2q5_wrong_between_bounds_are_rejected():
 
     by_type = _checks_by_type(solution)
 
-    assert by_type["f2q5_student_between_bounds"][0].status == "failed"
+    assert by_type["f2q5_student_between_bounds"][0].status == "refuted"
 
 
 def test_f2q5_wrong_final_digit_is_rejected():
@@ -85,4 +85,4 @@ def test_f2q5_wrong_final_digit_is_rejected():
 
     by_type = _checks_by_type(solution)
 
-    assert by_type["f2q5_student_final_digit"][0].status == "failed"
+    assert by_type["f2q5_student_final_digit"][0].status == "refuted"

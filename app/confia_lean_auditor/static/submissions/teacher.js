@@ -61,6 +61,19 @@
 
   function productError(error, action = "load") {
     console.error("ConfIA: manuscritos/transcrição", action, error, error.diagnostic);
+    if (action === "audit" && error.status === 409) {
+      return "Esta análise não corresponde mais à versão atual da transcrição. Atualize a solução antes de executar uma nova análise.";
+    }
+    if (/integridade da revisão ou do aceite/i.test(JSON.stringify(error.diagnostic || {}))) {
+      return action === "audit" ? "A integridade da revisão ou do aceite está divergente. A análise foi bloqueada."
+        : "A integridade da revisão ou do aceite está divergente. Reabra a solução para conferir o histórico.";
+    }
+    if (action === "audit") {
+      const diagnostic = JSON.stringify(error.diagnostic || {});
+      if (/arquivos originais/i.test(diagnostic)) return "Os arquivos originais desta solução precisam ser conferidos.";
+      if (/transcrição.*conferida/i.test(diagnostic)) return "A transcrição precisa ser conferida antes da análise.";
+      return "Não foi possível concluir a Análise ConfIA.";
+    }
     if (error.status === 404) return "Não foi possível carregar esta solução. Ela pode não estar mais disponível. Atualize a lista e tente novamente.";
     if (error.status === 409) {
       const diagnostic = JSON.stringify(error.diagnostic || {});
@@ -397,6 +410,7 @@
       accept.title = dirty ? "Salve ou descarte as alterações antes de conferir a revisão persistida." : "Conferir somente a revisão persistida";
       discard.hidden = !dirty;
       discard.disabled = editor.busy;
+      editor.onChange?.();
     }
 
     function setEditorBusy(busy) {
@@ -408,6 +422,7 @@
       for (const button of generateButtons) button.disabled = busy || !originalsIntact(data);
       updateDirty();
     }
+    editor.setBusy = setEditorBusy;
 
     function validateReviewer() {
       const invalid = !reviewer.value.trim();
@@ -479,6 +494,147 @@
       }
     });
     if (history) renderHistory(panel, history);
+    return editor;
+  }
+
+  function runIsStale(run, latest) {
+    return run.stale || run.transcription_id !== latest?.transcription_id
+      || run.revision_number !== latest?.revision_number || latest?.status !== "ACCEPTED";
+  }
+
+  function analysisLabel(runs, latest, failed = false, attemptState = null) {
+    if (attemptState === "CONFLICT") return "Conflito — atualize a solução";
+    if (attemptState === "FAILED") return "Não foi possível concluir";
+    if (failed) return "Não foi possível consultar";
+    const run = runs?.[0];
+    if (!run) return "Não executada";
+    if (runIsStale(run, latest)) return "Transcrição anterior";
+    return run.status === "COMPLETED" ? "Concluída" : "Não foi possível concluir";
+  }
+
+  function renderAnalysis(panel, data, id, history, initialRuns, editor, stages) {
+    const latest = history?.revisions?.[history.revisions.length - 1];
+    const acceptance = history?.acceptances?.find(item => item.revision_number === latest?.revision_number
+      && item.transcription_id === latest.transcription_id && item.submission_id === id
+      && /^acc_[0-9a-f]{32}$/.test(item.acceptance_id));
+    const accepted = latest?.status === "ACCEPTED" && /^[0-9a-f]{64}$/.test(acceptance?.accepted_revision_sha256 || "");
+    let runs = initialRuns || [];
+    let selectedId = runs[0]?.audit_run_id;
+    let executionKey = null;
+    let attemptState = null;
+    let attemptMessage = "";
+    const isStale = run => runIsStale(run, latest) || run.acceptance_id !== acceptance?.acceptance_id;
+    const historicalLabel = run => attemptState === "CONFLICT" || isStale(run)
+      ? "Análise de uma versão anterior" : attemptState === "FAILED" ? "Análise anterior desta revisão" : null;
+    panel.setAttribute("aria-label", "Análise ConfIA desta solução");
+    panel.appendChild(node("h3", "Análise ConfIA"));
+    const state = node("p");
+    state.className = "status";
+    state.setAttribute("role", "status");
+    state.setAttribute("aria-live", "polite");
+    panel.appendChild(state);
+    const action = node("button", "Executar Análise ConfIA");
+    action.type = "button";
+    action.className = "primary-action";
+    panel.appendChild(action);
+    const rerun = node("button", "Executar novamente");
+    rerun.type = "button";
+    rerun.className = "secondary-action";
+    panel.appendChild(rerun);
+    const guidance = node("p");
+    panel.appendChild(guidance);
+    if (history?.acceptances?.some(item => item.revision_number === latest?.revision_number
+        && !item.accepted_revision_sha256)) {
+      panel.appendChild(node("p", "Aceite anterior sem vínculo de integridade. Crie e confira uma nova revisão antes da análise.")).className = "transcription-warning";
+    }
+    const selection = node("select");
+    const selectionLabel = labeled("Histórico das análises", selection);
+    panel.appendChild(selectionLabel);
+    const result = node("div");
+    panel.appendChild(result);
+
+    function updateControls() {
+      action.disabled = editor.busy || editor.isDirty() || !accepted || !originalsIntact(data) || initialRuns === null || attemptState === "CONFLICT";
+      const current = runs.find(run => run.transcription_id === latest?.transcription_id && run.revision_number === latest?.revision_number);
+      rerun.hidden = !current;
+      rerun.disabled = action.disabled;
+      selection.disabled = editor.busy;
+      guidance.textContent = attemptState === "CONFLICT" ? attemptMessage
+        : !originalsIntact(data) ? "Os arquivos originais desta solução precisam ser conferidos."
+        : !accepted ? "A transcrição precisa ser conferida antes da análise."
+          : editor.isDirty() ? "Salve ou descarte as alterações antes de analisar a revisão conferida."
+            : "A análise usa somente a revisão persistida e conferida. Nota e resultado são sugestões para o professor.";
+    }
+    editor.onChange = updateControls;
+
+    function showRuns() {
+      selection.replaceChildren();
+      for (const run of runs) selection.appendChild(option(run.audit_run_id, `Revisão ${run.revision_number} · ${when(run.created_at)} · ${historicalLabel(run) || (run.status === "COMPLETED" ? "Concluída" : "Não foi possível concluir")}`));
+      selection.value = selectedId || "";
+      selectionLabel.hidden = runs.length === 0;
+      result.replaceChildren();
+      const run = runs.find(item => item.audit_run_id === selectedId) || runs[0];
+      state.textContent = attemptState ? attemptMessage
+        : initialRuns === null ? "Não foi possível consultar as análises. Reabra a solução."
+          : run ? isStale(run) ? "Análise de uma versão anterior" : run.status === "COMPLETED" ? "✓ Concluída" : "Não foi possível concluir a Análise ConfIA." : "○ Não executada";
+      if (!run) result.appendChild(node("p", "Esta solução ainda não foi encaminhada para análise matemática."));
+      else {
+        if (attemptState || isStale(run)) result.appendChild(node("p", attemptState
+          ? `${historicalLabel(run)}. Disponível somente como histórico.`
+          : "Esta análise corresponde a uma transcrição anterior. Disponível somente como histórico.")).className = "transcription-warning";
+        if (run.source.provenance?.revision?.provider === "fake_test") result.appendChild(node("p", "Análise baseada em transcrição de teste artificial; não é reconhecimento real do manuscrito.")).className = "transcription-warning";
+        result.appendChild(node("p", `Análise da revisão ${run.revision_number} · conferida em ${when(run.source.accepted_at)}`));
+        for (const warning of run.source.warnings || []) result.appendChild(node("p", `Página ${warning.page_index + 1}: ${warning.message}`)).className = "transcription-warning";
+        if (attemptState !== "CONFLICT" && run.status === "COMPLETED" && run.result) {
+          const report = node("div");
+          window.ConfIAReport.render(run.result, report, { context: "teacher" });
+          result.appendChild(report);
+        }
+        const source = node("details");
+        source.appendChild(node("summary", "Fonte e rastreabilidade da análise"));
+        source.appendChild(node("pre", JSON.stringify(run, null, 2)));
+        result.appendChild(source);
+      }
+      stages.replaceChildren(...renderStages(history, runs, attemptState).children);
+      const item = queue.find(item => item.record.submission_id === id);
+      if (item) { item.audits = runs; item.auditFailed = initialRuns === null; item.auditAttemptState = attemptState; renderQueue(); }
+      updateControls();
+    }
+    selection.addEventListener("change", () => { selectedId = selection.value; showRuns(); });
+
+    async function execute(again) {
+      updateControls();
+      if (action.disabled) return;
+      // Keep a rerun key on transport failure, so retry still deduplicates.
+      if (again && executionKey === null) executionKey = `teacher:${Date.now()}:${++segmentSequence}`;
+      editor.setBusy(true);
+      action.setAttribute("aria-busy", "true");
+      state.textContent = "Analisando solução...";
+      try {
+        const run = await write(`/submissions/${id}/audits`, {
+          transcription_id: latest.transcription_id, revision_number: latest.revision_number,
+          acceptance_id: acceptance.acceptance_id, ...(executionKey ? { execution_key: executionKey } : {}),
+        });
+        if (run.submission_id !== id || run.transcription_id !== latest.transcription_id || run.revision_number !== latest.revision_number
+            || run.acceptance_id !== acceptance.acceptance_id || !["COMPLETED", "FAILED"].includes(run.status)) throw new Error("Resultado sem vínculo válido");
+        runs = [run, ...runs.filter(item => item.audit_run_id !== run.audit_run_id)];
+        selectedId = run.audit_run_id;
+        executionKey = null;
+        attemptState = null;
+        attemptMessage = "";
+        showRuns();
+      } catch (error) {
+        attemptState = error.status === 409 ? "CONFLICT" : "FAILED";
+        attemptMessage = productError(error, "audit");
+        showRuns();
+      } finally {
+        editor.setBusy(false);
+        action.setAttribute("aria-busy", "false");
+      }
+    }
+    action.addEventListener("click", () => execute(false));
+    rerun.addEventListener("click", () => execute(true));
+    showRuns();
   }
 
   async function open(id, transcriptionId = null) {
@@ -489,9 +645,10 @@
     detail.replaceChildren();
     message.textContent = "Carregando manuscrito, transcrição e integridade…";
     try {
-      const [data, summaries, available] = await Promise.all([
+      const [data, summaries, available, auditResult] = await Promise.all([
         request(`/submissions/${id}`), request(`/submissions/${id}/transcriptions`),
         request("/submissions/recognition-providers"),
+        request(`/submissions/${id}/audits`).catch(error => { console.error("ConfIA: análises", error); return null; }),
       ]);
       if (sequence !== detailSequence) return;
       if (!Array.isArray(summaries)) throw new Error("Lista de transcrições inválida.");
@@ -536,7 +693,9 @@
       const transcription = node("section");
       transcription.className = "transcription-panel";
       renderOriginal(original, data, id);
-      flow.appendChild(renderStages(history));
+      const audits = Array.isArray(auditResult) ? auditResult : null;
+      const stages = renderStages(history, audits);
+      flow.appendChild(stages);
       if (summaries.length > 1) {
         const selection = node("select");
         summaries.forEach((item, index) => selection.appendChild(option(item.transcription.transcription_id, `Transcrição ${summaries.length - index} · ${when(item.transcription.created_at)} · ${statusLabel(item.latest_revision.status)}`)));
@@ -548,15 +707,12 @@
         });
         transcription.appendChild(labeled("Abrir transcrição", selection));
       }
-      renderTranscription(transcription, data, id, history, Array.isArray(available) ? available : []);
+      const editor = renderTranscription(transcription, data, id, history, Array.isArray(available) ? available : []);
       workspace.appendChild(original);
       flow.appendChild(transcription);
       const analysis = node("section");
       analysis.className = "manuscript-analysis-panel";
-      analysis.setAttribute("aria-label", "Análise ConfIA desta solução");
-      analysis.appendChild(node("h3", "Análise ConfIA"));
-      analysis.appendChild(node("p", "○ Não executada")).className = "status";
-      analysis.appendChild(node("p", "Esta solução ainda não foi encaminhada para análise matemática."));
+      renderAnalysis(analysis, data, id, history, audits, editor, stages);
       flow.appendChild(analysis);
       const evaluation = node("section");
       evaluation.className = "teacher-evaluation-panel";
@@ -583,7 +739,7 @@
     }
   }
 
-  function renderStages(history) {
+  function renderStages(history, runs = [], attemptState = null) {
     const latest = history?.revisions?.[history.revisions.length - 1];
     const stages = node("section");
     stages.className = "teacher-workflow-stages";
@@ -593,7 +749,7 @@
     const labels = [
       ["Recebimento", "✓ Recebida pelo ConfIA", true],
       ["Transcrição", latest ? `${latest.status === "ACCEPTED" ? "✓" : "○"} ${statusLabel(latest.status)}` : "○ Ainda não criada", latest?.status === "ACCEPTED"],
-      ["Análise ConfIA", "○ Não executada", false],
+      ["Análise ConfIA", analysisLabel(runs, latest, runs === null, attemptState), analysisLabel(runs, latest, runs === null, attemptState) === "Concluída"],
       ["Avaliação do professor", "○ Integração em desenvolvimento", false],
     ];
     for (const [title, state, complete] of labels) {
@@ -632,9 +788,10 @@
       state.className = "status queue-transcription";
       state.dataset.kind = failed ? "error" : revision?.status === "ACCEPTED" ? "success" : "warning";
       button.appendChild(state);
-      button.appendChild(node("span", "Análise ConfIA: Não executada")).className = "queue-analysis";
+      const analysis = analysisLabel(item.audits, revision, item.auditFailed, item.auditAttemptState);
+      button.appendChild(node("span", `Análise ConfIA: ${analysis}`)).className = "queue-analysis";
       button.appendChild(node("span", "Abrir →")).className = "queue-open";
-      button.setAttribute("aria-label", `Abrir solução da questão ${record.problem_id}, ${when(record.received_at)}. ${statusLabel(record.status)}. Transcrição: ${transcription}. Análise ConfIA: Não executada.`);
+      button.setAttribute("aria-label", `Abrir solução da questão ${record.problem_id}, ${when(record.received_at)}. ${statusLabel(record.status)}. Transcrição: ${transcription}. Análise ConfIA: ${analysis}.`);
       button.addEventListener("click", () => open(record.submission_id));
       list.appendChild(button);
     }
@@ -660,13 +817,18 @@
       if (sequence !== listSequence) return;
       if (!Array.isArray(records)) throw new Error("Lista de submissões inválida.");
       const valid = records.filter(record => validId(record.submission_id));
-      const summaries = await Promise.allSettled(valid.map(record => request(`/submissions/${record.submission_id}/transcriptions`)));
+      const [summaries, audits] = await Promise.all([
+        Promise.allSettled(valid.map(record => request(`/submissions/${record.submission_id}/transcriptions`))),
+        Promise.allSettled(valid.map(record => request(`/submissions/${record.submission_id}/audits`))),
+      ]);
       if (sequence !== listSequence) return;
       queue = valid.map((record, index) => {
         const result = summaries[index];
         const failed = result.status === "rejected" || !Array.isArray(result.value);
         if (result.status === "rejected") console.error("ConfIA: resumo da transcrição", result.reason);
-        return { record, summaries: failed ? [] : result.value, failed };
+        const audit = audits[index];
+        const auditFailed = audit.status === "rejected" || !Array.isArray(audit.value);
+        return { record, summaries: failed ? [] : result.value, failed, audits: auditFailed ? [] : audit.value, auditFailed };
       });
       queueLoaded = true;
       renderQueue();

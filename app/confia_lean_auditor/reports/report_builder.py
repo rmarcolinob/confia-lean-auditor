@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from typing import Any, Dict, List, Optional
+from confia_lean_auditor.student_claims.schemas import is_mathematically_refuted
 
 from confia_lean_auditor.core.schemas import (
     LeanCertificate,
@@ -18,7 +19,9 @@ def clean_sentence(text: str) -> str:
     return text
 
 
-def verdict_from_score(score: float, max_score: float) -> str:
+def verdict_from_score(score: Optional[float], max_score: float) -> str:
+    if score is None:
+        return "inconclusivo"
     ratio = score / max_score if max_score else 0.0
 
     if ratio >= 0.9:
@@ -40,7 +43,7 @@ def build_feedback(
     credited_items = [
         item.description
         for item in rubric.items
-        if item.points > 0
+        if item.points is not None and item.points > 0
     ]
 
     adjusted_items = [
@@ -69,6 +72,11 @@ def build_feedback(
             + "."
         )
 
+    pending_items = [item.description for item in rubric.items if item.points is None]
+    if pending_items:
+        parts.append("Avaliação incompleta; critérios indeterminados nesta execução: "
+                     + "; ".join(pending_items) + ". Nenhum zero foi atribuído por falta de verificação.")
+
     dynamic_notes: List[str] = []
     for item in adjusted_items:
         for note in getattr(item, "adjustment_notes", []) or []:
@@ -92,7 +100,8 @@ def build_feedback(
     verified_microclaims = [
         mc.description
         for mc in microclaims
-        if mc.textual_evidence and mc.lean_status == "verified_by_lean"
+        if mc.textual_evidence and mc.lean_status in {"verified_by_lean", "verified_by_formal_steps"}
+        and mc.dependencies_verified
     ]
 
     if verified_microclaims:
@@ -154,27 +163,26 @@ def _pedagogical_note(text: str) -> str:
     return _normalize_space(result)
 
 
-def _summary_for_verdict(verdict: str, score: float, max_score: float) -> str:
-    if verdict == "correto":
-        return (
-            f"A solução correta recebeu {score:g} de {max_score:g} pontos. "
-            "As principais evidências reconhecidas foram conferidas automaticamente "
-            "por checagem automática."
-        )
-    if verdict == "parcialmente_correto":
-        return (
-            f"A solução está parcialmente correta e recebeu {score:g} de {max_score:g} pontos. "
-            "Há boas evidências em parte do raciocínio, mas ainda faltam etapas ou justificativas."
-        )
-    if score > 0:
-        return (
-            f"A solução recebeu {score:g} de {max_score:g} pontos. "
-            "Foram encontradas poucas evidências suficientes para sustentar a resposta."
-        )
-    return (
-        f"A solução foi classificada como incorreta e recebeu {score:g} de {max_score:g} pontos. "
-        "As evidências encontradas não sustentam a resposta final."
-    )
+def _summary_for_verdict(verdict, score, max_score, *, positive, refuted, incomplete,
+                         technical, evaluated_score, evaluated_max_score):
+    if score is None or verdict == "inconclusivo":
+        summary = "A avaliação é inconclusiva; não há evidência suficiente para uma nota global."
+        if evaluated_max_score:
+            summary += f" Nos critérios decididos: {evaluated_score:g} de {evaluated_max_score:g} pontos, sem extrapolar para a solução inteira."
+    elif verdict == "correto" and positive:
+        summary = f"A solução foi considerada correta nos critérios avaliados e recebeu {score:g} de {max_score:g} pontos."
+    elif refuted:
+        summary = f"Há afirmações matemáticas refutadas por checagem automática. Pontuação dos critérios avaliados: {score:g} de {max_score:g}."
+    else:
+        summary = f"Pontuação dos critérios avaliados: {score:g} de {max_score:g}."
+    if positive:
+        summary += (" Parte das evidências pôde ser verificada nesta execução."
+                    if incomplete or technical else " Evidências selecionadas foram conferidas por checagem automática, dentro do escopo formal desta execução.")
+    if technical:
+        summary += " Parte das verificações formais ficou indisponível nesta execução."
+    elif incomplete:
+        summary += " Parte das verificações formais não foi concluída nesta execução."
+    return summary
 
 
 def _claim_confidence_by_id(student_claims: List[Any]) -> Dict[str, Optional[float]]:
@@ -196,7 +204,7 @@ def _build_check_evidence_items(
 
     for index, check in enumerate(student_claim_checks):
         status = _field_value(check, "status")
-        if status not in {"verified", "failed", "unsupported", "error"}:
+        if status not in {"verified", "refuted", "unverified", "technical_error", "failed", "unsupported", "error"}:
             continue
 
         raw_text = _field_value(check, "raw_text")
@@ -210,13 +218,20 @@ def _build_check_evidence_items(
                 "Esta afirmação foi reconhecida no texto e conferida automaticamente."
             )
             reliability = _confidence_label(confidence)
-        elif status == "failed":
+        elif is_mathematically_refuted(check):
             result = "incorreta"
             explanation = (
-                "Esta afirmação foi reconhecida no texto, mas a checagem automática indicou "
-                "que ela não está correta."
+                "A checagem automática produziu uma prova formal da negação desta afirmação."
             )
             reliability = _confidence_label(confidence)
+        elif status in {"technical_error", "error"}:
+            result = "verificação formal indisponível"
+            explanation = "A verificação formal deste trecho ficou indisponível nesta execução."
+            reliability = "não avaliada"
+        elif status in {"unverified", "failed", "refuted"}:
+            result = "não conclusiva"
+            explanation = "Não foi possível verificar formalmente esta afirmação."
+            reliability = "confiabilidade baixa"
         elif evidence:
             result = "não conclusiva"
             explanation = (
@@ -254,7 +269,11 @@ def _build_rubric_evidence_items(
         if evidence and evidence in checked_evidence_texts:
             continue
 
-        if item.points > 0 and evidence:
+        if item.points is None:
+            result = "indeterminado"
+            reliability = "não avaliada"
+            explanation = item.assessment_note or "Evidência insuficiente para decidir este critério nesta execução."
+        elif item.points > 0 and evidence:
             result = "pontuada"
             reliability = "confiabilidade média"
             explanation = (
@@ -291,7 +310,7 @@ def _build_rubric_evidence_items(
 
 def build_pedagogical_report(
     *,
-    score: float,
+    score: Optional[float],
     max_score: float,
     verdict: str,
     rubric: RubricAssessment,
@@ -299,6 +318,7 @@ def build_pedagogical_report(
     student_claim_checks: List[Any],
     microclaims: List[MicroclaimResult],
     artifact_dir: Optional[str],
+    verification_status: str = "available",
 ) -> PedagogicalReport:
     check_items = _build_check_evidence_items(student_claims, student_claim_checks)
     checked_evidence_texts = {
@@ -317,15 +337,32 @@ def build_pedagogical_report(
     verified_internal = [
         mc.description
         for mc in microclaims
-        if mc.textual_evidence and mc.lean_status == "verified_by_lean"
+        if mc.textual_evidence and mc.lean_status in {"verified_by_lean", "verified_by_formal_steps"}
+        and mc.dependencies_verified
     ]
+    positive = bool(verified_internal or any(item.result == "conferida" for item in check_items))
+    supported = any(item.mathematical_status == "supported" for item in rubric.items)
+    refuted = any(is_mathematically_refuted(check) for check in student_claim_checks)
+    incomplete = (score is None or rubric.assessment_status != "complete" or
+                  any(item.result in {"não conclusiva", "verificação formal indisponível", "não avaliada"} for item in check_items))
+    technical = verification_status == "technical_error" or any(
+        item.result == "verificação formal indisponível" for item in check_items) or any(
+        item.verification_status == "technical_error" for item in rubric.items)
+    if (score is None or not (positive or supported or refuted)
+            or not rubric.items
+            or (verdict == "incorreto" and not refuted)):
+        verdict = "inconclusivo"
+        if not rubric.items or not (positive or supported or refuted):
+            score = None
     if verified_internal and verdict == "correto":
         attention_points.append(
             "As etapas centrais reconhecidas também passaram por verificação formal interna."
         )
 
     return PedagogicalReport(
-        summary=_summary_for_verdict(verdict, score, max_score),
+        summary=_summary_for_verdict(verdict, score, max_score, positive=positive, refuted=refuted,
+            incomplete=incomplete, technical=technical, evaluated_score=rubric.evaluated_score,
+            evaluated_max_score=rubric.evaluated_max_score),
         result=verdict,
         score=score,
         max_score=max_score,
@@ -334,4 +371,8 @@ def build_pedagogical_report(
         evidence_items=evidence_items,
         attention_points=attention_points,
         technical_record_available=bool(artifact_dir),
+        verification_status="technical_error" if technical else "partial" if incomplete else "available",
+        assessment_status="indeterminate" if not rubric.items else rubric.assessment_status,
+        evaluated_score=rubric.evaluated_score,
+        evaluated_max_score=rubric.evaluated_max_score,
     )

@@ -3,6 +3,7 @@ from pathlib import Path
 from fastapi.testclient import TestClient
 
 from confia_lean_auditor.main import app
+from audit_contract import assert_score_contract, assert_incomplete
 
 
 CLIENT = TestClient(app)
@@ -21,7 +22,9 @@ def audit_solution(solution: str):
         },
     )
     assert response.status_code == 200, response.text
-    return response.json()
+    data = response.json()
+    assert_score_contract(data)
+    return data
 
 
 def rubric_item_by_id(data, item_id: str):
@@ -65,20 +68,20 @@ def test_q5_correct_solution_scores_10_and_verifies_lean():
 def test_q5_answer_only_scores_conclusion_point_only():
     data = audit_solution(read_example("answer_only.txt"))
 
-    assert data["score"] == 1.0
+    assert_incomplete(data, 1, 1)
 
-    assert rubric_item_by_id(data, "difference_relation")["points"] == 0.0
-    assert rubric_item_by_id(data, "geometric_form")["points"] == 0.0
-    assert rubric_item_by_id(data, "geometric_factorization")["points"] == 0.0
+    assert rubric_item_by_id(data, "difference_relation")["points"] is None
+    assert rubric_item_by_id(data, "geometric_form")["points"] is None
+    assert rubric_item_by_id(data, "geometric_factorization")["points"] is None
     assert rubric_item_by_id(data, "conclusion_pg")["points"] == 1.0
 
 
 def test_q5_missing_difference_blocks_factorization_dependency():
     data = audit_solution(read_example("missing_difference_relation.txt"))
 
-    assert rubric_item_by_id(data, "difference_relation")["points"] == 0.0
+    assert rubric_item_by_id(data, "difference_relation")["points"] is None
     assert rubric_item_by_id(data, "geometric_form")["points"] == 2.0
-    assert rubric_item_by_id(data, "geometric_factorization")["points"] == 0.0
+    assert rubric_item_by_id(data, "geometric_factorization")["points"] is None
     assert rubric_item_by_id(data, "conclusion_pg")["points"] == 1.0
 
     generated = set(data["lean_certificate"]["generated_theorems"])
@@ -93,7 +96,7 @@ def test_q5_missing_factorization_blocks_formal_step():
 
     assert rubric_item_by_id(data, "difference_relation")["points"] == 3.0
     assert rubric_item_by_id(data, "geometric_form")["points"] == 2.0
-    assert rubric_item_by_id(data, "geometric_factorization")["points"] == 0.0
+    assert rubric_item_by_id(data, "geometric_factorization")["points"] is None
     assert rubric_item_by_id(data, "conclusion_pg")["points"] == 1.0
 
     generated = set(data["lean_certificate"]["generated_theorems"])
@@ -103,8 +106,8 @@ def test_q5_missing_factorization_blocks_formal_step():
     assert "conclusion_pg" not in generated
 
 
-def test_q5_wrong_direction_scores_zero():
+def test_q5_wrong_direction_keeps_undecided_criteria_and_decided_subtotal():
     data = audit_solution(read_example("wrong_direction.txt"))
 
-    assert data["score"] == 0.0
-    assert rubric_item_by_id(data, "conclusion_pg")["points"] == 0.0
+    assert_incomplete(data, 0, 0)
+    assert rubric_item_by_id(data, "conclusion_pg")["points"] is None

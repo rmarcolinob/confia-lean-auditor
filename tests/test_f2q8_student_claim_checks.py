@@ -38,8 +38,8 @@ def test_f2q8_wrong_final_answer_and_pair_reduction():
 
     by_type = _checks_by_type(solution, "pytest_f2q8_wrong_final_pair_reduction")
 
-    assert by_type["f2q8_student_final_answer"].status == "failed"
-    assert by_type["f2q8_student_pair_reduction"].status == "failed"
+    assert by_type["f2q8_student_final_answer"].status == "refuted"
+    assert by_type["f2q8_student_pair_reduction"].status == "refuted"
 
     assert "arithmetic_equality" not in by_type
 
@@ -61,7 +61,7 @@ def test_f2q8_generic_wrong_arithmetic_equality_still_fails():
 
     by_type = _checks_by_type(solution, "pytest_f2q8_generic_wrong_arithmetic")
 
-    assert by_type["arithmetic_equality"].status == "failed"
+    assert by_type["arithmetic_equality"].status == "refuted"
 
 
 def test_f2q8_wrong_formula_is_rejected():
@@ -72,7 +72,7 @@ def test_f2q8_wrong_formula_is_rejected():
 
     by_type = _checks_by_type(solution, "pytest_f2q8_wrong_det_formula")
 
-    assert by_type["f2q8_student_det_formula"].status == "failed"
+    assert by_type["f2q8_student_det_formula"].status == "refuted"
 
 
 def test_f2q8_correct_formula_is_verified():
@@ -96,8 +96,8 @@ def test_f2q8_correct_pair_count_but_wrong_rhs():
     by_type = _checks_by_type(solution, "pytest_f2q8_pair_count_correct_rhs_wrong")
 
     assert by_type["f2q8_student_pair_count"].status == "verified"
-    assert by_type["f2q8_student_pair_reduction"].status == "failed"
-    assert by_type["f2q8_student_final_answer"].status == "failed"
+    assert by_type["f2q8_student_pair_reduction"].status == "refuted"
+    assert by_type["f2q8_student_final_answer"].status == "refuted"
 
 
 def test_f2q8_wrong_pair_count_true_local_subtraction():
@@ -109,9 +109,9 @@ def test_f2q8_wrong_pair_count_true_local_subtraction():
 
     by_type = _checks_by_type(solution, "pytest_f2q8_wrong_pair_count_true_subtraction")
 
-    assert by_type["f2q8_student_pair_count"].status == "failed"
-    assert by_type["f2q8_student_pair_reduction"].status == "failed"
-    assert by_type["f2q8_student_final_answer"].status == "failed"
+    assert by_type["f2q8_student_pair_count"].status == "refuted"
+    assert by_type["f2q8_student_pair_reduction"].status == "refuted"
+    assert by_type["f2q8_student_final_answer"].status == "refuted"
 
 
 def test_f2q8_does_not_extract_fake_final_answer_from_alternating_sum_start():

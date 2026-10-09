@@ -3,6 +3,7 @@ from pathlib import Path
 from fastapi.testclient import TestClient
 
 from confia_lean_auditor.main import app
+from audit_contract import assert_score_contract, assert_incomplete
 
 
 CLIENT = TestClient(app)
@@ -21,7 +22,9 @@ def audit_solution(solution: str):
         },
     )
     assert response.status_code == 200, response.text
-    return response.json()
+    data = response.json()
+    assert_score_contract(data)
+    return data
 
 
 def rubric_item_by_id(data, item_id: str):
@@ -69,30 +72,30 @@ def test_f2q8_correct_solution_scores_10_and_verifies_lean():
 def test_f2q8_answer_only_scores_final_points_only():
     data = audit_solution(read_example("answer_only.txt"))
 
-    assert data["score"] == 1.5
+    assert_incomplete(data, 1.5, 1.5)
     assert rubric_item_by_id(data, "final_answer")["points"] == 1.5
-    assert rubric_item_by_id(data, "matrix_transformation")["points"] == 0.0
-    assert rubric_item_by_id(data, "determinant_formula")["points"] == 0.0
-    assert rubric_item_by_id(data, "alternating_sum")["points"] == 0.0
+    assert rubric_item_by_id(data, "matrix_transformation")["points"] is None
+    assert rubric_item_by_id(data, "determinant_formula")["points"] is None
+    assert rubric_item_by_id(data, "alternating_sum")["points"] is None
 
 
 def test_f2q8_missing_determinant_formula_scores_partial():
     data = audit_solution(read_example("missing_determinant_formula.txt"))
 
-    assert rubric_item_by_id(data, "matrix_transformation")["points"] == 0.0
-    assert rubric_item_by_id(data, "determinant_formula")["points"] == 0.0
+    assert rubric_item_by_id(data, "matrix_transformation")["points"] is None
+    assert rubric_item_by_id(data, "determinant_formula")["points"] is None
     assert rubric_item_by_id(data, "alternating_sum")["points"] == 2.0
     assert rubric_item_by_id(data, "final_answer")["points"] == 1.5
-    assert data["score"] == 3.5
+    assert_incomplete(data, 3.5, 3.5)
 
     generated = set(data["lean_certificate"]["generated_theorems"])
     assert "generated_determinant_formula" not in generated
     assert "generated_final_answer" in generated
 
 
-def test_f2q8_wrong_answer_scores_zero():
+def test_f2q8_wrong_answer_keeps_undecided_criteria_and_decided_subtotal():
     data = audit_solution(read_example("wrong_answer.txt"))
 
-    assert data["score"] == 0.0
-    assert rubric_item_by_id(data, "final_answer")["points"] == 0.0
-    assert rubric_item_by_id(data, "determinant_formula")["points"] == 0.0
+    assert_incomplete(data, 0, 0)
+    assert rubric_item_by_id(data, "final_answer")["points"] is None
+    assert rubric_item_by_id(data, "determinant_formula")["points"] is None

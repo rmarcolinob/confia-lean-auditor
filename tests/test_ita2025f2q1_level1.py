@@ -3,6 +3,7 @@ from pathlib import Path
 from fastapi.testclient import TestClient
 
 from confia_lean_auditor.main import app
+from audit_contract import assert_score_contract, assert_incomplete
 
 
 CLIENT = TestClient(app)
@@ -21,7 +22,9 @@ def audit_solution(solution: str):
         },
     )
     assert response.status_code == 200, response.text
-    return response.json()
+    data = response.json()
+    assert_score_contract(data)
+    return data
 
 
 def rubric_item_by_id(data, item_id: str):
@@ -67,20 +70,20 @@ def test_f2q1_correct_solution_scores_10_and_verifies_lean():
 def test_f2q1_answer_only_scores_final_points_only():
     data = audit_solution(read_example("answer_only.txt"))
 
-    assert data["score"] == 2.0
+    assert_incomplete(data, 2, 2)
     assert rubric_item_by_id(data, "final_answer")["points"] == 2.0
-    assert rubric_item_by_id(data, "power_reductions")["points"] == 0.0
-    assert rubric_item_by_id(data, "reduced_polynomial_form")["points"] == 0.0
+    assert rubric_item_by_id(data, "power_reductions")["points"] is None
+    assert rubric_item_by_id(data, "reduced_polynomial_form")["points"] is None
 
 
 def test_f2q1_missing_reduced_form_scores_partial():
     data = audit_solution(read_example("missing_reduced_form.txt"))
 
     assert rubric_item_by_id(data, "power_reductions")["points"] == 3.0
-    assert rubric_item_by_id(data, "reduced_polynomial_form")["points"] == 0.0
-    assert rubric_item_by_id(data, "coefficient_system")["points"] == 0.0
+    assert rubric_item_by_id(data, "reduced_polynomial_form")["points"] is None
+    assert rubric_item_by_id(data, "coefficient_system")["points"] is None
     assert rubric_item_by_id(data, "final_answer")["points"] == 2.0
-    assert data["score"] == 5.0
+    assert_incomplete(data, 5, 5)
 
     generated = set(data["lean_certificate"]["generated_theorems"])
     assert "power_reductions" in generated
@@ -88,8 +91,8 @@ def test_f2q1_missing_reduced_form_scores_partial():
     assert "coefficient_system_solution" not in generated
 
 
-def test_f2q1_wrong_answer_scores_zero():
+def test_f2q1_wrong_answer_keeps_undecided_criteria_and_decided_subtotal():
     data = audit_solution(read_example("wrong_answer.txt"))
 
-    assert data["score"] == 0.0
+    assert_incomplete(data, 0, 2)
     assert rubric_item_by_id(data, "final_answer")["points"] == 0.0

@@ -32,6 +32,7 @@ from confia_lean_auditor.submissions.store import (
     SubmissionStore,
     SubmissionTooLarge,
     TranscriptionConflict,
+    TranscriptionIntegrityConflict,
 )
 
 router = APIRouter(prefix="/submissions", tags=["experimental submissions"])
@@ -55,6 +56,8 @@ def guarded(operation, *args):
         raise HTTPException(409, "Chave de idempotência reutilizada com outra configuração.") from None
     except SubmissionConflict:
         raise HTTPException(409, "Snapshot já recebido com conteúdo diferente ou integridade divergente.") from None
+    except TranscriptionIntegrityConflict:
+        raise HTTPException(409, "Integridade da revisão ou do aceite inválida; nenhum reparo automático foi realizado.") from None
     except TranscriptionConflict:
         raise HTTPException(409, "A transcrição foi alterada ou aceita a partir de outra versão.") from None
     except SubmissionTooLarge:

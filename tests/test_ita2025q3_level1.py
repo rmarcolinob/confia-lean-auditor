@@ -3,6 +3,7 @@ from pathlib import Path
 from fastapi.testclient import TestClient
 
 from confia_lean_auditor.main import app
+from audit_contract import assert_score_contract, assert_incomplete
 
 
 CLIENT = TestClient(app)
@@ -21,7 +22,9 @@ def audit_solution(solution: str):
         },
     )
     assert response.status_code == 200, response.text
-    return response.json()
+    data = response.json()
+    assert_score_contract(data)
+    return data
 
 
 def rubric_item_by_id(data, item_id: str):
@@ -67,21 +70,21 @@ def test_q3_correct_solution_scores_10_and_verifies_formal_step():
 def test_q3_answer_only_scores_one_point():
     data = audit_solution(read_example("answer_only.txt"))
 
-    assert data["score"] == 1.0
+    assert_incomplete(data, 1, 1)
 
     final_item = rubric_item_by_id(data, "final_answer")
     assert final_item["detected"] is True
     assert final_item["points"] == 1.0
 
 
-def test_q3_wrong_coefficient_scores_zero():
+def test_q3_wrong_coefficient_keeps_undecided_criteria_and_decided_subtotal():
     data = audit_solution(read_example("wrong_coefficient.txt"))
 
-    assert data["score"] == 0.0
+    assert_incomplete(data, 0, 0)
 
     final_item = rubric_item_by_id(data, "final_answer")
     assert final_item["detected"] is False
-    assert final_item["points"] == 0.0
+    assert final_item["points"] is None
 
 
 def test_q3_missing_parity_blocks_formal_chain():
@@ -89,8 +92,8 @@ def test_q3_missing_parity_blocks_formal_chain():
 
     assert rubric_item_by_id(data, "first_factor_exponent")["points"] == 2.0
     assert rubric_item_by_id(data, "second_factor_exponent")["points"] == 2.0
-    assert rubric_item_by_id(data, "exponent_balance")["points"] == 0.0
-    assert rubric_item_by_id(data, "parity_obstruction")["points"] == 0.0
+    assert rubric_item_by_id(data, "exponent_balance")["points"] is None
+    assert rubric_item_by_id(data, "parity_obstruction")["points"] is None
     assert rubric_item_by_id(data, "final_answer")["points"] == 1.0
 
     generated = set(data["lean_certificate"]["generated_theorems"])

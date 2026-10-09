@@ -42,6 +42,7 @@ def test_f2q8_wrong_answer_does_not_include_complete_strong_certificate():
 
     generated = set(data["lean_certificate"]["generated_theorems"])
 
-    assert data["score"] < data["max_score"]
+    assert data["score"] is None
+    assert data["verdict"] == "inconclusivo"
     assert "generated_strong_f2q8_claim" not in generated
     assert "generated_strong_claim" not in generated

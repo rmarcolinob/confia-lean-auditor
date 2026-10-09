@@ -52,7 +52,7 @@ def _base_rubric() -> RubricAssessment:
     )
 
 
-def _failed_check(claim_type: str, raw_text: str) -> StudentClaimCheck:
+def _refuted_check(claim_type: str, raw_text: str) -> StudentClaimCheck:
     return StudentClaimCheck(
         id="student_claim_0",
         problem_id="ITA2025F2Q3",
@@ -61,7 +61,9 @@ def _failed_check(claim_type: str, raw_text: str) -> StudentClaimCheck:
         normalized_text=raw_text,
         lean_statement="False",
         method="ring_nf",
-        status="failed",
+        status="refuted",
+        refutation_verified=True,
+        refutation_lean_file="/test/formal_negation.lean",
         compiled=False,
         lean_file=None,
         stdout="",
@@ -93,7 +95,7 @@ def test_f2q3_failed_beta_difference_zeros_beta_item_only():
 
     adjusted = apply_f2q3_student_claim_adjustments(
         rubric,
-        [_failed_check("f2q3_student_beta_difference", "cos beta - sin beta = -1/2")],
+        [_refuted_check("f2q3_student_beta_difference", "cos beta - sin beta = -1/2")],
     )
 
     by_id = {item.id: item for item in adjusted.items}
@@ -113,7 +115,7 @@ def test_f2q3_failed_candidate_value_zeros_candidate_item_only():
 
     adjusted = apply_f2q3_student_claim_adjustments(
         rubric,
-        [_failed_check("f2q3_student_candidate_value", "cos alpha = 3/4")],
+        [_refuted_check("f2q3_student_candidate_value", "cos alpha = 3/4")],
     )
 
     by_id = {item.id: item for item in adjusted.items}
@@ -130,8 +132,8 @@ def test_f2q3_multiple_failed_candidate_values_zero_candidate_item_once():
     adjusted = apply_f2q3_student_claim_adjustments(
         rubric,
         [
-            _failed_check("f2q3_student_candidate_value", "sin beta = (sqrt(7)+1)/4"),
-            _failed_check("f2q3_student_candidate_value", "cos beta = (sqrt(7)-1)/4"),
+            _refuted_check("f2q3_student_candidate_value", "sin beta = (sqrt(7)+1)/4"),
+            _refuted_check("f2q3_student_candidate_value", "cos beta = (sqrt(7)-1)/4"),
         ],
     )
 
@@ -148,7 +150,7 @@ def test_f2q3_failed_final_sin_sum_zeros_final_sin_sum_item_only():
 
     adjusted = apply_f2q3_student_claim_adjustments(
         rubric,
-        [_failed_check("f2q3_student_final_sin_sum", "sin(alpha+beta)=1/2")],
+        [_refuted_check("f2q3_student_final_sin_sum", "sin(alpha+beta)=1/2")],
     )
 
     by_id = {item.id: item for item in adjusted.items}
@@ -164,7 +166,7 @@ def test_f2q3_failed_final_answer_zeros_final_answer_item_only():
 
     adjusted = apply_f2q3_student_claim_adjustments(
         rubric,
-        [_failed_check("f2q3_student_final_answer", "resposta = 1/2")],
+        [_refuted_check("f2q3_student_final_answer", "resposta = 1/2")],
     )
 
     by_id = {item.id: item for item in adjusted.items}

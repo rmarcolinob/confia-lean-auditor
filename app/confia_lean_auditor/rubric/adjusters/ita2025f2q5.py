@@ -1,8 +1,11 @@
 from __future__ import annotations
 
+from confia_lean_auditor.student_claims.schemas import is_mathematically_refuted
+
 from typing import Any, Dict, List
 
 from confia_lean_auditor.core.schemas import RubricAssessment
+from confia_lean_auditor.rubric.assessment import refresh_assessment
 
 
 F2Q5_STUDENT_CHECK_TO_RUBRIC_ITEMS: Dict[str, List[str]] = {
@@ -57,16 +60,15 @@ def apply_f2q5_student_claim_adjustments(
     """Apply F2Q5 rubric reductions based on dynamic Lean checks.
 
     Policy:
-    - only status == "failed" reduces points;
+    - only a formally evidenced "refuted" check reduces points;
     - "unsupported" does not reduce points;
-    - "error" does not reduce points automatically;
+    - "technical_error", "unverified" and legacy "failed"/"error" never reduce points;
     - this adjuster never adds points.
     """
     failed_reasons_by_item: Dict[str, List[str]] = {}
 
     for check in student_claim_checks:
-        status = _field_value(check, "status")
-        if status != "failed":
+        if not is_mathematically_refuted(check):
             continue
 
         claim_type = _field_value(check, "claim_type")
@@ -96,11 +98,13 @@ def apply_f2q5_student_claim_adjustments(
             continue
 
         item.points = 0.0
+        item.mathematical_status = "refuted"
+        item.verification_status = "available"
+        item.assessment_note = "Refutação matemática formal disponível para este critério."
         item.student_check_adjusted = True
 
         for reason in reasons:
             if reason not in item.adjustment_notes:
                 item.adjustment_notes.append(reason)
 
-    rubric.score = sum(item.points for item in rubric.items)
-    return rubric
+    return refresh_assessment(rubric)
