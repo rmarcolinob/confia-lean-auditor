@@ -22,7 +22,7 @@ from confia_lean_auditor.lean.verification import verification_state
 from confia_lean_auditor.submission_audits.artifacts import capture_manifest
 from audit_contract import assert_score_contract
 from test_cap04_global_semantics import central
-from test_submission_audits import source, accept, execute, result
+from test_submission_audits import persisted_run, source, accept, execute, result
 from test_submissions import payload
 
 
@@ -145,10 +145,16 @@ def execute_pair(parity_pipeline, problem, solution, before_bridge=None):
         assert arguments == dict(problem_id=problem, solution=solution)
         assert raw == solution.encode("utf-8")
         assert sha256(raw) == sha256(solution.encode("utf-8"))
-    assert textual.json() == state["results"]["textual"]
-    assert run["result"] == state["results"]["bridge"]
+    from confia_lean_auditor.core.public_audit import public_projection
+    original = state["results"]["textual"]
+    assert textual.json() == public_projection(original, original["artifact_dir"])
+    original = state["results"]["bridge"]
+    projected = public_projection(original, original["artifact_dir"])
+    projected.pop("artifact_ref")
+    projected.pop("public_warnings")
+    assert run["result"] == projected
     assert_bridge_integrity(client, run, problem, solution)
-    return textual.json(), run["result"], state
+    return state["results"]["textual"], state["results"]["bridge"], state
 
 
 def assert_bridge_integrity(client, run, problem, solution):
@@ -156,9 +162,10 @@ def assert_bridge_integrity(client, run, problem, solution):
     assert run["problem_id"] == run["source"]["problem_id"] == problem
     assert run["source"]["solution_text"] == solution
     assert run["source_hash"] == canonical_hash({k: v for k, v in run["source"].items() if k != "source_hash"})
-    assert run["result_sha256"] == canonical_hash(run["result"])
-    assert run["artifact_manifest_sha256"] == canonical_hash(run["required_artifacts"])
-    assert [item.model_dump(mode="json") for item in capture_manifest(AuditResponse.model_validate(run["result"]))] == run["required_artifacts"]
+    stored = persisted_run(run)
+    assert run["result_sha256"] == canonical_hash(stored["result"])
+    assert run["artifact_manifest_sha256"] == canonical_hash(stored["required_artifacts"])
+    assert [item.model_dump(mode="json") for item in capture_manifest(AuditResponse.model_validate(stored["result"]))] == stored["required_artifacts"]
     response = client.get(f'/submission-audits/{run["audit_run_id"]}')
     assert response.status_code == 200, response.text
     assert response.json() == run
@@ -353,8 +360,9 @@ def test_formal_witness_integrity_independent(parity_pipeline, controlled_execut
     assert response.status_code == 200, response.text
     run = response.json()
     assert_bridge_integrity(client, run, PROBLEM, solution)
-    assert_execution_invariants(run["result"], solution)
-    witness = Path(next(item["file"] for item in run["required_artifacts"] if item["artifact_type"] == kind))
+    stored = persisted_run(run)
+    assert_execution_invariants(stored["result"], solution)
+    witness = Path(next(item["file"] for item in stored["required_artifacts"] if item["artifact_type"] == kind))
     witness.unlink() if change == "removed" else witness.write_bytes(b"altered witness")
     assert client.get(f'/submission-audits/{run["audit_run_id"]}').status_code == 409
     assert client.get(f'/submissions/{sid}/audits').status_code == 409

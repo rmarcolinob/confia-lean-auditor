@@ -2,7 +2,9 @@ from __future__ import annotations
 
 from typing import Dict, List, Optional, Any, Literal
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, model_serializer
+
+from confia_lean_auditor.reproducibility.schemas import ReproducibilityMetadata
 
 
 class AuditRequest(BaseModel):
@@ -147,3 +149,13 @@ class AuditResponse(BaseModel):
     feedback: str
     pedagogical_report: Optional[PedagogicalReport] = None
     artifact_dir: Optional[str] = None
+    reproducibility: Optional[ReproducibilityMetadata] = None
+
+    @model_serializer(mode="wrap")
+    def preserve_legacy_digest(self, handler):
+        data = handler(self)
+        # Old audit.json/result hashes cover the original shape. Never add a
+        # default field to their hashed representation or retroactively rehash.
+        if self.reproducibility is None:
+            data.pop("reproducibility", None)
+        return data

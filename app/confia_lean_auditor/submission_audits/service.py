@@ -1,6 +1,7 @@
 from contextlib import contextmanager
 from datetime import datetime, timezone
 import fcntl
+import json
 import os
 from pathlib import Path
 import re
@@ -8,13 +9,12 @@ import re
 from confia_lean_auditor.core.schemas import AuditRequest as EngineRequest, AuditResponse
 from confia_lean_auditor.submissions.store import SubmissionStore, TranscriptionIntegrityConflict
 from confia_lean_auditor.submissions.integrity import model_sha256, canonical_sha256
+from confia_lean_auditor.reproducibility.service import verify, ReproducibilityIntegrityError
+from confia_lean_auditor.reproducibility.schemas import ReproducibilityMetadata
 from .artifacts import capture_manifest, validate_manifest
-from .schemas import AuditRun, AuditRunView
+from .schemas import AuditRun, AuditRunView, AuditSource
+from .errors import AuditConflict, UnacceptedSource, SourceIntegrityError, ResultIntegrityError, RevisionConflict
 from .source import build_source, canonical_hash, convert_segments, source_digest
-
-
-class UnacceptedSource(ValueError):
-    pass
 
 
 class AuditService:
@@ -22,37 +22,51 @@ class AuditService:
         self.submissions, self.root, self.engine = submissions, root, engine
 
     def _source(self, submission_id, request):
+        try:
+            return self._validated_source(submission_id, request)
+        except AuditConflict:
+            raise
+        except ValueError:
+            raise SourceIntegrityError() from None
+
+    def _validated_source(self, submission_id, request):
         # Caller holds the submissions lock, including provenance validation.
         submission = self.submissions.assert_submission_integrity(submission_id)
         folder = self.submissions._transcription_folder(request.transcription_id)
         for directory, pattern in ((folder / "revisions", r"revision_[0-9]{6}\.json"),
                                    (folder / "acceptances", r"acceptance_[0-9]{6}\.json")):
             if directory.is_symlink():
-                raise UnacceptedSource()
+                raise SourceIntegrityError()
             if directory.exists():
                 for path in directory.iterdir():
                     if path.is_symlink() or not path.is_file() or not re.fullmatch(pattern, path.name):
-                        raise UnacceptedSource()
+                        raise SourceIntegrityError()
         if (folder / "transcription.json").is_symlink():
-            raise UnacceptedSource()
+            raise SourceIntegrityError()
         history = self.submissions._history_from_folder(folder)
         if history.transcription.submission_id != submission_id:
-            raise UnacceptedSource()
+            raise SourceIntegrityError()
         revision = next((item for item in history.revisions if item.revision_number == request.revision_number), None)
         acceptance = next((item for item in history.acceptances if item.acceptance_id == request.acceptance_id), None)
+        if revision is None:
+            raise RevisionConflict()
+        if revision.status != "ACCEPTED":
+            raise UnacceptedSource()
+        if acceptance is not None and acceptance.revision_number != revision.revision_number:
+            raise RevisionConflict()
         if acceptance is not None and acceptance.accepted_revision_sha256 is None:
             raise TranscriptionIntegrityConflict()
-        if (revision is None or acceptance is None or revision.status != "ACCEPTED"
+        if (acceptance is None
                 or acceptance.revision_number != revision.revision_number
                 or acceptance.transcription_id != revision.transcription_id
                 or acceptance.submission_id != submission_id
                 or acceptance.accepted_at.tzinfo is None or revision.created_at.tzinfo is None
                 or acceptance.accepted_at < revision.created_at
                 or sum(item.revision_number == revision.revision_number for item in history.acceptances) != 1):
-            raise UnacceptedSource()
+            raise SourceIntegrityError()
         if any(getattr(revision, field) != getattr(history.transcription, field)
                for field in ("source", "recognizer", "recognizer_version", "provider", "recognizer_run_id", "provenance")):
-            raise UnacceptedSource()
+            raise SourceIntegrityError()
         self.submissions._validate_segment_pages(revision.segments, submission)
         # Hash and embed the exact persisted revision, not its projected status.
         persisted = next(item for item in self.submissions._read_revisions(folder)
@@ -72,17 +86,56 @@ class AuditService:
     def _read(self, run_id):
         path = self._path(run_id)
         if self.root.is_symlink() or path.is_symlink():
-            raise ValueError("invalid audit storage")
-        run = AuditRun.model_validate_json(path.read_bytes())
-        if run.audit_run_id != run_id or source_digest(run.source) != run.source_hash:
-            raise ValueError("invalid persisted audit hash")
-        if run_id != self._identity(run.source, run.execution_key):
-            raise ValueError("invalid persisted audit identity")
+            raise AuditConflict()
+        raw_bytes = path.read_bytes()
+        try:
+            raw = json.loads(raw_bytes)
+            if not isinstance(raw, dict):
+                raise ValueError()
+        except ValueError:
+            raise AuditConflict() from None
+        # Validate GOV-01 independently before the full run validator, which
+        # also covers result digests and would otherwise obscure this category.
+        try:
+            result = raw.get("result")
+            metadata_raw = result.get("reproducibility") if isinstance(result, dict) else None
+            metadata = ReproducibilityMetadata.model_validate(metadata_raw) if metadata_raw is not None else None
+            record = metadata.record if metadata else None
+            statuses = {metadata.status} if metadata else (
+                {"legacy_unversioned", "unavailable"} if raw.get("status") == "FAILED" else {"legacy_unversioned"})
+            if (raw.get("reproducibility_status", "legacy_unversioned") not in statuses
+                    or raw.get("reproducibility_manifest_filename") != (record.filename if record else None)
+                    or raw.get("reproducibility_manifest_sha256") != (record.manifest_sha256 if record else None)
+                    or (record and record.manifest.problem_id != raw.get("problem_id"))):
+                raise ValueError()
+            if metadata:
+                verify(metadata, raw.get("artifact_dir"))
+        except (ValueError, TypeError, OSError):
+            raise ReproducibilityIntegrityError() from None
+        try:
+            source = AuditSource.model_validate(raw.get("source"))
+            if source_digest(source) != raw.get("source_hash") or any(
+                    raw.get(field) != getattr(source, field) for field in (
+                        "submission_id", "problem_id", "transcription_id", "revision_number", "acceptance_id", "source_hash")):
+                raise ValueError()
+        except (ValueError, TypeError):
+            raise SourceIntegrityError() from None
+        if raw.get("audit_run_id") != run_id or run_id != self._identity(source, raw.get("execution_key")):
+            raise AuditConflict()
+        try:
+            run = AuditRun.model_validate(raw)
+        except (ValueError, TypeError):
+            raise ResultIntegrityError() from None
         solution, warnings = convert_segments(run.source.provenance.revision.segments)
         if solution != run.source.solution_text or warnings != run.source.warnings:
-            raise ValueError("persisted audit conversion mismatch")
+            raise SourceIntegrityError()
         if run.status == "COMPLETED":
-            self._validate_artifacts(run.result, run.required_artifacts)
+            try:
+                self._validate_artifacts(run.result, run.required_artifacts)
+            except ReproducibilityIntegrityError:
+                raise
+            except (ValueError, OSError):
+                raise ResultIntegrityError() from None
         return run
 
     @staticmethod
@@ -117,7 +170,7 @@ class AuditService:
             # Recheck after waiting. Never replay a now-invalid source.
             with self.submissions._locked():
                 if self._source(submission_id, request) != source:
-                    raise UnacceptedSource()
+                    raise SourceIntegrityError()
             if self._path(run_id).exists() or self._path(run_id).is_symlink():
                 return self.view(self._read(run_id))
             created_at = datetime.now(timezone.utc)
@@ -131,23 +184,31 @@ class AuditService:
                 manifest_hash = canonical_sha256([item.model_dump(mode="json") for item in manifest])
                 result_hash = model_sha256(result)
                 status, error_code = "COMPLETED", None
-            except Exception:
+            except Exception as exc:
                 # Pipeline diagnostics can contain student content. Persist
                 # only the failure category, never a fictitious result.
                 result, result_hash, status, error_code = None, None, "FAILED", "AUDITOR_FAILED"
+                if isinstance(exc, ReproducibilityIntegrityError):
+                    error_code = "METADATA_INTEGRITY_FAILED"
                 manifest, manifest_hash = [], None
+            metadata = result.reproducibility if result else None
+            record = metadata.record if metadata else None
             run = AuditRun(audit_run_id=run_id, source=source, created_at=created_at,
                 **{field: getattr(source, field) for field in ("submission_id", "problem_id",
                     "transcription_id", "revision_number", "acceptance_id", "source_hash")},
                 status=status, result=result, artifact_dir=result.artifact_dir if result else None,
                 result_sha256=result_hash,
                 required_artifacts=manifest, artifact_manifest_sha256=manifest_hash,
+                reproducibility_status=metadata.status if metadata else (
+                    "unavailable" if status == "FAILED" else "legacy_unversioned"),
+                reproducibility_manifest_filename=record.filename if record else None,
+                reproducibility_manifest_sha256=record.manifest_sha256 if record else None,
                 execution_key=request.execution_key, error_code=error_code, auditor_version=None)
             # A newer revision leaves this accepted source valid. Changed
             # originals/acceptance block publication even after engine execution.
             with self.submissions._locked():
                 if self._source(submission_id, request) != source:
-                    raise UnacceptedSource()
+                    raise SourceIntegrityError()
                 SubmissionStore._write_atomic_new(self._path(run_id), run.model_dump_json(indent=2).encode())
             return self.view(run)
 
@@ -164,6 +225,15 @@ class AuditService:
 
     def get(self, run_id):
         return self.view(self._read(run_id))
+
+    def reproducibility(self, run_id):
+        run = self._read(run_id)
+        if run.result:
+            return verify(run.result.reproducibility, run.artifact_dir)
+        if run.reproducibility_status == "unavailable":
+            return ReproducibilityMetadata(status="unavailable", error_code=(
+                "METADATA_INTEGRITY_FAILED" if run.error_code == "METADATA_INTEGRITY_FAILED" else "AUDIT_NOT_COMPLETED"))
+        return ReproducibilityMetadata(status="legacy_unversioned")
 
     def list(self, submission_id):
         with self.submissions._locked():

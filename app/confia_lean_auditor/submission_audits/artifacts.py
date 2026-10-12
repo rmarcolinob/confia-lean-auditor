@@ -3,6 +3,7 @@ import hashlib
 from pathlib import Path
 
 from .schemas import RequiredArtifact
+from confia_lean_auditor.reproducibility.service import verify
 
 
 def required_references(result):
@@ -11,6 +12,11 @@ def required_references(result):
         raise ValueError("invalid audit artifact directory")
     references = [("export", name, str(root / name)) for name in (
         "audit.json", "solution.txt", "claims.json", "student_claims.json", "student_claim_checks.json")]
+    metadata = verify(result.reproducibility, root)
+    if metadata.status == "recorded":
+        record = metadata.record
+        for name in (record.filename, record.manifest.python_environment.dependency_manifest_filename):
+            references.append(("reproducibility", name, str(root / name)))
     references.append(("certificate", "principal", result.lean_certificate.lean_file))
     for step in result.formal_steps:
         if step.status == "verified":

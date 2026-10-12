@@ -106,7 +106,31 @@ def test_problem_example_endpoint_rejects_unknown_problem_or_example():
     assert unsupported_example.status_code == 404
 
 
-def test_ui_can_load_example_and_audit_with_pedagogical_report():
+def test_ui_can_load_example_and_audit_with_pedagogical_report(monkeypatch):
+    from pathlib import Path
+    import subprocess
+    import confia_lean_auditor.main as main
+    from confia_lean_auditor.core.schemas import AuditResponse
+    root = Path(__file__).resolve().parents[1]
+    def files():
+        return {str(p): (p.stat().st_size, p.stat().st_mtime_ns)
+                for name in ("artifacts", ".lake") for p in (root / name).rglob("*") if p.is_file()}
+    before = files()
+    calls = []
+    def engine(request):
+        calls.append(request)
+        return AuditResponse(problem_id=request.problem_id, score=0, max_score=10, verdict="insuficiente",
+            extracted_claims={"problem_id": request.problem_id, "claims": []}, formal_steps=[],
+            rubric_assessment={"score": 0, "max_score": 10, "items": []},
+            lean_certificate={"status": "unverified", "compiled": False, "exit_code": 0,
+                              "uses_forbidden_token": False, "forbidden_tokens_found": []},
+            microclaims=[], feedback="Resposta controlada",
+            pedagogical_report={"summary": "Resumo controlado", "result": "Insuficiente", "score": 0,
+                                "max_score": 10, "verdict": "insuficiente", "reliability": "limitada"})
+    def forbidden(*args, **kwargs):
+        raise AssertionError("static UI test must not execute subprocesses")
+    monkeypatch.setattr(main, "execute_audit", engine)
+    monkeypatch.setattr(subprocess, "run", forbidden)
     example_response = CLIENT.get("/problems/ITA2025F2Q1/examples/correct")
     assert example_response.status_code == 200
 
@@ -125,3 +149,6 @@ def test_ui_can_load_example_and_audit_with_pedagogical_report():
     assert payload["problem_id"] == "ITA2025F2Q1"
     assert payload["pedagogical_report"] is not None
     assert payload["pedagogical_report"]["summary"]
+
+    assert len(calls) == 1 and calls[0].solution == solution
+    assert files() == before

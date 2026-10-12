@@ -3,7 +3,7 @@ from pathlib import Path
 import zlib
 
 from fastapi import APIRouter, HTTPException, Request, Response
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, JSONResponse
 from pydantic import ValidationError
 from starlette.concurrency import run_in_threadpool
 
@@ -59,7 +59,7 @@ def guarded(operation, *args):
     except TranscriptionIntegrityConflict:
         raise HTTPException(409, "Integridade da revisão ou do aceite inválida; nenhum reparo automático foi realizado.") from None
     except TranscriptionConflict:
-        raise HTTPException(409, "A transcrição foi alterada ou aceita a partir de outra versão.") from None
+        return JSONResponse(status_code=409, content={"detail": "A transcrição foi alterada ou aceita a partir de outra versão.", "error_code": "REVISION_CONFLICT"}, headers={"Cache-Control": "no-store"})
     except SubmissionTooLarge:
         raise HTTPException(413, "Artefato acima do limite permitido.") from None
     except InvalidSubmissionProblem:

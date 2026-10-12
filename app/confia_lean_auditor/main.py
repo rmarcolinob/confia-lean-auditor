@@ -40,9 +40,16 @@ from confia_lean_auditor.submissions.router import (
 )
 from confia_lean_auditor.submissions.body_limit import TranscriptionBodyLimitMiddleware
 from confia_lean_auditor.submission_audits.router import router as submission_audits_router
+from confia_lean_auditor.reproducibility.collector import capture as capture_reproducibility
+from confia_lean_auditor.reproducibility.service import publish as publish_reproducibility, atomic_write
+from confia_lean_auditor.versions import API_VERSION
+from confia_lean_auditor.core.public_audit import (
+    public_audit_response, audit_exception_response, install_audit_exception_handlers,
+)
 
 
-app = FastAPI(title="ConfIA Lean Auditor", version="0.4.0")
+app = FastAPI(title="ConfIA Lean Auditor", version=API_VERSION)
+install_audit_exception_handlers(app)
 app.add_middleware(TranscriptionBodyLimitMiddleware)
 STATIC_DIR = Path(__file__).resolve().parent / "static"
 app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
@@ -70,7 +77,7 @@ def health():
     return {
         "status": "ok",
         "service": "ConfIA Lean Auditor",
-        "version": "0.4.0"
+        "version": API_VERSION
     }
 
 
@@ -87,9 +94,12 @@ def problem_example(problem_id: str, example_key: str):
         raise HTTPException(status_code=404, detail=str(exc)) from exc
 
 
-@app.post("/audit", response_model=AuditResponse)
-def audit(req: AuditRequest) -> AuditResponse:
-    return execute_audit(req)
+@app.post("/audit", response_model=dict)
+def audit(req: AuditRequest):
+    try:
+        return public_audit_response(execute_audit(req))
+    except Exception as error:
+        return audit_exception_response(error)
 
 
 def execute_audit(req: AuditRequest) -> AuditResponse:
@@ -104,6 +114,7 @@ def execute_audit(req: AuditRequest) -> AuditResponse:
     if not problem_dir.exists():
         raise HTTPException(status_code=404, detail="Problem not found: " + req.problem_id)
 
+    snapshot = capture_reproducibility(root, req.problem_id)
     try:
         assets = validate_problem_assets(problem_dir, req.problem_id)
     except ProblemAssetValidationError as exc:
@@ -233,11 +244,7 @@ def execute_audit(req: AuditRequest) -> AuditResponse:
         feedback=feedback,
         pedagogical_report=pedagogical_report,
         artifact_dir=str(artifact_dir),
-    )
-
-    (artifact_dir / "audit.json").write_text(
-        json.dumps(response.model_dump(), ensure_ascii=False, indent=2),
-        encoding="utf-8",
+        reproducibility=publish_reproducibility(snapshot, artifact_dir),
     )
 
     (artifact_dir / "solution.txt").write_text(req.solution, encoding="utf-8")
@@ -256,4 +263,6 @@ def execute_audit(req: AuditRequest) -> AuditResponse:
         encoding="utf-8",
     )
 
+    # The result is the publication marker, after all referenced files exist.
+    atomic_write(artifact_dir / "audit.json", response.model_dump_json(indent=2).encode("utf-8"))
     return response

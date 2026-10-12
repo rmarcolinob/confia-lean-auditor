@@ -53,7 +53,7 @@ def test_post_acceptance_tampering_blocks_engine_without_repair(setup, mutation)
     before = {p: p.read_bytes() for p in folder.rglob("*") if p.is_file()}
     response = execute(client, sid, request)
     assert response.status_code == 409, response.text
-    assert "Integridade da revisão ou do aceite" in response.json()["detail"]
+    assert response.json()["error_code"] == "SOURCE_INTEGRITY_MISMATCH"
     assert calls == [] and list(audits.service().root.glob("aud_*.json")) == []
     assert {p: p.read_bytes() for p in before} == before
 

@@ -7,6 +7,7 @@ from typing import Any, Dict, List, Optional
 
 from confia_lean_auditor.core.schemas import FormalStep
 
+DEFAULT_LLM_MODEL = "gpt-4o-mini"
 
 class FormalStepExtractionError(RuntimeError):
     pass
@@ -235,7 +236,7 @@ def extract_q1_semantic_data_with_llm(solution: str) -> Dict[str, Any]:
             "LLM formal-step extraction is enabled, but the openai package is not installed."
         ) from exc
 
-    model = os.environ.get("CONFIA_LLM_MODEL", "gpt-4o-mini")
+    model = os.environ.get("CONFIA_LLM_MODEL", DEFAULT_LLM_MODEL)
     client = OpenAI()
 
     try:

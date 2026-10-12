@@ -16,6 +16,7 @@ from confia_lean_auditor.submission_audits import router as audits
 from confia_lean_auditor.submissions import router as submissions
 from test_submissions import payload
 from test_transcriptions import segments, persisted_files
+from public_privacy import assert_no_local_paths
 
 
 def result(problem_id):
@@ -63,6 +64,10 @@ def accept(client, sid, revision):
 
 def execute(client, sid, request):
     return client.post(f"/submissions/{sid}/audits", json=request)
+
+
+def persisted_run(run):
+    return json.loads(audits.service()._path(run["audit_run_id"]).read_bytes())
 
 
 def run_files():
@@ -157,7 +162,8 @@ def test_original_corruption_blocks_before_engine_and_run(setup, name):
     (submissions.store().root / sid / name).write_bytes(b"changed original")
     response = execute(client, sid, request)
     assert response.status_code == 409
-    assert response.json()["detail"] == "Os arquivos originais desta solução precisam ser conferidos."
+    assert response.json()["detail"] == "A fonte desta análise não passou na verificação de integridade."
+    assert response.json()["error_code"] == "SOURCE_INTEGRITY_MISMATCH"
     assert calls == [] and run_files() == []
 
 
@@ -344,11 +350,28 @@ def test_real_bridge_preserves_wrong_solution_and_runs_existing_lean_pipeline(tm
     assert response.status_code == 200, response.text
     run = response.json()
     assert run["status"] == "COMPLETED", run
-    assert Path(run["artifact_dir"], "solution.txt").read_text() == solution
+    internal = persisted_run(run)
+    assert Path(internal["artifact_dir"], "solution.txt").read_text() == solution
     assert run["result"]["student_claim_checks"]
     assert any(item["status"] == "refuted" for item in run["result"]["student_claim_checks"])
     assert run["result"]["score"] is None
     assert run["result"]["verdict"] == "inconclusivo"
     assert any(item["mathematical_status"] == "refuted" for item in run["result"]["rubric_assessment"]["items"])
-    assert Path(run["result"]["lean_certificate"]["lean_file"]).is_file()
+    # Public references are relative identifiers, not paths resolved against cwd.
+    public_lean_file = run["result"]["lean_certificate"]["lean_file"]
+    assert isinstance(public_lean_file, str) and public_lean_file
+    public_path = Path(public_lean_file)
+    assert not public_path.is_absolute() and ".." not in public_path.parts
+    assert "\\" not in public_lean_file and ":" not in public_lean_file
+    assert_no_local_paths(public_lean_file)
+
+    # Locate the physical certificate exclusively from the persisted record.
+    artifact_root = Path(internal["artifact_dir"])
+    internal_lean_file = Path(internal["result"]["lean_certificate"]["lean_file"])
+    assert artifact_root.is_absolute() and internal_lean_file.is_absolute()
+    assert ".." not in internal_lean_file.parts
+    assert internal_lean_file.relative_to(artifact_root).as_posix() == public_lean_file
+    resolved_certificate = internal_lean_file.resolve(strict=True)
+    resolved_certificate.relative_to(artifact_root.resolve(strict=True))
+    assert resolved_certificate.is_file()
     assert persisted_files(folder) == before

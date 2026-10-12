@@ -17,7 +17,7 @@ async function open({ state = 'ACCEPTED', acceptances = [acceptance], intact = t
   const base = transportFor(intact, true);
   const ui = page(async (url, options = {}) => {
     if (options.method === 'POST' && url.endsWith('/audits')) return post ? post(url, options) : ok(run);
-    if (url.endsWith('/audits')) return readFailure ? { ok: false, status: 503, json: async () => ({}) } : ok(runs);
+    if (url.endsWith('/audits')) return readFailure ? { ok: false, status: typeof readFailure === "object" ? 409 : 503, json: async () => typeof readFailure === "object" ? readFailure : ({}) } : ok(runs);
     if (url.endsWith('/transcriptions')) return ok([{ ...summary, latest_revision: { ...revision, status: state } }]);
     if (url.startsWith('/transcriptions/')) return ok({ ...history, revisions: [{ ...revision, status: state }], acceptances });
     return base(url, options);
@@ -83,7 +83,7 @@ test('pending analysis locks navigation and editor; double click produces one PO
 
 test('newer revision shows old result with explicit stale notice and disables fresh audit until accepted', async () => {
   const ui = await open({ state: 'NEEDS_REVIEW', runs: [{ ...run, stale: true }] });
-  assert.match(primaryText(panel(ui)), /Esta análise corresponde a uma transcrição anterior/);
+  assert.match(primaryText(panel(ui)), /Esta análise corresponde a uma versão anterior/);
   assert.doesNotMatch(primaryText(panel(ui)), /Concluída/);
   assert.equal(ui.reports.length, 1);
   assert.equal(button(ui, 'Executar Análise ConfIA').disabled, true);
@@ -99,8 +99,12 @@ for (const diagnostic of ['Integridade da revisão ou do aceite divergente',
     assert.match(primaryText(panel(ui)), /Concluída/);
     assert.equal(ui.reports.length, 1);
     await button(ui, 'Executar novamente').click();
-    assert.match(primaryText(panel(ui)), /Esta análise não corresponde mais.*Atualize a solução/);
-    assert.match(primaryText(panel(ui)), /Análise de uma versão anterior/);
+    const expected = diagnostic.startsWith('Integridade') ? 'A fonte desta análise não passou na verificação de integridade.'
+      : diagnostic.startsWith('A transcrição') ? diagnostic
+        : diagnostic.startsWith('result_sha256') ? 'Não foi possível validar a integridade do resultado desta análise.'
+          : 'Não foi possível recuperar esta análise. Atualize a solução ou execute uma nova análise.';
+    assert(primaryText(panel(ui)).includes(expected));
+    assert.match(primaryText(panel(ui)), /Análise anterior indisponível/);
     assert.doesNotMatch(primaryText(panel(ui)), /Concluída|HTTP 409|Erro matemático identificado/);
     assert.match(ui.get('#manuscript-list').textContent, /Análise ConfIA: Conflito/);
     assert.doesNotMatch(ui.get('#manuscript-list').textContent, /Análise ConfIA: Concluída/);
@@ -112,7 +116,7 @@ for (const diagnostic of ['Integridade da revisão ou do aceite divergente',
     const selection = descendants(panel(ui)).find(n => n.tag === 'select');
     assert.equal(selection.children.length, 1);
     assert.equal(selection.children[0].value, run.audit_run_id);
-    assert.match(selection.children[0].textContent, /versão anterior/);
+    assert.match(selection.children[0].textContent, /Análise anterior indisponível/);
     await selection.emit('change');
     assert.doesNotMatch(primaryText(panel(ui)), /Concluída|Erro matemático identificado/);
     assert.equal(ui.reports.length, 1);
@@ -124,7 +128,7 @@ for (const diagnostic of ['Integridade da revisão ou do aceite divergente',
 test('failed transport with a cached report leaves the current workflow failed, then retry restores completion', async () => {
   let fail = true;
   const ui = await open({ runs: [run], post: () => {
-    if (fail) { fail = false; return { ok: false, status: 503, json: async () => ({}) }; }
+    if (fail) { fail = false; return { ok: false, status: typeof readFailure === "object" ? 409 : 503, json: async () => typeof readFailure === "object" ? readFailure : ({}) }; }
     return ok(run);
   } });
   await button(ui, 'Executar novamente').click();
@@ -153,7 +157,7 @@ test('explicit rerun uses key, transport retry preserves it and completed rerun 
   let failed = true;
   const ui = await open({ runs: [run], post: (_url, options) => {
     bodies.push(JSON.parse(options.body));
-    if (failed) { failed = false; return { ok: false, status: 503, json: async () => ({}) }; }
+    if (failed) { failed = false; return { ok: false, status: typeof readFailure === "object" ? 409 : 503, json: async () => typeof readFailure === "object" ? readFailure : ({}) }; }
     return ok({ ...run, audit_run_id: 'aud_' + 'e'.repeat(64) });
   } });
   await button(ui, 'Executar novamente').click();
@@ -178,3 +182,31 @@ test('historical analysis of artificial recognition keeps an explicit primary wa
     provenance: { revision: { provider: 'fake_test' } } } }] });
   assert.match(primaryText(panel(ui)), /transcrição de teste artificial; não é reconhecimento real/);
 });
+
+for (const [code, message] of Object.entries({
+  TRANSCRIPTION_NOT_ACCEPTED: 'A transcrição precisa ser conferida antes da análise.',
+  SOURCE_INTEGRITY_MISMATCH: 'A fonte desta análise não passou na verificação de integridade.',
+  REPRODUCIBILITY_INTEGRITY_MISMATCH: 'Não foi possível validar os metadados desta análise.',
+  RESULT_INTEGRITY_MISMATCH: 'Não foi possível validar a integridade do resultado desta análise.',
+  REVISION_CONFLICT: 'Existe uma revisão mais recente ou um aceite de outra revisão. Atualize a solução.',
+  AUDIT_RUN_CONFLICT: 'Não foi possível recuperar esta análise. Atualize a solução ou execute uma nova análise.',
+})) {
+  for (const stage of ['execute', 'list']) {
+    test(`${stage} displays domain ${code} without exposing private diagnostics`, async () => {
+      const privatePaths = ['/Users/teste/projeto/a', '/home/teste/projeto/a', 'C:\\Users\\teste\\a', 'file:///Users/teste/a'];
+      const diagnostic = { error_code: code, detail: privatePaths.join(' ') };
+      const ui = await open(stage === 'list' ? { readFailure: diagnostic } : {
+        runs: [run], post: () => ({ ok: false, status: 409, json: async () => diagnostic }),
+      });
+      if (stage === 'execute') await button(ui, 'Executar novamente').click();
+      assert(primaryText(panel(ui)).includes(message));
+      assert(!primaryText(panel(ui)).includes(code));
+      assert(!primaryText(panel(ui)).includes("versão anterior"));
+      assert(descendants(panel(ui)).some(n => n.tag === 'details' && n.textContent.includes(code)));
+      for (const path of privatePaths) {
+        assert(!panel(ui).textContent.includes(path));
+        assert(!JSON.stringify(ui.logs).includes(path));
+      }
+    });
+  }
+}

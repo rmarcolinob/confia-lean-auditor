@@ -119,7 +119,7 @@ def test_textual_and_bridge_share_failure_semantics_without_score_penalty(tmp_pa
     a, b = textual.json(), bridge["result"]
     def central(value):
         if isinstance(value, dict):
-            return {k: central(v) for k, v in value.items() if k not in {"artifact_dir", "lean_file", "refutation_lean_file", "stdout", "stderr", "refutation_stdout", "refutation_stderr"}}
+            return {k: central(v) for k, v in value.items() if k not in {"artifact_dir", "lean_file", "refutation_lean_file", "stdout", "stderr", "refutation_stdout", "refutation_stderr", "reproducibility", "artifact_ref", "public_warnings"}}
         if isinstance(value, list):
             return [central(v) for v in value]
         return value

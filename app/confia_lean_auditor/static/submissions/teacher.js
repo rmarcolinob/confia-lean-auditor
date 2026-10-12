@@ -59,10 +59,27 @@
     return response.json();
   }
 
+  const auditErrors = {
+    TRANSCRIPTION_NOT_ACCEPTED: "A transcrição precisa ser conferida antes da análise.",
+    SOURCE_INTEGRITY_MISMATCH: "A fonte desta análise não passou na verificação de integridade.",
+    RESULT_INTEGRITY_MISMATCH: "Não foi possível validar a integridade do resultado desta análise.",
+    REPRODUCIBILITY_INTEGRITY_MISMATCH: "Não foi possível validar os metadados desta análise.",
+    REVISION_CONFLICT: "Existe uma revisão mais recente ou um aceite de outra revisão. Atualize a solução.",
+    AUDIT_RUN_CONFLICT: "Não foi possível recuperar esta análise. Atualize a solução ou execute uma nova análise.",
+  };
+  const safeErrorCode = error => Object.hasOwn(auditErrors, error?.diagnostic?.error_code)
+    ? error.diagnostic.error_code : null;
+
   function productError(error, action = "load") {
-    console.error("ConfIA: manuscritos/transcrição", action, error, error.diagnostic);
+    console.error("ConfIA: manuscritos/transcrição", action, error.status, safeErrorCode(error));
+    if (safeErrorCode(error)) return auditErrors[safeErrorCode(error)];
     if (action === "audit" && error.status === 409) {
-      return "Esta análise não corresponde mais à versão atual da transcrição. Atualize a solução antes de executar uma nova análise.";
+      const diagnostic = String(error.diagnostic?.detail || "");
+      if (/metadados|manifesto/i.test(diagnostic)) return auditErrors.REPRODUCIBILITY_INTEGRITY_MISMATCH;
+      if (/integridade|arquivos originais/i.test(diagnostic)) return auditErrors.SOURCE_INTEGRITY_MISMATCH;
+      if (/transcrição.*conferida/i.test(diagnostic)) return auditErrors.TRANSCRIPTION_NOT_ACCEPTED;
+      if (/result_sha256/i.test(diagnostic)) return auditErrors.RESULT_INTEGRITY_MISMATCH;
+      return auditErrors.AUDIT_RUN_CONFLICT;
     }
     if (/integridade da revisão ou do aceite/i.test(JSON.stringify(error.diagnostic || {}))) {
       return action === "audit" ? "A integridade da revisão ou do aceite está divergente. A análise foi bloqueada."
@@ -512,7 +529,7 @@
     return run.status === "COMPLETED" ? "Concluída" : "Não foi possível concluir";
   }
 
-  function renderAnalysis(panel, data, id, history, initialRuns, editor, stages) {
+  function renderAnalysis(panel, data, id, history, initialRuns, editor, stages, loadError = null) {
     const latest = history?.revisions?.[history.revisions.length - 1];
     const acceptance = history?.acceptances?.find(item => item.revision_number === latest?.revision_number
       && item.transcription_id === latest.transcription_id && item.submission_id === id
@@ -521,11 +538,13 @@
     let runs = initialRuns || [];
     let selectedId = runs[0]?.audit_run_id;
     let executionKey = null;
-    let attemptState = null;
-    let attemptMessage = "";
+    let attemptState = loadError ? (loadError.status === 409 ? "CONFLICT" : "FAILED") : null;
+    let attemptMessage = loadError ? productError(loadError, "audit") : "";
+    let attemptErrorCode = safeErrorCode(loadError);
     const isStale = run => runIsStale(run, latest) || run.acceptance_id !== acceptance?.acceptance_id;
-    const historicalLabel = run => attemptState === "CONFLICT" || isStale(run)
-      ? "Análise de uma versão anterior" : attemptState === "FAILED" ? "Análise anterior desta revisão" : null;
+    const historicalLabel = run => isStale(run) ? "Análise de uma versão anterior"
+      : attemptState === "CONFLICT" ? "Análise anterior indisponível"
+        : attemptState === "FAILED" ? "Análise anterior desta revisão" : null;
     panel.setAttribute("aria-label", "Análise ConfIA desta solução");
     panel.appendChild(node("h3", "Análise ConfIA"));
     const state = node("p");
@@ -581,7 +600,7 @@
       else {
         if (attemptState || isStale(run)) result.appendChild(node("p", attemptState
           ? `${historicalLabel(run)}. Disponível somente como histórico.`
-          : "Esta análise corresponde a uma transcrição anterior. Disponível somente como histórico.")).className = "transcription-warning";
+          : "Esta análise corresponde a uma versão anterior. Disponível somente como histórico.")).className = "transcription-warning";
         if (run.source.provenance?.revision?.provider === "fake_test") result.appendChild(node("p", "Análise baseada em transcrição de teste artificial; não é reconhecimento real do manuscrito.")).className = "transcription-warning";
         result.appendChild(node("p", `Análise da revisão ${run.revision_number} · conferida em ${when(run.source.accepted_at)}`));
         for (const warning of run.source.warnings || []) result.appendChild(node("p", `Página ${warning.page_index + 1}: ${warning.message}`)).className = "transcription-warning";
@@ -592,8 +611,14 @@
         }
         const source = node("details");
         source.appendChild(node("summary", "Fonte e rastreabilidade da análise"));
-        source.appendChild(node("pre", JSON.stringify(run, null, 2)));
+        source.appendChild(node("pre", JSON.stringify(run, window.ConfIAReport.publicTechnicalValue, 2)));
         result.appendChild(source);
+      }
+      if (attemptErrorCode) {
+        const diagnostic = node("details");
+        diagnostic.appendChild(node("summary", "Detalhes técnicos da falha"));
+        diagnostic.appendChild(node("code", attemptErrorCode));
+        result.appendChild(diagnostic);
       }
       stages.replaceChildren(...renderStages(history, runs, attemptState).children);
       const item = queue.find(item => item.record.submission_id === id);
@@ -622,10 +647,12 @@
         executionKey = null;
         attemptState = null;
         attemptMessage = "";
+        attemptErrorCode = null;
         showRuns();
       } catch (error) {
         attemptState = error.status === 409 ? "CONFLICT" : "FAILED";
         attemptMessage = productError(error, "audit");
+        attemptErrorCode = safeErrorCode(error);
         showRuns();
       } finally {
         editor.setBusy(false);
@@ -645,10 +672,11 @@
     detail.replaceChildren();
     message.textContent = "Carregando manuscrito, transcrição e integridade…";
     try {
+      let auditLoadError = null;
       const [data, summaries, available, auditResult] = await Promise.all([
         request(`/submissions/${id}`), request(`/submissions/${id}/transcriptions`),
         request("/submissions/recognition-providers"),
-        request(`/submissions/${id}/audits`).catch(error => { console.error("ConfIA: análises", error); return null; }),
+        request(`/submissions/${id}/audits`).catch(error => { auditLoadError = error; return null; }),
       ]);
       if (sequence !== detailSequence) return;
       if (!Array.isArray(summaries)) throw new Error("Lista de transcrições inválida.");
@@ -712,7 +740,7 @@
       flow.appendChild(transcription);
       const analysis = node("section");
       analysis.className = "manuscript-analysis-panel";
-      renderAnalysis(analysis, data, id, history, audits, editor, stages);
+      renderAnalysis(analysis, data, id, history, audits, editor, stages, auditLoadError);
       flow.appendChild(analysis);
       const evaluation = node("section");
       evaluation.className = "teacher-evaluation-panel";
@@ -825,7 +853,7 @@
       queue = valid.map((record, index) => {
         const result = summaries[index];
         const failed = result.status === "rejected" || !Array.isArray(result.value);
-        if (result.status === "rejected") console.error("ConfIA: resumo da transcrição", result.reason);
+        if (result.status === "rejected") console.error("ConfIA: resumo da transcrição", result.reason?.status, safeErrorCode(result.reason));
         const audit = audits[index];
         const auditFailed = audit.status === "rejected" || !Array.isArray(audit.value);
         return { record, summaries: failed ? [] : result.value, failed, audits: auditFailed ? [] : audit.value, auditFailed };

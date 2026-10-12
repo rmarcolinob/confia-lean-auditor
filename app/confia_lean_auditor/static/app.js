@@ -437,6 +437,50 @@ function renderAttentionPoints(points) {
   return section;
 }
 
+function publicTechnicalValue(key, value) {
+  if (["artifact_dir", "stdout", "stderr",
+    "refutation_stdout", "refutation_stderr"].includes(key)) return undefined;
+  if (typeof value === "string" && /file:\/\/|[A-Za-z]:[\\/]|(?:^|[\s"'(=:])\/(?:[^\s/]+\/|Users\b|home\b|tmp\b|private\b)/i.test(value)) return null;
+  return value;
+}
+
+function renderEnvironment(data) {
+  const details = document.createElement("details");
+  details.className = "technical-details analysis-environment";
+  details.appendChild(document.createElement("summary")).textContent = "Ambiente da análise";
+  const metadata = data.reproducibility;
+  if (!metadata || metadata.status === "legacy_unversioned") {
+    appendTextElement(details, "p", "", "Metadados de reprodutibilidade não registrados nesta execução.");
+    return details;
+  }
+  if (metadata.status !== "recorded" || !metadata.record) {
+    appendTextElement(details, "p", "", "Metadados da execução indisponíveis. O resultado matemático foi preservado.");
+    return details;
+  }
+  const manifest = metadata.record.manifest;
+  const code = manifest.code_identity;
+  const application = manifest.application_identity;
+  const formal = manifest.formal_environment;
+  const value = entry => entry?.value || "indisponível";
+  appendTextElement(details, "p", "", "Metadados da execução registrados.");
+  appendTextElement(details, "p", "", `Código: ${value(code.git_commit)} · Build: ${value(code.build_id)}`);
+  appendTextElement(details, "p", "", `Worktree: ${code.worktree_dirty === true ? "dirty (com alterações)" : code.worktree_dirty === false ? "clean (sem alterações)" : "estado desconhecido"}`);
+  appendTextElement(details, "p", "", `Projeto: ${value(application.project_version)} · API: ${application.api_version} · Conversão: ${application.conversion_version} · Bridge: ${value(application.audit_bridge_version)}`);
+  const python = manifest.python_environment;
+  appendTextElement(details, "p", "", `Python: ${python.major}.${python.minor}.${python.micro} (${python.implementation})`);
+  appendTextElement(details, "p", "", `Lean: ${value(formal.lean_version)} · Lake: ${value(formal.lake_version)} · Mathlib: ${value(formal.mathlib_revision)}`);
+  const assets = [...manifest.problem_assets, ...manifest.configuration_assets];
+  appendTextElement(details, "p", "", `Assets registrados: ${assets.filter(item => item.status === "available").length} de ${assets.length}.`);
+  appendTextElement(details, "p", "muted", "O registro apoia a auditoria e a tentativa de reprodução; não garante reprodução bit a bit.");
+  const technical = document.createElement("details");
+  technical.appendChild(document.createElement("summary")).textContent = "Detalhes técnicos";
+  appendTextElement(technical, "p", "", "SHA-256 verifica integridade técnica interna; não é assinatura digital nem prova de autoria.");
+  appendTextElement(technical, "p", "", "O hash e o tamanho referem-se ao registro interno. O JSON público pode conter textos ocultados e ter bytes diferentes.");
+  appendTextElement(technical, "pre", "", JSON.stringify(metadata.record, null, 2));
+  details.appendChild(technical);
+  return details;
+}
+
 function renderTechnicalDetails(data) {
   const details = document.createElement("details");
   details.className = "technical-details";
@@ -447,7 +491,7 @@ function renderTechnicalDetails(data) {
   appendTextElement(details, "p", "", "Verificação formal com Lean: consulte abaixo os dados técnicos desta análise.");
 
   const pre = document.createElement("pre");
-  pre.textContent = JSON.stringify(data, null, 2);
+  pre.textContent = JSON.stringify(data, publicTechnicalValue, 2);
   details.appendChild(pre);
 
   return details;
@@ -477,7 +521,7 @@ function renderFormalChecks(data) {
     appendTextElement(details, "p", "", `${item.description || item.claim_id || item.id || "Verificação"}: ${label}`);
   }
   appendTextElement(details, "pre", "", JSON.stringify({ lean_certificate: data.lean_certificate,
-    formal_steps: data.formal_steps, student_claim_checks: data.student_claim_checks, microclaims: data.microclaims }, null, 2));
+    formal_steps: data.formal_steps, student_claim_checks: data.student_claim_checks, microclaims: data.microclaims }, publicTechnicalValue, 2));
   section.appendChild(details);
   return section;
 }
@@ -547,6 +591,7 @@ function renderReport(data, targetPanel = resultPanel, options = {}) {
       "A análise terminou, mas não retornou relatório pedagógico."
     );
     targetPanel.appendChild(renderFormalChecks(data));
+    targetPanel.appendChild(renderEnvironment(data));
     targetPanel.appendChild(renderTechnicalDetails(data));
     return;
   }
@@ -600,10 +645,11 @@ function renderReport(data, targetPanel = resultPanel, options = {}) {
     targetPanel.appendChild(renderRubricSection(data.rubric_assessment));
   }
   targetPanel.appendChild(renderFormalChecks(data));
+  targetPanel.appendChild(renderEnvironment(data));
   targetPanel.appendChild(renderTechnicalDetails(data));
 }
 
-if (typeof window !== "undefined") window.ConfIAReport = { render: renderReport };
+if (typeof window !== "undefined") window.ConfIAReport = { render: renderReport, publicTechnicalValue };
 
 function renderError(message, targetPanel = resultPanel) {
   clearNode(targetPanel);

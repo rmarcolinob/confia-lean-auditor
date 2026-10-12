@@ -1,14 +1,20 @@
 import os
 from pathlib import Path
 
-from fastapi import APIRouter, HTTPException, Response
+from fastapi import APIRouter, Response
+from confia_lean_auditor.core.public_audit import (
+    public_audit_response, public_error_response, public_response,
+    public_reproducibility, PublicReproducibilityMetadata, audit_exception_response,
+)
+from .errors import AuditConflict, SourceIntegrityError
 from pydantic import ValidationError
 
 from confia_lean_auditor.core.paths import get_repo_root
 from confia_lean_auditor.submissions.router import store
 from confia_lean_auditor.submissions.store import SubmissionIntegrityConflict, TranscriptionIntegrityConflict
-from .schemas import AuditRequest, AuditRunView
-from .service import AuditService, UnacceptedSource
+from .schemas import AuditRequest
+from .service import AuditService
+from confia_lean_auditor.reproducibility.service import ReproducibilityIntegrityError
 
 router = APIRouter(tags=["accepted transcription analyses"])
 
@@ -28,33 +34,50 @@ def service():
 def guarded(operation, *args):
     try:
         return operation(*args)
-    except SubmissionIntegrityConflict:
-        raise HTTPException(409, "Os arquivos originais desta solução precisam ser conferidos.") from None
-    except TranscriptionIntegrityConflict:
-        raise HTTPException(409, "Integridade da revisão ou do aceite inválida; análise bloqueada.") from None
-    except UnacceptedSource:
-        raise HTTPException(409, "A transcrição precisa ser conferida antes da análise.") from None
+    except (SubmissionIntegrityConflict, TranscriptionIntegrityConflict):
+        return conflict(SourceIntegrityError.code, SourceIntegrityError.message)
+    except ReproducibilityIntegrityError:
+        return conflict("REPRODUCIBILITY_INTEGRITY_MISMATCH",
+                        "Não foi possível validar a integridade dos metadados desta análise.")
+    except AuditConflict as error:
+        return conflict(error.code, error.message)
     except FileNotFoundError:
-        raise HTTPException(404, "Fonte ou análise não encontrada.") from None
+        return public_error_response(404, "AUDIT_RESOURCE_NOT_FOUND", "Fonte ou análise não encontrada.")
     except (ValidationError, ValueError):
-        raise HTTPException(409, "A transcrição precisa ser conferida antes da análise.") from None
+        return conflict(AuditConflict.code, AuditConflict.message)
     except OSError:
-        raise HTTPException(503, "Não foi possível concluir a Análise ConfIA.") from None
+        return public_error_response(503, "AUDIT_STORAGE_UNAVAILABLE", "Não foi possível concluir a Análise ConfIA.")
+    except Exception as error:
+        return audit_exception_response(error)
 
 
-@router.post("/submissions/{submission_id}/audits", response_model=AuditRunView)
+def conflict(code, message):
+    return public_error_response(409, code, message)
+
+
+def public_operation(operation, *args):
+    return guarded(lambda: public_audit_response(operation(*args)))
+
+
+@router.post("/submissions/{submission_id}/audits", response_model=dict)
 def execute(submission_id: str, request: AuditRequest, response: Response):
     response.headers["Cache-Control"] = "no-store"
-    return guarded(service().execute, submission_id, request)
+    return public_operation(service().execute, submission_id, request)
 
 
-@router.get("/submissions/{submission_id}/audits", response_model=list[AuditRunView])
+@router.get("/submissions/{submission_id}/audits", response_model=list[dict])
 def list_runs(submission_id: str, response: Response):
     response.headers["Cache-Control"] = "no-store"
-    return guarded(service().list, submission_id)
+    return public_operation(service().list, submission_id)
 
 
-@router.get("/submission-audits/{audit_run_id}", response_model=AuditRunView)
+@router.get("/submission-audits/{audit_run_id}", response_model=dict)
 def get_run(audit_run_id: str, response: Response):
     response.headers["Cache-Control"] = "no-store"
-    return guarded(service().get, audit_run_id)
+    return public_operation(service().get, audit_run_id)
+
+
+@router.get("/submission-audits/{audit_run_id}/reproducibility", response_model=PublicReproducibilityMetadata)
+def get_reproducibility(audit_run_id: str, response: Response):
+    response.headers["Cache-Control"] = "no-store"
+    return guarded(lambda: public_response(public_reproducibility(service().reproducibility(audit_run_id))))

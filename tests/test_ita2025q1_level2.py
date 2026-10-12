@@ -135,7 +135,12 @@ def test_malicious_problem_id_is_rejected():
     assert response.status_code == 400
 
 
-def test_llm_failure_returns_503(monkeypatch):
+def test_llm_failure_returns_503(monkeypatch, tmp_path):
+    import shutil
+    import confia_lean_auditor.main as main
+    shutil.copytree(REPO_ROOT / "problems/ITA2025Q1", tmp_path / "problems/ITA2025Q1")
+    monkeypatch.setattr(main, "repo_root", lambda: tmp_path)
+    monkeypatch.setattr(main, "capture_reproducibility", lambda *args: None)
     from confia_lean_auditor.llm.formal_step_extractor import (
         FormalStepExtractionError,
     )
@@ -162,7 +167,9 @@ def test_llm_failure_returns_503(monkeypatch):
     )
 
     assert response.status_code == 503
-    assert "forced llm failure" in response.json()["detail"]
+    assert response.json()["error_code"] == "FORMAL_EXTRACTION_UNAVAILABLE"
+    assert response.json()["message"] == "Não foi possível extrair os passos desta solução."
+    assert "forced llm failure" not in response.text
 
 
 

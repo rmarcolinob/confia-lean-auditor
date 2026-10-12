@@ -1,3 +1,4 @@
+from test_submission_audits import persisted_run
 """P1: unavailable verification never becomes a mathematical zero or verdict."""
 from importlib import import_module
 from pathlib import Path
@@ -32,7 +33,7 @@ def central(value):
     if isinstance(value, dict):
         return {key: central(item) for key, item in value.items() if key not in {
             "artifact_dir", "lean_file", "refutation_lean_file", "stdout", "stderr",
-            "refutation_stdout", "refutation_stderr"}}
+            "refutation_stdout", "refutation_stderr", "reproducibility", "artifact_ref", "public_warnings"}}
     if isinstance(value, list):
         return [central(item) for item in value]
     return value
@@ -177,7 +178,7 @@ def test_verified_formal_step_witness_changes_block_read_and_retry(setup, monkey
     run = execute(client, sid, request).json()
     assert run["status"] == "COMPLETED"
     reference = next(item for item in run["required_artifacts"] if item["artifact_type"] == "formal_step")
-    witness = Path(reference["file"])
+    witness = Path(persisted_run(run)["artifact_dir"], reference["file"])
     original = witness.read_bytes()
     if change == "removed":
         witness.unlink()
@@ -247,7 +248,7 @@ def test_all_required_artifact_kinds_remain_integrity_bound(setup, monkeypatch, 
     run = execute(client, sid, request).json()
     assert run["status"] == "COMPLETED"
     artifact = next(item for item in run["required_artifacts"] if item["artifact_type"] == kind)
-    witness = Path(artifact["file"])
+    witness = Path(persisted_run(run)["artifact_dir"], artifact["file"])
     witness.unlink() if change == "removed" else witness.write_bytes(b"modified")
     assert client.get(f'/submission-audits/{run["audit_run_id"]}').status_code == 409
 

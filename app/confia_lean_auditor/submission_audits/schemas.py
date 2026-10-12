@@ -70,7 +70,7 @@ class AuditSource(SubmissionModel):
 
 
 class RequiredArtifact(SubmissionModel):
-    artifact_type: Literal["export", "certificate", "formal_step", "student_proof", "refutation"]
+    artifact_type: Literal["export", "certificate", "formal_step", "student_proof", "refutation", "reproducibility"]
     relation_id: str
     file: str
     sha256: Sha256
@@ -95,10 +95,23 @@ class AuditRun(SubmissionModel):
     artifact_dir: Optional[str] = None
     auditor_version: Optional[str] = None
     execution_key: Optional[str] = None
-    error_code: Optional[Literal["AUDITOR_FAILED"]] = None
+    error_code: Optional[Literal["AUDITOR_FAILED", "METADATA_INTEGRITY_FAILED"]] = None
+    reproducibility_status: Literal["recorded", "unavailable", "legacy_unversioned"] = "legacy_unversioned"
+    reproducibility_manifest_filename: Optional[Literal["reproducibility_manifest.json"]] = None
+    reproducibility_manifest_sha256: Optional[Sha256] = None
 
     @model_validator(mode="after")
     def coherent(self):
+        metadata = self.result.reproducibility if self.result else None
+        record = metadata.record if metadata else None
+        expected_statuses = {metadata.status} if metadata else (
+            {"legacy_unversioned", "unavailable"} if self.status == "FAILED" else {"legacy_unversioned"})
+        if (self.reproducibility_status not in expected_statuses
+                or self.reproducibility_manifest_filename != (record.filename if record else None)
+                or self.reproducibility_manifest_sha256 != (record.manifest_sha256 if record else None)):
+            raise ValueError("inconsistent reproducibility binding")
+        if record and record.manifest.problem_id != self.problem_id:
+            raise ValueError("inconsistent reproducibility problem")
         for field in ("submission_id", "problem_id", "transcription_id", "revision_number",
                       "acceptance_id", "source_hash"):
             if getattr(self, field) != getattr(self.source, field):
@@ -115,7 +128,7 @@ class AuditRun(SubmissionModel):
                 raise ValueError("inconsistent audit result binding")
         elif (self.result is not None or self.result_sha256 is not None or self.required_artifacts
               or self.artifact_manifest_sha256 is not None
-              or self.artifact_dir is not None or self.error_code != "AUDITOR_FAILED"):
+              or self.artifact_dir is not None or self.error_code not in {"AUDITOR_FAILED", "METADATA_INTEGRITY_FAILED"}):
             raise ValueError("failed audit cannot publish a result")
         return self
 
