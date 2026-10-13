@@ -52,7 +52,7 @@ def test_f2_correct_solution_has_full_operational_strong_lean_contract(problem_i
     assert data["verdict"] == "correto"
     assert data["lean_certificate"]["status"] == "verified"
     assert data["pedagogical_report"] is not None
-    assert data["artifact_dir"]
+    assert data["artifact_dir"] is None
     assert isinstance(data["formal_steps"], list)
     assert isinstance(data["student_claims"], list)
     assert isinstance(data["student_claim_checks"], list)

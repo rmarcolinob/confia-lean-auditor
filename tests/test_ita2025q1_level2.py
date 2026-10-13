@@ -109,7 +109,14 @@ def test_q1_answer_only_preserves_subtotal_without_global_score():
     assert answer_mc["lean_status"] == "verified_by_lean"
 
 
-def test_q1_injection_attempt_is_rejected_before_lean_generation():
+def test_q1_injection_attempt_is_rejected_before_lean_generation(monkeypatch):
+    from unittest.mock import Mock
+    import confia_lean_auditor.lean.formal_step_evaluator as evaluator
+
+    render = Mock(side_effect=AssertionError("Invalid step must not generate Lean"))
+    checker = Mock(side_effect=AssertionError("Invalid step must not reach Lean"))
+    monkeypatch.setattr(evaluator, "render_formal_step", render)
+    monkeypatch.setattr(evaluator, "run_lean_file", checker)
     data = audit_solution(read_example("injection_attempt.txt"))
 
     assert len(data["formal_steps"]) == 1
@@ -117,7 +124,9 @@ def test_q1_injection_attempt_is_rejected_before_lean_generation():
 
     assert step["status"] == "invalid_formal_step"
     assert step["compiled"] is False
-    assert "forbidden" in step["stderr"].lower() or "contains" in step["stderr"].lower()
+    assert step["stderr"] == ""
+    render.assert_not_called()
+    checker.assert_not_called()
 
     area_mc = microclaim_by_id(data, "mc_area_formula")
     assert area_mc["lean_status"] == "formal_steps_not_verified"

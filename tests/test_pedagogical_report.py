@@ -92,7 +92,7 @@ def test_pedagogical_report_hides_technical_details():
 
     assert "artifact_dir" not in data["pedagogical_report"]
     assert data["pedagogical_report"]["technical_record_available"] is True
-    assert data["artifact_dir"]
+    assert data["artifact_dir"] is None
 
 
 def test_legacy_feedback_still_exists_with_pedagogical_report():

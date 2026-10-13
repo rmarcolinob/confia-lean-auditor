@@ -85,8 +85,7 @@ def assert_audit_contract(data: dict, problem_id: str) -> None:
     assert data["pedagogical_report"] is not None
     assert isinstance(data["pedagogical_report"], dict)
 
-    assert data["artifact_dir"]
-    assert isinstance(data["artifact_dir"], str)
+    assert data["artifact_dir"] is None
 
     assert isinstance(data["extracted_claims"], dict)
     assert isinstance(data["formal_steps"], list)

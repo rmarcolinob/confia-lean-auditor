@@ -205,7 +205,7 @@ def test_capture_contract_does_not_expose_evaluation_or_server_receipt_fields():
 
 
 def test_existing_root_and_audit_route_remain_registered():
-    paths = {route.path for route in app.routes}
+    paths = {getattr(route, "path", None) for route in app.routes}
 
     assert "/" in paths
     assert "/capture" in paths
