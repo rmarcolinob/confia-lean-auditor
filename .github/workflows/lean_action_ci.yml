@@ -34,4 +34,4 @@ jobs:
           python -m pip install -e .
 
       - name: Run tests
-        run: pytest -q
+        run: python -m pytest -q
