@@ -38,7 +38,7 @@ async function page(options = {}) {
   const messages = [];
   const parent = { postMessage: message => messages.push(message) };
   const mathContexts = [];
-  let stored = null;
+  let stored = options.initialDocument || null;
   const getElement = (selector) => {
     if (!elements.has(selector)) {
       const control = element();
@@ -52,7 +52,7 @@ async function page(options = {}) {
     storageId: (document) => document.local_snapshot_id || document.draft_id,
     list: async () => {
       if (options.listError) throw new Error("Armazenamento indisponível");
-      return [];
+      return stored ? [{ storage_id: Store.storageId(stored), document_kind: stored.document_kind, client_updated_at: stored.client_updated_at }] : [];
     },
     get: async () => stored,
     save(document) {
@@ -72,7 +72,8 @@ async function page(options = {}) {
       mathContexts.push(presentation);
     } },
     document: { body: { dataset: {} }, querySelector: getElement, querySelectorAll: () => [], createElement: element },
-    fetch: async (url) => {
+    fetch: async (url, init) => {
+      if (options.fetch && url.startsWith("/submissions/")) return options.fetch(url, init);
       if (url === "/static/problem-presentations/registry.json") {
         if (options.registryError) throw new Error("Apresentação indisponível");
         return { ok: true, json: async () => options.registry || [] };

@@ -39,6 +39,64 @@
   function command(action, values = {}) {
     if (loaded) frame.contentWindow.postMessage({ type: "confia-workspace-command", action, ...values }, location.origin);
   }
+  function notebookAction(action, values = {}) {
+    if (!ready || !notebook?.controls?.document_id) return;
+    command(action, { problem_id: problemSelect.value, mode, document_id: notebook.controls.document_id, ...values });
+  }
+  function renderNotebookControls() {
+    const controls = ready ? notebook?.controls : null;
+    const submission = mode === "submission";
+    get("workspace-submission-actions").hidden = !submission;
+    get("workspace-recognition-actions").hidden = !submission;
+    setCopy("workspace-draft-persistence", controls?.persistence || "Abrindo o caderno…");
+    get("workspace-draft-persistence").dataset.state = controls?.persistence_kind || "idle";
+    setCopy("workspace-capture-status", controls?.status || "");
+    get("workspace-capture-status").dataset.kind = controls?.status_kind || "info";
+    const versions = get("workspace-saved-document");
+    const selected = versions.value;
+    versions.replaceChildren();
+    const placeholder = document.createElement("option");
+    placeholder.value = "";
+    placeholder.textContent = "Selecione uma versão salva";
+    versions.appendChild(placeholder);
+    for (const saved of controls?.saved_documents || []) {
+      const option = document.createElement("option");
+      option.value = saved.id;
+      option.textContent = saved.label;
+      versions.appendChild(option);
+    }
+    versions.value = (controls?.saved_documents || []).some(saved => saved.id === selected) ? selected : "";
+    get("workspace-open-document").disabled = !controls || !versions.value;
+    get("workspace-new-draft").disabled = !controls;
+    get("workspace-continue-draft").hidden = !controls?.frozen;
+    get("workspace-continue-draft").disabled = !controls?.frozen;
+    get("workspace-prepare-snapshot").disabled = !submission || !controls?.can_prepare;
+    get("workspace-send-solution").disabled = !submission || !controls?.can_send;
+    setCopy("workspace-send-solution", controls?.send_label || "Enviar solução");
+    get("workspace-recognize-writing").disabled = !submission || !controls?.can_recognize;
+    setCopy("workspace-snapshot-message", controls?.snapshot_message || "");
+    setCopy("workspace-submission-message", controls?.submission_message || "");
+    get("workspace-submission-message").dataset.kind = controls?.submission_kind || "info";
+    setCopy("workspace-submission-receipt", controls?.submission_receipt || "");
+    get("workspace-submission-receipt").hidden = !controls?.submission_receipt;
+    setCopy("workspace-recognition-message", controls?.recognition_message || "");
+    const preview = get("workspace-recognition-preview");
+    preview.replaceChildren();
+    for (const segment of controls?.recognition_segments || []) {
+      const row = document.createElement("section");
+      const heading = document.createElement("strong");
+      heading.textContent = `Página ${segment.page_index + 1}`;
+      row.appendChild(heading);
+      if (segment.text) { const text = document.createElement("p"); text.textContent = segment.text; row.appendChild(text); }
+      if (segment.latex) { const latex = document.createElement("pre"); latex.textContent = segment.latex; row.appendChild(latex); }
+      preview.appendChild(row);
+    }
+    setCopy("workspace-document-state", controls?.document_state || "");
+    setCopy("workspace-document-id", controls ? `Identificador: ${controls.document_id}` : "");
+    setCopy("workspace-storage-state", controls?.storage_state || "");
+    get("workspace-export-json").disabled = !controls;
+    get("workspace-export-png").disabled = !controls;
+  }
   function configure() {
     command("configure", { problem_id: problemSelect.value, mode });
   }
@@ -78,10 +136,11 @@
     // Compact navigation reserves the full width for the validated notebook.
     const resolving = active && !get("student-area").hidden && get("student-area").dataset.view === "resolve";
     document.body.dataset.resolutionActive = String(resolving);
-    // Only handwritten practice uses the parent page's sticky question/focus layout.
+    // Practice keeps the focused chrome; both notebook modes present the question above the iframe.
     const handwriting = resolving && mode === "practice" && response === "notebook";
     document.body.dataset.handwritingFocus = String(handwriting);
-    get("notebook-problem-context").hidden = !handwriting;
+    get("notebook-problem-context").hidden = !resolving || !mode || (mode === "practice" && response === "typed");
+    renderNotebookControls();
   }
   function chooseMode(value) {
     if (!["practice", "submission"].includes(value)) return;
@@ -97,11 +156,12 @@
       renderStudentAnalysis();
     }
     ready = false;
+    notebook = null;
     if (!loaded) {
       // The iframe is created once. Question/mode changes reuse this exact notebook.
       const initial = new URLSearchParams(location.search);
       const draft = initial.get("problem_id") === problemSelect.value ? initial.get("draft_id") : null;
-      frame.src = `/capture?embedded=1&problem_id=${encodeURIComponent(problemSelect.value)}&mode=${mode}${draft ? `&draft_id=${encodeURIComponent(draft)}` : ""}&ui=ui-02-persistence-bottom`;
+      frame.src = `/capture?embedded=1&problem_id=${encodeURIComponent(problemSelect.value)}&mode=${mode}${draft ? `&draft_id=${encodeURIComponent(draft)}` : ""}&ui=ui-05-fit-notebook`;
       loaded = true;
     } else configure();
     display();
@@ -185,7 +245,6 @@
       get("typed-problem-statement").textContent = problem?.statement || "";
       globalThis.ConfiaProblemMath?.render(get("typed-problem-statement"), get("typed-math-message"), options);
       get("notebook-problem-code").textContent = problemSelect.value;
-      get("notebook-problem-title").textContent = problem?.title || "Selecione uma questão";
       get("notebook-problem-statement").textContent = problem?.statement || "";
       globalThis.ConfiaProblemMath?.render(get("notebook-problem-statement"), get("notebook-math-message"), options);
     },
@@ -205,6 +264,9 @@
       renderReceipts();
     }
     if (!active || !mode || context.problem_id !== problemSelect.value || context.mode !== mode) { configure(); return; }
+    if (Number.isFinite(context.content_height) && context.content_height >= 640 && context.content_height <= 4000) {
+      frame.style.height = `${context.content_height}px`;
+    }
     restore(context);
     if (mode === "submission" && context.receipt) setStatus("Solução recebida pelo ConfIA", "success");
     ready = true;
@@ -218,6 +280,13 @@
   get("toggle-notebook-problem").addEventListener("click", () => {
     setNotebookProblemExpanded(get("toggle-notebook-problem").getAttribute("aria-expanded") !== "true");
   });
+  get("workspace-saved-document").addEventListener("change", () => {
+    get("workspace-open-document").disabled = !ready || !notebook?.controls || !get("workspace-saved-document").value;
+  });
+  get("workspace-open-document").addEventListener("click", () => notebookAction("open-document", { saved_document_id: get("workspace-saved-document").value }));
+  for (const action of ["new-draft", "continue-draft", "prepare-snapshot", "send-solution", "recognize-writing", "export-json", "export-png"]) {
+    get(`workspace-${action}`).addEventListener("click", () => notebookAction(action));
+  }
   for (const value of ["notebook", "typed"]) get(`${value}-response`).addEventListener("click", () => {
     response = value;
     get("practice-response").open = value === "typed";

@@ -78,7 +78,7 @@ def test_analysis_is_a_native_closed_disclosure_after_the_notebook():
         assert control in page.ids
 
 
-def test_parent_sticky_and_focus_rules_are_restricted_to_handwritten_practice():
+def test_parent_statement_is_compact_and_sticky_through_notebook_and_submission():
     html = CLIENT.get('/').text
     page = Page(html)
     assert page.ids['notebook-problem-context'][0] == 'section'
@@ -88,17 +88,27 @@ def test_parent_sticky_and_focus_rules_are_restricted_to_handwritten_practice():
     assert toggle['aria-expanded'] == 'true'
     assert toggle['aria-controls'] == 'notebook-problem-body'
     assert page.ids['notebook-math-message'][1]['role'] == 'status'
-    assert html.index('id="notebook-problem-context"') < html.index('id="resolution-title"') < html.index('id="resolution-notebook"') < html.index('id="prepare-analysis"')
-    # The new rules do not select the approved typed view or the global shell.
-    css = (STATIC / 'styles.css').read_text().split('/* Parent-page sticky')[1].split('*/', 1)[1]
-    for selectors in re.findall(r'([^{}]+)\{[^{}]*\}', css):
-        assert all(selector.strip().startswith('body[data-handwriting-focus="true"]') for selector in selectors.split(','))
-    assert 'position: sticky;' in css and 'top: 0;' in css
+    assert 'notebook-problem-title' not in page.ids
+    assert re.search(r'<p class="eyebrow">Questão <span id="notebook-problem-code"></span></p>', html)
+    assert html.index('id="resolution-title"') < html.index('id="notebook-problem-context"') < html.index('id="resolution-notebook"') < html.index('id="prepare-analysis"')
+    assert html.index('id="resolution-notebook"') < html.index('class="notebook-end"') < html.index('id="workspace-draft-persistence"') < html.index('id="workspace-submission-actions"') < html.index('id="workspace-recognition-actions"')
+    css = (STATIC / 'styles.css').read_text()
+    sticky = re.search(r'body\[data-resolution-active="true"\] #notebook-problem-context\s*\{([^}]*)\}', css)
+    assert sticky and 'position: sticky;' in sticky.group(1) and 'top: 0;' in sticky.group(1)
+    assert 'body[data-handwriting-focus="true"] #notebook-problem-context' not in css
+    assert '#notebook-problem-body { max-height:' in css
+    assert 'position: sticky' not in (STATIC / 'capture/tablet.css').read_text().split('/* Embedded mode')[1]
+    workspace = (STATIC / 'resolution-workspace.js').read_text()
+    assert 'get("notebook-problem-statement").textContent = problem?.statement || ""' in workspace
+    assert 'notebook-problem-title' not in workspace
+    assert 'frame.style.height = `${context.content_height}px`' in workspace
 
 
 def test_embedded_practice_has_no_second_visible_statement_and_still_has_persistence_status():
     css = (STATIC / 'capture/tablet.css').read_text()
-    assert 'body[data-embedded="true"][data-workspace-mode="practice"] #problem-dock { display: none; }' in css
+    for selector in ('#problem-dock', '.setup-card', '.draft-persistence-bar', '#technical-details', '.export-card'):
+        assert f'body[data-embedded="true"] {selector}' in css
+    assert '.export-card { display: none; }' in css
     html = CLIENT.get('/capture').text
     page = Page(html)
     assert 'hidden' not in page.ids['problem-dock'][1]

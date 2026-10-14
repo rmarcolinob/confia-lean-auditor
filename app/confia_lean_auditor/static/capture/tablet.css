@@ -391,6 +391,10 @@ select {
 .submission-card .submission-receipt { max-width: none; overflow-wrap: anywhere; font-size: 0.95rem; }
 .submission-card [data-kind="error"] { color: #9b2727; }
 .submission-card [data-kind="saved"] { color: #246644; font-weight: 650; }
+.export-card.recognition-card { display: block; }
+.recognition-card .export-actions { margin: 14px 0; }
+.recognition-preview section { border-top: 1px solid var(--border); padding: 12px 0; }
+.recognition-preview pre { white-space: pre-wrap; overflow-wrap: anywhere; font-size: 1rem; }
 
 /* Embedded mode removes repeated shell chrome, never changes ink geometry. */
 body[data-embedded="true"] .capture-header,
@@ -401,11 +405,14 @@ body[data-embedded="true"] .limits-card,
 body[data-embedded="true"] #capture-purpose,
 body[data-embedded="true"] #capture-question-field,
 body[data-embedded="true"] #problem-help { display: none; }
-body[data-embedded="true"] .capture-shell { padding-top: 8px; }
-body[data-embedded="true"] .setup-card { order: 5; }
-/* Handwritten practice presents the question in the parent document.
-   Persistence and recovery sit below the canvas, outside this hidden dock. */
-body[data-embedded="true"][data-workspace-mode="practice"] #problem-dock { display: none; }
+body[data-embedded="true"] .capture-shell { padding-top: 8px; padding-bottom: 8px; }
+/* The parent workspace presents the question and every recovery/send control. */
+body[data-embedded="true"] .setup-card,
+body[data-embedded="true"] #problem-dock,
+body[data-embedded="true"] .draft-persistence-bar,
+body[data-embedded="true"] #continue-draft,
+body[data-embedded="true"] #technical-details,
+body[data-embedded="true"] .export-card { display: none; }
 /* Compact only the embedded chrome; never stretch or crop the ink page. */
 body[data-embedded="true"] .notebook-controls { padding: 6px; margin-bottom: 8px; }
 body[data-embedded="true"] .toolbar { margin-bottom: 6px; }

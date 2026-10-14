@@ -139,7 +139,8 @@ class RecognitionService:
                     raise SubmissionIntegrityConflict()
                 now = datetime.now(timezone.utc)
                 provenance = RecognitionProvenance(
-                    submission_id=submission_id, artifacts=refs, adapter=adapter.adapter,
+                    submission_id=submission_id, snapshot_id=submission.snapshot_id,
+                    artifacts=refs, adapter=adapter.adapter,
                     adapter_version=adapter.adapter_version, provider=adapter.provider,
                     input_mode=adapter.input_mode, parameters=parameters, created_at=now,
                     input_hash=canonical_hash({"input_mode": adapter.input_mode,

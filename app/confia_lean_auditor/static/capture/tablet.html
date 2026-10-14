@@ -6,7 +6,7 @@
     <title>ConfIA — Caderno de resolução</title>
     <link rel="stylesheet" href="/static/capture/vendor/katex-0.18.9/katex.min.css">
     <link rel="stylesheet" href="/static/design-system.css?v=ui-01">
-    <link rel="stylesheet" href="/static/capture/tablet.css?v=p2-cap-02&amp;ui=ui-02-persistence-bottom">
+    <link rel="stylesheet" href="/static/capture/tablet.css?v=p2-cap-02&amp;ui=ui-05-fit-notebook">
     <link rel="stylesheet" href="/static/capture/identity.css?v=ui-01">
   </head>
   <body>
@@ -192,10 +192,23 @@
         <p id="submission-receipt" class="submission-receipt" hidden></p>
       </section>
 
+      <section class="export-card recognition-card" data-submission-only aria-label="Reconhecimento da escrita">
+        <div>
+          <p class="eyebrow">Leitura automática</p>
+          <h2>Reconhecimento automático</h2>
+          <p>Confira se o reconhecimento corresponde ao que foi escrito.</p>
+        </div>
+        <div class="export-actions">
+          <button id="recognize-writing" type="button" disabled>Reconhecer escrita</button>
+        </div>
+        <p id="recognition-message" role="status" aria-live="polite">Envie a versão preparada para reconhecer a escrita.</p>
+        <div id="recognition-preview" class="recognition-preview" aria-label="Prévia da transcrição automática"></div>
+      </section>
+
       <section class="limits-card" aria-label="Limitações do protótipo">
         <h2>Limites deste incremento</h2>
         <p>
-          Até três páginas por rascunho. Recebimento experimental, sem OCR, transcrição, auditoria, Lean, nota ou autenticação.
+          Até três páginas por rascunho. Reconhecimento experimental sujeito a revisão humana, sem auditoria, Lean, nota ou autenticação.
           Use somente dados fictícios ou testes autorizados. Compatibilidade com caneta, rotação e palma deve ser verificada
           em cada tablet real.
         </p>
@@ -211,6 +224,6 @@
     <script src="/static/capture/ink-canvas.js"></script>
     <script src="/static/capture/draft-store.js"></script>
     <script src="/static/capture/submission-client.js?v=p2-cap-02"></script>
-    <script src="/static/capture/tablet.js?v=p2-cap-02&amp;ui=ui-02-parent-sticky"></script>
+    <script src="/static/capture/tablet.js?v=p2-cap-02&amp;ui=ui-05-fit-notebook"></script>
   </body>
 </html>

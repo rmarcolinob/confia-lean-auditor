@@ -59,6 +59,9 @@
     sendSolution: document.querySelector("#send-solution"),
     submissionMessage: document.querySelector("#submission-message"),
     submissionReceipt: document.querySelector("#submission-receipt"),
+    recognizeWriting: document.querySelector("#recognize-writing"),
+    recognitionMessage: document.querySelector("#recognition-message"),
+    recognitionPreview: document.querySelector("#recognition-preview"),
     exportTitle: document.querySelector("#export-title"),
     exportNote: document.querySelector("#export-note"),
     modeTitle: document.querySelector("#capture-mode-title"),
@@ -80,18 +83,46 @@
   let persistenceRequest = 0;
   let savedDocumentsRequest = 0;
   let submissionBusy = false;
+  let recognitionBusy = false;
   const submissionStates = new Map();
+  const recognitionStates = new Map();
 
   function notifyContext(value = captureDocument, receipt = null, mode = resolutionMode) {
     if (!embedded || !value) return;
+    const shell = document.querySelector(".capture-shell");
+    const measuredHeight = shell && Number.isFinite(shell.offsetHeight) ? Math.ceil(shell.offsetTop + shell.offsetHeight + 8) : null;
     const presentation = problemPresentations.find(item => item.problem_id === value.problem_id && item.source_statement === problems.find(p => (p.problem_id || p.id) === value.problem_id)?.statement);
     const state = submissionStates.get(value.local_snapshot_id);
+    // The parent renders controls; this page remains the sole owner of state and actions.
+    const controls = value === captureDocument ? {
+      document_id: documentStorageId(value),
+      frozen: value.document_kind === "local_snapshot",
+      document_state: elements.documentState.textContent,
+      storage_state: elements.storageState.textContent,
+      persistence: elements.draftPersistence.textContent,
+      persistence_kind: elements.draftPersistence.dataset.state,
+      status: elements.statusMessage.textContent,
+      status_kind: elements.statusMessage.dataset.kind,
+      saved_documents: elements.savedSelect.children ? Array.from(elements.savedSelect.children).map(option => ({ id: option.value, label: option.textContent })).filter(option => option.id) : [],
+      can_prepare: !elements.prepareSnapshot.disabled,
+      can_send: !elements.sendSolution.disabled,
+      send_label: elements.sendSolution.textContent,
+      can_recognize: !elements.recognizeWriting.disabled,
+      snapshot_message: elements.snapshotMessage.textContent,
+      submission_message: elements.submissionMessage.textContent,
+      submission_kind: elements.submissionMessage.dataset.kind,
+      submission_receipt: elements.submissionReceipt.textContent,
+      recognition_message: elements.recognitionMessage.textContent,
+      recognition_segments: recognitionStates.get(value.local_snapshot_id)?.segments || [],
+    } : null;
     globalThis.parent.postMessage({ type: "confia-notebook-context", context: {
       problem_id: value.problem_id, mode, draft_id: value.draft_id,
       local_snapshot_id: value.local_snapshot_id || null,
       question_presentation_version: presentation?.display_version ?? null,
       ink_version: `${value.operations.length}:${value.pages.length}:${value.active_stroke_ids.length}`,
       receipt: receipt || state?.receipt || null,
+      controls,
+      content_height: measuredHeight && measuredHeight > 0 ? Math.min(4000, measuredHeight) : null,
     } }, globalThis.location.origin);
   }
 
@@ -110,6 +141,33 @@
       : "";
     if (state?.receipt) elements.snapshotMessage.textContent = "Versão congelada preservada neste dispositivo.";
     else if (state) elements.snapshotMessage.textContent = "Versão local preservada; recebimento pelo servidor ainda não confirmado.";
+    const recognition = recognitionStates.get(captureDocument?.local_snapshot_id);
+    elements.recognizeWriting.disabled = resolutionMode !== "submission" || !state?.receipt || recognitionBusy
+      || !captureDocument?.active_stroke_ids?.length;
+    elements.recognitionMessage.textContent = recognition?.message || (state?.receipt
+      ? captureDocument?.active_stroke_ids?.length
+        ? "Toque em Reconhecer escrita para iniciar a leitura da versão enviada."
+        : "Esta versão não contém escrita ativa para reconhecer."
+      : "Envie a versão preparada para reconhecer a escrita.");
+    elements.recognitionPreview.replaceChildren();
+    for (const segment of recognition?.segments || []) {
+      const row = document.createElement("section");
+      const heading = document.createElement("strong");
+      heading.textContent = `Página ${segment.page_index + 1}`;
+      row.appendChild(heading);
+      if (segment.text) {
+        const text = document.createElement("p");
+        text.textContent = segment.text;
+        row.appendChild(text);
+      }
+      if (segment.latex) {
+        const latex = document.createElement("pre");
+        latex.textContent = segment.latex;
+        row.appendChild(latex);
+      }
+      elements.recognitionPreview.appendChild(row);
+    }
+    notifyContext();
   }
 
   function selectedProblem() {
@@ -127,6 +185,7 @@
   function setStatus(message, kind) {
     elements.statusMessage.textContent = message;
     elements.statusMessage.dataset.kind = kind || "info";
+    notifyContext();
   }
 
   function setPersistenceState(state) {
@@ -140,6 +199,7 @@
     };
     elements.draftPersistence.dataset.state = state;
     elements.draftPersistence.textContent = messages[state];
+    notifyContext();
   }
 
   function setToggle(first, second, firstActive) {
@@ -212,7 +272,6 @@
     elements.modeTitle.textContent = resolutionMode === "practice" ? "Prática com feedback" : "Solução para envio";
     renderCanvas();
     renderSubmission();
-    notifyContext();
   }
 
   async function refreshSavedDocuments() {
@@ -233,6 +292,7 @@
         option.textContent = `${kind} · ${new Date(record.client_updated_at).toLocaleString("pt-BR")} · ${record.storage_id.slice(-8)}`;
         elements.savedSelect.appendChild(option);
       }
+      notifyContext();
     } catch (error) {
       setStatus(`${error.message} Continue usando exportação manual para preservar os dados.`, "error");
       elements.storageState.textContent = "Armazenamento indisponível";
@@ -444,15 +504,38 @@
     return queueTransition(() => changeProblem(id));
   });
   globalThis.addEventListener("message", event => {
-    if (!embedded || !initialized || event.origin !== globalThis.location.origin || event.source !== globalThis.parent || event.data?.type !== "confia-workspace-command" || event.data.action !== "configure") return;
-    const { problem_id: problemId, mode } = event.data;
+    if (!embedded || !initialized || event.origin !== globalThis.location.origin || event.source !== globalThis.parent || event.data?.type !== "confia-workspace-command") return;
+    const { action, problem_id: problemId, mode } = event.data;
     if (!["practice", "submission"].includes(mode)) return;
-    queueTransition(async () => {
-      await preparationFinished;
-      if (captureDocument.problem_id !== problemId) await changeProblem(problemId);
-      resolutionMode = mode;
-      renderState();
-    });
+    if (action === "configure") {
+      queueTransition(async () => {
+        await preparationFinished;
+        if (captureDocument.problem_id !== problemId) await changeProblem(problemId);
+        resolutionMode = mode;
+        renderState();
+      });
+      return;
+    }
+    if (problemId !== captureDocument.problem_id || mode !== resolutionMode || event.data.document_id !== documentStorageId(captureDocument) || preparing) return;
+    const buttons = {
+      "new-draft": elements.newDraft,
+      "continue-draft": elements.continueDraft,
+      "prepare-snapshot": elements.prepareSnapshot,
+      "send-solution": elements.sendSolution,
+      "recognize-writing": elements.recognizeWriting,
+      "export-json": elements.exportJson,
+      "export-png": elements.exportPng,
+    };
+    if (action === "open-document") {
+      const id = event.data.saved_document_id;
+      if (typeof id !== "string" || !Array.from(elements.savedSelect.children).some(option => option.value === id)) return;
+      elements.savedSelect.value = id;
+      elements.openDocument.click();
+      return;
+    }
+    const button = buttons[action];
+    if (!button || button.disabled || button.hidden || (action === "continue-draft" && captureDocument.document_kind !== "local_snapshot")) return;
+    button.click();
   });
   elements.openTeacher.addEventListener("click", event => {
     if (!embedded) return;
@@ -603,6 +686,40 @@
       notifyContext();
     }
   });
+  elements.recognizeWriting.addEventListener("click", async () => {
+    const snapshotId = captureDocument?.local_snapshot_id;
+    const receipt = submissionStates.get(snapshotId)?.receipt;
+    if (resolutionMode !== "submission" || recognitionBusy || !receipt) return;
+    const state = recognitionStates.get(snapshotId) || { attempt: 0 };
+    recognitionBusy = true;
+    state.segments = [];
+    state.message = "Reconhecendo...";
+    recognitionStates.set(snapshotId, state);
+    renderSubmission();
+    try {
+      const response = await fetch(`/submissions/${encodeURIComponent(receipt.submission_id)}/recognitions`, {
+        method: "POST", headers: { "Content-Type": "application/json" }, cache: "no-store",
+        body: JSON.stringify({ provider: "mathpix", idempotency_key: `mathpix:${state.attempt}` }),
+      });
+      if (!response.ok) throw new Error("Reconhecedor indisponível. Confira a configuração do servidor.");
+      const summary = await response.json();
+      if (summary.status !== "NEEDS_REVIEW") {
+        state.attempt += 1;
+        throw new Error("O reconhecimento falhou. Toque novamente para tentar uma nova leitura.");
+      }
+      const detail = await fetch(`/submissions/${encodeURIComponent(receipt.submission_id)}/recognitions/${encodeURIComponent(summary.recognizer_run_id)}`, { cache: "no-store" });
+      if (!detail.ok) throw new Error("A leitura foi registrada, mas a prévia não pôde ser carregada. Toque novamente para recuperá-la.");
+      const run = await detail.json();
+      if (run.status !== "NEEDS_REVIEW" || !Array.isArray(run.result?.segments)) throw new Error("Prévia de reconhecimento indisponível.");
+      state.segments = run.result.segments;
+      state.message = "Reconhecimento automático · precisa de revisão. Confira se o reconhecimento corresponde ao que foi escrito.";
+    } catch (error) {
+      state.message = error.message;
+    } finally {
+      recognitionBusy = false;
+      renderSubmission();
+    }
+  });
   elements.exportJson.addEventListener("click", () => {
     const exported = Model.exportClone(captureDocument);
     const blob = new Blob([JSON.stringify(exported, null, 2)], { type: "application/json" });
@@ -624,6 +741,10 @@
   if (typeof globalThis.ResizeObserver === "function") {
     const resizeObserver = new ResizeObserver(() => renderCanvas());
     resizeObserver.observe(elements.canvas);
+    if (embedded) {
+      const layoutObserver = new ResizeObserver(() => notifyContext());
+      layoutObserver.observe(document.querySelector(".capture-shell"));
+    }
   } else {
     globalThis.addEventListener("resize", renderCanvas);
   }

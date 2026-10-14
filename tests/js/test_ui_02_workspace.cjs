@@ -4,6 +4,8 @@ const { page } = require('./workspace-dom.cjs');
 const { page: capturePage } = require('./capture-dom.cjs');
 const { flush, deferred } = require('./ui-dom.cjs');
 const Model = require('../../app/confia_lean_auditor/static/capture/ink-model.js');
+const fs = require('node:fs');
+const path = require('node:path');
 const report = id => ({ ok:true, json:async () => ({ problem_id:id, pedagogical_report: { summary:`Feedback ${id}` } }) });
 
 test('Resolver opens the one notebook for the selected problem; both purposes reuse its frame', async () => {
@@ -243,7 +245,7 @@ test('existing draft with handwriting recovers unchanged inside the taller noteb
   assert.equal(JSON.stringify(ui.canvasRenders.at(-1).document),persisted);
 });
 
-test('parent question and focus exist only in active handwritten practice; the typed view keeps its behavior', async () => {
+test('parent question precedes the notebook in both modes; practice focus and typed view keep their behavior', async () => {
   const ui=await page();
   const question=ui.get('#notebook-problem-context');
   assert.equal(question.hidden,true);
@@ -268,7 +270,7 @@ test('parent question and focus exist only in active handwritten practice; the t
   assert.equal(question.hidden,false);
   assert.equal(ui.get('#practice-response').open,false);
   await ui.get('#submission-mode').click(); ui.notebook();
-  assert.equal(question.hidden,true);
+  assert.equal(question.hidden,false);
   assert.equal(ui.document.body.dataset.handwritingFocus,'false');
   await ui.get('#practice-mode').click(); ui.notebook();
   ui.visit('feedback');
@@ -284,11 +286,51 @@ test('parent question and focus exist only in active handwritten practice; the t
   assert.equal(ui.calls.some(c=>c.options?.method==='POST'),false);
 });
 
+test('workspace renders capture status and routes actions through the existing notebook frame', async () => {
+  const ui=await page(); await ui.start('submission');
+  ui.notebook({local_snapshot_id:'snap:A',content_height:1120,controls:{
+    document_id:'snap:A', frozen:true, document_state:'Cópia local congelada', storage_state:'Salvo neste dispositivo',
+    persistence:'Cópia local salva neste dispositivo', persistence_kind:'saved', status:'Versão recuperada', status_kind:'saved',
+    saved_documents:[{id:'snap:A',label:'cópia congelada'}], can_prepare:false, can_send:true, send_label:'Enviar solução',
+    can_recognize:false, snapshot_message:'Versão preparada localmente.', submission_message:'Envie para receber confirmação.',
+    submission_receipt:'', recognition_message:'Envie a versão preparada.', recognition_segments:[],
+  }});
+  assert.equal(ui.get('#workspace-draft-persistence').textContent,'Cópia local salva neste dispositivo');
+  assert.equal(ui.frame.style.height,'1120px');
+  assert.equal(ui.get('#workspace-submission-actions').hidden,false);
+  assert.equal(ui.get('#workspace-recognition-actions').hidden,false);
+  assert.equal(ui.get('#workspace-continue-draft').hidden,false);
+  assert.equal(ui.get('#workspace-send-solution').disabled,false);
+  await ui.get('#workspace-send-solution').click();
+  assert.deepEqual(JSON.parse(JSON.stringify(ui.commands.at(-1).message)),{
+    type:'confia-workspace-command',action:'send-solution',problem_id:'A',mode:'submission',document_id:'snap:A',
+  });
+  const select=ui.get('#workspace-saved-document');
+  select.value='snap:A'; await select.emit('change');
+  await ui.get('#workspace-open-document').click();
+  assert.equal(ui.commands.at(-1).message.action,'open-document');
+  assert.equal(ui.commands.at(-1).message.saved_document_id,'snap:A');
+  ui.notebook({local_snapshot_id:'snap:A',controls:{
+    document_id:'snap:A', frozen:true, saved_documents:[], can_send:false, can_recognize:true,
+    submission_receipt:'submission_id: sub_test', recognition_message:'Confira a leitura.',
+    recognition_segments:[{page_index:0,text:'<script>texto</script>',latex:'x^2'}],
+  }});
+  assert.equal(ui.get('#workspace-submission-receipt').hidden,false);
+  assert.equal(ui.get('#workspace-recognition-preview').children[0].children[1].textContent,'<script>texto</script>');
+  assert.equal(ui.get('#workspace-recognize-writing').disabled,false);
+  await ui.get('#workspace-recognize-writing').click();
+  assert.equal(ui.commands.at(-1).message.action,'recognize-writing');
+  await ui.get('#practice-mode').click(); ui.notebook();
+  assert.equal(ui.get('#workspace-submission-actions').hidden,true);
+  assert.equal(ui.get('#workspace-recognition-actions').hidden,true);
+  assert.equal(ui.get('#workspace-send-solution').disabled,true);
+});
+
 test('parent sticky updates with the selected problem and its disclosure preserves notebook/text', async () => {
   const ui=await page(); await ui.select('B'); await ui.start();
   const source=ui.frame.src, draft=ui.window.ConfIAWorkspace.analysisContext().draft_id;
   assert.equal(ui.get('#notebook-problem-code').textContent,'B');
-  assert.equal(ui.get('#notebook-problem-title').textContent,'Questão B');
+  assert.equal(ui.get('#notebook-problem-title'),undefined);
   assert.equal(ui.get('#notebook-problem-statement').textContent,'Enunciado B');
   await ui.write('Texto B');
   await ui.get('#toggle-notebook-problem').click();
@@ -305,10 +347,29 @@ test('parent sticky updates with the selected problem and its disclosure preserv
   await ui.get('#toggle-notebook-problem').click();
   await ui.get('#change-question').click(); await ui.select('A'); await ui.start();
   assert.equal(ui.get('#notebook-problem-code').textContent,'A');
-  assert.equal(ui.get('#notebook-problem-title').textContent,'Questão A');
   assert.equal(ui.get('#notebook-problem-statement').textContent,'Enunciado A');
   assert.equal(ui.get('#notebook-problem-body').hidden,false);
   assert.equal(ui.frame.src,source);
+});
+
+test('every catalog question shows only its ID above its complete statement in the parent notebook', async () => {
+  const root=path.join(__dirname,'../../problems');
+  const catalog=fs.readdirSync(root).flatMap(id => {
+    const file=path.join(root,id,'problem.json');
+    if (!fs.existsSync(file)) return [];
+    const problem=JSON.parse(fs.readFileSync(file,'utf8'));
+    return [{problem_id:id,title:problem.title,statement:problem.statement,examples:[]}];
+  });
+  assert.ok(catalog.some(problem => problem.problem_id==='ITA2025F2Q5'));
+  for (const problem of catalog) {
+    const ui=await page(undefined,{catalog});
+    await ui.select(problem.problem_id); await ui.start('submission');
+    assert.equal(ui.get('#notebook-problem-code').textContent,problem.problem_id);
+    assert.equal(ui.get('#notebook-problem-title'),undefined);
+    assert.equal(ui.get('#notebook-problem-statement').textContent,problem.statement);
+    assert.equal(ui.get('#notebook-problem-context').hidden,false);
+    assert.equal(ui.get('#workspace-submission-actions').hidden,false);
+  }
 });
 
 test('parent question uses the same renderer, registry and fallback message as the approved typed statement', async () => {

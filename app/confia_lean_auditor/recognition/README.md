@@ -6,15 +6,16 @@ do serviço, e retorna `ProviderOutput` segmentado.
 O adapter declara provider, nome/versão do adapter, modo (`strokes`, `image` ou
 `strokes_and_image`) e uma allowlist de parâmetros públicos. Factories registradas
 explicitamente no `RecognizerRegistry` isolam configuração e implementação.
-Os nomes `mathpix_strokes`, `mathpix_image` e `vision_model` podem ser registrados
-futuramente, mas não têm implementações nesta etapa. Factories futuras poderão
+Os nomes `mathpix_image` e `vision_model` podem ser registrados
+futuramente. O provider `mathpix` para strokes está descrito em
+`docs/P2_HMER_MATHPIX_STROKES.md`. Factories futuras poderão
 ler configuração por variáveis de ambiente internamente; credenciais não fazem
 parte dos contratos, da proveniência ou das respostas ao frontend.
 
-Somente `fake_test` existe. Para habilitar API e UI, configure `CONFIA_ENV=test`
+`fake_test` existe para testes. Para habilitá-lo na API e UI, configure `CONFIA_ENV=test`
 ou `CONFIA_ENV=development`. Ausência dessa variável, `production` e qualquer
-outro valor desabilitam o provider. `CONFIA_SUBMISSIONS_DIR` conserva o significado
-existente. Não há configuração de credenciais, SDK nem chamada externa nova.
+outro valor desabilitam o fake. `CONFIA_SUBMISSIONS_DIR` conserva o significado
+existente. O Mathpix exige `CONFIA_MATHPIX_APP_ID` e `CONFIA_MATHPIX_APP_KEY` no backend.
 
 O reconhecedor de teste devolve **sempre `2 + 2 = 5` por página**, independentemente
 do conteúdo manuscrito. É um fixture determinístico para a arquitetura, não OCR.
@@ -43,6 +44,9 @@ hashes/tamanhos/índices, adapter, versão, provider, parâmetros públicos e ho
 `output_hash` é SHA-256 do `ProviderOutput` normalizado, incluindo `null`, warnings
 e metadados opcionais. Canonização: UTF-8, chaves ordenadas, sem espaços separadores,
 Unicode literal, sem NaN. IDs e horário do run não entram no output hash.
+Na leitura, a validação usa somente os campos de output presentes no run persistido:
+defaults acrescentados por versões posteriores do schema não alteram hashes históricos.
+Runs novos persistem `page_metadata` e o incluem no hash, inclusive quando vazio.
 
 A resposta resumida contém `recognizer_run_id`, `status`, `transcription_id`,
 `revision_number`, `error_code` e proveniência. `201` significa novo run (inclusive
@@ -130,7 +134,7 @@ Se FAILED já foi publicado, callers em espera e retries podem recuperá-lo sem
 esperar o worker tardio. Sem registro final, um retry da mesma chave precisa esperar
 o worker existente; operações não relacionadas continuam disponíveis.
 
-**Requisito para futuros adapters HTTP:** aplicar connect timeout, read timeout e
+**Regra para adapters HTTP:** aplicar connect timeout, read timeout e
 um total timeout respeitando o deadline restante, incluindo tentativas/retries e
 consumo de resposta. Factories só devem construir/configurar adapters, sem I/O remoto.
 A thread daemon limita espera local e não garante cancelamento de requests já
@@ -140,7 +144,8 @@ uma execução remota: o lock local é liberado ao terminar o processo.
 
 ## Limites desta etapa
 
-Há somente adapter fake local; não há credenciais ou chamadas remotas novas.
+O adapter Mathpix usa credenciais somente no backend e chama o serviço remoto
+após ação explícita no caderno. Consulte `docs/P2_HMER_MATHPIX_STROKES.md`.
 Os contratos e a validação não autenticam autoria, provider ou professor. Não há
-OCR real, StructuredSolution, extração de claims, rubrica, nota, feedback, auditoria
+correção matemática automática, StructuredSolution, extração de claims, rubrica, nota, feedback, auditoria
 matemática, execução Lean ou autenticação.

@@ -294,11 +294,13 @@ class SubmissionStore:
             if path.parent.is_symlink() or path.is_symlink() or not path.is_file():
                 raise TranscriptionIntegrityConflict()
             receipt = TranscriptionAcceptanceReceipt.model_validate_json(path.read_bytes())
+            # Verify the fields stored at publication time; later schema defaults
+            # must not change the accepted revision or acceptance digest.
             if (receipt.acceptance_id != acceptance.acceptance_id
                     or receipt.created_at != acceptance.accepted_at
-                    or receipt.acceptance_sha256 != model_sha256(acceptance)
+                    or receipt.acceptance_sha256 != model_sha256(acceptance, exclude_unset=True)
                     or receipt.accepted_revision_sha256 != acceptance.accepted_revision_sha256
-                    or model_sha256(revision) != acceptance.accepted_revision_sha256):
+                    or model_sha256(revision, exclude_unset=True) != acceptance.accepted_revision_sha256):
                 raise TranscriptionIntegrityConflict()
             return receipt
         except (ValueError, FileNotFoundError, IsADirectoryError) as exc:

@@ -9,5 +9,5 @@ def canonical_sha256(value):
     return hashlib.sha256(raw).hexdigest()
 
 
-def model_sha256(model):
-    return canonical_sha256(model.model_dump(mode="json"))
+def model_sha256(model, *, exclude_unset=False):
+    return canonical_sha256(model.model_dump(mode="json", exclude_unset=exclude_unset))

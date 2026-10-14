@@ -78,7 +78,7 @@ def test_capture_loads_pinned_local_katex_assets_and_fonts_in_order():
         assert response.status_code == 200, asset
         assert response.content
     assert html.index(prefix + "katex.min.js") < html.index(prefix + "contrib/auto-render.min.js")
-    assert html.index("problem-math.js") < html.index('src="/static/capture/tablet.js?v=p2-cap-02&amp;ui=ui-02-parent-sticky"')
+    assert html.index("problem-math.js") < html.index('src="/static/capture/tablet.js?v=p2-cap-02&amp;ui=ui-05-fit-notebook"')
     css = CLIENT.get(prefix + "katex.min.css").text
     fonts = re.findall(r"url\((fonts/[^)]+)\)", css)
     assert fonts

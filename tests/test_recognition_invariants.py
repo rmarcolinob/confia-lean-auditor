@@ -13,8 +13,11 @@ from confia_lean_auditor.recognition.fake import FakeTestRecognizer
 from confia_lean_auditor.recognition.registry import RecognizerRegistry
 from confia_lean_auditor.recognition.schemas import RecognitionRequest
 from confia_lean_auditor.recognition.service import RecognitionConflict, RecognitionService
-from confia_lean_auditor.submissions.schemas import SubmissionRequest, TranscriptionRecord, TranscriptionRevision
-from confia_lean_auditor.submissions.store import SubmissionStore
+from confia_lean_auditor.recognition.validation import canonical_hash
+from confia_lean_auditor.submissions.schemas import (
+    AcceptTranscriptionRequest, SubmissionRequest, TranscriptionRecord, TranscriptionRevision,
+)
+from confia_lean_auditor.submissions.store import SubmissionStore, TranscriptionIntegrityConflict
 from test_submissions import payload
 
 
@@ -339,3 +342,118 @@ def test_without_key_creates_distinct_runs_and_keyed_replay_after_restart(tmp_pa
     assert restarted.recognize(sid, REQUEST) == (keyed, False)
     assert len(restarted.list(sid)) == len(service.store.list_transcriptions(sid)) == 3
     assert original_hashes(service.store, sid) == before
+
+
+@pytest.fixture
+def legacy_recognition_run(tmp_path):
+    """Persist the exact output shape and hash used before page_metadata existed."""
+    service, sid = setup_service(tmp_path)
+    run, _ = service.recognize(sid, REQUEST)
+    folder = service.store.root / sid / "transcriptions" / run.transcription_id
+    paths = [folder / "recognition.json", folder / "transcription.json",
+             folder / "revisions" / "revision_000001.json"]
+    recognition = json.loads(paths[0].read_bytes())
+    result = recognition["result"]
+    assert result.pop("page_metadata") == []
+    legacy_output = {name: result[name] for name in
+                     ("provider_version", "provider_request_id", "segments", "warnings")}
+    old_hash = canonical_hash(legacy_output)
+    result["output_hash"] = old_hash
+    for path in paths:
+        data = recognition if path == paths[0] else json.loads(path.read_bytes())
+        # snapshot_id was also added after CAP-03B and was absent from each pair member.
+        data["provenance"].pop("snapshot_id")
+        path.write_text(json.dumps(data, ensure_ascii=False))
+    return service, sid, run, paths, old_hash, {path: path.read_bytes() for path in paths}
+
+
+def test_legacy_output_hash_survives_restart_listing_and_history(legacy_recognition_run):
+    service, sid, run, paths, old_hash, original_bytes = legacy_recognition_run
+    restarted = RecognitionService(SubmissionStore(service.store.root), service.registry, timeout_seconds=1)
+    loaded = restarted.get(sid, run.recognizer_run_id)
+    assert loaded.result.output_hash == old_hash
+    assert loaded.result.page_metadata == []
+    assert "page_metadata" not in loaded.result.model_fields_set
+    assert restarted.list(sid) == [loaded]
+    assert restarted.recognize(sid, REQUEST) == (loaded, False)
+    history = restarted.store.transcription_history(run.transcription_id)
+    assert history.revisions[0].recognizer_run_id == loaded.recognizer_run_id
+    assert history.revisions[0].status == "NEEDS_REVIEW"
+    assert len(restarted.store.list_transcriptions(sid)) == 1
+    assert {path: path.read_bytes() for path in paths} == original_bytes
+
+
+@pytest.mark.parametrize("change", ["latex", "added_default"])
+def test_legacy_output_still_rejects_tampering(legacy_recognition_run, change):
+    service, sid, run, paths, _, _ = legacy_recognition_run
+    data = json.loads(paths[0].read_bytes())
+    if change == "latex":
+        data["result"]["segments"][0]["latex"] = "2 + 2 = 4"
+    else:
+        data["result"]["page_metadata"] = []
+    paths[0].write_text(json.dumps(data, ensure_ascii=False))
+    restarted = RecognitionService(SubmissionStore(service.store.root), service.registry, timeout_seconds=1)
+    with pytest.raises(ValueError, match="recognition output hash mismatch"):
+        restarted.get(sid, run.recognizer_run_id)
+
+
+def test_legacy_accepted_revision_hash_survives_restart(legacy_recognition_run):
+    service, sid, run, paths, _, _ = legacy_recognition_run
+    service.store.accept_transcription(run.transcription_id, AcceptTranscriptionRequest(
+        revision_number=1, reviewer_reference="professor-teste-01"))
+    folder = paths[0].parent
+    acceptance_path = folder / "acceptances" / "acceptance_000001.json"
+    receipt_path = folder / "acceptance_receipts" / "acceptance_000001.json"
+    # The old contract hashed the revision without snapshot_id in provenance.
+    old_revision_hash = canonical_hash(json.loads(paths[2].read_bytes()))
+    acceptance = json.loads(acceptance_path.read_bytes())
+    acceptance["accepted_revision_sha256"] = old_revision_hash
+    old_acceptance_hash = canonical_hash(acceptance)
+    acceptance_path.write_text(json.dumps(acceptance, ensure_ascii=False))
+    receipt = json.loads(receipt_path.read_bytes())
+    receipt["accepted_revision_sha256"] = old_revision_hash
+    receipt["acceptance_sha256"] = old_acceptance_hash
+    receipt_path.write_text(json.dumps(receipt, ensure_ascii=False))
+    originals = {path: path.read_bytes() for path in (*paths, acceptance_path, receipt_path)}
+
+    restarted = RecognitionService(SubmissionStore(service.store.root), service.registry, timeout_seconds=1)
+    history = restarted.store.transcription_history(run.transcription_id)
+    assert history.revisions[0].status == "ACCEPTED"
+    assert history.acceptances[0].accepted_revision_sha256 == old_revision_hash
+    assert restarted.get(sid, run.recognizer_run_id).result.output_hash
+    altered_revision = restarted.store._read_revisions(folder)[0].model_copy(
+        update={"reviewer_reference": "outro-professor"})
+    with pytest.raises(TranscriptionIntegrityConflict):
+        restarted.store.assert_acceptance_integrity(folder, altered_revision, history.acceptances[0])
+    assert {path: path.read_bytes() for path in originals} == originals
+
+
+def test_new_accepted_revision_binds_snapshot_id_after_restart(tmp_path):
+    service, sid = setup_service(tmp_path)
+    run, _ = service.recognize(sid, REQUEST)
+    service.store.accept_transcription(run.transcription_id, AcceptTranscriptionRequest(
+        revision_number=1, reviewer_reference="professor-teste-01"))
+    restarted = SubmissionStore(service.store.root)
+    folder = restarted._transcription_folder(run.transcription_id)
+    revision = restarted._read_revisions(folder)[0]
+    acceptance = restarted._read_acceptances(folder)[0]
+    assert restarted.assert_acceptance_integrity(folder, revision, acceptance)
+    assert revision.provenance.snapshot_id is not None
+    missing_snapshot = TranscriptionRevision.model_validate(
+        revision.model_dump(exclude={"provenance": {"snapshot_id"}}))
+    with pytest.raises(TranscriptionIntegrityConflict):
+        restarted.assert_acceptance_integrity(folder, missing_snapshot, acceptance)
+
+
+def test_failed_run_after_restart_still_has_no_output_hash(tmp_path):
+    class Failing(FakeTestRecognizer):
+        def recognize(self, source):
+            raise RuntimeError("simulated provider failure")
+
+    service, sid = setup_service(tmp_path, Failing())
+    failed, _ = service.recognize(sid, REQUEST)
+    restarted = RecognitionService(SubmissionStore(service.store.root), service.registry, timeout_seconds=1)
+    loaded = restarted.get(sid, failed.recognizer_run_id)
+    assert loaded.status == "FAILED" and loaded.result is None
+    assert restarted.list(sid) == [loaded]
+    assert restarted.store.list_transcriptions(sid) == []

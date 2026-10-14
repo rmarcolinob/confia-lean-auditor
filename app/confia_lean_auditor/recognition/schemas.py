@@ -33,10 +33,18 @@ class RecognitionSegment(SubmissionModel):
         return self
 
 
+class RecognitionPageMetadata(SubmissionModel):
+    page_index: int = Field(ge=0, lt=MAX_PAGES)
+    provider_version: Optional[Version] = None
+    provider_request_id: Optional[str] = Field(default=None, min_length=1, max_length=120)
+    is_handwritten: Optional[bool] = None
+
+
 class ProviderOutput(SubmissionModel):
     provider_version: Optional[Version] = None
     provider_request_id: Optional[str] = Field(default=None, min_length=1, max_length=120)
     segments: list[RecognitionSegment] = Field(min_length=1, max_length=2_000)
+    page_metadata: list[RecognitionPageMetadata] = Field(default_factory=list, max_length=MAX_PAGES)
     warnings: list[str] = Field(default_factory=list, max_length=100)
 
     @model_validator(mode="after")
@@ -44,6 +52,10 @@ class ProviderOutput(SubmissionModel):
         positions = [(s.page_index, s.order) for s in self.segments]
         if len(positions) != len(set(positions)):
             raise ValueError("duplicate segment positions")
+        metadata_pages = [item.page_index for item in self.page_metadata]
+        if len(metadata_pages) != len(set(metadata_pages)) or any(
+                index not in {segment.page_index for segment in self.segments} for index in metadata_pages):
+            raise ValueError("invalid page metadata")
         if any(len(w) > 500 for w in self.warnings):
             raise ValueError("warning too long")
         return self

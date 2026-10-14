@@ -115,6 +115,8 @@ class TranscriptionSegment(SubmissionModel):
 
 class RecognitionProvenance(SubmissionModel):
     submission_id: SubmissionId
+    # Optional for pre-Mathpix runs already persisted by CAP-03B.
+    snapshot_id: Optional[Identifier] = None
     artifacts: list[ArtifactReference] = Field(min_length=1, max_length=MAX_PAGES + 1)
     adapter: Identifier
     adapter_version: Annotated[str, StringConstraints(min_length=1, max_length=80)]

@@ -6,7 +6,7 @@
     <title>ConfIA — Matemática com confiança</title>
     <link rel="stylesheet" href="/static/capture/vendor/katex-0.18.9/katex.min.css">
     <link rel="stylesheet" href="/static/design-system.css?v=ui-01">
-    <link rel="stylesheet" href="/static/styles.css?v=ui-03">
+    <link rel="stylesheet" href="/static/styles.css?v=ui-06-sticky-statement">
     <link rel="stylesheet" href="/static/submissions/teacher.css?v=p2-cap-04">
   </head>
   <body>
@@ -95,16 +95,6 @@
           </div>
 
           <section id="resolution-workspace" aria-label="Caderno de Resolução ConfIA" hidden>
-            <section id="notebook-problem-context" aria-label="Questão da resolução manuscrita" hidden>
-              <div class="notebook-problem-heading">
-                <div><p class="eyebrow">Questão · <span id="notebook-problem-code"></span></p><h3 id="notebook-problem-title"></h3></div>
-                <button id="toggle-notebook-problem" class="secondary-action" type="button" aria-expanded="true" aria-controls="notebook-problem-body">Recolher enunciado</button>
-              </div>
-              <div id="notebook-problem-body">
-                <div id="notebook-problem-statement" class="statement-text"></div>
-                <p id="notebook-math-message" role="status" hidden></p>
-              </div>
-            </section>
             <div class="resolution-heading">
               <div><p class="eyebrow">Caderno de Resolução ConfIA</p><h2 id="resolution-title" tabindex="-1">Como você quer trabalhar esta questão?</h2></div>
               <button id="change-question" class="secondary-action" type="button">Escolher outra questão</button>
@@ -119,7 +109,63 @@
               <button id="typed-response" class="mode-button" type="button" aria-pressed="false">Digitar solução</button>
             </div>
             <div id="notebook-surface" hidden>
-              <iframe id="resolution-notebook" title="Caderno da questão selecionada: enunciado, escrita, páginas e rascunhos"></iframe>
+              <section id="notebook-problem-context" aria-label="Questão da resolução manuscrita" hidden>
+                <div class="notebook-problem-heading">
+                  <p class="eyebrow">Questão <span id="notebook-problem-code"></span></p>
+                  <button id="toggle-notebook-problem" class="secondary-action" type="button" aria-expanded="true" aria-controls="notebook-problem-body">Recolher enunciado</button>
+                </div>
+                <div id="notebook-problem-body">
+                  <div id="notebook-problem-statement" class="statement-text"></div>
+                  <p id="notebook-math-message" role="status" hidden></p>
+                </div>
+              </section>
+              <iframe id="resolution-notebook" title="Caderno da questão selecionada: escrita, ferramentas e páginas"></iframe>
+              <div class="notebook-end" role="separator"><span>Fim do caderno · controles da resolução abaixo</span></div>
+              <section class="notebook-action-card" aria-label="Rascunhos e recuperação">
+                <p class="eyebrow">Rascunho local</p>
+                <h3>Salvar e recuperar</h3>
+                <p id="workspace-draft-persistence" role="status" aria-live="polite">Abrindo o caderno…</p>
+                <div class="notebook-action-row">
+                  <label>Versões salvas desta questão
+                    <select id="workspace-saved-document"><option value="">Selecione uma versão salva</option></select>
+                  </label>
+                  <button id="workspace-open-document" type="button" disabled>Recuperar versão</button>
+                  <button id="workspace-new-draft" class="secondary-action" type="button" disabled>Novo rascunho</button>
+                  <button id="workspace-continue-draft" class="secondary-action" type="button" hidden disabled>Continuar em nova versão</button>
+                </div>
+                <p id="workspace-capture-status" role="status" aria-live="polite"></p>
+                <p class="help-text">A recuperação é explícita. Neste protótipo, o dispositivo compartilhado não separa versões por usuário.</p>
+              </section>
+              <section id="workspace-submission-actions" class="notebook-action-card" aria-label="Preparar e enviar solução" hidden>
+                <p class="eyebrow">Envio ao ConfIA</p>
+                <h3>Preparar e enviar</h3>
+                <p>Prepare uma cópia congelada e envie para obter o recibo do servidor.</p>
+                <div class="notebook-action-row">
+                  <button id="workspace-prepare-snapshot" type="button" disabled>Preparar versão para envio</button>
+                  <button id="workspace-send-solution" type="button" disabled>Enviar solução</button>
+                </div>
+                <p id="workspace-snapshot-message" role="status" aria-live="polite"></p>
+                <p id="workspace-submission-message" role="status" aria-live="polite"></p>
+                <p id="workspace-submission-receipt" class="workspace-receipt" hidden></p>
+              </section>
+              <section id="workspace-recognition-actions" class="notebook-action-card" aria-label="Reconhecimento automático" hidden>
+                <p class="eyebrow">Leitura automática</p>
+                <h3>Reconhecimento da escrita</h3>
+                <p>Confira se o reconhecimento corresponde ao que foi escrito.</p>
+                <div class="notebook-action-row"><button id="workspace-recognize-writing" type="button" disabled>Reconhecer escrita</button></div>
+                <p id="workspace-recognition-message" role="status" aria-live="polite"></p>
+                <div id="workspace-recognition-preview" class="workspace-recognition-preview" aria-label="Prévia da transcrição automática"></div>
+              </section>
+              <details class="notebook-action-card workspace-technical" aria-label="Detalhes técnicos">
+                <summary>Detalhes técnicos e exportação</summary>
+                <p id="workspace-document-state"></p>
+                <p id="workspace-document-id"></p>
+                <p id="workspace-storage-state"></p>
+                <div class="notebook-action-row">
+                  <button id="workspace-export-json" class="secondary-action" type="button" disabled>Exportar traços</button>
+                  <button id="workspace-export-png" class="secondary-action" type="button" disabled>Exportar PNG da página</button>
+                </div>
+              </details>
             </div>
             <section id="typed-problem-context" class="problem-statement" aria-label="Questão da solução digitada" hidden>
               <p class="eyebrow">Enunciado</p><h3 id="typed-problem-title"></h3>
@@ -340,7 +386,7 @@
     <script src="/static/capture/vendor/katex-0.18.9/contrib/auto-render.min.js"></script>
     <script src="/static/capture/problem-math.js?v=p2-ui-01"></script>
     <script src="/static/app.js?v=p2-cap-04"></script>
-    <script src="/static/resolution-workspace.js?v=ui-02-persistence-bottom"></script>
+    <script src="/static/resolution-workspace.js?v=ui-06-sticky-statement"></script>
     <script src="/static/submissions/teacher.js?v=p2-cap-04-p1-final"></script>
     <script src="/static/shell.js?v=ui-03"></script>
   </body>

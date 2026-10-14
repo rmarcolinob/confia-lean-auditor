@@ -21,16 +21,21 @@ def input_references(submission, input_mode):
 
 
 def validate_run_source(run, submission):
-    run = RecognitionRun.model_validate(run.model_dump())
+    # Preserve which fields were present in the persisted run. A later schema
+    # default must not change the representation covered by its original hash.
+    run = RecognitionRun.model_validate(run.model_dump(exclude_unset=True))
     p = run.provenance
-    if run.submission_id != submission.submission_id or p.artifacts != input_references(submission, p.input_mode):
+    if (run.submission_id != submission.submission_id
+            or (p.snapshot_id is not None and p.snapshot_id != submission.snapshot_id)
+            or p.artifacts != input_references(submission, p.input_mode)):
         raise ValueError("recognition source references mismatch")
     manifest = {"input_mode": p.input_mode, "artifacts": [a.model_dump(mode="json") for a in p.artifacts]}
     if canonical_hash(manifest) != p.input_hash:
         raise ValueError("recognition input manifest hash mismatch")
     if run.result is not None:
-        output = ProviderOutput.model_validate(run.result.model_dump(include=set(ProviderOutput.model_fields)))
-        if canonical_hash(output.model_dump(mode="json")) != run.result.output_hash:
+        output = ProviderOutput.model_validate(run.result.model_dump(
+            include=set(ProviderOutput.model_fields), exclude_unset=True))
+        if canonical_hash(output.model_dump(mode="json", exclude_unset=True)) != run.result.output_hash:
             raise ValueError("recognition output hash mismatch")
     return run
 

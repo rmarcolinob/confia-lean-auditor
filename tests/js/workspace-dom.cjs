@@ -30,6 +30,7 @@ async function page(transport = async () => ({ ok: true, json: async () => ({ pr
   }
   const get = selector => nodes.get(selector);
   const frame = get('#resolution-notebook');
+  frame.style = {};
   frame.contentWindow = { postMessage: (message, origin) => commands.push({message,origin}) };
   const window = { addEventListener(name, callback) { events[name] = callback; }, ConfIATeacher: { canLeave: () => true, showText() {}, showView() {} } };
   const location = { hash: '#student/resolve', search: '', origin: 'http://confia.test' };
