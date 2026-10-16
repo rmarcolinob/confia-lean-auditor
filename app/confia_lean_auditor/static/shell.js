@@ -135,6 +135,16 @@
       if (!authenticatedProfile) { location.replace("/"); return; }
       window.ConfIAAuthProfile = authenticatedProfile;
       document.querySelector(".brand").setAttribute("href", `#${authenticatedProfile}/home`);
+      document.querySelector("#demo-profile-label").remove();
+      document.querySelector(".profile-switch").remove();
+      document.querySelector(".sidebar-note").remove();
+      for (const menu of menus) {
+        if (menu.dataset.profileMenu !== authenticatedProfile) menu.remove();
+      }
+      for (const link of links) {
+        const route = /^#(student|teacher|management)\//.exec(link.getAttribute("href") || "");
+        if (route && route[1] !== authenticatedProfile) link.remove();
+      }
       const label = profiles[authenticatedProfile].label;
       document.querySelector("#auth-identity").textContent = `${authenticatedUser.display_name} / ${label}`;
       document.querySelector("#auth-identity").hidden = false;

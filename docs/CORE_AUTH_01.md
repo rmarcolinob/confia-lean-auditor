@@ -15,6 +15,8 @@ Abra `http://127.0.0.1:8000/`. `CONFIA_COOKIE_SECURE=0` serve apenas HTTP local.
 
 O script solicita senhas sem eco e cria `aluno.demo`, `professor.demo` e `gestao.demo`. Contas existentes são preservadas. Os três usuários compartilham o tenant de demonstração `demo-pi`; aluno e professor usam `turma.demo`. Não há cadastro público nem senha padrão.
 
+Para usar a prévia HMER, configure `CONFIA_MATHPIX_APP_ID` e `CONFIA_MATHPIX_APP_KEY` **no mesmo processo do servidor antes de iniciá-lo**, conforme [P2_HMER_MATHPIX_STROKES.md](P2_HMER_MATHPIX_STROKES.md). A autenticação não fornece essas credenciais. Sem elas, `mathpix` não é registrado e `/submissions/recognition-preview` responde 503 por configuração ausente; não é um erro 422 do payload do tablet.
+
 ## Arquitetura e armazenamento
 
 `runtime/auth/users.json` contém identidade, role, escopo, salt aleatório, hash de senha e parâmetros do derivador. `runtime/auth/sessions.json` contém somente o SHA-256 do token opaco de sessão, o ID do usuário e a expiração. O token original existe apenas no cookie. Ambos os arquivos estão fora do Git, com modo 0600; o diretório usa 0700. Escritas usam arquivo temporário, sincronização e substituição atômica sob lock local. O arquivo de sessões não exige `CONFIA_SESSION_SECRET`, pois não há token assinado nem JWT.
@@ -41,7 +43,7 @@ Submissions antigas continuam sem proprietário e não são reescritas. Um profe
 
 ## Interface e fluxo HMER
 
-Sem sessão, `/` serve a tela institucional de login. Após login, o shell consulta `/auth/me`, mostra nome e papel, revela somente a navegação desse papel e disponibiliza **Sair**. Um hash manual de outro papel volta ao início do papel autenticado. O seletor visual antigo fica oculto no modo autenticado. Isso melhora a navegação; a autorização efetiva permanece nas dependências FastAPI.
+Sem sessão, `/` serve a tela institucional de login. Após login, o shell consulta `/auth/me`, mostra nome e papel, remove do DOM os links e menus de outros papéis e disponibiliza **Sair**. Um hash manual de outro papel volta ao início do papel autenticado. O seletor de perfis de demonstração também é removido no modo autenticado. Isso melhora a navegação; a autorização efetiva permanece nas dependências FastAPI.
 
 Os HTMLs acessados diretamente em `/static/index.html` e `/static/capture/tablet.html` redirecionam para `/` e `/capture` no modo autenticado, respectivamente, preservando a proteção das rotas canônicas. CSS, JavaScript e outros assets estáticos continuam públicos e não contêm dados pessoais.
 

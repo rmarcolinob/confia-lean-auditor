@@ -4,16 +4,26 @@ const fs = require("node:fs");
 const path = require("node:path");
 const vm = require("node:vm");
 const { element, descendants, flush } = require("./ui-dom.cjs");
+const { summary, history: transcriptionHistory, revision } = require("./teacher-dom.cjs");
 const staticDir = path.join(__dirname, "../../app/confia_lean_auditor/static");
 const html = fs.readFileSync(path.join(staticDir, "index.html"), "utf8");
 const submissionId = "sub_" + "a".repeat(32);
 const record = { submission_id: submissionId, problem_id: "ITA2025Q1", snapshot_id: "snapshot:test",
   received_at: "2026-10-03T12:00:00Z", status: "RECEIVED", source: "tablet", capture_schema_version: "1.0",
   page_images: [{ filename: "page_1.png", page_index: 0 }] };
-async function page({ hash = "", search = "", records = [], authRole = null } = {}) {
+async function page({ hash = "", search = "", records = [], authRole = null, teacherReview = false } = {}) {
   const nodes = new Map(), links = [], menus = [], tabs = [], modes = [], calls = [], events = {}, store = new Map();
+  let accepted = false;
+  const acceptance = { submission_id: submissionId, transcription_id: summary.transcription.transcription_id,
+    revision_number: 1, acceptance_id: 'acc_' + 'c'.repeat(32), accepted_at: revision.created_at,
+    accepted_revision_sha256: 'd'.repeat(64) };
   function create(tag) {
     const n = element(tag);
+    n.isConnected = true;
+    n.remove = () => {
+      n.isConnected = false;
+      if (n.attributes.class === 'profile-switch') for (const tab of tabs) tab.isConnected = false;
+    };
     n.removeAttribute = key => { delete n.attributes[key]; };
     n.getAttribute = key => n.attributes[key] ?? null;
     n.closest = () => n.inNav ? {} : null;
@@ -46,20 +56,30 @@ async function page({ hash = "", search = "", records = [], authRole = null } = 
     querySelectorAll: selector => ({ '[data-tab-target]': tabs, '.tab-panel': panels, '[data-student-mode]': modes,
       '[data-shell-link]': links, '[data-profile-menu]': menus })[selector] || [],
   }, location, history, window, URLSearchParams, console,
+    katex: { render(latex, target) { target.textContent = `rendered:${latex}`; } },
     localStorage: { getItem: key => store.get(key), setItem: (key, value) => store.set(key, value) },
     fetch: async (url, options) => {
       calls.push({ url, options });
       assert.notEqual(url, '/audit', 'Shell navigation must never trigger an audit');
       let data;
       if (url === '/auth/me') data = { user_id: 'usr_test', display_name: 'Pessoa Demo', role: authRole };
+      else if (teacherReview && url.endsWith('/accept') && options?.method === 'POST') {
+        accepted = true;
+        data = { revision: { ...revision, status: 'ACCEPTED' }, acceptance };
+      }
       else if (url === '/problems') data = [{ problem_id: 'ITA2025Q1', title: 'Questão de teste', statement: 'Enunciado', examples: [{ key: 'correct', label: 'Exemplo' }] }];
       else if (url === '/submissions') data = records;
+      else if (teacherReview && url.endsWith('/transcriptions')) data = [{ ...summary,
+        latest_revision: { ...revision, status: accepted ? 'ACCEPTED' : 'NEEDS_REVIEW' } }];
+      else if (teacherReview && url.startsWith('/transcriptions/')) data = { ...transcriptionHistory,
+        revisions: [{ ...revision, status: accepted ? 'ACCEPTED' : 'NEEDS_REVIEW' }],
+        acceptances: accepted ? [acceptance] : [] };
       else if (url === '/submissions/recognition-providers' || /\/(transcriptions|audits)$/.test(url)) data = [];
       else data = { submission: record, integrity: [{ filename: 'snapshot.json', matches: true }, { filename: 'page_1.png', matches: true }] };
       return { ok: true, json: async () => data };
     },
   });
-  for (const file of ['app.js', 'submissions/teacher.js', 'shell.js']) vm.runInContext(fs.readFileSync(path.join(staticDir, file), 'utf8'), context);
+  for (const file of ['recognition-view.js', 'app.js', 'submissions/teacher.js', 'shell.js']) vm.runInContext(fs.readFileSync(path.join(staticDir, file), 'utf8'), context);
   await flush();
   const visit = async href => {
     const link = links.find(link => link.inNav && link.getAttribute('href') === href);
@@ -75,11 +95,18 @@ test('authenticated shell locks navigation to the server role and exposes logout
   assert.equal(student.get('#auth-identity').textContent, 'Pessoa Demo / Aluno');
   assert.equal(student.get('#auth-logout').hidden, false);
   assert.equal(student.get('#active-profile').textContent, 'Pessoa Demo / Aluno');
-  assert.equal(student.menus.filter(menu => !menu.hidden).length, 1);
-  assert.equal(student.menus.find(menu => !menu.hidden).dataset.profileMenu, 'student');
+  assert.deepEqual(student.menus.filter(menu => menu.isConnected).map(menu => menu.dataset.profileMenu), ['student']);
+  assert(student.links.some(link => link.isConnected && /^#student\//.test(link.getAttribute('href'))));
+  assert(student.links.filter(link => link.isConnected).every(link => !/^#(teacher|management)\//.test(link.getAttribute('href'))));
+  assert.equal(student.get('.profile-switch').isConnected, false);
+  assert(student.tabs.every(tab => !tab.isConnected));
+  assert.equal(student.get('#demo-profile-label').isConnected, false);
+  assert.equal(student.get('.sidebar-note').isConnected, false);
+  assert(student.calls.some(call => call.url === '/auth/me'));
   student.location.hash = '#management/overview'; await student.events.hashchange();
   assert.equal(student.location.hash, '#student/home');
-  await student.tabs[1].click();
+  assert.equal(student.window.ConfIAShell.navigate('teacher', 'submissions'), true);
+  assert.equal(student.location.hash, '#student/home');
   assert.equal(student.get('#teacher-area').hidden, true);
   await student.get('#auth-logout').click();
   assert.equal(student.calls.at(-1).url, '/auth/logout');
@@ -87,10 +114,39 @@ test('authenticated shell locks navigation to the server role and exposes logout
 
   const teacher = await page({ hash: '#teacher/submissions', authRole: 'TEACHER' });
   assert.equal(teacher.location.hash, '#teacher/submissions');
-  assert.equal(teacher.menus.find(menu => !menu.hidden).dataset.profileMenu, 'teacher');
+  assert.deepEqual(teacher.menus.filter(menu => menu.isConnected).map(menu => menu.dataset.profileMenu), ['teacher']);
+  assert(teacher.links.some(link => link.isConnected && /^#teacher\//.test(link.getAttribute('href'))));
+  assert(teacher.links.filter(link => link.isConnected).every(link => !/^#(student|management)\//.test(link.getAttribute('href'))));
+  assert.equal(teacher.get('.profile-switch').isConnected, false);
+  assert(teacher.tabs.every(tab => !tab.isConnected));
+  teacher.location.hash = '#student/resolve'; await teacher.events.hashchange();
+  assert.equal(teacher.location.hash, '#teacher/home');
   const manager = await page({ authRole: 'SCHOOL_MANAGER' });
   assert.equal(manager.location.hash, '#management/home');
-  assert.equal(manager.menus.find(menu => !menu.hidden).dataset.profileMenu, 'management');
+  assert.deepEqual(manager.menus.filter(menu => menu.isConnected).map(menu => menu.dataset.profileMenu), ['management']);
+  assert(manager.links.some(link => link.isConnected && /^#management\//.test(link.getAttribute('href'))));
+  assert(manager.links.filter(link => link.isConnected).every(link => !/^#(student|teacher)\//.test(link.getAttribute('href'))));
+  assert.equal(manager.get('.profile-switch').isConnected, false);
+  assert(manager.tabs.every(tab => !tab.isConnected));
+  manager.location.hash = '#teacher/analysis'; await manager.events.hashchange();
+  assert.equal(manager.location.hash, '#management/home');
+});
+
+test('authenticated teacher opens the original and recognized transcription, then enables analysis after acceptance', async () => {
+  const ui = await page({ hash: '#teacher/submissions', authRole: 'TEACHER', records: [record], teacherReview: true });
+  await ui.get('#manuscript-list').children[0].click();
+  let tree = descendants(ui.get('#manuscript-detail'));
+  const workspace = tree.find(node => node.className === 'transcription-workspace');
+  assert.equal(ui.get('#manuscript-detail').hidden, false);
+  assert.deepEqual(workspace.children.map(node => node.className), ['original-manuscript-panel', 'transcription-panel']);
+  assert(tree.some(node => node.tag === 'img' && node.src === `/submissions/${submissionId}/pages/0`));
+  assert(tree.some(node => node.textContent === 'rendered:2 + 2 = 5'));
+  assert.equal(tree.find(node => node.tag === 'button' && node.textContent === 'Executar Análise ConfIA').disabled, true);
+  assert(ui.calls.some(call => call.url === '/submissions/recognition-providers'));
+  await tree.find(node => node.tag === 'button' && node.textContent === 'Aceitar como fiel ao manuscrito').click();
+  tree = descendants(ui.get('#manuscript-detail'));
+  assert.equal(tree.find(node => node.tag === 'button' && node.textContent === 'Executar Análise ConfIA').disabled, false);
+  assert(tree.some(node => node.className === 'transcription-history'));
 });
 
 test('initial shell explicitly selects Aluno and shows only its home and menu', async () => {

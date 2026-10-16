@@ -229,6 +229,82 @@ def test_role_matrix_object_scope_hmer_teacher_and_audit(auth_case, monkeypatch)
     assert original["submitted_by_user_id"] == users["student_a"].user_id
 
 
+def test_teacher_detail_keeps_provider_metadata_review_and_audit_available(auth_case, monkeypatch):
+    auth_store, _, client_factory, _ = auth_case
+    auth_store.create_user(login="aluno.demo", display_name="Aluno Demo", role=Role.STUDENT,
+                           password=PASSWORD, tenant_id="school-a", classroom_ids=["class-a"])
+    auth_store.create_user(login="professor.demo", display_name="Professor Demo", role=Role.TEACHER,
+                           password=PASSWORD, tenant_id="school-a", classroom_ids=["class-a"])
+    monkeypatch.setenv("CONFIA_MATHPIX_APP_ID", "private-test-id")
+    monkeypatch.setenv("CONFIA_MATHPIX_APP_KEY", "private-test-key")
+    registry = RecognizerRegistry()
+    registry.register("mathpix", PreviewAdapter)
+    monkeypatch.setattr(submissions_router, "configured_registry", lambda: registry)
+
+    student = client_factory("aluno.demo")
+    teacher = client_factory("professor.demo")
+    manager = client_factory("manager.a")
+    assert teacher.get("/auth/me").json()["role"] == "TEACHER"
+    submitted = student_payload("snapshot:teacher-regression")
+    submitted.pop("submitted_by_user_id")
+    receipt = student.post("/submissions", json=submitted)
+    assert receipt.status_code == 201, receipt.text
+    sid = receipt.json()["submission_id"]
+    official = student.post(f"/submissions/{sid}/recognitions", json={
+        "provider": "mathpix", "idempotency_key": "teacher-regression:0"})
+    assert official.status_code == 201, official.text
+    assert official.json()["status"] == "NEEDS_REVIEW"
+
+    queue = teacher.get("/submissions")
+    assert queue.status_code == 200
+    assert [item["submission_id"] for item in queue.json()] == [sid]
+    providers = teacher.get("/submissions/recognition-providers")
+    assert providers.status_code == 200
+    assert providers.json() == [{"provider": "mathpix", "label": "Mathpix"}]
+    assert providers.headers["cache-control"] == "no-store"
+    assert "private-test-id" not in providers.text and "private-test-key" not in providers.text
+    assert student.get("/submissions/recognition-providers").json() == providers.json()
+    monkeypatch.setattr(submissions_router, "configured_registry", RecognizerRegistry)
+    unconfigured = teacher.get("/submissions/recognition-providers")
+    assert unconfigured.status_code == 200 and unconfigured.json() == []
+    monkeypatch.setattr(submissions_router, "configured_registry", lambda: registry)
+    assert manager.get("/submissions/recognition-providers").status_code == 403
+    assert client_factory().get("/submissions/recognition-providers").status_code == 401
+    assert teacher.post("/submissions/recognition-providers", json={}).status_code == 405
+
+    detail = teacher.get(f"/submissions/{sid}")
+    assert detail.status_code == 200
+    assert detail.json()["submission"]["submission_id"] == sid
+    assert all(item["matches"] for item in detail.json()["integrity"])
+    assert teacher.get(f"/submissions/{sid}/pages/0").status_code == 200
+    summaries = teacher.get(f"/submissions/{sid}/transcriptions")
+    assert summaries.status_code == 200
+    assert summaries.json()[0]["latest_revision"]["status"] == "NEEDS_REVIEW"
+    tid = official.json()["transcription_id"]
+    history = teacher.get(f"/transcriptions/{tid}")
+    assert history.status_code == 200
+    assert history.json()["revisions"][0]["segments"][0]["latex"] == "2 + 2 = 5"
+    assert teacher.get(f"/submissions/{sid}/audits").json() == []
+
+    assert student.get(f"/transcriptions/{tid}").status_code == 403
+    assert student.post(f"/transcriptions/{tid}/accept", json={}).status_code == 403
+    assert student.post(f"/submissions/{sid}/audits", json={}).status_code == 403
+    assert manager.get(f"/submissions/{sid}").status_code == 403
+    assert manager.get(f"/submissions/{sid}/transcriptions").status_code == 403
+    assert manager.post(f"/submissions/{sid}/audits", json={}).status_code == 403
+
+    acceptance = teacher.post(f"/transcriptions/{tid}/accept", json={
+        "revision_number": 1, "reviewer_reference": "professor.demo"})
+    assert acceptance.status_code == 200, acceptance.text
+    assert teacher.get(f"/transcriptions/{tid}").json()["revisions"][0]["status"] == "ACCEPTED"
+    monkeypatch.setattr(main, "execute_audit", lambda request: result(request.problem_id))
+    audit = teacher.post(f"/submissions/{sid}/audits", json={
+        "transcription_id": tid, "revision_number": 1,
+        "acceptance_id": acceptance.json()["acceptance"]["acceptance_id"]})
+    assert audit.status_code == 200, audit.text
+    assert audit.json()["status"] == "COMPLETED"
+
+
 def test_legacy_unscoped_is_preserved_and_opt_in_teacher_read(auth_case, monkeypatch):
     _, _, client_factory, tmp_path = auth_case
     submission_store = SubmissionStore(tmp_path / "submissions")

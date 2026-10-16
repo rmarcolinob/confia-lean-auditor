@@ -124,7 +124,7 @@ def list_submissions(response: Response, user: Optional[AuthUser] = Depends(
 
 
 @router.get("/recognition-providers")
-def recognition_providers(response: Response, _user=Depends(require_role(Role.STUDENT))):
+def recognition_providers(response: Response, _user=Depends(require_any_role(Role.STUDENT, Role.TEACHER))):
     response.headers["Cache-Control"] = "no-store"
     registry = configured_registry()
     return [{"provider": name, "label": registry.create(name).display_label} for name in registry.providers()]
@@ -151,7 +151,8 @@ async def preview_recognition(request: Request, response: Response,
         preview_request = PreviewRequest.model_validate_json(bytes(raw))
         result = await run_in_threadpool(recognize_preview, preview_request, configured_registry())
     except UnknownRecognizer:
-        raise HTTPException(422, "Reconhecedor indisponível neste ambiente.") from None
+        # A missing backend provider is server configuration, not a client schema error.
+        raise HTTPException(503, "Reconhecedor indisponível neste ambiente.") from None
     except PreviewError as exc:
         code = str(exc)
         status = 422 if code in {"INVALID_SNAPSHOT", "INVALID_PROVIDER", "INVALID_PROVIDER_OUTPUT"} else 503
