@@ -1036,6 +1036,10 @@ body { background: var(--color-background); }
 .profile-navigation a:hover { background: var(--color-background); }
 .profile-navigation a[aria-current="page"] { color: var(--color-primary-strong); background: var(--color-surface-subtle); border-color: #c4d7f2; font-weight: 650; }
 .sidebar-note { margin: var(--spacing-6) 0 0; font-size: .75rem; color: var(--color-text-muted); }
+body.auth-loading .app-layout { visibility: hidden; }
+body.auth-enabled .profile-switch, body.auth-enabled .sidebar-note { display: none; }
+body.auth-enabled[data-resolution-active="true"] .profile-switch { display: none; }
+body.auth-enabled .shell-sidebar > .eyebrow { display: none; }
 .shell { width: 100%; min-width: 0; padding: 0 0 var(--spacing-6); }
 .page-heading { margin-bottom: var(--spacing-6); }
 .page-title { font-size: var(--font-page-title); line-height: 1.2; margin: var(--spacing-2) 0; letter-spacing: -.02em; }

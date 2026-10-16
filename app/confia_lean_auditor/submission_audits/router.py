@@ -1,7 +1,8 @@
 import os
 from pathlib import Path
 
-from fastapi import APIRouter, Response
+from fastapi import APIRouter, Depends, Response
+from confia_lean_auditor.auth.dependencies import teacher_audit_access, teacher_submission_access
 from confia_lean_auditor.core.public_audit import (
     public_audit_response, public_error_response, public_response,
     public_reproducibility, PublicReproducibilityMetadata, audit_exception_response,
@@ -60,24 +61,28 @@ def public_operation(operation, *args):
 
 
 @router.post("/submissions/{submission_id}/audits", response_model=dict)
-def execute(submission_id: str, request: AuditRequest, response: Response):
+def execute(submission_id: str, request: AuditRequest, response: Response,
+            _record=Depends(teacher_submission_access)):
     response.headers["Cache-Control"] = "no-store"
     return public_operation(service().execute, submission_id, request)
 
 
 @router.get("/submissions/{submission_id}/audits", response_model=list[dict])
-def list_runs(submission_id: str, response: Response):
+def list_runs(submission_id: str, response: Response,
+              _record=Depends(teacher_submission_access)):
     response.headers["Cache-Control"] = "no-store"
     return public_operation(service().list, submission_id)
 
 
 @router.get("/submission-audits/{audit_run_id}", response_model=dict)
-def get_run(audit_run_id: str, response: Response):
+def get_run(audit_run_id: str, response: Response,
+            _record=Depends(teacher_audit_access)):
     response.headers["Cache-Control"] = "no-store"
     return public_operation(service().get, audit_run_id)
 
 
 @router.get("/submission-audits/{audit_run_id}/reproducibility", response_model=PublicReproducibilityMetadata)
-def get_reproducibility(audit_run_id: str, response: Response):
+def get_reproducibility(audit_run_id: str, response: Response,
+                        _record=Depends(teacher_audit_access)):
     response.headers["Cache-Control"] = "no-store"
     return guarded(lambda: public_response(public_reproducibility(service().reproducibility(audit_run_id))))

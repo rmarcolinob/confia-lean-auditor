@@ -67,6 +67,12 @@ def test_test_provider_environment_gate(client, monkeypatch, env):
         monkeypatch.setenv("CONFIA_ENV", env)
     expected = env in {"development", "test"}
     assert configured_registry().providers() == (["fake_test"] if expected else [])
+    if env == "production":
+        # The legacy protocol fixture explicitly disables auth; production
+        # must refuse that configuration rather than expose this endpoint.
+        with pytest.raises(RuntimeError, match="authentication cannot be disabled"):
+            client.get("/submissions/recognition-providers")
+        return
     response = client.get("/submissions/recognition-providers")
     assert response.json() == ([{"provider": "fake_test", "label": "Reconhecedor de teste"}] if expected else [])
     sid = submission(client)

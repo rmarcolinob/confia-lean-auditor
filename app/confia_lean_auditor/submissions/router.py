@@ -1,13 +1,22 @@
+from __future__ import annotations
+
 import os
 from pathlib import Path
+from typing import Optional
 import zlib
 
-from fastapi import APIRouter, HTTPException, Request, Response
+from fastapi import APIRouter, Depends, HTTPException, Request, Response
 from fastapi.responses import FileResponse, JSONResponse
 from pydantic import ValidationError
 from starlette.concurrency import run_in_threadpool
 
 from confia_lean_auditor.core.paths import get_repo_root
+from confia_lean_auditor.auth.dependencies import (
+    require_any_role, require_role, visible_submissions,
+    student_submission_access, submission_access, teacher_submission_access,
+    teacher_transcription_access,
+)
+from confia_lean_auditor.auth.models import AuthUser, Role
 from confia_lean_auditor.recognition.registry import configured_registry, UnknownRecognizer
 from confia_lean_auditor.recognition.schemas import RecognitionRequest, RecognitionResponse, RecognitionRun
 from confia_lean_auditor.recognition.service import RecognitionService, RecognitionConflict
@@ -77,13 +86,14 @@ def guarded(operation, *args):
         ) from None
 
 
-def receive_body(raw):
+def receive_body(raw, owner):
     request = SubmissionRequest.model_validate_json(raw)
-    return store().receive(request)
+    return store().receive(request, owner)
 
 
 @router.post("", response_model=SubmissionReceipt)
-async def receive_submission(request: Request, response: Response):
+async def receive_submission(request: Request, response: Response,
+                             user: Optional[AuthUser] = Depends(require_role(Role.STUDENT))):
     if request.headers.get("content-type", "").split(";")[0].strip().lower() != "application/json":
         raise HTTPException(415, "Use application/json.")
     length = request.headers.get("content-length")
@@ -99,27 +109,30 @@ async def receive_submission(request: Request, response: Response):
         if len(raw) + len(chunk) > MAX_REQUEST_BYTES:
             raise HTTPException(413, "Payload acima do limite permitido.")
         raw.extend(chunk)
-    receipt, created = await run_in_threadpool(guarded, receive_body, bytes(raw))
+    receipt, created = await run_in_threadpool(guarded, receive_body, bytes(raw), user)
     response.status_code = 201 if created else 200
     response.headers["Cache-Control"] = "no-store"
     return receipt
 
 
 @router.get("", response_model=list[SubmissionRecord])
-def list_submissions(response: Response):
+def list_submissions(response: Response, user: Optional[AuthUser] = Depends(
+        require_any_role(Role.STUDENT, Role.TEACHER))):
     response.headers["Cache-Control"] = "no-store"
-    return guarded(store().list)
+    records = guarded(store().list)
+    return visible_submissions(user, records)
 
 
 @router.get("/recognition-providers")
-def recognition_providers(response: Response):
+def recognition_providers(response: Response, _user=Depends(require_role(Role.STUDENT))):
     response.headers["Cache-Control"] = "no-store"
     registry = configured_registry()
     return [{"provider": name, "label": registry.create(name).display_label} for name in registry.providers()]
 
 
 @router.post("/recognition-preview", response_model=PreviewResponse)
-async def preview_recognition(request: Request, response: Response):
+async def preview_recognition(request: Request, response: Response,
+                              _user=Depends(require_role(Role.STUDENT))):
     if request.headers.get("content-type", "").split(";")[0].strip().lower() != "application/json":
         raise HTTPException(415, "Use application/json.")
     length = request.headers.get("content-length")
@@ -155,7 +168,8 @@ def recognize_body(submission_id, raw):
 
 
 @router.post("/{submission_id}/recognitions", response_model=RecognitionResponse)
-async def recognize_submission(submission_id: str, request: Request, response: Response):
+async def recognize_submission(submission_id: str, request: Request, response: Response,
+                               _record=Depends(student_submission_access)):
     # The body limiter bounds reads. Parse within guarded so rejected extras cannot
     # echo possible secrets/manuscript in FastAPI's default validation errors.
     if request.headers.get("content-type", "").split(";")[0].strip().lower() != "application/json":
@@ -167,25 +181,28 @@ async def recognize_submission(submission_id: str, request: Request, response: R
 
 
 @router.get("/{submission_id}/recognitions", response_model=list[RecognitionRun])
-def list_recognitions(submission_id: str, response: Response):
+def list_recognitions(submission_id: str, response: Response,
+                      _record=Depends(submission_access)):
     response.headers["Cache-Control"] = "no-store"
     return guarded(RecognitionService(store(), configured_registry()).list, submission_id)
 
 
 @router.get("/{submission_id}/recognitions/{recognizer_run_id}", response_model=RecognitionRun)
-def get_recognition(submission_id: str, recognizer_run_id: str, response: Response):
+def get_recognition(submission_id: str, recognizer_run_id: str, response: Response,
+                    _record=Depends(submission_access)):
     response.headers["Cache-Control"] = "no-store"
     return guarded(RecognitionService(store(), configured_registry()).get, submission_id, recognizer_run_id)
 
 
 @router.get("/{submission_id}", response_model=SubmissionDetail)
-def get_submission(submission_id: str, response: Response):
+def get_submission(submission_id: str, response: Response,
+                   _record=Depends(submission_access)):
     response.headers["Cache-Control"] = "no-store"
     return guarded(store().detail, submission_id)
 
 
 @router.get("/{submission_id}/pages/{page_index}")
-def get_page(submission_id: str, page_index: int):
+def get_page(submission_id: str, page_index: int, _record=Depends(submission_access)):
     path, ref = guarded(store().artifact, submission_id, page_index)
     return FileResponse(
         path, media_type="image/png", filename=ref.filename,
@@ -198,7 +215,7 @@ def get_page(submission_id: str, page_index: int):
 
 
 @router.get("/{submission_id}/snapshot")
-def get_snapshot(submission_id: str):
+def get_snapshot(submission_id: str, _record=Depends(submission_access)):
     path, ref = guarded(store().artifact, submission_id)
     return FileResponse(
         path, media_type="application/json", filename=ref.filename,
@@ -207,19 +224,22 @@ def get_snapshot(submission_id: str):
 
 
 @router.post("/{submission_id}/transcriptions", response_model=TranscriptionRevision, status_code=201)
-def create_transcription(submission_id: str, request: CreateTranscriptionRequest, response: Response):
+def create_transcription(submission_id: str, request: CreateTranscriptionRequest, response: Response,
+                         _record=Depends(teacher_submission_access)):
     response.headers["Cache-Control"] = "no-store"
     return guarded(store().create_transcription, submission_id, request)
 
 
 @router.get("/{submission_id}/transcriptions", response_model=list[TranscriptionSummary])
-def list_transcriptions(submission_id: str, response: Response):
+def list_transcriptions(submission_id: str, response: Response,
+                        _record=Depends(teacher_submission_access)):
     response.headers["Cache-Control"] = "no-store"
     return guarded(store().list_transcriptions, submission_id)
 
 
 @transcriptions_router.get("/{transcription_id}", response_model=TranscriptionHistory)
-def get_transcription(transcription_id: str, response: Response):
+def get_transcription(transcription_id: str, response: Response,
+                      _record=Depends(teacher_transcription_access)):
     response.headers["Cache-Control"] = "no-store"
     return guarded(store().transcription_history, transcription_id)
 
@@ -227,6 +247,7 @@ def get_transcription(transcription_id: str, response: Response):
 @transcriptions_router.post("/{transcription_id}/revisions", response_model=TranscriptionRevision, status_code=201)
 def create_transcription_revision(
     transcription_id: str, request: CreateTranscriptionRevisionRequest, response: Response,
+    _record=Depends(teacher_transcription_access),
 ):
     response.headers["Cache-Control"] = "no-store"
     return guarded(store().create_transcription_revision, transcription_id, request)
@@ -235,6 +256,7 @@ def create_transcription_revision(
 @transcriptions_router.post("/{transcription_id}/accept", response_model=AcceptedTranscription)
 def accept_transcription(
     transcription_id: str, request: AcceptTranscriptionRequest, response: Response,
+    _record=Depends(teacher_transcription_access),
 ):
     response.headers["Cache-Control"] = "no-store"
     return guarded(store().accept_transcription, transcription_id, request)

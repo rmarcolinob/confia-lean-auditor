@@ -26,6 +26,8 @@
       <div class="header-context">
         <span class="badge">Ambiente de demonstração</span>
         <div id="service-status" class="status-pill" role="status" aria-live="polite" aria-atomic="true">Pronto</div>
+        <span id="auth-identity" hidden></span>
+        <button id="auth-logout" class="secondary-action" type="button" hidden>Sair</button>
       </div>
     </header>
 
@@ -219,7 +221,7 @@
 
         <section id="student-session-envios" class="card" aria-label="Recibos desta sessão" hidden>
           <h2>Recibos desta sessão</h2>
-          <p>Envie a versão preparada no caderno para receber confirmação. Sem autenticação, esta área reúne somente recibos confirmados nesta sessão; ainda não há histórico pessoal.</p>
+          <p>Envie a versão preparada no caderno para receber confirmação. Esta área reúne somente recibos confirmados nesta sessão; ainda não há histórico pessoal.</p>
           <div id="student-receipt-list" class="submission-list"><p>Nenhum recibo nesta sessão.</p></div>
           <a href="#student/resolve" data-shell-link>Preparar solução no caderno →</a>
           <details><summary>Acesso direto ao caderno</summary><p>O caderno é o ambiente utilizado para resolver questões. A entrada direta continua disponível para compatibilidade.</p><a href="/capture">Abrir caderno</a></details>
@@ -396,6 +398,6 @@
     <script src="/static/app.js?v=p2-cap-04"></script>
     <script src="/static/resolution-workspace.js?v=ui-06-sticky-statement"></script>
     <script src="/static/submissions/teacher.js?v=p2-cap-04-p1-final"></script>
-    <script src="/static/shell.js?v=ui-03"></script>
+    <script src="/static/shell.js?v=core-auth-01"></script>
   </body>
 </html>

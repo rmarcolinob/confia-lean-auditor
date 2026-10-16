@@ -10,6 +10,7 @@ __pycache__/
 artifacts/runs/
 runtime/submissions/
 runtime/submission_audits/
+runtime/auth/
 
 # Local environment files
 .env

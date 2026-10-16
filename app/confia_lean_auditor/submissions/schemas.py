@@ -66,6 +66,10 @@ class SubmissionRecord(SubmissionModel):
     page_images: list[ArtifactReference] = Field(min_length=1, max_length=MAX_PAGES)
     student_reference: Optional[str] = None
     student_reference_verified: Literal[False] = False
+    # Absent on records created before CORE-AUTH-01; no owner is inferred.
+    submitted_by_user_id: Optional[str] = None
+    tenant_id: Optional[str] = None
+    classroom_id: Optional[str] = None
 
 
 class SubmissionReceipt(SubmissionRecord):

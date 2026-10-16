@@ -6,8 +6,8 @@ from dataclasses import asdict
 from datetime import datetime, timezone
 from pathlib import Path
 
-from fastapi import FastAPI, HTTPException
-from fastapi.responses import FileResponse
+from fastapi import Depends, FastAPI, HTTPException, Request
+from fastapi.responses import FileResponse, HTMLResponse, JSONResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 
 from confia_lean_auditor.claims.extract_claims import extract_claims
@@ -46,6 +46,11 @@ from confia_lean_auditor.versions import API_VERSION
 from confia_lean_auditor.core.public_audit import (
     public_audit_response, audit_exception_response, install_audit_exception_handlers,
 )
+from confia_lean_auditor.auth.dependencies import (
+    auth_enabled, optional_user, require_any_role, require_role, same_origin,
+)
+from confia_lean_auditor.auth.models import Role
+from confia_lean_auditor.auth.router import cookie_secure, router as auth_router
 
 
 app = FastAPI(title="ConfIA Lean Auditor", version=API_VERSION)
@@ -53,6 +58,7 @@ install_audit_exception_handlers(app)
 app.add_middleware(TranscriptionBodyLimitMiddleware)
 STATIC_DIR = Path(__file__).resolve().parent / "static"
 app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
+app.include_router(auth_router)
 app.include_router(submissions_router)
 app.include_router(transcriptions_router)
 app.include_router(submission_audits_router)
@@ -62,13 +68,37 @@ def repo_root() -> Path:
     return get_repo_root()
 
 
+@app.middleware("http")
+async def same_origin_mutations(request: Request, call_next):
+    enabled = auth_enabled()
+    if enabled:
+        cookie_secure()  # Reject an unsafe production configuration before serving any route.
+        # Canonical HTML routes enforce the session; static assets alone carry no data.
+        if request.url.path == "/static/index.html":
+            return RedirectResponse("/", status_code=307)
+        if request.url.path == "/static/capture/tablet.html":
+            query = f"?{request.url.query}" if request.url.query else ""
+            return RedirectResponse(f"/capture{query}", status_code=307)
+    if enabled and request.method not in {"GET", "HEAD", "OPTIONS"} and not same_origin(request):
+        return JSONResponse({"detail": "Origem não autorizada."}, status_code=403,
+                            headers={"Cache-Control": "no-store"})
+    return await call_next(request)
+
+
 @app.get("/", include_in_schema=False)
-def index():
-    return FileResponse(STATIC_DIR / "index.html")
+def index(request: Request):
+    if not auth_enabled():
+        return FileResponse(STATIC_DIR / "index.html")
+    if optional_user(request) is None:
+        return FileResponse(STATIC_DIR / "login.html", headers={"Cache-Control": "no-store"})
+    html = (STATIC_DIR / "index.html").read_text(encoding="utf-8")
+    html = html.replace('<body>', '<body class="auth-enabled auth-loading">', 1)
+    html = html.replace('id="app-root" class="shell"', 'id="app-root" class="shell" data-auth-enabled="true"', 1)
+    return HTMLResponse(html, headers={"Cache-Control": "no-store"})
 
 
 @app.get("/capture", include_in_schema=False)
-def capture_notebook():
+def capture_notebook(_user=Depends(require_role(Role.STUDENT))):
     return FileResponse(STATIC_DIR / "capture" / "tablet.html")
 
 
@@ -82,12 +112,13 @@ def health():
 
 
 @app.get("/problems")
-def problems():
+def problems(_user=Depends(require_any_role(Role.STUDENT, Role.TEACHER))):
     return list_problem_catalog(repo_root())
 
 
 @app.get("/problems/{problem_id}/examples/{example_key}")
-def problem_example(problem_id: str, example_key: str):
+def problem_example(problem_id: str, example_key: str,
+                    _user=Depends(require_any_role(Role.STUDENT, Role.TEACHER))):
     try:
         return get_catalog_example(repo_root(), problem_id, example_key)
     except ProblemCatalogError as exc:
@@ -95,11 +126,17 @@ def problem_example(problem_id: str, example_key: str):
 
 
 @app.post("/audit", response_model=dict)
-def audit(req: AuditRequest):
+def audit(req: AuditRequest, _user=Depends(require_any_role(Role.STUDENT, Role.TEACHER))):
     try:
         return public_audit_response(execute_audit(req))
     except Exception as error:
         return audit_exception_response(error)
+
+
+@app.get("/management/overview")
+def management_overview(_user=Depends(require_role(Role.SCHOOL_MANAGER))):
+    return {"kind": "demonstrative_aggregate", "tenant_scope": "local_demo",
+            "note": "Dados ilustrativos; não representam alunos ou turmas reais."}
 
 
 def execute_audit(req: AuditRequest) -> AuditResponse:

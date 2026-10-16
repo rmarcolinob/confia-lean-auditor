@@ -137,7 +137,7 @@ class SubmissionStore:
         finally:
             temporary.unlink(missing_ok=True)
 
-    def receive(self, request: SubmissionRequest):
+    def receive(self, request: SubmissionRequest, owner=None):
         snapshot, raw, images = validate_request(request)
         artifact = ArtifactReference(filename="snapshot.json", media_type="application/json", sha256=sha256(raw), size_bytes=len(raw))
         page_images = [ArtifactReference(filename=f"page_{page.index + 1}.png", media_type="image/png",
@@ -146,7 +146,9 @@ class SubmissionStore:
         with self._locked(exclusive=True):
             for record in self._records():
                 if record.snapshot_id == snapshot.local_snapshot_id:
-                    if record.snapshot != artifact or record.page_images != page_images or record.student_reference != request.student_reference:
+                    if (record.snapshot != artifact or record.page_images != page_images
+                            or record.student_reference != request.student_reference
+                            or (owner is not None and record.submitted_by_user_id != owner.user_id)):
                         raise SubmissionConflict()
                     detail = self._detail(record.submission_id)
                     if not all(item.matches for item in detail.integrity):
@@ -154,7 +156,10 @@ class SubmissionStore:
                     return detail.receipt, False
             record = SubmissionRecord(submission_id=f"sub_{uuid4().hex}", problem_id=snapshot.problem_id,
                                       snapshot_id=snapshot.local_snapshot_id, received_at=datetime.now(timezone.utc),
-                                      snapshot=artifact, page_images=page_images, student_reference=request.student_reference)
+                                      snapshot=artifact, page_images=page_images, student_reference=request.student_reference,
+                                      submitted_by_user_id=owner.user_id if owner else None,
+                                      tenant_id=owner.tenant_id if owner else None,
+                                      classroom_id=owner.classroom_ids[0] if owner and owner.classroom_ids else None)
             receipt = SubmissionReceipt(**record.model_dump())
             pending = Path(tempfile.mkdtemp(prefix=".pending-", dir=self.root))
             try:
@@ -175,6 +180,10 @@ class SubmissionStore:
     def list(self):
         with self._locked():
             return sorted(self._records(), key=lambda item: item.received_at, reverse=True)
+
+    def get_record(self, submission_id):
+        with self._locked():
+            return self._read(submission_id)[0]
 
     def _detail(self, submission_id):
         record, receipt = self._read(submission_id)

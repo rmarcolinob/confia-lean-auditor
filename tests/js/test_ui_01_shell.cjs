@@ -10,7 +10,7 @@ const submissionId = "sub_" + "a".repeat(32);
 const record = { submission_id: submissionId, problem_id: "ITA2025Q1", snapshot_id: "snapshot:test",
   received_at: "2026-10-03T12:00:00Z", status: "RECEIVED", source: "tablet", capture_schema_version: "1.0",
   page_images: [{ filename: "page_1.png", page_index: 0 }] };
-async function page({ hash = "", search = "", records = [] } = {}) {
+async function page({ hash = "", search = "", records = [], authRole = null } = {}) {
   const nodes = new Map(), links = [], menus = [], tabs = [], modes = [], calls = [], events = {}, store = new Map();
   function create(tag) {
     const n = element(tag);
@@ -36,10 +36,12 @@ async function page({ hash = "", search = "", records = [] } = {}) {
   }
   const get = selector => nodes.get(selector);
   const panels = ['student-area', 'teacher-area', 'management-area'].map(id => get(`#${id}`));
-  const location = { hash, search };
+  const location = { hash, search, replace(url) { this.redirected = url; } };
+  const bodyClasses = new Set(authRole ? ['auth-enabled', 'auth-loading'] : []);
+  const body = { classList: { contains: value => bodyClasses.has(value), remove: value => bodyClasses.delete(value) } };
   const history = Object.fromEntries(['pushState', 'replaceState'].map(method => [method, (_a, _b, url) => { location.hash = url; }]));
   const window = { addEventListener: (name, handler) => { events[name] = handler; } };
-  const context = vm.createContext({ document: {
+  const context = vm.createContext({ document: { body,
     querySelector: get, createElement: create,
     querySelectorAll: selector => ({ '[data-tab-target]': tabs, '.tab-panel': panels, '[data-student-mode]': modes,
       '[data-shell-link]': links, '[data-profile-menu]': menus })[selector] || [],
@@ -49,7 +51,8 @@ async function page({ hash = "", search = "", records = [] } = {}) {
       calls.push({ url, options });
       assert.notEqual(url, '/audit', 'Shell navigation must never trigger an audit');
       let data;
-      if (url === '/problems') data = [{ problem_id: 'ITA2025Q1', title: 'Questão de teste', statement: 'Enunciado', examples: [{ key: 'correct', label: 'Exemplo' }] }];
+      if (url === '/auth/me') data = { user_id: 'usr_test', display_name: 'Pessoa Demo', role: authRole };
+      else if (url === '/problems') data = [{ problem_id: 'ITA2025Q1', title: 'Questão de teste', statement: 'Enunciado', examples: [{ key: 'correct', label: 'Exemplo' }] }];
       else if (url === '/submissions') data = records;
       else if (url === '/submissions/recognition-providers' || /\/(transcriptions|audits)$/.test(url)) data = [];
       else data = { submission: record, integrity: [{ filename: 'snapshot.json', matches: true }, { filename: 'page_1.png', matches: true }] };
@@ -63,8 +66,32 @@ async function page({ hash = "", search = "", records = [] } = {}) {
     assert(link, `missing menu link ${href}`);
     await link.emit('click', { button: 0, preventDefault() {} }); await flush();
   };
-  return { get, links, menus, tabs, modes, visit, location, window, events, calls, store };
+  return { get, links, menus, tabs, modes, visit, location, window, events, calls, store, bodyClasses };
 }
+
+test('authenticated shell locks navigation to the server role and exposes logout', async () => {
+  const student = await page({ hash: '#teacher/submissions', authRole: 'STUDENT' });
+  assert.equal(student.location.hash, '#student/home');
+  assert.equal(student.get('#auth-identity').textContent, 'Pessoa Demo / Aluno');
+  assert.equal(student.get('#auth-logout').hidden, false);
+  assert.equal(student.get('#active-profile').textContent, 'Pessoa Demo / Aluno');
+  assert.equal(student.menus.filter(menu => !menu.hidden).length, 1);
+  assert.equal(student.menus.find(menu => !menu.hidden).dataset.profileMenu, 'student');
+  student.location.hash = '#management/overview'; await student.events.hashchange();
+  assert.equal(student.location.hash, '#student/home');
+  await student.tabs[1].click();
+  assert.equal(student.get('#teacher-area').hidden, true);
+  await student.get('#auth-logout').click();
+  assert.equal(student.calls.at(-1).url, '/auth/logout');
+  assert.equal(student.location.redirected, '/');
+
+  const teacher = await page({ hash: '#teacher/submissions', authRole: 'TEACHER' });
+  assert.equal(teacher.location.hash, '#teacher/submissions');
+  assert.equal(teacher.menus.find(menu => !menu.hidden).dataset.profileMenu, 'teacher');
+  const manager = await page({ authRole: 'SCHOOL_MANAGER' });
+  assert.equal(manager.location.hash, '#management/home');
+  assert.equal(manager.menus.find(menu => !menu.hidden).dataset.profileMenu, 'management');
+});
 
 test('initial shell explicitly selects Aluno and shows only its home and menu', async () => {
   const ui = await page();

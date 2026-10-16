@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Entrar — ConfIA</title>
+    <link rel="stylesheet" href="/static/design-system.css?v=ui-01">
+    <link rel="stylesheet" href="/static/auth.css?v=core-auth-01">
+  </head>
+  <body>
+    <main class="login-layout">
+      <section class="login-card" aria-labelledby="login-title">
+        <div class="brand-mark" aria-hidden="true">C<span>IA</span></div>
+        <p class="eyebrow">ConfIA</p>
+        <h1 id="login-title">Confiabilidade e Explicabilidade em Matemática</h1>
+        <form id="login-form">
+          <label for="login">Login</label>
+          <input id="login" name="login" autocomplete="username" required maxlength="80">
+          <label for="password">Senha</label>
+          <input id="password" name="password" type="password" autocomplete="current-password" required>
+          <p id="login-error" role="alert" aria-live="polite"></p>
+          <button type="submit">Entrar</button>
+        </form>
+      </section>
+    </main>
+    <footer>Governo do Piauí · FAPEPI · SIA</footer>
+    <script src="/static/login.js?v=core-auth-01"></script>
+  </body>
+</html>
