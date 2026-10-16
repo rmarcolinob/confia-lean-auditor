@@ -15,6 +15,7 @@ DEMO_ACCOUNTS = (
     ("aluno.demo", "Aluno Demo", Role.STUDENT, ["turma.demo"]),
     ("professor.demo", "Professor Demo", Role.TEACHER, ["turma.demo"]),
     ("gestao.demo", "Gestão Demo", Role.SCHOOL_MANAGER, []),
+    ("rede.demo", "Gestão Rede Demo", Role.NETWORK_MANAGER, []),
 )
 
 

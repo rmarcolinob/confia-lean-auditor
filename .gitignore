@@ -11,6 +11,7 @@ artifacts/runs/
 runtime/submissions/
 runtime/submission_audits/
 runtime/auth/
+runtime/institutional/
 
 # Local environment files
 .env

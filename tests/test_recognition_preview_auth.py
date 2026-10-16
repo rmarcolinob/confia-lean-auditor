@@ -11,6 +11,9 @@ import pytest
 import confia_lean_auditor.main as main
 from confia_lean_auditor.auth.models import Role
 from confia_lean_auditor.auth.store import AuthStore
+from confia_lean_auditor.institutional.models import (Network, School, Classroom, TeacherAssignment,
+    Enrollment, InstitutionalData)
+from confia_lean_auditor.institutional.store import InstitutionalStore, current_academic_year
 from confia_lean_auditor.recognition.mathpix import MathpixRecognitionProvider
 from confia_lean_auditor.recognition.registry import RecognizerRegistry
 from confia_lean_auditor.submissions import router as submissions_router
@@ -44,11 +47,24 @@ def case(tmp_path, monkeypatch):
     monkeypatch.setenv("CONFIA_AUTH_DIR", str(tmp_path / "auth"))
     monkeypatch.setenv("CONFIA_SUBMISSIONS_DIR", str(tmp_path / "submissions"))
     monkeypatch.setenv("CONFIA_SUBMISSION_AUDITS_DIR", str(tmp_path / "audits"))
+    monkeypatch.setenv("CONFIA_INSTITUTIONAL_DIR", str(tmp_path / "institutional"))
     store = AuthStore(tmp_path / "auth")
-    store.create_user(login="aluno.demo", display_name="Aluno Demo", role=Role.STUDENT,
+    student = store.create_user(login="aluno.demo", display_name="Aluno Demo", role=Role.STUDENT,
                       password=PASSWORD, tenant_id="demo-pi", classroom_ids=["turma.demo"])
-    store.create_user(login="professor.demo", display_name="Professor Demo", role=Role.TEACHER,
+    teacher = store.create_user(login="professor.demo", display_name="Professor Demo", role=Role.TEACHER,
                       password=PASSWORD, tenant_id="demo-pi", classroom_ids=["turma.demo"])
+    year = current_academic_year()
+    InstitutionalStore(tmp_path / "institutional").replace(InstitutionalData(
+        networks=[Network(network_id="demo-pi", name="Rede Demo")],
+        schools=[School(school_id="ceti-centro", network_id="demo-pi", name="CETI Centro",
+                        code="centro", municipality="Teresina")],
+        classrooms=[Classroom(classroom_id="turma.demo", school_id="ceti-centro", name="Turma Demo",
+                              grade="2ª série", shift="Manhã", academic_year=year)],
+        teacher_assignments=[TeacherAssignment(teacher_user_id=teacher.user_id, school_id="ceti-centro",
+                                               classroom_id="turma.demo", academic_year=year)],
+        enrollments=[Enrollment(student_user_id=student.user_id, school_id="ceti-centro",
+                                classroom_id="turma.demo", academic_year=year)],
+    ))
 
     def client(login=None):
         session = TestClient(main.app, headers={"Origin": ORIGIN})

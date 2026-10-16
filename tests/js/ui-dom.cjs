@@ -4,6 +4,8 @@ function element(tag) {
   const value = {
     tag, children: [], hidden: false, disabled: false, value: "", attributes: {}, listeners: {}, dataset: {},
     classList: { toggle() {} },
+    style: { setProperty(key, value) { this[key] = value; }, getPropertyValue(key) { return this[key] || ""; } },
+    getBoundingClientRect() { return { height: this.mockHeight || 0 }; },
     get textContent() { return text + this.children.map(child => child.textContent).join(""); },
     set textContent(content) { text = String(content); this.children = []; },
     get childNodes() { return this.children; },

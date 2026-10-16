@@ -51,6 +51,8 @@ from confia_lean_auditor.auth.dependencies import (
 )
 from confia_lean_auditor.auth.models import Role
 from confia_lean_auditor.auth.router import cookie_secure, router as auth_router
+from confia_lean_auditor.institutional.router import router as institutional_router
+from confia_lean_auditor.management.router import router as management_router
 
 
 app = FastAPI(title="ConfIA Lean Auditor", version=API_VERSION)
@@ -62,6 +64,8 @@ app.include_router(auth_router)
 app.include_router(submissions_router)
 app.include_router(transcriptions_router)
 app.include_router(submission_audits_router)
+app.include_router(institutional_router)
+app.include_router(management_router)
 
 
 def repo_root() -> Path:
@@ -131,12 +135,6 @@ def audit(req: AuditRequest, _user=Depends(require_any_role(Role.STUDENT, Role.T
         return public_audit_response(execute_audit(req))
     except Exception as error:
         return audit_exception_response(error)
-
-
-@app.get("/management/overview")
-def management_overview(_user=Depends(require_role(Role.SCHOOL_MANAGER))):
-    return {"kind": "demonstrative_aggregate", "tenant_scope": "local_demo",
-            "note": "Dados ilustrativos; não representam alunos ou turmas reais."}
 
 
 def execute_audit(req: AuditRequest) -> AuditResponse:

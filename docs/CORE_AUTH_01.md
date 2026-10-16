@@ -1,5 +1,7 @@
 # CORE-AUTH-01 — autenticação local do ConfIA
 
+> Atualização CORE-INST-01: a autorização de professor agora exige `TeacherAssignment` ativo na turma da Submission; gestores escolares consultam agregados da própria escola e gestores de rede consultam agregados da rede. Novas Submissions recebem escola e turma da matrícula no servidor. Para o modelo vigente, seed e endpoints, veja [CORE_INST_01.md](CORE_INST_01.md). A matriz e a seção de limitações abaixo registram o marco original de CORE-AUTH-01.
+
 CORE-AUTH-01 oferece autenticação e RBAC local para MVP e demonstração. Ainda não é uma implantação institucional exposta à internet.
 
 ## Iniciar a demo

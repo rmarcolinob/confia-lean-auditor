@@ -1163,6 +1163,32 @@ body[data-resolution-active="true"] #notebook-problem-context {
   z-index: var(--z-sticky);
   box-shadow: var(--shadow-card);
 }
+.workspace-ink-toolbar {
+  position: sticky;
+  top: var(--statement-sticky-height, 0px);
+  z-index: var(--z-sticky);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px;
+  padding: 5px 8px;
+  margin-bottom: 4px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-control);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-card);
+}
+.workspace-ink-toolbar[hidden] { display: none; }
+.workspace-ink-toolbar button { min-height: 36px; padding: 5px 8px; font-size: .82rem; }
+.workspace-ink-toolbar button[aria-pressed="true"] { background: var(--color-primary); color: white; }
+#workspace-page-indicator { padding: 0 4px; font-size: .82rem; white-space: nowrap; }
+.institutional-context { margin-bottom: var(--spacing-4); }
+.institutional-context .notebook-action-row { margin-bottom: 0; }
+.institutional-context label { flex: 1 1 180px; }
+.institutional-context select { width: 100%; }
+.management-table { width: 100%; border-collapse: collapse; margin-top: var(--spacing-4); }
+.management-table th, .management-table td { padding: var(--spacing-2); text-align: left; border-bottom: 1px solid var(--color-border); }
+#management-table { overflow-x: auto; }
 @media (max-width: 620px) {
   .notebook-problem-heading { flex-wrap: wrap; }
 }
@@ -1173,3 +1199,13 @@ body[data-handwriting-focus="true"] .page-heading { display: none; }
 body[data-handwriting-focus="true"] .institutional-header { min-height: 56px; padding-block: var(--spacing-2); }
 body[data-handwriting-focus="true"] .resolution-heading { margin-bottom: var(--spacing-2); }
 body[data-handwriting-focus="true"] .resolution-heading .eyebrow { display: none; }
+
+/* Student areas share the notebook; only the entry and actions differ. */
+.student-primary-actions { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.student-primary-actions .card { border-top: 3px solid var(--color-primary); }
+.student-primary-actions .button { justify-content: center; text-align: center; }
+.student-enrollment { font-weight: 600; color: var(--color-primary-strong) !important; }
+#student-exams { padding: var(--spacing-6); }
+#student-exam-list { display: grid; gap: var(--spacing-3); }
+#student-exam-list button { margin-top: var(--spacing-2); }
+@media (max-width: 700px) { .student-primary-actions { grid-template-columns: minmax(0, 1fr); } }

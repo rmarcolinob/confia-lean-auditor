@@ -69,8 +69,11 @@ def authorize_submission_record(user: AuthUser | None, record, *, student_write=
         if record.submitted_by_user_id != user.user_id:
             raise HTTPException(403, "Acesso não autorizado.")
     elif user.role == Role.TEACHER and not student_write:
-        if not ((record.tenant_id is not None and record.tenant_id == user.tenant_id)
-                or (record.tenant_id is None and allow_legacy_teacher_read())):
+        from confia_lean_auditor.institutional.store import institutional_store
+        legacy = (not all((record.network_id, record.school_id, record.classroom_id))
+                  and allow_legacy_teacher_read()
+                  and (record.tenant_id is None or record.tenant_id == user.tenant_id))
+        if not (institutional_store().teacher_can_view(user, record) or legacy):
             raise HTTPException(403, "Acesso não autorizado.")
     else:
         raise HTTPException(403, "Acesso não autorizado.")
@@ -83,9 +86,12 @@ def visible_submissions(user: Optional[AuthUser], records):
     if user.role == Role.STUDENT:
         return [record for record in records if record.submitted_by_user_id == user.user_id]
     if user.role == Role.TEACHER:
-        return [record for record in records if
-                (record.tenant_id is not None and record.tenant_id == user.tenant_id)
-                or (record.tenant_id is None and allow_legacy_teacher_read())]
+        from confia_lean_auditor.institutional.store import institutional_store
+        institutions = institutional_store()
+        return [record for record in records if institutions.teacher_can_view(user, record)
+                or (not all((record.network_id, record.school_id, record.classroom_id))
+                    and allow_legacy_teacher_read()
+                    and (record.tenant_id is None or record.tenant_id == user.tenant_id))]
     raise HTTPException(403, "Acesso não autorizado.")
 
 

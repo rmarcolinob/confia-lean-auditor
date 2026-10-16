@@ -69,6 +69,8 @@ class SubmissionRecord(SubmissionModel):
     # Absent on records created before CORE-AUTH-01; no owner is inferred.
     submitted_by_user_id: Optional[str] = None
     tenant_id: Optional[str] = None
+    network_id: Optional[str] = None
+    school_id: Optional[str] = None
     classroom_id: Optional[str] = None
 
 

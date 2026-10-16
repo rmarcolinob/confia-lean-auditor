@@ -415,6 +415,7 @@ body[data-embedded="true"] .draft-persistence-bar,
 body[data-embedded="true"] #continue-draft,
 body[data-embedded="true"] #technical-details,
 body[data-embedded="true"] .export-card { display: none; }
+body[data-embedded="true"] .notebook-controls { display: none; }
 /* Compact only the embedded chrome; never stretch or crop the ink page. */
 body[data-embedded="true"] .notebook-controls { padding: 6px; margin-bottom: 8px; }
 body[data-embedded="true"] .toolbar { margin-bottom: 6px; }

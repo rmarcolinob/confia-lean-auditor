@@ -43,8 +43,9 @@ async function page(transport = async () => ({ ok: true, json: async () => ({ pr
     ConfiaProblemMath: options.mathRenderer,
     fetch: async (url, request) => {
       calls.push({url,options:request});
-      if (url === '/problems') return { ok:true, json:async () => options.catalog || catalog };
+      if (url === '/problems') return options.catalogResponse || { ok:true, json:async () => options.catalog || catalog };
       if (url.endsWith('registry.json')) return { ok:true, json:async () => options.registry || [] };
+      if (url === '/institutional/me/exams') return { ok:true, json:async () => options.exams || [] };
       return transport(url,request);
     },
   });

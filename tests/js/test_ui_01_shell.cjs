@@ -11,7 +11,10 @@ const submissionId = "sub_" + "a".repeat(32);
 const record = { submission_id: submissionId, problem_id: "ITA2025Q1", snapshot_id: "snapshot:test",
   received_at: "2026-10-03T12:00:00Z", status: "RECEIVED", source: "tablet", capture_schema_version: "1.0",
   page_images: [{ filename: "page_1.png", page_index: 0 }] };
-async function page({ hash = "", search = "", records = [], authRole = null, teacherReview = false } = {}) {
+async function page({ hash = "", search = "", records = [], authRole = null, teacherReview = false,
+  contextSchools = [{ school_id: 'school-a', name: 'Escola A' }],
+  classroomsBySchool = { 'school-a': [{ classroom_id: 'class-a', school_id: 'school-a', name: 'Turma A' }] },
+  recordsByClass = null } = {}) {
   const nodes = new Map(), links = [], menus = [], tabs = [], modes = [], calls = [], events = {}, store = new Map();
   let accepted = false;
   const acceptance = { submission_id: submissionId, transcription_id: summary.transcription.transcription_id,
@@ -63,12 +66,18 @@ async function page({ hash = "", search = "", records = [], authRole = null, tea
       assert.notEqual(url, '/audit', 'Shell navigation must never trigger an audit');
       let data;
       if (url === '/auth/me') data = { user_id: 'usr_test', display_name: 'Pessoa Demo', role: authRole };
+      else if (url === '/institutional/me/context') data = { academic_year: 2026,
+        schools: contextSchools, classrooms: Object.values(classroomsBySchool).flat() };
+      else if (url.startsWith('/institutional/schools/') && url.endsWith('/classrooms'))
+        data = classroomsBySchool[url.split('/')[3]] || [];
+      else if (url === '/institutional/classrooms/class-a/students') data = [{ user_id: 'usr_student', display_name: 'Aluno da turma A' }];
       else if (teacherReview && url.endsWith('/accept') && options?.method === 'POST') {
         accepted = true;
         data = { revision: { ...revision, status: 'ACCEPTED' }, acceptance };
       }
       else if (url === '/problems') data = [{ problem_id: 'ITA2025Q1', title: 'Questão de teste', statement: 'Enunciado', examples: [{ key: 'correct', label: 'Exemplo' }] }];
-      else if (url === '/submissions') data = records;
+      else if (url === '/submissions' || url.startsWith('/submissions?'))
+        data = recordsByClass ? (recordsByClass[new URLSearchParams(url.split('?')[1] || '').get('classroom_id')] || []) : records;
       else if (teacherReview && url.endsWith('/transcriptions')) data = [{ ...summary,
         latest_revision: { ...revision, status: accepted ? 'ACCEPTED' : 'NEEDS_REVIEW' } }];
       else if (teacherReview && url.startsWith('/transcriptions/')) data = { ...transcriptionHistory,
@@ -93,6 +102,8 @@ test('authenticated shell locks navigation to the server role and exposes logout
   const student = await page({ hash: '#teacher/submissions', authRole: 'STUDENT' });
   assert.equal(student.location.hash, '#student/home');
   assert.equal(student.get('#auth-identity').textContent, 'Pessoa Demo / Aluno');
+  assert.equal(student.get('#student-home-name').textContent, 'Pessoa Demo');
+  assert.equal(student.get('#student-institutional-context').textContent, 'Escola: Escola A · Turma: Turma A');
   assert.equal(student.get('#auth-logout').hidden, false);
   assert.equal(student.get('#active-profile').textContent, 'Pessoa Demo / Aluno');
   assert.deepEqual(student.menus.filter(menu => menu.isConnected).map(menu => menu.dataset.profileMenu), ['student']);
@@ -103,6 +114,8 @@ test('authenticated shell locks navigation to the server role and exposes logout
   assert.equal(student.get('#demo-profile-label').isConnected, false);
   assert.equal(student.get('.sidebar-note').isConnected, false);
   assert(student.calls.some(call => call.url === '/auth/me'));
+  student.location.hash = '#student/resolve'; await student.events.hashchange();
+  assert.equal(student.location.hash, '#student/tutoria');
   student.location.hash = '#management/overview'; await student.events.hashchange();
   assert.equal(student.location.hash, '#student/home');
   assert.equal(student.window.ConfIAShell.navigate('teacher', 'submissions'), true);
@@ -122,7 +135,7 @@ test('authenticated shell locks navigation to the server role and exposes logout
   teacher.location.hash = '#student/resolve'; await teacher.events.hashchange();
   assert.equal(teacher.location.hash, '#teacher/home');
   const manager = await page({ authRole: 'SCHOOL_MANAGER' });
-  assert.equal(manager.location.hash, '#management/home');
+  assert.equal(manager.location.hash, '#management/overview');
   assert.deepEqual(manager.menus.filter(menu => menu.isConnected).map(menu => menu.dataset.profileMenu), ['management']);
   assert(manager.links.some(link => link.isConnected && /^#management\//.test(link.getAttribute('href'))));
   assert(manager.links.filter(link => link.isConnected).every(link => !/^#(student|teacher)\//.test(link.getAttribute('href'))));
@@ -130,6 +143,10 @@ test('authenticated shell locks navigation to the server role and exposes logout
   assert(manager.tabs.every(tab => !tab.isConnected));
   manager.location.hash = '#teacher/analysis'; await manager.events.hashchange();
   assert.equal(manager.location.hash, '#management/home');
+  const network = await page({ authRole: 'NETWORK_MANAGER' });
+  assert.equal(network.location.hash, '#management/overview');
+  assert.deepEqual(network.menus.filter(menu => menu.isConnected).map(menu => menu.dataset.profileMenu), ['management']);
+  assert(network.links.filter(link => link.isConnected).every(link => !/^#(student|teacher)\//.test(link.getAttribute('href'))));
 });
 
 test('authenticated teacher opens the original and recognized transcription, then enables analysis after acceptance', async () => {
@@ -149,6 +166,41 @@ test('authenticated teacher opens the original and recognized transcription, the
   assert(tree.some(node => node.className === 'transcription-history'));
 });
 
+test('teacher changes school and classroom without leaving the previous queue or detail visible', async () => {
+  const other = { ...record, submission_id: 'sub_' + 'b'.repeat(32) };
+  const ui = await page({ hash: '#teacher/submissions', authRole: 'TEACHER',
+    contextSchools: [{ school_id: 'school-a', name: 'Escola A' }, { school_id: 'school-b', name: 'Escola B' }],
+    classroomsBySchool: {
+      'school-a': [{ classroom_id: 'class-a', school_id: 'school-a', name: 'Turma A' }],
+      'school-b': [{ classroom_id: 'class-b', school_id: 'school-b', name: 'Turma B' }],
+    }, recordsByClass: { 'class-a': [record], 'class-b': [other] } });
+  assert.equal(ui.get('#teacher-school-select').value, '');
+  ui.get('#teacher-school-select').value = 'school-a';
+  await ui.get('#teacher-school-select').emit('change'); await flush();
+  assert.equal(ui.get('#teacher-classroom-select').value, 'class-a');
+  assert.equal(ui.get('#manuscript-list').children.length, 1);
+  ui.get('#teacher-school-select').value = 'school-b';
+  const changing = ui.get('#teacher-school-select').emit('change');
+  assert.equal(ui.get('#manuscript-list').children.length, 0);
+  assert.equal(ui.get('#manuscript-detail').hidden, true);
+  await changing; await flush();
+  assert.equal(ui.get('#teacher-classroom-select').value, 'class-b');
+  assert.equal(ui.get('#manuscript-list').children.length, 1);
+  assert(ui.calls.some(call => call.url === '/submissions?school_id=school-b&classroom_id=class-b'));
+});
+
+test('teacher Alunos view lists only the selected classroom and hides manuscript detail', async () => {
+  const ui = await page({ hash: '#teacher/submissions', authRole: 'TEACHER', records: [record] });
+  await ui.get('#manuscript-list').children[0].click();
+  await ui.visit('#teacher/students'); await flush();
+  assert.equal(ui.get('#teacher-students-panel').hidden, false);
+  assert.equal(ui.get('#manuscript-detail').hidden, true);
+  assert.equal(ui.get('#manuscript-queue').hidden, true);
+  assert.equal(ui.get('#teacher-queue-header').hidden, true);
+  assert.match(ui.get('#teacher-students-panel').textContent, /Aluno da turma A/);
+  assert(ui.calls.some(call => call.url === '/institutional/classrooms/class-a/students'));
+});
+
 test('initial shell explicitly selects Aluno and shows only its home and menu', async () => {
   const ui = await page();
   assert.equal(ui.location.hash, '#student/home');
@@ -162,7 +214,7 @@ test('initial shell explicitly selects Aluno and shows only its home and menu', 
 
 test('every existing destination stays reachable, and profile/current-page semantics follow navigation', async () => {
   const ui = await page();
-  const routes = ['#student/resolve', '#student/feedback', '#student/submissions', '#teacher/home', '#teacher/submissions',
+  const routes = ['#student/tutoria', '#student/exams', '#student/submissions', '#teacher/home', '#teacher/submissions',
     '#teacher/transcriptions', '#teacher/analysis', '#management/home', '#management/overview'];
   for (const route of routes) {
     await ui.visit(route);
@@ -173,7 +225,7 @@ test('every existing destination stays reachable, and profile/current-page seman
     assert.equal(ui.get('#page-title').focused, true);
   }
   assert.equal(ui.get('#management-overview').hidden, false);
-  assert.match(ui.get('#page-description').textContent, /Dados ilustrativos.*não são indicadores reais/);
+  assert.match(ui.get('#page-description').textContent, /Dados agregados/);
 });
 
 test('teacher routes converge on the same solution and keep the local text demonstration separate', async () => {
@@ -221,7 +273,7 @@ test('Envios exposes session receipts and no legacy local submission editor', as
   assert.equal(ui.get('#student-workspace').hidden, true);
   assert.equal(ui.modes.length, 0);
   assert.equal(ui.calls.some(call => call.options?.method === 'POST'), false);
-  await ui.visit('#student/feedback');
+  ui.window.ConfIAShell.navigate('student', 'feedback');
   assert.equal(ui.get('#student-feedback').hidden, false);
   assert.equal(ui.get('#student-workspace').hidden, true);
 });

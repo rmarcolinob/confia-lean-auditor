@@ -18,6 +18,10 @@
   let detailSequence = 0;
   let segmentSequence = 0;
   let activeEditor = null;
+  let selectedSchool = "";
+  let selectedClassroom = "";
+  let institutionalMode = false;
+  let contextSequence = 0;
   const labels = { RECEIVED: "Recebida pelo ConfIA", DRAFT: "Rascunho da transcrição", NEEDS_REVIEW: "Aguardando conferência", ACCEPTED: "Transcrição conferida" };
   const statusLabel = (status) => labels[status] || "Estado indisponível";
   const validId = (id) => typeof id === "string" && /^sub_[0-9a-f]{32}$/.test(id);
@@ -847,7 +851,8 @@
     refreshButton.setAttribute("aria-busy", "true");
     message.textContent = "Carregando soluções recebidas…";
     try {
-      const records = await request("/submissions");
+      const scope = institutionalMode ? `?school_id=${encodeURIComponent(selectedSchool)}&classroom_id=${encodeURIComponent(selectedClassroom)}` : "";
+      const records = institutionalMode && !selectedClassroom ? [] : await request(`/submissions${scope}`);
       if (sequence !== listSequence) return;
       if (!Array.isArray(records)) throw new Error("Lista de submissões inválida.");
       const valid = records.filter(record => validId(record.submission_id));
@@ -888,14 +893,94 @@
     return true;
   }
   function showView(view) {
-    if (!mode(true)) return false;
+    if (view === "students") {
+      if (!canLeaveEditor()) return false;
+      ++listSequence; ++detailSequence;
+      queueLoaded = false; activeEditor = null;
+      detail.hidden = true; detail.replaceChildren();
+      inbox.hidden = false; legacy.hidden = true;
+      showInk.setAttribute("aria-pressed", "true");
+      showText.setAttribute("aria-pressed", "false");
+    } else if (!mode(true)) return false;
+    document.querySelector("#teacher-students-panel").hidden = view !== "students";
+    document.querySelector("#teacher-queue-header").hidden = view === "students";
+    queuePanel.hidden = view === "students";
+    if (view === "students") {
+      showStudents();
+      return true;
+    }
     filter.value = view === "transcriptions" ? "pending" : "all";
     queueTitle.textContent = view === "transcriptions" ? "Transcrições para conferir" : view === "analysis" ? "Soluções e Análise ConfIA" : "Soluções recebidas";
     queueNote.textContent = view === "analysis" ? "Abra uma solução para consultar suas etapas. A análise matemática dos manuscritos ainda não está integrada." : "Confira a leitura com o manuscrito original. A conferência da transcrição preserva o que o aluno escreveu.";
     renderQueue();
     return true;
   }
-  window.ConfIATeacher = { canLeave: canLeaveEditor, showView, showManuscripts: () => mode(true), showText: () => mode(false) };
+  async function showStudents() {
+    const panel = document.querySelector("#teacher-students-panel");
+    panel.replaceChildren(node("h2", "Alunos da turma"));
+    if (!selectedClassroom) { panel.appendChild(node("p", "Selecione uma turma.")); return; }
+    const sequence = ++contextSequence;
+    try {
+      const students = await request(`/institutional/classrooms/${encodeURIComponent(selectedClassroom)}/students`);
+      if (sequence !== contextSequence) return;
+      if (!students.length) panel.appendChild(node("p", "Nenhum aluno matriculado nesta turma."));
+      for (const student of students) panel.appendChild(node("p", student.display_name));
+    } catch (error) { if (sequence === contextSequence) panel.appendChild(node("p", "Não foi possível carregar os alunos.")); }
+  }
+  function clearInstitutionalQueue() {
+    ++listSequence; ++detailSequence; ++contextSequence;
+    queue = []; queueLoaded = false; activeEditor = null;
+    list.replaceChildren(); detail.replaceChildren(); detail.hidden = true;
+    message.textContent = selectedClassroom ? "Carregando turma…" : "Selecione uma turma.";
+    if (!document.querySelector("#teacher-students-panel").hidden) showStudents();
+    else if (!inbox.hidden && selectedClassroom) refresh();
+  }
+  async function initInstitutional(user) {
+    if (!user || user.role !== "TEACHER") return;
+    institutionalMode = true;
+    const box = document.querySelector("#teacher-institutional-context");
+    const schoolSelect = document.querySelector("#teacher-school-select");
+    const classroomSelect = document.querySelector("#teacher-classroom-select");
+    const status = document.querySelector("#teacher-context-message");
+    box.hidden = false;
+    document.querySelector("#teacher-context-name").textContent = /^professor(a)?\b/i.test(user.display_name)
+      ? user.display_name : `Professor ${user.display_name}`;
+    function fill(select, items, key, label, placeholder) {
+      select.replaceChildren(option("", placeholder));
+      for (const item of items) select.appendChild(option(item[key], item[label]));
+    }
+    async function loadClasses() {
+      if (!canLeaveEditor()) { schoolSelect.value = selectedSchool; return; }
+      selectedSchool = schoolSelect.value;
+      selectedClassroom = "";
+      fill(classroomSelect, [], "classroom_id", "name", "Selecione a turma");
+      clearInstitutionalQueue();
+      if (!selectedSchool) return;
+      const sequence = ++contextSequence;
+      try {
+        const classes = await request(`/institutional/schools/${encodeURIComponent(selectedSchool)}/classrooms`);
+        if (sequence !== contextSequence) return;
+        fill(classroomSelect, classes, "classroom_id", "name", "Selecione a turma");
+        if (classes.length === 1) classroomSelect.value = classes[0].classroom_id;
+        selectedClassroom = classroomSelect.value;
+        clearInstitutionalQueue();
+      } catch (_error) { if (sequence === contextSequence) status.textContent = "Não foi possível carregar as turmas."; }
+    }
+    schoolSelect.addEventListener("change", loadClasses);
+    classroomSelect.addEventListener("change", () => {
+      if (!canLeaveEditor()) { classroomSelect.value = selectedClassroom; return; }
+      selectedClassroom = classroomSelect.value;
+      clearInstitutionalQueue();
+    });
+    try {
+      const context = await request("/institutional/me/context");
+      document.querySelector("#teacher-academic-year").textContent = `Ano ${context.academic_year}`;
+      fill(schoolSelect, context.schools, "school_id", "name", "Selecione a escola");
+      if (context.schools.length === 1) schoolSelect.value = context.schools[0].school_id;
+      await loadClasses();
+    } catch (_error) { status.textContent = "Não foi possível carregar o contexto institucional."; }
+  }
+  window.ConfIATeacher = { canLeave: canLeaveEditor, showView, initInstitutional, showManuscripts: () => mode(true), showText: () => mode(false) };
   filter.addEventListener("change", renderQueue);
   showInk.addEventListener("click", () => mode(true));
   showText.addEventListener("click", () => mode(false));

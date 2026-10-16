@@ -327,6 +327,37 @@ test('workspace renders capture status and routes actions through the existing n
   assert.equal(ui.get('#workspace-send-solution').disabled,true);
 });
 
+test('parent sticky ink toolbar follows statement height and delegates every ink command', async () => {
+  const ui = await page(); await ui.start('submission');
+  const statement = ui.get('#notebook-problem-context');
+  statement.mockHeight = 96;
+  await ui.get('#toggle-notebook-problem').click();
+  assert.equal(ui.get('#notebook-surface').style.getPropertyValue('--statement-sticky-height'), '96px');
+  statement.mockHeight = 44;
+  await ui.get('#toggle-notebook-problem').click();
+  assert.equal(ui.get('#notebook-surface').style.getPropertyValue('--statement-sticky-height'), '44px');
+  ui.notebook({ controls: { document_id: 'draft:A', frozen: false, input_mode: 'pen', active_tool: 'draw',
+    can_undo: true, can_redo: true, can_previous_page: true, can_next_page: true, can_add_page: true,
+    page_index: 1, page_count: 3, saved_documents: [] } });
+  assert.equal(ui.get('#workspace-ink-toolbar').hidden, false);
+  assert.equal(ui.get('#workspace-pen-mode').getAttribute('aria-pressed'), 'true');
+  assert.equal(ui.get('#workspace-page-indicator').textContent, 'Página 2 de 3');
+  for (const action of ['pen-mode', 'mouse-mode', 'draw-tool', 'erase-tool', 'undo', 'redo',
+    'previous-page', 'next-page', 'add-page']) {
+    await ui.get(`#workspace-${action}`).click();
+    assert.equal(ui.commands.at(-1).message.action, action);
+    assert.equal(ui.commands.at(-1).message.document_id, 'draft:A');
+  }
+  ui.notebook({ controls: { document_id: 'snapshot:A', frozen: true, page_index: 0, page_count: 1 } });
+  assert.equal(ui.get('#workspace-draw-tool').disabled, true);
+  assert.equal(ui.get('#workspace-add-page').disabled, true);
+  const styles = fs.readFileSync(path.join(__dirname, '../../app/confia_lean_auditor/static/styles.css'), 'utf8');
+  assert.match(styles, /#notebook-problem-context\s*\{\s*position: sticky/);
+  assert.match(styles, /\.workspace-ink-toolbar\s*\{\s*position: sticky;\s*top: var\(--statement-sticky-height/);
+  const embedded = fs.readFileSync(path.join(__dirname, '../../app/confia_lean_auditor/static/capture/tablet.css'), 'utf8');
+  assert.match(embedded, /body\[data-embedded="true"\] \.notebook-controls \{ display: none; \}/);
+});
+
 test('parent sticky updates with the selected problem and its disclosure preserves notebook/text', async () => {
   const ui=await page(); await ui.select('B'); await ui.start();
   const source=ui.frame.src, draft=ui.window.ConfIAWorkspace.analysisContext().draft_id;

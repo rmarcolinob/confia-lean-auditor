@@ -5,8 +5,17 @@
   const frame = get("resolution-notebook");
   const entries = new Map();
   const receipts = new Map();
+  const StudentFlow = Object.freeze({ TUTOR: "TUTOR", EXAM: "EXAM" });
+  const captureModes = { [StudentFlow.TUTOR]: "practice", [StudentFlow.EXAM]: "submission" };
   let active = false;
   let mode = null;
+  let experience = null;
+  let selectedExam = null;
+  let availableExams = [];
+  let examsLoaded = false;
+  let examsRequest = 0;
+  let submissionsPending = false;
+  let serverSubmissions = null;
   let response = "notebook";
   let notebook = null;
   let currentKey = null;
@@ -45,9 +54,30 @@
   }
   function renderNotebookControls() {
     const controls = ready ? notebook?.controls : null;
+    const ink = get("workspace-ink-toolbar");
+    ink.hidden = !controls || get("notebook-surface").hidden;
+    for (const [action, enabled] of Object.entries({
+      "pen-mode": !controls?.frozen, "mouse-mode": !controls?.frozen,
+      "draw-tool": !controls?.frozen, "erase-tool": !controls?.frozen,
+      undo: controls?.can_undo, redo: controls?.can_redo,
+      "previous-page": controls?.can_previous_page, "next-page": controls?.can_next_page,
+      "add-page": controls?.can_add_page,
+    })) get(`workspace-${action}`).disabled = !enabled;
+    for (const [action, selected] of Object.entries({
+      "pen-mode": controls?.input_mode === "pen", "mouse-mode": controls?.input_mode === "mouse",
+      "draw-tool": controls?.active_tool === "draw", "erase-tool": controls?.active_tool === "erase",
+    })) get(`workspace-${action}`).setAttribute("aria-pressed", String(selected));
+    setCopy("workspace-page-indicator", controls ? `Página ${controls.page_index + 1} de ${controls.page_count}` : "Página —");
     const submission = mode === "submission";
     get("workspace-submission-actions").hidden = !submission;
     get("workspace-recognition-actions").hidden = !submission;
+    get("workspace-tutor-actions").hidden = mode !== "practice" || get("notebook-surface").hidden;
+    get("workspace-tutor-preview").disabled = mode !== "practice" || !controls?.can_tutor_preview;
+    get("workspace-tutor-feedback").disabled = mode !== "practice" || !controls?.tutor_preview_segments?.length || studentAuditPending;
+    get("workspace-tutor-new-attempt").disabled = mode !== "practice" || !controls;
+    setCopy("workspace-tutor-message", controls?.tutor_preview_message || "Escreva no caderno e reconheça sua solução para pedir feedback.");
+    get("workspace-tutor-message").dataset.kind = controls?.tutor_preview_kind || "info";
+    globalThis.ConfiaRecognitionView?.render(get("workspace-tutor-result"), controls?.tutor_preview_segments || []);
     setCopy("workspace-draft-persistence", controls?.persistence || "Abrindo o caderno…");
     get("workspace-draft-persistence").dataset.state = controls?.persistence_kind || "idle";
     setCopy("workspace-capture-status", controls?.status || "");
@@ -99,11 +129,19 @@
     get("notebook-problem-body").hidden = !expanded;
     get("toggle-notebook-problem").setAttribute("aria-expanded", String(expanded));
     setCopy("toggle-notebook-problem", expanded ? "Recolher enunciado" : "Expandir enunciado");
+    updateToolbarOffset();
   }
+  function updateToolbarOffset() {
+    const statement = get("notebook-problem-context");
+    const top = statement.hidden ? 0 : Math.ceil(statement.getBoundingClientRect().height);
+    get("notebook-surface").style.setProperty("--statement-sticky-height", `${top}px`);
+  }
+  if (typeof ResizeObserver !== "undefined") new ResizeObserver(updateToolbarOffset).observe(get("notebook-problem-context"));
   function display() {
     get("question-picker").hidden = active;
     get("resolution-workspace").hidden = !active;
     get("response-switch").hidden = mode !== "practice";
+    get("resolution-mode-switch").hidden = Boolean(experience);
     get("notebook-surface").hidden = !active || !mode || (mode === "practice" && response === "typed");
     get("practice-response").hidden = !active || mode !== "practice";
     get("typed-problem-context").hidden = !active || mode !== "practice" || response !== "typed";
@@ -111,10 +149,11 @@
     get("handwriting-analysis-note").hidden = response === "typed";
     setCopy("prepare-analysis-label", response === "typed" ? "Solução digitada" : "Preparar análise");
     get("prepare-analysis-note").hidden = response === "typed";
-    setCopy("resolution-title", mode === "practice" ? "Prática com feedback" : mode === "submission" ? "Solução para envio" : "Como você quer trabalhar esta questão?");
+    setCopy("resolution-title", mode === "practice" ? experience ? "TutorIA · prática com feedback" : "Prática com feedback"
+      : mode === "submission" ? experience ? "Exames · solução para envio" : "Solução para envio" : "Como você quer trabalhar esta questão?");
     setCopy("workspace-status", !mode ? "Escolha a finalidade da resolução." : !ready
       ? "Abrindo o caderno da questão selecionada…"
-      : mode === "practice" ? "Resolva no caderno e use sua versão digitada para a Análise ConfIA." : "Prepare uma versão congelada e envie para receber o recibo do ConfIA.");
+      : mode === "practice" ? "Resolva no caderno, reconheça a escrita e peça feedback." : "Prepare uma versão congelada e envie para receber o recibo do ConfIA.");
     for (const value of ["practice", "submission"]) {
       const button = get(`${value}-mode`);
       button.setAttribute("aria-pressed", String(mode === value));
@@ -129,16 +168,19 @@
     auditButton.disabled = !ready || mode !== "practice" || studentAuditPending || !selectedProblem();
     get("reanalyze-solution").disabled = auditButton.disabled;
     // Compact navigation reserves the full width for the validated notebook.
-    const resolving = active && !get("student-area").hidden && get("student-area").dataset.view === "resolve";
+    const resolving = active && !get("student-area").hidden && ["resolve", "tutoria", "exams"].includes(get("student-area").dataset.view);
     document.body.dataset.resolutionActive = String(resolving);
     // Practice keeps the focused chrome; both notebook modes present the question above the iframe.
     const handwriting = resolving && mode === "practice" && response === "notebook";
     document.body.dataset.handwritingFocus = String(handwriting);
     get("notebook-problem-context").hidden = !resolving || !mode || (mode === "practice" && response === "typed");
+    updateToolbarOffset();
     renderNotebookControls();
   }
   function chooseMode(value) {
     if (!["practice", "submission"].includes(value)) return;
+    if (experience && value !== captureModes[experience]) return;
+    if (experience === StudentFlow.EXAM && (!selectedExam || !selectedExam.problem_ids.includes(problemSelect.value))) return;
     if (mode === "practice") remember();
     mode = value;
     get("practice-response").open = value === "practice" && response === "typed";
@@ -156,7 +198,7 @@
       // The iframe is created once. Question/mode changes reuse this exact notebook.
       const initial = new URLSearchParams(location.search);
       const draft = initial.get("problem_id") === problemSelect.value ? initial.get("draft_id") : null;
-      frame.src = `/capture?embedded=1&problem_id=${encodeURIComponent(problemSelect.value)}&mode=${mode}${draft ? `&draft_id=${encodeURIComponent(draft)}` : ""}&ui=ui-05-fit-notebook`;
+      frame.src = `/capture?embedded=1&problem_id=${encodeURIComponent(problemSelect.value)}&mode=${mode}${draft ? `&draft_id=${encodeURIComponent(draft)}` : ""}&ui=student-tutor-exams-01`;
       loaded = true;
     } else configure();
     display();
@@ -164,7 +206,9 @@
   }
   function open() {
     if (!selectedProblem()) return;
+    if (experience === StudentFlow.EXAM && (!selectedExam || !selectedExam.problem_ids.includes(problemSelect.value))) return;
     active = true;
+    if (experience) chooseMode(captureModes[experience]);
     display();
     get("resolution-title").focus();
   }
@@ -188,13 +232,99 @@
   function renderReceipts() {
     const list = get("student-receipt-list");
     list.replaceChildren();
-    if (!receipts.size) appendTextElement(list, "p", "empty-state", "Nenhum recibo nesta sessão. O salvamento do rascunho não confirma envio.");
-    for (const receipt of receipts.values()) {
+    const items = document.body.classList?.contains("auth-enabled") && serverSubmissions ? serverSubmissions : [...receipts.values()];
+    if (!items.length) appendTextElement(list, "p", "empty-state", "Nenhuma solução enviada ao professor.");
+    for (const receipt of items) {
       const article = appendTextElement(list, "article", "local-submission", "");
       appendTextElement(article, "h3", "", `Questão ${receipt.problem_id}`);
       appendTextElement(article, "p", "", `Recebida pelo ConfIA · ${formatDateTime(receipt.received_at)}`);
       appendTextElement(article, "p", "", `Número do envio: ${receipt.submission_id}`);
       appendTextElement(article, "p", "", `Versão enviada: ${receipt.snapshot_id}`);
+    }
+  }
+  async function loadSubmissions() {
+    if (!document.body.classList?.contains("auth-enabled") || submissionsPending) { renderReceipts(); return; }
+    submissionsPending = true;
+    try {
+      const response = await fetch("/submissions", { credentials: "same-origin", cache: "no-store" });
+      if (!response.ok) throw new Error("Não foi possível carregar as submissões.");
+      const data = await response.json();
+      serverSubmissions = Array.isArray(data) ? data : [];
+      renderReceipts();
+    } catch (_) {
+      const list = get("student-receipt-list");
+      list.replaceChildren();
+      appendTextElement(list, "p", "empty-state", "Não foi possível carregar as submissões. Tente abrir esta área novamente.");
+    } finally { submissionsPending = false; }
+  }
+  function filterProblems(allowedIds) {
+    for (const option of problemSelect.children) {
+      option.hidden = Boolean(allowedIds) && !allowedIds.includes(option.value);
+      option.disabled = option.hidden;
+    }
+    if (allowedIds?.length && !allowedIds.includes(problemSelect.value)) problemSelect.value = allowedIds[0];
+    renderExamples(); renderProblemStatement();
+    get("resolve-question").disabled = !selectedProblem();
+  }
+  function renderExams() {
+    const list = get("student-exam-list");
+    list.replaceChildren();
+    if (!problems.length) { setCopy("student-exams-message", "Carregando catálogo de questões…"); return; }
+    const exams = availableExams.filter(exam => exam?.problem_ids?.every(id => problems.some(p => (p.problem_id || p.id) === id)));
+    setCopy("student-exams-message", exams.length ? "Escolha uma atividade disponível." : "Nenhum exame disponível para sua turma no momento.");
+    for (const exam of exams) {
+      const card = appendTextElement(list, "article", "local-submission", "");
+      appendTextElement(card, "h3", "", exam.title);
+      appendTextElement(card, "p", "", `${exam.problem_ids.length} questão(ões) · sua turma`);
+      const button = appendTextElement(card, "button", "button button-primary", "Abrir exame");
+      button.type = "button";
+      button.addEventListener("click", () => {
+        selectedExam = exam;
+        experience = StudentFlow.EXAM;
+        active = false;
+        mode = null;
+        filterProblems(exam.problem_ids);
+        get("resolve-question").textContent = "Resolver questão do exame";
+        get("student-exams").hidden = true;
+        get("student-workspace").hidden = false;
+        display();
+      });
+    }
+  }
+  async function loadExams() {
+    const request = ++examsRequest;
+    setCopy("student-exams-message", "Carregando exames…");
+    try {
+      const response = await fetch("/institutional/me/exams", { credentials: "same-origin", cache: "no-store" });
+      if (!response.ok) throw new Error("Não foi possível consultar as atividades da turma.");
+      const data = await response.json();
+      if (request !== examsRequest) return;
+      availableExams = Array.isArray(data) ? data.filter(exam => exam && Array.isArray(exam.problem_ids) && exam.problem_ids.length) : [];
+      examsLoaded = true;
+      renderExams();
+    } catch (_) { if (request === examsRequest) setCopy("student-exams-message", "Não foi possível consultar os exames. Abra esta área novamente."); }
+  }
+  function enter(view) {
+    if (view === "tutoria" || view === "resolve") {
+      if (view === "resolve") { experience = null; display(); return; }
+      if (experience === StudentFlow.TUTOR) { display(); return; }
+      selectedExam = null;
+      experience = StudentFlow.TUTOR;
+      active = false;
+      mode = null;
+      response = "notebook";
+      filterProblems(null);
+      get("resolve-question").textContent = "Resolver no TutorIA";
+      display();
+    } else if (view === "exams") {
+      selectedExam = null;
+      experience = StudentFlow.EXAM;
+      active = false;
+      mode = null;
+      response = "notebook";
+      filterProblems([]);
+      display();
+      loadExams();
     }
   }
   function analysisContext() {
@@ -206,9 +336,11 @@
   }
   window.ConfIAWorkspace = {
     get mode() { return mode; },
+    get experience() { return experience; },
+    get examSelected() { return Boolean(selectedExam); },
     get active() { return active; },
     get ready() { return ready; },
-    display, analysisContext, owns,
+    display, enter, loadSubmissions, analysisContext, owns,
     canAnalyze: () => active && ready && mode === "practice",
     contextIsStale: context => !owns(context) || context.ink_version !== notebook?.ink_version || context.question_presentation_version !== notebook?.question_presentation_version,
     rememberText() { if (mode === "practice") remember(); },
@@ -231,6 +363,7 @@
       }
       get("resolve-question").disabled = !selectedProblem();
       this.renderMath();
+      if (examsLoaded) renderExams();
     },
     renderMath() {
       const problem = selectedProblem();
@@ -254,7 +387,7 @@
     const context = event.data.context;
     if (!context || !context.draft_id) return;
     // Receipts are emitted only by the existing, validated P2-CAP-02 sender.
-    if (context.receipt && context.receipt.snapshot_id === context.local_snapshot_id && context.receipt.problem_id === context.problem_id) {
+    if (context.mode === "submission" && context.receipt && context.receipt.snapshot_id === context.local_snapshot_id && context.receipt.problem_id === context.problem_id) {
       receipts.set(context.receipt.submission_id, context.receipt);
       renderReceipts();
     }
@@ -282,6 +415,19 @@
   for (const action of ["new-draft", "continue-draft", "prepare-snapshot", "preview-writing", "send-solution", "recognize-writing", "export-json", "export-png"]) {
     get(`workspace-${action}`).addEventListener("click", () => notebookAction(action));
   }
+  get("workspace-tutor-preview").addEventListener("click", () => notebookAction("tutor-preview"));
+  get("workspace-tutor-new-attempt").addEventListener("click", () => notebookAction("new-draft"));
+  get("workspace-tutor-feedback").addEventListener("click", () => {
+    if (mode !== "practice" || !ready || !notebook?.controls?.tutor_preview_segments?.length) return;
+    const recognized = notebook.controls.tutor_preview_segments.map(segment => segment.text || segment.latex || "").filter(Boolean).join("\n").trim();
+    if (!recognized) return;
+    solutionInput.value = recognized;
+    studentContextChanged();
+    auditCurrentSolution();
+  });
+  for (const action of ["pen-mode", "mouse-mode", "draw-tool", "erase-tool", "undo", "redo", "previous-page", "next-page", "add-page"]) {
+    get(`workspace-${action}`).addEventListener("click", () => notebookAction(action));
+  }
   for (const value of ["notebook", "typed"]) get(`${value}-response`).addEventListener("click", () => {
     response = value;
     get("practice-response").open = value === "typed";
@@ -289,12 +435,13 @@
     if (value === "typed") solutionInput.focus();
   });
   function resume(typed) {
-    if (!mode) { window.ConfIAShell?.navigate("student", "resolve"); return; }
+    const route = experience === StudentFlow.TUTOR ? "tutoria" : "resolve";
+    if (!mode) { window.ConfIAShell?.navigate("student", route); return; }
     active = true;
     if (mode !== "practice") chooseMode("practice");
     response = typed ? "typed" : "notebook";
     get("practice-response").open = typed;
-    window.ConfIAShell?.navigate("student", "resolve");
+    window.ConfIAShell?.navigate("student", route);
     display();
     if (typed) solutionInput.focus(); else frame.focus();
   }

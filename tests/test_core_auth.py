@@ -10,6 +10,9 @@ import confia_lean_auditor.main as main
 from confia_lean_auditor.auth.dependencies import COOKIE_NAME
 from confia_lean_auditor.auth.models import Role
 from confia_lean_auditor.auth.store import AuthStore
+from confia_lean_auditor.institutional.models import (Network, School, Classroom, TeacherAssignment,
+    Enrollment, ManagerAssignment, InstitutionalData)
+from confia_lean_auditor.institutional.store import InstitutionalStore, current_academic_year
 from confia_lean_auditor.recognition.fake import FakeTestRecognizer
 from confia_lean_auditor.recognition.registry import RecognizerRegistry
 from confia_lean_auditor.submissions import router as submissions_router
@@ -31,6 +34,7 @@ def auth_case(tmp_path, monkeypatch):
     monkeypatch.setenv("CONFIA_AUTH_DIR", str(tmp_path / "auth"))
     monkeypatch.setenv("CONFIA_SUBMISSIONS_DIR", str(tmp_path / "submissions"))
     monkeypatch.setenv("CONFIA_SUBMISSION_AUDITS_DIR", str(tmp_path / "audits"))
+    monkeypatch.setenv("CONFIA_INSTITUTIONAL_DIR", str(tmp_path / "institutional"))
     store = AuthStore(tmp_path / "auth")
     users = {
         "student_a": store.create_user(login="student.a", display_name="Aluno A", role=Role.STUDENT,
@@ -44,6 +48,19 @@ def auth_case(tmp_path, monkeypatch):
         "manager": store.create_user(login="manager.a", display_name="Gestão A", role=Role.SCHOOL_MANAGER,
                                      password=PASSWORD, tenant_id="school-a"),
     }
+    year = current_academic_year()
+    InstitutionalStore(tmp_path / "institutional").replace(InstitutionalData(
+        networks=[Network(network_id="school-a", name="Rede de teste")],
+        schools=[School(school_id="school-a", network_id="school-a", name="Escola A", code="a", municipality="Teresina"),
+                 School(school_id="school-b", network_id="school-a", name="Escola B", code="b", municipality="Teresina")],
+        classrooms=[Classroom(classroom_id=class_id, school_id="school-a", name=class_id, grade="2ª série", shift="Manhã", academic_year=year)
+                    for class_id in ("class-a", "class-b")],
+        teacher_assignments=[TeacherAssignment(teacher_user_id=users["teacher"].user_id, school_id="school-a",
+                                               classroom_id="class-a", academic_year=year)],
+        enrollments=[Enrollment(student_user_id=users[key].user_id, school_id="school-a", classroom_id=class_id,
+                                academic_year=year) for key, class_id in (("student_a", "class-a"), ("student_b", "class-b"))],
+        manager_assignments=[ManagerAssignment(manager_user_id=users["manager"].user_id, school_id="school-a")],
+    ))
 
     def client(login=None):
         session = TestClient(main.app, headers={"Origin": ORIGIN})
@@ -78,9 +95,9 @@ def test_store_password_hash_demo_script_and_public_model(auth_case, monkeypatch
 
     demo = runpy.run_path(str(Path(__file__).resolve().parents[1] / "scripts" / "create_demo_users.py"))
     demo["create_demo_users"].__globals__["auth_store"] = lambda: store
-    prompts = iter(["demo-secret", "demo-secret"] * 3)
+    prompts = iter(["demo-secret", "demo-secret"] * 4)
     demo["create_demo_users"](prompt=lambda _: next(prompts), output=lambda _: None)
-    for login in ("aluno.demo", "professor.demo", "gestao.demo"):
+    for login in ("aluno.demo", "professor.demo", "gestao.demo", "rede.demo"):
         assert store.authenticate(login, "demo-secret") is not None
     assert "demo-secret" not in (tmp_path / "auth" / "users.json").read_text()
 
@@ -152,7 +169,7 @@ def test_role_matrix_object_scope_hmer_teacher_and_audit(auth_case, monkeypatch)
 
     assert student_a.get("/management/overview").status_code == 403
     assert teacher.get("/management/overview").status_code == 403
-    assert manager.get("/management/overview").json()["kind"] == "demonstrative_aggregate"
+    assert manager.get("/management/overview").json()["kind"] == "institutional_aggregate"
     assert manager.get("/submissions").status_code == 403
     assert manager.get("/problems").status_code == 403
     assert manager.post("/audit", json={}).status_code == 403
@@ -225,16 +242,33 @@ def test_role_matrix_object_scope_hmer_teacher_and_audit(auth_case, monkeypatch)
     assert other_teacher.get(f"/submission-audits/{aid}").status_code == 403
     assert manager.get(f"/submission-audits/{aid}").status_code == 403
     assert teacher.get(f"/submission-audits/{aid}/reproducibility").status_code == 200
+    aggregates = manager.get("/management/schools/school-a/overview")
+    assert aggregates.status_code == 200, aggregates.text
+    counts = aggregates.json()["metrics"]
+    assert counts["submissions_count"] == 1
+    assert counts["transcriptions_count"] == 1
+    assert counts["recognition_success_count"] == 1
+    assert counts["recognition_failure_count"] == 0
+    assert counts["audit_runs_count"] == 1
+    assert counts["completed_audits"] == 1
+    assert "transcription_text" not in aggregates.text and "snapshot_json" not in aggregates.text
     original = json.loads((tmp_path / "submissions" / sid / "submission.json").read_text())
     assert original["submitted_by_user_id"] == users["student_a"].user_id
 
 
 def test_teacher_detail_keeps_provider_metadata_review_and_audit_available(auth_case, monkeypatch):
-    auth_store, _, client_factory, _ = auth_case
-    auth_store.create_user(login="aluno.demo", display_name="Aluno Demo", role=Role.STUDENT,
+    auth_store, _, client_factory, tmp_path = auth_case
+    demo_student = auth_store.create_user(login="aluno.demo", display_name="Aluno Demo", role=Role.STUDENT,
                            password=PASSWORD, tenant_id="school-a", classroom_ids=["class-a"])
-    auth_store.create_user(login="professor.demo", display_name="Professor Demo", role=Role.TEACHER,
+    demo_teacher = auth_store.create_user(login="professor.demo", display_name="Professor Demo", role=Role.TEACHER,
                            password=PASSWORD, tenant_id="school-a", classroom_ids=["class-a"])
+    institutions = InstitutionalStore(tmp_path / "institutional")
+    data = institutions.snapshot()
+    data.enrollments.append(Enrollment(student_user_id=demo_student.user_id, school_id="school-a",
+                                       classroom_id="class-a", academic_year=current_academic_year()))
+    data.teacher_assignments.append(TeacherAssignment(teacher_user_id=demo_teacher.user_id, school_id="school-a",
+        classroom_id="class-a", academic_year=current_academic_year()))
+    institutions.replace(data)
     monkeypatch.setenv("CONFIA_MATHPIX_APP_ID", "private-test-id")
     monkeypatch.setenv("CONFIA_MATHPIX_APP_KEY", "private-test-key")
     registry = RecognizerRegistry()

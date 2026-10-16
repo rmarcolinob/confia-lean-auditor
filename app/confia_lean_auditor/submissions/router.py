@@ -17,6 +17,7 @@ from confia_lean_auditor.auth.dependencies import (
     teacher_transcription_access,
 )
 from confia_lean_auditor.auth.models import AuthUser, Role
+from confia_lean_auditor.institutional.store import InstitutionalScopeError, institutional_store
 from confia_lean_auditor.recognition.registry import configured_registry, UnknownRecognizer
 from confia_lean_auditor.recognition.schemas import RecognitionRequest, RecognitionResponse, RecognitionRun
 from confia_lean_auditor.recognition.service import RecognitionService, RecognitionConflict
@@ -72,6 +73,8 @@ def guarded(operation, *args):
         return JSONResponse(status_code=409, content={"detail": "A transcrição foi alterada ou aceita a partir de outra versão.", "error_code": "REVISION_CONFLICT"}, headers={"Cache-Control": "no-store"})
     except SubmissionTooLarge:
         raise HTTPException(413, "Artefato acima do limite permitido.") from None
+    except InstitutionalScopeError as exc:
+        raise HTTPException(exc.status_code, str(exc)) from None
     except InvalidSubmissionProblem:
         raise HTTPException(400, "Questão não disponível no catálogo.") from None
     except FileNotFoundError:
@@ -88,7 +91,11 @@ def guarded(operation, *args):
 
 def receive_body(raw, owner):
     request = SubmissionRequest.model_validate_json(raw)
-    return store().receive(request, owner)
+    if owner is None:
+        return store().receive(request)
+    enrollment, school = institutional_store().student_enrollment(owner)
+    return store().receive(request, owner,
+                           (school.network_id, school.school_id, enrollment.classroom_id))
 
 
 @router.post("", response_model=SubmissionReceipt)
@@ -116,11 +123,25 @@ async def receive_submission(request: Request, response: Response,
 
 
 @router.get("", response_model=list[SubmissionRecord])
-def list_submissions(response: Response, user: Optional[AuthUser] = Depends(
+def list_submissions(response: Response, school_id: Optional[str] = None, classroom_id: Optional[str] = None,
+                     user: Optional[AuthUser] = Depends(
         require_any_role(Role.STUDENT, Role.TEACHER))):
     response.headers["Cache-Control"] = "no-store"
+    if user is not None:
+        if user.role == Role.STUDENT and (school_id or classroom_id):
+            raise HTTPException(403, "Aluno não escolhe escola ou turma.")
+        if user.role == Role.TEACHER:
+            institutions = institutional_store()
+            if classroom_id and not school_id:
+                raise HTTPException(422, "Informe a escola da turma.")
+            if school_id and school_id not in {s.school_id for s in institutions.schools_for(user)}:
+                raise HTTPException(403, "Escola fora do escopo autorizado.")
+            if classroom_id and classroom_id not in {c.classroom_id for c in institutions.classrooms_for(user, school_id)}:
+                raise HTTPException(403, "Turma fora do escopo autorizado.")
     records = guarded(store().list)
-    return visible_submissions(user, records)
+    records = visible_submissions(user, records)
+    return [r for r in records if (school_id is None or r.school_id == school_id)
+            and (classroom_id is None or r.classroom_id == classroom_id)]
 
 
 @router.get("/recognition-providers")

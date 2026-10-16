@@ -90,6 +90,8 @@
   let previewPending = null;
   let previewGeneration = 0;
   let transientPreview = null;
+  let tutorPreview = null;
+  let tutorPreviewPending = false;
   const submissionStates = new Map();
   const recognitionStates = new Map();
 
@@ -102,6 +104,15 @@
     // The parent renders controls; this page remains the sole owner of state and actions.
     const controls = value === captureDocument ? {
       document_id: documentStorageId(value),
+      input_mode: inputMode,
+      active_tool: activeTool,
+      can_undo: !elements.undo.disabled,
+      can_redo: !elements.redo.disabled,
+      can_previous_page: !elements.previousPage.disabled,
+      can_next_page: !elements.nextPage.disabled,
+      can_add_page: !elements.addPage.disabled,
+      page_index: pageIndex,
+      page_count: value.pages.length,
       frozen: value.document_kind === "local_snapshot",
       document_state: elements.documentState.textContent,
       storage_state: elements.storageState.textContent,
@@ -116,6 +127,10 @@
       preview_message: elements.previewMessage.textContent,
       preview_kind: elements.previewMessage.dataset.kind,
       preview_segments: transientPreview?.snapshot === value ? transientPreview.segments : [],
+      can_tutor_preview: mode === "practice" && value.document_kind === "draft" && value.active_stroke_ids.length > 0 && !tutorPreviewPending,
+      tutor_preview_segments: mode === "practice" && tutorPreview?.source === value ? tutorPreview.segments : [],
+      tutor_preview_message: mode === "practice" && tutorPreview?.source === value ? tutorPreview.message : "",
+      tutor_preview_kind: mode === "practice" && tutorPreview?.source === value ? tutorPreview.kind : "info",
       send_label: elements.sendSolution.textContent,
       can_recognize: !elements.recognizeWriting.disabled,
       recognize_label: elements.recognizeWriting.textContent,
@@ -282,6 +297,7 @@
     elements.modeTitle.textContent = resolutionMode === "practice" ? "Prática com feedback" : "Solução para envio";
     renderCanvas();
     renderSubmission();
+    notifyContext();
   }
 
   async function refreshSavedDocuments() {
@@ -346,6 +362,7 @@
     previewGeneration += 1;
     previewPending = null;
     transientPreview = null;
+    tutorPreview = null;
     captureDocument = nextDocument;
     pageIndex = nextPageIndex || 0;
     currentStroke = null;
@@ -373,6 +390,7 @@
     previewGeneration += 1;
     previewPending = null;
     transientPreview = null;
+    tutorPreview = null;
     captureDocument = nextDocument;
     elements.storageState.textContent = "Salvando…";
     renderState();
@@ -542,12 +560,25 @@
       "recognize-writing": elements.recognizeWriting,
       "export-json": elements.exportJson,
       "export-png": elements.exportPng,
+      "pen-mode": elements.penMode,
+      "mouse-mode": elements.mouseMode,
+      "draw-tool": elements.drawTool,
+      "erase-tool": elements.eraseTool,
+      "undo": elements.undo,
+      "redo": elements.redo,
+      "previous-page": elements.previousPage,
+      "next-page": elements.nextPage,
+      "add-page": elements.addPage,
     };
     if (action === "open-document") {
       const id = event.data.saved_document_id;
       if (typeof id !== "string" || !Array.from(elements.savedSelect.children).some(option => option.value === id)) return;
       elements.savedSelect.value = id;
       elements.openDocument.click();
+      return;
+    }
+    if (action === "tutor-preview" && resolutionMode === "practice") {
+      recognizeTutorDraft();
       return;
     }
     const button = buttons[action];
@@ -613,10 +644,12 @@
   elements.drawTool.addEventListener("click", () => {
     activeTool = "draw";
     setToggle(elements.drawTool, elements.eraseTool, true);
+    notifyContext();
   });
   elements.eraseTool.addEventListener("click", () => {
     activeTool = "erase";
     setToggle(elements.drawTool, elements.eraseTool, false);
+    notifyContext();
   });
   elements.undo.addEventListener("click", () => mutate(Model.undo(captureDocument)));
   elements.redo.addEventListener("click", () => mutate(Model.redo(captureDocument)));
@@ -633,6 +666,7 @@
       previewGeneration += 1;
       previewPending = null;
       transientPreview = null;
+      tutorPreview = null;
       captureDocument = Model.addPage(captureDocument);
       pageIndex = captureDocument.pages.length - 1;
       renderState();
@@ -723,6 +757,41 @@
       renderSubmission();
     }
   });
+  async function recognizeTutorDraft() {
+    if (resolutionMode !== "practice" || tutorPreviewPending || captureDocument?.document_kind !== "draft"
+        || !captureDocument.active_stroke_ids.length) return;
+    stopStroke(true);
+    const source = captureDocument;
+    const generation = ++previewGeneration;
+    const snapshot = Model.freeze(source);
+    const clientPreviewId = Model.newId("preview");
+    tutorPreviewPending = true;
+    tutorPreview = { source, segments: [], message: "Reconhecendo solução...", kind: "pending" };
+    notifyContext();
+    try {
+      const response = await fetch("/submissions/recognition-preview", {
+        method: "POST", headers: { "Content-Type": "application/json" }, cache: "no-store",
+        body: JSON.stringify({ snapshot_json: JSON.stringify(Model.exportClone(snapshot), null, 2), client_preview_id: clientPreviewId }),
+      });
+      if (!response.ok) throw new Error("Não foi possível reconhecer sua solução. Tente novamente.");
+      const result = await response.json();
+      if (result.client_preview_id !== clientPreviewId || result.problem_id !== snapshot.problem_id
+          || result.snapshot_id !== snapshot.local_snapshot_id || !/^[0-9a-f]{64}$/.test(result.snapshot_sha256)
+          || result.page_count !== snapshot.pages.length || result.active_stroke_count !== snapshot.active_stroke_ids.length
+          || !Array.isArray(result.result?.segments) || !result.result.segments.length) {
+        throw new Error("A prévia não corresponde à escrita atual. Reconheça novamente.");
+      }
+      if (generation !== previewGeneration || captureDocument !== source) return;
+      tutorPreview = { source, segments: result.result.segments,
+        message: "Prévia transitória. Confira a leitura antes de pedir feedback.", kind: "saved" };
+    } catch (error) {
+      if (generation === previewGeneration && captureDocument === source)
+        tutorPreview = { source, segments: [], message: error.message, kind: "error" };
+    } finally {
+      tutorPreviewPending = false;
+      notifyContext();
+    }
+  }
   async function recognizeSubmittedSnapshot(snapshotId, receipt) {
     if (!receipt?.submission_id || recognitionBusy.has(receipt.submission_id)) return;
     const state = recognitionStates.get(snapshotId) || { attempt: 0 };
@@ -751,14 +820,14 @@
       state.message = "Transcrição automática criada · aguarda conferência do professor.";
       const submission = submissionStates.get(snapshotId);
       if (submission?.receipt?.submission_id === receipt.submission_id) {
-        submissionStates.set(snapshotId, { ...submission, message: "Solução enviada. Transcrição automática aguarda conferência do professor.", kind: "saved" });
+        submissionStates.set(snapshotId, { ...submission, message: "Solução enviada ao professor. Transcrição automática aguarda conferência.", kind: "saved" });
       }
     } catch (_error) {
       state.failed = true;
       state.message = "Não foi possível gerar a transcrição automática. Toque para tentar novamente.";
       const submission = submissionStates.get(snapshotId);
       if (submission?.receipt?.submission_id === receipt.submission_id) {
-        submissionStates.set(snapshotId, { ...submission, message: "Solução enviada. Não foi possível gerar a transcrição automática.", kind: "error" });
+        submissionStates.set(snapshotId, { ...submission, message: "Solução enviada ao professor. Não foi possível gerar a transcrição automática.", kind: "error" });
       }
     } finally {
       recognitionBusy.delete(receipt.submission_id);
@@ -782,7 +851,7 @@
         submissionStates.set(id, { message: error.message, kind: "error" });
         return;
       }
-      submissionStates.set(id, { receipt, message: "Solução enviada. Gerando transcrição automática...", kind: "pending" });
+      submissionStates.set(id, { receipt, message: "Solução enviada ao professor. Gerando transcrição automática...", kind: "pending" });
       notifyContext(snapshot, receipt, "submission");
       renderSubmission();
       await recognizeSubmittedSnapshot(id, receipt);

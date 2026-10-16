@@ -6,7 +6,7 @@
     <title>ConfIA — Matemática com confiança</title>
     <link rel="stylesheet" href="/static/capture/vendor/katex-0.18.9/katex.min.css">
     <link rel="stylesheet" href="/static/design-system.css?v=ui-01">
-    <link rel="stylesheet" href="/static/styles.css?v=ui-06-sticky-statement">
+    <link rel="stylesheet" href="/static/styles.css?v=student-tutor-exams-01">
     <link rel="stylesheet" href="/static/submissions/teacher.css?v=p2-cap-04">
   </head>
   <body>
@@ -43,19 +43,20 @@
         <nav id="profile-navigation" class="profile-navigation" aria-label="Navegação do Aluno">
           <div data-profile-menu="student">
             <a href="#student/home" data-shell-link aria-current="page">Início</a>
-            <a href="#student/resolve" data-shell-link>Questões / Resolver</a>
-            <a href="#student/feedback" data-shell-link>Feedback</a>
-            <a href="#student/submissions" data-shell-link>Envios</a>
+            <a href="#student/tutoria" data-shell-link>TutorIA</a>
+            <a href="#student/exams" data-shell-link>Exames</a>
+            <a href="#student/submissions" data-shell-link>Minhas submissões</a>
           </div>
           <div data-profile-menu="teacher" hidden>
             <a href="#teacher/home" data-shell-link>Início</a>
+            <a href="#teacher/students" data-shell-link>Alunos</a>
             <a href="#teacher/submissions" data-shell-link>Soluções recebidas</a>
             <a href="#teacher/transcriptions" data-shell-link>Transcrições</a>
             <a href="#teacher/analysis" data-shell-link>Correção / Análise ConfIA</a>
           </div>
           <div data-profile-menu="management" hidden>
             <a href="#management/home" data-shell-link>Início</a>
-            <a href="#management/overview" data-shell-link>Painel demonstrativo</a>
+            <a href="#management/overview" data-shell-link>Indicadores</a>
           </div>
         </nav>
         <p class="sidebar-note">A troca de perfil altera apenas o contexto de demonstração.</p>
@@ -70,16 +71,20 @@
       <section id="student-area" class="tab-panel is-active" aria-label="Área do Aluno">
         <section id="student-home" class="home-panel">
           <div class="welcome-card card">
-            <p class="eyebrow">Matemática com confiança</p>
-            <h2>Uma questão, um caderno de resolução</h2>
-            <p>Auditoria matemática confiável para apoiar o estudo. Escolha uma questão e use o caderno para praticar com feedback ou preparar uma solução para envio.</p>
-            <a class="button button-primary" href="#student/resolve" data-shell-link>Começar a resolver <span aria-hidden="true">→</span></a>
+            <p class="eyebrow">Sua área de estudo</p>
+            <h2>Olá, <span id="student-home-name">aluno</span></h2>
+            <p id="student-institutional-context" class="student-enrollment" role="status">Carregando escola e turma…</p>
           </div>
-          <div class="home-grid">
-            <article class="card"><span class="step-label">01 · Resolver</span><h2>Questões e soluções</h2><p>Use o catálogo atual e os exemplos para explorar uma questão.</p><a href="#student/resolve" data-shell-link>Ver questões</a></article>
-            <article class="card"><span class="step-label">02 · Compreender</span><h2>Feedback da solução</h2><p>Consulte a análise da solução enviada e suas evidências.</p><a href="#student/feedback" data-shell-link>Abrir feedback</a></article>
-            <article class="card"><span class="step-label">03 · Escrever</span><h2>Caderno de resolução</h2><p>Escreva com caneta, recupere rascunhos e prepare uma versão para envio.</p><a href="#student/resolve" data-shell-link>Resolver no caderno →</a></article>
+          <div class="home-grid student-primary-actions">
+            <article class="card"><span class="step-label">Aprender</span><h2>TutorIA</h2><p>Resolva problemas e receba feedback durante o estudo.</p><a class="button button-primary" href="#student/tutoria" data-shell-link>Entrar no TutorIA</a></article>
+            <article class="card"><span class="step-label">Avaliar</span><h2>Exames</h2><p>Acesse avaliações, resolva as questões e envie suas respostas ao professor.</p><a class="button button-primary" href="#student/exams" data-shell-link>Ver exames</a></article>
           </div>
+        </section>
+        <section id="student-exams" class="card" aria-label="Exames disponíveis" hidden>
+          <h2>Exames da sua turma</h2>
+          <p>Atividades disponibilizadas para sua turma. Escolha uma para abrir o caderno.</p>
+          <p id="student-exams-message" role="status">Carregando exames…</p>
+          <div id="student-exam-list" class="submission-list"></div>
         </section>
         <section id="student-workspace" class="workspace" aria-label="Questões e Caderno de Resolução ConfIA" hidden>
           <div id="question-picker">
@@ -93,7 +98,7 @@
               <div id="problem-statement-text" class="statement-text"></div>
               <p id="catalog-math-message" role="status" hidden></p>
             </section>
-            <button id="resolve-question" type="button" disabled>Resolver</button>
+            <button id="resolve-question" type="button" disabled>Resolver no TutorIA</button>
           </div>
 
           <section id="resolution-workspace" aria-label="Caderno de Resolução ConfIA" hidden>
@@ -101,7 +106,7 @@
               <div><p class="eyebrow">Caderno de Resolução ConfIA</p><h2 id="resolution-title" tabindex="-1">Como você quer trabalhar esta questão?</h2></div>
               <button id="change-question" class="secondary-action" type="button">Escolher outra questão</button>
             </div>
-            <div class="mode-switch" role="group" aria-label="Como você quer trabalhar esta questão?">
+            <div id="resolution-mode-switch" class="mode-switch" role="group" aria-label="Como você quer trabalhar esta questão?">
               <button id="practice-mode" class="mode-button" type="button" aria-pressed="false">Praticar com feedback</button>
               <button id="submission-mode" class="mode-button" type="button" aria-pressed="false">Preparar solução para envio</button>
             </div>
@@ -121,6 +126,18 @@
                   <p id="notebook-math-message" role="status" hidden></p>
                 </div>
               </section>
+              <div id="workspace-ink-toolbar" class="workspace-ink-toolbar" role="toolbar" aria-label="Ferramentas de escrita" hidden>
+                <button id="workspace-pen-mode" type="button">Caneta</button>
+                <button id="workspace-mouse-mode" type="button">Mouse / teste</button>
+                <button id="workspace-draw-tool" type="button">Escrever</button>
+                <button id="workspace-erase-tool" type="button">Borracha</button>
+                <button id="workspace-undo" type="button">Desfazer</button>
+                <button id="workspace-redo" type="button">Refazer</button>
+                <button id="workspace-previous-page" type="button">Anterior</button>
+                <span id="workspace-page-indicator" role="status">Página —</span>
+                <button id="workspace-next-page" type="button">Próxima</button>
+                <button id="workspace-add-page" type="button">Nova página</button>
+              </div>
               <iframe id="resolution-notebook" title="Caderno da questão selecionada: escrita, ferramentas e páginas"></iframe>
               <div class="notebook-end" role="separator"><span>Fim do caderno · controles da resolução abaixo</span></div>
               <section class="notebook-action-card" aria-label="Rascunhos e recuperação">
@@ -156,6 +173,18 @@
                 <div class="notebook-action-row"><button id="workspace-send-solution" type="button" disabled>Enviar solução</button></div>
                 <p id="workspace-submission-message" role="status" aria-live="polite"></p>
                 <p id="workspace-submission-receipt" class="workspace-receipt" hidden></p>
+              </section>
+              <section id="workspace-tutor-actions" class="notebook-action-card" aria-label="Feedback de estudo" hidden>
+                <p class="eyebrow">TutorIA · estudo</p>
+                <h3>Conferir sua solução</h3>
+                <p>Reconheça a escrita e confira a leitura antes de pedir feedback.</p>
+                <div class="notebook-action-row">
+                  <button id="workspace-tutor-preview" type="button" disabled>Reconhecer solução</button>
+                  <button id="workspace-tutor-feedback" type="button" disabled>Pedir feedback</button>
+                  <button id="workspace-tutor-new-attempt" class="secondary-action" type="button" disabled>Nova tentativa</button>
+                </div>
+                <p id="workspace-tutor-message" role="status" aria-live="polite"></p>
+                <div id="workspace-tutor-result" class="workspace-recognition-preview" aria-label="Prévia da solução para estudo"></div>
               </section>
               <section id="workspace-recognition-actions" class="notebook-action-card" aria-label="Reconhecimento automático" hidden>
                 <p class="eyebrow">Leitura automática</p>
@@ -219,16 +248,25 @@
           </div>
         </section>
 
-        <section id="student-session-envios" class="card" aria-label="Recibos desta sessão" hidden>
-          <h2>Recibos desta sessão</h2>
-          <p>Envie a versão preparada no caderno para receber confirmação. Esta área reúne somente recibos confirmados nesta sessão; ainda não há histórico pessoal.</p>
-          <div id="student-receipt-list" class="submission-list"><p>Nenhum recibo nesta sessão.</p></div>
-          <a href="#student/resolve" data-shell-link>Preparar solução no caderno →</a>
+        <section id="student-session-envios" class="card" aria-label="Minhas submissões" hidden>
+          <h2>Minhas submissões</h2>
+          <p>Envios oficiais ao professor. Tentativas do TutorIA não aparecem aqui.</p>
+          <div id="student-receipt-list" class="submission-list"><p>Carregando submissões…</p></div>
+          <a href="#student/exams" data-shell-link>Ver exames →</a>
           <details><summary>Acesso direto ao caderno</summary><p>O caderno é o ambiente utilizado para resolver questões. A entrada direta continua disponível para compatibilidade.</p><a href="/capture">Abrir caderno</a></details>
         </section>
       </section>
 
       <section id="teacher-area" class="tab-panel" aria-label="Área do Professor" hidden>
+        <section id="teacher-institutional-context" class="prototype-panel institutional-context" hidden>
+          <h2 id="teacher-context-name">Professor</h2>
+          <div class="notebook-action-row">
+            <label>Escola <select id="teacher-school-select"></select></label>
+            <label>Turma <select id="teacher-classroom-select"></select></label>
+            <span id="teacher-academic-year"></span>
+          </div>
+          <p id="teacher-context-message" role="status"></p>
+        </section>
         <section id="teacher-home" class="home-panel" hidden>
           <div class="welcome-card card"><p class="eyebrow">Acompanhamento da solução</p><h2>Da solução recebida à avaliação do professor</h2><p>Abra a solução do aluno, compare o manuscrito com a transcrição e confira a fidelidade da leitura. A análise matemática e a avaliação docente dos manuscritos aguardam integração.</p><a class="button button-primary" href="#teacher/submissions" data-shell-link>Abrir soluções recebidas →</a></div>
           <div class="home-grid">
@@ -242,11 +280,14 @@
           <button id="show-text-prototype" class="secondary-action" type="button" aria-pressed="false">Demonstração textual local</button>
         </div>
         <section id="manuscript-inbox" class="prototype-panel" aria-label="Manuscritos recebidos pelo servidor">
+          <div id="teacher-students-panel" hidden></div>
+          <div id="teacher-queue-header">
           <div class="panel-heading">
             <div><p class="eyebrow">Soluções enviadas pelo caderno</p><h2 id="manuscript-queue-title">Soluções recebidas</h2></div>
             <button id="refresh-manuscripts" class="secondary-action" type="button">Atualizar lista</button>
           </div>
           <p id="manuscript-queue-note" class="prototype-note">Confira a leitura com o manuscrito original. A conferência da transcrição preserva o que o aluno escreveu.</p>
+          </div>
           <div id="manuscript-queue">
             <label class="queue-filter">Estado da transcrição
               <select id="transcription-filter">
@@ -340,47 +381,13 @@
       </section>
 
       <section id="management-area" class="tab-panel" aria-label="Área da Gestão" hidden>
-        <section id="management-home" class="welcome-card card" hidden><p class="eyebrow">Área da Gestão</p><h2>Visão demonstrativa de gestão</h2><p>Esta área apresenta somente dados ilustrativos fixos. Não representa acompanhamento de alunos, turmas ou escolas.</p><a class="button button-primary" href="#management/overview" data-shell-link>Explorar painel demonstrativo →</a></section>
+        <section id="management-home" class="welcome-card card" hidden><p class="eyebrow">Área da Gestão</p><h2>Indicadores institucionais</h2><p>Dados agregados das escolas e turmas vinculadas à sua sessão.</p><a class="button button-primary" href="#management/overview" data-shell-link>Abrir indicadores →</a></section>
         <section id="management-overview" class="prototype-panel management-panel">
-          <div class="panel-heading">
-            <div>
-              <p class="eyebrow">Área da Gestão</p>
-              <h2>Visão demonstrativa de gestão</h2>
-              <span class="badge" data-kind="warning">Dados ilustrativos</span>
-            </div>
-          </div>
-
-          <p class="prototype-note">
-            Dados ilustrativos fixos, sem conexão com envios ou correções reais. Este painel demonstra a apresentação de informações de gestão.
-          </p>
-
-          <div class="macro-grid">
-            <article class="macro-card">
-              <span>Soluções analisadas</span>
-              <strong>128</strong><small>Dados ilustrativos</small>
-            </article>
-            <article class="macro-card">
-              <span>Média geral</span>
-              <strong>7,4</strong><small>Dados ilustrativos</small>
-            </article>
-            <article class="macro-card">
-              <span>Confiabilidade alta</span>
-              <strong>82%</strong><small>Dados ilustrativos</small>
-            </article>
-            <article class="macro-card">
-              <span>Revisões humanas recomendadas</span>
-              <strong>19</strong><small>Dados ilustrativos</small>
-            </article>
-          </div>
-
-          <section class="difficulty-panel">
-            <h3>Dificuldades frequentes · exemplo ilustrativo</h3>
-            <ul>
-              <li>redução algébrica</li>
-              <li>comparação de coeficientes</li>
-              <li>justificativa incompleta</li>
-            </ul>
-          </section>
+          <h2 id="management-heading">Indicadores</h2>
+          <p id="management-message" role="status">Carregando indicadores…</p>
+          <div id="management-cards" class="macro-grid"></div>
+          <div id="management-breadcrumb"></div>
+          <div id="management-table"></div>
         </section>
       </section>
       </main>
@@ -396,8 +403,9 @@
     <script src="/static/capture/problem-math.js?v=p2-ui-01"></script>
     <script src="/static/recognition-view.js?v=hmer-preview-1"></script>
     <script src="/static/app.js?v=p2-cap-04"></script>
-    <script src="/static/resolution-workspace.js?v=ui-06-sticky-statement"></script>
-    <script src="/static/submissions/teacher.js?v=p2-cap-04-p1-final"></script>
-    <script src="/static/shell.js?v=core-auth-02-role-navigation"></script>
+    <script src="/static/resolution-workspace.js?v=student-tutor-exams-01"></script>
+    <script src="/static/submissions/teacher.js?v=core-inst-01"></script>
+    <script src="/static/management.js?v=core-inst-01"></script>
+    <script src="/static/shell.js?v=student-tutor-exams-01"></script>
   </body>
 </html>

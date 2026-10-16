@@ -137,7 +137,7 @@ class SubmissionStore:
         finally:
             temporary.unlink(missing_ok=True)
 
-    def receive(self, request: SubmissionRequest, owner=None):
+    def receive(self, request: SubmissionRequest, owner=None, institutional_context=None):
         snapshot, raw, images = validate_request(request)
         artifact = ArtifactReference(filename="snapshot.json", media_type="application/json", sha256=sha256(raw), size_bytes=len(raw))
         page_images = [ArtifactReference(filename=f"page_{page.index + 1}.png", media_type="image/png",
@@ -148,7 +148,9 @@ class SubmissionStore:
                 if record.snapshot_id == snapshot.local_snapshot_id:
                     if (record.snapshot != artifact or record.page_images != page_images
                             or record.student_reference != request.student_reference
-                            or (owner is not None and record.submitted_by_user_id != owner.user_id)):
+                            or (owner is not None and record.submitted_by_user_id != owner.user_id)
+                            or (institutional_context is not None and record.school_id is not None
+                                and (record.network_id, record.school_id, record.classroom_id) != institutional_context)):
                         raise SubmissionConflict()
                     detail = self._detail(record.submission_id)
                     if not all(item.matches for item in detail.integrity):
@@ -158,8 +160,10 @@ class SubmissionStore:
                                       snapshot_id=snapshot.local_snapshot_id, received_at=datetime.now(timezone.utc),
                                       snapshot=artifact, page_images=page_images, student_reference=request.student_reference,
                                       submitted_by_user_id=owner.user_id if owner else None,
-                                      tenant_id=owner.tenant_id if owner else None,
-                                      classroom_id=owner.classroom_ids[0] if owner and owner.classroom_ids else None)
+                                      tenant_id=institutional_context[0] if institutional_context else (owner.tenant_id if owner else None),
+                                      network_id=institutional_context[0] if institutional_context else None,
+                                      school_id=institutional_context[1] if institutional_context else None,
+                                      classroom_id=institutional_context[2] if institutional_context else None)
             receipt = SubmissionReceipt(**record.model_dump())
             pending = Path(tempfile.mkdtemp(prefix=".pending-", dir=self.root))
             try:

@@ -3,21 +3,24 @@
   "use strict";
   const profiles = {
     student: { area: "student-area", label: "Aluno", views: {
-      home: ["Início", "Um espaço para resolver, compreender e conferir sua solução matemática."],
-      resolve: ["Questões / Resolver", "Escolha uma questão e resolva no Caderno de Resolução ConfIA."],
+      home: ["Início", "Escolha entre estudo com feedback e atividades enviadas ao professor."],
+      tutoria: ["TutorIA", "Resolva problemas e peça feedback durante o estudo."],
+      exams: ["Exames", "Acesse atividades disponibilizadas para sua turma."],
+      resolve: ["TutorIA", "Escolha uma questão e resolva no Caderno de Resolução ConfIA."],
       feedback: ["Feedback", "Consulte a análise atual da resolução nesta sessão."],
-      submissions: ["Envios", "Consulte os recibos de envios confirmados nesta sessão."],
+      submissions: ["Minhas submissões", "Consulte as soluções enviadas ao professor."],
     } },
     teacher: { area: "teacher-area", label: "Professor", views: {
       home: ["Início", "Acompanhe cada solução: recebimento, transcrição, Análise ConfIA e avaliação docente."],
+      students: ["Alunos", "Alunos matriculados na turma selecionada."],
       submissions: ["Soluções recebidas", "Manuscritos recebidos pelo ConfIA. Abra uma solução para visualizar o original."],
       transcriptions: ["Transcrições", "Selecione uma solução recebida para comparar a transcrição com o manuscrito original."],
       analysis: ["Correção / Análise ConfIA", "Consulte as etapas das soluções recebidas. A análise dos manuscritos aguarda integração."],
       text: ["Demonstração textual local", "Análise de textos locais e exemplos. Este fluxo não corresponde aos manuscritos persistidos."],
     } },
     management: { area: "management-area", label: "Gestão", views: {
-      home: ["Visão demonstrativa de gestão", "Apresentação de gestão com dados ilustrativos fixos."],
-      overview: ["Painel demonstrativo", "Dados ilustrativos. Os números deste painel não são indicadores reais."],
+      home: ["Gestão institucional", "Consulte escolas, turmas e indicadores agregados."],
+      overview: ["Indicadores", "Dados agregados do escopo institucional autorizado."],
     } },
   };
   const title = document.querySelector("#page-title");
@@ -33,7 +36,7 @@
   function refreshStudent() {
     const student = current.profile === "student";
     const workspace = window.ConfIAWorkspace;
-    visible("student-feedback", student && (current.view === "feedback" || (current.view === "resolve" && workspace?.mode === "practice" && Boolean(studentAnalysis))));
+    visible("student-feedback", student && (current.view === "feedback" || (["resolve", "tutoria"].includes(current.view) && workspace?.mode === "practice" && Boolean(studentAnalysis))));
     visible("student-session-envios", student && current.view === "submissions");
     if (student && current.view === "feedback" && !studentAnalysis) renderStudentStudyEmptyState();
     workspace?.display();
@@ -54,7 +57,10 @@
       else link.removeAttribute("aria-current");
     }
     visible("student-home", profile === "student" && view === "home");
-    visible("student-workspace", profile === "student" && view === "resolve");
+    if (profile === "student") window.ConfIAWorkspace?.enter(view);
+    visible("student-exams", profile === "student" && view === "exams" && !window.ConfIAWorkspace?.examSelected);
+    visible("student-workspace", profile === "student" && (view === "resolve" || view === "tutoria" || (view === "exams" && window.ConfIAWorkspace?.examSelected)));
+    if (profile === "student" && view === "submissions") window.ConfIAWorkspace?.loadSubmissions();
     refreshStudent();
     visible("teacher-home", profile === "teacher" && view === "home");
     document.querySelector(".teacher-submission-modes").hidden = profile !== "teacher" || view === "home";
@@ -67,6 +73,7 @@
     }
     visible("management-home", profile === "management" && view === "home");
     visible("management-overview", profile === "management" && view === "overview");
+    if (profile === "management" && view === "overview") window.ConfIAManagement?.load();
     document.title = `ConfIA — ${config.views[view][0]}`;
     if (focus) title.focus();
   }
@@ -74,6 +81,7 @@
   function navigate(profile, view, { focus = true, historyMode = "push" } = {}) {
     if (authMode && !authenticatedProfile) return false;
     if (authMode && profile !== authenticatedProfile) { profile = authenticatedProfile; view = "home"; }
+    if (authMode && profile === "student" && view === "resolve") view = "tutoria";
     if (!profiles[profile]?.views[view]) { profile = "student"; view = "home"; }
     if (authMode && profile !== authenticatedProfile) { profile = authenticatedProfile; view = "home"; }
     // UI-P0 protects unsaved transcription edits across every shell destination.
@@ -121,8 +129,9 @@
   function initialNavigation() {
     const [hashProfile, hashView] = location.hash.slice(1).split("/");
     const fromCapture = new URLSearchParams(location.search).get("area") === "teacher";
+    const initialView = authMode && authenticatedProfile === "management" ? "overview" : "home";
     navigate(hashProfile || (authMode ? authenticatedProfile : (fromCapture ? "teacher" : "student")),
-      hashView || (!authMode && fromCapture ? "submissions" : "home"),
+      hashView || (!authMode && fromCapture ? "submissions" : initialView),
       { focus: false, historyMode: "replace" });
   }
   if (authMode) {
@@ -130,10 +139,12 @@
       if (!response.ok) { location.replace("/"); return; }
       authenticatedUser = await response.json();
       authenticatedProfile = {
-        STUDENT: "student", TEACHER: "teacher", SCHOOL_MANAGER: "management",
+        STUDENT: "student", TEACHER: "teacher", SCHOOL_MANAGER: "management", NETWORK_MANAGER: "management",
       }[authenticatedUser.role];
       if (!authenticatedProfile) { location.replace("/"); return; }
       window.ConfIAAuthProfile = authenticatedProfile;
+      window.ConfIAAuthUser = authenticatedUser;
+      if (authenticatedProfile === "student") document.querySelector("#student-home-name").textContent = authenticatedUser.display_name;
       document.querySelector(".brand").setAttribute("href", `#${authenticatedProfile}/home`);
       document.querySelector("#demo-profile-label").remove();
       document.querySelector(".profile-switch").remove();
@@ -154,6 +165,14 @@
         if (result.ok) location.replace("/");
       });
       document.body.classList.remove("auth-loading");
+      if (authenticatedProfile === "teacher") window.ConfIATeacher?.initInstitutional(authenticatedUser);
+      if (authenticatedProfile === "student") fetch("/institutional/me/context", { credentials: "same-origin", cache: "no-store" })
+        .then(response => response.ok ? response.json() : null).then(context => {
+          const label = document.querySelector("#student-institutional-context");
+          label.textContent = context?.schools?.length && context?.classrooms?.length
+            ? `Escola: ${context.schools[0].name} · Turma: ${context.classrooms[0].name}`
+            : "Escola e turma indisponíveis nesta sessão.";
+        }).catch(() => { document.querySelector("#student-institutional-context").textContent = "Escola e turma indisponíveis nesta sessão."; });
       initialNavigation();
     }).catch(() => { location.replace("/"); });
   } else initialNavigation();
