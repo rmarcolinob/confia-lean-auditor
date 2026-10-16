@@ -71,26 +71,21 @@
     get("workspace-continue-draft").hidden = !controls?.frozen;
     get("workspace-continue-draft").disabled = !controls?.frozen;
     get("workspace-prepare-snapshot").disabled = !submission || !controls?.can_prepare;
+    get("workspace-preview-writing").disabled = !submission || !controls?.can_preview;
+    setCopy("workspace-preview-message", controls?.preview_message || "");
+    get("workspace-preview-message").dataset.kind = controls?.preview_kind || "info";
+    globalThis.ConfiaRecognitionView?.render(get("workspace-preview-result"), controls?.preview_segments || []);
     get("workspace-send-solution").disabled = !submission || !controls?.can_send;
     setCopy("workspace-send-solution", controls?.send_label || "Enviar solução");
     get("workspace-recognize-writing").disabled = !submission || !controls?.can_recognize;
+    setCopy("workspace-recognize-writing", controls?.recognize_label || "Reconhecer escrita");
     setCopy("workspace-snapshot-message", controls?.snapshot_message || "");
     setCopy("workspace-submission-message", controls?.submission_message || "");
     get("workspace-submission-message").dataset.kind = controls?.submission_kind || "info";
     setCopy("workspace-submission-receipt", controls?.submission_receipt || "");
     get("workspace-submission-receipt").hidden = !controls?.submission_receipt;
     setCopy("workspace-recognition-message", controls?.recognition_message || "");
-    const preview = get("workspace-recognition-preview");
-    preview.replaceChildren();
-    for (const segment of controls?.recognition_segments || []) {
-      const row = document.createElement("section");
-      const heading = document.createElement("strong");
-      heading.textContent = `Página ${segment.page_index + 1}`;
-      row.appendChild(heading);
-      if (segment.text) { const text = document.createElement("p"); text.textContent = segment.text; row.appendChild(text); }
-      if (segment.latex) { const latex = document.createElement("pre"); latex.textContent = segment.latex; row.appendChild(latex); }
-      preview.appendChild(row);
-    }
+    globalThis.ConfiaRecognitionView?.render(get("workspace-recognition-preview"), controls?.recognition_segments || []);
     setCopy("workspace-document-state", controls?.document_state || "");
     setCopy("workspace-document-id", controls ? `Identificador: ${controls.document_id}` : "");
     setCopy("workspace-storage-state", controls?.storage_state || "");
@@ -284,7 +279,7 @@
     get("workspace-open-document").disabled = !ready || !notebook?.controls || !get("workspace-saved-document").value;
   });
   get("workspace-open-document").addEventListener("click", () => notebookAction("open-document", { saved_document_id: get("workspace-saved-document").value }));
-  for (const action of ["new-draft", "continue-draft", "prepare-snapshot", "send-solution", "recognize-writing", "export-json", "export-png"]) {
+  for (const action of ["new-draft", "continue-draft", "prepare-snapshot", "preview-writing", "send-solution", "recognize-writing", "export-json", "export-png"]) {
     get(`workspace-${action}`).addEventListener("click", () => notebookAction(action));
   }
   for (const value of ["notebook", "typed"]) get(`${value}-response`).addEventListener("click", () => {

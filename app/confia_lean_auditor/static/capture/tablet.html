@@ -178,11 +178,19 @@
         <p id="snapshot-message" class="snapshot-message" aria-live="polite"></p>
       </section>
 
+      <section class="export-card recognition-card" data-submission-only aria-label="Prévia do reconhecimento antes do envio">
+        <div><p class="eyebrow">Conferir antes de enviar</p><h2>Prévia da solução reconhecida</h2>
+          <p>Confira se a leitura corresponde ao que você escreveu.</p></div>
+        <div class="export-actions"><button id="preview-writing" type="button" disabled>Reconhecer para conferir</button></div>
+        <p id="preview-message" role="status" aria-live="polite"></p>
+        <div id="preview-result" class="recognition-preview" aria-label="Prévia antes do envio"></div>
+      </section>
+
       <section class="export-card submission-card" data-submission-only aria-label="Envio experimental ao servidor">
         <div>
           <p class="eyebrow">Recebimento pelo ConfIA</p>
           <h2>Enviar versão preparada</h2>
-          <p>Envia os traços e os PNGs de todas as páginas. O recibo confirma armazenamento, não autoria nem correção matemática.</p>
+          <p>Compare a leitura com o manuscrito. Envia os traços e os PNGs; o recibo confirma armazenamento, não autoria nem correção matemática.</p>
         </div>
         <div class="export-actions">
           <button id="send-solution" type="button" disabled>Enviar solução</button>
@@ -196,7 +204,7 @@
         <div>
           <p class="eyebrow">Leitura automática</p>
           <h2>Reconhecimento automático</h2>
-          <p>Confira se o reconhecimento corresponde ao que foi escrito.</p>
+          <p>A transcrição oficial começa após o envio. Se falhar, tente novamente nesta versão recebida.</p>
         </div>
         <div class="export-actions">
           <button id="recognize-writing" type="button" disabled>Reconhecer escrita</button>
@@ -220,6 +228,7 @@
     <script src="/static/capture/vendor/katex-0.18.9/katex.min.js"></script>
     <script src="/static/capture/vendor/katex-0.18.9/contrib/auto-render.min.js"></script>
     <script src="/static/capture/problem-math.js?v=p2-ui-01"></script>
+    <script src="/static/recognition-view.js?v=hmer-preview-1"></script>
     <script src="/static/capture/ink-model.js"></script>
     <script src="/static/capture/ink-canvas.js"></script>
     <script src="/static/capture/draft-store.js"></script>

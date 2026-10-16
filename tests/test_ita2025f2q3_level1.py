@@ -85,19 +85,15 @@ def test_f2q3_answer_only_scores_final_points_only():
 def test_f2q3_partial_beta_difference_scores_partial():
     data = audit_solution(read_example("partial_beta_difference.txt"))
 
-    assert_incomplete(data, 2, 4)
+    assert_incomplete(data, 2, 2)
     assert rubric_item_by_id(data, "beta_difference")["points"] == 2.0
     assert rubric_item_by_id(data, "candidate_values")["points"] is None
     assert rubric_item_by_id(data, "final_sin_sum")["points"] is None
-    # The existing checker also decides the extracted final-answer claim by refutation.
-    # Its zero belongs to the decided capacity; missing criteria remain pending.
     final = rubric_item_by_id(data, "final_answer")
-    assert final["points"] == 0.0
-    assert final["mathematical_status"] == "refuted"
-    check = next(check for check in data["student_claim_checks"]
-                 if check["claim_type"] == "f2q3_student_final_answer")
-    assert check["status"] == "refuted" and check["refutation_verified"] is True
-    assert check["refutation_lean_file"]
+    assert final["points"] is None
+    assert final["mathematical_status"] == "indeterminate"
+    assert not any(check["claim_type"] == "f2q3_student_final_answer"
+                   for check in data["student_claim_checks"])
 
 
 def test_f2q3_wrong_answer_keeps_undecided_criteria_and_decided_subtotal():

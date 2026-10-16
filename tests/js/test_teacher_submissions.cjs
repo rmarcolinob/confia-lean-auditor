@@ -43,6 +43,22 @@ test("inbox and existing correction prototype are mutually exclusive without new
   assert.match(ui.get("#manuscript-message").textContent, /Nenhuma solução/);
 });
 
+test("returning to the teacher inbox refreshes a previously loaded transcription state", async () => {
+  let published = false;
+  const base = transportFor();
+  const ui = page(async url => url.endsWith("/transcriptions")
+    ? { ok: true, json: async () => published ? [summary] : [] }
+    : base(url));
+  await ui.get("#refresh-manuscripts").click();
+  assert.match(ui.get("#manuscript-list").textContent, /Ainda não criada/);
+  await ui.get("#show-text-prototype").click();
+  published = true;
+  await ui.get("#show-manuscripts").click();
+  await flush();
+  assert.match(ui.get("#manuscript-list").textContent, /Aguardando conferência/);
+  assert.equal(ui.calls.filter(call => call.url === "/submissions").length, 2);
+});
+
 test("failed list and detail requests do not leave stale received artifacts on screen", async () => {
   let fail = false;
   const ui = page(async url => fail ? { ok: false, status: 503, json: async () => ({}) } : transportFor()(url));

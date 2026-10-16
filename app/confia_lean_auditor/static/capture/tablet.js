@@ -57,6 +57,9 @@
     snapshotMessage: document.querySelector("#snapshot-message"),
     technicalDetails: document.querySelector("#technical-details"),
     sendSolution: document.querySelector("#send-solution"),
+    previewWriting: document.querySelector("#preview-writing"),
+    previewMessage: document.querySelector("#preview-message"),
+    previewResult: document.querySelector("#preview-result"),
     submissionMessage: document.querySelector("#submission-message"),
     submissionReceipt: document.querySelector("#submission-receipt"),
     recognizeWriting: document.querySelector("#recognize-writing"),
@@ -83,7 +86,10 @@
   let persistenceRequest = 0;
   let savedDocumentsRequest = 0;
   let submissionBusy = false;
-  let recognitionBusy = false;
+  const recognitionBusy = new Set();
+  let previewPending = null;
+  let previewGeneration = 0;
+  let transientPreview = null;
   const submissionStates = new Map();
   const recognitionStates = new Map();
 
@@ -106,8 +112,13 @@
       saved_documents: elements.savedSelect.children ? Array.from(elements.savedSelect.children).map(option => ({ id: option.value, label: option.textContent })).filter(option => option.id) : [],
       can_prepare: !elements.prepareSnapshot.disabled,
       can_send: !elements.sendSolution.disabled,
+      can_preview: !elements.previewWriting.disabled,
+      preview_message: elements.previewMessage.textContent,
+      preview_kind: elements.previewMessage.dataset.kind,
+      preview_segments: transientPreview?.snapshot === value ? transientPreview.segments : [],
       send_label: elements.sendSolution.textContent,
       can_recognize: !elements.recognizeWriting.disabled,
+      recognize_label: elements.recognizeWriting.textContent,
       snapshot_message: elements.snapshotMessage.textContent,
       submission_message: elements.submissionMessage.textContent,
       submission_kind: elements.submissionMessage.dataset.kind,
@@ -129,11 +140,25 @@
   function renderSubmission() {
     const frozen = captureDocument?.document_kind === "local_snapshot";
     const state = submissionStates.get(captureDocument?.local_snapshot_id);
-    elements.sendSolution.disabled = resolutionMode !== "submission" || !Sender || !frozen || submissionBusy || Boolean(state?.receipt);
+    const previewBusy = previewPending?.snapshot === captureDocument;
+    const preview = transientPreview?.snapshot === captureDocument ? transientPreview : null;
+    const previewReady = !captureDocument?.active_stroke_ids?.length || Boolean(preview?.segments?.length && !preview?.loading);
+    elements.sendSolution.disabled = resolutionMode !== "submission" || !Sender || !frozen || submissionBusy || previewBusy
+      || !previewReady || Boolean(state?.receipt);
     elements.sendSolution.textContent = state?.receipt ? "Solução recebida" : "Enviar solução";
+    elements.previewWriting.disabled = resolutionMode !== "submission" || !frozen || previewBusy
+      || !captureDocument?.active_stroke_ids?.length || Boolean(state?.receipt);
+    elements.previewMessage.textContent = previewBusy && preview?.loading ? "Reconhecendo..."
+      : preview?.message || (frozen ? captureDocument?.active_stroke_ids?.length
+        ? "Reconheça a versão preparada para conferir a leitura antes do envio."
+        : "Esta versão não contém escrita ativa para reconhecer."
+        : "Prepare uma versão para gerar a prévia.");
+    elements.previewMessage.dataset.kind = preview?.kind || "info";
+    globalThis.ConfiaRecognitionView?.render(elements.previewResult, preview?.segments || []);
     elements.submissionMessage.dataset.kind = state?.kind || "info";
     elements.submissionMessage.textContent = state?.message || (frozen
-      ? "Versão preparada neste dispositivo. Envie para receber confirmação do servidor."
+      ? previewReady ? "Versão preparada neste dispositivo. Envie para receber confirmação do servidor."
+        : "Reconheça e confira a versão preparada antes de enviar."
       : "Prepare uma versão antes de enviar. Salvar o rascunho neste dispositivo não envia a solução.");
     elements.submissionReceipt.hidden = !state?.receipt;
     elements.submissionReceipt.textContent = state?.receipt
@@ -142,31 +167,16 @@
     if (state?.receipt) elements.snapshotMessage.textContent = "Versão congelada preservada neste dispositivo.";
     else if (state) elements.snapshotMessage.textContent = "Versão local preservada; recebimento pelo servidor ainda não confirmado.";
     const recognition = recognitionStates.get(captureDocument?.local_snapshot_id);
-    elements.recognizeWriting.disabled = resolutionMode !== "submission" || !state?.receipt || recognitionBusy
-      || !captureDocument?.active_stroke_ids?.length;
+    elements.recognizeWriting.disabled = resolutionMode !== "submission" || !state?.receipt
+      || recognitionBusy.has(state.receipt.submission_id) || Boolean(recognition?.segments?.length && !recognition.failed);
+    elements.recognizeWriting.textContent = recognition?.segments?.length && !recognition.failed
+      ? "Transcrição gerada" : recognition?.failed ? "Tentar reconhecimento novamente" : "Reconhecer escrita";
     elements.recognitionMessage.textContent = recognition?.message || (state?.receipt
       ? captureDocument?.active_stroke_ids?.length
-        ? "Toque em Reconhecer escrita para iniciar a leitura da versão enviada."
+        ? "A transcrição automática oficial será gerada a partir da versão enviada."
         : "Esta versão não contém escrita ativa para reconhecer."
       : "Envie a versão preparada para reconhecer a escrita.");
-    elements.recognitionPreview.replaceChildren();
-    for (const segment of recognition?.segments || []) {
-      const row = document.createElement("section");
-      const heading = document.createElement("strong");
-      heading.textContent = `Página ${segment.page_index + 1}`;
-      row.appendChild(heading);
-      if (segment.text) {
-        const text = document.createElement("p");
-        text.textContent = segment.text;
-        row.appendChild(text);
-      }
-      if (segment.latex) {
-        const latex = document.createElement("pre");
-        latex.textContent = segment.latex;
-        row.appendChild(latex);
-      }
-      elements.recognitionPreview.appendChild(row);
-    }
+    globalThis.ConfiaRecognitionView?.render(elements.recognitionPreview, recognition?.segments || []);
     notifyContext();
   }
 
@@ -333,6 +343,9 @@
   }
 
   function setDocument(nextDocument, nextPageIndex) {
+    previewGeneration += 1;
+    previewPending = null;
+    transientPreview = null;
     captureDocument = nextDocument;
     pageIndex = nextPageIndex || 0;
     currentStroke = null;
@@ -357,6 +370,9 @@
 
   function mutate(nextDocument, statusText) {
     if (nextDocument === captureDocument) return;
+    previewGeneration += 1;
+    previewPending = null;
+    transientPreview = null;
     captureDocument = nextDocument;
     elements.storageState.textContent = "Salvando…";
     renderState();
@@ -522,6 +538,7 @@
       "continue-draft": elements.continueDraft,
       "prepare-snapshot": elements.prepareSnapshot,
       "send-solution": elements.sendSolution,
+      "preview-writing": elements.previewWriting,
       "recognize-writing": elements.recognizeWriting,
       "export-json": elements.exportJson,
       "export-png": elements.exportPng,
@@ -613,6 +630,9 @@
   });
   elements.addPage.addEventListener("click", () => {
     try {
+      previewGeneration += 1;
+      previewPending = null;
+      transientPreview = null;
       captureDocument = Model.addPage(captureDocument);
       pageIndex = captureDocument.pages.length - 1;
       renderState();
@@ -667,33 +687,49 @@
     setStatus("Nova versão editável criada; a cópia congelada permanece inalterada.");
     persist(nextDraft);
   });
-  elements.sendSolution.addEventListener("click", async () => {
-    if (resolutionMode !== "submission" || !Sender || submissionBusy || captureDocument?.document_kind !== "local_snapshot" || submissionStates.get(captureDocument.local_snapshot_id)?.receipt) return;
-    const snapshot = Model.exportClone(captureDocument);
-    const id = snapshot.local_snapshot_id;
-    submissionBusy = true;
-    submissionStates.set(id, { message: "Enviando solução… aguarde o recibo do servidor.", kind: "pending" });
+  elements.previewWriting.addEventListener("click", async () => {
+    if (resolutionMode !== "submission" || previewPending?.snapshot === captureDocument || captureDocument?.document_kind !== "local_snapshot"
+        || !captureDocument.active_stroke_ids.length) return;
+    const snapshot = captureDocument;
+    const generation = ++previewGeneration;
+    const clientPreviewId = Model.newId("preview");
+    const snapshotJson = JSON.stringify(Model.exportClone(snapshot), null, 2);
+    previewPending = { snapshot, generation };
+    transientPreview = { snapshot, segments: [], message: "Reconhecendo...", loading: true, kind: "pending" };
     renderSubmission();
     try {
-      const receipt = await Sender.send(snapshot);
-      submissionStates.set(id, { receipt, message: "Solução recebida pelo ConfIA", kind: "saved" });
-      notifyContext(snapshot, receipt, "submission");
+      const response = await fetch("/submissions/recognition-preview", {
+        method: "POST", headers: { "Content-Type": "application/json" }, cache: "no-store",
+        body: JSON.stringify({ snapshot_json: snapshotJson, client_preview_id: clientPreviewId }),
+      });
+      if (!response.ok) throw new Error("Não foi possível reconhecer esta versão. Tente novamente.");
+      const result = await response.json();
+      if (result.client_preview_id !== clientPreviewId || result.problem_id !== snapshot.problem_id
+          || result.snapshot_id !== snapshot.local_snapshot_id || !/^[0-9a-f]{64}$/.test(result.snapshot_sha256)
+          || result.page_count !== snapshot.pages.length
+          || result.active_stroke_count !== snapshot.active_stroke_ids.length
+          || !Array.isArray(result.result?.segments) || !result.result.segments.length) {
+        throw new Error("A prévia não corresponde à versão preparada. Gere uma nova leitura.");
+      }
+      if (generation !== previewGeneration || captureDocument !== snapshot) return;
+      transientPreview = { snapshot, snapshotHash: result.snapshot_sha256, segments: result.result.segments,
+        message: "Prévia transitória. Confira se a leitura corresponde ao que você escreveu.", kind: "saved" };
     } catch (error) {
-      submissionStates.set(id, { message: error.message, kind: "error" });
+      if (generation === previewGeneration && captureDocument === snapshot) {
+        transientPreview = { snapshot, segments: [], message: error.message, kind: "error" };
+      }
     } finally {
-      submissionBusy = false;
+      if (previewPending?.generation === generation) previewPending = null;
       renderSubmission();
-      notifyContext();
     }
   });
-  elements.recognizeWriting.addEventListener("click", async () => {
-    const snapshotId = captureDocument?.local_snapshot_id;
-    const receipt = submissionStates.get(snapshotId)?.receipt;
-    if (resolutionMode !== "submission" || recognitionBusy || !receipt) return;
+  async function recognizeSubmittedSnapshot(snapshotId, receipt) {
+    if (!receipt?.submission_id || recognitionBusy.has(receipt.submission_id)) return;
     const state = recognitionStates.get(snapshotId) || { attempt: 0 };
-    recognitionBusy = true;
+    recognitionBusy.add(receipt.submission_id);
     state.segments = [];
-    state.message = "Reconhecendo...";
+    state.failed = false;
+    state.message = "Reconhecendo a solução enviada...";
     recognitionStates.set(snapshotId, state);
     renderSubmission();
     try {
@@ -704,21 +740,63 @@
       if (!response.ok) throw new Error("Reconhecedor indisponível. Confira a configuração do servidor.");
       const summary = await response.json();
       if (summary.status !== "NEEDS_REVIEW") {
-        state.attempt += 1;
+        if (summary.status === "FAILED") state.attempt += 1;
         throw new Error("O reconhecimento falhou. Toque novamente para tentar uma nova leitura.");
       }
       const detail = await fetch(`/submissions/${encodeURIComponent(receipt.submission_id)}/recognitions/${encodeURIComponent(summary.recognizer_run_id)}`, { cache: "no-store" });
-      if (!detail.ok) throw new Error("A leitura foi registrada, mas a prévia não pôde ser carregada. Toque novamente para recuperá-la.");
+      if (!detail.ok) throw new Error("A transcrição foi registrada, mas não pôde ser carregada. Toque novamente para recuperá-la.");
       const run = await detail.json();
-      if (run.status !== "NEEDS_REVIEW" || !Array.isArray(run.result?.segments)) throw new Error("Prévia de reconhecimento indisponível.");
+      if (run.status !== "NEEDS_REVIEW" || !Array.isArray(run.result?.segments)) throw new Error("Transcrição automática indisponível.");
       state.segments = run.result.segments;
-      state.message = "Reconhecimento automático · precisa de revisão. Confira se o reconhecimento corresponde ao que foi escrito.";
-    } catch (error) {
-      state.message = error.message;
+      state.message = "Transcrição automática criada · aguarda conferência do professor.";
+      const submission = submissionStates.get(snapshotId);
+      if (submission?.receipt?.submission_id === receipt.submission_id) {
+        submissionStates.set(snapshotId, { ...submission, message: "Solução enviada. Transcrição automática aguarda conferência do professor.", kind: "saved" });
+      }
+    } catch (_error) {
+      state.failed = true;
+      state.message = "Não foi possível gerar a transcrição automática. Toque para tentar novamente.";
+      const submission = submissionStates.get(snapshotId);
+      if (submission?.receipt?.submission_id === receipt.submission_id) {
+        submissionStates.set(snapshotId, { ...submission, message: "Solução enviada. Não foi possível gerar a transcrição automática.", kind: "error" });
+      }
     } finally {
-      recognitionBusy = false;
+      recognitionBusy.delete(receipt.submission_id);
       renderSubmission();
     }
+  }
+
+  elements.sendSolution.addEventListener("click", async () => {
+    if (resolutionMode !== "submission" || !Sender || submissionBusy || captureDocument?.document_kind !== "local_snapshot" || submissionStates.get(captureDocument.local_snapshot_id)?.receipt) return;
+    if (captureDocument.active_stroke_ids.length && !(transientPreview?.snapshot === captureDocument && transientPreview.segments?.length)) return;
+    const snapshot = Model.exportClone(captureDocument);
+    const id = snapshot.local_snapshot_id;
+    submissionBusy = true;
+    submissionStates.set(id, { message: "Enviando solução… aguarde o recibo do servidor.", kind: "pending" });
+    renderSubmission();
+    try {
+      let receipt;
+      try {
+        receipt = await Sender.send(snapshot);
+      } catch (error) {
+        submissionStates.set(id, { message: error.message, kind: "error" });
+        return;
+      }
+      submissionStates.set(id, { receipt, message: "Solução enviada. Gerando transcrição automática...", kind: "pending" });
+      notifyContext(snapshot, receipt, "submission");
+      renderSubmission();
+      await recognizeSubmittedSnapshot(id, receipt);
+    } finally {
+      submissionBusy = false;
+      renderSubmission();
+      notifyContext();
+    }
+  });
+  elements.recognizeWriting.addEventListener("click", async () => {
+    const snapshotId = captureDocument?.local_snapshot_id;
+    const receipt = submissionStates.get(snapshotId)?.receipt;
+    if (resolutionMode !== "submission" || !receipt) return;
+    await recognizeSubmittedSnapshot(snapshotId, receipt);
   });
   elements.exportJson.addEventListener("click", () => {
     const exported = Model.exportClone(captureDocument);

@@ -72,6 +72,23 @@ test("formal details distinguish proven refutations from unavailable or inconclu
   assert.match(section.textContent, /goals-step: Não foi possível verificar formalmente/);
 });
 
+test("teacher report keeps suggested result, evidence, attention and F2Q3 criteria visible", async () => {
+  const data = { ...report("ITA2025F2Q3"), rubric_assessment: { items: [
+    { id: "final_answer", description: "Apresenta a resposta final correta (5+sqrt(7))/8.",
+      points: null, max_points: 2, mathematical_status: "indeterminate" },
+  ] } };
+  Object.assign(data.pedagogical_report, { evidence_items: [
+    { title: "Afirmação do estudante", result: "incorreta", evidence: "cos beta - sin beta = -1/2" },
+  ], attention_points: ["A resposta final não foi calculada."] });
+  const ui = await page(() => response(data));
+  const target = element("section");
+  ui.render(data, target, { context: "teacher" });
+  assert.match(target.textContent, /Nota sugerida.*Resultado sugerido.*Evidências.*Pontos de atenção.*Critérios de avaliação/s);
+  assert.match(target.textContent, /cos beta - sin beta = -1\/2/);
+  assert.match(target.textContent, /\(5\+sqrt\(7\)\)\/8/);
+  assert.doesNotMatch(target.textContent, /\[local path hidden\]/);
+});
+
 test("incomplete assessment shows no global numeric grade and keeps pending criteria explicit", async () => {
   const data = { ...report("A"), score: null, verdict: "inconclusivo", rubric_assessment: { items: [
     { id: "pending", description: "Critério pendente", points: null, max_points: 5,

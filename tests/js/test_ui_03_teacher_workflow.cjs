@@ -45,7 +45,9 @@ test('original precedes the complementary workflow and page navigation preserves
   const ui = await open(async url => url === `/submissions/${id}` ? ok(data) : base(url));
   const workspace = byClass(ui, 'transcription-workspace');
   assert.equal(workspace.children[0].className, 'original-manuscript-panel');
-  assert.equal(workspace.children[1].className, 'teacher-solution-flow');
+  assert.equal(workspace.children[1].className, 'transcription-panel');
+  const detail = ui.get('#manuscript-detail');
+  assert(detail.children.indexOf(byClass(ui, 'manuscript-analysis-panel')) > detail.children.indexOf(workspace));
   assert.match(primaryText(workspace.children[0]), /Solução do aluno.*Manuscrito original.*conferidos e preservados/);
   await tree(ui).find(n => n.tag === 'button' && n.textContent === 'Próxima página').click();
   assert.equal(tree(ui).find(n => n.tag === 'img').src, `/submissions/${id}/pages/1`);

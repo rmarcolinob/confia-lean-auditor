@@ -11,6 +11,7 @@ from confia_lean_auditor.core.paths import get_repo_root
 from confia_lean_auditor.recognition.registry import configured_registry, UnknownRecognizer
 from confia_lean_auditor.recognition.schemas import RecognitionRequest, RecognitionResponse, RecognitionRun
 from confia_lean_auditor.recognition.service import RecognitionService, RecognitionConflict
+from confia_lean_auditor.recognition.preview import PreviewError, PreviewRequest, PreviewResponse, recognize_preview
 from confia_lean_auditor.submissions.schemas import (
     AcceptedTranscription,
     AcceptTranscriptionRequest,
@@ -115,6 +116,37 @@ def recognition_providers(response: Response):
     response.headers["Cache-Control"] = "no-store"
     registry = configured_registry()
     return [{"provider": name, "label": registry.create(name).display_label} for name in registry.providers()]
+
+
+@router.post("/recognition-preview", response_model=PreviewResponse)
+async def preview_recognition(request: Request, response: Response):
+    if request.headers.get("content-type", "").split(";")[0].strip().lower() != "application/json":
+        raise HTTPException(415, "Use application/json.")
+    length = request.headers.get("content-length")
+    if length is not None:
+        try:
+            if int(length) > MAX_REQUEST_BYTES or int(length) < 0:
+                raise HTTPException(413, "Payload acima do limite permitido.")
+        except ValueError:
+            raise HTTPException(400, "Content-Length inválido.") from None
+    raw = bytearray()
+    async for chunk in request.stream():
+        if len(raw) + len(chunk) > MAX_REQUEST_BYTES:
+            raise HTTPException(413, "Payload acima do limite permitido.")
+        raw.extend(chunk)
+    try:
+        preview_request = PreviewRequest.model_validate_json(bytes(raw))
+        result = await run_in_threadpool(recognize_preview, preview_request, configured_registry())
+    except UnknownRecognizer:
+        raise HTTPException(422, "Reconhecedor indisponível neste ambiente.") from None
+    except PreviewError as exc:
+        code = str(exc)
+        status = 422 if code in {"INVALID_SNAPSHOT", "INVALID_PROVIDER", "INVALID_PROVIDER_OUTPUT"} else 503
+        raise HTTPException(status, code) from None
+    except (ValidationError, ValueError):
+        raise HTTPException(422, "Payload de prévia inválido.") from None
+    response.headers["Cache-Control"] = "no-store"
+    return result
 
 
 def recognize_body(submission_id, raw):

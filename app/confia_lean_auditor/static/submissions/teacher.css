@@ -22,6 +22,12 @@
 #manuscript-detail li { overflow-wrap: anywhere; }
 #manuscript-detail pre { white-space: pre-wrap; overflow-wrap: anywhere; font-size: .8rem; }
 .transcription-workspace { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); gap: var(--spacing-5); align-items: start; margin-top: var(--spacing-6); }
+.manuscript-analysis-panel, .teacher-evaluation-panel { margin-top: var(--spacing-5); }
+.transcription-visual { min-width: 0; margin: var(--spacing-4) 0; padding: var(--spacing-3); border: 1px solid var(--color-border); border-radius: var(--radius-control); background: var(--color-surface); }
+.transcription-visual h4 { margin: 0 0 var(--spacing-3); }
+.recognized-segment { min-width: 0; padding: var(--spacing-3) 0; border-top: 1px solid var(--color-border); overflow-wrap: anywhere; }
+.recognized-segment p { white-space: pre-wrap; }
+.recognized-math { max-width: 100%; overflow-x: auto; overflow-y: hidden; }
 .teacher-solution-flow { display: grid; gap: var(--spacing-4); min-width: 0; }
 .original-manuscript-panel, .transcription-panel, .teacher-workflow-stages, .manuscript-analysis-panel, .teacher-evaluation-panel { min-width: 0; padding: var(--spacing-5); border: 1px solid var(--color-border); border-radius: var(--radius-card); background: var(--color-background); }
 .original-manuscript-panel { background: var(--color-surface); border-top: 3px solid var(--color-primary); }

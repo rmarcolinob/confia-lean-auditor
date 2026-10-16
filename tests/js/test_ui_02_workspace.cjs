@@ -316,7 +316,8 @@ test('workspace renders capture status and routes actions through the existing n
     recognition_segments:[{page_index:0,text:'<script>texto</script>',latex:'x^2'}],
   }});
   assert.equal(ui.get('#workspace-submission-receipt').hidden,false);
-  assert.equal(ui.get('#workspace-recognition-preview').children[0].children[1].textContent,'<script>texto</script>');
+  assert.equal(ui.get('#workspace-recognition-preview').children[0].children[1].textContent,'rendered:x^2');
+  assert.equal(ui.get('#workspace-recognition-preview').children[0].children[2].children[1].textContent,'<script>texto</script>');
   assert.equal(ui.get('#workspace-recognize-writing').disabled,false);
   await ui.get('#workspace-recognize-writing').click();
   assert.equal(ui.commands.at(-1).message.action,'recognize-writing');

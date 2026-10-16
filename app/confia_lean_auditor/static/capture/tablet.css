@@ -395,6 +395,8 @@ select {
 .recognition-card .export-actions { margin: 14px 0; }
 .recognition-preview section { border-top: 1px solid var(--border); padding: 12px 0; }
 .recognition-preview pre { white-space: pre-wrap; overflow-wrap: anywhere; font-size: 1rem; }
+.recognition-preview .recognized-math { max-width: 100%; overflow-x: auto; overflow-y: hidden; }
+.recognition-preview .recognized-segment p { white-space: pre-wrap; }
 
 /* Embedded mode removes repeated shell chrome, never changes ink geometry. */
 body[data-embedded="true"] .capture-header,

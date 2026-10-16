@@ -288,12 +288,21 @@
     const pageCount = data.submission.page_images.length;
     const latest = history?.revisions?.[history.revisions.length - 1] || null;
     panel.setAttribute("aria-label", "Transcrição da solução");
-    panel.appendChild(node("h3", "Transcrição"));
+    panel.appendChild(node("h3", "Transcrição reconhecida"));
     const warning = node("p", "Transcrever é representar fielmente o manuscrito. Não corrija a matemática: se o aluno escreveu “2 + 2 = 5”, preserve “2 + 2 = 5”.");
     warning.className = "transcription-warning";
     panel.appendChild(warning);
     panel.appendChild(node("p", "Transcrição conferida significa somente fidelidade ao manuscrito; não significa solução correta nem avaliação do professor."));
     panel.appendChild(node("p", latest ? `${statusLabel(latest.status)} · revisão persistida ${latest.revision_number}` : "Transcrição: ainda não criada"));
+    if (latest?.segments?.length) {
+      const visual = node("div");
+      visual.className = "transcription-visual";
+      visual.appendChild(node("h4", "Visualização da transcrição"));
+      const content = node("div");
+      globalThis.ConfiaRecognitionView?.render(content, latest.segments);
+      visual.appendChild(content);
+      panel.appendChild(visual);
+    }
     if (latest?.recognizer_run_id) {
       if (latest.provider === "fake_test") panel.appendChild(node("p", "Transcrição de teste artificial. Conteúdo constante; não é OCR real. Confira cada segmento com o original.")).className = "transcription-warning";
       const origin = node("details");
@@ -716,14 +725,12 @@
       workspace.className = "transcription-workspace";
       const original = node("section");
       original.className = "original-manuscript-panel";
-      const flow = node("div");
-      flow.className = "teacher-solution-flow";
       const transcription = node("section");
       transcription.className = "transcription-panel";
       renderOriginal(original, data, id);
       const audits = Array.isArray(auditResult) ? auditResult : null;
       const stages = renderStages(history, audits);
-      flow.appendChild(stages);
+      detail.appendChild(stages);
       if (summaries.length > 1) {
         const selection = node("select");
         summaries.forEach((item, index) => selection.appendChild(option(item.transcription.transcription_id, `Transcrição ${summaries.length - index} · ${when(item.transcription.created_at)} · ${statusLabel(item.latest_revision.status)}`)));
@@ -737,18 +744,17 @@
       }
       const editor = renderTranscription(transcription, data, id, history, Array.isArray(available) ? available : []);
       workspace.appendChild(original);
-      flow.appendChild(transcription);
+      workspace.appendChild(transcription);
+      detail.appendChild(workspace);
       const analysis = node("section");
       analysis.className = "manuscript-analysis-panel";
       renderAnalysis(analysis, data, id, history, audits, editor, stages, auditLoadError);
-      flow.appendChild(analysis);
+      detail.appendChild(analysis);
       const evaluation = node("section");
       evaluation.className = "teacher-evaluation-panel";
       evaluation.appendChild(node("h3", "Avaliação do professor"));
       evaluation.appendChild(node("p", "Avaliação docente — integração em desenvolvimento."));
-      flow.appendChild(evaluation);
-      workspace.appendChild(flow);
-      detail.appendChild(workspace);
+      detail.appendChild(evaluation);
       detail.appendChild(technical);
       detail.hidden = false;
       queuePanel.hidden = true;
@@ -873,11 +879,12 @@
 
   function mode(manuscripts) {
     if (!canLeaveEditor()) return false;
+    const reopeningInbox = inbox.hidden;
     inbox.hidden = !manuscripts;
     legacy.hidden = manuscripts;
     showInk.setAttribute("aria-pressed", String(manuscripts));
     showText.setAttribute("aria-pressed", String(!manuscripts));
-    if (manuscripts && !queueLoaded && !refreshButton.disabled) refresh();
+    if (manuscripts && (reopeningInbox || !queueLoaded) && !refreshButton.disabled) refresh();
     return true;
   }
   function showView(view) {

@@ -9,9 +9,11 @@ from confia_lean_auditor.core.schemas import (
     ExtractedClaim,
     FormalStep,
 )
+from confia_lean_auditor.core.audit_math_projection import project_audit_math
 
 
 def normalize(text: str) -> str:
+    text = project_audit_math(text)
     text = text.replace("α", "alpha")
     text = text.replace("β", "beta")
     text = text.replace("sen", "sin")
@@ -53,7 +55,7 @@ def detect_features(solution: str) -> Dict[str, bool]:
     t = normalize(solution)
     c = compact(t)
 
-    raw = solution.lower()
+    raw = project_audit_math(solution).lower()
     raw = raw.replace("α", "alpha").replace("β", "beta")
     raw = raw.replace("sen", "sin").replace("seno", "sin")
     raw = raw.replace("√", "sqrt")
@@ -84,7 +86,6 @@ def detect_features(solution: str) -> Dict[str, bool]:
             "cosbeta-senbeta=1/2",
         )
         or "cos beta - sin beta = 1/2" in t
-        or ("subtra" in t and "1/2" in c and "cosbeta" in c and "sinbeta" in c)
     )
 
     # ------------------------------------------------------------
@@ -143,7 +144,11 @@ def detect_features(solution: str) -> Dict[str, bool]:
         or "sinalphacosbeta+cosalphasinbeta" in c
         or "sin alpha cos beta + cos alpha sin beta" in t
         or "sin alpha*cos beta+cos alpha*sin beta" in t
+        or "sinalpha*cosbeta+sinbeta*cosalpha" in c
+        or "sinalphacosbeta+sinbetacosalpha" in c
     )
+
+    sin_sum_identity = mentions_sin_sum_target and mentions_addition_formula
 
     mentions_correct_sum_value = has_any(
         "(5+sqrt(7))/8",
@@ -180,6 +185,7 @@ def detect_features(solution: str) -> Dict[str, bool]:
 
     return {
         "beta_difference": beta_difference,
+        "sin_sum_identity": sin_sum_identity,
         "candidate_values": candidate_values,
         "final_sin_sum": final_sin_sum,
         "final_answer": final_answer,
@@ -276,6 +282,17 @@ def extract_claims_ita2025f2q3(solution: str) -> ClaimExtraction:
                 claim_type="beta_difference",
                 text="A solução obtém cos(beta)-sen(beta)=1/2.",
                 evidence="Foi detectada a diferença cos beta - sen beta = 1/2.",
+                confidence=0.88,
+            )
+        )
+
+    if features["sin_sum_identity"]:
+        claims.append(
+            make_claim(
+                claim_id="f2q3_c_identity",
+                claim_type="sin_sum_identity",
+                text="A solução escreve a identidade de adição de sen(alpha+beta).",
+                evidence="Foi detectada a identidade sen(alpha+beta)=sen alpha cos beta + sen beta cos alpha.",
                 confidence=0.88,
             )
         )

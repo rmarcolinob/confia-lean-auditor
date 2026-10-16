@@ -26,9 +26,11 @@ INTEGRITY_SCOPE = "persisted_internal_record"
 # handled separately, using the authorized root rather than text inference.
 LOCAL_PATH_PATTERNS = (
     re.compile(r"file://", re.I),
-    re.compile(r"(?<![A-Za-z0-9])[A-Za-z]:[\\/]|\\\\[^\\\s]+\\"),
+    re.compile(r"(?<![A-Za-z0-9])[A-Za-z]:[\\/]|(?<!\\)\\\\(?!\\)[^\\\s{}]+\\[^\\\s{}]+"),
     re.compile(r"(?<![\w/])/(?:Users|home|private|tmp|var|opt|etc|usr|root|Volumes|mnt|srv|run|workspace|workspaces)(?:/|(?=$|[\s\]\)}\"',;]))", re.I),
-    re.compile(r"(?<![\w:/\\])/(?![/\s])[^\s\[\](){}\"',;<>]+"),
+    # A slash immediately after a closing math delimiter is a denominator,
+    # e.g. (5+sqrt(7))/8, not the start of a POSIX path.
+    re.compile(r"(?<![\w:/\\)\]}])/(?![/\s])[^\s\[\](){}\"',;<>]+"),
 )
 PATH_FIELDS = {"file", "lean_file", "refutation_lean_file"}
 DIAGNOSTICS = {"stdout", "stderr", "refutation_stdout", "refutation_stderr"}

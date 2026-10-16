@@ -2,6 +2,7 @@ const fs = require("node:fs");
 const path = require("node:path");
 const vm = require("node:vm");
 const source = fs.readFileSync(path.join(__dirname, "../../app/confia_lean_auditor/static/submissions/teacher.js"), "utf8");
+const recognitionView = fs.readFileSync(path.join(__dirname, "../../app/confia_lean_auditor/static/recognition-view.js"), "utf8");
 const id = "sub_" + "a".repeat(32);
 const record = { submission_id: id, problem_id: "ITA2025Q1", snapshot_id: "snapshot:1", received_at: "2026-10-01T12:00:00Z", status: "RECEIVED", source: "tablet", capture_schema_version: "1.0",
   student_reference: "<img src=x onerror=unsafe> (teste)", page_images: [{ filename: "page_1.png", page_index: 0 }] };
@@ -27,7 +28,7 @@ function page(transport, search = "") {
   get("#teacher-text-prototype").hidden = true;
   get("#manuscript-detail").hidden = true;
   const logs = [], reports = [];
-  vm.runInNewContext(source, {
+  const context = {
     console: { error: (...args) => logs.push(args) },
     window: { addEventListener() {}, ConfIAReport: { render(data, target, options) {
       reports.push({ data, target, options });
@@ -36,7 +37,10 @@ function page(transport, search = "") {
     document: { querySelector: get, createElement: element },
     location: { search }, URLSearchParams,
     fetch: async (url, options) => { calls.push({ url, options }); return transport(url, options); },
-  });
+    katex: { render(latex, target) { target.textContent = `rendered:${latex}`; } },
+  };
+  vm.runInNewContext(recognitionView, context);
+  vm.runInNewContext(source, context);
   return { get, calls, logs, reports };
 }
 function transportFor(matches = true, withTranscription = false) {

@@ -5,9 +5,11 @@ import unicodedata
 from typing import List
 
 from confia_lean_auditor.student_claims.schemas import StudentClaim
+from confia_lean_auditor.core.audit_math_projection import project_audit_math
 
 
 def normalize(text: str) -> str:
+    text = project_audit_math(text)
     text = text.replace("α", "alpha")
     text = text.replace("β", "beta")
     text = text.replace("sen", "sin")
@@ -154,10 +156,10 @@ def _extract_candidate_values(solution: str, claims: List[StudentClaim]) -> None
 
 def _extract_final_sin_sum(solution: str, claims: List[StudentClaim]) -> None:
     t = normalize(solution)
-    c = compact(t)
-
-    if "sin(alpha+beta)" not in c and "sen(alpha+beta)" not in c:
+    assignment = re.search(r"sin\s*\(\s*alpha\s*\+\s*beta\s*\)\s*=\s*([^;.]+)", t)
+    if assignment is None:
         return
+    c = compact(assignment.group(1).rsplit("=", 1)[-1])
 
     options = [
         ("(5+sqrt(7))/8", "(5 + sqrt7) / 8", "sin(alpha+beta) = (5+sqrt(7))/8"),
@@ -185,14 +187,14 @@ def _extract_final_sin_sum(solution: str, claims: List[StudentClaim]) -> None:
 
 def _extract_final_answer(solution: str, claims: List[StudentClaim]) -> None:
     t = normalize(solution)
-    c = compact(t)
-
-    tail = t
-    for cue in ["portanto", "logo", "resposta", "conclu", "assim"]:
-        idx = t.rfind(cue)
-        if idx >= 0:
-            tail = t[idx:]
-            break
+    cues = [t.rfind(cue) for cue in ["portanto", "logo", "resposta", "conclu", "assim"]]
+    if max(cues) < 0:
+        target = re.search(r"sin\s*\(\s*alpha\s*\+\s*beta\s*\)\s*=\s*([^;.]+)", t)
+        if target is None:
+            return
+        tail = target.group(1).rsplit("=", 1)[-1]
+    else:
+        tail = t[max(cues):]
 
     tail_c = compact(tail)
 
@@ -204,7 +206,7 @@ def _extract_final_answer(solution: str, claims: List[StudentClaim]) -> None:
     ]
 
     for needle, expr, raw in options:
-        if needle in tail_c or (needle in c and "resposta" in c):
+        if needle in tail_c:
             claims.append(
                 _make_claim(
                     idx=len(claims),

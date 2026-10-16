@@ -144,7 +144,7 @@ test("submission is disabled for drafts and receipt is shown only after the serv
   assert.notEqual(sent, snapshot);
   response.resolve({ submission_id: "sub_" + "a".repeat(32), received_at: "2026-10-01T12:00:00Z", problem_id: "ITA2025Q1" });
   await sending;
-  assert.equal(ui.sendMessage.textContent, "Solução recebida pelo ConfIA");
+  assert.match(ui.sendMessage.textContent, /Solução enviada.*Não foi possível gerar a transcrição automática/);
   assert.equal(ui.receipt.hidden, false);
   assert.equal(ui.snapshotMessage.textContent, "Versão congelada preservada neste dispositivo.");
   assert.match(ui.receipt.textContent, /sub_a{32}/);

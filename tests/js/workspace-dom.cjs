@@ -48,7 +48,8 @@ async function page(transport = async () => ({ ok: true, json: async () => ({ pr
       return transport(url,request);
     },
   });
-  for (const file of ['app.js','resolution-workspace.js','shell.js']) vm.runInContext(fs.readFileSync(path.join(staticDir,file),'utf8'),context);
+  context.katex = { render(latex, target) { target.textContent = `rendered:${latex}`; } };
+  for (const file of ['recognition-view.js','app.js','resolution-workspace.js','shell.js']) vm.runInContext(fs.readFileSync(path.join(staticDir,file),'utf8'),context);
   await flush();
   const notebook = (values = {}) => {
     const current = window.ConfIAWorkspace;

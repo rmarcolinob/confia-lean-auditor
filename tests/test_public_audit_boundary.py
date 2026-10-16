@@ -52,6 +52,16 @@ def test_nonlocal_text_and_math_remain_unchanged(value):
     assert sanitize_public_text(value) == value
 
 
+def test_f2q3_real_rubric_math_is_not_redacted():
+    rubric = json.loads(Path("problems/ITA2025F2Q3/rubric.json").read_text())
+    for item in rubric["items"]:
+        assert sanitize_public_text(item["description"]) == item["description"]
+    assert sanitize_public_text("(5+sqrt(7))/8") == "(5+sqrt(7))/8"
+    assert sanitize_public_text(r"\begin{array}{l}x=\frac{1}{2}\\\operatorname{sen}\alpha\end{array}") == r"\begin{array}{l}x=\frac{1}{2}\\\operatorname{sen}\alpha\end{array}"
+    assert sanitize_public_text("erro em /Users/aluno/projeto") == HIDDEN_LOCAL_PATH
+    assert sanitize_public_text("arquivo={/custom-root/projeto}") == HIDDEN_LOCAL_PATH
+
+
 def test_recursive_projection_does_not_mutate_input_or_drop_colliding_keys():
     value = {"a": {"b": [f"texto {EMBEDDED_PATHS[0]}", (EMBEDDED_PATHS[4], 3, None, True)]},
         **{name: [{"nested": {"value": EMBEDDED_PATHS[index]}}] for index, name in enumerate((

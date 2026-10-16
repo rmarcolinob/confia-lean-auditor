@@ -4,6 +4,7 @@ const vm = require("node:vm");
 const assert = require("node:assert/strict");
 const Model = require("../../app/confia_lean_auditor/static/capture/ink-model.js");
 const source = fs.readFileSync(path.join(__dirname, "../../app/confia_lean_auditor/static/capture/tablet.js"), "utf8");
+const recognitionView = fs.readFileSync(path.join(__dirname, "../../app/confia_lean_auditor/static/recognition-view.js"), "utf8");
 const flush = () => new Promise((resolve) => setImmediate(resolve));
 
 function deferred() {
@@ -83,8 +84,10 @@ async function page(options = {}) {
     },
     addEventListener(name, handler) { events[name] = handler; }, requestAnimationFrame(callback) { callback(); },
     Blob, URL: { createObjectURL: () => "blob:test", revokeObjectURL() {} }, setTimeout() {},
+    katex: { render(latex, target) { target.textContent = `rendered:${latex}`; } },
   };
   if (options.embedded) Object.assign(context, { parent, location: { search: options.search || "?embedded=1&problem_id=ITA2025Q1&mode=practice", origin: "http://confia.test" }, URLSearchParams });
+  vm.runInNewContext(recognitionView, context);
   vm.runInNewContext(source, context);
   await flush();
   return {

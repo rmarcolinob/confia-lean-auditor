@@ -1,5 +1,6 @@
 const test = require("node:test");
 const assert = require("node:assert/strict");
+const { createHash } = require("node:crypto");
 const Model = require("../../app/confia_lean_auditor/static/capture/ink-model.js");
 const { page, flush, deferred } = require("./capture-dom.cjs");
 
@@ -12,13 +13,26 @@ function inkSnapshot() {
   return Model.freeze(written);
 }
 
-test("explicit recognition waits for receipt and shows the review preview", async () => {
+function previewResponse(init) {
+  const body = JSON.parse(init.body);
+  const snapshot = JSON.parse(body.snapshot_json);
+  return { ok: true, json: async () => ({
+    client_preview_id: body.client_preview_id, problem_id: snapshot.problem_id,
+    snapshot_id: snapshot.local_snapshot_id,
+    snapshot_sha256: createHash("sha256").update(body.snapshot_json).digest("hex"),
+    page_count: snapshot.pages.length, active_stroke_count: snapshot.active_stroke_ids.length,
+    result: { segments: [{ page_index: 0, order: 0, kind: "math", latex: "2 + 2 = 5" }] },
+  }) };
+}
+
+test("successful send automatically starts official recognition and shows its review result", async () => {
   const calls = [];
   const pending = deferred();
   const receipt = { submission_id: "sub_" + "a".repeat(32), received_at: "2026-10-01T12:00:00Z", problem_id: "ITA2025Q1" };
   const ui = await page({
     sender: { async send() { return receipt; } },
     fetch: async (url, init) => {
+      if (url === "/submissions/recognition-preview") return previewResponse(init);
       calls.push({ url, init });
       if (init?.method === "POST") return pending.promise;
       return { ok: true, json: async () => ({ status: "NEEDS_REVIEW", result: { segments: [
@@ -28,47 +42,54 @@ test("explicit recognition waits for receipt and shows the review preview", asyn
   });
   await ui.recover(inkSnapshot());
   assert.equal(ui.get("#recognize-writing").disabled, true);
-  await ui.click("send-solution");
-  assert.equal(ui.get("#recognize-writing").disabled, false);
-  assert.equal(calls.length, 0);
-  const recognition = ui.click("recognize-writing");
-  assert.equal(ui.get("#recognition-message").textContent, "Reconhecendo...");
+  assert.equal(ui.get("#send-solution").disabled, true);
+  await ui.click("preview-writing");
+  const sending = ui.click("send-solution");
+  await flush();
+  assert.equal(ui.get("#recognition-message").textContent, "Reconhecendo a solução enviada...");
   assert.equal(ui.get("#recognize-writing").disabled, true);
   assert.equal(calls.length, 1);
   const body = JSON.parse(calls[0].init.body);
   assert.equal(body.provider, "mathpix");
   assert.equal(body.idempotency_key, "mathpix:0");
   pending.resolve({ ok: true, json: async () => ({ status: "NEEDS_REVIEW", recognizer_run_id: "run_" + "b".repeat(32) }) });
-  await recognition;
+  await sending;
   assert.equal(calls.length, 2);
-  assert.match(ui.get("#recognition-message").textContent, /precisa de revisão/);
+  assert.match(ui.get("#recognition-message").textContent, /aguarda conferência/);
   const preview = ui.get("#recognition-preview").children[0];
-  assert.equal(preview.children[0].textContent, "Página 1");
-  assert.equal(preview.children[1].textContent, "2 + 2 = 5");
-  assert.equal(preview.children[2].textContent, "2 + 2 = 5");
-  assert.equal(ui.get("#recognize-writing").disabled, false);
+  assert.match(preview.children[0].textContent, /Página 1/);
+  assert.equal(preview.children[1].textContent, "rendered:2 + 2 = 5");
+  assert.equal(preview.children[2].children[1].textContent, "2 + 2 = 5");
+  assert.equal(ui.get("#recognize-writing").disabled, true);
+  assert.equal(ui.get("#recognize-writing").textContent, "Transcrição gerada");
 });
 
-test("failed provider increments attempt, while lost response reuses request key", async () => {
+test("automatic failure preserves receipt; retry reuses a lost key and advances a failed run", async () => {
   const keys = [];
   let mode = "network";
   const ui = await page({
     sender: { async send() { return { submission_id: "sub_" + "c".repeat(32), received_at: "2026-10-01T12:00:00Z", problem_id: "ITA2025Q1" }; } },
-    fetch: async (_, init) => {
+    fetch: async (url, init) => {
+      if (url === "/submissions/recognition-preview") return previewResponse(init);
       keys.push(JSON.parse(init.body).idempotency_key);
       if (mode === "network") throw new Error("network error");
       return { ok: true, json: async () => ({ status: "FAILED" }) };
     },
   });
   await ui.recover(inkSnapshot());
+  await ui.click("preview-writing");
   await ui.click("send-solution");
-  await ui.click("recognize-writing");
-  assert.match(ui.get("#recognition-message").textContent, /network error/);
+  assert.match(ui.get("#submission-message").textContent, /Solução enviada.*Não foi possível gerar/);
+  assert.equal(ui.get("#submission-receipt").hidden, false);
+  assert.match(ui.get("#recognition-message").textContent, /Toque para tentar novamente/);
+  await Promise.all([ui.click("recognize-writing"), ui.click("recognize-writing")]);
+  assert.equal(keys.length, 2); // Automatic attempt plus one retry despite a double tap.
   mode = "failed";
   await ui.click("recognize-writing");
   await ui.click("recognize-writing");
   assert.equal(keys[0], keys[1]);
-  assert.notEqual(keys[1], keys[2]);
+  assert.equal(keys[1], keys[2]);
+  assert.notEqual(keys[2], keys[3]);
   assert.equal(ui.get("#recognition-preview").children.length, 0);
   await flush();
 });
@@ -97,9 +118,9 @@ test("embedded controls use the capture handlers and reject stale or foreign com
   await ui.command({action:"send-solution",problem_id:"ITA2025Q1",mode:"submission",document_id:frozen.controls.document_id});
   await flush();
   assert.equal(calls.filter(call => call.kind === "send").length,1);
-  assert.equal(ui.messages.at(-1).context.controls.can_recognize,false); // Empty snapshot has no ink.
+  assert.equal(calls.filter(call => call.kind === "recognize").length,1);
   await ui.command({action:"recognize-writing",problem_id:"ITA2025Q1",mode:"submission",document_id:frozen.controls.document_id});
-  assert.equal(calls.some(call => call.kind === "recognize"),false);
+  assert.equal(calls.filter(call => call.kind === "recognize").length,1);
   await ui.command({action:"continue-draft",problem_id:"ITA2025Q1",mode:"submission",document_id:frozen.controls.document_id});
   assert.equal(ui.messages.at(-1).context.controls.frozen,false);
 });
@@ -112,7 +133,8 @@ test("embedded recognition reports loading, review preview and retry through the
   const ui = await page({ embedded:true, autoSave:true, initialDocument:snapshot,
     search:`?embedded=1&problem_id=ITA2025Q1&mode=submission&draft_id=${snapshot.local_snapshot_id}`,
     sender:{ async send() { return receipt; } },
-    fetch:async (_url,init) => {
+    fetch:async (url,init) => {
+      if (url === "/submissions/recognition-preview") return previewResponse(init);
       if (init?.method === "POST") {
         keys.push(JSON.parse(init.body).idempotency_key);
         if (failed) return {ok:true,json:async () => ({status:"FAILED"})};
@@ -122,16 +144,43 @@ test("embedded recognition reports loading, review preview and retry through the
     },
   });
   const values = {problem_id:"ITA2025Q1",mode:"submission",document_id:snapshot.local_snapshot_id};
+  await ui.command({action:"preview-writing",...values}); await flush();
   await ui.command({action:"send-solution",...values}); await flush();
-  assert.equal(ui.messages.at(-1).context.controls.can_recognize,true);
-  await ui.command({action:"recognize-writing",...values}); await flush();
-  assert.match(ui.messages.at(-1).context.controls.recognition_message,/tentar uma nova leitura/);
-  assert.equal(ui.messages.some(message => message.context.controls?.recognition_message === "Reconhecendo..."),true);
+  assert.match(ui.messages.at(-1).context.controls.submission_message,/Solução enviada.*Não foi possível gerar/);
   assert.equal(ui.messages.at(-1).context.controls.can_recognize,true);
   failed = false;
   await ui.command({action:"recognize-writing",...values}); await flush();
   const controls = ui.messages.at(-1).context.controls;
-  assert.match(controls.recognition_message,/precisa de revisão/);
+  assert.match(controls.recognition_message,/aguarda conferência/);
   assert.equal(controls.recognition_segments[0].latex,"x=2");
   assert.deepEqual(keys,["mathpix:0","mathpix:1"]);
+});
+
+test("reload resends the same snapshot but replays the same official execution key", async () => {
+  const snapshot = inkSnapshot();
+  const receipt = { submission_id: "sub_" + "9".repeat(32), received_at: "2026-10-01T12:00:00Z", problem_id: "ITA2025Q1" };
+  const keys = [];
+  const options = { initialDocument: snapshot,
+    sender: { async send() { return receipt; } },
+    fetch: async (url, init) => {
+      if (url === "/submissions/recognition-preview") return previewResponse(init);
+      if (init?.method === "POST") {
+        keys.push(JSON.parse(init.body).idempotency_key);
+        return { ok: true, json: async () => ({ status: "NEEDS_REVIEW", recognizer_run_id: "run_" + "8".repeat(32) }) };
+      }
+      return { ok: true, json: async () => ({ status: "NEEDS_REVIEW", result: { segments: [
+        { page_index: 0, order: 0, kind: "math", latex: "x=1" },
+      ] } }) };
+    },
+  };
+  const first = await page(options);
+  await first.recover(snapshot);
+  await first.click("preview-writing");
+  await first.click("send-solution");
+  const reloaded = await page(options);
+  await reloaded.recover(snapshot);
+  await reloaded.click("preview-writing");
+  await reloaded.click("send-solution");
+  assert.deepEqual(keys, ["mathpix:0", "mathpix:0"]);
+  assert.equal(reloaded.get("#recognition-preview").children[0].children[1].textContent, "rendered:x=1");
 });
