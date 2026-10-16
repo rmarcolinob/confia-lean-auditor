@@ -11,6 +11,15 @@ const Model = require('../../app/confia_lean_auditor/static/capture/ink-model.js
 const staticDir = path.join(__dirname, '../../app/confia_lean_auditor/static');
 const html = fs.readFileSync(path.join(staticDir, 'index.html'), 'utf8');
 const css = fs.readFileSync(path.join(staticDir, 'styles.css'), 'utf8');
+const exam = { assessment:{ assessment_id:'asmt_' + 'a'.repeat(32), title:'Prova A',
+  opens_at:'2026-10-16T12:00:00Z', closes_at:'2026-10-23T12:00:00Z', instructions:'Resolva.' },
+  items:[{ assessment_item_id:'ait_' + 'b'.repeat(32), problem_id:'B', order:1, points:5 }],
+  teacher_name:'Professor Demo', classroom_name:'2ª série A', availability:'DISPONÍVEL', submitted_item_ids:[] };
+
+const examTwoItems = { ...exam, items: [
+  { assessment_item_id:'ait_' + '1'.repeat(32), problem_id:'A', order:1, points:5 },
+  { assessment_item_id:'ait_' + '2'.repeat(32), problem_id:'B', order:2, points:5 },
+] };
 
 test('student home and primary navigation separate TutorIA, Exames and submissions', async () => {
   const ui = await workspacePage();
@@ -58,12 +67,15 @@ test('Exames starts empty and opens only an explicitly available activity in the
   assert.equal(empty.get('#student-workspace').hidden, true);
   await empty.get('#submission-mode').click();
   assert.equal(empty.window.ConfIAWorkspace.mode, null);
-  const ui = await workspacePage(undefined, { exams:[{ exam_id:'exam-a', title:'Prova A', problem_ids:['B'] }] });
+  const ui = await workspacePage(undefined, { exams:[exam] });
   ui.visit('tutoria'); await ui.get('#resolve-question').click(); ui.notebook();
   const frame = ui.frame;
   ui.visit('exams'); await flush();
-  assert.equal(ui.get('#student-exam-list').children.length, 1);
-  await ui.get('#student-exam-list').children[0].children[2].click();
+  assert.equal(ui.get('#student-exam-list').children.length, 2);
+  await ui.get('#student-exam-list').children[1].children.find(child => child.tag === 'button').click();
+  assert.equal(ui.get('#student-exam-detail').hidden, false);
+  assert.match(ui.get('#student-exam-items').textContent, /Questão 1 · B5 pontos/);
+  await ui.get('#student-exam-items').children[0].children[2].click();
   assert.equal(ui.get('#problem-select').value, 'B');
   assert.equal(ui.get('#problem-select').children.find(option => option.value === 'A').disabled, true);
   assert.equal(ui.get('#student-exams').hidden, true);
@@ -76,17 +88,85 @@ test('Exames starts empty and opens only an explicitly available activity in the
   assert.equal(ui.get('#workspace-tutor-actions').hidden, true);
   assert.equal(ui.get('#notebook-problem-context').hidden, false);
   assert.equal(ui.get('#workspace-ink-toolbar').hidden, false);
+  assert.equal(ui.commands.at(-1).message.submission_target,
+    `/assessments/${exam.assessment.assessment_id}/items/${exam.items[0].assessment_item_id}/submissions`);
+});
+
+test('student exam progress refreshes from the server after receipt and survives new page and session', async () => {
+  const serverExams = [{ ...examTwoItems, submitted_item_ids: [] }];
+  const examId = examTwoItems.assessment.assessment_id;
+  const firstItem = examTwoItems.items[0], secondItem = examTwoItems.items[1];
+  const ui = await workspacePage(undefined, { exams: serverExams });
+  ui.visit('exams'); await flush();
+  assert.match(ui.get('#student-exam-list').textContent, /0 de 2 questões enviadas.*Não iniciada/);
+  await ui.get('#student-exam-list').children[1].children.find(child => child.tag === 'button').click();
+  assert.equal(ui.get('#student-exam-progress').textContent, 'Progresso: 0/2 · Não iniciada');
+  assert.match(ui.get('#student-exam-items').textContent, /Questão 1 · A5 pontos · Não enviada.*Questão 2 · B5 pontos · Não enviada/);
+  await ui.get('#student-exam-items').children[0].children.find(child => child.tag === 'button').click();
+  await ui.get('#resolve-question').click();
+  const target = `/assessments/${examId}/items/${firstItem.assessment_item_id}/submissions`;
+  assert.match(ui.frame.src, new RegExp(`submission_target=${encodeURIComponent(target)}`));
+  ui.notebook({ submission_target: '/submissions' });
+  assert.equal(ui.commands.at(-1).message.submission_target, target);
+
+  serverExams[0] = { ...examTwoItems, submitted_item_ids: [firstItem.assessment_item_id] };
+  const receipt = { submission_id:'sub_' + '1'.repeat(32), assessment_id:examId,
+    assessment_item_id:firstItem.assessment_item_id, snapshot_id:'snapshot:A', problem_id:'A' };
+  ui.notebook({ local_snapshot_id:'snapshot:A', receipt, submission_target:target });
+  await flush();
+  assert.equal(ui.get('#student-exam-progress').textContent, 'Progresso: 1/2 · Em andamento');
+  assert.match(ui.get('#student-exam-items').textContent, /Questão 1 · A5 pontos · Enviada.*Questão 2 · B5 pontos · Não enviada/);
+  assert.match(ui.get('#student-exam-list').textContent, /1 de 2 questões enviadas.*Em andamento/);
+  ui.notebook({ local_snapshot_id:'snapshot:A', receipt, submission_target:target });
+  await flush();
+  assert.equal(ui.get('#student-exam-progress').textContent, 'Progresso: 1/2 · Em andamento');
+
+  const reloaded = await workspacePage(undefined, { exams: serverExams });
+  reloaded.visit('exams'); await flush();
+  assert.match(reloaded.get('#student-exam-list').textContent, /1 de 2 questões enviadas.*Em andamento/);
+  const relogged = await workspacePage(undefined, { exams: serverExams });
+  relogged.visit('exams'); await flush();
+  assert.match(relogged.get('#student-exam-list').textContent, /1 de 2 questões enviadas.*Em andamento/);
+  await relogged.get('#student-exam-list').children[1].children.find(child => child.tag === 'button').click();
+  await relogged.get('#student-exam-items').children[1].children.find(child => child.tag === 'button').click();
+  await relogged.get('#resolve-question').click();
+  serverExams[0] = { ...examTwoItems, submitted_item_ids: [firstItem.assessment_item_id, secondItem.assessment_item_id] };
+  relogged.notebook({ local_snapshot_id:'snapshot:B', receipt: { ...receipt,
+    submission_id:'sub_' + '2'.repeat(32), assessment_item_id:secondItem.assessment_item_id,
+    snapshot_id:'snapshot:B', problem_id:'B' },
+    submission_target:`/assessments/${examId}/items/${secondItem.assessment_item_id}/submissions` });
+  await flush();
+  assert.equal(relogged.get('#student-exam-progress').textContent, 'Progresso: 2/2 · Concluída');
+  assert.match(relogged.get('#student-exam-list').textContent, /2 de 2 questões enviadas.*Concluída/);
+});
+
+test('embedded exam starts with its bound submission target before any configure message', async () => {
+  const target = `/assessments/${exam.assessment.assessment_id}/items/${exam.items[0].assessment_item_id}/submissions`;
+  let sentTo = null;
+  const catalog = deferred();
+  const ui = await capturePage({ embedded:true, autoSave:true,
+    search:`?embedded=1&problem_id=ITA2025Q1&mode=submission&submission_target=${encodeURIComponent(target)}`,
+    catalogResponse:catalog.promise,
+    sender:{ send:async (_snapshot, destination) => { sentTo = destination; throw new Error('Interromper antes do transporte'); } },
+  });
+  await ui.command({ problem_id:'ITA2025Q1', mode:'submission', submission_target:'/submissions' });
+  catalog.resolve({ ok:true, json:async () => [{ problem_id:'ITA2025Q1', title:'Questão', statement:'Enunciado' }] });
+  await flush(); await flush();
+  assert.equal(ui.messages.at(-1).context.submission_target, target);
+  await ui.click('prepare-snapshot');
+  await ui.click('send-solution');
+  assert.equal(sentTo, target);
 });
 
 test('an exam remains available when its manifest loads before the problem catalog', async () => {
   const pending = deferred();
   const ui = await workspacePage(undefined, { catalogResponse:pending.promise,
-    exams:[{ exam_id:'exam-a', title:'Prova A', problem_ids:['B'] }] });
+    exams:[exam] });
   ui.visit('exams'); await flush();
   assert.match(ui.get('#student-exams-message').textContent, /Carregando catálogo/);
   pending.resolve({ ok:true, json:async () => [{ problem_id:'B', title:'B', statement:'Enunciado B', examples:[] }] });
   await flush(); await flush();
-  assert.equal(ui.get('#student-exam-list').children.length, 1);
+  assert.equal(ui.get('#student-exam-list').children.length, 2);
 });
 
 test('TutorIA preview freezes only in memory and never invokes submission or official recognition', async () => {

@@ -33,11 +33,14 @@
   function create(canvas, transport) {
     let prepared = null;
     let inFlight = false;
-    async function send(document) {
+    async function send(document, target = "/submissions") {
       if (document?.document_kind !== "local_snapshot" || !document.local_snapshot_id) {
         throw new Error("Prepare uma versão congelada antes de enviar.");
       }
       if (inFlight) throw new Error("Aguarde o envio em andamento.");
+      if (target !== "/submissions" && !/^\/assessments\/asmt_[0-9a-f]{32}\/items\/ait_[0-9a-f]{32}\/submissions$/.test(target)) {
+        throw new Error("Destino do envio inválido.");
+      }
       inFlight = true;
       try {
         // Own immutable copy; neither PNG creation nor retries touch the open draft.
@@ -61,7 +64,7 @@
         let response;
         let receipt;
         try {
-          response = await transport("/submissions", {
+          response = await transport(target, {
             method: "POST", headers: { "Content-Type": "application/json" },
             body: prepared.body, signal: controller.signal, cache: "no-store",
           });
@@ -81,6 +84,12 @@
         }
         if (![200, 201].includes(response.status) || !validReceipt(receipt, snapshot)) {
           throw new Error("Resposta sem recibo válido. A versão local foi preservada; tente novamente.");
+        }
+        if (target !== "/submissions") {
+          const [, , assessmentId, , itemId] = target.split("/");
+          if (receipt.assessment_id !== assessmentId || receipt.assessment_item_id !== itemId) {
+            throw new Error("Recibo não corresponde à questão do exame. Preserve a versão local.");
+          }
         }
         return receipt;
       } finally {

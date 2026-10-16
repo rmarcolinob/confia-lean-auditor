@@ -80,7 +80,7 @@ async function page(options = {}) {
         return { ok: true, json: async () => options.registry || [] };
       }
       assert.equal(url, "/problems");
-      return { ok: true, json: async () => options.problems || [{ problem_id: "ITA2025Q1", title: "Questão", statement: "Enunciado" }] };
+      return options.catalogResponse || { ok: true, json: async () => options.problems || [{ problem_id: "ITA2025Q1", title: "Questão", statement: "Enunciado" }] };
     },
     addEventListener(name, handler) { events[name] = handler; }, requestAnimationFrame(callback) { callback(); },
     Blob, URL: { createObjectURL: () => "blob:test", revokeObjectURL() {} }, setTimeout() {},

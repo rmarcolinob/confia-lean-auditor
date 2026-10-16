@@ -102,3 +102,22 @@ test("concurrent repeated click does not create two requests", async () => {
   await first;
   assert.equal(count, 1);
 });
+
+test("Assessment sender uses item endpoint and checks server-derived binding", async () => {
+  const document = snapshot();
+  const assessmentId = "asmt_" + "a".repeat(32), itemId = "ait_" + "b".repeat(32);
+  const target = `/assessments/${assessmentId}/items/${itemId}/submissions`;
+  const calls = [];
+  const client = Client.create({ pngBlob: async () => new Blob(["png"]) }, async (url, options) => {
+    calls.push({ url, options });
+    return { ok: true, status: 201, json: async () => ({ ...receipt(document), assessment_id: assessmentId, assessment_item_id: itemId }) };
+  });
+  assert.equal((await client.send(document, target)).assessment_item_id, itemId);
+  assert.equal(calls[0].url, target);
+  assert.equal(Object.hasOwn(JSON.parse(calls[0].options.body), "assessment_id"), false);
+  await assert.rejects(client.send(document, "/assessments/other/items/other/submissions"), /Destino/);
+  const bad = Client.create({ pngBlob: async () => new Blob(["png"]) }, async () => ({
+    ok: true, status: 201, json: async () => ({ ...receipt(document), assessment_id: assessmentId, assessment_item_id: "ait_" + "c".repeat(32) }),
+  }));
+  await assert.rejects(bad.send(document, target), /não corresponde/);
+});

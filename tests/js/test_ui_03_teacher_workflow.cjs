@@ -113,6 +113,23 @@ test('transcription filters operate on the same queue and preserve the selected 
   assert.match(ui.get('#manuscript-list').textContent, /Ainda não criada/);
 });
 
+test('existing teacher queue filters Assessment and problem without copying submissions', async () => {
+  const examA = 'asmt_' + 'a'.repeat(32), examB = 'asmt_' + 'b'.repeat(32);
+  const records = [
+    { ...record, assessment_id: examA, problem_id: 'ITA2025F2Q1' },
+    { ...record, submission_id: 'sub_' + 'c'.repeat(32), assessment_id: examA, problem_id: 'ITA2025F2Q3' },
+    { ...record, submission_id: 'sub_' + 'd'.repeat(32), assessment_id: examB, problem_id: 'ITA2025F2Q5' },
+  ];
+  const ui = await load(async url => url === '/submissions' ? ok(records) : url.endsWith('/audits') ? ok([]) : ok([]));
+  assert.equal(ui.get('#manuscript-list').children.length, 3);
+  ui.get('#assessment-filter').value = examA; await ui.get('#assessment-filter').emit('change');
+  assert.equal(ui.get('#manuscript-list').children.length, 2);
+  ui.get('#assessment-problem-filter').value = 'ITA2025F2Q3'; await ui.get('#assessment-problem-filter').emit('change');
+  assert.equal(ui.get('#manuscript-list').children.length, 1);
+  assert.match(ui.get('#manuscript-list').textContent, /ITA2025F2Q3/);
+  assert.equal(ui.calls.filter(call => call.url === '/submissions').length, 1);
+});
+
 test('failure to consult a transcription never looks like an absent transcription or completed analysis', async () => {
   const ui = await load(async url => url === '/submissions' ? ok([record]) : { ok: false, status: 503, json: async () => ({ detail: 'internal_error' }) });
   assert.match(ui.get('#manuscript-list').textContent, /Transcrição: Não foi possível consultar/);

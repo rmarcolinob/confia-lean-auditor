@@ -1208,4 +1208,15 @@ body[data-handwriting-focus="true"] .resolution-heading .eyebrow { display: none
 #student-exams { padding: var(--spacing-6); }
 #student-exam-list { display: grid; gap: var(--spacing-3); }
 #student-exam-list button { margin-top: var(--spacing-2); }
+#student-exam-detail { margin-top: var(--spacing-4); }
+#student-exam-items { margin-top: var(--spacing-3); }
+#teacher-exams { padding: var(--spacing-6); }
+#teacher-exam-form { display: grid; gap: var(--spacing-3); margin: var(--spacing-4) 0; }
+#teacher-exam-form > label { display: grid; gap: var(--spacing-1); }
+#teacher-exam-form :is(input, textarea) { width: 100%; }
+#teacher-exam-catalog label { display: grid; grid-template-columns: auto minmax(0, 1fr) 6rem; align-items: center; gap: var(--spacing-2); }
+#teacher-exam-catalog input[type="checkbox"] { width: auto; }
+#teacher-exam-progress { overflow-x: auto; margin-top: var(--spacing-4); }
+#teacher-exam-progress table { width: 100%; border-collapse: collapse; }
+#teacher-exam-progress :is(th, td) { padding: var(--spacing-2); text-align: left; border-bottom: 1px solid var(--color-border); }
 @media (max-width: 700px) { .student-primary-actions { grid-template-columns: minmax(0, 1fr); } }

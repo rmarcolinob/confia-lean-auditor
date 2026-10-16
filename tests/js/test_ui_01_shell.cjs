@@ -14,7 +14,8 @@ const record = { submission_id: submissionId, problem_id: "ITA2025Q1", snapshot_
 async function page({ hash = "", search = "", records = [], authRole = null, teacherReview = false,
   contextSchools = [{ school_id: 'school-a', name: 'Escola A' }],
   classroomsBySchool = { 'school-a': [{ classroom_id: 'class-a', school_id: 'school-a', name: 'Turma A' }] },
-  recordsByClass = null } = {}) {
+  recordsByClass = null, assessmentsByClass = {}, studentsByClass = {},
+  summariesBySubmission = {}, historiesByTranscription = {} } = {}) {
   const nodes = new Map(), links = [], menus = [], tabs = [], modes = [], calls = [], events = {}, store = new Map();
   let accepted = false;
   const acceptance = { submission_id: submissionId, transcription_id: summary.transcription.transcription_id,
@@ -70,7 +71,10 @@ async function page({ hash = "", search = "", records = [], authRole = null, tea
         schools: contextSchools, classrooms: Object.values(classroomsBySchool).flat() };
       else if (url.startsWith('/institutional/schools/') && url.endsWith('/classrooms'))
         data = classroomsBySchool[url.split('/')[3]] || [];
-      else if (url === '/institutional/classrooms/class-a/students') data = [{ user_id: 'usr_student', display_name: 'Aluno da turma A' }];
+      else if (/^\/institutional\/classrooms\/[^/]+\/students$/.test(url))
+        data = studentsByClass[url.split('/')[3]] || [{ user_id: 'usr_student', display_name: 'Aluno da turma A' }];
+      else if (url.startsWith('/assessments?'))
+        data = assessmentsByClass[new URLSearchParams(url.split('?')[1] || '').get('classroom_id')] || [];
       else if (teacherReview && url.endsWith('/accept') && options?.method === 'POST') {
         accepted = true;
         data = { revision: { ...revision, status: 'ACCEPTED' }, acceptance };
@@ -78,6 +82,18 @@ async function page({ hash = "", search = "", records = [], authRole = null, tea
       else if (url === '/problems') data = [{ problem_id: 'ITA2025Q1', title: 'Questão de teste', statement: 'Enunciado', examples: [{ key: 'correct', label: 'Exemplo' }] }];
       else if (url === '/submissions' || url.startsWith('/submissions?'))
         data = recordsByClass ? (recordsByClass[new URLSearchParams(url.split('?')[1] || '').get('classroom_id')] || []) : records;
+      else if (/^\/submissions\/sub_[0-9a-f]{32}\/transcriptions$/.test(url)
+        && Object.hasOwn(summariesBySubmission, url.split('/')[2]))
+        data = summariesBySubmission[url.split('/')[2]];
+      else if (Object.hasOwn(historiesByTranscription, url.split('/')[2]))
+        data = historiesByTranscription[url.split('/')[2]];
+      else if (/^\/submissions\/sub_[0-9a-f]{32}$/.test(url)) {
+        const candidate = (recordsByClass ? Object.values(recordsByClass).flat() : records)
+          .find(entry => entry.submission_id === url.split('/')[2]) || record;
+        data = { submission: candidate, receipt: candidate, integrity: [
+          { filename: 'snapshot.json', matches: true }, { filename: 'page_1.png', matches: true },
+        ] };
+      }
       else if (teacherReview && url.endsWith('/transcriptions')) data = [{ ...summary,
         latest_revision: { ...revision, status: accepted ? 'ACCEPTED' : 'NEEDS_REVIEW' } }];
       else if (teacherReview && url.startsWith('/transcriptions/')) data = { ...transcriptionHistory,
@@ -199,6 +215,77 @@ test('teacher Alunos view lists only the selected classroom and hides manuscript
   assert.equal(ui.get('#teacher-queue-header').hidden, true);
   assert.match(ui.get('#teacher-students-panel').textContent, /Aluno da turma A/);
   assert(ui.calls.some(call => call.url === '/institutional/classrooms/class-a/students'));
+});
+
+test('teacher Alunos groups real Assessment items, statuses and legacy deliveries in its classroom', async () => {
+  const exam1 = 'asmt_' + '1'.repeat(32), exam2 = 'asmt_' + '2'.repeat(32);
+  const item11 = 'ait_' + '1'.repeat(32), item12 = 'ait_' + '2'.repeat(32);
+  const item21 = 'ait_' + '3'.repeat(32), item22 = 'ait_' + '4'.repeat(32);
+  const sent1 = 'sub_' + '1'.repeat(32), sent2 = 'sub_' + '2'.repeat(32);
+  const sent3 = 'sub_' + '3'.repeat(32), legacyId = 'sub_' + '4'.repeat(32);
+  const view = (assessmentId, title, items, classroomId = 'class-a') => ({
+    assessment: { assessment_id: assessmentId, title, status: 'PUBLISHED', school_id: 'school-a', classroom_id: classroomId },
+    items,
+  });
+  const item = (assessmentItemId, problemId, order, points) => ({
+    assessment_item_id: assessmentItemId, problem_id: problemId, order, points,
+  });
+  const bound = (submissionId, assessmentId, assessmentItemId, problemId) => ({
+    ...record, submission_id: submissionId, submitted_by_user_id: 'usr_student',
+    school_id: 'school-a', classroom_id: 'class-a', assessment_id: assessmentId,
+    assessment_item_id: assessmentItemId, problem_id: problemId,
+  });
+  const exams = [
+    view(exam1, 'Avaliação 1', [item(item11, 'ITA2025F2Q1', 1, 5), item(item12, 'ITA2025F2Q3', 2, 5)]),
+    view(exam2, 'Avaliação 2', [item(item21, 'ITA2025F2Q5', 1, 5), item(item22, 'ITA2025F2Q8', 2, 5)]),
+    view('asmt_' + '9'.repeat(32), 'Avaliação fora da turma', [item('ait_' + '9'.repeat(32), 'ITA2025F2Q8', 1, 5)], 'class-b'),
+  ];
+  const records = [
+    bound(sent1, exam1, item11, 'ITA2025F2Q1'),
+    bound(sent2, exam2, item21, 'ITA2025F2Q5'),
+    bound(sent3, exam2, item22, 'ITA2025F2Q8'),
+    { ...bound(legacyId, null, null, 'ITA2025Q1'), assessment_id: null },
+    { ...bound('sub_' + '8'.repeat(32), exam1, item12, 'ITA2025F2Q3'), classroom_id: 'class-b' },
+  ];
+  const ui = await page({ hash: '#teacher/home', authRole: 'TEACHER',
+    assessmentsByClass: { 'class-a': exams }, recordsByClass: { 'class-a': records },
+    summariesBySubmission: {
+      [sent1]: [{ transcription: { ...summary.transcription, submission_id: sent1 },
+        latest_revision: { ...revision, submission_id: sent1, status: 'NEEDS_REVIEW' } }],
+      [sent2]: [{ transcription: { ...summary.transcription, submission_id: sent2 },
+        latest_revision: { ...revision, submission_id: sent2, status: 'ACCEPTED' } }],
+      [sent3]: [], [legacyId]: [],
+    },
+    historiesByTranscription: {
+      [summary.transcription.transcription_id]: { ...transcriptionHistory,
+        transcription: { ...summary.transcription, submission_id: sent1 },
+        revisions: [{ ...revision, submission_id: sent1, status: 'NEEDS_REVIEW' }] },
+    },
+  });
+  await ui.visit('#teacher/students'); await flush();
+  const panel = ui.get('#teacher-students-panel');
+  const card = descendants(panel).find(node => node.tag === 'article');
+  assert(card);
+  assert.equal(card.children[0].textContent, 'Aluno da turma A');
+  const groups = card.children.filter(node => node.tag === 'section');
+  assert.deepEqual(groups.map(group => group.children[0].textContent), [
+    'Avaliação 1', 'Avaliação 2', 'Envios anteriores / sem avaliação vinculada',
+  ]);
+  assert.match(groups[0].textContent, /Questão 1 · ITA2025F2Q1 · 5 pontos.*Solução enviada.*Transcrição aguardando conferência.*Abrir solução/);
+  assert.match(groups[0].textContent, /Questão 2 · ITA2025F2Q3 · 5 pontos.*Pendente/);
+  assert.equal(groups[0].textContent.match(/Abrir solução/g).length, 1);
+  assert.match(groups[1].textContent, /Questão 1 · ITA2025F2Q5 · 5 pontos.*Transcrição aceita.*Análise ConfIA disponível/);
+  assert.match(groups[1].textContent, /Questão 2 · ITA2025F2Q8 · 5 pontos.*Solução enviada/);
+  assert.match(groups[2].textContent, /Questão ITA2025Q1.*Solução enviada/);
+  assert.doesNotMatch(panel.textContent, /2ª Fase|Avaliação fora da turma/);
+  const open = descendants(groups[0]).find(node => node.tag === 'button' && node.textContent === 'Abrir solução');
+  await open.click(); await flush();
+  assert.equal(ui.location.hash, '#teacher/submissions');
+  assert(ui.calls.some(call => call.url === `/submissions/${sent1}`));
+  assert.equal(ui.get('#manuscript-detail').hidden, false);
+  assert.match(ui.get('#manuscript-detail').textContent, /Manuscrito original.*Transcrição reconhecida/s);
+  assert(ui.calls.some(call => call.url === '/assessments?school_id=school-a&classroom_id=class-a'));
+  assert(ui.calls.some(call => call.url === '/submissions?school_id=school-a&classroom_id=class-a'));
 });
 
 test('initial shell explicitly selects Aluno and shows only its home and menu', async () => {

@@ -52,6 +52,7 @@ from confia_lean_auditor.auth.dependencies import (
 from confia_lean_auditor.auth.models import Role
 from confia_lean_auditor.auth.router import cookie_secure, router as auth_router
 from confia_lean_auditor.institutional.router import router as institutional_router
+from confia_lean_auditor.assessments.router import router as assessments_router
 from confia_lean_auditor.management.router import router as management_router
 
 
@@ -65,6 +66,7 @@ app.include_router(submissions_router)
 app.include_router(transcriptions_router)
 app.include_router(submission_audits_router)
 app.include_router(institutional_router)
+app.include_router(assessments_router)
 app.include_router(management_router)
 
 

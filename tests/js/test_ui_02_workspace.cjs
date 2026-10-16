@@ -15,7 +15,7 @@ test('Resolver opens the one notebook for the selected problem; both purposes re
   const source = ui.frame.src;
   await ui.get('#submission-mode').click(); ui.notebook();
   assert.equal(ui.frame.src,source);
-  assert.deepEqual(JSON.parse(JSON.stringify(ui.commands.at(-1).message)), { type:'confia-workspace-command',action:'configure',problem_id:'B',mode:'submission' });
+  assert.deepEqual(JSON.parse(JSON.stringify(ui.commands.at(-1).message)), { type:'confia-workspace-command',action:'configure',problem_id:'B',mode:'submission',submission_target:'/submissions' });
   assert.equal(ui.get('#resolution-title').textContent,'Solução para envio');
   assert.equal(ui.get('#practice-response').hidden,true);
   assert.equal(ui.calls.some(c => c.options?.method === 'POST'),false);

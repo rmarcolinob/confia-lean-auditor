@@ -6,8 +6,8 @@
     <title>ConfIA — Matemática com confiança</title>
     <link rel="stylesheet" href="/static/capture/vendor/katex-0.18.9/katex.min.css">
     <link rel="stylesheet" href="/static/design-system.css?v=ui-01">
-    <link rel="stylesheet" href="/static/styles.css?v=student-tutor-exams-01">
-    <link rel="stylesheet" href="/static/submissions/teacher.css?v=p2-cap-04">
+    <link rel="stylesheet" href="/static/styles.css?v=p2-assmt-01">
+    <link rel="stylesheet" href="/static/submissions/teacher.css?v=assmt-students-01">
   </head>
   <body>
     <a class="skip-link" href="#app-root">Ir para o conteúdo principal</a>
@@ -50,6 +50,7 @@
           <div data-profile-menu="teacher" hidden>
             <a href="#teacher/home" data-shell-link>Início</a>
             <a href="#teacher/students" data-shell-link>Alunos</a>
+            <a href="#teacher/exams" data-shell-link>Exames</a>
             <a href="#teacher/submissions" data-shell-link>Soluções recebidas</a>
             <a href="#teacher/transcriptions" data-shell-link>Transcrições</a>
             <a href="#teacher/analysis" data-shell-link>Correção / Análise ConfIA</a>
@@ -85,6 +86,14 @@
           <p>Atividades disponibilizadas para sua turma. Escolha uma para abrir o caderno.</p>
           <p id="student-exams-message" role="status">Carregando exames…</p>
           <div id="student-exam-list" class="submission-list"></div>
+          <section id="student-exam-detail" hidden>
+            <button id="student-exam-back" class="secondary-action" type="button">← Voltar aos exames</button>
+            <h3 id="student-exam-title"></h3>
+            <p id="student-exam-meta"></p>
+            <p id="student-exam-progress" role="status"></p>
+            <p id="student-exam-instructions"></p>
+            <div id="student-exam-items" class="submission-list"></div>
+          </section>
         </section>
         <section id="student-workspace" class="workspace" aria-label="Questões e Caderno de Resolução ConfIA" hidden>
           <div id="question-picker">
@@ -98,7 +107,7 @@
               <div id="problem-statement-text" class="statement-text"></div>
               <p id="catalog-math-message" role="status" hidden></p>
             </section>
-            <button id="resolve-question" type="button" disabled>Resolver no TutorIA</button>
+            <button id="resolve-question" class="button button-primary" type="button" disabled>Resolver no TutorIA</button>
           </div>
 
           <section id="resolution-workspace" aria-label="Caderno de Resolução ConfIA" hidden>
@@ -275,6 +284,21 @@
             <article class="card"><h2>Análise ConfIA</h2><p>Consulte a etapa de análise das mesmas soluções recebidas e o que falta integrar.</p><a href="#teacher/analysis" data-shell-link>Consultar etapa de análise</a></article>
           </div>
         </section>
+        <section id="teacher-exams" class="card" hidden>
+          <h2>Exames da turma</h2>
+          <p id="teacher-exams-message" role="status">Selecione uma escola e uma turma.</p>
+          <button id="teacher-create-exam" class="button button-primary" type="button">+ Criar exame</button>
+          <form id="teacher-exam-form" hidden>
+            <label>Título <input id="teacher-exam-title" required maxlength="160"></label>
+            <label>Instruções <textarea id="teacher-exam-instructions" maxlength="10000"></textarea></label>
+            <label>Abertura <input id="teacher-exam-opens" type="datetime-local" required></label>
+            <label>Encerramento <input id="teacher-exam-closes" type="datetime-local" required></label>
+            <div id="teacher-exam-catalog" class="submission-list"></div>
+            <button class="button button-primary" type="submit">Criar rascunho</button>
+          </form>
+          <div id="teacher-exam-list" class="submission-list"></div>
+          <section id="teacher-exam-progress" hidden></section>
+        </section>
         <div class="teacher-submission-modes" aria-label="Origem das soluções">
           <button id="show-manuscripts" class="secondary-action" type="button" aria-pressed="true">Soluções recebidas</button>
           <button id="show-text-prototype" class="secondary-action" type="button" aria-pressed="false">Demonstração textual local</button>
@@ -297,6 +321,8 @@
                 <option value="accepted">Transcrição conferida</option>
               </select>
             </label>
+            <label class="queue-filter">Exame <select id="assessment-filter"><option value="all">Todos os exames</option></select></label>
+            <label class="queue-filter">Questão <select id="assessment-problem-filter"><option value="all">Todas as questões</option></select></label>
             <div id="manuscript-list" class="submission-list" aria-label="Lista de manuscritos"></div>
           </div>
           <p id="manuscript-message" tabindex="-1" role="status" aria-live="polite">Abra esta área para consultar o servidor.</p>
@@ -401,11 +427,12 @@
     <script src="/static/capture/vendor/katex-0.18.9/katex.min.js"></script>
     <script src="/static/capture/vendor/katex-0.18.9/contrib/auto-render.min.js"></script>
     <script src="/static/capture/problem-math.js?v=p2-ui-01"></script>
-    <script src="/static/recognition-view.js?v=hmer-preview-1"></script>
+    <script src="/static/recognition-view.js?v=mathpix-view-01"></script>
     <script src="/static/app.js?v=p2-cap-04"></script>
-    <script src="/static/resolution-workspace.js?v=student-tutor-exams-01"></script>
-    <script src="/static/submissions/teacher.js?v=core-inst-01"></script>
+    <script src="/static/resolution-workspace.js?v=p2-assmt-progress-01"></script>
+    <script src="/static/submissions/teacher.js?v=assmt-students-01"></script>
+    <script src="/static/assessments.js?v=p2-assmt-01"></script>
     <script src="/static/management.js?v=core-inst-01"></script>
-    <script src="/static/shell.js?v=student-tutor-exams-01"></script>
+    <script src="/static/shell.js?v=p2-assmt-01"></script>
   </body>
 </html>

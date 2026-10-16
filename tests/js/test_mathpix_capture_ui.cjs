@@ -25,6 +25,26 @@ function previewResponse(init) {
   }) };
 }
 
+test("embedded exam uses the configured item submission route and keeps official recognition separate", async () => {
+  const target = `/assessments/asmt_${"a".repeat(32)}/items/ait_${"b".repeat(32)}/submissions`;
+  const sent = [];
+  const receipt = { submission_id: "sub_" + "c".repeat(32), received_at: "2026-10-01T12:00:00Z", problem_id: "ITA2025Q1" };
+  const ui = await page({ embedded: true,
+    search: "?embedded=1&problem_id=ITA2025Q1&mode=submission",
+    initialDocument: inkSnapshot(),
+    sender: { async send(snapshot, destination) { sent.push({ snapshot, destination }); return receipt; } },
+    fetch: async (url, init) => url === "/submissions/recognition-preview" ? previewResponse(init)
+      : { ok: true, json: async () => ({ status: "NEEDS_REVIEW", result: { segments: [] } }) },
+  });
+  await ui.recover(inkSnapshot());
+  await ui.command({ action: "configure", problem_id: "ITA2025Q1", mode: "submission", submission_target: target });
+  await ui.click("preview-writing");
+  await ui.click("send-solution");
+  assert.equal(sent.length, 1);
+  assert.equal(sent[0].destination, target);
+  assert.equal(sent[0].snapshot.document_kind, "local_snapshot");
+});
+
 test("successful send automatically starts official recognition and shows its review result", async () => {
   const calls = [];
   const pending = deferred();

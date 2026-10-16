@@ -397,6 +397,8 @@ select {
 .recognition-preview pre { white-space: pre-wrap; overflow-wrap: anywhere; font-size: 1rem; }
 .recognition-preview .recognized-math { max-width: 100%; overflow-x: auto; overflow-y: hidden; }
 .recognition-preview .recognized-segment p { white-space: pre-wrap; }
+.recognition-preview .recognized-content { white-space: pre-wrap; }
+.recognition-preview .recognized-inline-math { display: inline-block; max-width: 100%; overflow-x: auto; vertical-align: middle; }
 
 /* Embedded mode removes repeated shell chrome, never changes ink geometry. */
 body[data-embedded="true"] .capture-header,

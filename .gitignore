@@ -12,6 +12,7 @@ runtime/submissions/
 runtime/submission_audits/
 runtime/auth/
 runtime/institutional/
+runtime/assessments/
 
 # Local environment files
 .env

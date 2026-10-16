@@ -6,7 +6,11 @@ O workspace compartilha um único iframe `/capture`. O estado central `TUTOR` us
 
 Em Exames, o aluno escolhe uma atividade explicitamente disponível para sua turma. O mesmo caderno usa o pipeline existente: preparar versão, reconhecer para conferir, enviar Submission e iniciar reconhecimento oficial. Minhas submissões consulta `/submissions` da própria sessão; tentativas de TutorIA não entram nessa lista.
 
-## Disponibilidade temporária de exames
+## Manifesto temporário superado
+
+P2-ASSMT-01 substituiu a dependência funcional abaixo por Assessment persistido, com lista em `GET /assessments` e envio vinculado por item. Consulte [P2_ASSMT_01.md](P2_ASSMT_01.md). A descrição abaixo fica apenas como histórico da versão anterior.
+
+### Disponibilidade temporária de exames
 
 Até existir uma entidade Assessment, `GET /institutional/me/exams` lê o arquivo opcional `exams.json` no diretório configurado por `CONFIA_INSTITUTIONAL_DIR` (por padrão, `runtime/institutional`). Sem esse arquivo, a lista é vazia. Um exemplo de atividade é:
 

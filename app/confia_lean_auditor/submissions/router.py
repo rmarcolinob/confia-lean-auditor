@@ -89,13 +89,16 @@ def guarded(operation, *args):
         ) from None
 
 
-def receive_body(raw, owner):
+def receive_body(raw, owner, assessment_binding=None):
     request = SubmissionRequest.model_validate_json(raw)
     if owner is None:
         return store().receive(request)
     enrollment, school = institutional_store().student_enrollment(owner)
+    if assessment_binding is not None and (school.network_id, school.school_id,
+            enrollment.classroom_id, enrollment.academic_year) != assessment_binding[4:8]:
+        raise InstitutionalScopeError("Matrícula não corresponde ao exame.")
     return store().receive(request, owner,
-                           (school.network_id, school.school_id, enrollment.classroom_id))
+                           (school.network_id, school.school_id, enrollment.classroom_id), assessment_binding)
 
 
 @router.post("", response_model=SubmissionReceipt)

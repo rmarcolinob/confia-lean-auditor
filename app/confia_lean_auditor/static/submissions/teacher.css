@@ -6,6 +6,16 @@
 #teacher-text-prototype[hidden], #manuscript-inbox[hidden], #manuscript-detail[hidden] { display: none; }
 .queue-filter { display: grid; gap: var(--spacing-2); max-width: 360px; margin: var(--spacing-5) 0; }
 #manuscript-list { margin-bottom: var(--spacing-6); gap: var(--spacing-3); }
+#teacher-students-panel { display: grid; gap: var(--spacing-4); }
+#teacher-students-panel[hidden] { display: none; }
+.teacher-student-card { padding: var(--spacing-4); border: 1px solid var(--color-border); border-radius: var(--radius-card); background: var(--color-surface); }
+.teacher-student-card h3 { margin: 0 0 var(--spacing-3); }
+.teacher-student-assessment { margin-top: var(--spacing-3); }
+.teacher-student-assessment h4 { margin: 0 0 var(--spacing-2); }
+.teacher-student-assessment ul { display: grid; gap: var(--spacing-2); list-style: none; padding: 0; margin: 0; }
+.teacher-student-item { display: flex; gap: var(--spacing-2) var(--spacing-3); align-items: center; flex-wrap: wrap; padding: var(--spacing-3); border: 1px solid var(--color-border); border-radius: var(--radius-control); }
+.teacher-student-item strong { flex-basis: 100%; }
+.teacher-student-item .button { margin-left: auto; }
 #manuscript-list .manuscript-queue-row { width: 100%; text-align: left; white-space: normal; overflow-wrap: anywhere; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.35fr) auto; gap: var(--spacing-2) var(--spacing-4); padding: var(--spacing-4); border: 1px solid var(--color-border); border-radius: var(--radius-card); }
 .manuscript-queue-row:hover { border-color: var(--color-primary); background: var(--color-background); }
 .queue-question { grid-column: 1; font-size: .95rem; }
@@ -27,7 +37,9 @@
 .transcription-visual h4 { margin: 0 0 var(--spacing-3); }
 .recognized-segment { min-width: 0; padding: var(--spacing-3) 0; border-top: 1px solid var(--color-border); overflow-wrap: anywhere; }
 .recognized-segment p { white-space: pre-wrap; }
+.recognized-content { white-space: pre-wrap; }
 .recognized-math { max-width: 100%; overflow-x: auto; overflow-y: hidden; }
+.recognized-inline-math { display: inline-block; max-width: 100%; overflow-x: auto; vertical-align: middle; }
 .teacher-solution-flow { display: grid; gap: var(--spacing-4); min-width: 0; }
 .original-manuscript-panel, .transcription-panel, .teacher-workflow-stages, .manuscript-analysis-panel, .teacher-evaluation-panel { min-width: 0; padding: var(--spacing-5); border: 1px solid var(--color-border); border-radius: var(--radius-card); background: var(--color-background); }
 .original-manuscript-panel { background: var(--color-surface); border-top: 3px solid var(--color-primary); }

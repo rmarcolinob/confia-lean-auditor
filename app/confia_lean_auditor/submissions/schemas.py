@@ -72,6 +72,17 @@ class SubmissionRecord(SubmissionModel):
     network_id: Optional[str] = None
     school_id: Optional[str] = None
     classroom_id: Optional[str] = None
+    # Optional for submissions received before institutional Assessment existed.
+    assessment_id: Optional[str] = Field(default=None, pattern=r"^asmt_[0-9a-f]{32}$")
+    assessment_item_id: Optional[str] = Field(default=None, pattern=r"^ait_[0-9a-f]{32}$")
+    assessment_definition_sha256: Optional[Sha256] = None
+
+    @model_validator(mode="after")
+    def assessment_binding_is_complete(self):
+        values = (self.assessment_id, self.assessment_item_id, self.assessment_definition_sha256)
+        if any(value is not None for value in values) and not all(value is not None for value in values):
+            raise ValueError("assessment binding must be complete")
+        return self
 
 
 class SubmissionReceipt(SubmissionRecord):

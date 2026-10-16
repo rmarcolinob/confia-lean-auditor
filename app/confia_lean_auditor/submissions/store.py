@@ -137,18 +137,30 @@ class SubmissionStore:
         finally:
             temporary.unlink(missing_ok=True)
 
-    def receive(self, request: SubmissionRequest, owner=None, institutional_context=None):
+    def receive(self, request: SubmissionRequest, owner=None, institutional_context=None, assessment_binding=None):
         snapshot, raw, images = validate_request(request)
+        if assessment_binding is not None and (owner is None or institutional_context is None
+                or snapshot.problem_id != assessment_binding[3]):
+            raise SubmissionConflict()
         artifact = ArtifactReference(filename="snapshot.json", media_type="application/json", sha256=sha256(raw), size_bytes=len(raw))
         page_images = [ArtifactReference(filename=f"page_{page.index + 1}.png", media_type="image/png",
                           sha256=sha256(data), size_bytes=len(data), page_id=page.page_id, page_index=page.index)
                        for page, data in images]
         with self._locked(exclusive=True):
             for record in self._records():
+                if assessment_binding is not None and record.submitted_by_user_id == owner.user_id \
+                        and record.assessment_id == assessment_binding[0] \
+                        and record.assessment_item_id == assessment_binding[1]:
+                    if (record.snapshot_id != snapshot.local_snapshot_id or record.assessment_id != assessment_binding[0]
+                            or record.assessment_definition_sha256 != assessment_binding[2]):
+                        raise SubmissionConflict()
                 if record.snapshot_id == snapshot.local_snapshot_id:
                     if (record.snapshot != artifact or record.page_images != page_images
                             or record.student_reference != request.student_reference
                             or (owner is not None and record.submitted_by_user_id != owner.user_id)
+                            or (assessment_binding is not None and (record.assessment_id, record.assessment_item_id,
+                                record.assessment_definition_sha256) != assessment_binding[:3])
+                            or (assessment_binding is None and record.assessment_id is not None)
                             or (institutional_context is not None and record.school_id is not None
                                 and (record.network_id, record.school_id, record.classroom_id) != institutional_context)):
                         raise SubmissionConflict()
@@ -163,7 +175,10 @@ class SubmissionStore:
                                       tenant_id=institutional_context[0] if institutional_context else (owner.tenant_id if owner else None),
                                       network_id=institutional_context[0] if institutional_context else None,
                                       school_id=institutional_context[1] if institutional_context else None,
-                                      classroom_id=institutional_context[2] if institutional_context else None)
+                                      classroom_id=institutional_context[2] if institutional_context else None,
+                                      assessment_id=assessment_binding[0] if assessment_binding else None,
+                                      assessment_item_id=assessment_binding[1] if assessment_binding else None,
+                                      assessment_definition_sha256=assessment_binding[2] if assessment_binding else None)
             receipt = SubmissionReceipt(**record.model_dump())
             pending = Path(tempfile.mkdtemp(prefix=".pending-", dir=self.root))
             try:

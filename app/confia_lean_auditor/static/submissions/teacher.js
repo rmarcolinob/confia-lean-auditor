@@ -10,6 +10,8 @@
   const showText = document.querySelector("#show-text-prototype");
   const refreshButton = document.querySelector("#refresh-manuscripts");
   const filter = document.querySelector("#transcription-filter");
+  const assessmentFilter = document.querySelector("#assessment-filter");
+  const problemFilter = document.querySelector("#assessment-problem-filter");
   const queueTitle = document.querySelector("#manuscript-queue-title");
   const queueNote = document.querySelector("#manuscript-queue-note");
   let queue = [];
@@ -806,6 +808,8 @@
     if (!queueLoaded) return;
     const chosen = filter.value || "all";
     const visible = queue.filter(item => {
+      if (assessmentFilter.value && assessmentFilter.value !== "all" && item.record.assessment_id !== assessmentFilter.value) return false;
+      if (problemFilter.value && problemFilter.value !== "all" && item.record.problem_id !== problemFilter.value) return false;
       const revision = item.summaries?.[0]?.latest_revision;
       if (item.failed || chosen === "all") return true;
       if (chosen === "uncreated") return !revision;
@@ -869,6 +873,16 @@
         const auditFailed = audit.status === "rejected" || !Array.isArray(audit.value);
         return { record, summaries: failed ? [] : result.value, failed, audits: auditFailed ? [] : audit.value, auditFailed };
       });
+      const selectedAssessment = assessmentFilter.value;
+      const selectedProblem = problemFilter.value;
+      assessmentFilter.replaceChildren(option("all", "Todos os exames"));
+      for (const assessmentId of [...new Set(valid.map(record => record.assessment_id).filter(Boolean))]) {
+        assessmentFilter.appendChild(option(assessmentId, assessmentId));
+      }
+      if ([...assessmentFilter.children].some(item => item.value === selectedAssessment)) assessmentFilter.value = selectedAssessment;
+      problemFilter.replaceChildren(option("all", "Todas as questões"));
+      for (const problemId of [...new Set(valid.map(record => record.problem_id))]) problemFilter.appendChild(option(problemId, problemId));
+      if ([...problemFilter.children].some(item => item.value === selectedProblem)) problemFilter.value = selectedProblem;
       queueLoaded = true;
       renderQueue();
       message.textContent = valid.length ? `${valid.length} solução(ões) recebida(s) no servidor. Selecione para abrir.${queue.some(item => item.failed) ? " Alguns estados de transcrição não puderam ser consultados. Atualize a lista." : ""}` : "Nenhuma solução recebida pelo servidor.";
@@ -918,13 +932,90 @@
   async function showStudents() {
     const panel = document.querySelector("#teacher-students-panel");
     panel.replaceChildren(node("h2", "Alunos da turma"));
-    if (!selectedClassroom) { panel.appendChild(node("p", "Selecione uma turma.")); return; }
+    if (!selectedSchool || !selectedClassroom) { panel.appendChild(node("p", "Selecione uma turma.")); return; }
     const sequence = ++contextSequence;
     try {
-      const students = await request(`/institutional/classrooms/${encodeURIComponent(selectedClassroom)}/students`);
+      const scope = `?school_id=${encodeURIComponent(selectedSchool)}&classroom_id=${encodeURIComponent(selectedClassroom)}`;
+      const [students, assessments, records] = await Promise.all([
+        request(`/institutional/classrooms/${encodeURIComponent(selectedClassroom)}/students`),
+        request(`/assessments${scope}`), request(`/submissions${scope}`),
+      ]);
       if (sequence !== contextSequence) return;
+      if (![students, assessments, records].every(Array.isArray)) throw new Error("Listas da turma inválidas.");
+      const exams = assessments.filter(view => view.assessment?.status !== "DRAFT"
+        && view.assessment?.school_id === selectedSchool
+        && view.assessment?.classroom_id === selectedClassroom);
+      const enrolled = new Set(students.map(student => student.user_id));
+      const visible = records.filter(record => enrolled.has(record.submitted_by_user_id)
+        && record.school_id === selectedSchool && record.classroom_id === selectedClassroom
+        && validId(record.submission_id));
+      const summaries = await Promise.allSettled(visible.map(record =>
+        request(`/submissions/${record.submission_id}/transcriptions`)));
+      if (sequence !== contextSequence) return;
+      const revisions = new Map(visible.map((record, index) => [record.submission_id,
+        summaries[index].status === "fulfilled" && Array.isArray(summaries[index].value)
+          ? summaries[index].value[0]?.latest_revision : null]));
+      const openStudentSubmission = submissionId => {
+        window.ConfIAShell?.navigate("teacher", "submissions");
+        window.ConfIATeacher?.openSubmission(submissionId);
+      };
+      function addDelivery(container, record) {
+        container.appendChild(node("span", record ? "Solução enviada" : "Pendente"));
+        if (!record) return;
+        const status = revisions.get(record.submission_id)?.status;
+        if (status === "NEEDS_REVIEW") container.appendChild(node("span", "Transcrição aguardando conferência"));
+        if (status === "ACCEPTED") {
+          container.appendChild(node("span", "Transcrição aceita"));
+          container.appendChild(node("span", "Análise ConfIA disponível"));
+        }
+        const button = node("button", "Abrir solução");
+        button.type = "button";
+        button.className = "button button-primary";
+        button.addEventListener("click", () => openStudentSubmission(record.submission_id));
+        container.appendChild(button);
+      }
       if (!students.length) panel.appendChild(node("p", "Nenhum aluno matriculado nesta turma."));
-      for (const student of students) panel.appendChild(node("p", student.display_name));
+      for (const student of students) {
+        const card = node("article");
+        card.className = "teacher-student-card";
+        card.appendChild(node("h3", student.display_name));
+        const deliveries = visible.filter(record => record.submitted_by_user_id === student.user_id);
+        for (const view of exams) {
+          const group = node("section");
+          group.className = "teacher-student-assessment";
+          group.appendChild(node("h4", view.assessment.title));
+          const items = node("ul");
+          for (const item of [...view.items].sort((a, b) => a.order - b.order)) {
+            const row = node("li");
+            row.className = "teacher-student-item";
+            row.appendChild(node("strong", `Questão ${item.order} · ${item.problem_id} · ${Number(item.points).toLocaleString("pt-BR")} ${item.points === 1 ? "ponto" : "pontos"}`));
+            const record = deliveries.find(entry => entry.assessment_id === view.assessment.assessment_id
+              && entry.assessment_item_id === item.assessment_item_id && entry.problem_id === item.problem_id);
+            addDelivery(row, record);
+            items.appendChild(row);
+          }
+          group.appendChild(items);
+          card.appendChild(group);
+        }
+        const legacy = deliveries.filter(record => !record.assessment_id);
+        if (legacy.length) {
+          const group = node("section");
+          group.className = "teacher-student-assessment";
+          group.appendChild(node("h4", "Envios anteriores / sem avaliação vinculada"));
+          const items = node("ul");
+          for (const record of legacy) {
+            const row = node("li");
+            row.className = "teacher-student-item";
+            row.appendChild(node("strong", `Questão ${record.problem_id}`));
+            addDelivery(row, record);
+            items.appendChild(row);
+          }
+          group.appendChild(items);
+          card.appendChild(group);
+        }
+        if (!exams.length && !legacy.length) card.appendChild(node("p", "Nenhuma avaliação ou envio nesta turma."));
+        panel.appendChild(card);
+      }
     } catch (error) { if (sequence === contextSequence) panel.appendChild(node("p", "Não foi possível carregar os alunos.")); }
   }
   function clearInstitutionalQueue() {
@@ -932,6 +1023,7 @@
     queue = []; queueLoaded = false; activeEditor = null;
     list.replaceChildren(); detail.replaceChildren(); detail.hidden = true;
     message.textContent = selectedClassroom ? "Carregando turma…" : "Selecione uma turma.";
+    if (!document.querySelector("#teacher-exams").hidden) window.ConfIAAssessments?.load();
     if (!document.querySelector("#teacher-students-panel").hidden) showStudents();
     else if (!inbox.hidden && selectedClassroom) refresh();
   }
@@ -980,8 +1072,13 @@
       await loadClasses();
     } catch (_error) { status.textContent = "Não foi possível carregar o contexto institucional."; }
   }
-  window.ConfIATeacher = { canLeave: canLeaveEditor, showView, initInstitutional, showManuscripts: () => mode(true), showText: () => mode(false) };
+  window.ConfIATeacher = { canLeave: canLeaveEditor, showView, initInstitutional,
+    openSubmission: async id => { await refresh(); await open(id); },
+    context: () => ({ schoolId: selectedSchool, classroomId: selectedClassroom }),
+    showManuscripts: () => mode(true), showText: () => mode(false) };
   filter.addEventListener("change", renderQueue);
+  assessmentFilter.addEventListener("change", renderQueue);
+  problemFilter.addEventListener("change", renderQueue);
   showInk.addEventListener("click", () => mode(true));
   showText.addEventListener("click", () => mode(false));
   refreshButton.addEventListener("click", refresh);

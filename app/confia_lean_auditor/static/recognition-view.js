@@ -5,17 +5,68 @@
     if (value !== undefined) element.textContent = value;
     return element;
   }
-  function renderMath(host, latex) {
-    const math = node("div");
-    math.className = "recognized-math";
+  function renderMath(host, latex, original, display) {
+    const math = node(display ? "div" : "span");
+    math.className = display ? "recognized-math" : "recognized-inline-math";
     if (root.katex?.render) {
       try {
-        root.katex.render(latex, math, { displayMode: true, throwOnError: true, trust: false, strict: "ignore" });
+        root.katex.render(latex, math, { displayMode: display, throwOnError: false, trust: false, strict: "ignore" });
+        if (math.querySelector?.(".katex-error")) throw new Error("invalid TeX");
       } catch (_) {
-        math.textContent = latex;
+        math.replaceChildren();
+        math.textContent = original;
+        math.className += " recognized-math-fallback";
       }
-    } else math.textContent = latex;
+    } else math.textContent = original;
     host.appendChild(math);
+  }
+
+  function markerAt(source, index) {
+    if (source.startsWith("\\(", index)) return { open: "\\(", close: "\\)", display: false };
+    if (source.startsWith("\\[", index)) return { open: "\\[", close: "\\]", display: true };
+    if (source[index] !== "$" || (index > 0 && source[index - 1] === "\\")) return null;
+    if (source.startsWith("$$", index)) return { open: "$$", close: "$$", display: true };
+    if (/\s/.test(source[index + 1] || "") || /[\p{L}\p{N}]/u.test(source[index - 1] || "")) return null;
+    return { open: "$", close: "$", display: false };
+  }
+  function closingAt(source, marker, start) {
+    for (let index = start; index < source.length; index++) {
+      if (!source.startsWith(marker.close, index)) continue;
+      if (marker.close[0] === "$" && index > 0 && source[index - 1] === "\\") continue;
+      if (marker.close === "$" && source[index + 1] === "$") continue;
+      if (marker.close === "$" && /\s/.test(source[index - 1] || "")) continue;
+      return index;
+    }
+    return -1;
+  }
+  function renderMathText(host, source, bareMath = false) {
+    const value = typeof source === "string" ? source : "";
+    const markers = [];
+    for (let index = 0; index < value.length; index++) {
+      const marker = markerAt(value, index);
+      if (marker) { markers.push({ index, marker }); index += marker.open.length - 1; }
+    }
+    if (!markers.length) {
+      if (bareMath && value.trim()) renderMath(host, value.trim(), value, true);
+      else host.textContent = value;
+      return;
+    }
+    let cursor = 0;
+    while (cursor < value.length) {
+      let next = null;
+      for (const candidate of markers) if (candidate.index >= cursor) { next = candidate; break; }
+      if (!next) { host.appendChild(node("span", value.slice(cursor))); break; }
+      if (next.index > cursor) host.appendChild(node("span", value.slice(cursor, next.index)));
+      const start = next.index + next.marker.open.length;
+      const end = closingAt(value, next.marker, start);
+      if (end < 0 || end === start) {
+        host.appendChild(node("span", value.slice(next.index)));
+        break;
+      }
+      const original = value.slice(next.index, end + next.marker.close.length);
+      renderMath(host, value.slice(start, end), original, next.marker.display);
+      cursor = end + next.marker.close.length;
+    }
   }
   function render(host, segments) {
     host.replaceChildren();
@@ -26,8 +77,23 @@
       row.appendChild(node("strong", `Página ${segment.page_index + 1} · ${kinds[segment.kind] || kinds.unknown}`));
       // For Mathpix mixed results, text is often the plain form of latex_styled.
       // Keep it in details so the same expression is not presented twice.
-      if (segment.latex) renderMath(row, segment.latex);
-      else if (segment.text) row.appendChild(node("p", segment.text));
+      if (segment.latex) {
+        if (!["\\(", "\\[", "$"].some(marker => segment.latex.includes(marker))) {
+          renderMath(row, segment.latex, segment.latex, true);
+        }
+        else {
+          const content = node("div");
+          content.className = "recognized-content";
+          renderMathText(content, segment.latex, true);
+          row.appendChild(content);
+        }
+      } else if (segment.text) {
+        const content = node("p");
+        content.className = "recognized-content";
+        const bareMath = /^\s*\\(?:frac|sqrt|sum|int|lim|left|begin)\b/.test(segment.text);
+        renderMathText(content, segment.text, bareMath);
+        row.appendChild(content);
+      }
       if (segment.latex) {
         const details = node("details");
         details.appendChild(node("summary", "Texto reconhecido / LaTeX"));
@@ -38,6 +104,6 @@
       host.appendChild(row);
     }
   }
-  root.ConfiaRecognitionView = { render };
-  if (typeof module === "object" && module.exports) module.exports = { render };
+  root.ConfiaRecognitionView = { render, renderMathText };
+  if (typeof module === "object" && module.exports) module.exports = { render, renderMathText };
 })(globalThis);

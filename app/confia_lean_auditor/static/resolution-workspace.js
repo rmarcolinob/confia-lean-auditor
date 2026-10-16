@@ -11,6 +11,7 @@
   let mode = null;
   let experience = null;
   let selectedExam = null;
+  let selectedExamItem = null;
   let availableExams = [];
   let examsLoaded = false;
   let examsRequest = 0;
@@ -122,8 +123,13 @@
     get("workspace-export-json").disabled = !controls;
     get("workspace-export-png").disabled = !controls;
   }
+  function submissionTarget() {
+    return selectedExam && selectedExamItem && mode === "submission"
+      ? `/assessments/${selectedExam.assessment.assessment_id}/items/${selectedExamItem.assessment_item_id}/submissions`
+      : "/submissions";
+  }
   function configure() {
-    command("configure", { problem_id: problemSelect.value, mode });
+    command("configure", { problem_id: problemSelect.value, mode, submission_target: submissionTarget() });
   }
   function setNotebookProblemExpanded(expanded) {
     get("notebook-problem-body").hidden = !expanded;
@@ -180,7 +186,7 @@
   function chooseMode(value) {
     if (!["practice", "submission"].includes(value)) return;
     if (experience && value !== captureModes[experience]) return;
-    if (experience === StudentFlow.EXAM && (!selectedExam || !selectedExam.problem_ids.includes(problemSelect.value))) return;
+    if (experience === StudentFlow.EXAM && (!selectedExamItem || selectedExamItem.problem_id !== problemSelect.value)) return;
     if (mode === "practice") remember();
     mode = value;
     get("practice-response").open = value === "practice" && response === "typed";
@@ -198,7 +204,8 @@
       // The iframe is created once. Question/mode changes reuse this exact notebook.
       const initial = new URLSearchParams(location.search);
       const draft = initial.get("problem_id") === problemSelect.value ? initial.get("draft_id") : null;
-      frame.src = `/capture?embedded=1&problem_id=${encodeURIComponent(problemSelect.value)}&mode=${mode}${draft ? `&draft_id=${encodeURIComponent(draft)}` : ""}&ui=student-tutor-exams-01`;
+      const target = submissionTarget();
+      frame.src = `/capture?embedded=1&problem_id=${encodeURIComponent(problemSelect.value)}&mode=${mode}${draft ? `&draft_id=${encodeURIComponent(draft)}` : ""}${target !== "/submissions" ? `&submission_target=${encodeURIComponent(target)}` : ""}&ui=p2-assmt-02`;
       loaded = true;
     } else configure();
     display();
@@ -206,7 +213,7 @@
   }
   function open() {
     if (!selectedProblem()) return;
-    if (experience === StudentFlow.EXAM && (!selectedExam || !selectedExam.problem_ids.includes(problemSelect.value))) return;
+    if (experience === StudentFlow.EXAM && (!selectedExamItem || selectedExamItem.problem_id !== problemSelect.value)) return;
     active = true;
     if (experience) chooseMode(captureModes[experience]);
     display();
@@ -239,6 +246,7 @@
       appendTextElement(article, "h3", "", `Questão ${receipt.problem_id}`);
       appendTextElement(article, "p", "", `Recebida pelo ConfIA · ${formatDateTime(receipt.received_at)}`);
       appendTextElement(article, "p", "", `Número do envio: ${receipt.submission_id}`);
+      appendTextElement(article, "p", "", receipt.assessment_id ? `Exame: ${receipt.assessment_id}` : "Envio legado");
       appendTextElement(article, "p", "", `Versão enviada: ${receipt.snapshot_id}`);
     }
   }
@@ -270,20 +278,51 @@
     const list = get("student-exam-list");
     list.replaceChildren();
     if (!problems.length) { setCopy("student-exams-message", "Carregando catálogo de questões…"); return; }
-    const exams = availableExams.filter(exam => exam?.problem_ids?.every(id => problems.some(p => (p.problem_id || p.id) === id)));
-    setCopy("student-exams-message", exams.length ? "Escolha uma atividade disponível." : "Nenhum exame disponível para sua turma no momento.");
-    for (const exam of exams) {
+    const exams = availableExams.filter(exam => exam?.items?.every(item => problems.some(p => (p.problem_id || p.id) === item.problem_id)));
+    setCopy("student-exams-message", exams.length ? "Escolha uma avaliação da sua turma." : "Nenhum exame disponível para sua turma no momento.");
+    for (const group of ["Disponíveis", "Agendados", "Enviados", "Encerrados"]) {
+      const members = exams.filter(exam => group === "Enviados" ? exam.submitted_item_ids.length === exam.items.length
+        : exam.submitted_item_ids.length === exam.items.length ? false
+          : ({ Disponíveis: "DISPONÍVEL", Agendados: "AGENDADO", Encerrados: "ENCERRADO" })[group] === exam.availability);
+      if (!members.length) continue;
+      appendTextElement(list, "h3", "", group);
+      for (const exam of members) {
+        const card = appendTextElement(list, "article", "local-submission", "");
+        appendTextElement(card, "h4", "", exam.assessment.title);
+        appendTextElement(card, "p", "", `${exam.teacher_name} · ${exam.classroom_name}`);
+        appendTextElement(card, "p", "", `Prazo: ${formatDateTime(exam.assessment.closes_at)} · ${exam.availability}`);
+        appendTextElement(card, "p", "", `${exam.submitted_item_ids.length} de ${exam.items.length} questões enviadas`);
+        appendTextElement(card, "p", "", examProgressStatus(exam));
+        const button = appendTextElement(card, "button", "button button-primary", "Abrir exame");
+        button.type = "button";
+        button.addEventListener("click", () => openExam(exam));
+      }
+    }
+  }
+  function examProgressStatus(exam) {
+    const sent = exam.submitted_item_ids.length;
+    return sent === 0 ? "Não iniciada" : sent === exam.items.length ? "Concluída" : "Em andamento";
+  }
+  function renderExamDetail(exam) {
+    setCopy("student-exam-title", exam.assessment.title);
+    setCopy("student-exam-meta", `${exam.teacher_name} · ${exam.classroom_name} · ${formatDateTime(exam.assessment.opens_at)} até ${formatDateTime(exam.assessment.closes_at)}`);
+    setCopy("student-exam-progress", `Progresso: ${exam.submitted_item_ids.length}/${exam.items.length} · ${examProgressStatus(exam)}`);
+    setCopy("student-exam-instructions", exam.assessment.instructions);
+    const list = get("student-exam-items");
+    list.replaceChildren();
+    for (const item of exam.items) {
       const card = appendTextElement(list, "article", "local-submission", "");
-      appendTextElement(card, "h3", "", exam.title);
-      appendTextElement(card, "p", "", `${exam.problem_ids.length} questão(ões) · sua turma`);
-      const button = appendTextElement(card, "button", "button button-primary", "Abrir exame");
+      appendTextElement(card, "h4", "", `Questão ${item.order} · ${item.problem_id}`);
+      appendTextElement(card, "p", "", `${item.points} pontos · ${exam.submitted_item_ids.includes(item.assessment_item_id) ? "Enviada" : "Não enviada"}`);
+      const button = appendTextElement(card, "button", "button button-primary", "Resolver");
       button.type = "button";
+      button.disabled = exam.availability !== "DISPONÍVEL" || exam.submitted_item_ids.includes(item.assessment_item_id);
       button.addEventListener("click", () => {
-        selectedExam = exam;
+        selectedExamItem = item;
         experience = StudentFlow.EXAM;
         active = false;
         mode = null;
-        filterProblems(exam.problem_ids);
+        filterProblems([item.problem_id]);
         get("resolve-question").textContent = "Resolver questão do exame";
         get("student-exams").hidden = true;
         get("student-workspace").hidden = false;
@@ -291,17 +330,31 @@
       });
     }
   }
+  function openExam(exam) {
+    selectedExam = exam;
+    selectedExamItem = null;
+    get("student-exam-list").hidden = true;
+    get("student-exam-detail").hidden = false;
+    renderExamDetail(exam);
+  }
   async function loadExams() {
     const request = ++examsRequest;
     setCopy("student-exams-message", "Carregando exames…");
     try {
-      const response = await fetch("/institutional/me/exams", { credentials: "same-origin", cache: "no-store" });
+      const response = await fetch("/assessments", { credentials: "same-origin", cache: "no-store" });
       if (!response.ok) throw new Error("Não foi possível consultar as atividades da turma.");
       const data = await response.json();
       if (request !== examsRequest) return;
-      availableExams = Array.isArray(data) ? data.filter(exam => exam && Array.isArray(exam.problem_ids) && exam.problem_ids.length) : [];
+      availableExams = Array.isArray(data) ? data.filter(exam => exam?.assessment && Array.isArray(exam.items)) : [];
       examsLoaded = true;
       renderExams();
+      if (selectedExam) {
+        const refreshed = availableExams.find(exam => exam.assessment.assessment_id === selectedExam.assessment.assessment_id);
+        if (refreshed) {
+          selectedExam = refreshed;
+          renderExamDetail(refreshed);
+        }
+      }
     } catch (_) { if (request === examsRequest) setCopy("student-exams-message", "Não foi possível consultar os exames. Abra esta área novamente."); }
   }
   function enter(view) {
@@ -309,6 +362,7 @@
       if (view === "resolve") { experience = null; display(); return; }
       if (experience === StudentFlow.TUTOR) { display(); return; }
       selectedExam = null;
+      selectedExamItem = null;
       experience = StudentFlow.TUTOR;
       active = false;
       mode = null;
@@ -318,6 +372,9 @@
       display();
     } else if (view === "exams") {
       selectedExam = null;
+      selectedExamItem = null;
+      get("student-exam-list").hidden = false;
+      get("student-exam-detail").hidden = true;
       experience = StudentFlow.EXAM;
       active = false;
       mode = null;
@@ -390,7 +447,9 @@
     if (context.mode === "submission" && context.receipt && context.receipt.snapshot_id === context.local_snapshot_id && context.receipt.problem_id === context.problem_id) {
       receipts.set(context.receipt.submission_id, context.receipt);
       renderReceipts();
+      if (selectedExam && context.receipt.assessment_id === selectedExam.assessment.assessment_id) loadExams();
     }
+    if (typeof context.submission_target === "string" && context.submission_target !== submissionTarget()) configure();
     if (!active || !mode || context.problem_id !== problemSelect.value || context.mode !== mode) { configure(); return; }
     if (Number.isFinite(context.content_height) && context.content_height >= 640 && context.content_height <= 4000) {
       frame.style.height = `${context.content_height}px`;
@@ -402,6 +461,11 @@
   });
   frame.addEventListener("load", configure);
   get("resolve-question").addEventListener("click", open);
+  get("student-exam-back").addEventListener("click", () => {
+    selectedExam = null; selectedExamItem = null;
+    get("student-exam-list").hidden = false;
+    get("student-exam-detail").hidden = true;
+  });
   get("change-question").addEventListener("click", () => { active = false; display(); problemSelect.focus(); });
   get("practice-mode").addEventListener("click", () => chooseMode("practice"));
   get("submission-mode").addEventListener("click", () => chooseMode("submission"));

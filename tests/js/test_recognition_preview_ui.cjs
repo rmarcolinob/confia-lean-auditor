@@ -140,3 +140,39 @@ test('recognition UI keeps Mathpix credentials server side and uses safe DOM ren
   assert.match(renderer,/trust:\s*false/);
   assert.doesNotMatch(renderer,/innerHTML|insertAdjacentHTML/);
 });
+
+test('tablet Mathpix prose with inline TeX renders consistently in student preview and teacher view', async () => {
+  const recognized = String.raw`Seja \(p(x)=x^{57}+a x^{14}+b x^7+1\)`;
+  const calls = [];
+  const student = await page({ sender: { send: async () => { throw Error('preview must not send'); } },
+    fetch: async (url, init) => {
+      calls.push(url);
+      const body = JSON.parse(init.body), snapshot = JSON.parse(body.snapshot_json);
+      return { ok: true, json: async () => ({ client_preview_id: body.client_preview_id,
+        problem_id: snapshot.problem_id, snapshot_id: snapshot.local_snapshot_id,
+        snapshot_sha256: createHash('sha256').update(body.snapshot_json).digest('hex'),
+        page_count: snapshot.pages.length, active_stroke_count: snapshot.active_stroke_ids.length,
+        result: { segments: [{ page_index: 0, order: 0, kind: 'text', text: recognized }] } }) };
+    } });
+  await student.recover(snapshot());
+  await student.click('preview-writing');
+  const preview = student.get('#preview-result').children[0].children[1];
+  assert.equal(preview.children[0].textContent, 'Seja ');
+  assert.equal(preview.children[1].textContent, 'rendered:p(x)=x^{57}+a x^{14}+b x^7+1');
+  assert.deepEqual(calls, ['/submissions/recognition-preview']);
+
+  const base = transportFor(true, true);
+  const persisted = { ...revision, source: 'automatic', provider: 'mathpix', segments: [
+    { page_index: 0, order: 0, kind: 'text', text: recognized, latex: null }] };
+  const professor = teacher(async url => url === `/transcriptions/${transcriptionId}`
+    ? { ok: true, json: async () => ({ ...history, revisions: [persisted] }) } : base(url));
+  await professor.get('#refresh-manuscripts').click();
+  await professor.get('#manuscript-list').children[0].click();
+  const tree = descendants(professor.get('#manuscript-detail'));
+  const visual = tree.find(node => node.className === 'transcription-visual');
+  assert(visual.textContent.includes('rendered:p(x)=x^{57}+a x^{14}+b x^7+1'));
+  assert(!visual.textContent.includes(String.raw`\(`));
+  const sourceField = tree.find(node => node.tag === 'textarea' && node.value === recognized);
+  assert(sourceField);
+  assert.equal(persisted.segments[0].text, recognized);
+});

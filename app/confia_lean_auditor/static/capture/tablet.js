@@ -147,6 +147,7 @@
       question_presentation_version: presentation?.display_version ?? null,
       ink_version: `${value.operations.length}:${value.pages.length}:${value.active_stroke_ids.length}`,
       receipt: receipt || state?.receipt || null,
+      submission_target: submissionTarget,
       controls,
       content_height: measuredHeight && measuredHeight > 0 ? Math.min(4000, measuredHeight) : null,
     } }, globalThis.location.origin);
@@ -537,11 +538,17 @@
     const id = elements.problemSelect.value;
     return queueTransition(() => changeProblem(id));
   });
+  const initialSubmissionTarget = params?.get("submission_target");
+  let submissionTarget = embedded && /^\/assessments\/asmt_[0-9a-f]{32}\/items\/ait_[0-9a-f]{32}\/submissions$/.test(initialSubmissionTarget || "")
+    ? initialSubmissionTarget : "/submissions";
   globalThis.addEventListener("message", event => {
     if (!embedded || !initialized || event.origin !== globalThis.location.origin || event.source !== globalThis.parent || event.data?.type !== "confia-workspace-command") return;
     const { action, problem_id: problemId, mode } = event.data;
     if (!["practice", "submission"].includes(mode)) return;
     if (action === "configure") {
+      const target = event.data.submission_target || "/submissions";
+      if (target !== "/submissions" && !/^\/assessments\/asmt_[0-9a-f]{32}\/items\/ait_[0-9a-f]{32}\/submissions$/.test(target)) return;
+      submissionTarget = target;
       queueTransition(async () => {
         await preparationFinished;
         if (captureDocument.problem_id !== problemId) await changeProblem(problemId);
@@ -846,7 +853,7 @@
     try {
       let receipt;
       try {
-        receipt = await Sender.send(snapshot);
+        receipt = await Sender.send(snapshot, submissionTarget);
       } catch (error) {
         submissionStates.set(id, { message: error.message, kind: "error" });
         return;
