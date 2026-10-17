@@ -14,6 +14,13 @@ CLIENT = TestClient(app)
 CAPTURE_DIR = Path(STATIC_DIR) / "capture"
 
 
+def declared_capture_asset(html: str, asset: str) -> str:
+    path = f"/static/capture/{asset}"
+    match = re.search(rf'(?:src|href)="({re.escape(path)}\?v=[^"&]+)"', html)
+    assert match is not None, f"missing cache-busted asset: {path}"
+    return match.group(1)
+
+
 def test_shared_curated_registry_covers_exactly_the_ten_catalog_sources():
     response = CLIENT.get("/static/problem-presentations/registry.json")
     assert response.status_code == 200
@@ -78,7 +85,9 @@ def test_capture_loads_pinned_local_katex_assets_and_fonts_in_order():
         assert response.status_code == 200, asset
         assert response.content
     assert html.index(prefix + "katex.min.js") < html.index(prefix + "contrib/auto-render.min.js")
-    assert html.index("problem-math.js") < html.index('src="/static/capture/tablet.js?v=p2-cap-02&amp;ui=ui-05-fit-notebook"')
+    assert html.index(declared_capture_asset(html, "problem-math.js")) < html.index(
+        declared_capture_asset(html, "tablet.js")
+    )
     css = CLIENT.get(prefix + "katex.min.css").text
     fonts = re.findall(r"url\((fonts/[^)]+)\)", css)
     assert fonts
@@ -88,9 +97,8 @@ def test_capture_loads_pinned_local_katex_assets_and_fonts_in_order():
 
 def test_capture_loads_current_presentation_assets_despite_a_cached_previous_ui():
     html = CLIENT.get("/capture").text
-    for asset, version in (("tablet.css", "p2-cap-02"), ("problem-math.js", "p2-ui-01"), ("tablet.js", "p2-cap-02")):
-        url = f"/static/capture/{asset}?v={version}"
-        assert url in html
+    for asset in ("tablet.css", "problem-math.js", "tablet.js"):
+        url = declared_capture_asset(html, asset)
         assert CLIENT.get(url).status_code == 200
 
 

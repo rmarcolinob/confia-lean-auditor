@@ -21,9 +21,16 @@ from test_submissions import payload
 
 @pytest.fixture
 def client(tmp_path, monkeypatch):
-    monkeypatch.setenv("CONFIA_ENV", "test")
     monkeypatch.setenv("CONFIA_SUBMISSIONS_DIR", str(tmp_path / "submissions"))
     return TestClient(app)
+
+
+@pytest.fixture(autouse=True)
+def isolated_recognition_environment(monkeypatch):
+    monkeypatch.setenv("CONFIA_AUTH_ENABLED", "0")
+    monkeypatch.setenv("CONFIA_ENV", "test")
+    monkeypatch.delenv("CONFIA_MATHPIX_APP_ID", raising=False)
+    monkeypatch.delenv("CONFIA_MATHPIX_APP_KEY", raising=False)
 
 
 def submission(client, pages=1):
@@ -77,6 +84,18 @@ def test_test_provider_environment_gate(client, monkeypatch, env):
     assert response.json() == ([{"provider": "fake_test", "label": "Reconhecedor de teste"}] if expected else [])
     sid = submission(client)
     assert recognize(client, sid).status_code == (201 if expected else 422)
+
+
+def test_mathpix_registry_requires_both_credentials(monkeypatch):
+    monkeypatch.setenv("CONFIA_ENV", "production")
+    assert configured_registry().providers() == []
+    monkeypatch.setenv("CONFIA_MATHPIX_APP_ID", "test-app-id")
+    assert configured_registry().providers() == []
+    monkeypatch.delenv("CONFIA_MATHPIX_APP_ID")
+    monkeypatch.setenv("CONFIA_MATHPIX_APP_KEY", "test-app-key")
+    assert configured_registry().providers() == []
+    monkeypatch.setenv("CONFIA_MATHPIX_APP_ID", "test-app-id")
+    assert configured_registry().providers() == ["mathpix"]
 
 
 def test_fake_result_null_fields_provenance_hashes_and_immutable_submission(client):

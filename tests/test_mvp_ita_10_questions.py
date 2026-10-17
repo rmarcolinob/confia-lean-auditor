@@ -9,7 +9,13 @@ from confia_lean_auditor.main import app
 from audit_contract import assert_score_contract, assert_incomplete
 
 
-CLIENT = TestClient(app)
+@pytest.fixture
+def client(monkeypatch):
+    monkeypatch.setenv("CONFIA_AUTH_ENABLED", "0")
+    monkeypatch.setenv("CONFIA_ENV", "test")
+    monkeypatch.delenv("CONFIA_MATHPIX_APP_ID", raising=False)
+    monkeypatch.delenv("CONFIA_MATHPIX_APP_KEY", raising=False)
+    return TestClient(app)
 
 VALID_VERDICTS = {
     "correto",
@@ -57,8 +63,8 @@ def read_example(problem_id: str, filename: str) -> str:
     )
 
 
-def audit_solution(problem_id: str, solution: str) -> dict:
-    response = CLIENT.post(
+def audit_solution(client: TestClient, problem_id: str, solution: str) -> dict:
+    response = client.post(
         "/audit",
         json={
             "problem_id": problem_id,
@@ -69,8 +75,8 @@ def audit_solution(problem_id: str, solution: str) -> dict:
     return response.json()
 
 
-def audit_example(problem_id: str, filename: str) -> dict:
-    return audit_solution(problem_id, read_example(problem_id, filename))
+def audit_example(client: TestClient, problem_id: str, filename: str) -> dict:
+    return audit_solution(client, problem_id, read_example(problem_id, filename))
 
 
 def assert_audit_contract(data: dict, problem_id: str) -> None:
@@ -98,8 +104,8 @@ def assert_audit_contract(data: dict, problem_id: str) -> None:
 
 
 @pytest.mark.parametrize("problem_id", MVP_PROBLEM_IDS)
-def test_mvp_correct_solutions_for_all_10_questions(problem_id: str):
-    data = audit_example(problem_id, "correct_solution.txt")
+def test_mvp_correct_solutions_for_all_10_questions(client, problem_id: str):
+    data = audit_example(client, problem_id, "correct_solution.txt")
 
     assert_audit_contract(data, problem_id)
     assert data["score"] == data["max_score"]
@@ -111,17 +117,18 @@ def test_mvp_correct_solutions_for_all_10_questions(problem_id: str):
     PARTIAL_AND_WRONG_EXAMPLES,
 )
 def test_mvp_partial_and_wrong_examples_keep_audit_contract(
+    client,
     problem_id: str,
     partial_filename: str,
     wrong_filename: str,
 ):
-    partial_data = audit_example(problem_id, partial_filename)
+    partial_data = audit_example(client, problem_id, partial_filename)
     assert_audit_contract(partial_data, problem_id)
     assert partial_data["score"] is None
     assert partial_data["verdict"] == "inconclusivo"
     assert partial_data["rubric_assessment"]["evaluated_max_score"] < partial_data["max_score"]
 
-    wrong_data = audit_example(problem_id, wrong_filename)
+    wrong_data = audit_example(client, problem_id, wrong_filename)
     assert_audit_contract(wrong_data, problem_id)
     assert wrong_data["score"] is None
     assert wrong_data["verdict"] == "inconclusivo"
@@ -129,8 +136,8 @@ def test_mvp_partial_and_wrong_examples_keep_audit_contract(
 
 
 @pytest.mark.parametrize("problem_id", MVP_PROBLEM_IDS)
-def test_mvp_synthetic_adversarial_inputs_do_not_crash(problem_id: str):
-    data = audit_solution(problem_id, ADVERSARIAL_SOLUTION)
+def test_mvp_synthetic_adversarial_inputs_do_not_crash(client, problem_id: str):
+    data = audit_solution(client, problem_id, ADVERSARIAL_SOLUTION)
 
     assert_audit_contract(data, problem_id)
     assert_incomplete(data, 0, 0)

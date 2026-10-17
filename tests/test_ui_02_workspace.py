@@ -38,7 +38,9 @@ def test_modes_responses_and_current_session_views_have_native_accessible_contro
     assert 'Representação digitada para análise' in html
     assert 'a versão digitada para analisar esta solução manuscrita' in html
     assert 'Ainda não há histórico persistente' in html
-    assert 'somente recibos confirmados nesta sessão' in html
+    assert page.ids['student-session-envios'][1]['aria-label'] == 'Minhas submissões'
+    assert page.ids['student-receipt-list'][0] == 'div'
+    assert 'Envios oficiais ao professor. Tentativas do TutorIA não aparecem aqui.' in html
     assert 'data-student-mode=' not in html
     for forbidden in ('fake_test', 'recognition-providers', 'localStorage', 'meus envios'):
         assert forbidden not in (STATIC / 'resolution-workspace.js').read_text()
@@ -53,7 +55,13 @@ def test_sending_and_analysis_remain_separate_and_canvas_geometry_is_preserved()
     assert 'fetch("/audit"' in app
     assert '!window.ConfIAWorkspace.canAnalyze()' in app
     assert 'resolutionMode !== "submission"' in capture
-    assert 'transport("/submissions"' in sender and 'method: "POST"' in sender
+    assert 'async function send(document, target = "/submissions")' in sender
+    assert 'response = await transport(target, {' in sender and 'method: "POST"' in sender
+    assert 'target !== "/submissions"' in sender
+    assert 'receipt.assessment_id !== assessmentId || receipt.assessment_item_id !== itemId' in sender
+    assert 'mode === "submission"' in workspace
+    assert '`/assessments/${selectedExam.assessment.assessment_id}/items/${selectedExamItem.assessment_item_id}/submissions`' in workspace
+    assert 'submission_target: submissionTarget()' in workspace
     assert 'receipt.snapshot_id === snapshot.local_snapshot_id' in sender
     assert 'snapshot_id === context.local_snapshot_id' in workspace
     assert 'source: "tablet"' not in workspace  # No invented server receipt.

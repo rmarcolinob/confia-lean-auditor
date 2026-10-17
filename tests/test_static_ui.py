@@ -32,28 +32,20 @@ def test_root_serves_mvp_html():
     response = CLIENT.get("/")
 
     assert response.status_code == 200
-    assert "CONFIA" in response.text
-    assert "Auditoria matemática confiável" in response.text
-    assert "Uma questão, um caderno de resolução" in response.text
-    assert "Analisar minha solução" in response.text
-    assert "Área do Aluno" in response.text
-    assert "Praticar com feedback" in response.text
-    assert "Envios de demonstração neste navegador" in response.text
-    assert "Área do Professor" in response.text
-    assert "Analisar com ConfIA" in response.text
-    assert "O ConfIA sugere uma análise" in response.text
-    assert "Área da Gestão" in response.text
-    assert "Avaliação docente — integração em desenvolvimento" in response.text
-    assert "Aprovar correção" not in response.text
-    assert "Soluções analisadas" in response.text
-    assert "Enunciado" in response.text
-    assert "Aluno" in response.text
-    assert "Professor" in response.text
-    assert "Gestão" in response.text
-    assert "app-root" in response.text
-    assert "problem-statement" in response.text
-    assert "problem-title" in response.text
-    assert "problem-statement-text" in response.text
+    html = response.text
+    assert "ConfIA" in html
+    assert "Confiabilidade e Explicabilidade em Matemática" in html
+    assert '<main id="app-root"' in html
+    assert 'id="auth-identity"' in html
+    assert 'id="auth-logout"' in html
+    for section in ("student-area", "student-exams", "student-workspace", "teacher-area",
+                    "manuscript-inbox", "teacher-exams", "management-area", "management-overview"):
+        assert f'id="{section}"' in html
+    for link in ("#student/tutoria", "#student/exams", "#student/submissions",
+                 "#teacher/submissions", "#management/overview"):
+        assert f'href="{link}"' in html
+    for element in ("problem-statement", "problem-title", "problem-statement-text"):
+        assert f'id="{element}"' in html
 
 
 def test_problems_endpoint_lists_10_mvp_questions_with_examples():

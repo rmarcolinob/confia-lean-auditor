@@ -46,10 +46,15 @@ def test_shell_landmarks_and_profile_navigation_are_conventional():
 def test_every_menu_destination_is_available_and_capture_is_reused():
     page = Page(CLIENT.get('/').text)
     links = [attrs['href'] for tag, attrs in page.elements if tag == 'a' and 'href' in attrs]
-    expected = {'#student/home', '#student/resolve', '#student/feedback', '#student/submissions', '/capture',
-                '#teacher/home', '#teacher/submissions', '#teacher/transcriptions', '#teacher/analysis',
+    expected = {'#student/home', '#student/tutoria', '#student/exams', '#student/submissions', '/capture',
+                '#teacher/home', '#teacher/students', '#teacher/exams', '#teacher/submissions',
+                '#teacher/transcriptions', '#teacher/analysis',
                 '#management/home', '#management/overview'}
     assert expected <= set(links)
+    assert not {'#student/resolve', '#student/feedback'} & {
+        attrs['href'] for tag, attrs in page.elements
+        if tag == 'a' and 'href' in attrs and 'data-shell-link' in attrs
+    }
     for forbidden in ('#classes', '#progress', '#achievements', '#assignments', '#grades'):
         assert forbidden not in links
     assert CLIENT.get('/capture').status_code == 200
@@ -61,15 +66,23 @@ def test_every_menu_destination_is_available_and_capture_is_reused():
         assert CLIENT.get(f'/static/{asset}?v=ui-01').status_code == 200
 
 
-def test_each_management_metric_is_locally_labelled_as_illustrative():
+def test_management_panel_uses_institutional_aggregate_contract():
     html = CLIENT.get('/').text
-    assert 'Visão demonstrativa de gestão' in html
-    cards = re.findall(r'<article class="macro-card">(.*?)</article>', html, re.S)
-    assert len(cards) == 4  # Existing metrics only.
-    for card in cards:
-        assert '<small>Dados ilustrativos</small>' in card
-    assert 'sem conexão com envios ou correções reais' in html
-    assert 'Dificuldades frequentes · exemplo ilustrativo' in html
+    page = Page(html)
+    for section in ('management-area', 'management-home', 'management-overview',
+                    'management-cards', 'management-breadcrumb', 'management-table'):
+        assert section in page.ids
+    assert page.ids['management-message'][1]['role'] == 'status'
+    management_html = html.split('<section id="management-area"', 1)[1].split('</main>', 1)[0]
+    assert 'Dados agregados das escolas e turmas' in management_html
+    assert 'Dados ilustrativos' not in management_html
+    assert '<article class="macro-card">' not in management_html
+    source = (STATIC / 'management.js').read_text()
+    assert 'read("/management/network/overview")' in source
+    assert 'read("/management/schools")' in source
+    assert 'renderCards(overview.metrics)' in source
+    assert 'dados agregados persistidos' in source
+    assert 'não é nota oficial' in source
 
 
 def test_skip_links_target_focusable_main_and_institutions_match():
