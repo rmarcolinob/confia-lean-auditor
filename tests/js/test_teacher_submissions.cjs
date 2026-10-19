@@ -96,7 +96,8 @@ test("teacher shows original and editable transcription side by side with histor
   assert(tree.some(n => n.className === "original-manuscript-panel"));
   assert(tree.some(n => n.className === "transcription-panel"));
   assert.match(tree.map(n => n.textContent).join(" "), /2 \+ 2 = 5/);
-  assert.match(tree.map(n => n.textContent).join(" "), /Transcrição conferida.*não significa solução correta/);
+  assert.match(tree.find(n => n.tag === "button" && n.textContent === "Conferir transcrição").title,
+    /somente a fidelidade ao manuscrito; não significa solução correta/);
   assert(ui.calls.some(c => c.url === `/transcriptions/${transcriptionId}`), JSON.stringify(ui.calls));
   assert(ui.calls.every(c => c.url !== "/audit"));
 });
@@ -111,7 +112,7 @@ test("teacher creates a manual transcription and accepts fidelity without an aud
     if (options.method === "POST" && url.endsWith("/transcriptions")) {
       const body = JSON.parse(options.body);
       assert.equal(body.source, "manual");
-      assert.equal(body.segments[0].latex, "2 + 2 = 5");
+      assert.equal(body.segments[0].text, "2 + 2 = 5");
       savedRevision = { ...revision, segments: body.segments };
       localSummary.latest_revision = savedRevision;
       localHistory.revisions = [savedRevision];
@@ -138,11 +139,13 @@ test("teacher creates a manual transcription and accepts fidelity without an aud
   await ui.get("#refresh-manuscripts").click();
   await ui.get("#manuscript-list").children[0].click();
   let tree = descendants(ui.get("#manuscript-detail"));
-  tree.find(n => n.tag === "textarea" && /LaTeX/.test(n.placeholder)).value = "2 + 2 = 5";
-  await tree.find(n => n.textContent === "Criar transcrição manual").click();
+  await tree.find(n => n.tag === "button" && n.textContent === "Editar transcrição").click();
+  const source = tree.find(n => n.className === "transcription-source");
+  source.value = "2 + 2 = 5"; await source.emit("input");
+  await tree.find(n => n.textContent === "Salvar nova versão").click();
   assert.equal(created, true);
   tree = descendants(ui.get("#manuscript-detail"));
-  await tree.find(n => n.textContent === "Aceitar como fiel ao manuscrito").click();
+  await tree.find(n => n.tag === "button" && n.textContent === "Conferir transcrição").click();
   assert.equal(accepted, true);
   assert(ui.calls.every(c => c.url !== "/audit"));
 });
@@ -241,17 +244,17 @@ test("ACCEPTED is presented as Transcrição conferida and RECEIVED as Recebida 
   assert.match(ui.get("#manuscript-list").textContent, /Recebida pelo ConfIA/);
   assert.match(ui.get("#manuscript-detail").textContent, /Transcrição conferida/);
   assert.doesNotMatch(primaryText(ui.get("#manuscript-detail")), /ACCEPTED|RECEIVED|solução aprovada/);
-  assert.equal(control(ui, "Aceitar como fiel ao manuscrito").disabled, true);
+  assert.equal(control(ui, "Conferir transcrição").disabled, true);
 });
 
 test("edited transcription detects unsaved changes, blocks acceptance and preserves content when refresh is blocked", async () => {
   const ui = await opened();
   const edited = editLatex(ui);
   assert.match(ui.get("#manuscript-detail").textContent, /Alterações não salvas/);
-  assert.equal(control(ui, "Aceitar como fiel ao manuscrito").disabled, true);
+  assert.equal(control(ui, "Conferir transcrição").disabled, true);
   const count = ui.calls.length;
   // Exercise the defensive handler even if a caller bypasses the disabled control.
-  await control(ui, "Aceitar como fiel ao manuscrito").emit("click");
+  await control(ui, "Conferir transcrição").emit("click");
   await ui.get("#refresh-manuscripts").click();
   assert.equal(ui.calls.length, count);
   assert.equal(edited.value, "2 + 2 = 6");
@@ -285,7 +288,7 @@ test("explicit discard permits context switch and opens only the selected submis
     return base(url);
   });
   editLatex(ui);
-  await control(ui, "Descartar alterações não salvas").click();
+  await control(ui, "Cancelar").click();
   await ui.get("#manuscript-list").children[1].click();
   assert.match(ui.get("#manuscript-detail").textContent, /ITA2025Q4/);
   assert.doesNotMatch(ui.get("#manuscript-detail").textContent, /2 \+ 2 = 6/);
@@ -294,10 +297,10 @@ test("explicit discard permits context switch and opens only the selected submis
 test("discard restores the persisted revision and acceptance sends only its revision number", async () => {
   const ui = await opened();
   editLatex(ui);
-  await control(ui, "Descartar alterações não salvas").click();
-  assert.equal(editorTree(ui).find(n => n.tag === "textarea" && /LaTeX/.test(n.placeholder)).value, "2 + 2 = 5");
-  assert.equal(control(ui, "Aceitar como fiel ao manuscrito").disabled, false);
-  await control(ui, "Aceitar como fiel ao manuscrito").click();
+  await control(ui, "Cancelar").click();
+  assert.equal(editorTree(ui).find(n => n.tag === "textarea" && /LaTeX/.test(n.placeholder)).value, "\\[2 + 2 = 5\\]");
+  assert.equal(control(ui, "Conferir transcrição").disabled, false);
+  await control(ui, "Conferir transcrição").click();
   const call = ui.calls.find(c => c.url.endsWith("/accept"));
   const payload = JSON.parse(call.options.body);
   assert.equal(payload.revision_number, 1);
@@ -318,26 +321,23 @@ test("save creates a persisted revision before that revision can be accepted", a
     return base(url, options);
   });
   editLatex(ui);
-  await control(ui, "Salvar como nova revisão").click();
-  assert.equal(control(ui, "Aceitar como fiel ao manuscrito").disabled, false);
-  assert.match(ui.get("#manuscript-detail").textContent, /revisão persistida 2/);
-  await control(ui, "Aceitar como fiel ao manuscrito").click();
+  await control(ui, "Salvar nova versão").click();
+  assert.equal(control(ui, "Conferir transcrição").disabled, false);
+  assert.match(ui.get("#manuscript-detail").textContent, /Revisão 2 · Aguardando conferência/);
+  await control(ui, "Conferir transcrição").click();
   assert.equal(JSON.parse(ui.calls.find(c => c.url.endsWith("/accept")).options.body).revision_number, 2);
 });
 
-test("all editable transcription fields and added segments mark pending changes", async () => {
-  for (const field of ["reviewer", "reason", "kind", "page", "text", "latex", "add"]) {
+test("source and revision metadata mark pending changes, including whitespace", async () => {
+  for (const field of ["reviewer", "reason", "source"]) {
     const ui = await opened();
+    await control(ui, "Editar transcrição").click();
     const tree = editorTree(ui);
-    let item;
-    if (field === "add") await control(ui, "Adicionar segmento").click();
-    else {
-      if (field === "reviewer" || field === "reason") item = tree.filter(n => n.tag === "input")[field === "reviewer" ? 0 : 1];
-      else item = tree.find(n => n.className === "transcription-segment").controls[field];
-      item.value += " "; // Raw edits, including whitespace, must be detected.
-      await item.emit("input");
-    }
-    assert.equal(control(ui, "Aceitar como fiel ao manuscrito").disabled, true, field);
+    const item = field === "source" ? tree.find(n => n.className === "transcription-source")
+      : tree.filter(n => n.tag === "input")[field === "reviewer" ? 0 : 1];
+    item.value += " ";
+    await item.emit("input");
+    assert.equal(control(ui, "Conferir transcrição").disabled, true, field);
     assert.match(tree.find(n => n.className === "transcription-dirty-message").textContent, /Alterações não salvas/);
   }
 });
@@ -354,11 +354,11 @@ test("404 and revision conflict are translated while diagnostics stay in the con
     ? { ok: false, status: 409, json: async () => ({ detail: "revision_conflict" }) }
     : base(url));
   const edited = editLatex(ui409);
-  await control(ui409, "Salvar como nova revisão").click();
+  await control(ui409, "Salvar nova versão").click();
   assert.match(ui409.get("#manuscript-detail").textContent, /Existe uma revisão mais recente da transcrição/);
   assert.doesNotMatch(ui409.get("#manuscript-detail").textContent, /HTTP|revision_conflict/);
   assert.equal(edited.value, "2 + 2 = 6");
-  assert.equal(control(ui409, "Aceitar como fiel ao manuscrito").disabled, true);
+  assert.equal(control(ui409, "Conferir transcrição").disabled, true);
 });
 
 test("switching transcription is guarded before loading another persisted history", async () => {
@@ -382,9 +382,9 @@ test("pending save locks only incompatible editor changes and blocks a context r
   const base = transportFor(true, true);
   const ui = await opened(async (url, options = {}) => options.method === "POST" ? pending.promise : base(url));
   const textarea = editLatex(ui);
-  const saving = control(ui, "Salvar como nova revisão").click();
+  const saving = control(ui, "Salvar nova versão").click();
   assert.equal(textarea.disabled, true);
-  assert.equal(control(ui, "Aceitar como fiel ao manuscrito").disabled, true);
+  assert.equal(control(ui, "Conferir transcrição").disabled, true);
   const count = ui.calls.length;
   await ui.get("#refresh-manuscripts").click();
   assert.equal(ui.calls.length, count);

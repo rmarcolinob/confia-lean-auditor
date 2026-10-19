@@ -48,7 +48,9 @@ test('original precedes the complementary workflow and page navigation preserves
   assert.equal(workspace.children[1].className, 'transcription-panel');
   const detail = ui.get('#manuscript-detail');
   assert(detail.children.indexOf(byClass(ui, 'manuscript-analysis-panel')) > detail.children.indexOf(workspace));
-  assert.match(primaryText(workspace.children[0]), /Solução do aluno.*Manuscrito original.*conferidos e preservados/);
+  assert.match(primaryText(workspace.children[0]), /Manuscrito original.*Solução enviada pelo aluno\./);
+  assert.doesNotMatch(primaryText(workspace.children[0]), /conferidos e preservados/);
+  assert.match(workspace.children[0].textContent, /conferidos e preservados/);
   await tree(ui).find(n => n.tag === 'button' && n.textContent === 'Próxima página').click();
   assert.equal(tree(ui).find(n => n.tag === 'img').src, `/submissions/${id}/pages/1`);
   assert.match(primaryText(workspace.children[0]), /Página 2 de 2/);
@@ -62,8 +64,8 @@ test('accepted fidelity completes only transcription; no audit, grade or institu
   const ui = await open(async url => url === `/transcriptions/${transcriptionId}` ? ok({ ...history, revisions: [latest] }) : base(url));
   const steps = descendants(byClass(ui, 'teacher-workflow-stages')).filter(n => n.tag === 'li');
   assert.deepEqual(steps.map(n => n.dataset.complete), ['true', 'true', 'false', 'false']);
-  const evaluation = byClass(ui, 'teacher-evaluation-panel');
-  assert.match(evaluation.textContent, /integração em desenvolvimento/);
+  const evaluation = byClass(ui, 'teacher-decision-panel');
+  assert.match(evaluation.textContent, /Envio anterior sem avaliação vinculada/);
   assert.equal(descendants(evaluation).some(n => ['button', 'input', 'select'].includes(n.tag)), false);
   assert.equal(ui.calls.some(c => c.url === '/audit' || /decision|grade/.test(c.url) || c.options.method), false);
 });
@@ -85,7 +87,8 @@ test('production has no recognition controls; persisted fake transcription remai
   const base = transportFor(true, true);
   const ui = await open(async url => url === '/submissions/recognition-providers' ? ok([]) : url === `/transcriptions/${transcriptionId}` ? ok({ ...history, revisions: [fake] }) : base(url));
   assert.equal(tree(ui).some(n => n.tag === 'button' && /Gerar transcrição automática/.test(n.textContent)), false);
-  assert.match(primaryText(ui.get('#manuscript-detail')), /Transcrição de teste artificial.*não é OCR real/);
+  assert.match(primaryText(ui.get('#manuscript-detail')), /Detalhes do reconhecimento — teste artificial/);
+  assert.match(ui.get('#manuscript-detail').textContent, /Transcrição de teste artificial.*não é OCR real/);
   assert.doesNotMatch(primaryText(ui.get('#manuscript-detail')), /fake_test|run_|input_hash/);
   assert.match(ui.get('#manuscript-detail').textContent, /Detalhes do reconhecimento.*input_hash/s);
 });
@@ -120,8 +123,10 @@ test('existing teacher queue filters Assessment and problem without copying subm
     { ...record, submission_id: 'sub_' + 'c'.repeat(32), assessment_id: examA, problem_id: 'ITA2025F2Q3' },
     { ...record, submission_id: 'sub_' + 'd'.repeat(32), assessment_id: examB, problem_id: 'ITA2025F2Q5' },
   ];
-  const ui = await load(async url => url === '/submissions' ? ok(records) : url.endsWith('/audits') ? ok([]) : ok([]));
+  const ui = await load(async url => url === '/submissions' ? ok(records) : url === '/assessments'
+    ? ok([{ assessment: { assessment_id: examA, title: 'Avaliação 1' } }, { assessment: { assessment_id: examB, title: 'Avaliação 2' } }]) : ok([]));
   assert.equal(ui.get('#manuscript-list').children.length, 3);
+  assert.equal(ui.get('#assessment-filter').textContent, 'Todos os examesAvaliação 1Avaliação 2');
   ui.get('#assessment-filter').value = examA; await ui.get('#assessment-filter').emit('change');
   assert.equal(ui.get('#manuscript-list').children.length, 2);
   ui.get('#assessment-problem-filter').value = 'ITA2025F2Q3'; await ui.get('#assessment-problem-filter').emit('change');
@@ -142,7 +147,7 @@ test('Portuguese integrity conflict is translated and unsaved transcription surv
   const ui = await open(async (url, options) => options.method === 'POST' ? { ok: false, status: 409, json: async () => ({ detail: 'Integridade da submissão original inválida; revisão não publicada.' }) } : base(url));
   const latex = tree(ui).find(n => n.tag === 'textarea' && /LaTeX/.test(n.placeholder));
   latex.value = 'alteração de teste'; await latex.emit('input');
-  await tree(ui).find(n => n.tag === 'button' && n.textContent === 'Salvar como nova revisão').click();
+  await tree(ui).find(n => n.tag === 'button' && n.textContent === 'Salvar nova versão').click();
   assert.match(primaryText(ui.get('#manuscript-detail')), /Os arquivos originais desta solução precisam ser conferidos/);
   assert.doesNotMatch(primaryText(ui.get('#manuscript-detail')), /Existe uma revisão mais recente|HTTP/);
   assert.equal(latex.value, 'alteração de teste');
@@ -156,7 +161,7 @@ test('return to queue respects unsaved changes and does not discard them implici
   assert.equal(ui.get('#manuscript-queue').hidden, true);
   assert.equal(ui.get('#manuscript-detail').hidden, false);
   assert.equal(latex.value, 'nova leitura');
-  await tree(ui).find(n => n.tag === 'button' && n.textContent === 'Descartar alterações não salvas').click();
+  await tree(ui).find(n => n.tag === 'button' && n.textContent === 'Cancelar').click();
   await back.click();
   assert.equal(ui.get('#manuscript-queue').hidden, false);
   assert.equal(ui.get('#manuscript-detail').hidden, true);

@@ -1,0 +1,40 @@
+/* TUTORIA-CHAT-DEMO-01: institutional study conversation, shared ConfIA tokens only. */
+.tutoria-chat-context { min-width: 0; overflow-wrap: anywhere; }
+.tutoria-chat-context summary { color: var(--color-primary-strong); font-weight: 600; }
+.tutoria-chat-context-body { padding-top: var(--spacing-4); }
+.tutoria-chat-context-body > p { font-size: var(--font-auxiliary); }
+.tutoria-chat-context-body h3 { font-size: var(--font-auxiliary); margin-bottom: var(--spacing-2); }
+.tutoria-chat-context-body details { margin: var(--spacing-4) 0; }
+.tutoria-chat-context-body details .tutoria-chat-text { margin-top: var(--spacing-3); }
+.tutoria-chat-conversation { min-width: 0; }
+.tutoria-chat-panel-heading { display: flex; align-items: center; justify-content: space-between; gap: var(--spacing-3); margin-bottom: var(--spacing-4); }
+.tutoria-chat-panel-heading h3 { margin: 0 !important; }
+.tutoria-chat-panel-heading button { flex-shrink: 0; font-size: var(--font-auxiliary); }
+.tutoria-chat-messages { max-height: 440px; min-height: 220px; overflow-y: auto; overscroll-behavior: contain; scrollbar-gutter: stable; padding-right: var(--spacing-2); }
+.tutoria-chat-messages:focus-visible { outline: 3px solid var(--color-focus); outline-offset: 3px; }
+.tutoria-chat-message { padding: var(--spacing-4); margin-bottom: var(--spacing-4); border: 1px solid var(--color-border); border-radius: var(--radius-control); overflow-wrap: anywhere; }
+.tutoria-chat-tutor { background: var(--color-surface-subtle); border-left: 3px solid var(--color-primary); margin-right: var(--spacing-4); }
+.tutoria-chat-student { background: var(--color-surface); margin-left: var(--spacing-6); }
+.tutoria-chat-author { display: flex; align-items: center; gap: var(--spacing-2); margin: 0 0 var(--spacing-2); color: var(--color-primary-strong); font-size: var(--font-auxiliary); font-weight: 650; }
+.tutoria-chat-text { white-space: pre-wrap; line-height: 1.65; min-width: 0; overflow-wrap: anywhere; }
+.tutoria-chat-text .recognized-math { max-width: 100%; overflow-x: auto; }
+.tutoria-chat-quick { display: flex; flex-wrap: wrap; gap: var(--spacing-2); padding: var(--spacing-4) 0; border-top: 1px solid var(--color-border); }
+.tutoria-chat-quick button { font-size: var(--font-auxiliary); text-align: left; }
+.tutoria-chat-composer { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: var(--spacing-3); align-items: end; }
+.tutoria-chat-composer textarea { min-height: 84px; resize: vertical; font-weight: 400; }
+.tutoria-chat-conversation > .action-message { min-height: 1.4em; }
+.tutoria-chat, .tutoria-chat .tutoria-chat-layout { display: flex; flex-direction: column; align-items: stretch; gap: var(--spacing-3); height: 100%; min-height: 0; }
+.tutoria-chat .card { padding: var(--spacing-3); box-shadow: none; }
+.tutoria-chat .tutoria-chat-context { flex: 0 0 auto; max-height: 35%; overflow: auto; font-size: var(--font-auxiliary); }
+.tutoria-chat .tutoria-chat-conversation { flex: 1; display: flex; flex-direction: column; min-height: 260px; }
+.tutoria-chat .tutoria-chat-panel-heading { flex-direction: row; align-items: center; margin-bottom: var(--spacing-2); }
+.tutoria-chat .tutoria-chat-panel-heading h3 { font-size: var(--font-auxiliary); }
+.tutoria-chat .tutoria-chat-panel-heading button { padding: var(--spacing-2); }
+.tutoria-chat .tutoria-chat-messages { flex: 1; min-height: 72px; max-height: none; font-size: var(--font-auxiliary); }
+.tutoria-chat .tutoria-chat-message { padding: var(--spacing-3); margin-bottom: var(--spacing-3); }
+.tutoria-chat .tutoria-chat-quick { flex: 0 0 auto; flex-wrap: nowrap; overflow-x: auto; padding: var(--spacing-2) 0; }
+.tutoria-chat .tutoria-chat-quick button { flex: 0 0 auto; white-space: nowrap; }
+.tutoria-chat .tutoria-chat-composer { flex: 0 0 auto; grid-template-columns: minmax(0, 1fr) auto; gap: var(--spacing-2); }
+.tutoria-chat .tutoria-chat-composer textarea { min-height: 64px; max-height: 120px; }
+.tutoria-chat .tutoria-chat-conversation > p { font-size: var(--font-auxiliary); margin: var(--spacing-2) 0 0; }
+.tutoria-chat .action-message:empty { display: none; }

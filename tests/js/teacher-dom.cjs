@@ -40,8 +40,9 @@ function page(transport, search = "") {
     katex: { render(latex, target) { target.textContent = `rendered:${latex}`; } },
   };
   vm.runInNewContext(recognitionView, context);
+  vm.runInNewContext(fs.readFileSync(path.join(__dirname, "../../app/confia_lean_auditor/static/submissions/decisions.js"), "utf8"), context);
   vm.runInNewContext(source, context);
-  return { get, calls, logs, reports };
+  return { get, calls, logs, reports, window: context.window };
 }
 function transportFor(matches = true, withTranscription = false) {
   return async url => ({ ok: true, json: async () => {
@@ -54,6 +55,7 @@ function transportFor(matches = true, withTranscription = false) {
 }
 
 function primaryText(n) {
+  if (n.hidden) return "";
   if (n.tag === "details") return n.children[0]?.textContent || "";
   if (!n.children.length) return n.textContent;
   return n.children.map(primaryText).join(" ");

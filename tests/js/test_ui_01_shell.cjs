@@ -15,7 +15,7 @@ async function page({ hash = "", search = "", records = [], authRole = null, tea
   contextSchools = [{ school_id: 'school-a', name: 'Escola A' }],
   classroomsBySchool = { 'school-a': [{ classroom_id: 'class-a', school_id: 'school-a', name: 'Turma A' }] },
   recordsByClass = null, assessmentsByClass = {}, studentsByClass = {},
-  summariesBySubmission = {}, historiesByTranscription = {} } = {}) {
+  summariesBySubmission = {}, historiesByTranscription = {}, progressByAssessment = {} } = {}) {
   const nodes = new Map(), links = [], menus = [], tabs = [], modes = [], calls = [], events = {}, store = new Map();
   let accepted = false;
   const acceptance = { submission_id: submissionId, transcription_id: summary.transcription.transcription_id,
@@ -75,6 +75,8 @@ async function page({ hash = "", search = "", records = [], authRole = null, tea
         data = studentsByClass[url.split('/')[3]] || [{ user_id: 'usr_student', display_name: 'Aluno da turma A' }];
       else if (url.startsWith('/assessments?'))
         data = assessmentsByClass[new URLSearchParams(url.split('?')[1] || '').get('classroom_id')] || [];
+      else if (url.endsWith('/progress')) data = progressByAssessment[url.split('/')[2]] || { students: [] };
+      else if (url.endsWith('/teacher-decision')) data = null;
       else if (teacherReview && url.endsWith('/accept') && options?.method === 'POST') {
         accepted = true;
         data = { revision: { ...revision, status: 'ACCEPTED' }, acceptance };
@@ -104,7 +106,7 @@ async function page({ hash = "", search = "", records = [], authRole = null, tea
       return { ok: true, json: async () => data };
     },
   });
-  for (const file of ['recognition-view.js', 'app.js', 'submissions/teacher.js', 'shell.js']) vm.runInContext(fs.readFileSync(path.join(staticDir, file), 'utf8'), context);
+  for (const file of ['recognition-view.js', 'app.js', 'submissions/decisions.js', 'submissions/teacher.js', 'shell.js']) vm.runInContext(fs.readFileSync(path.join(staticDir, file), 'utf8'), context);
   await flush();
   const visit = async href => {
     const link = links.find(link => link.inNav && link.getAttribute('href') === href);
@@ -131,7 +133,10 @@ test('authenticated shell locks navigation to the server role and exposes logout
   assert.equal(student.get('.sidebar-note').isConnected, false);
   assert(student.calls.some(call => call.url === '/auth/me'));
   student.location.hash = '#student/resolve'; await student.events.hashchange();
-  assert.equal(student.location.hash, '#student/tutoria');
+  assert.equal(student.location.hash, '#student/tutoria/practice');
+  student.location.hash = '#student/feedback'; await student.events.hashchange();
+  assert.equal(student.location.hash, '#student/tutoria/feedback');
+  assert.equal(student.get('#student-feedback').hidden, true);
   student.location.hash = '#management/overview'; await student.events.hashchange();
   assert.equal(student.location.hash, '#student/home');
   assert.equal(student.window.ConfIAShell.navigate('teacher', 'submissions'), true);
@@ -176,7 +181,7 @@ test('authenticated teacher opens the original and recognized transcription, the
   assert(tree.some(node => node.textContent === 'rendered:2 + 2 = 5'));
   assert.equal(tree.find(node => node.tag === 'button' && node.textContent === 'Executar Análise ConfIA').disabled, true);
   assert(ui.calls.some(call => call.url === '/submissions/recognition-providers'));
-  await tree.find(node => node.tag === 'button' && node.textContent === 'Aceitar como fiel ao manuscrito').click();
+  await tree.find(node => node.tag === 'button' && node.textContent === 'Conferir transcrição').click();
   tree = descendants(ui.get('#manuscript-detail'));
   assert.equal(tree.find(node => node.tag === 'button' && node.textContent === 'Executar Análise ConfIA').disabled, false);
   assert(tree.some(node => node.className === 'transcription-history'));
@@ -249,6 +254,8 @@ test('teacher Alunos groups real Assessment items, statuses and legacy deliverie
   ];
   const ui = await page({ hash: '#teacher/home', authRole: 'TEACHER',
     assessmentsByClass: { 'class-a': exams }, recordsByClass: { 'class-a': records },
+    progressByAssessment: { [exam2]: { students: [{ submissions: { [item21]: sent2, [item22]: sent3 },
+      correction_statuses: { [item21]: 'DECISION_FINALIZED', [item22]: 'RESULT_RELEASED' } }] } },
     summariesBySubmission: {
       [sent1]: [{ transcription: { ...summary.transcription, submission_id: sent1 },
         latest_revision: { ...revision, submission_id: sent1, status: 'NEEDS_REVIEW' } }],
@@ -271,12 +278,13 @@ test('teacher Alunos groups real Assessment items, statuses and legacy deliverie
   assert.deepEqual(groups.map(group => group.children[0].textContent), [
     'Avaliação 1', 'Avaliação 2', 'Envios anteriores / sem avaliação vinculada',
   ]);
-  assert.match(groups[0].textContent, /Questão 1 · ITA2025F2Q1 · 5 pontos.*Solução enviada.*Transcrição aguardando conferência.*Abrir solução/);
-  assert.match(groups[0].textContent, /Questão 2 · ITA2025F2Q3 · 5 pontos.*Pendente/);
+  assert.match(groups[0].textContent, /Questão 1 · ITA2025F2Q1 · 5 pontos.*Enviada.*Transcrição em conferência.*Abrir solução/);
+  assert.match(groups[0].textContent, /Questão 2 · ITA2025F2Q3 · 5 pontos.*Não enviada/);
   assert.equal(groups[0].textContent.match(/Abrir solução/g).length, 1);
-  assert.match(groups[1].textContent, /Questão 1 · ITA2025F2Q5 · 5 pontos.*Transcrição aceita.*Análise ConfIA disponível/);
-  assert.match(groups[1].textContent, /Questão 2 · ITA2025F2Q8 · 5 pontos.*Solução enviada/);
-  assert.match(groups[2].textContent, /Questão ITA2025Q1.*Solução enviada/);
+  assert.match(groups[1].textContent, /Questão 1 · ITA2025F2Q5 · 5 pontos.*Decisão finalizada/);
+  assert.doesNotMatch(groups[1].textContent, /Análise disponível/); // Acceptance alone is not an audit.
+  assert.match(groups[1].textContent, /Questão 2 · ITA2025F2Q8 · 5 pontos.*Enviada.*Resultado liberado/);
+  assert.match(groups[2].textContent, /Questão ITA2025Q1.*Enviada/);
   assert.doesNotMatch(panel.textContent, /2ª Fase|Avaliação fora da turma/);
   const open = descendants(groups[0]).find(node => node.tag === 'button' && node.textContent === 'Abrir solução');
   await open.click(); await flush();
@@ -338,8 +346,8 @@ test('UI-P0 dirty editor protects profile switches, shell links and browser hist
   const ui = await page({ records: [record] });
   await ui.visit('#teacher/transcriptions');
   await ui.get('#manuscript-list').children[0].click();
-  const editor = descendants(ui.get('#manuscript-detail')).find(n => n.className === 'transcription-segment');
-  editor.controls.text.value = 'Leitura ainda não salva'; await editor.controls.text.emit('input');
+  const editor = descendants(ui.get('#manuscript-detail')).find(n => n.className === 'transcription-source');
+  editor.value = 'Leitura ainda não salva'; await editor.emit('input');
   await ui.tabs[0].click();
   assert.equal(ui.get('#teacher-area').hidden, false);
   assert.equal(ui.location.hash, '#teacher/transcriptions');
@@ -348,8 +356,8 @@ test('UI-P0 dirty editor protects profile switches, shell links and browser hist
   assert.match(ui.get('#manuscript-message').textContent, /Alterações não salvas/);
   ui.location.hash = '#management/overview'; await ui.events.hashchange();
   assert.equal(ui.location.hash, '#teacher/transcriptions');
-  assert.equal(editor.controls.text.value, 'Leitura ainda não salva');
-  const discard = descendants(ui.get('#manuscript-detail')).find(n => n.tag === 'button' && n.textContent === 'Descartar alterações não salvas');
+  assert.equal(editor.value, 'Leitura ainda não salva');
+  const discard = descendants(ui.get('#manuscript-detail')).find(n => n.tag === 'button' && n.textContent === 'Cancelar');
   await discard.click(); await ui.visit('#teacher/analysis');
   assert.equal(ui.location.hash, '#teacher/analysis');
 });

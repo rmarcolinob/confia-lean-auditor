@@ -38,4 +38,7 @@ def test_submission_frontends_use_text_nodes_original_pngs_and_no_direct_audit()
     assert "textContent" in sources[1]
     assert 'image.src = `/submissions/${id}/pages/${page.page_index}`' in sources[1]
     assert 'className = "transcription-workspace"' in sources[1]
-    assert "2 + 2 = 5" in sources[1]
+    assert 'className = "transcription-document"' in sources[1]
+    assert '"Editar transcrição"' in sources[1] and '"Conferir transcrição"' in sources[1]
+    assert "não significa solução correta nem avaliação do professor." in sources[1]
+    assert '"Texto reconhecido"' not in sources[1] and '"LaTeX reconhecido"' not in sources[1]

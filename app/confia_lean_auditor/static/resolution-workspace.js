@@ -151,15 +151,20 @@
     get("notebook-surface").hidden = !active || !mode || (mode === "practice" && response === "typed");
     get("practice-response").hidden = !active || mode !== "practice";
     get("typed-problem-context").hidden = !active || mode !== "practice" || response !== "typed";
-    setCopy("typed-solution-heading", response === "typed" ? "Solução digitada" : "Representação digitada para análise");
+    setCopy("typed-solution-heading", response === "typed" ? "Solução digitada" : experience === StudentFlow.TUTOR ? "Representação da solução" : "Representação digitada para análise");
     get("handwriting-analysis-note").hidden = response === "typed";
-    setCopy("prepare-analysis-label", response === "typed" ? "Solução digitada" : "Preparar análise");
+    setCopy("prepare-analysis-label", response === "typed" ? "Solução digitada" : experience === StudentFlow.TUTOR ? "Revisar representação digitada" : "Preparar análise");
+    if (experience === StudentFlow.TUTOR) {
+      setCopy("prepare-analysis-note", "Use o texto para registrar e revisar seu raciocínio.");
+      setCopy("handwriting-analysis-note", "Você pode registrar ou ajustar sua representação digitada. A escrita do caderno permanece preservada.");
+    }
     get("prepare-analysis-note").hidden = response === "typed";
+    get("tutoria-typed-feedback-note").hidden = experience !== StudentFlow.TUTOR;
     setCopy("resolution-title", mode === "practice" ? experience ? "TutorIA · prática com feedback" : "Prática com feedback"
       : mode === "submission" ? experience ? "Exames · solução para envio" : "Solução para envio" : "Como você quer trabalhar esta questão?");
     setCopy("workspace-status", !mode ? "Escolha a finalidade da resolução." : !ready
       ? "Abrindo o caderno da questão selecionada…"
-      : mode === "practice" ? "Resolva no caderno, reconheça a escrita e peça feedback." : "Prepare uma versão congelada e envie para receber o recibo do ConfIA.");
+      : mode === "practice" ? "Resolva no caderno, reconheça a escrita e peça feedback." : "Confira a leitura da sua solução e envie ao professor. O ConfIA confirmará o recebimento.");
     for (const value of ["practice", "submission"]) {
       const button = get(`${value}-mode`);
       button.setAttribute("aria-pressed", String(mode === value));
@@ -174,7 +179,7 @@
     auditButton.disabled = !ready || mode !== "practice" || studentAuditPending || !selectedProblem();
     get("reanalyze-solution").disabled = auditButton.disabled;
     // Compact navigation reserves the full width for the validated notebook.
-    const resolving = active && !get("student-area").hidden && ["resolve", "tutoria", "exams"].includes(get("student-area").dataset.view);
+    const resolving = active && !get("student-area").hidden && ["resolve", "tutoria/practice", "exams"].includes(get("student-area").dataset.view);
     document.body.dataset.resolutionActive = String(resolving);
     // Practice keeps the focused chrome; both notebook modes present the question above the iframe.
     const handwriting = resolving && mode === "practice" && response === "notebook";
@@ -182,6 +187,7 @@
     get("notebook-problem-context").hidden = !resolving || !mode || (mode === "practice" && response === "typed");
     updateToolbarOffset();
     renderNotebookControls();
+    window.ConfIATutoriaAssistant?.sync();
   }
   function chooseMode(value) {
     if (!["practice", "submission"].includes(value)) return;
@@ -245,14 +251,19 @@
       const article = appendTextElement(list, "article", "local-submission", "");
       appendTextElement(article, "h3", "", `Questão ${receipt.problem_id}`);
       appendTextElement(article, "p", "", `Recebida pelo ConfIA · ${formatDateTime(receipt.received_at)}`);
-      appendTextElement(article, "p", "", `Número do envio: ${receipt.submission_id}`);
-      appendTextElement(article, "p", "", receipt.assessment_id ? `Exame: ${receipt.assessment_id}` : "Envio legado");
-      appendTextElement(article, "p", "", `Versão enviada: ${receipt.snapshot_id}`);
+      appendTextElement(article, "span", "status", "Enviada").dataset.kind = "info";
+      const details = appendTextElement(article, "details", "receipt-details", "");
+      appendTextElement(details, "summary", "", "Comprovante do envio");
+      appendTextElement(details, "p", "", `Número do envio: ${receipt.submission_id}`);
+      appendTextElement(details, "p", "", receipt.assessment_id ? `Exame: ${receipt.assessment_id}` : "Envio anterior sem avaliação vinculada");
+      appendTextElement(details, "p", "", `Versão enviada: ${receipt.snapshot_id}`);
     }
   }
   async function loadSubmissions() {
     if (!document.body.classList?.contains("auth-enabled") || submissionsPending) { renderReceipts(); return; }
     submissionsPending = true;
+    get("student-receipt-list").replaceChildren();
+    appendTextElement(get("student-receipt-list"), "p", "action-message", "Carregando submissões…").setAttribute("role", "status");
     try {
       const response = await fetch("/submissions", { credentials: "same-origin", cache: "no-store" });
       if (!response.ok) throw new Error("Não foi possível carregar as submissões.");
@@ -280,6 +291,7 @@
     if (!problems.length) { setCopy("student-exams-message", "Carregando catálogo de questões…"); return; }
     const exams = availableExams.filter(exam => exam?.items?.every(item => problems.some(p => (p.problem_id || p.id) === item.problem_id)));
     setCopy("student-exams-message", exams.length ? "Escolha uma avaliação da sua turma." : "Nenhum exame disponível para sua turma no momento.");
+    get("student-exams-message").className = exams.length ? "action-message" : "empty-state";
     for (const group of ["Disponíveis", "Agendados", "Enviados", "Encerrados"]) {
       const members = exams.filter(exam => group === "Enviados" ? exam.submitted_item_ids.length === exam.items.length
         : exam.submitted_item_ids.length === exam.items.length ? false
@@ -287,13 +299,17 @@
       if (!members.length) continue;
       appendTextElement(list, "h3", "", group);
       for (const exam of members) {
-        const card = appendTextElement(list, "article", "local-submission", "");
+        const card = appendTextElement(list, "article", "local-submission exam-card", "");
         appendTextElement(card, "h4", "", exam.assessment.title);
-        appendTextElement(card, "p", "", `${exam.teacher_name} · ${exam.classroom_name}`);
-        appendTextElement(card, "p", "", `Prazo: ${formatDateTime(exam.assessment.closes_at)} · ${exam.availability}`);
-        appendTextElement(card, "p", "", `${exam.submitted_item_ids.length} de ${exam.items.length} questões enviadas`);
-        appendTextElement(card, "p", "", examProgressStatus(exam));
-        const button = appendTextElement(card, "button", "button button-primary", "Abrir exame");
+        appendTextElement(card, "p", "exam-card-meta", `${exam.classroom_name} · ${exam.teacher_name}`);
+        appendTextElement(card, "p", "exam-card-meta", `Prazo: ${formatDateTime(exam.assessment.closes_at)}`);
+        appendTextElement(card, "p", "exam-card-progress", `${exam.items.length} questões · ${exam.submitted_item_ids.length}/${exam.items.length} enviadas`);
+        const state = appendTextElement(card, "p", "status", examProgressStatus(exam));
+        state.dataset.kind = exam.submitted_item_ids.length === exam.items.length ? "success" : exam.submitted_item_ids.length ? "info" : "neutral";
+        if (exam.availability !== "DISPONÍVEL") appendTextElement(card, "span", "status", exam.availability === "AGENDADO" ? "Agendada" : "Encerrada").dataset.kind = "neutral";
+        const corrected = exam.items.filter(item => releasedResult(exam, item)).length;
+        if (corrected) appendTextElement(card, "p", "exam-card-meta", `Correção: ${corrected} de ${exam.items.length} questões corrigidas`);
+        const button = appendTextElement(card, "button", "button button-primary", "Abrir avaliação");
         button.type = "button";
         button.addEventListener("click", () => openExam(exam));
       }
@@ -303,7 +319,13 @@
     const sent = exam.submitted_item_ids.length;
     return sent === 0 ? "Não iniciada" : sent === exam.items.length ? "Concluída" : "Em andamento";
   }
+  function releasedResult(exam, item) {
+    return (exam.released_results || []).find(result => result.status === "corrected"
+      && result.assessment_id === exam.assessment.assessment_id && result.item_id === item.assessment_item_id
+      && result.problem_id === item.problem_id);
+  }
   function renderExamDetail(exam) {
+    setCopy("student-exams-message", "");
     setCopy("student-exam-title", exam.assessment.title);
     setCopy("student-exam-meta", `${exam.teacher_name} · ${exam.classroom_name} · ${formatDateTime(exam.assessment.opens_at)} até ${formatDateTime(exam.assessment.closes_at)}`);
     setCopy("student-exam-progress", `Progresso: ${exam.submitted_item_ids.length}/${exam.items.length} · ${examProgressStatus(exam)}`);
@@ -311,12 +333,25 @@
     const list = get("student-exam-items");
     list.replaceChildren();
     for (const item of exam.items) {
-      const card = appendTextElement(list, "article", "local-submission", "");
+      const card = appendTextElement(list, "article", "local-submission exam-item-card", "");
       appendTextElement(card, "h4", "", `Questão ${item.order} · ${item.problem_id}`);
-      appendTextElement(card, "p", "", `${item.points} pontos · ${exam.submitted_item_ids.includes(item.assessment_item_id) ? "Enviada" : "Não enviada"}`);
+      appendTextElement(card, "p", "exam-item-points", `${item.points.toLocaleString("pt-BR")} pontos`);
+      const submitted = exam.submitted_item_ids.includes(item.assessment_item_id);
+      const result = releasedResult(exam, item);
+      const state = appendTextElement(card, "p", "status", result ? "Corrigida" : submitted ? "Enviada" : "Não enviada");
+      state.dataset.kind = result ? "success" : submitted ? "info" : "neutral";
+      if (result) {
+        const format = value => Number(value).toLocaleString("pt-BR", { minimumFractionDigits: 1, maximumFractionDigits: 2 });
+        const released = appendTextElement(card, "section", "student-result", "");
+        appendTextElement(released, "p", "student-result-score", `Pontuação: ${format(result.final_points)} / ${format(result.max_points)}`);
+        appendTextElement(released, "h5", "", "Feedback do professor");
+        appendTextElement(released, "p", "student-teacher-feedback", result.teacher_feedback || "Nenhum feedback registrado.");
+      } else if (submitted) appendTextElement(card, "p", "form-help", "Aguardando resultado do professor.");
       const button = appendTextElement(card, "button", "button button-primary", "Resolver");
       button.type = "button";
-      button.disabled = exam.availability !== "DISPONÍVEL" || exam.submitted_item_ids.includes(item.assessment_item_id);
+      button.hidden = submitted;
+      button.disabled = exam.availability !== "DISPONÍVEL" || submitted;
+      button.setAttribute("aria-label", `Resolver questão ${item.order}`);
       button.addEventListener("click", () => {
         selectedExamItem = item;
         experience = StudentFlow.EXAM;
@@ -336,10 +371,17 @@
     get("student-exam-list").hidden = true;
     get("student-exam-detail").hidden = false;
     renderExamDetail(exam);
+    get("student-exam-title").focus();
   }
   async function loadExams() {
     const request = ++examsRequest;
+    availableExams = []; examsLoaded = false;
     setCopy("student-exams-message", "Carregando exames…");
+    get("student-exams-message").className = "action-message";
+    get("student-exam-list").replaceChildren();
+    get("student-exam-items").replaceChildren();
+    get("student-exam-detail").hidden = true;
+    get("student-exams").setAttribute("aria-busy", "true");
     try {
       const response = await fetch("/assessments", { credentials: "same-origin", cache: "no-store" });
       if (!response.ok) throw new Error("Não foi possível consultar as atividades da turma.");
@@ -352,13 +394,18 @@
         const refreshed = availableExams.find(exam => exam.assessment.assessment_id === selectedExam.assessment.assessment_id);
         if (refreshed) {
           selectedExam = refreshed;
+          get("student-exam-detail").hidden = false;
           renderExamDetail(refreshed);
+        } else {
+          selectedExam = null; selectedExamItem = null;
+          get("student-exam-list").hidden = false;
         }
       }
     } catch (_) { if (request === examsRequest) setCopy("student-exams-message", "Não foi possível consultar os exames. Abra esta área novamente."); }
+    finally { if (request === examsRequest) get("student-exams").setAttribute("aria-busy", "false"); }
   }
   function enter(view) {
-    if (view === "tutoria" || view === "resolve") {
+    if (view === "tutoria/practice" || view === "resolve") {
       if (view === "resolve") { experience = null; display(); return; }
       if (experience === StudentFlow.TUTOR) { display(); return; }
       selectedExam = null;
@@ -382,6 +429,10 @@
       filterProblems([]);
       display();
       loadExams();
+    } else if (experience === StudentFlow.EXAM) {
+      // Leaving the institutional view ends its UI mode without issuing a notebook command.
+      experience = null; active = false; mode = null; selectedExam = null; selectedExamItem = null;
+      display();
     }
   }
   function analysisContext() {
@@ -397,6 +448,20 @@
     get examSelected() { return Boolean(selectedExam); },
     get active() { return active; },
     get ready() { return ready; },
+    get catalog() { return [...problems]; },
+    get catalogLoaded() { return problemCatalogState === "ready"; },
+    get catalogState() { return problemCatalogState; },
+    get currentPracticeProblemId() { return active && experience === StudentFlow.TUTOR && mode === "practice" ? problemSelect.value : null; },
+    studyContext() {
+      const problem = selectedProblem();
+      return this.currentPracticeProblemId && problem ? { kind: "question", origin: "REAL", problemId: problemSelect.value, problemTitle: problem.title } : null;
+    },
+    practiceProblem(id) {
+      if (experience !== StudentFlow.TUTOR || !problems.some(problem => (problem.problem_id || problem.id) === id)) return false;
+      problemSelect.value = id;
+      renderExamples(); renderProblemStatement(); changeProblem(); open();
+      return true;
+    },
     display, enter, loadSubmissions, analysisContext, owns,
     canAnalyze: () => active && ready && mode === "practice",
     contextIsStale: context => !owns(context) || context.ink_version !== notebook?.ink_version || context.question_presentation_version !== notebook?.question_presentation_version,
@@ -406,12 +471,14 @@
       const entry = entries.get(key) || { solution: analysis.context.solution, version: analysis.context.version };
       entries.set(key, { ...entry, analysis });
       if (owns(analysis.context)) studentAnalysis = analysis;
+      if (analysis.data.tutoria_feedback) window.ConfIATutoria?.recordAttempt(analysis);
       display();
     },
     onProblemSelected: changeProblem,
     catalogReady() {
+      window.ConfIATutoria?.catalogChanged(problems);
       const initial = new URLSearchParams(location.search).get("problem_id");
-      if (initial && problems.some(p => (p.problem_id || p.id) === initial)) {
+      if (["resolve", "tutoria/practice"].includes(get("student-area").dataset.view) && initial && problems.some(p => (p.problem_id || p.id) === initial)) {
         problemSelect.value = initial;
         renderExamples(); renderProblemStatement();
         open();
@@ -499,7 +566,7 @@
     if (value === "typed") solutionInput.focus();
   });
   function resume(typed) {
-    const route = experience === StudentFlow.TUTOR ? "tutoria" : "resolve";
+    const route = experience === StudentFlow.TUTOR ? "tutoria/practice" : "resolve";
     if (!mode) { window.ConfIAShell?.navigate("student", route); return; }
     active = true;
     if (mode !== "practice") chooseMode("practice");

@@ -20,6 +20,8 @@
   let detailSequence = 0;
   let segmentSequence = 0;
   let activeEditor = null;
+  let activeDecision = null;
+  let activeSubmissionContext = null;
   let selectedSchool = "";
   let selectedClassroom = "";
   let institutionalMode = false;
@@ -110,6 +112,12 @@
   }
 
   function canLeaveEditor() {
+    if (activeDecision?.busy || activeDecision?.isDirty()) {
+      message.textContent = activeDecision.busy ? "Aguarde a operação da decisão terminar."
+        : "Salve ou descarte as alterações da decisão antes de trocar o contexto.";
+      message.focus();
+      return false;
+    }
     if (!activeEditor) return true;
     if (activeEditor.busy) {
       message.textContent = "Aguarde a operação desta transcrição terminar antes de trocar o contexto.";
@@ -158,13 +166,12 @@
     const pages = [...record.page_images].sort((a, b) => a.page_index - b.page_index);
     let current = 0;
     panel.setAttribute("aria-label", "Solução do aluno — manuscrito original");
-    panel.appendChild(node("p", "Solução do aluno")).className = "eyebrow";
     panel.appendChild(node("h3", "Manuscrito original"));
-    panel.appendChild(node("p", "Solução enviada pelo caderno. O arquivo original permanece preservado."));
+    panel.appendChild(node("p", "Solução enviada pelo aluno."));
     const integrity = node("p", originalsIntact(data) ? "✓ Arquivos originais conferidos e preservados." : "! Os arquivos originais desta solução precisam ser conferidos.");
     integrity.className = "alert";
     integrity.dataset.kind = originalsIntact(data) ? "success" : "warning";
-    panel.appendChild(integrity);
+    if (!originalsIntact(data)) panel.appendChild(integrity);
     const navigation = node("div");
     navigation.className = "page-navigation";
     const previous = node("button", "Página anterior");
@@ -215,72 +222,68 @@
     previous.addEventListener("click", () => { if (current > 0) { current -= 1; draw(); } });
     next.addEventListener("click", () => { if (current + 1 < pages.length) { current += 1; draw(); } });
     draw();
-    panel.appendChild(integrityDetails(data, id));
+    const evidence = integrityDetails(data, id);
+    if (originalsIntact(data)) evidence.appendChild(integrity);
+    panel.appendChild(evidence);
   }
 
-  function editableSegment(segment, pageCount, onChange) {
-    const row = node("fieldset");
-    row.className = "transcription-segment";
-    row.dataset.segmentId = segment.segment_id || `manual:${Date.now()}:${++segmentSequence}`;
-    row.appendChild(node("legend", `Segmento ${segment.order + 1}`));
-    const kind = node("select");
-    const kinds = { text: "Texto", math: "Matemática", mixed: "Misto", diagram: "Diagrama", unknown: "Não identificado" };
-    for (const value of Object.keys(kinds)) kind.appendChild(option(value, kinds[value]));
-    kind.value = segment.kind || "mixed";
-    const page = node("select");
-    for (let index = 0; index < pageCount; index += 1) page.appendChild(option(String(index), `Página ${index + 1}`));
-    page.value = String(segment.page_index || 0);
-    const text = node("textarea");
-    text.rows = 3;
-    text.value = segment.text || "";
-    text.placeholder = "Texto exatamente como aparece no manuscrito";
-    const latex = node("textarea");
-    latex.rows = 3;
-    latex.value = segment.latex || "";
-    latex.placeholder = "LaTeX fiel ao manuscrito, mesmo quando a matemática estiver errada";
-    row.appendChild(labeled("Tipo", kind));
-    row.appendChild(labeled("Página", page));
-    row.appendChild(labeled("Texto (opcional)", text));
-    row.appendChild(labeled("Matemática / LaTeX (opcional)", latex));
-    row.controls = { kind, page, text, latex };
-    if (onChange) for (const control of Object.values(row.controls)) {
-      control.addEventListener("input", onChange);
-      control.addEventListener("change", onChange);
+  const orderedSegments = segments => [...segments].sort((a, b) => a.page_index - b.page_index || a.order - b.order);
+
+  function transcriptionSource(segment) {
+    // One representation per segment, shared by the reading page and source editor.
+    // Mathpix latex_styled is persisted as latex; text is its fallback, never an appendix.
+    // Distinct, complementary segments retain their own position in the document.
+    const hasLatex = typeof segment.latex === "string" && Boolean(segment.latex.trim());
+    const source = hasLatex ? segment.latex : segment.text || "";
+    const bareMath = hasLatex || segment.kind === "math"
+      || /^\s*\\(?:frac|sqrt|sum|int|lim|left|begin)\b/.test(source);
+    const parts = globalThis.ConfiaRecognitionView.splitMathText(source, bareMath);
+    // Add source delimiters only for an undelimited formula. Stored strings stay intact.
+    return parts.length === 1 && parts[0].math && parts[0].value === source.trim()
+      ? `\\[${source}\\]` : source;
+  }
+
+  function renderTranscriptionContent(host, segments) {
+    host.replaceChildren();
+    const document = node("div");
+    document.className = "transcription-document";
+    document.setAttribute("role", "document");
+    document.setAttribute("aria-label", "Transcrição reconhecida");
+    const view = globalThis.ConfiaRecognitionView;
+    let count = 0;
+    for (const segment of orderedSegments(segments)) {
+      const source = transcriptionSource(segment);
+      if (!source) continue;
+      const content = node("div");
+      content.className = "transcription-document-segment";
+      view.renderMathText(content, source);
+      document.appendChild(content);
+      count++;
     }
-    return row;
-  }
-
-  function collectSegments(host) {
-    return Array.from(host.children).map((row, order) => {
-      const item = { segment_id: row.dataset.segmentId, page_index: Number(row.controls.page.value), order, kind: row.controls.kind.value };
-      const text = row.controls.text.value.trim();
-      const latex = row.controls.latex.value.trim();
-      if (text) item.text = text;
-      if (latex) item.latex = latex;
-      return item;
-    });
+    if (!count) document.appendChild(node("p", "Nenhuma transcrição disponível."));
+    host.appendChild(document);
   }
 
   function renderHistory(panel, history) {
     const disclosure = node("details");
     disclosure.className = "transcription-history";
     disclosure.appendChild(node("summary", `Histórico da transcrição (${history.revisions.length} ${history.revisions.length === 1 ? "revisão" : "revisões"})`));
-    const changes = { initial_transcription: "Transcrição criada", reading_correction: "Leitura corrigida", other_transcription_edit: "Transcrição editada" };
-    const kinds = { text: "Texto", math: "Matemática", mixed: "Misto", diagram: "Diagrama", unknown: "Não identificado" };
     for (const revision of [...history.revisions].reverse()) {
       const article = node("article");
       article.appendChild(node("h4", `Revisão ${revision.revision_number} · ${statusLabel(revision.status)}`));
-      article.appendChild(node("p", `${when(revision.created_at)} · revisor não verificado: ${revision.reviewer_reference} · ${changes[revision.change_type] || "Revisão registrada"}`));
-      if (revision.change_reason) article.appendChild(node("p", `Motivo: ${revision.change_reason}`));
-      const items = node("ol");
-      for (const segment of revision.segments) {
-        items.appendChild(node("li", `Página ${segment.page_index + 1} · ${kinds[segment.kind] || "Não identificado"} · texto: ${segment.text || "—"} · LaTeX: ${segment.latex || "—"}`));
-      }
-      article.appendChild(items);
+      const origin = revision.source === "automatic" && revision.change_type === "initial_transcription" ? "Automática" : "Manual";
+      article.appendChild(node("p", `${when(revision.created_at)} · ${origin}`));
+      const content = node("details");
+      content.appendChild(node("summary", "Ver revisão"));
+      if (revision.change_reason) content.appendChild(node("p", `Motivo: ${revision.change_reason}`));
+      const items = node("div");
+      renderTranscriptionContent(items, revision.segments);
+      content.appendChild(items);
       const technical = node("details");
       technical.appendChild(node("summary", "Detalhes técnicos da revisão"));
       technical.appendChild(node("pre", JSON.stringify(revision, null, 2)));
-      article.appendChild(technical);
+      content.appendChild(technical);
+      article.appendChild(content);
       disclosure.appendChild(article);
     }
     for (const acceptance of history.acceptances || []) {
@@ -295,29 +298,21 @@
     const latest = history?.revisions?.[history.revisions.length - 1] || null;
     panel.setAttribute("aria-label", "Transcrição da solução");
     panel.appendChild(node("h3", "Transcrição reconhecida"));
-    const warning = node("p", "Transcrever é representar fielmente o manuscrito. Não corrija a matemática: se o aluno escreveu “2 + 2 = 5”, preserve “2 + 2 = 5”.");
-    warning.className = "transcription-warning";
-    panel.appendChild(warning);
-    panel.appendChild(node("p", "Transcrição conferida significa somente fidelidade ao manuscrito; não significa solução correta nem avaliação do professor."));
-    panel.appendChild(node("p", latest ? `${statusLabel(latest.status)} · revisão persistida ${latest.revision_number}` : "Transcrição: ainda não criada"));
-    if (latest?.segments?.length) {
-      const visual = node("div");
-      visual.className = "transcription-visual";
-      visual.appendChild(node("h4", "Visualização da transcrição"));
-      const content = node("div");
-      globalThis.ConfiaRecognitionView?.render(content, latest.segments);
-      visual.appendChild(content);
-      panel.appendChild(visual);
-    }
+    const visual = node("div");
+    visual.className = "transcription-visual";
+    panel.appendChild(visual);
+    const revisionStatus = node("p", latest ? latest.status === "ACCEPTED" ? "Transcrição conferida" : "Transcrição a conferir" : "Transcrição: ainda não criada");
+    revisionStatus.className = "transcription-status status";
+    revisionStatus.dataset.kind = latest?.status === "ACCEPTED" ? "success" : "pending";
+    const supportingDetails = node("div");
     if (latest?.recognizer_run_id) {
-      if (latest.provider === "fake_test") panel.appendChild(node("p", "Transcrição de teste artificial. Conteúdo constante; não é OCR real. Confira cada segmento com o original.")).className = "transcription-warning";
       const origin = node("details");
-      origin.appendChild(node("summary", "Detalhes do reconhecimento"));
+      origin.appendChild(node("summary", `Detalhes do reconhecimento${latest.provider === "fake_test" ? " — teste artificial" : ""}`));
+      if (latest.provider === "fake_test") origin.appendChild(node("p", "Transcrição de teste artificial. Conteúdo constante; não é OCR real. Confira cada segmento com o original."));
       origin.appendChild(node("p", `Origem automática · provider: ${latest.provider} · execução: ${latest.recognizer_run_id} · adapter: ${latest.recognizer} ${latest.recognizer_version}`));
       origin.appendChild(node("p", "Proveniência do reconhecimento do manuscrito"));
       origin.appendChild(node("pre", JSON.stringify(latest.provenance || history.transcription.provenance || {}, null, 2)));
-      panel.appendChild(origin);
-      panel.appendChild(node("p", "Revise cada segmento com o manuscrito original antes de aceitar a fidelidade."));
+      supportingDetails.appendChild(origin);
     }
     const recognition = node("details");
     recognition.className = "recognition-assistance disclosure";
@@ -360,43 +355,103 @@
         }
       });
     }
-    if (generateButtons.length) panel.appendChild(recognition);
+    if (generateButtons.length) supportingDetails.appendChild(recognition);
+    const editing = node("div");
+    editing.className = "transcription-editor";
+    editing.hidden = true;
+    editing.id = `transcription-editor-${++segmentSequence}`;
+    editing.appendChild(node("h4", "Editar transcrição"));
+    const edit = node("button", "Editar transcrição");
+    edit.type = "button";
+    edit.className = "secondary-action";
+    edit.setAttribute("aria-controls", editing.id);
+    edit.setAttribute("aria-expanded", "false");
+    function showEditor(visible) {
+      editing.hidden = !visible;
+      visual.hidden = visible;
+      actions.hidden = visible;
+      edit.setAttribute("aria-expanded", String(visible));
+      if (visible) {
+        editorMessage.textContent = "";
+        sourceEditor.focus();
+      }
+    }
+    edit.addEventListener("click", () => { if (!editor.busy) showEditor(true); });
+    const initialSegments = latest?.segments || [];
+    const drafts = Array.from({ length: pageCount }, (_, pageIndex) => {
+      const segments = orderedSegments(initialSegments.filter(segment => segment.page_index === pageIndex));
+      // Textareas normalize line endings. Compare their normalized projection, but
+      // send the untouched original segments when a page's source was not edited.
+      const initial = segments.map(transcriptionSource).join("\n\n").replace(/\r\n?/g, "\n");
+      return { pageIndex, segments, initial, source: initial };
+    });
+    let selectedPage = 0;
+    const pageSelect = node("select");
+    pageSelect.className = "transcription-source-page";
+    for (const draft of drafts) pageSelect.appendChild(option(String(draft.pageIndex), `Página ${draft.pageIndex + 1}`));
+    pageSelect.value = "0";
+    if (pageCount > 1) editing.appendChild(labeled("Página da transcrição", pageSelect));
+    const sourceEditor = node("textarea");
+    sourceEditor.className = "transcription-source";
+    sourceEditor.rows = 16;
+    sourceEditor.spellcheck = false;
+    sourceEditor.placeholder = "Texto-fonte com matemática entre delimitadores LaTeX";
+    sourceEditor.value = drafts[selectedPage].source;
+    editing.appendChild(labeled("Texto-fonte da transcrição", sourceEditor));
+    pageSelect.addEventListener("change", () => {
+      if (editor.busy) return;
+      selectedPage = Number(pageSelect.value);
+      sourceEditor.value = drafts[selectedPage].source;
+    });
+    sourceEditor.addEventListener("input", () => {
+      if (editor.busy) return;
+      drafts[selectedPage].source = sourceEditor.value;
+      updateDirty();
+    });
+    function collectSegments() {
+      return drafts.flatMap(draft => {
+        if (draft.source === draft.initial && draft.segments.length) return draft.segments;
+        if (!draft.source && drafts.some(page => page.source)) return [];
+        // A manual page has one source. Do not carry an obsolete alternate latex
+        // field or measured segment coordinates into the newly edited document.
+        return [{ segment_id: `manual:${Date.now()}:${++segmentSequence}`, page_index: draft.pageIndex,
+          order: 0, kind: "mixed", text: draft.source || null, latex: null }];
+      });
+    }
     const reviewer = node("input");
     reviewer.type = "text";
     reviewer.maxLength = 80;
     reviewer.value = latest?.reviewer_reference === "automatic:pending-human-review" ? "professor-teste-01" : latest?.reviewer_reference || "professor-teste-01";
-    panel.appendChild(labeled("Referência do revisor (identidade não verificada)", reviewer));
+    editing.appendChild(labeled("Referência do revisor (identidade não verificada)", reviewer));
     const reason = node("input");
     reason.type = "text";
     reason.maxLength = 500;
     reason.placeholder = "Ex.: corrige palavra lida incorretamente";
-    panel.appendChild(labeled("Motivo da nova revisão (opcional)", reason));
-    const segmentHost = node("div");
-    segmentHost.className = "transcription-segments";
-    const initialSegments = latest?.segments || [{ segment_id: "", page_index: 0, order: 0, kind: "mixed" }];
-    for (const segment of initialSegments) segmentHost.appendChild(editableSegment(segment, pageCount, updateDirty));
-    panel.appendChild(segmentHost);
+    editing.appendChild(labeled("Motivo da nova revisão (opcional)", reason));
+    panel.appendChild(editing);
     const actions = node("div");
     actions.className = "transcription-actions";
-    const add = node("button", "Adicionar segmento");
-    add.type = "button";
-    add.className = "secondary-action";
-    const save = node("button", latest ? "Salvar como nova revisão" : "Criar transcrição manual");
+    const save = node("button", "Salvar nova versão");
     save.type = "button";
     save.className = "primary-action";
-    const accept = node("button", "Aceitar como fiel ao manuscrito");
+    const accept = node("button", "Conferir transcrição");
     accept.type = "button";
     accept.className = "secondary-action";
+    const fidelityHelp = "Conferir confirma somente a fidelidade ao manuscrito; não significa solução correta nem avaliação do professor.";
+    accept.setAttribute("aria-description", fidelityHelp);
     accept.disabled = !latest || latest.status === "ACCEPTED";
-    const discard = node("button", "Descartar alterações não salvas");
+    const discard = node("button", "Cancelar");
     discard.type = "button";
     discard.className = "secondary-action";
-    discard.hidden = true;
-    actions.appendChild(add);
-    actions.appendChild(save);
+    const editActions = node("div");
+    editActions.className = "transcription-actions";
+    editActions.appendChild(discard);
+    editActions.appendChild(save);
+    editing.appendChild(editActions);
+    actions.appendChild(edit);
     actions.appendChild(accept);
-    actions.appendChild(discard);
     panel.appendChild(actions);
+    panel.appendChild(revisionStatus);
     const dirtyMessage = node("p");
     dirtyMessage.className = "transcription-dirty-message";
     dirtyMessage.setAttribute("role", "status");
@@ -412,10 +467,7 @@
     const initialReviewer = reviewer.value;
     const fingerprint = () => JSON.stringify({
       reviewer: reviewer.value, reason: reason.value,
-      segments: Array.from(segmentHost.children).map(row => ({
-        id: row.dataset.segmentId,
-        values: Object.fromEntries(Object.entries(row.controls).map(([key, control]) => [key, control.value])),
-      })),
+      pages: drafts.map(draft => draft.source),
     });
     let baseline = fingerprint();
     const editor = {
@@ -425,30 +477,31 @@
         reviewer.value = initialReviewer;
         reviewer.setAttribute("aria-invalid", "false");
         reason.value = "";
-        segmentHost.replaceChildren();
-        for (const segment of initialSegments) segmentHost.appendChild(editableSegment(segment, pageCount, updateDirty));
+        for (const draft of drafts) draft.source = draft.initial;
+        sourceEditor.value = drafts[selectedPage].source;
         baseline = fingerprint();
         editorMessage.textContent = "Alterações descartadas. A revisão persistida permanece disponível.";
         updateDirty();
+        showEditor(false);
+        edit.focus();
       },
     };
     activeEditor = editor;
 
     function updateDirty() {
       const dirty = editor.isDirty();
-      dirtyMessage.textContent = dirty ? "Alterações não salvas. Salve uma nova revisão antes de conferir a transcrição." : "Sem alterações não salvas.";
+      dirtyMessage.textContent = dirty ? "Alterações não salvas. Salve uma nova revisão antes de conferir a transcrição." : "";
+      dirtyMessage.hidden = !dirty;
       dirtyMessage.dataset.dirty = String(dirty);
       accept.disabled = editor.busy || dirty || !latest || latest.status === "ACCEPTED";
-      accept.title = dirty ? "Salve ou descarte as alterações antes de conferir a revisão persistida." : "Conferir somente a revisão persistida";
-      discard.hidden = !dirty;
+      accept.title = dirty ? "Salve ou descarte as alterações antes de conferir a revisão persistida." : fidelityHelp;
       discard.disabled = editor.busy;
       editor.onChange?.();
     }
 
     function setEditorBusy(busy) {
       editor.busy = busy;
-      for (const control of [reviewer, reason, add, save, ...generateButtons,
-        ...Array.from(segmentHost.children).flatMap(row => Object.values(row.controls))]) {
+      for (const control of [reviewer, reason, save, edit, sourceEditor, pageSelect, ...generateButtons]) {
         control.disabled = busy;
       }
       for (const button of generateButtons) button.disabled = busy || !originalsIntact(data);
@@ -469,19 +522,20 @@
     reviewer.addEventListener("input", () => { reviewer.setAttribute("aria-invalid", "false"); updateDirty(); });
     reason.addEventListener("input", updateDirty);
     discard.addEventListener("click", () => { if (!editor.busy) editor.discard(); });
+    renderTranscriptionContent(visual, initialSegments);
     updateDirty();
-    add.addEventListener("click", () => {
-      if (editor.busy) return;
-      segmentHost.appendChild(editableSegment({ segment_id: "", page_index: 0, order: segmentHost.children.length, kind: "mixed" }, pageCount, updateDirty));
-      updateDirty();
-    });
     save.addEventListener("click", async () => {
       if (editor.busy || !validateReviewer()) return;
+      const tooLong = drafts.find(draft => draft.source !== draft.initial && draft.source.length > 20000);
+      if (tooLong) {
+        editorMessage.textContent = `A página ${tooLong.pageIndex + 1} excede o limite de 20.000 caracteres para uma edição. O texto ainda não foi salvo.`;
+        return;
+      }
       setEditorBusy(true);
       save.setAttribute("aria-busy", "true");
       editorMessage.textContent = latest ? "Salvando nova revisão sem alterar a anterior…" : "Criando transcrição manual…";
       try {
-        const common = { reviewer_reference: reviewer.value.trim(), reviewer_identity_verified: false, segments: collectSegments(segmentHost), status: "NEEDS_REVIEW" };
+        const common = { reviewer_reference: reviewer.value.trim(), reviewer_identity_verified: false, segments: collectSegments(), status: "NEEDS_REVIEW" };
         if (latest) {
           await write(`/transcriptions/${history.transcription.transcription_id}/revisions`, {
             ...common, based_on_revision_number: latest.revision_number, change_type: "reading_correction",
@@ -494,6 +548,7 @@
         editorMessage.textContent = "Revisão salva. Atualizando histórico…";
         setEditorBusy(false);
         await open(id, history?.transcription.transcription_id);
+        if (!detail.hidden) message.textContent = "Transcrição salva. A nova versão aguarda conferência.";
       } catch (error) {
         editorMessage.textContent = productError(error, "save");
       } finally {
@@ -518,6 +573,7 @@
         });
         setEditorBusy(false);
         await open(id, history.transcription.transcription_id);
+        if (!detail.hidden) message.textContent = "Transcrição conferida. A revisão está disponível para análise.";
       } catch (error) {
         editorMessage.textContent = productError(error, "accept");
       } finally {
@@ -526,6 +582,7 @@
       }
     });
     if (history) renderHistory(panel, history);
+    panel.appendChild(supportingDetails);
     return editor;
   }
 
@@ -544,7 +601,7 @@
     return run.status === "COMPLETED" ? "Concluída" : "Não foi possível concluir";
   }
 
-  function renderAnalysis(panel, data, id, history, initialRuns, editor, stages, loadError = null) {
+  function renderAnalysis(panel, data, id, history, initialRuns, editor, stages, loadError = null, onRunChange = () => {}) {
     const latest = history?.revisions?.[history.revisions.length - 1];
     const acceptance = history?.acceptances?.find(item => item.revision_number === latest?.revision_number
       && item.transcription_id === latest.transcription_id && item.submission_id === id
@@ -611,7 +668,9 @@
       state.textContent = attemptState ? attemptMessage
         : initialRuns === null ? "Não foi possível consultar as análises. Reabra a solução."
           : run ? isStale(run) ? "Análise de uma versão anterior" : run.status === "COMPLETED" ? "✓ Concluída" : "Não foi possível concluir a Análise ConfIA." : "○ Não executada";
-      if (!run) result.appendChild(node("p", "Esta solução ainda não foi encaminhada para análise matemática."));
+      state.dataset.kind = attemptState || initialRuns === null || run?.status === "FAILED" ? "error"
+        : run && !isStale(run) ? "success" : "neutral";
+      if (!run) result.appendChild(node("p", "Esta solução ainda não foi encaminhada para análise matemática.")).className = "empty-state";
       else {
         if (attemptState || isStale(run)) result.appendChild(node("p", attemptState
           ? `${historicalLabel(run)}. Disponível somente como histórico.`
@@ -636,6 +695,7 @@
         result.appendChild(diagnostic);
       }
       stages.replaceChildren(...renderStages(history, runs, attemptState).children);
+      onRunChange(run, Boolean(run && !isStale(run) && attemptState !== "CONFLICT"));
       const item = queue.find(item => item.record.submission_id === id);
       if (item) { item.audits = runs; item.auditFailed = initialRuns === null; item.auditAttemptState = attemptState; renderQueue(); }
       updateControls();
@@ -679,10 +739,35 @@
     showRuns();
   }
 
-  async function open(id, transcriptionId = null) {
+  function selectedName(selector, id) {
+    return Array.from(document.querySelector(selector)?.children || []).find(option => option.value === id)?.textContent || "";
+  }
+
+  async function displayContext(record) {
+    if (!record.assessment_id || !record.classroom_id || !record.school_id) return null;
+    const [assessment, students] = await Promise.allSettled([
+      request(`/assessments/${encodeURIComponent(record.assessment_id)}`),
+      request(`/institutional/classrooms/${encodeURIComponent(record.classroom_id)}/students`),
+    ]);
+    const view = assessment.status === "fulfilled" && assessment.value?.assessment?.assessment_id === record.assessment_id
+      ? assessment.value : null;
+    const item = view?.items?.find(item => item.assessment_item_id === record.assessment_item_id && item.problem_id === record.problem_id);
+    const student = students.status === "fulfilled" && Array.isArray(students.value)
+      ? students.value.find(student => student.user_id === record.submitted_by_user_id) : null;
+    return { submissionId: record.submission_id, assessmentId: record.assessment_id, assessmentItemId: record.assessment_item_id,
+      problemId: record.problem_id, studentId: record.submitted_by_user_id,
+      assessmentTitle: view?.assessment.title || "Avaliação indisponível", studentName: student?.display_name || "Aluno indisponível",
+      questionOrder: item?.order, schoolName: selectedName("#teacher-school-select", record.school_id) || "Escola do envio",
+      classroomName: view?.classroom_name || selectedName("#teacher-classroom-select", record.classroom_id) || "Turma do envio" };
+  }
+
+  async function open(id, transcriptionId = null, examContext = activeSubmissionContext) {
     if (!validId(id) || !canLeaveEditor()) return;
+    if (examContext?.submissionId !== id) examContext = null;
     const sequence = ++detailSequence;
     activeEditor = null;
+    activeDecision = null;
+    activeSubmissionContext = null;
     detail.hidden = true;
     detail.replaceChildren();
     message.textContent = "Carregando manuscrito, transcrição e integridade…";
@@ -697,6 +782,13 @@
       if (!Array.isArray(summaries)) throw new Error("Lista de transcrições inválida.");
       const record = data.submission;
       if (record.submission_id !== id) throw new Error("Registro retornado não corresponde à submissão selecionada.");
+      if (examContext && (examContext.assessmentId !== record.assessment_id
+        || examContext.assessmentItemId !== record.assessment_item_id
+        || examContext.studentId !== record.submitted_by_user_id || examContext.problemId !== record.problem_id)) {
+        throw new Error("A solução retornada não corresponde à avaliação, ao aluno e à questão selecionados.");
+      }
+      if (!examContext) examContext = await displayContext(record);
+      if (sequence !== detailSequence) return;
       let history = null;
       if (summaries.length) {
         const selected = summaries.find(item => item.transcription.transcription_id === transcriptionId) || summaries[0];
@@ -713,6 +805,8 @@
         if (!canLeaveEditor()) return;
         ++detailSequence;
         activeEditor = null;
+        activeDecision = null;
+        activeSubmissionContext = null;
         detail.hidden = true;
         queuePanel.hidden = false;
         message.textContent = "Fila de soluções aberta. Selecione uma solução para continuar.";
@@ -720,6 +814,24 @@
       });
       detail.appendChild(back);
       detail.appendChild(heading);
+      if (examContext) {
+        const context = node("dl");
+        context.className = "submission-context";
+        context.setAttribute("aria-label", "Contexto da correção");
+        for (const [label, value] of [
+          ["Escola", examContext.schoolName || selectedName("#teacher-school-select", record.school_id)],
+          ["Turma", examContext.classroomName || selectedName("#teacher-classroom-select", record.classroom_id)],
+          ["Avaliação", examContext.assessmentTitle], ["Aluno", examContext.studentName],
+          ["Questão", examContext.questionOrder ? `Q${examContext.questionOrder} · ${record.problem_id}` : record.problem_id]]) {
+          if (!value) continue;
+          const entry = node("div");
+          entry.appendChild(node("dt", label));
+          entry.appendChild(node("dd", value));
+          context.appendChild(entry);
+        }
+        detail.appendChild(context);
+        activeSubmissionContext = examContext;
+      }
       detail.appendChild(node("p", `${statusLabel(record.status)} · ${when(record.received_at)}`)).className = "auxiliary-text";
       const technical = node("details");
       technical.className = "disclosure submission-technical";
@@ -754,12 +866,20 @@
       detail.appendChild(workspace);
       const analysis = node("section");
       analysis.className = "manuscript-analysis-panel";
-      renderAnalysis(analysis, data, id, history, audits, editor, stages, auditLoadError);
-      detail.appendChild(analysis);
       const evaluation = node("section");
-      evaluation.className = "teacher-evaluation-panel";
-      evaluation.appendChild(node("h3", "Avaliação do professor"));
-      evaluation.appendChild(node("p", "Avaliação docente — integração em desenvolvimento."));
+      const decisionController = window.ConfIADecisions.mount(evaluation, record, decision => {
+        if (sequence !== detailSequence) return;
+        const item = queue.find(item => item.record.submission_id === id);
+        if (item) { item.decision = decision; renderQueue(); }
+        updateDecisionStage(stages, decision);
+      });
+      activeDecision = decisionController;
+      renderAnalysis(analysis, data, id, history, audits, editor, stages, auditLoadError,
+        (run, usable) => {
+          decisionController.setOpenedRun(run, usable);
+          updateDecisionStage(stages, decisionController.decision);
+        });
+      detail.appendChild(analysis);
       detail.appendChild(evaluation);
       detail.appendChild(technical);
       detail.hidden = false;
@@ -771,11 +891,22 @@
     } catch (error) {
       if (sequence === detailSequence) {
         activeEditor = null;
+        activeDecision = null;
+        activeSubmissionContext = null;
         detail.replaceChildren();
         detail.hidden = true;
         queuePanel.hidden = false;
         message.textContent = productError(error);
       }
+    }
+  }
+
+  function updateDecisionStage(stages, decision) {
+    const step = stages.children[1]?.children[3];
+    if (step) {
+      step.children[1].textContent = window.ConfIADecisions.decisionLabel(decision);
+      step.dataset.complete = String(Boolean(decision && decision.status !== "DRAFT"));
+      step.children[1].dataset.kind = decision?.status === "RELEASED" ? "success" : decision?.status === "DRAFT" ? "pending" : decision ? "info" : "neutral";
     }
   }
 
@@ -790,13 +921,15 @@
       ["Recebimento", "✓ Recebida pelo ConfIA", true],
       ["Transcrição", latest ? `${latest.status === "ACCEPTED" ? "✓" : "○"} ${statusLabel(latest.status)}` : "○ Ainda não criada", latest?.status === "ACCEPTED"],
       ["Análise ConfIA", analysisLabel(runs, latest, runs === null, attemptState), analysisLabel(runs, latest, runs === null, attemptState) === "Concluída"],
-      ["Avaliação do professor", "○ Integração em desenvolvimento", false],
+      ["Decisão do professor", "○ Aguardando decisão", false],
     ];
     for (const [title, state, complete] of labels) {
       const step = node("li");
       step.dataset.complete = String(Boolean(complete));
       step.appendChild(node("strong", title));
-      step.appendChild(node("span", state));
+      const badge = step.appendChild(node("span", state));
+      badge.className = "status";
+      badge.dataset.kind = complete ? "success" : "neutral";
       steps.appendChild(step);
     }
     stages.appendChild(steps);
@@ -832,8 +965,9 @@
       button.appendChild(state);
       const analysis = analysisLabel(item.audits, revision, item.auditFailed, item.auditAttemptState);
       button.appendChild(node("span", `Análise ConfIA: ${analysis}`)).className = "queue-analysis";
+      if (item.decision) button.appendChild(node("span", window.ConfIADecisions.decisionLabel(item.decision))).className = "queue-decision";
       button.appendChild(node("span", "Abrir →")).className = "queue-open";
-      button.setAttribute("aria-label", `Abrir solução da questão ${record.problem_id}, ${when(record.received_at)}. ${statusLabel(record.status)}. Transcrição: ${transcription}. Análise ConfIA: ${analysis}.`);
+      button.setAttribute("aria-label", `Abrir solução da questão ${record.problem_id}, ${when(record.received_at)}. ${statusLabel(record.status)}. Transcrição: ${transcription}. Análise ConfIA: ${analysis}.${item.decision ? ` ${window.ConfIADecisions.decisionLabel(item.decision)}.` : ""}`);
       button.addEventListener("click", () => open(record.submission_id));
       list.appendChild(button);
     }
@@ -845,6 +979,8 @@
     const sequence = ++listSequence;
     ++detailSequence;
     activeEditor = null;
+    activeDecision = null;
+    activeSubmissionContext = null;
     detail.hidden = true;
     detail.replaceChildren();
     list.replaceChildren();
@@ -860,9 +996,12 @@
       if (sequence !== listSequence) return;
       if (!Array.isArray(records)) throw new Error("Lista de submissões inválida.");
       const valid = records.filter(record => validId(record.submission_id));
-      const [summaries, audits] = await Promise.all([
+      const [summaries, audits, decisions, assessments] = await Promise.all([
         Promise.allSettled(valid.map(record => request(`/submissions/${record.submission_id}/transcriptions`))),
         Promise.allSettled(valid.map(record => request(`/submissions/${record.submission_id}/audits`))),
+        Promise.allSettled(valid.map(record => record.assessment_id
+          ? request(`/submissions/${record.submission_id}/teacher-decision`) : Promise.resolve(null))),
+        valid.some(record => record.assessment_id) ? request(`/assessments${scope}`).catch(() => []) : [],
       ]);
       if (sequence !== listSequence) return;
       queue = valid.map((record, index) => {
@@ -871,13 +1010,18 @@
         if (result.status === "rejected") console.error("ConfIA: resumo da transcrição", result.reason?.status, safeErrorCode(result.reason));
         const audit = audits[index];
         const auditFailed = audit.status === "rejected" || !Array.isArray(audit.value);
-        return { record, summaries: failed ? [] : result.value, failed, audits: auditFailed ? [] : audit.value, auditFailed };
+        const decision = decisions[index].status === "fulfilled" ? decisions[index].value : null;
+        return { record, summaries: failed ? [] : result.value, failed, audits: auditFailed ? [] : audit.value, auditFailed, decision };
       });
       const selectedAssessment = assessmentFilter.value;
       const selectedProblem = problemFilter.value;
+      const assessmentNames = new Map((Array.isArray(assessments) ? assessments : [])
+        .filter(view => view.assessment && (!institutionalMode || (view.assessment.school_id === selectedSchool
+          && view.assessment.classroom_id === selectedClassroom)))
+        .map(view => [view.assessment.assessment_id, view.assessment.title]));
       assessmentFilter.replaceChildren(option("all", "Todos os exames"));
       for (const assessmentId of [...new Set(valid.map(record => record.assessment_id).filter(Boolean))]) {
-        assessmentFilter.appendChild(option(assessmentId, assessmentId));
+        assessmentFilter.appendChild(option(assessmentId, assessmentNames.get(assessmentId) || `Avaliação indisponível · ${assessmentFilter.children.length}`));
       }
       if ([...assessmentFilter.children].some(item => item.value === selectedAssessment)) assessmentFilter.value = selectedAssessment;
       problemFilter.replaceChildren(option("all", "Todas as questões"));
@@ -910,7 +1054,7 @@
     if (view === "students") {
       if (!canLeaveEditor()) return false;
       ++listSequence; ++detailSequence;
-      queueLoaded = false; activeEditor = null;
+      queueLoaded = false; activeEditor = null; activeDecision = null;
       detail.hidden = true; detail.replaceChildren();
       inbox.hidden = false; legacy.hidden = true;
       showInk.setAttribute("aria-pressed", "true");
@@ -925,7 +1069,7 @@
     }
     filter.value = view === "transcriptions" ? "pending" : "all";
     queueTitle.textContent = view === "transcriptions" ? "Transcrições para conferir" : view === "analysis" ? "Soluções e Análise ConfIA" : "Soluções recebidas";
-    queueNote.textContent = view === "analysis" ? "Abra uma solução para consultar suas etapas. A análise matemática dos manuscritos ainda não está integrada." : "Confira a leitura com o manuscrito original. A conferência da transcrição preserva o que o aluno escreveu.";
+    queueNote.textContent = view === "analysis" ? "Abra uma solução para consultar a Análise ConfIA e registrar a decisão do professor." : "Confira a leitura com o manuscrito original. A conferência da transcrição preserva o que o aluno escreveu.";
     renderQueue();
     return true;
   }
@@ -949,25 +1093,34 @@
       const visible = records.filter(record => enrolled.has(record.submitted_by_user_id)
         && record.school_id === selectedSchool && record.classroom_id === selectedClassroom
         && validId(record.submission_id));
-      const summaries = await Promise.allSettled(visible.map(record =>
-        request(`/submissions/${record.submission_id}/transcriptions`)));
+      const [summaries, progress] = await Promise.all([
+        Promise.allSettled(visible.map(record => request(`/submissions/${record.submission_id}/transcriptions`))),
+        Promise.allSettled(exams.map(view => request(`/assessments/${view.assessment.assessment_id}/progress`))),
+      ]);
       if (sequence !== contextSequence) return;
       const revisions = new Map(visible.map((record, index) => [record.submission_id,
         summaries[index].status === "fulfilled" && Array.isArray(summaries[index].value)
           ? summaries[index].value[0]?.latest_revision : null]));
+      const correctionStatuses = new Map();
+      for (const response of progress) if (response.status === "fulfilled") {
+        for (const student of response.value.students || []) {
+          for (const [itemId, submissionId] of Object.entries(student.submissions)) {
+            correctionStatuses.set(submissionId, student.correction_statuses?.[itemId]);
+          }
+        }
+      }
       const openStudentSubmission = submissionId => {
         window.ConfIAShell?.navigate("teacher", "submissions");
         window.ConfIATeacher?.openSubmission(submissionId);
       };
       function addDelivery(container, record) {
-        container.appendChild(node("span", record ? "Solução enviada" : "Pendente"));
+        container.appendChild(node("span", record ? "Enviada" : "Não enviada"));
         if (!record) return;
+        const correction = correctionStatuses.get(record.submission_id);
         const status = revisions.get(record.submission_id)?.status;
-        if (status === "NEEDS_REVIEW") container.appendChild(node("span", "Transcrição aguardando conferência"));
-        if (status === "ACCEPTED") {
-          container.appendChild(node("span", "Transcrição aceita"));
-          container.appendChild(node("span", "Análise ConfIA disponível"));
-        }
+        if (correction && correction !== "SUBMITTED") container.appendChild(node("span", window.ConfIADecisions.labels[correction]));
+        else if (status === "NEEDS_REVIEW") container.appendChild(node("span", "Transcrição em conferência"));
+        else if (status === "ACCEPTED") container.appendChild(node("span", "Transcrição aceita"));
         const button = node("button", "Abrir solução");
         button.type = "button";
         button.className = "button button-primary";
@@ -1020,7 +1173,8 @@
   }
   function clearInstitutionalQueue() {
     ++listSequence; ++detailSequence; ++contextSequence;
-    queue = []; queueLoaded = false; activeEditor = null;
+    queue = []; queueLoaded = false; activeEditor = null; activeDecision = null;
+    activeSubmissionContext = null;
     list.replaceChildren(); detail.replaceChildren(); detail.hidden = true;
     message.textContent = selectedClassroom ? "Carregando turma…" : "Selecione uma turma.";
     if (!document.querySelector("#teacher-exams").hidden) window.ConfIAAssessments?.load();
@@ -1073,8 +1227,16 @@
     } catch (_error) { status.textContent = "Não foi possível carregar o contexto institucional."; }
   }
   window.ConfIATeacher = { canLeave: canLeaveEditor, showView, initInstitutional,
-    openSubmission: async id => { await refresh(); await open(id); },
-    context: () => ({ schoolId: selectedSchool, classroomId: selectedClassroom }),
+    openSubmission: async (id, examContext = null) => {
+      if (!validId(id) || !canLeaveEditor()) return;
+      const refreshed = refresh();
+      const listVersion = listSequence, detailVersion = detailSequence;
+      await refreshed;
+      if (listVersion !== listSequence || detailVersion !== detailSequence) return;
+      await open(id, null, examContext);
+    },
+    context: () => ({ schoolId: selectedSchool, classroomId: selectedClassroom,
+      schoolName: selectedName("#teacher-school-select", selectedSchool), classroomName: selectedName("#teacher-classroom-select", selectedClassroom) }),
     showManuscripts: () => mode(true), showText: () => mode(false) };
   filter.addEventListener("change", renderQueue);
   assessmentFilter.addEventListener("change", renderQueue);
@@ -1085,7 +1247,7 @@
   document.querySelector('[data-tab-target="teacher-area"]').addEventListener("click", () => { if (!document.querySelector("#teacher-area").hidden && !inbox.hidden && detail.hidden && !list.children.length) refresh(); });
   if (new URLSearchParams(location.search).get("area") === "teacher") document.querySelector('[data-tab-target="teacher-area"]').click();
   window.addEventListener("beforeunload", (event) => {
-    if (activeEditor?.isDirty() || activeEditor?.busy) {
+    if (activeEditor?.isDirty() || activeEditor?.busy || activeDecision?.isDirty() || activeDecision?.busy) {
       event.preventDefault();
       event.returnValue = "";
     }

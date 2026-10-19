@@ -4,7 +4,14 @@
   const profiles = {
     student: { area: "student-area", label: "Aluno", views: {
       home: ["Início", "Escolha entre estudo com feedback e atividades enviadas ao professor."],
-      tutoria: ["TutorIA", "Resolva problemas e peça feedback durante o estudo."],
+      tutoria: ["TutorIA", "Aprendizagem assistida em matemática. Estude no seu ritmo, explore conteúdos, resolva questões e receba orientações para avançar em matemática."],
+      "tutoria/content": ["Conteúdos · TutorIA", "Explore temas, explicações e exemplos de matemática."],
+      "tutoria/questions": ["Banco de questões · TutorIA", "Encontre sua próxima questão no catálogo ConfIA."],
+      "tutoria/practice": ["Prática · TutorIA", "Registre seu raciocínio no Caderno de Resolução ConfIA."],
+      "tutoria/feedback": ["Feedback pedagógico · TutorIA", "Observe suas estratégias e planeje uma nova tentativa."],
+      "tutoria/trails": ["Trilhas · TutorIA", "Conheça percursos de aprendizagem por tema."],
+      "tutoria/progress": ["Meu progresso · TutorIA", "Uma visão do acompanhamento da aprendizagem."],
+      "tutoria/attempts": ["Minhas atividades · TutorIA", "Retome suas tentativas de prática."],
       exams: ["Exames", "Acesse atividades disponibilizadas para sua turma."],
       resolve: ["TutorIA", "Escolha uma questão e resolva no Caderno de Resolução ConfIA."],
       feedback: ["Feedback", "Consulte a análise atual da resolução nesta sessão."],
@@ -16,7 +23,7 @@
       exams: ["Exames", "Crie avaliações e acompanhe as entregas da turma."],
       submissions: ["Soluções recebidas", "Manuscritos recebidos pelo ConfIA. Abra uma solução para visualizar o original."],
       transcriptions: ["Transcrições", "Selecione uma solução recebida para comparar a transcrição com o manuscrito original."],
-      analysis: ["Correção / Análise ConfIA", "Consulte as etapas das soluções recebidas. A análise dos manuscritos aguarda integração."],
+      analysis: ["Correção / Análise ConfIA", "Consulte a Análise ConfIA e registre a decisão sobre cada solução recebida."],
       text: ["Demonstração textual local", "Análise de textos locais e exemplos. Este fluxo não corresponde aos manuscritos persistidos."],
     } },
     management: { area: "management-area", label: "Gestão", views: {
@@ -37,7 +44,7 @@
   function refreshStudent() {
     const student = current.profile === "student";
     const workspace = window.ConfIAWorkspace;
-    visible("student-feedback", student && (current.view === "feedback" || (["resolve", "tutoria"].includes(current.view) && workspace?.mode === "practice" && Boolean(studentAnalysis))));
+    visible("student-feedback", student && (current.view === "feedback" || (["resolve", "tutoria/practice"].includes(current.view) && workspace?.mode === "practice" && Boolean(studentAnalysis))));
     visible("student-session-envios", student && current.view === "submissions");
     if (student && current.view === "feedback" && !studentAnalysis) renderStudentStudyEmptyState();
     workspace?.display();
@@ -45,6 +52,7 @@
 
   function render(profile, view, focus) {
     const config = profiles[profile];
+    if (current.profile === "student" && current.view.startsWith("tutoria") && !(profile === "student" && view.startsWith("tutoria"))) setStatus("Pronto", "idle");
     current = { profile, view };
     document.querySelector(`#${config.area}`).dataset.view = view;
     document.querySelector("#active-profile").textContent = authMode ? `${authenticatedUser.display_name} / ${config.label}` : `Perfil de demonstração: ${config.label}`;
@@ -54,13 +62,15 @@
     document.querySelector("#page-description").textContent = config.views[view][1];
     for (const menu of menus) menu.hidden = menu.dataset.profileMenu !== profile;
     for (const link of links) {
-      if (link.getAttribute("href") === `#${profile}/${view}` && link.closest("#profile-navigation")) link.setAttribute("aria-current", "page");
+      if ((link.getAttribute("href") === `#${profile}/${view}` || (profile === "student" && view.startsWith("tutoria/") && link.getAttribute("href") === "#student/tutoria")) && link.closest("#profile-navigation")) link.setAttribute("aria-current", "page");
       else link.removeAttribute("aria-current");
     }
-    visible("student-home", profile === "student" && view === "home");
+    visible("tutoria-root", profile === "student" && (view === "tutoria" || view.startsWith("tutoria/")));
     if (profile === "student") window.ConfIAWorkspace?.enter(view);
+    window.ConfIATutoria?.show(profile === "student" ? view : "");
+    visible("student-home", profile === "student" && view === "home");
     visible("student-exams", profile === "student" && view === "exams" && !window.ConfIAWorkspace?.examSelected);
-    visible("student-workspace", profile === "student" && (view === "resolve" || view === "tutoria" || (view === "exams" && window.ConfIAWorkspace?.examSelected)));
+    visible("student-workspace", profile === "student" && (view === "resolve" || view === "tutoria/practice" || (view === "exams" && window.ConfIAWorkspace?.examSelected)));
     if (profile === "student" && view === "submissions") window.ConfIAWorkspace?.loadSubmissions();
     refreshStudent();
     visible("teacher-home", profile === "teacher" && view === "home");
@@ -78,13 +88,17 @@
     visible("management-overview", profile === "management" && view === "overview");
     if (profile === "management" && view === "overview") window.ConfIAManagement?.load();
     document.title = `ConfIA — ${config.views[view][0]}`;
+    window.ConfIATutoriaAssistant?.sync();
     if (focus) title.focus();
   }
 
   function navigate(profile, view, { focus = true, historyMode = "push" } = {}) {
     if (authMode && !authenticatedProfile) return false;
     if (authMode && profile !== authenticatedProfile) { profile = authenticatedProfile; view = "home"; }
-    if (authMode && profile === "student" && view === "resolve") view = "tutoria";
+    if (authMode && profile === "student" && view === "resolve") view = "tutoria/practice";
+    if (authMode && profile === "student" && view === "feedback") view = "tutoria/feedback";
+    // Old bookmarks return to the overview; the assistant has no dedicated page.
+    if (profile === "student" && view === "tutoria/chat") view = "tutoria";
     if (!profiles[profile]?.views[view]) { profile = "student"; view = "home"; }
     if (authMode && profile !== authenticatedProfile) { profile = authenticatedProfile; view = "home"; }
     // UI-P0 protects unsaved transcription edits across every shell destination.
@@ -103,6 +117,7 @@
   }
 
   window.ConfIAShell = {
+    get current() { return { ...current }; },
     refreshStudent, navigate,
     activateProfile(area) {
       if (navigating) return;
@@ -115,8 +130,8 @@
   for (const link of links) link.addEventListener("click", event => {
     if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
     event.preventDefault();
-    const [profile, view] = link.getAttribute("href").slice(1).split("/");
-    navigate(profile, view);
+    const [profile, ...parts] = link.getAttribute("href").slice(1).split("/");
+    navigate(profile, parts.join("/"));
   });
   document.querySelector("#show-manuscripts").addEventListener("click", () => {
     if (!document.querySelector("#manuscript-inbox").hidden) navigate("teacher", "submissions");
@@ -126,11 +141,12 @@
   });
   window.addEventListener("hashchange", () => {
     if (location.hash === "#app-root") return; // Native skip link keeps its normal focus behavior.
-    const [profile, view] = location.hash.slice(1).split("/");
-    navigate(profile, view, { historyMode: "replace" });
+    const [profile, ...parts] = location.hash.slice(1).split("/");
+    navigate(profile, parts.join("/"), { historyMode: "replace" });
   });
   function initialNavigation() {
-    const [hashProfile, hashView] = location.hash.slice(1).split("/");
+    const [hashProfile, ...parts] = location.hash.slice(1).split("/");
+    const hashView = parts.join("/");
     const fromCapture = new URLSearchParams(location.search).get("area") === "teacher";
     const initialView = authMode && authenticatedProfile === "management" ? "overview" : "home";
     navigate(hashProfile || (authMode ? authenticatedProfile : (fromCapture ? "teacher" : "student")),
@@ -175,7 +191,8 @@
           label.textContent = context?.schools?.length && context?.classrooms?.length
             ? `Escola: ${context.schools[0].name} · Turma: ${context.classrooms[0].name}`
             : "Escola e turma indisponíveis nesta sessão.";
-        }).catch(() => { document.querySelector("#student-institutional-context").textContent = "Escola e turma indisponíveis nesta sessão."; });
+          window.ConfIATutoria?.updateContext();
+        }).catch(() => { document.querySelector("#student-institutional-context").textContent = "Escola e turma indisponíveis nesta sessão."; window.ConfIATutoria?.updateContext(); });
       initialNavigation();
     }).catch(() => { location.replace("/"); });
   } else initialNavigation();

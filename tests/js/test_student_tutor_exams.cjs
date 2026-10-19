@@ -40,7 +40,7 @@ test('TutorIA uses practice notebook and transient preview without an institutio
     calls.push({ url, options });
     return { ok:true, json: async () => ({ problem_id:'A', pedagogical_report:{ summary:'Feedback de estudo' } }) };
   });
-  ui.visit('tutoria');
+  ui.visit('tutoria/practice');
   await ui.get('#resolve-question').click();
   ui.notebook({ controls:{ document_id:'draft:A', can_tutor_preview:true, tutor_preview_segments:[{ page_index:0, kind:'math', text:'x = 2', latex:'x=2' }] } });
   assert.equal(ui.window.ConfIAWorkspace.experience, 'TUTOR');
@@ -55,7 +55,8 @@ test('TutorIA uses practice notebook and transient preview without an institutio
   assert.equal(ui.commands.at(-1).message.action, 'tutor-preview');
   await ui.get('#workspace-tutor-feedback').click(); await flush();
   assert.equal(ui.get('#solution-input').value, 'x = 2');
-  assert(calls.some(call => call.url === '/audit'));
+  assert(!calls.some(call => call.url === '/audit'));
+  assert.match(ui.get('#result-panel').textContent, /Feedback demonstrativo/);
   assert(!calls.some(call => call.url === '/submissions'));
   assert.match(css, /body\[data-resolution-active="true"\] #notebook-problem-context\s*\{\s*position: sticky/);
   assert.match(css, /\.workspace-ink-toolbar\s*\{\s*position: sticky/);
@@ -68,14 +69,14 @@ test('Exames starts empty and opens only an explicitly available activity in the
   await empty.get('#submission-mode').click();
   assert.equal(empty.window.ConfIAWorkspace.mode, null);
   const ui = await workspacePage(undefined, { exams:[exam] });
-  ui.visit('tutoria'); await ui.get('#resolve-question').click(); ui.notebook();
+  ui.visit('tutoria/practice'); await ui.get('#resolve-question').click(); ui.notebook();
   const frame = ui.frame;
   ui.visit('exams'); await flush();
   assert.equal(ui.get('#student-exam-list').children.length, 2);
   await ui.get('#student-exam-list').children[1].children.find(child => child.tag === 'button').click();
   assert.equal(ui.get('#student-exam-detail').hidden, false);
-  assert.match(ui.get('#student-exam-items').textContent, /Questão 1 · B5 pontos/);
-  await ui.get('#student-exam-items').children[0].children[2].click();
+  assert.match(ui.get('#student-exam-items').textContent, /Questão 1 · B5 pontosNão enviada/);
+  await ui.get('#student-exam-items').children[0].children.find(child => child.tag === 'button').click();
   assert.equal(ui.get('#problem-select').value, 'B');
   assert.equal(ui.get('#problem-select').children.find(option => option.value === 'A').disabled, true);
   assert.equal(ui.get('#student-exams').hidden, true);
@@ -98,10 +99,10 @@ test('student exam progress refreshes from the server after receipt and survives
   const firstItem = examTwoItems.items[0], secondItem = examTwoItems.items[1];
   const ui = await workspacePage(undefined, { exams: serverExams });
   ui.visit('exams'); await flush();
-  assert.match(ui.get('#student-exam-list').textContent, /0 de 2 questões enviadas.*Não iniciada/);
+  assert.match(ui.get('#student-exam-list').textContent, /2 questões · 0\/2 enviadas.*Não iniciada/);
   await ui.get('#student-exam-list').children[1].children.find(child => child.tag === 'button').click();
   assert.equal(ui.get('#student-exam-progress').textContent, 'Progresso: 0/2 · Não iniciada');
-  assert.match(ui.get('#student-exam-items').textContent, /Questão 1 · A5 pontos · Não enviada.*Questão 2 · B5 pontos · Não enviada/);
+  assert.match(ui.get('#student-exam-items').textContent, /Questão 1 · A5 pontosNão enviada.*Questão 2 · B5 pontosNão enviada/);
   await ui.get('#student-exam-items').children[0].children.find(child => child.tag === 'button').click();
   await ui.get('#resolve-question').click();
   const target = `/assessments/${examId}/items/${firstItem.assessment_item_id}/submissions`;
@@ -115,18 +116,18 @@ test('student exam progress refreshes from the server after receipt and survives
   ui.notebook({ local_snapshot_id:'snapshot:A', receipt, submission_target:target });
   await flush();
   assert.equal(ui.get('#student-exam-progress').textContent, 'Progresso: 1/2 · Em andamento');
-  assert.match(ui.get('#student-exam-items').textContent, /Questão 1 · A5 pontos · Enviada.*Questão 2 · B5 pontos · Não enviada/);
-  assert.match(ui.get('#student-exam-list').textContent, /1 de 2 questões enviadas.*Em andamento/);
+  assert.match(ui.get('#student-exam-items').textContent, /Questão 1 · A5 pontosEnviada.*Questão 2 · B5 pontosNão enviada/);
+  assert.match(ui.get('#student-exam-list').textContent, /2 questões · 1\/2 enviadas.*Em andamento/);
   ui.notebook({ local_snapshot_id:'snapshot:A', receipt, submission_target:target });
   await flush();
   assert.equal(ui.get('#student-exam-progress').textContent, 'Progresso: 1/2 · Em andamento');
 
   const reloaded = await workspacePage(undefined, { exams: serverExams });
   reloaded.visit('exams'); await flush();
-  assert.match(reloaded.get('#student-exam-list').textContent, /1 de 2 questões enviadas.*Em andamento/);
+  assert.match(reloaded.get('#student-exam-list').textContent, /2 questões · 1\/2 enviadas.*Em andamento/);
   const relogged = await workspacePage(undefined, { exams: serverExams });
   relogged.visit('exams'); await flush();
-  assert.match(relogged.get('#student-exam-list').textContent, /1 de 2 questões enviadas.*Em andamento/);
+  assert.match(relogged.get('#student-exam-list').textContent, /2 questões · 1\/2 enviadas.*Em andamento/);
   await relogged.get('#student-exam-list').children[1].children.find(child => child.tag === 'button').click();
   await relogged.get('#student-exam-items').children[1].children.find(child => child.tag === 'button').click();
   await relogged.get('#resolve-question').click();
@@ -137,7 +138,7 @@ test('student exam progress refreshes from the server after receipt and survives
     submission_target:`/assessments/${examId}/items/${secondItem.assessment_item_id}/submissions` });
   await flush();
   assert.equal(relogged.get('#student-exam-progress').textContent, 'Progresso: 2/2 · Concluída');
-  assert.match(relogged.get('#student-exam-list').textContent, /2 de 2 questões enviadas.*Concluída/);
+  assert.match(relogged.get('#student-exam-list').textContent, /2 questões · 2\/2 enviadas.*Concluída/);
 });
 
 test('embedded exam starts with its bound submission target before any configure message', async () => {
@@ -200,7 +201,7 @@ test('TutorIA preview freezes only in memory and never invokes submission or off
 test('Minhas submissões reads official records and ignores TutorIA attempts', async () => {
   const receipt = { submission_id:'sub_exam', snapshot_id:'snapshot:B', problem_id:'B', received_at:'2026-10-16T12:00:00Z' };
   const ui = await workspacePage(async url => ({ ok:true, json:async () => url === '/submissions' ? [receipt] : {} }));
-  ui.visit('tutoria'); await ui.get('#resolve-question').click();
+  ui.visit('tutoria/practice'); await ui.get('#resolve-question').click();
   ui.notebook({ local_snapshot_id:'snapshot:A', receipt:{ ...receipt, snapshot_id:'snapshot:A', problem_id:'A', submission_id:'sub_tutor' } });
   assert.doesNotMatch(ui.get('#student-receipt-list').textContent, /sub_tutor/);
   ui.document.body.classList = { contains: value => value === 'auth-enabled' };

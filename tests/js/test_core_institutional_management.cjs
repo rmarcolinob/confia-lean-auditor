@@ -8,7 +8,8 @@ const { element, descendants, flush } = require('./ui-dom.cjs');
 const script = fs.readFileSync(path.join(__dirname, '../../app/confia_lean_auditor/static/management.js'), 'utf8');
 const base = { number_of_schools: 2, number_of_classrooms: 3, number_of_students: 3, number_of_teachers: 2,
   submissions_count: 1, transcriptions_count: 1, recognition_success_count: 1, recognition_failure_count: 0,
-  audit_runs_count: 0, completed_audits: 0, inconclusive_audits: 0 };
+  audit_runs_count: 0, completed_audits: 0, inconclusive_audits: 0,
+  decisions_finalized_count: 1, decisions_released_count: 0, override_count: 1 };
 const schoolA = { school_id: 'school-a', name: 'Escola A', municipality: 'Teresina' };
 const schoolB = { school_id: 'school-b', name: 'Escola B', municipality: 'Parnaíba' };
 const classroom = { classroom_id: 'class-a', school_id: 'school-a', name: '2ª série A' };
@@ -38,7 +39,8 @@ test('network management drills down through real aggregate endpoints only', asy
   const ui = page('NETWORK_MANAGER');
   await ui.load();
   assert.equal(ui.nodes['management-heading'].textContent, 'Visão geral da rede');
-  assert.equal(ui.nodes['management-cards'].children.length, 11);
+  assert.equal(ui.nodes['management-cards'].children.length, 14);
+  assert.match(ui.nodes['management-cards'].textContent, /Decisões finalizadas.*Resultados liberados.*Decisões com alteração da sugestão/);
   assert.match(ui.nodes['management-table'].textContent, /Escola A/);
   assert.match(ui.nodes['management-table'].textContent, /Escola B/);
   assert(ui.calls.every(url => url.startsWith('/management/')));

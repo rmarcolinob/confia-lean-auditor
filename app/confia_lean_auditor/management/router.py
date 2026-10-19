@@ -14,6 +14,8 @@ from confia_lean_auditor.recognition.registry import RecognizerRegistry
 from confia_lean_auditor.recognition.service import RecognitionService
 from confia_lean_auditor.submission_audits.router import service as audit_service
 from confia_lean_auditor.submissions.router import store as submission_store
+from confia_lean_auditor.teacher_decisions.store import decision_store
+from confia_lean_auditor.teacher_decisions.service import validate_binding
 
 router = APIRouter(prefix="/management", tags=["institutional aggregates"])
 MANAGERS = (Role.SCHOOL_MANAGER, Role.NETWORK_MANAGER)
@@ -31,6 +33,9 @@ class Metrics(InstitutionalModel):
     audit_runs_count: Optional[int] = Field(default=None, ge=0)
     completed_audits: Optional[int] = Field(default=None, ge=0)
     inconclusive_audits: Optional[int] = Field(default=None, ge=0)
+    decisions_finalized_count: Optional[int] = Field(default=None, ge=0)
+    decisions_released_count: Optional[int] = Field(default=None, ge=0)
+    override_count: Optional[int] = Field(default=None, ge=0)
 
 
 class Overview(InstitutionalModel):
@@ -96,6 +101,18 @@ def _metrics(school_ids: set[str], classroom_ids: set[str]) -> Metrics:
         records = None
     if records is None:
         return Metrics(**counts)
+    try:
+        decisions = []
+        for record in records:
+            decision = decision_store().get_for_submission(record.submission_id)
+            if decision is not None:
+                validate_binding(decision, record)
+                decisions.append(decision)
+        counts["decisions_finalized_count"] = sum(d.status != "DRAFT" for d in decisions)
+        counts["decisions_released_count"] = sum(d.status == "RELEASED" for d in decisions)
+        counts["override_count"] = sum(d.status != "DRAFT" and d.is_override for d in decisions)
+    except (ValueError, OSError):
+        pass
     try:
         counts["transcriptions_count"] = sum(len(submissions.list_transcriptions(r.submission_id)) for r in records)
     except (ValueError, OSError):

@@ -50,4 +50,4 @@ def test_status_live_regions_and_validation_errors_are_associated():
         assert controls[name]["aria-live"] == "polite"
     for name in ("solution-input", "student-name-input", "problem-select"):
         assert controls[name]["aria-describedby"] == "student-validation-message"
-    assert controls["result-panel"]["aria-label"] == "Análise ConfIA"
+    assert controls["result-panel"]["aria-label"] == "Feedback pedagógico"

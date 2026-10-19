@@ -37,7 +37,7 @@ def test_modes_responses_and_current_session_views_have_native_accessible_contro
     assert 'Como você quer trabalhar esta questão?' in html
     assert 'Representação digitada para análise' in html
     assert 'a versão digitada para analisar esta solução manuscrita' in html
-    assert 'Ainda não há histórico persistente' in html
+    assert 'Retome sua solução e explore orientações para uma nova tentativa.' in html
     assert page.ids['student-session-envios'][1]['aria-label'] == 'Minhas submissões'
     assert page.ids['student-receipt-list'][0] == 'div'
     assert 'Envios oficiais ao professor. Tentativas do TutorIA não aparecem aqui.' in html

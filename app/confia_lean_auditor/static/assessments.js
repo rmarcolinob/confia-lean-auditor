@@ -10,6 +10,9 @@
   let assessments = [];
   let editing = null;
   let sequence = 0;
+  let progressSequence = 0;
+  let selectedCard = null;
+  let selectedButton = null;
   const text = (tag, content, className = "") => {
     const element = document.createElement(tag);
     element.textContent = content;
@@ -17,6 +20,7 @@
     return element;
   };
   const date = value => new Date(value).toLocaleString("pt-BR");
+  const availability = view => ({ RASCUNHO: "Rascunho", AGENDADO: "Agendada", DISPONÍVEL: "Disponível", ENCERRADO: "Encerrada" })[view.availability] || "Indisponível";
   async function request(url, options = {}) {
     const response = await fetch(url, { credentials: "same-origin", cache: "no-store", ...options });
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
@@ -39,14 +43,24 @@
       list.appendChild(text("h3", heading));
       for (const view of entries) {
         const exam = view.assessment;
-        const card = text("article", "", "local-submission");
-        card.appendChild(text("h4", exam.title));
-        card.appendChild(text("p", `${view.classroom_name} · ${date(exam.opens_at)} até ${date(exam.closes_at)}`));
-        card.appendChild(text("p", `${view.items.length} questões · ${view.items.reduce((sum, item) => sum + item.points, 0)} pontos · ${view.availability}`));
-        card.appendChild(button("Abrir exame", () => showProgress(view)));
+        const card = text("article", "", "local-submission exam-card");
+        const heading = text("h4", "");
+        const select = button(exam.title, () => showProgress(view, card, select));
+        select.className = "exam-select";
+        select.setAttribute("aria-expanded", "false");
+        select.setAttribute("aria-controls", "teacher-exam-progress");
+        heading.appendChild(select);
+        card.appendChild(heading);
+        card.appendChild(text("p", `${view.classroom_name} · ${date(exam.opens_at)} até ${date(exam.closes_at)}`, "exam-preview"));
+        card.appendChild(text("p", `${view.items.length} questões · ${view.items.reduce((sum, item) => sum + item.points, 0).toLocaleString("pt-BR")} pontos`, "exam-preview"));
+        const state = text("span", availability(view), "status exam-preview");
+        state.dataset.kind = view.availability === "DISPONÍVEL" ? "info" : "neutral";
+        card.appendChild(state);
         if (status === "DRAFT") {
-          card.appendChild(button("Editar rascunho", () => edit(view)));
-          card.appendChild(button("Publicar", () => publish(exam.assessment_id)));
+          const actions = text("div", "", "action-row");
+          const editButton = button("Editar rascunho", () => edit(view)); editButton.className = "secondary-action";
+          actions.appendChild(editButton); actions.appendChild(button("Publicar", () => publish(exam.assessment_id)));
+          card.appendChild(actions);
         }
         list.appendChild(card);
       }
@@ -55,8 +69,12 @@
   }
   async function load() {
     const current = ++sequence;
+    ++progressSequence;
+    selectedCard = null;
+    selectedButton = null;
+    assessments = [];
     const { schoolId, classroomId } = context();
-    list.replaceChildren(); progress.hidden = true;
+    list.replaceChildren(); progress.hidden = true; progress.replaceChildren();
     get("teacher-create-exam").disabled = !schoolId || !classroomId;
     if (!schoolId || !classroomId) { message.textContent = "Selecione uma escola e uma turma."; return; }
     message.textContent = "Carregando exames…";
@@ -68,37 +86,128 @@
       render();
     } catch (_) { if (current === sequence) message.textContent = "Não foi possível carregar os exames da turma."; }
   }
-  async function showProgress(view) {
+  function renderSummary(view) {
+    const exam = view.assessment;
+    const summary = text("dl", "", "exam-summary");
+    for (const [label, value] of [
+      ["Turma", view.classroom_name],
+      ["Período", `${date(exam.opens_at)} até ${date(exam.closes_at)}`],
+      ["Questões", view.items.length],
+      ["Total de pontos", view.items.reduce((sum, item) => sum + item.points, 0).toLocaleString("pt-BR")],
+      ["Status", availability(view)],
+    ]) {
+      const entry = text("div", "");
+      entry.appendChild(text("dt", label));
+      entry.appendChild(text("dd", value));
+      summary.appendChild(entry);
+    }
+    progress.replaceChildren(text("h3", exam.title), summary, text("h4", "Entregas dos alunos"));
+  }
+  function deliveryLabel(status) {
+    if (status === "DECISION_FINALIZED" || status === "RESULT_RELEASED") return "Corrigida";
+    if (["TRANSCRIPTION_REVIEW", "ANALYSIS_AVAILABLE", "DECISION_DRAFT"].includes(status)) return "Em correção";
+    return "Enviada";
+  }
+  // Keep row composition separate so a future paginated response can reuse the same table.
+  function renderStudentRow(student, items, view) {
+    const row = text("tr", "");
+    const name = row.appendChild(text("th", student.display_name));
+    name.setAttribute("scope", "row");
+    let submitted = 0;
+    for (const item of items) {
+      const cell = text("td", "");
+      const submissionId = student.submissions[item.assessment_item_id];
+      if (submissionId) {
+        submitted++;
+        const status = student.correction_statuses?.[item.assessment_item_id];
+        const label = deliveryLabel(status);
+        const action = button(label, () => {
+          if (window.ConfIAShell?.navigate("teacher", "submissions") === false) return;
+          return window.ConfIATeacher?.openSubmission(submissionId, {
+            submissionId, assessmentId: view.assessment.assessment_id, assessmentTitle: view.assessment.title,
+            assessmentItemId: item.assessment_item_id, problemId: item.problem_id, questionOrder: item.order,
+            studentId: student.user_id, studentName: student.display_name,
+            classroomName: view.classroom_name, ...(context().schoolName ? { schoolName: context().schoolName } : {}),
+          });
+        });
+        action.className = "exam-delivery-link status";
+        action.dataset.kind = label === "Corrigida" ? "success" : label === "Em correção" ? "pending" : "info";
+        action.setAttribute("aria-label", `${label} · ${student.display_name} · Q${item.order}`);
+        action.title = window.ConfIADecisions?.labels[status] || label;
+        cell.appendChild(action);
+      } else cell.appendChild(text("span", "Não enviada", "status")).dataset.kind = "neutral";
+      row.appendChild(cell);
+    }
+    row.appendChild(text("td", `${submitted}/${items.length}`, "exam-student-progress"));
+    return row;
+  }
+  function renderDeliveries(data, view) {
+    const items = [...data.items].sort((a, b) => a.order - b.order);
+    const scroll = text("div", "", "exam-deliveries-scroll");
+    scroll.tabIndex = 0;
+    scroll.setAttribute("role", "region");
+    scroll.setAttribute("aria-label", `Entregas dos alunos · ${view.assessment.title}`);
+    const table = text("table", "");
+    table.appendChild(text("caption", `${data.students.length} aluno(s) · Progresso: questões enviadas / total`));
+    const thead = table.appendChild(text("thead", ""));
+    const head = thead.appendChild(text("tr", ""));
+    for (const label of ["Aluno", ...items.map(item => `Q${item.order}`), "Progresso"]) {
+      head.appendChild(text("th", label)).setAttribute("scope", "col");
+    }
+    const tbody = table.appendChild(text("tbody", ""));
+    const students = [...data.students].sort((a, b) => a.display_name.localeCompare(b.display_name, "pt-BR"));
+    for (const student of students) tbody.appendChild(renderStudentRow(student, items, view));
+    scroll.appendChild(table);
+    progress.appendChild(scroll);
+    if (!data.students.length) progress.appendChild(text("p", "Nenhum aluno matriculado nesta turma.", "empty-state"));
+    else if (!data.students.some(student => items.some(item => student.submissions[item.assessment_item_id]))) {
+      progress.appendChild(text("p", "Nenhuma solução enviada para esta avaliação.", "empty-state"));
+    }
+  }
+  async function showProgress(view, card, select) {
+    const current = ++progressSequence;
+    const scope = context();
+    const stillSelected = () => current === progressSequence
+      && scope.schoolId === context().schoolId && scope.classroomId === context().classroomId;
+    if (selectedCard) selectedCard.dataset.selected = "false";
+    selectedButton?.setAttribute("aria-expanded", "false");
+    selectedCard = card;
+    selectedButton = select;
+    card.dataset.selected = "true";
+    select.setAttribute("aria-expanded", "true");
+    card.appendChild(progress);
     progress.hidden = false;
-    progress.replaceChildren(text("h3", view.assessment.title));
+    progress.setAttribute("aria-busy", "true");
+    renderSummary(view);
+    // Collapsing a preceding exam can move the selected heading above the viewport.
+    // Bring that heading back into view, never the bottom of the deliveries table.
+    const revealSelection = () => {
+      const bounds = select.getBoundingClientRect();
+      if (bounds.top < 0 || bounds.bottom > window.innerHeight / 3) card.scrollIntoView({ block: "start", behavior: "instant" });
+    };
+    revealSelection();
     if (view.assessment.status === "DRAFT") {
       progress.appendChild(text("p", "Publique o exame para acompanhar entregas."));
+      progress.setAttribute("aria-busy", "false");
       return;
     }
+    const loading = text("p", "Carregando entregas…");
+    loading.setAttribute("role", "status");
+    progress.appendChild(loading);
     try {
       const data = await request(`/assessments/${view.assessment.assessment_id}/progress`);
-      const table = document.createElement("table");
-      const head = document.createElement("tr");
-      head.appendChild(text("th", "Aluno"));
-      for (const item of data.items) head.appendChild(text("th", `${item.order}. ${item.problem_id}`));
-      table.appendChild(head);
-      for (const student of data.students) {
-        const row = document.createElement("tr");
-        row.appendChild(text("th", student.display_name));
-        for (const item of data.items) {
-          const cell = document.createElement("td");
-          const submissionId = student.submissions[item.assessment_item_id];
-          if (submissionId) cell.appendChild(button("Enviado", () => {
-            window.ConfIAShell?.navigate("teacher", "submissions");
-            window.ConfIATeacher?.openSubmission(submissionId);
-          }));
-          else cell.textContent = "Pendente";
-          row.appendChild(cell);
-        }
-        table.appendChild(row);
+      if (!stillSelected()) return;
+      if (data.assessment.assessment_id !== view.assessment.assessment_id) throw new Error("Exame divergente.");
+      progress.removeChild(loading);
+      renderDeliveries(data, view);
+      revealSelection();
+    } catch (_) {
+      if (stillSelected()) {
+        renderSummary(view);
+        const error = text("p", "Não foi possível carregar as entregas. Selecione a avaliação para tentar novamente.", "alert");
+        error.dataset.kind = "error"; error.setAttribute("role", "status"); progress.appendChild(error);
       }
-      progress.appendChild(table);
-    } catch (_) { progress.appendChild(text("p", "Não foi possível carregar o progresso.")); }
+    } finally { if (stillSelected()) progress.setAttribute("aria-busy", "false"); }
   }
   async function publish(id) {
     try {

@@ -8,7 +8,72 @@ from confia_lean_auditor.main import app
 from confia_lean_auditor.recognition.mathpix import MathpixRecognitionProvider
 from confia_lean_auditor.recognition.registry import RecognizerRegistry
 from confia_lean_auditor.submissions import router
+from confia_lean_auditor.submissions.schemas import TranscriptionSegment
+from confia_lean_auditor.submissions.store import SubmissionStore
+from confia_lean_auditor.submission_audits.source import convert_segments
 from test_submissions import payload
+
+
+def test_teacher_single_source_revisions_preserve_recognition_and_historical_receipts(tmp_path, monkeypatch):
+    """The unified editor creates versions through the existing immutable API."""
+    monkeypatch.setenv("CONFIA_SUBMISSIONS_DIR", str(tmp_path / "submissions"))
+    monkeypatch.setenv("CONFIA_MATHPIX_APP_ID", "test-id")
+    monkeypatch.setenv("CONFIA_MATHPIX_APP_KEY", "test-key")
+    registry = RecognizerRegistry()
+    registry.register("mathpix", lambda: MathpixRecognitionProvider(transport=httpx.MockTransport(
+        lambda _: httpx.Response(200, json={"text": "2 + 2 = 5", "latex_styled": "2+2=5"})
+    )))
+    monkeypatch.setattr(router, "configured_registry", lambda: registry)
+    client = TestClient(app)
+    sid = client.post("/submissions", json=payload()).json()["submission_id"]
+    run = client.post(f"/submissions/{sid}/recognitions", json={
+        "provider": "mathpix", "idempotency_key": "teacher:source-editor",
+    }).json()
+    tid = run["transcription_id"]
+    first = client.get(f"/transcriptions/{tid}").json()["revisions"][0]
+    folder = tmp_path / "submissions" / sid
+
+    for number in (1, 2, 3):
+        before_acceptance = {path: path.read_bytes() for path in folder.rglob("*") if path.is_file()}
+        accepted = client.post(f"/transcriptions/{tid}/accept", json={
+            "revision_number": number, "reviewer_reference": "professor-teste-01",
+            "acceptance_note": "Conferida visualmente com o manuscrito original.",
+        })
+        assert accepted.status_code == 200, accepted.text
+        assert accepted.json()["acceptance"]["revision_number"] == number
+        assert accepted.json()["acceptance"]["mathematical_validity_assessed"] is False
+        assert all(path.read_bytes() == content for path, content in before_acceptance.items())
+        if number == 3:
+            break
+        historical_files = {path: path.read_bytes() for path in folder.rglob("*") if path.is_file()}
+        source = f"Leitura {number + 1}: \\(2+2=5\\).\n\nConclusão do aluno."
+        edited = client.post(f"/transcriptions/{tid}/revisions", json={
+            "based_on_revision_number": number, "reviewer_reference": "professor-teste-01",
+            "reviewer_identity_verified": False, "change_type": "reading_correction",
+            "segments": [{"segment_id": f"manual:page:{number + 1}", "page_index": 0, "order": 0,
+                          "kind": "mixed", "text": source, "latex": None}],
+            "status": "NEEDS_REVIEW",
+        })
+        assert edited.status_code == 201, edited.text
+        current = edited.json()
+        assert current["revision_number"] == number + 1
+        assert current["status"] == "NEEDS_REVIEW"
+        assert current["provenance"] == first["provenance"]
+        assert current["recognizer_run_id"] == first["recognizer_run_id"]
+        # The existing Auditor bridge receives exactly the edited source, once.
+        solution, warnings = convert_segments([TranscriptionSegment.model_validate(item) for item in current["segments"]])
+        assert solution == source and warnings == []
+        assert all(path.read_bytes() == content for path, content in historical_files.items())
+        history = client.get(f"/transcriptions/{tid}").json()
+        assert history["revisions"][-1]["status"] == "NEEDS_REVIEW"
+        assert len(history["acceptances"]) == number
+
+    history = client.get(f"/transcriptions/{tid}").json()
+    assert [item["revision_number"] for item in history["acceptances"]] == [1, 2, 3]
+    assert history["revisions"][0]["segments"] == first["segments"]
+    assert all(item["status"] == "ACCEPTED" for item in history["revisions"])
+    assert SubmissionStore(router.store().root).transcription_history(tid).model_dump(mode="json") == history
+    assert client.get(f"/submissions/{sid}/audits").json() == []
 
 
 def test_official_mathpix_after_submission_is_visible_to_teacher_and_idempotent(tmp_path, monkeypatch):

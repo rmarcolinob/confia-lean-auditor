@@ -13,6 +13,7 @@ runtime/submission_audits/
 runtime/auth/
 runtime/institutional/
 runtime/assessments/
+runtime/teacher_decisions/
 
 # Local environment files
 .env

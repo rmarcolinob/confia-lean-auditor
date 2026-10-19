@@ -9,6 +9,9 @@
     transcriptions_count: "Transcrições", recognition_success_count: "Reconhecimentos concluídos",
     recognition_failure_count: "Falhas de reconhecimento", completed_audits: "Análises concluídas",
     inconclusive_audits: "Análises inconclusivas",
+    decisions_finalized_count: "Decisões finalizadas",
+    decisions_released_count: "Resultados liberados",
+    override_count: "Decisões com alteração da sugestão",
   };
   let sequence = 0;
   let currentSchool = null;

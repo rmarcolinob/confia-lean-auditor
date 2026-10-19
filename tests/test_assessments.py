@@ -112,6 +112,8 @@ def test_bound_submission_single_item_and_teacher_progress(scenario):
     assert teacher.get("/institutional/classrooms/class-a/students").status_code == 200
     outsider = client("teacher.b")
     assert outsider.get(f"/assessments{scoped}").status_code == 403
+    assert outsider.get(f"/assessments/{assessment_id}/progress").status_code == 403
+    assert outsider.get(f"/submissions/{receipt['submission_id']}").status_code == 403
     assert outsider.get(f"/submissions{scoped}").status_code == 403
     assert outsider.get("/institutional/classrooms/class-a/students").status_code == 403
 

@@ -27,10 +27,13 @@ def _user(user):
 
 
 def _scope_error(exc):
+    from confia_lean_auditor.teacher_decisions.store import DecisionIntegrityError
     if isinstance(exc, InstitutionalScopeError):
         raise HTTPException(exc.status_code, str(exc)) from None
     if isinstance(exc, AssessmentIntegrityConflict):
         raise HTTPException(409, "Integridade da definição publicada inválida.") from None
+    if isinstance(exc, DecisionIntegrityError):
+        raise HTTPException(409, "Integridade da decisão ou do vínculo institucional inválida.") from None
     if isinstance(exc, AssessmentConflict):
         raise HTTPException(409, str(exc)) from None
     if isinstance(exc, FileNotFoundError):
@@ -90,6 +93,7 @@ def availability(assessment, now=None):
 
 
 def _view(document, user, records=None):
+    from confia_lean_auditor.teacher_decisions.service import results_for_student
     assessment = document.assessment
     people = auth_store()
     teacher = people.get_user(assessment.teacher_user_id)
@@ -106,7 +110,8 @@ def _view(document, user, records=None):
     return AssessmentView(assessment=assessment, items=document.items,
         teacher_name=teacher.display_name if teacher else "Professor",
         classroom_name=classroom.name if classroom else assessment.classroom_id,
-        availability=availability(assessment), submitted_item_ids=submitted)
+        availability=availability(assessment), submitted_item_ids=submitted,
+        released_results=results_for_student(user, document, records) if user.role == Role.STUDENT else [])
 
 
 @router.get("", response_model=list[AssessmentView])
@@ -261,6 +266,7 @@ def assessment_progress(assessment_id: str, response: Response,
     response.headers["Cache-Control"] = "no-store"
     user = _user(user)
     try:
+        from confia_lean_auditor.teacher_decisions.service import correction_status
         document = _teacher_document(user, assessment_id)
         data = institutional_store().snapshot()
         assessment = document.assessment
@@ -273,9 +279,13 @@ def assessment_progress(assessment_id: str, response: Response,
             student = auth_store().get_user(user_id)
             if not student or not student.active or student.role != Role.STUDENT:
                 continue
-            submitted = {record.assessment_item_id: record.submission_id for record in records
-                if record.assessment_id == assessment_id and record.submitted_by_user_id == user_id}
-            students.append({"user_id": user_id, "display_name": student.display_name, "submissions": submitted})
+            deliveries = [record for record in records if record.assessment_id == assessment_id
+                and record.submitted_by_user_id == user_id and (record.network_id, record.school_id, record.classroom_id) ==
+                    (assessment.network_id, assessment.school_id, assessment.classroom_id)]
+            submitted = {record.assessment_item_id: record.submission_id for record in deliveries}
+            statuses = {record.assessment_item_id: correction_status(record) for record in deliveries}
+            students.append({"user_id": user_id, "display_name": student.display_name,
+                             "submissions": submitted, "correction_statuses": statuses})
         return AssessmentProgress(assessment=assessment, items=document.items, students=students)
     except Exception as exc:
         _scope_error(exc)

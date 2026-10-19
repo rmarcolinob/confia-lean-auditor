@@ -6,6 +6,7 @@ from pydantic import BaseModel, ConfigDict, Field, field_validator, model_valida
 
 from confia_lean_auditor.institutional.models import InstitutionId
 from confia_lean_auditor.submissions.schemas import Sha256
+from confia_lean_auditor.teacher_decisions.models import CorrectionStatus, StudentResult
 
 AssessmentStatus = Literal["DRAFT", "PUBLISHED", "CLOSED"]
 
@@ -122,9 +123,17 @@ class AssessmentView(AssessmentDocument):
     classroom_name: str
     availability: Literal["RASCUNHO", "AGENDADO", "DISPONÍVEL", "ENCERRADO"]
     submitted_item_ids: list[str] = Field(default_factory=list)
+    released_results: list[StudentResult] = Field(default_factory=list)
+
+
+class StudentProgress(AssessmentModel):
+    user_id: str
+    display_name: str
+    submissions: dict[str, str]
+    correction_statuses: dict[str, CorrectionStatus] = Field(default_factory=dict)
 
 
 class AssessmentProgress(AssessmentModel):
     assessment: Assessment
     items: list[AssessmentItem]
-    students: list[dict]
+    students: list[StudentProgress]

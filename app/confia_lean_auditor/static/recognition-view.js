@@ -39,7 +39,7 @@
     }
     return -1;
   }
-  function renderMathText(host, source, bareMath = false) {
+  function splitMathText(source, bareMath = false) {
     const value = typeof source === "string" ? source : "";
     const markers = [];
     for (let index = 0; index < value.length; index++) {
@@ -47,25 +47,35 @@
       if (marker) { markers.push({ index, marker }); index += marker.open.length - 1; }
     }
     if (!markers.length) {
-      if (bareMath && value.trim()) renderMath(host, value.trim(), value, true);
-      else host.textContent = value;
-      return;
+      return [{ math: bareMath && Boolean(value.trim()), value: bareMath && value.trim() ? value.trim() : value,
+        source: value, display: bareMath }];
     }
+    const parts = [];
+    const text = value => parts.push({ math: false, value, source: value });
     let cursor = 0;
     while (cursor < value.length) {
       let next = null;
       for (const candidate of markers) if (candidate.index >= cursor) { next = candidate; break; }
-      if (!next) { host.appendChild(node("span", value.slice(cursor))); break; }
-      if (next.index > cursor) host.appendChild(node("span", value.slice(cursor, next.index)));
+      if (!next) { text(value.slice(cursor)); break; }
+      if (next.index > cursor) text(value.slice(cursor, next.index));
       const start = next.index + next.marker.open.length;
       const end = closingAt(value, next.marker, start);
       if (end < 0 || end === start) {
-        host.appendChild(node("span", value.slice(next.index)));
+        text(value.slice(next.index));
         break;
       }
       const original = value.slice(next.index, end + next.marker.close.length);
-      renderMath(host, value.slice(start, end), original, next.marker.display);
+      parts.push({ math: true, value: value.slice(start, end), source: original, display: next.marker.display });
       cursor = end + next.marker.close.length;
+    }
+    return parts;
+  }
+  function renderMathText(host, source, bareMath = false) {
+    const parts = splitMathText(source, bareMath);
+    if (parts.length === 1 && !parts[0].math) { host.textContent = parts[0].value; return; }
+    for (const part of parts) {
+      if (part.math) renderMath(host, part.value, part.source, part.display);
+      else host.appendChild(node("span", part.value));
     }
   }
   function render(host, segments) {
@@ -104,6 +114,6 @@
       host.appendChild(row);
     }
   }
-  root.ConfiaRecognitionView = { render, renderMathText };
-  if (typeof module === "object" && module.exports) module.exports = { render, renderMathText };
+  root.ConfiaRecognitionView = { render, renderMathText, splitMathText };
+  if (typeof module === "object" && module.exports) module.exports = { render, renderMathText, splitMathText };
 })(globalThis);

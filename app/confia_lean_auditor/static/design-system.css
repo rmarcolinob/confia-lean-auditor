@@ -9,6 +9,8 @@
   --color-text: #17233c;
   --color-text-muted: #52647e;
   --color-border: #d5dfed;
+  --color-document-border: #e5e7eb;
+  --color-navigation-border: #c4d7f2;
   --color-focus: #123b73;
   --color-success: #126c39;
   --color-warning: #795000;
@@ -61,7 +63,7 @@ a { color: var(--color-info); text-underline-offset: 3px; }
 textarea { resize: vertical; line-height: 1.5; }
 label, .label { font-size: var(--font-auxiliary); font-weight: 600; }
 :is(button, .button) { overflow-wrap: anywhere; cursor: pointer; font-weight: 600; }
-.button {
+.button, .primary-action, .secondary-action, .button-primary, .button-secondary {
   display: inline-flex; align-items: center; justify-content: center; gap: var(--spacing-3);
   padding: 10px var(--spacing-4); border: 1px solid transparent; text-decoration: none;
 }
@@ -93,6 +95,15 @@ button[aria-busy="true"] { cursor: progress; }
 .disclosure { padding: var(--spacing-4); border: 1px solid var(--color-border); border-radius: var(--radius-card); }
 summary { min-height: var(--control-height); align-content: center; cursor: pointer; color: var(--color-info); font-weight: 600; }
 .auxiliary-text { font-size: var(--font-auxiliary); color: var(--color-text-muted); }
+.action-row { display: flex; align-items: center; flex-wrap: wrap; gap: var(--spacing-3); margin-top: var(--spacing-4); }
+.form-field { display: grid; gap: var(--spacing-2); min-width: 0; }
+.form-help { margin: 0; font-size: var(--font-auxiliary); color: var(--color-text-muted); font-weight: 400; }
+.action-message { margin: var(--spacing-3) 0; color: var(--color-text-muted); font-size: var(--font-auxiliary); }
+.action-message:empty { display: none; }
+.action-message[data-kind="success"] { color: var(--color-success); }
+.action-message[data-kind="error"] { color: var(--color-danger); }
+.status[data-kind="neutral"] { color: var(--color-text-muted); background: var(--color-background); }
+.status[data-kind="pending"] { color: var(--color-warning); background: var(--color-warning-subtle); }
 .skip-link { position: fixed; top: var(--spacing-3); left: var(--spacing-3); z-index: var(--z-overlay); padding: var(--spacing-3) var(--spacing-4); background: white; border: 2px solid var(--color-focus); border-radius: var(--radius-control); transform: translateY(-180%); }
 .skip-link:focus { transform: translateY(0); }
 .institutional-footer { width: min(1440px, calc(100% - 48px)); margin: var(--spacing-7) auto 0; padding: var(--spacing-6) 0; border-top: 1px solid var(--color-border); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: var(--spacing-4); color: var(--color-text-muted); font-size: .8rem; }

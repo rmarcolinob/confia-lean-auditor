@@ -45,12 +45,12 @@ async function page(transport = async () => ({ ok: true, json: async () => ({ pr
       calls.push({url,options:request});
       if (url === '/problems') return options.catalogResponse || { ok:true, json:async () => options.catalog || catalog };
       if (url.endsWith('registry.json')) return { ok:true, json:async () => options.registry || [] };
-      if (url === '/assessments') return { ok:true, json:async () => options.exams || [] };
+      if (url === '/assessments') return options.examsTransport ? options.examsTransport() : { ok:true, json:async () => options.exams || [] };
       return transport(url,request);
     },
   });
   context.katex = { render(latex, target) { target.textContent = `rendered:${latex}`; } };
-  for (const file of ['recognition-view.js','app.js','resolution-workspace.js','shell.js']) vm.runInContext(fs.readFileSync(path.join(staticDir,file),'utf8'),context);
+  for (const file of ['recognition-view.js','app.js','resolution-workspace.js','demo/tutoria-demo-data.js','demo/tutoria-chat-demo.js','tutoria-chat.js','tutoria.js','tutoria-assistant.js','shell.js']) vm.runInContext(fs.readFileSync(path.join(staticDir,file),'utf8'),context);
   await flush();
   const notebook = (values = {}) => {
     const current = window.ConfIAWorkspace;

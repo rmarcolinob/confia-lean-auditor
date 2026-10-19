@@ -1,0 +1,59 @@
+/* TUTORIA-DEMO-01: use only ConfIA's approved design tokens. */
+#tutoria-root { min-width: 0; }
+.tutoria-context { color: var(--color-text-muted); font-size: var(--font-auxiliary); margin: 0 0 var(--spacing-4); }
+.tutoria-navigation { display: flex; flex-wrap: wrap; gap: var(--spacing-2); border-bottom: 1px solid var(--color-border); padding-bottom: var(--spacing-4); margin-bottom: var(--spacing-6); }
+.tutoria-navigation a { border-color: transparent; background: transparent; }
+.tutoria-navigation a[aria-current="page"] { color: var(--color-primary-strong); background: var(--color-surface-subtle); border-color: var(--color-border); }
+#tutoria-content { display: grid; gap: var(--spacing-6); min-width: 0; }
+#tutoria-content:empty { display: none; }
+#tutoria-content .card { box-shadow: var(--shadow-card); padding: var(--spacing-5); }
+#tutoria-content .card h2, #tutoria-content .card h3 { margin-top: var(--spacing-3); }
+#tutoria-content .card > .button, #tutoria-content .card > button { margin-top: var(--spacing-4); }
+.tutoria-intro { padding: var(--spacing-2) 0; }
+.tutoria-intro h2 { margin: var(--spacing-2) 0; font-size: clamp(1.35rem, 2.5vw, 1.8rem); }
+.tutoria-intro p:last-child { color: var(--color-text-muted); margin-bottom: 0; }
+.tutoria-module-grid { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: var(--spacing-4); }
+.tutoria-module { grid-column: span 2; display: flex; align-items: flex-start; flex-direction: column; border-top: 3px solid var(--color-primary); }
+.tutoria-module p { color: var(--color-text-muted); font-size: var(--font-auxiliary); flex: 1; }
+.tutoria-module .button { width: 100%; font-size: var(--font-auxiliary); }
+.tutoria-icon { display: grid; place-items: center; width: 40px; height: 40px; color: var(--color-primary-strong); background: var(--color-surface-subtle); border-radius: var(--radius-control); font-weight: 650; font-size: 1.15rem; }
+.tutoria-feature-grid { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: var(--spacing-5); align-items: stretch; }
+#tutoria-content .tutoria-featured { background: var(--color-surface-subtle); border-top: 3px solid var(--color-primary); }
+.tutoria-featured h2 { font-size: 1.5rem; }
+.tutoria-featured .tutoria-document { font-size: 1.7rem; text-align: center; padding: var(--spacing-6); margin-top: var(--spacing-5); }
+.tutoria-card-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--spacing-4); }
+.tutoria-list { padding-left: var(--spacing-5); line-height: 1.8; }
+.tutoria-list-item { padding: var(--spacing-4) 0; border-bottom: 1px solid var(--color-border); }
+.tutoria-list-item:last-of-type { border-bottom: 0; }
+.tutoria-list-item .button { margin-top: var(--spacing-3); font-size: var(--font-auxiliary); }
+.tutoria-section-heading h2 { margin: var(--spacing-3) 0 var(--spacing-2); }
+.tutoria-filters { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--spacing-4); }
+.tutoria-search, .tutoria-filter-help { grid-column: 1 / -1; }
+.tutoria-filters input, .tutoria-filters select { font-weight: 400; }
+.tutoria-question { min-width: 0; display: flex; flex-direction: column; align-items: flex-start; }
+.tutoria-question h3 { overflow-wrap: anywhere; }
+.tutoria-question details { width: 100%; flex: 1; }
+.tutoria-question .tutoria-document { font-size: var(--font-auxiliary); }
+.tutoria-document { white-space: pre-wrap; overflow-wrap: anywhere; padding: var(--spacing-4); border: 1px solid var(--color-border); background: var(--color-surface); border-radius: var(--radius-control); line-height: 1.85; min-width: 0; }
+.tutoria-document .recognized-math { max-width: 100%; overflow-x: auto; }
+.tutoria-guidance { margin: var(--spacing-5) 0; }
+.tutoria-guidance > section { padding: var(--spacing-2) var(--spacing-4); margin-top: var(--spacing-4); border-left: 3px solid var(--color-border); background: var(--color-background); }
+.tutoria-guidance h4 { margin: var(--spacing-2) 0; }
+.tutoria-metrics { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--spacing-4); }
+.tutoria-metric-value { font-size: 2rem; color: var(--color-primary-strong); }
+#tutoria-content progress { width: 100%; height: 12px; border: 0; border-radius: var(--radius-pill); overflow: hidden; appearance: none; accent-color: var(--color-primary); }
+#tutoria-content progress::-webkit-progress-bar { background: var(--color-surface-subtle); }
+#tutoria-content progress::-webkit-progress-value { background: var(--color-primary); }
+#tutoria-content progress::-moz-progress-bar { background: var(--color-primary); }
+.tutoria-progress-label { margin-top: var(--spacing-5); font-weight: 600; }
+body[data-resolution-active="true"] #tutoria-root { display: none; }
+@media (max-width: 1100px) {
+  .tutoria-module-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .tutoria-module { grid-column: auto; }
+  .tutoria-feature-grid { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 620px) {
+  .tutoria-module-grid, .tutoria-card-grid, .tutoria-metrics { grid-template-columns: minmax(0, 1fr); }
+  .tutoria-filters { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .tutoria-navigation a { padding: var(--spacing-2); font-size: .8rem; }
+}

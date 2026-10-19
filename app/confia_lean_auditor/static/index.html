@@ -5,11 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>ConfIA — Matemática com confiança</title>
     <link rel="stylesheet" href="/static/capture/vendor/katex-0.18.9/katex.min.css">
-    <link rel="stylesheet" href="/static/design-system.css?v=ui-01">
-    <link rel="stylesheet" href="/static/styles.css?v=p2-assmt-01">
-    <link rel="stylesheet" href="/static/submissions/teacher.css?v=assmt-students-01">
+    <link rel="stylesheet" href="/static/design-system.css?v=ux-pro-01">
+    <link rel="stylesheet" href="/static/styles.css?v=ux-pro-01">
+    <link rel="stylesheet" href="/static/submissions/teacher.css?v=ux-pro-01">
+    <link rel="stylesheet" href="/static/tutoria.css?v=tutoria-contextual-final-01">
+    <link rel="stylesheet" href="/static/tutoria-chat.css?v=tutoria-contextual-final-01">
+    <link rel="stylesheet" href="/static/tutoria-assistant.css?v=tutoria-contextual-final-01">
   </head>
   <body>
+    <div id="confia-surface">
     <a class="skip-link" href="#app-root">Ir para o conteúdo principal</a>
     <div class="brand-strip" aria-hidden="true">
       <span class="strip-blue"></span>
@@ -77,20 +81,25 @@
             <p id="student-institutional-context" class="student-enrollment" role="status">Carregando escola e turma…</p>
           </div>
           <div class="home-grid student-primary-actions">
-            <article class="card"><span class="step-label">Aprender</span><h2>TutorIA</h2><p>Resolva problemas e receba feedback durante o estudo.</p><a class="button button-primary" href="#student/tutoria" data-shell-link>Entrar no TutorIA</a></article>
+            <article class="card"><span class="step-label">Aprender</span><h2>TutorIA</h2><p>Aprenda matemática com conteúdos, questões, prática guiada e feedback.</p><a class="button button-primary" href="#student/tutoria" data-shell-link>Entrar no TutorIA</a></article>
             <article class="card"><span class="step-label">Avaliar</span><h2>Exames</h2><p>Acesse avaliações, resolva as questões e envie suas respostas ao professor.</p><a class="button button-primary" href="#student/exams" data-shell-link>Ver exames</a></article>
           </div>
+        </section>
+        <section id="tutoria-root" aria-label="Ambiente TutorIA" hidden>
+          <p id="tutoria-student-context" class="tutoria-context"></p>
+          <nav id="tutoria-navigation" class="tutoria-navigation" aria-label="Navegação do TutorIA"></nav>
+          <div id="tutoria-content"></div>
         </section>
         <section id="student-exams" class="card" aria-label="Exames disponíveis" hidden>
           <h2>Exames da sua turma</h2>
           <p>Atividades disponibilizadas para sua turma. Escolha uma para abrir o caderno.</p>
-          <p id="student-exams-message" role="status">Carregando exames…</p>
+          <p id="student-exams-message" role="status" aria-live="polite">Carregando exames…</p>
           <div id="student-exam-list" class="submission-list"></div>
           <section id="student-exam-detail" hidden>
             <button id="student-exam-back" class="secondary-action" type="button">← Voltar aos exames</button>
-            <h3 id="student-exam-title"></h3>
+            <h3 id="student-exam-title" tabindex="-1"></h3>
             <p id="student-exam-meta"></p>
-            <p id="student-exam-progress" role="status"></p>
+            <p id="student-exam-progress" role="status" aria-live="polite"></p>
             <p id="student-exam-instructions"></p>
             <div id="student-exam-items" class="submission-list"></div>
           </section>
@@ -113,7 +122,9 @@
           <section id="resolution-workspace" aria-label="Caderno de Resolução ConfIA" hidden>
             <div class="resolution-heading">
               <div><p class="eyebrow">Caderno de Resolução ConfIA</p><h2 id="resolution-title" tabindex="-1">Como você quer trabalhar esta questão?</h2></div>
-              <button id="change-question" class="secondary-action" type="button">Escolher outra questão</button>
+              <div class="action-row">
+                <button id="change-question" class="secondary-action" type="button">Escolher outra questão</button>
+              </div>
             </div>
             <div id="resolution-mode-switch" class="mode-switch" role="group" aria-label="Como você quer trabalhar esta questão?">
               <button id="practice-mode" class="mode-button" type="button" aria-pressed="false">Praticar com feedback</button>
@@ -136,16 +147,16 @@
                 </div>
               </section>
               <div id="workspace-ink-toolbar" class="workspace-ink-toolbar" role="toolbar" aria-label="Ferramentas de escrita" hidden>
-                <button id="workspace-pen-mode" type="button">Caneta</button>
-                <button id="workspace-mouse-mode" type="button">Mouse / teste</button>
-                <button id="workspace-draw-tool" type="button">Escrever</button>
-                <button id="workspace-erase-tool" type="button">Borracha</button>
-                <button id="workspace-undo" type="button">Desfazer</button>
-                <button id="workspace-redo" type="button">Refazer</button>
-                <button id="workspace-previous-page" type="button">Anterior</button>
+                <button id="workspace-pen-mode" class="secondary-action" type="button">Caneta</button>
+                <button id="workspace-mouse-mode" class="secondary-action" type="button">Mouse / teste</button>
+                <button id="workspace-draw-tool" class="secondary-action" type="button">Escrever</button>
+                <button id="workspace-erase-tool" class="secondary-action" type="button">Borracha</button>
+                <button id="workspace-undo" class="secondary-action" type="button">Desfazer</button>
+                <button id="workspace-redo" class="secondary-action" type="button">Refazer</button>
+                <button id="workspace-previous-page" class="secondary-action" type="button">Anterior</button>
                 <span id="workspace-page-indicator" role="status">Página —</span>
-                <button id="workspace-next-page" type="button">Próxima</button>
-                <button id="workspace-add-page" type="button">Nova página</button>
+                <button id="workspace-next-page" class="secondary-action" type="button">Próxima</button>
+                <button id="workspace-add-page" class="secondary-action" type="button">Nova página</button>
               </div>
               <iframe id="resolution-notebook" title="Caderno da questão selecionada: escrita, ferramentas e páginas"></iframe>
               <div class="notebook-end" role="separator"><span>Fim do caderno · controles da resolução abaixo</span></div>
@@ -157,39 +168,40 @@
                   <label>Versões salvas desta questão
                     <select id="workspace-saved-document"><option value="">Selecione uma versão salva</option></select>
                   </label>
-                  <button id="workspace-open-document" type="button" disabled>Recuperar versão</button>
+                  <button id="workspace-open-document" class="secondary-action" type="button" disabled>Recuperar versão</button>
                   <button id="workspace-new-draft" class="secondary-action" type="button" disabled>Novo rascunho</button>
                   <button id="workspace-continue-draft" class="secondary-action" type="button" hidden disabled>Continuar em nova versão</button>
                 </div>
                 <p id="workspace-capture-status" role="status" aria-live="polite"></p>
-                <p class="help-text">A recuperação é explícita. Neste protótipo, o dispositivo compartilhado não separa versões por usuário.</p>
+                <p class="help-text">As versões salvas ficam neste dispositivo. Em equipamentos compartilhados, confira a questão e a versão antes de recuperar.</p>
               </section>
               <section id="workspace-submission-actions" class="notebook-action-card" aria-label="Preparar e enviar solução" hidden>
                 <p class="eyebrow">Envio ao ConfIA</p>
                 <h3>Preparar versão</h3>
                 <p>Prepare uma cópia congelada para conferir a leitura antes de enviar.</p>
                 <div class="notebook-action-row">
-                  <button id="workspace-prepare-snapshot" type="button" disabled>Preparar versão para envio</button>
+                  <button id="workspace-prepare-snapshot" class="secondary-action" type="button" disabled>Preparar versão para envio</button>
                 </div>
                 <p id="workspace-snapshot-message" role="status" aria-live="polite"></p>
                 <h3>Prévia da solução reconhecida</h3>
                 <p>Confira se a leitura corresponde ao que você escreveu.</p>
-                <div class="notebook-action-row"><button id="workspace-preview-writing" type="button" disabled>Reconhecer para conferir</button></div>
+                <div class="notebook-action-row"><button id="workspace-preview-writing" class="secondary-action" type="button" disabled>Reconhecer para conferir</button></div>
                 <p id="workspace-preview-message" role="status" aria-live="polite"></p>
                 <div id="workspace-preview-result" class="workspace-recognition-preview" aria-label="Prévia antes do envio"></div>
                 <h3>Enviar solução</h3>
                 <p>Compare a leitura com o manuscrito. Enviar não afirma que a matemática está correta.</p>
-                <div class="notebook-action-row"><button id="workspace-send-solution" type="button" disabled>Enviar solução</button></div>
+                <div class="notebook-action-row"><button id="workspace-send-solution" class="primary-action" type="button" disabled>Enviar solução</button></div>
                 <p id="workspace-submission-message" role="status" aria-live="polite"></p>
                 <p id="workspace-submission-receipt" class="workspace-receipt" hidden></p>
               </section>
               <section id="workspace-tutor-actions" class="notebook-action-card" aria-label="Feedback de estudo" hidden>
                 <p class="eyebrow">TutorIA · estudo</p>
                 <h3>Conferir sua solução</h3>
+                <span class="status">Feedback demonstrativo</span>
                 <p>Reconheça a escrita e confira a leitura antes de pedir feedback.</p>
                 <div class="notebook-action-row">
-                  <button id="workspace-tutor-preview" type="button" disabled>Reconhecer solução</button>
-                  <button id="workspace-tutor-feedback" type="button" disabled>Pedir feedback</button>
+                  <button id="workspace-tutor-preview" class="secondary-action" type="button" disabled>Reconhecer solução</button>
+                  <button id="workspace-tutor-feedback" class="primary-action" type="button" disabled>Pedir feedback</button>
                   <button id="workspace-tutor-new-attempt" class="secondary-action" type="button" disabled>Nova tentativa</button>
                 </div>
                 <p id="workspace-tutor-message" role="status" aria-live="polite"></p>
@@ -199,7 +211,7 @@
                 <p class="eyebrow">Leitura automática</p>
                 <h3>Reconhecimento da versão recebida</h3>
                 <p>A transcrição oficial começa após o envio. Se falhar, tente novamente nesta versão recebida.</p>
-                <div class="notebook-action-row"><button id="workspace-recognize-writing" type="button" disabled>Reconhecer escrita</button></div>
+                <div class="notebook-action-row"><button id="workspace-recognize-writing" class="secondary-action" type="button" disabled>Reconhecer escrita</button></div>
                 <p id="workspace-recognition-message" role="status" aria-live="polite"></p>
                 <div id="workspace-recognition-preview" class="workspace-recognition-preview" aria-label="Prévia da transcrição automática"></div>
               </section>
@@ -234,7 +246,8 @@
                 <label class="solution-area">Solução digitada
                   <textarea id="solution-input" spellcheck="false" placeholder="Digite sua solução ou sua representação textual para análise." aria-describedby="student-validation-message"></textarea>
                 </label>
-                <div class="actions"><button id="audit-button" type="button">Analisar minha solução</button></div>
+                <p id="tutoria-typed-feedback-note" class="form-help" hidden>Feedback demonstrativo: orientações de revisão, sem análise automática da tentativa.</p>
+                <div class="actions"><button id="audit-button" class="primary-action" type="button">Analisar minha solução</button></div>
               </div>
             </details>
           </section>
@@ -247,13 +260,13 @@
         </section>
 
         <section id="student-feedback" aria-label="Feedback da resolução atual" hidden>
-          <h2>Análise ConfIA</h2>
-          <p>Esta área mostra a análise atual desta resolução na sessão. Ainda não há histórico persistente de análises.</p>
-          <section id="result-panel" class="result-panel" aria-live="polite" aria-label="Análise ConfIA"></section>
+          <h2>Feedback da prática</h2>
+          <p>Retome sua solução e explore orientações para uma nova tentativa.</p>
+          <section id="result-panel" class="result-panel" aria-live="polite" aria-label="Feedback pedagógico"></section>
           <div id="feedback-actions" class="actions" hidden>
             <button id="continue-solving" class="secondary-action" type="button">Continuar resolvendo</button>
             <button id="edit-solution" class="secondary-action" type="button">Alterar solução</button>
-            <button id="reanalyze-solution" type="button">Analisar novamente</button>
+            <button id="reanalyze-solution" class="primary-action" type="button">Pedir novo feedback</button>
           </div>
         </section>
 
@@ -274,19 +287,19 @@
             <label>Turma <select id="teacher-classroom-select"></select></label>
             <span id="teacher-academic-year"></span>
           </div>
-          <p id="teacher-context-message" role="status"></p>
+          <p id="teacher-context-message" role="status" aria-live="polite"></p>
         </section>
         <section id="teacher-home" class="home-panel" hidden>
-          <div class="welcome-card card"><p class="eyebrow">Acompanhamento da solução</p><h2>Da solução recebida à avaliação do professor</h2><p>Abra a solução do aluno, compare o manuscrito com a transcrição e confira a fidelidade da leitura. A análise matemática e a avaliação docente dos manuscritos aguardam integração.</p><a class="button button-primary" href="#teacher/submissions" data-shell-link>Abrir soluções recebidas →</a></div>
+          <div class="welcome-card card"><p class="eyebrow">Acompanhamento da solução</p><h2>Da solução recebida à decisão do professor</h2><p>Confira o manuscrito e a transcrição, consulte a sugestão da Análise ConfIA e registre sua decisão. Finalize e libere o resultado ao aluno quando estiver pronto.</p><a class="button button-primary" href="#teacher/submissions" data-shell-link>Abrir soluções recebidas →</a></div>
           <div class="home-grid">
-            <article class="card"><h2>Soluções recebidas</h2><p>Consulte manuscritos enviados pelo caderno e seus arquivos originais.</p><a href="#teacher/submissions" data-shell-link>Consultar soluções</a></article>
-            <article class="card"><h2>Transcrições</h2><p>Confira a leitura junto ao original, preservando o que o aluno escreveu.</p><a href="#teacher/transcriptions" data-shell-link>Conferir transcrições</a></article>
-            <article class="card"><h2>Análise ConfIA</h2><p>Consulte a etapa de análise das mesmas soluções recebidas e o que falta integrar.</p><a href="#teacher/analysis" data-shell-link>Consultar etapa de análise</a></article>
+            <article class="card"><h2>Soluções recebidas</h2><p>Consulte manuscritos enviados pelo caderno e seus arquivos originais.</p><a class="button button-secondary" href="#teacher/submissions" data-shell-link>Consultar soluções</a></article>
+            <article class="card"><h2>Transcrições</h2><p>Confira a leitura junto ao original, preservando o que o aluno escreveu.</p><a class="button button-secondary" href="#teacher/transcriptions" data-shell-link>Conferir transcrições</a></article>
+            <article class="card"><h2>Análise ConfIA</h2><p>Consulte a análise da solução e registre a pontuação final do professor.</p><a class="button button-secondary" href="#teacher/analysis" data-shell-link>Consultar análise e decisão</a></article>
           </div>
         </section>
         <section id="teacher-exams" class="card" hidden>
           <h2>Exames da turma</h2>
-          <p id="teacher-exams-message" role="status">Selecione uma escola e uma turma.</p>
+          <p id="teacher-exams-message" role="status" aria-live="polite">Selecione uma escola e uma turma.</p>
           <button id="teacher-create-exam" class="button button-primary" type="button">+ Criar exame</button>
           <form id="teacher-exam-form" hidden>
             <label>Título <input id="teacher-exam-title" required maxlength="160"></label>
@@ -424,15 +437,36 @@
     </footer>
     <noscript><p class="alert">Ative o JavaScript para navegar pelos perfis de demonstração e carregar as questões.</p></noscript>
 
+    </div>
+    <aside id="tutoria-assistant-rail" class="tutoria-assistant-rail" aria-label="Acesso ao assistente de estudo" hidden>
+      <button id="tutoria-assistant-toggle" class="secondary-action" type="button" aria-expanded="false" aria-controls="tutoria-assistant-drawer"><span aria-hidden="true">✦</span> TutorIA</button>
+    </aside>
+    <section id="tutoria-assistant-drawer" class="tutoria-assistant-drawer" role="dialog" aria-modal="false" aria-labelledby="tutoria-assistant-title" hidden>
+      <header class="tutoria-assistant-header">
+        <div><h2 id="tutoria-assistant-title" tabindex="-1">TutorIA</h2><p>Assistente de estudo</p></div>
+        <button id="tutoria-assistant-close" class="secondary-action" type="button" aria-label="Recolher TutorIA">Recolher</button>
+      </header>
+      <div class="tutoria-assistant-tools">
+        <span class="form-help">Experiência demonstrativa</span>
+      </div>
+      <div id="tutoria-assistant-content"></div>
+    </section>
+
     <script src="/static/capture/vendor/katex-0.18.9/katex.min.js"></script>
     <script src="/static/capture/vendor/katex-0.18.9/contrib/auto-render.min.js"></script>
     <script src="/static/capture/problem-math.js?v=p2-ui-01"></script>
-    <script src="/static/recognition-view.js?v=mathpix-view-01"></script>
-    <script src="/static/app.js?v=p2-cap-04"></script>
-    <script src="/static/resolution-workspace.js?v=p2-assmt-progress-01"></script>
-    <script src="/static/submissions/teacher.js?v=assmt-students-01"></script>
-    <script src="/static/assessments.js?v=p2-assmt-01"></script>
-    <script src="/static/management.js?v=core-inst-01"></script>
-    <script src="/static/shell.js?v=p2-assmt-01"></script>
+    <script src="/static/recognition-view.js?v=teacher-transcription-02"></script>
+    <script src="/static/app.js?v=tutoria-demo-01"></script>
+    <script src="/static/resolution-workspace.js?v=tutoria-contextual-final-01"></script>
+    <script src="/static/submissions/decisions.js?v=ux-pro-01"></script>
+    <script src="/static/submissions/teacher.js?v=ux-pro-01"></script>
+    <script src="/static/assessments.js?v=ux-pro-01"></script>
+    <script src="/static/management.js?v=p2-dec-01"></script>
+    <script src="/static/demo/tutoria-demo-data.js?v=tutoria-contextual-final-01"></script>
+    <script src="/static/demo/tutoria-chat-demo.js?v=tutoria-contextual-final-01"></script>
+    <script src="/static/tutoria-chat.js?v=tutoria-contextual-final-01"></script>
+    <script src="/static/tutoria.js?v=tutoria-contextual-final-01"></script>
+    <script src="/static/tutoria-assistant.js?v=tutoria-contextual-final-01"></script>
+    <script src="/static/shell.js?v=tutoria-contextual-final-01"></script>
   </body>
 </html>

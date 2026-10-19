@@ -104,7 +104,7 @@ test('teacher shows rendered persisted math beside intact original and analysis 
   assert(tree.some(n=>n.textContent==='rendered:2 + 2 = 5'));
   assert(tree.some(n=>n.textContent==='<script>literal</script>'));
   assert(tree.some(n=>n.textContent==='?'));
-  assert(tree.some(n=>n.textContent.includes('não significa solução correta')));
+  assert(tree.some(n=>n.title?.includes('não significa solução correta')));
   const css=fs.readFileSync(path.join(__dirname,'../../app/confia_lean_auditor/static/submissions/teacher.css'),'utf8');
   assert.match(css,/\.transcription-workspace\s*\{[^}]*grid-template-columns:\s*minmax\(0, 1\.15fr\) minmax\(0, 1fr\)/);
   assert.match(css,/@media \(max-width: 760px\)\s*\{[^}]*\.transcription-workspace\s*\{ grid-template-columns: minmax\(0, 1fr\)/);
@@ -124,7 +124,7 @@ test('teacher receives the official Mathpix NEEDS_REVIEW revision and can confer
   const tree=descendants(ui.get('#manuscript-detail'));
   assert(tree.some(n=>n.className==='transcription-visual' && n.textContent.includes('rendered:2 + 2 = 5')));
   assert(tree.some(n=>n.tag==='img' && n.src?.endsWith('/pages/0')));
-  const accept=tree.find(n=>n.tag==='button' && n.textContent==='Aceitar como fiel ao manuscrito');
+  const accept=tree.find(n=>n.tag==='button' && n.textContent==='Conferir transcrição');
   assert.equal(accept.disabled,false);
   assert(tree.some(n=>n.className==='manuscript-analysis-panel' && n.textContent.includes('transcrição precisa ser conferida')));
   assert(ui.calls.every(call=>call.options?.method!=='POST'));

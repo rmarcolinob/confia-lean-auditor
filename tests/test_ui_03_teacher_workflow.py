@@ -38,7 +38,7 @@ def test_teacher_entities_are_shared_and_text_demo_is_explicitly_separate():
     assert 'não corresponde aos manuscritos persistidos' in html
 
 
-def test_no_official_decision_controls_or_local_decision_writes_remain():
+def test_legacy_text_demo_has_no_official_decision_controls_or_local_writes():
     html = (STATIC / 'index.html').read_text()
     source = (STATIC / 'app.js').read_text()
     for forbidden in ('approve-correction', 'request-review', 'release-feedback', 'updateSelectedSubmissionStatus', 'teacherEvaluationLabel'):
@@ -47,6 +47,10 @@ def test_no_official_decision_controls_or_local_decision_writes_remain():
     manuscript = (STATIC / 'submissions/teacher.js').read_text()
     for forbidden in ('localStorage', 'fetch("/audit"', 'write("/audit"', 'TeacherDecision', 'StructuredSolution'):
         assert forbidden not in manuscript
+    decisions = (STATIC / 'submissions/decisions.js').read_text()
+    assert 'localStorage' not in decisions
+    assert '/teacher-decisions/' in decisions and 'credentials: "same-origin"' in decisions
+    assert html.index('submissions/decisions.js') < html.index('submissions/teacher.js')
 
 
 def test_analysis_states_have_text_and_style_only_when_real_text_requests_apply():

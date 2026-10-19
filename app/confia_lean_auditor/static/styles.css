@@ -1034,7 +1034,7 @@ body { background: var(--color-background); }
 .profile-navigation > div { display: grid; gap: var(--spacing-1); }
 .profile-navigation a { display: flex; align-items: center; justify-content: space-between; gap: var(--spacing-2); min-height: var(--control-height); padding: 10px var(--spacing-3); border: 1px solid transparent; border-radius: var(--radius-control); text-decoration: none; font-size: .875rem; font-weight: 500; color: var(--color-text-muted); }
 .profile-navigation a:hover { background: var(--color-background); }
-.profile-navigation a[aria-current="page"] { color: var(--color-primary-strong); background: var(--color-surface-subtle); border-color: #c4d7f2; font-weight: 650; }
+.profile-navigation a[aria-current="page"] { color: var(--color-primary-strong); background: var(--color-surface-subtle); border-color: var(--color-navigation-border); font-weight: 650; }
 .sidebar-note { margin: var(--spacing-6) 0 0; font-size: .75rem; color: var(--color-text-muted); }
 body.auth-loading .app-layout { visibility: hidden; }
 body.auth-enabled .profile-switch, body.auth-enabled .sidebar-note { display: none; }
@@ -1216,7 +1216,59 @@ body[data-handwriting-focus="true"] .resolution-heading .eyebrow { display: none
 #teacher-exam-form :is(input, textarea) { width: 100%; }
 #teacher-exam-catalog label { display: grid; grid-template-columns: auto minmax(0, 1fr) 6rem; align-items: center; gap: var(--spacing-2); }
 #teacher-exam-catalog input[type="checkbox"] { width: auto; }
-#teacher-exam-progress { overflow-x: auto; margin-top: var(--spacing-4); }
-#teacher-exam-progress table { width: 100%; border-collapse: collapse; }
+#teacher-exam-list > article { min-width: 0; scroll-margin-top: var(--spacing-4); }
+#teacher-exam-list > article > h4 { margin: 0; }
+#teacher-exam-list > article[data-selected="true"] { border-color: var(--color-primary); }
+#teacher-exam-list > article[data-selected="true"] > .exam-preview { display: none; }
+.exam-select { border: 0; padding: 0; background: transparent; color: var(--color-primary); font: inherit; text-align: left; cursor: pointer; text-decoration: underline; text-underline-offset: .2em; }
+.exam-select[aria-expanded="true"]::after { content: " · selecionada"; font-size: .8em; font-weight: normal; }
+#teacher-exam-progress { margin-top: var(--spacing-4); padding-top: var(--spacing-4); border-top: 1px solid var(--color-border); }
+#teacher-exam-progress > h3 { margin-top: 0; }
+.exam-summary { display: flex; flex-wrap: wrap; gap: var(--spacing-3) var(--spacing-6); margin-bottom: var(--spacing-5); }
+.exam-summary dt { color: var(--color-text-muted); font-size: .875rem; }
+.exam-summary dd { margin: 0; }
+.exam-deliveries-scroll { max-height: 28rem; overflow: auto; margin-top: var(--spacing-3); border: 1px solid var(--color-border); border-radius: var(--radius-control); }
+.exam-deliveries-scroll:focus-visible { outline: 3px solid var(--color-primary); outline-offset: 3px; }
+#teacher-exam-progress table { width: 100%; border-collapse: separate; border-spacing: 0; }
+#teacher-exam-progress caption { padding: var(--spacing-2); text-align: left; color: var(--color-text-muted); }
 #teacher-exam-progress :is(th, td) { padding: var(--spacing-2); text-align: left; border-bottom: 1px solid var(--color-border); }
+#teacher-exam-progress thead th { position: sticky; top: 0; z-index: 1; background: var(--color-surface-subtle); white-space: nowrap; }
+#teacher-exam-progress tbody th { min-width: 12rem; }
+#teacher-exam-progress td { white-space: nowrap; }
+.exam-delivery-link { min-height: var(--control-height); padding: var(--spacing-2) var(--spacing-3); text-decoration: underline; text-underline-offset: .2em; cursor: pointer; }
+.exam-student-progress { font-variant-numeric: tabular-nums; }
 @media (max-width: 700px) { .student-primary-actions { grid-template-columns: minmax(0, 1fr); } }
+
+/* UX-PRO-01: institutional polish using the approved tokens. */
+.student-primary-actions .card { gap: var(--spacing-2); }
+.student-primary-actions .card > p { margin-bottom: var(--spacing-5); }
+.student-primary-actions .card > .button { margin-top: auto; }
+.home-grid .button { width: fit-content; }
+.exam-card h4, .exam-item-card h4 { margin: 0 0 var(--spacing-3); font-size: 1.05rem; }
+.exam-card .exam-card-progress { margin-top: var(--spacing-4); color: var(--color-primary-strong); font-weight: 600; font-variant-numeric: tabular-nums; }
+.exam-card > .status { margin-right: var(--spacing-2); }
+.exam-card > button:not(.exam-select) { display: flex; margin-top: var(--spacing-4); }
+.exam-card .exam-card-meta, .exam-item-card .exam-item-points { font-size: var(--font-auxiliary); }
+#student-exam-detail { border-top: 1px solid var(--color-border); padding-top: var(--spacing-5); }
+#student-exam-title { font-size: var(--font-section-title); margin-bottom: var(--spacing-2); }
+#student-exam-meta { color: var(--color-text-muted); font-size: var(--font-auxiliary); }
+#student-exam-progress { color: var(--color-primary-strong); font-weight: 600; font-variant-numeric: tabular-nums; }
+#student-exam-instructions { white-space: pre-wrap; }
+#student-exam-items { display: grid; gap: var(--spacing-4); }
+.student-result { padding: var(--spacing-4); margin: var(--spacing-4) 0; border: 1px solid var(--color-border); border-radius: var(--radius-control); background: var(--color-surface); }
+.student-result .student-result-score { font-size: 1.25rem; font-weight: 650; color: var(--color-primary-strong); }
+.student-result h5 { font-size: .9rem; margin: var(--spacing-4) 0 var(--spacing-2); }
+.student-result .student-teacher-feedback { color: var(--color-text); white-space: pre-wrap; }
+.receipt-details { margin-top: var(--spacing-3); font-size: var(--font-auxiliary); }
+#teacher-exam-list { display: grid; gap: var(--spacing-3); margin-top: var(--spacing-5); }
+#teacher-exam-list > h3 { margin: var(--spacing-4) 0 0; }
+#teacher-exam-form { padding: var(--spacing-5); border: 1px solid var(--color-border); border-radius: var(--radius-control); background: var(--color-background); }
+#teacher-exam-catalog { display: grid; gap: var(--spacing-3); }
+.exam-deliveries-scroll .status { white-space: nowrap; }
+.notebook-action-card [role="status"]:empty { display: none; }
+@media (max-width: 620px) {
+  #student-exams, #teacher-exams { padding: var(--spacing-4); }
+  .exam-summary { gap: var(--spacing-3); }
+  .home-grid .button { width: 100%; }
+  #teacher-exam-form { padding: var(--spacing-3); }
+}

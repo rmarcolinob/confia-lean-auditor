@@ -27,6 +27,7 @@ const teacherAnalysisStatus = document.querySelector("#teacher-analysis-status")
 const studentValidationMessage = document.querySelector("#student-validation-message");
 
 let problems = [];
+let problemCatalogState = "loading";
 let studentMode = "study";
 let selectedTeacherSubmission = null;
 let studentVersion = 0;
@@ -104,7 +105,8 @@ function updateStudentAction() {
   const analyzing = studentMode === "study" && studentAuditPending;
   auditButton.disabled = analyzing || !selectedProblem();
   auditButton.setAttribute("aria-busy", String(analyzing));
-  auditButton.textContent = studentMode === "submit"
+  const tutoring = typeof window !== "undefined" && window.ConfIAWorkspace?.experience === "TUTOR";
+  auditButton.textContent = tutoring ? (analyzing ? "Preparando feedback…" : "Pedir feedback") : studentMode === "submit"
     ? "Salvar como envio de demonstração neste navegador"
     : analyzing ? "Analisando…" : studentResultIsStale() ? "Analisar novamente" : "Analisar minha solução";
   if (typeof window !== "undefined") window.ConfIAWorkspace?.display();
@@ -152,6 +154,10 @@ function renderAnalysisContext(panel, context, stale, analyzeAgain) {
 
 function renderStudentAnalysis() {
   if (studentMode !== "study" || (typeof window !== "undefined" && window.ConfIAWorkspace && window.ConfIAWorkspace.mode !== "practice")) return;
+  if (typeof window !== "undefined" && window.ConfIAWorkspace?.experience === "TUTOR") {
+    window.ConfIATutoria?.renderPracticeFeedback(resultPanel, studentAnalysis, studentResultIsStale(), studentAuditPending);
+    return;
+  }
   if (studentAnalysis) {
     const stale = studentResultIsStale();
     const renderKey = `${studentAnalysis.context.sequence}:${stale}:${studentAuditPending}`;
@@ -845,6 +851,7 @@ async function loadProblems() {
     throw new Error("Não foi possível carregar as questões.");
   }
   problems = await response.json();
+  problemCatalogState = "ready";
   renderProblems();
   renderTeacherArea();
   if (typeof window !== "undefined") window.ConfIAWorkspace?.catalogReady();
@@ -916,16 +923,17 @@ async function auditCurrentSolution() {
     return;
   }
   studentAuditContext = context;
+  const tutoring = typeof window !== "undefined" && window.ConfIAWorkspace?.experience === "TUTOR";
   setBusy(true);
-  setStatus(`Analisando a questão ${context.problem_id}`, "busy");
+  setStatus(tutoring ? `Preparando feedback para a questão ${context.problem_id}` : `Analisando a questão ${context.problem_id}`, "busy");
   renderStudentAnalysis();
   try {
-    const data = await requestAnalysis(context);
+    const data = tutoring ? await window.ConfIATutoria.requestFeedback(context) : await requestAnalysis(context);
     if (context.sequence !== studentAuditSequence) return;
     if (typeof window !== "undefined" && window.ConfIAWorkspace) window.ConfIAWorkspace.recordAnalysis({ context, data });
     else studentAnalysis = { context, data };
     renderStudentAnalysis();
-    if (typeof window === "undefined" || !window.ConfIAWorkspace || window.ConfIAWorkspace.owns(context)) setStatus(`Análise concluída para a questão ${context.problem_id}`, "success");
+    if (typeof window === "undefined" || !window.ConfIAWorkspace || window.ConfIAWorkspace.owns(context)) setStatus(tutoring ? `Feedback demonstrativo disponível para a questão ${context.problem_id}` : `Análise concluída para a questão ${context.problem_id}`, "success");
   } catch (error) {
     console.error("ConfIA: análise do aluno", context, error);
     const currentContext = typeof window === "undefined" || !window.ConfIAWorkspace || window.ConfIAWorkspace.owns(context);
@@ -1011,7 +1019,9 @@ teacherAuditButton.addEventListener("click", auditTeacherSubmission);
 
 updateStudentAction();
 loadProblems().catch((error) => {
+  problemCatalogState = "error";
   console.error("ConfIA: carregamento de questões", error);
   renderError("Não foi possível carregar as questões. Atualize a página e tente novamente.");
   setStatus("Questões indisponíveis", "error");
+  if (typeof window !== "undefined") window.ConfIATutoria?.catalogChanged([], true);
 });

@@ -50,18 +50,18 @@ test('only persisted IDs reach bridge; dirty edit disables and discard restores 
   latex.value = '2 + 2 = 4, not saved'; await latex.emit('input');
   assert.equal(action.disabled, true);
   await action.click();
-  await button(ui, 'Descartar alterações não salvas').click();
+  await button(ui, 'Cancelar').click();
   assert.equal(action.disabled, false);
   await action.click();
   assert.deepEqual(body, { transcription_id: transcriptionId, revision_number: 1, acceptance_id: acceptance.acceptance_id });
-  assert.equal(tree(ui).find(n => n.tag === 'textarea' && /LaTeX/.test(n.placeholder)).value, '2 + 2 = 5');
+  assert.equal(tree(ui).find(n => n.tag === 'textarea' && /LaTeX/.test(n.placeholder)).value, '\\[2 + 2 = 5\\]');
   assert.equal(ui.reports.length, 1);
   assert.equal(ui.reports[0].data, run.result);
   assert.equal(ui.reports[0].options.context, 'teacher');
   assert.match(primaryText(panel(ui)), /Concluída.*Erro matemático identificado/);
   assert.match(ui.get('#manuscript-list').textContent, /Análise ConfIA: Concluída/);
   assert.equal(ui.calls.some(call => call.url === '/audit'), false);
-  const evaluation = tree(ui).find(n => n.className === 'teacher-evaluation-panel');
+  const evaluation = tree(ui).find(n => n.className === 'teacher-decision-panel');
   assert.equal(descendants(evaluation).some(n => ['button', 'input'].includes(n.tag)), false);
 });
 
