@@ -106,7 +106,7 @@ async function page({ hash = "", search = "", records = [], authRole = null, tea
       return { ok: true, json: async () => data };
     },
   });
-  for (const file of ['recognition-view.js', 'app.js', 'submissions/decisions.js', 'submissions/teacher.js', 'shell.js']) vm.runInContext(fs.readFileSync(path.join(staticDir, file), 'utf8'), context);
+  for (const file of ['recognition-view.js', 'audit-view.js','app.js', 'submissions/decisions.js', 'submissions/teacher.js', 'shell.js']) vm.runInContext(fs.readFileSync(path.join(staticDir, file), 'utf8'), context);
   await flush();
   const visit = async href => {
     const link = links.find(link => link.inNav && link.getAttribute('href') === href);

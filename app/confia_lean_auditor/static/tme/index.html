@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>ConfIA — Confiabilidade e Explicabilidade</title>
+  <link rel="stylesheet" href="/static/capture/vendor/katex-0.18.9/katex.min.css">
+  <link rel="stylesheet" href="/static/design-system.css?v=ui-01">
+  <link rel="stylesheet" href="/static/audit-view.css?v=workspace-02">
+  <link rel="stylesheet" href="/static/tme/tme.css?v=workspace-02">
+  <link rel="stylesheet" href="/static/tme/home.css?v=home-04">
+</head>
+<body data-view="home">
+  <a class="skip" href="#main">Ir para conteúdo</a>
+  <header class="home-header"><div class="home-brand"><strong>ConfIA</strong><span>Plataforma de<br>correção assistida</span></div><details class="home-avatar"><summary id="evaluator-avatar" aria-label="Perfil do avaliador"></summary><p id="home-session">Avaliador ConfIA</p></details></header>
+  <header class="top">
+    <div class="brand"><strong>ConfIA</strong><span>Confiabilidade e Explicabilidade</span><small>PILOTO ConfIA</small></div>
+    <details class="user-menu"><summary id="session-label">Sessão do avaliador</summary><p id="session-detail" role="status">Verificando sessão…</p><button id="logout" type="button" class="secondary" hidden>Encerrar sessão</button></details>
+  </header>
+  <div class="workspace-shell">
+    <aside id="sidebar" class="sidebar">
+      <button id="sidebar-toggle" type="button" class="secondary" aria-expanded="true" aria-controls="workspace-nav recent-cases" aria-label="Recolher menu">‹</button>
+      <nav id="workspace-nav" aria-label="Correção matemática"><button type="button" data-view="home" aria-label="Início"><span class="nav-symbol" aria-hidden="true">⌂</span><span class="nav-label">Início</span></button><button type="button" data-view="cases" aria-label="Correções" title="Correções"><span class="nav-symbol" aria-hidden="true">≡</span><span class="nav-label">Correções</span></button><button type="button" data-view="new" aria-label="Nova correção" title="Nova correção"><span class="nav-symbol" aria-hidden="true">＋</span><span class="nav-label">Nova correção</span></button><button type="button" data-view="results" aria-label="Resultados" title="Resultados"><span class="nav-symbol" aria-hidden="true">✓</span><span class="nav-label">Resultados</span></button></nav>
+      <section class="recent-cases"><h2>Recentes</h2><div id="recent-cases"></div></section>
+    </aside>
+    <main id="main" tabindex="-1"><div id="app"></div></main>
+  </div>
+  <nav id="home-bottom-nav" class="home-bottom-nav" aria-label="Navegação principal"></nav>
+  <script src="/static/capture/vendor/katex-0.18.9/katex.min.js"></script>
+  <script src="/static/recognition-view.js"></script>
+  <script src="/static/audit-view.js?v=workspace-02"></script>
+  <script src="/static/tme/workspace-controls.js?v=workspace-02"></script>
+  <script src="/static/tme/workspace-report.js?v=workspace-02"></script>
+  <script src="/static/tme/scan-model.js"></script>
+  <script src="/static/tme/home.js?v=home-04"></script>
+  <script src="/static/tme/tme.js?v=home-01"></script>
+</body>
+</html>

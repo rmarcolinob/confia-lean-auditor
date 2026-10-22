@@ -16,8 +16,10 @@ function deferred() {
 function element() {
   return {
     value: "", textContent: "", dataset: {}, hidden: false, disabled: false,
+    height: 180, getBoundingClientRect() { return { height: this.height }; },
     attributes: {}, listeners: {}, children: [],
     classList: { toggle() {} },
+    after(element) { this.nextElement = element; },
     addEventListener(event, handler) { this.listeners[event] = handler; },
     setAttribute(name, value) { this.attributes[name] = value; },
     getAttribute(name) { return this.attributes[name]; },
@@ -72,14 +74,14 @@ async function page(options = {}) {
       mathRenders.push(target.textContent);
       mathContexts.push(presentation);
     } },
-    document: { body: { dataset: {} }, querySelector: getElement, querySelectorAll: () => [], createElement: element },
+    document: { body: { dataset: {}, style: { setProperty(name, value) { this[name] = value; } } }, querySelector: getElement, querySelectorAll: () => [], createElement: element },
     fetch: async (url, init) => {
-      if (options.fetch && url.startsWith("/submissions/")) return options.fetch(url, init);
+      if (options.fetch && (url.startsWith("/submissions/") || url.startsWith("/tme/cases/"))) return options.fetch(url, init);
       if (url === "/static/problem-presentations/registry.json") {
         if (options.registryError) throw new Error("Apresentação indisponível");
         return { ok: true, json: async () => options.registry || [] };
       }
-      assert.equal(url, "/problems");
+      assert.equal(url, options.catalogPath || "/problems");
       return options.catalogResponse || { ok: true, json: async () => options.problems || [{ problem_id: "ITA2025Q1", title: "Questão", statement: "Enunciado" }] };
     },
     addEventListener(name, handler) { events[name] = handler; }, requestAnimationFrame(callback) { callback(); },

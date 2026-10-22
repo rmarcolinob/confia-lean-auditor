@@ -25,6 +25,36 @@ function previewResponse(init) {
   }) };
 }
 
+test("TME notebook completes preview, submission and recognition using only case routes", async () => {
+  const caseId = "case_" + "a".repeat(32);
+  const base = `/tme/cases/${caseId}`;
+  const calls = [], sent = [];
+  const runId = "run_" + "b".repeat(32);
+  const receipt = { submission_id: "sub_" + "c".repeat(32), tme_case_id: caseId,
+    received_at: "2026-10-01T12:00:00Z", problem_id: "ITA2025Q1" };
+  const ui = await page({ embedded: true, catalogPath: "/tme/problems",
+    search: `?embedded=1&tme_case_id=${caseId}&problem_id=ITA2025Q1&submission_target=/submissions`,
+    sender: { async send(snapshot, destination) { sent.push(destination); return receipt; } },
+    fetch: async (url, init) => {
+      calls.push(url);
+      assert.ok(url.startsWith(base), `TME attempted a school API: ${url}`);
+      if (url.endsWith("/recognition-preview")) return previewResponse(init);
+      return { ok: true, json: async () => ({ status: "NEEDS_REVIEW", recognizer_run_id: runId,
+        result: { segments: [{ page_index: 0, order: 0, kind: "text", text: "2 + 2 = 5" }] } }) };
+    },
+  });
+  await ui.recover(inkSnapshot());
+  await ui.command({ action: "configure", problem_id: "ITA2025Q1", mode: "submission", submission_target: "/submissions" });
+  assert.equal(ui.get("#send-solution").disabled, false);
+  await ui.click("send-solution");
+  assert.deepEqual(sent, [`${base}/digital-submission`]);
+  assert.deepEqual(calls, [`${base}/recognize`, `${base}/recognitions/${runId}`]);
+  assert.equal(ui.context.document.body.dataset.tme, "true");
+  assert.match(ui.get("#recognition-message").textContent, /Transcrição automática disponível/);
+  assert.ok(ui.messages.some(message => message.context?.tmeRecognitionFinished));
+  assert.doesNotMatch(ui.get("#submission-message").textContent, /professor/);
+});
+
 test("embedded exam uses the configured item submission route and keeps official recognition separate", async () => {
   const target = `/assessments/asmt_${"a".repeat(32)}/items/ait_${"b".repeat(32)}/submissions`;
   const sent = [];

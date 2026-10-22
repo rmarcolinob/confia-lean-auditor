@@ -50,7 +50,7 @@ async function page(transport = async () => ({ ok: true, json: async () => ({ pr
     },
   });
   context.katex = { render(latex, target) { target.textContent = `rendered:${latex}`; } };
-  for (const file of ['recognition-view.js','app.js','resolution-workspace.js','demo/tutoria-demo-data.js','demo/tutoria-chat-demo.js','tutoria-chat.js','tutoria.js','tutoria-assistant.js','shell.js']) vm.runInContext(fs.readFileSync(path.join(staticDir,file),'utf8'),context);
+  for (const file of ['recognition-view.js','audit-view.js','app.js','resolution-workspace.js','demo/tutoria-demo-data.js','demo/tutoria-chat-demo.js','tutoria-chat.js','tutoria.js','tutoria-assistant.js','shell.js']) vm.runInContext(fs.readFileSync(path.join(staticDir,file),'utf8'),context);
   await flush();
   const notebook = (values = {}) => {
     const current = window.ConfIAWorkspace;
