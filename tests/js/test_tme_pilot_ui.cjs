@@ -7,7 +7,7 @@ const { pilot, walk, text } = require('./tme-dom.cjs');
 
 test('photo states, retry and single transcription remain visible without exposing technical content', async () => {
   const ui = await pilot();
-  assert.match(text(ui.root), /Correções/);
+  assert.match(text(ui.root), /Fila de correções/);
   assert.doesNotMatch(text(ui.root), /TME/);
   await ui.click('Abrir');
   assert.match(text(ui.root), /Aguardando reconhecimento/);
@@ -20,7 +20,7 @@ test('photo states, retry and single transcription remain visible without exposi
   assert.match(text(ui.root), /Transcrição automática disponível/);
 
   assert.match(text(ui.root), /Original.*Transcrição/);
-  assert.deepEqual(ui.rendered, ['x = 2']);
+  assert.deepEqual(ui.rendered.filter(value => value !== 'Enunciado não disponível no catálogo desta questão.'), ['x = 2']);
   assert.doesNotMatch(walk(ui.root).filter(e => e.tag !== "pre").map(e => e.textContent).join(" "), /mixed|PROVIDER_|recognizer_run_id/);
   assert.equal(walk(ui.root).find(e => e.tag === 'button' && e.textContent === 'Analisar com ConfIA').disabled, false);
   assert.doesNotMatch(text(ui.root), /Conferir transcrição/);
@@ -37,6 +37,7 @@ test('adjusting a saved photo recovers original bytes and timestamps and publish
   const upload = ui.calls.find(c => c.url.endsWith('/scan') && c.options.method === 'POST');
   assert.ok(upload);
   assert.ok(!upload.url.includes(ui.snapshot.case_id));
+  assert.equal(ui.window.history.url, '/tme?case_id=' + upload.url.split('/')[3]);
   const page = JSON.parse(upload.options.body).pages[0];
   assert.equal(Buffer.from(page.original_base64, 'base64').toString(), 'original-bytes');
   assert.equal(page.captured_at, ui.acceptedAt);

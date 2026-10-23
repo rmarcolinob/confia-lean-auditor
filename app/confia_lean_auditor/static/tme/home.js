@@ -4,6 +4,12 @@
   const status = c => ({ pending: 'Pendente', in_progress: 'Em andamento', inconclusive: 'Inconclusiva', finalized: 'Finalizada' }[c.operational_status]
     || { IDENTIFIED: 'Pendente', SOURCE_READY: 'Em andamento', DECIDED: 'Finalizada' }[c.status] || 'Não informado');
   const paths = {
+    minus: '<path d="M5 12h14"/>', back: '<path d="M19 12H5m6-6-6 6 6 6"/>',
+    previous: '<path d="m15 6-6 6 6 6"/>', rotate: '<path d="M20 7v5h-5M19.5 12a8 8 0 1 0-2.3 5.7"/>',
+    expand: '<path d="M14 4h6v6M20 4l-7 7M10 20H4v-6M4 20l7-7"/>',
+    collapse: '<path d="M20 4l-7 7m0-6v6h6M4 20l7-7m-6 0h6v6"/>',
+    unknown: '<circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 0 1 5 .5c0 1.5-2.5 2-2.5 3.5M12 17h.01"/>',
+    refuted: '<circle cx="12" cy="12" r="9"/><path d="m9 9 6 6m0-6-6 6"/>',
     document: '<path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/>',
     plus: '<path d="M12 5v14M5 12h14"/>', list: '<path d="M9 6h11M9 12h11M9 18h11M4 6h.01M4 12h.01M4 18h.01"/>',
     chart: '<path d="M4 20h17M7 16V9M12 16V4M17 16v-5"/>', arrow: '<path d="M5 12h14m-6-6 6 6-6 6"/>',
@@ -33,7 +39,7 @@
     const n = el('section', null, 'home-overview'), heading = el('div', null, 'home-section-heading');
     const select = el('select'); select.setAttribute('aria-label', 'Período de criação dos casos');
     for (const [value,label] of [['today','Hoje'],['7d','7 dias'],['30d','30 dias'],['all','Todo o período']]) { const o = el('option',label); o.value=value; select.append(o); } select.value=period; select.addEventListener('change',()=>change(select.value));
-    heading.append(el('h2','Visão geral'),select); const grid=el('div',null,'home-metrics');
+    heading.append(el('h2','Visão geral'),change?select:el('span','Todo o período','home-footnote')); const grid=el('div',null,'home-metrics');
     grid.append(MetricCard('Pendentes',values.pending,'blue','document'),MetricCard('Inconclusivas',values.inconclusive,'yellow','alert'),MetricCard('Finalizadas',values.finalized,'green','check'),MetricCard('Em andamento',values.in_progress,'rose','play'));
     n.append(heading,grid,el('p',period === 'today' ? 'Status atual dos casos criados hoje (Fortaleza).' : period === 'all' ? 'Status atual de todos os casos da sua fila.' : `Status atual dos casos criados nos últimos ${period === '7d' ? 7 : 30} dias (Fortaleza).`,'home-footnote'));
     return n;
@@ -49,16 +55,16 @@
   function sectionLink(label, action) { const n = button(label, action, 'home-text-button'); n.append(icon('chevron')); return n; }
   function PriorityQueue(cases, navigate, open) {
     const n=el('section',null,'home-priority'), list=cases, heading=el('div',null,'home-section-heading'), title=el('h2','Fila prioritária');
-    title.append(el('span',String(list.length),'home-count')); heading.append(title,sectionLink('Ver fila completa',()=>navigate('cases'))); n.append(heading);
+    title.append(el('span',String(list.length),'home-count')); heading.append(title,sectionLink('Ver fila completa',()=>navigate('cases',{}))); n.append(heading);
     if (!list.length) n.append(el('p','Nenhuma correção pendente.','home-empty'),button('Nova correção',()=>navigate('new'),'home-empty-action'));
     else { const rows=el('div',null,'home-case-list'); list.slice(0,3).forEach(c=>rows.append(PriorityCaseRow(c,open))); n.append(rows); } return n;
   }
   function ExamProgressCard(exam,navigate) {
     const n=el('article',null,'home-exam'), heading=el('div',null,'home-exam-heading'), title=el('div'); title.append(el('h3',exam.exam_code),el('span','Questões conhecidas','home-footnote')); heading.append(title,el('strong',`${exam.completed_items}/${exam.known_items}`));
-    const bar=el('progress'); bar.max=exam.known_items; bar.value=exam.completed_items; bar.setAttribute('aria-label',`${exam.exam_code}: ${exam.completed_items} de ${exam.known_items} questões finalizadas`); const open = button(null,()=>navigate('cases'),'home-exam-open'); open.setAttribute('aria-label',`Ver correções da prova ${exam.exam_code}`); n.append(icon('document'),heading,bar,open); return n;
+    const bar=el('progress'); bar.max=exam.known_items; bar.value=exam.completed_items; bar.setAttribute('aria-label',`${exam.exam_code}: ${exam.completed_items} de ${exam.known_items} questões finalizadas`); const open = button(null,()=>navigate('cases',{exam:exam.exam_code}),'home-exam-open'); open.setAttribute('aria-label',`Ver correções da prova ${exam.exam_code}`); n.append(icon('document'),heading,bar,open); return n;
   }
   function ExamProgress(groups,navigate) {
-    const n=el('section',null,'home-progress'), heading=el('div',null,'home-section-heading'); heading.append(el('h2','Progresso por prova'),sectionLink('Ver todas',()=>navigate('cases'))); n.append(heading);
+    const n=el('section',null,'home-progress'), heading=el('div',null,'home-section-heading'); heading.append(el('h2','Progresso por prova'),sectionLink('Ver todas',()=>navigate('exams'))); n.append(heading);
     const grid=el('div',null,'home-exams'); groups.slice(0,2).forEach(exam=>grid.append(ExamProgressCard(exam,navigate)));
     n.append(groups.length?grid:el('p','Suas provas aparecerão aqui ao criar uma correção.','home-empty')); return n;
   }
@@ -107,7 +113,7 @@
     else n.append(OverviewMetrics(summary.counts,period,changePeriod),PriorityQueue(summary.priority_cases,navigate,open),ExamProgress(summary.exam_progress,navigate));
     return n;
   }
-  const api={status,TmeHome,HomeHeader,MobileBottomNav,PriorityCaseRow};
+  const api={icon,status,TmeHome,HomeHeader,MobileBottomNav,PriorityCaseRow,StatusPill,MetricCard,OverviewMetrics,PrimaryCorrectionCTA};
   if(typeof module!=='undefined' && module.exports) module.exports=api;
   root.ConfiaTmeHome=api;
 })(typeof window==='undefined'?globalThis:window);

@@ -4,11 +4,49 @@
   const state = { cases: [], current: null, history: null, audit: null, photos: [], message: "",
     feedback: null, busy: false, adjusting: false, cache: new Map(), view: "home", homePeriod: "today", generation: 0, filters: { cases: {}, results: {} } };
   const Home = window.ConfiaTmeHome;
-  function navigate(view) {
-    if (state.busy) return;
-    window.scrollTo(0, 0); document.querySelector("#main")?.scrollTo?.(0, 0);
-    return Promise.resolve(view === "home" ? home() : view === "new" ? newCase() : view === "results" ? results() : cases()).catch(showError);
+  const Workspace = window.ConfiaCorrectionWorkspace;
+  const Views = window.ConfiaTmeViews;
+  const viewNames = {home:"home",queue:"cases",cases:"cases",new:"new",results:"results",exams:"exams"};
+  let currentURL = "", returnTo = {view:"cases",params:{}};
+  function locationRoute() {
+    const query = new URLSearchParams(window.location.search || "");
+    if(query.get("case_id")) return {view:"workspace",caseId:query.get("case_id")};
+    const params={};for(const key of ["search","question","status","source","exam","page"]) if(query.get(key))params[key]=query.get(key);
+    return {view:viewNames[query.get("view")] || "home",params};
   }
+  function writeRoute(view, params={}, caseId=null, replace=false) {
+    const query=new URLSearchParams();
+    if(caseId) query.set("case_id",caseId);
+    else { if(view!=="home")query.set("view",view==="cases"?"queue":view);for(const key of ["search","question","status","source","exam","page"])if(params[key]&&!(key==="page"&&String(params[key])==="1"))query.set(key,params[key]); }
+    const url="/tme"+(query.toString()?`?${query}`:"");
+    const changed=url!==currentURL;
+    if(changed || replace)window.history?.[replace?"replaceState":"pushState"]?.({tme:true,origin:returnTo},"",url);
+    currentURL=url;
+    return changed;
+  }
+  const route = id => writeRoute("workspace",{},id);
+  function navigate(view, params, record=true) {
+    if(state.busy)return;
+    view=viewNames[view] || "home";
+    if(view==="cases"||view==="exams"){
+      state.filters[view]=params ? {...params} : {...(state.filters[view]||{})};
+      params=state.filters[view];
+    }else params={};
+    if(record && !writeRoute(view,params) && state.view===view && state.navigationPending)return state.navigationPending;
+    window.scrollTo(0,0);document.querySelector("#main")?.scrollTo?.(0,0);
+    const pending=Promise.resolve(view==="home"?home():view==="new"?newCase():listing(view)).catch(showError)
+      .finally(()=>{if(state.navigationPending===pending)state.navigationPending=null;});
+    state.navigationPending=pending;return pending;
+  }
+  async function restoreRoute(){
+    const target=locationRoute();
+    if(state.busy){window.history?.replaceState?.({tme:true,origin:returnTo},"",currentURL);return;}
+    currentURL="/tme"+(window.location.search||"");
+    returnTo=window.history?.state?.origin||{view:"cases",params:{}};
+    if(target.caseId)return openCase(target.caseId,false).catch(showError);
+    return navigate(target.view,target.params,false);
+  }
+  window.addEventListener("popstate",restoreRoute);
   async function home() {
     state.view = "home";
     const generation = ++state.generation;
@@ -52,7 +90,7 @@
   const problemLabel = p => `${p.problem_id || p.id} · ${p.title || p.name || "Questão"}`;
   async function refreshCases() {
     if (!state.caseRequest) state.caseRequest = api("/tme/cases").finally(() => { state.caseRequest = null; });
-    state.cases = await state.caseRequest;
+    state.cases = await state.caseRequest; state.casesLoaded = true;
   }
   const local = c => {
     if (!state.cache.has(c.case_id)) state.cache.set(c.case_id, { page: 0, zoom: 1, rotation: 0, tab: "original", draft: {}, editors: {}, audits: null, history: null, decision: undefined, detail: null, feedback: null });
@@ -71,7 +109,7 @@
       const indicator = node("span", "", "case-dot"); indicator.dataset.status = caseStatus(c); indicator.setAttribute("aria-hidden", "true");
       item.append(indicator, node("span", c.external_candidate_ref, "recent-code"), node("span", questionNumber(c) ? `Q${questionNumber(c)}` : c.problem_id, "recent-question")); recent.appendChild(item);
     }
-    for (const link of document.querySelectorAll("nav [data-view]")) link.setAttribute("aria-current", link.dataset.view === state.view ? "page" : "false");
+    for (const link of document.querySelectorAll("nav [data-view]")) link.setAttribute("aria-current", link.dataset.view === (state.view === "exams" ? "results" : state.view === "workspace" ? "cases" : state.view) ? "page" : "false");
   }
   const origin = c => c.source_mode === "IMAGE_SCAN" ? "Foto / scan" : "Escrita digital";
   const runFor = c => {
@@ -102,100 +140,89 @@
     }
     return saved;
   }
-  async function cases(resultsOnly = false) {
-    state.view = resultsOnly ? "results" : "cases";
-    const generation = ++state.generation;
-    show(loading("Carregando correções…"));
-    await refreshCases();
-    // Bounded reads; the queue reuses case data already loaded in this session.
-    for (let i = 0; i < state.cases.length; i += 4) await Promise.all(state.cases.slice(i, i + 4).map(c => loadCaseData(c).catch(() => { local(c).loadError = true; })));
-    if (generation !== state.generation) return;
-    const box = card(resultsOnly ? "Resultados" : "Correções"); box.classList.add("queue");
-    const search = node("input"); search.type = "search"; search.placeholder = "Buscar código da prova";
-    const select = (label, values) => { const el = node("select"); for (const value of ["", ...values]) { const option = node("option", value || "Todos"); option.value = value; el.appendChild(option); } return [field(label, el), el]; };
-    const [questionField, question] = select("Questão", [...new Set(state.cases.map(c => c.problem_id))]);
-    const [statusField, status] = select("Status", [...new Set(state.cases.map(caseStatus))]);
-    const [originField, source] = select("Origem", ["Foto / scan", "Escrita digital"]);
-    const remembered = state.filters[state.view];
-    search.value = remembered.search || "";
-    for (const [key, control] of [["question", question], ["status", status], ["source", source]]) {
-      if (remembered[key] && !Array.from(control.children).some(option => option.value === remembered[key])) { const option = node("option", remembered[key]); option.value = remembered[key]; control.appendChild(option); }
-      control.value = remembered[key] || "";
-    }
-    const filters = node("div", undefined, "queue-filters"); filters.append(field("Código da prova", search), questionField, statusField, originField);
-    const mobileQueue = node("div", undefined, "mobile-queue");
-    const tableWrap = node("div", undefined, "queue-scroll"), table = node("table"), head = node("thead"), heading = node("tr"), body = node("tbody");
-    table.appendChild(node("caption", "Fila de correções do avaliador"));
-    for (const title of ["Código", "Questão", "Origem", "Status", "Sugestão", "Atualização"]) { const th = node("th", title); th.setAttribute("scope", "col"); heading.appendChild(th); }
-    head.appendChild(heading); table.append(head, body); tableWrap.appendChild(table);
-    const count = note("");
-    const update = () => {
-      Object.assign(remembered, { search: search.value, question: question.value, status: status.value, source: source.value });
-      body.replaceChildren(); mobileQueue.replaceChildren();
-      const selected = state.cases.filter(c => (!resultsOnly || caseStatus(c) === "Finalizada") && (!question.value || c.problem_id === question.value) && (!status.value || caseStatus(c) === status.value) && (!source.value || origin(c) === source.value) && c.external_candidate_ref.toLowerCase().includes(search.value.toLowerCase()));
-      count.textContent = `${selected.length} ${selected.length === 1 ? "correção" : "correções"}`;
-      for (const c of selected) {
-        const saved = local(c), run = runFor(c), row = node("tr"), first = node("td");
-        const open = btn(c.external_candidate_ref, () => openCase(c.case_id).catch(showError), "secondary"); open.setAttribute("aria-label", `Abrir correção ${c.external_candidate_ref}`); first.appendChild(open); row.appendChild(first);
-        const date = saved.decision?.decided_at || run?.created_at || saved.history?.revisions.at(-1)?.created_at || c.created_at;
-        for (const value of [c.problem_id, origin(c), saved.loadError ? "Dados indisponíveis" : caseStatus(c), run?.result?.score == null ? "Não determinada" : `${run.result.score} / ${run.result.max_score}`, date ? new Date(date).toLocaleString("pt-BR") : "—"]) row.appendChild(node("td", value));
-        body.appendChild(row);
-        const mobileRow = Home.PriorityCaseRow(c, id => openCase(id).catch(showError));
-        const statusPill = Array.from(mobileRow.children).find(n => n.className === "home-status");
-        statusPill.textContent = caseStatus(c); statusPill.dataset.status = caseStatus(c);
-        mobileRow.setAttribute("aria-label", `Abrir correção ${c.external_candidate_ref} · ${c.problem_id} · ${caseStatus(c)}`);
-        mobileQueue.appendChild(mobileRow);
-      }
-    };
-    for (const control of [search, question, status, source]) control.addEventListener(control === search ? "input" : "change", update);
-    box.append(actions(btn("Atualizar fila", () => { for (const cached of state.cache.values()) cached.loaded = false; cases(resultsOnly).catch(showError); }, "secondary")), filters, count, tableWrap, mobileQueue); update(); show(box);
+  async function listing(view) {
+    state.view=view;const generation=++state.generation;
+    const isQueue=view==="cases",isExams=view==="exams",values=state.filters[view]||{};
+    const title=isQueue?(values.exam?`Questões da prova ${Workspace.displayExamName(values.exam)}`:"Fila de correções"):isExams?"Progresso por prova":"Resultados";
+    const subtitle=isQueue?"Acompanhe, filtre e continue suas correções.":isExams?"Acompanhe a situação das questões de cada prova.":"Acompanhe o andamento das correções do piloto.";
+    const box=Views.Page(title,subtitle),content=node("div",undefined,"tme-page-content");content.append(Views.Loading());box.append(content);show(box);
+    const reload=()=>listing(view),change=(key,value)=>navigate(view,{...values,[key]:value,page:1});
+    const query=new URLSearchParams({view:isQueue?"queue":view,size:"50",...values});
+    try {
+      const [data,summary]=await Promise.all([api(`/tme/cases?${query}`),isQueue?api("/tme/home-summary?period=all"):Promise.resolve(null)]);
+      if(generation!==state.generation)return;
+      content.replaceChildren();
+      if(isQueue){const cta=Home.PrimaryCorrectionCTA(summary.priority_cases,id=>openCase(id).catch(showError),"success");cta.classList.add("tme-next");box.heading.append(cta);}
+      if(isQueue||isExams){
+        content.append(Views.Filters(values,data.questions,change,reload,isExams));
+        if(values.exam)content.append(btn("Todas as provas",()=>navigate("exams"),"home-text-button"));
+        content.append(data.items.length?(isQueue?Views.QueueRows(data.items,id=>openCase(id).catch(showError)):Views.Exams(data.items,navigate)):Views.Empty(isQueue?"Nenhuma correção encontrada.":"Nenhuma prova disponível."));
+        content.append(Views.Pagination(data,page=>navigate(view,{...values,page})));
+      }else content.append(Views.Results(data,navigate));
+    }catch(_){if(generation!==state.generation)return;content.replaceChildren(Views.ErrorState(isQueue?"Não foi possível carregar a fila.":isExams?"Não foi possível carregar o progresso das provas.":"Não foi possível carregar os resultados.",reload));}
   }
-  const results = () => cases(true);
+  const cases=()=>navigate("cases");
   const showError = () => show(note("Não foi possível carregar esta etapa. Tente novamente.", true), actions(btn("Correções", () => cases().catch(showError))));
   async function newCase() {
-    state.view = "new"; ++state.generation;
-    const box = card("Nova correção"); const form = node("form");
+    state.view = "new"; const generation=++state.generation;
+    const box = Views.Page("Nova correção","Localize uma prova e escolha a forma de entrada da solução."); const form = node("form",undefined,"tme-new-form");
+    const skeleton=Views.Loading();box.append(skeleton);show(box);
     const select = node("select"); select.required = true;
     const placeholder = node("option", "Selecione uma questão"); placeholder.value = ""; select.appendChild(placeholder);
     try { for (const p of await api("/tme/problems")) { const option = node("option", problemLabel(p)); option.value = p.problem_id || p.id; select.appendChild(option); } }
-    catch (error) { box.appendChild(note(error.message, true)); }
+    catch (_) { if(generation===state.generation){box.replaceChildren(box.heading,Views.ErrorState("Não foi possível carregar as questões.",newCase));}return; }
+    if(generation!==state.generation)return;
+    box.replaceChildren(box.heading);
     const code = node("input"); code.required = true; code.maxLength = 80; code.pattern = "[A-Za-z0-9._:/-]+"; code.autocomplete = "off"; code.placeholder = "Ex.: PROVA-2026-0001";
-    form.append(field("Questão", select), field("Código da prova / participante", code), node("p", "Use um código pseudônimo; não informe o nome do participante.", "muted"));
-    form.appendChild(node("h2", "Como deseja inserir a solução?"));
+    form.append(field("Código da prova", code), field("Questão", select), node("p", "Use um código pseudônimo; não informe o nome do participante.", "muted"));
+    form.appendChild(node("h2", "Forma de entrada"));
     const choices = node("div", undefined, "choice-row"); let mode = null;
-    for (const [name, value] of [["Fotografar solução", "IMAGE_SCAN"], ["Escrever no tablet", "DIGITAL_INK"]]) {
-      const choice = btn(name, () => { mode = value; for (const item of choices.children) item.classList.toggle("selected", item === choice); }, "choice"); choices.appendChild(choice);
+    for (const [name, value] of [["Foto / scan", "IMAGE_SCAN"], ["Escrever no tablet", "DIGITAL_INK"]]) {
+      const choice = btn(name, () => { mode = value; for (const item of choices.children) { item.classList.toggle("selected", item === choice);item.setAttribute("aria-pressed",String(item===choice)); } }, "choice"); choice.setAttribute("aria-pressed","false");choice.prepend(Home.icon(value==="IMAGE_SCAN"?"camera":"tablet"));choices.appendChild(choice);
     }
-    form.append(choices, actions(btn("Continuar", async () => {
-      if (!form.reportValidity()) return;
+    const continueButton=btn("Continuar", async () => {
+      if (state.busy || !form.reportValidity()) return;
       if (!mode) { error.textContent = "Escolha uma forma de entrada."; return; }
-      try { const c = await post("/tme/cases", { problem_id: select.value, external_candidate_ref: code.value.trim(), source_mode: mode }); await openCase(c.case_id); }
+      state.busy=true;continueButton.disabled=true;
+      try { const c = await post("/tme/cases", { problem_id: select.value, external_candidate_ref: code.value.trim(), source_mode: mode }); state.busy=false;await openCase(c.case_id); }
       catch (e) { error.textContent = e.message; }
-    }))); const error = node("p", "", "field-error"); form.appendChild(error); box.appendChild(form); show(box);
+      finally {state.busy=false;continueButton.disabled=false;}
+    }); const error = node("p", "", "field-error");error.setAttribute("role","alert");form.append(choices,actions(continueButton),error);form.addEventListener("submit",event=>{event.preventDefault();continueButton.click();});box.appendChild(form); show(box);
   }
   function steps(active) {
     const list = node("ol", undefined, "steps"); list.setAttribute("aria-label", "Progresso da correção");
     ["Entrada", "Transcrição", "Análise", "Decisão"].forEach((label, i) => {
-      const item = node("li", label, i === active ? "active" : ""); if (i === active) item.setAttribute("aria-current", "step"); list.appendChild(item);
+      const item = node("li", label, i === active ? "active" : ""); item.dataset.state=i<active?"complete":i===active?"current":"upcoming"; if (i === active) item.setAttribute("aria-current", "step"); list.appendChild(item);
     }); return list;
   }
   function context(c, active) {
-    const header = node("header", undefined, "case-context");
-    const status = node("span", caseStatus(c), "status");
-    status.dataset.kind = caseStatus(c) === "Finalizada" ? "success" : ["Inconclusiva", "Falha técnica"].includes(caseStatus(c)) ? "pending" : "info";
-    header.append(node("h1", `Prova ${c.external_candidate_ref} · ${questionNumber(c) ? `Questão ${questionNumber(c)}` : c.problem_id} · ${origin(c)}`), status, steps(active)); return header;
+    return Workspace.CorrectionHeader({ c, cases: state.cases, status: item => item.case_id === c.case_id || local(item).loaded || item.status === "DECIDED" ? caseStatus(item) : "Disponível",
+      open: id => { if (!state.busy) openCase(id).catch(showError); }, back: () => navigate(returnTo.view,returnTo.params), steps, active, busy: state.busy });
   }
-  async function openCase(caseId) {
+  async function loadWorkspaceContext() {
+    if (!state.problemRequest) state.problemRequest = api("/tme/problems").catch(() => { state.problemRequest = null; return []; });
+    if (!state.presentationRequest) state.presentationRequest = api("/static/problem-presentations/registry.json").catch(() => { state.presentationRequest = null; return []; });
+    const [problems, presentations] = await Promise.all([state.problemRequest, state.presentationRequest, state.casesLoaded ? Promise.resolve() : refreshCases().catch(() => {})]);
+    state.problems = problems; state.presentations = Array.isArray(presentations) ? presentations : [];
+  }
+  async function openCase(caseId, record=true) {
+    if (state.busy) return;
+    if(record){if(state.view!=="workspace")returnTo={view:state.view==="new"?"cases":state.view,params:{...(state.filters[state.view]||{})}};route(caseId);}
     state.view = "workspace"; const generation = ++state.generation;
+    show(loading("Carregando solução…")); window.scrollTo(0,0);
     const c = await api(`/tme/cases/${caseId}`);
     if (generation !== state.generation) return;
     if (state.current?.case_id !== caseId) { for (const photo of state.photos) URL.revokeObjectURL(photo.url); state.photos = []; }
     state.current = c; state.message = ""; state.adjusting = false; state.feedback = local(c).feedback;
+    await loadWorkspaceContext();
+    if (generation !== state.generation) return;
     if (!c.submission_id) return c.source_mode === "IMAGE_SCAN" ? renderScan() : renderInk();
-    await loadCaseData(c); if (generation === state.generation) await renderCorrection();
+    try { await loadCaseData(c); if (generation === state.generation) await renderCorrection(); }
+    catch (_) { if (generation === state.generation) show(context(c,0),note("Não foi possível carregar a solução. Seus dados permanecem preservados."),actions(btn("Tentar novamente",()=>openCase(caseId).catch(showError)))); }
   }
   function renderInk() {
     const c = state.current, box = card("Escrever no tablet");
+    box.classList.add("tme-entry-panel");
     box.append(node("p", `${c.external_candidate_ref} · ${c.problem_id}`, "muted"));
     const frame = node("iframe", undefined, "frame"); frame.title = "Caderno de escrita digital ConfIA";
     frame.src = `/tme/cases/${c.case_id}/capture?embedded=1&tme_case_id=${encodeURIComponent(c.case_id)}&problem_id=${encodeURIComponent(c.problem_id)}&submission_target=${encodeURIComponent(`/tme/cases/${c.case_id}/digital-submission`)}`;
@@ -219,7 +246,7 @@
     state.message = "Confira a página e selecione Usar esta página."; renderScan();
   }
   function renderScan() {
-    const c = state.current, box = card("Fotografar solução"); box.append(node("p", `${c.external_candidate_ref} · ${c.problem_id}`),
+    const c = state.current, box = card("Fotografar solução"); box.classList.add("tme-entry-panel");box.append(node("p", `${c.external_candidate_ref} · ${c.problem_id}`),
       node("p", "Fotografe a folha inteira, evite sombras, mantenha a câmera paralela ao papel e confira se a escrita está legível.", "muted"));
     box.appendChild(scanStatus("WAITING"));
     if (state.adjusting) box.appendChild(note("Ao continuar, será criada uma nova correção com as páginas ajustadas. Esta versão e seus originais ficam preservados."));
@@ -266,7 +293,7 @@
       if (state.adjusting) {
         c = await post("/tme/cases", { problem_id: c.problem_id,
           external_candidate_ref: c.external_candidate_ref, source_mode: "IMAGE_SCAN" });
-        state.current = c; state.adjusting = false;
+        state.current = c; state.adjusting = false; route(c.case_id);
       }
       await post(`/tme/cases/${c.case_id}/scan`, { pages });
       state.current = await api(`/tme/cases/${c.case_id}`);
@@ -324,22 +351,27 @@
     if (state.current?.case_id === c.case_id && state.view === "workspace") await renderCorrection();
   }
   function manuscriptPage(c, index) {
+    const saved = local(c); saved.originalPages ||= new Map();
+    if (saved.originalPages.has(index)) return saved.originalPages.get(index);
     const page = node("div", undefined, "page-review"); page.appendChild(node("h3", `Página ${index + 1}`));
     const originalUrl = c.source_mode === "IMAGE_SCAN" ? `/tme/cases/${c.case_id}/originals/${index}` : `/tme/cases/${c.case_id}/pages/${index}`;
     const img = node("img"); img.src = originalUrl; img.alt = `Manuscrito original da página ${index + 1}`;
+    const imageState = note("Carregando solução…"); page.appendChild(imageState);
+    img.onload = () => { imageState.hidden = true; saved.updateOriginal?.(); };
+    img.draggable = false;
     img.onerror = () => {
-      img.onerror = null;
+      img.onerror = () => { imageState.hidden = false; imageState.textContent = "Não foi possível carregar a solução."; };
       if (c.source_mode === "IMAGE_SCAN") {
         img.src = `/tme/cases/${c.case_id}/pages/${index}`; img.alt = `Prévia normalizada da página ${index + 1}`;
         page.appendChild(node("p", "Este navegador exibe a prévia normalizada. O original continua preservado.", "muted"));
       }
     };
-    page.appendChild(img);
+    const surface=node("div",undefined,"manuscript-surface"); surface.appendChild(img); page.appendChild(surface);
     if (c.source_mode === "IMAGE_SCAN") {
       const link = node("a", "Abrir original preservado"); link.href = originalUrl; link.target = "_blank"; link.rel = "noopener";
       page.appendChild(link);
     }
-    return page;
+    saved.originalPages.set(index, page); return page;
   }
   function loading(message) {
     const box = node("div", undefined, "processing-state"); box.appendChild(note(message));
@@ -349,46 +381,69 @@
   async function renderCorrection() {
     const c = state.current, saved = await loadCaseData(c);
     if (state.current !== c || state.view !== "workspace") return;
-    state.history = saved.history;
+    state.history = saved.history; root.dataset.decisionState=saved.decision?"finalized":"active";
     const latest = saved.history?.revisions.at(-1), run = runFor(c);
     const layout = node("div", undefined, "correction-workspace"), solution = card(), right = node("aside", undefined, "analysis-column");
     solution.classList.add("solution-panel"); solution.id = "solution-pane"; right.id = "analysis-pane"; right.setAttribute("aria-label", "Análise ConfIA");
-    const solutionHeading = node("header", undefined, "pane-header"); solutionHeading.appendChild(node("h2", "SOLUÇÃO DO PARTICIPANTE"));
+    const solutionHeading = node("header", undefined, "pane-header"); solutionHeading.appendChild(node("h2", "Solução do participante"));
+    const expandSolution = btn("⤢", () => { saved.solutionExpanded=!saved.solutionExpanded;updateExpanded(); }, "secondary expand-solution");
+    const updateExpanded=()=>{layout.dataset.solutionExpanded=String(Boolean(saved.solutionExpanded));const label=saved.solutionExpanded?"Restaurar análise":"Expandir solução";expandSolution.setAttribute("aria-label",label);expandSolution.title=label;expandSolution.replaceChildren(window.ConfiaTmeHome.icon(saved.solutionExpanded?"collapse":"expand"));expandSolution.setAttribute("aria-expanded",String(Boolean(saved.solutionExpanded)));};
+    expandSolution.setAttribute("aria-controls","solution-pane analysis-pane");updateExpanded();solutionHeading.appendChild(expandSolution);
     const tabs = node("div", undefined, "solution-tabs"), views = node("div", undefined, "solution-views"); views.id = "solution-views"; views.setAttribute("role", "tabpanel"); views.tabIndex = 0;
     tabs.setAttribute("aria-label", "Visualização da solução"); tabs.setAttribute("role", "tablist");
     const original = node("section", undefined, "original-document"), transcript = node("section", undefined, "transcript-document");
     original.setAttribute("aria-label", "Original"); transcript.setAttribute("aria-label", "Transcrição");
     const pages = [...new Set([...(saved.detail?.submission?.page_images || []).map(p => p.page_index), ...(latest?.segments || []).map(s => s.page_index)])].sort((a,b) => a-b);
     const pageNodes = pages.map(index => manuscriptPage(c, index)); original.append(...pageNodes);
+    Workspace.attachPan(original,saved);
+    if (!pages.length) original.appendChild(note("Nenhuma página original disponível."));
     saved.page = Math.min(saved.page, Math.max(0, pages.length - 1));
     const pagination = node("span", "", "page-position");
     const updatePages = () => {
-      pageNodes.forEach((page, i) => { page.hidden = i !== saved.page; const img = page.querySelectorAll("img")[0]; img.style.transform = `scale(${saved.zoom}) rotate(${saved.rotation}deg)`; });
+      pageNodes.forEach((page, i) => { page.hidden = i !== saved.page; const img = page.querySelectorAll("img")[0]; Workspace.layoutOriginal(page,img,original,saved); });
+      fit.value=Workspace.originalFitMode(saved);
       pagination.textContent = `${Math.round(saved.zoom * 100)}% · Página ${pages.length ? saved.page + 1 : 0}/${pages.length}`;
     };
-    const toolbar = actions(btn("Zoom −", () => { saved.zoom = Math.max(.5, saved.zoom - .25); updatePages(); }, "secondary"), pagination,
-      btn("Zoom +", () => { saved.zoom = Math.min(3, saved.zoom + .25); updatePages(); }, "secondary"),
+    saved.updateOriginal = updatePages;
+    const resetFit = mode => { saved.fitMode=mode; saved.zoom=1; delete saved.customWidth; original.scrollTop=0; original.scrollLeft=0; updatePages(); };
+    const manualZoom = delta => {
+      if(Workspace.originalFitMode(saved)!=="custom") saved.customWidth=parseFloat(pageNodes[saved.page]?.querySelectorAll("img")[0]?.style.width)||0;
+      saved.fitMode="custom";saved.zoom=Math.max(.5,Math.min(3,saved.zoom+delta));updatePages();
+    };
+    const toolbar = actions(btn("Zoom −", () => manualZoom(-.25), "secondary"), pagination,
+      btn("Zoom +", () => manualZoom(.25), "secondary"),
       btn("Anterior", () => { saved.page = Math.max(0, saved.page - 1); updatePages(); }, "secondary"),
       btn("Próxima", () => { saved.page = Math.min(Math.max(0, pages.length - 1), saved.page + 1); updatePages(); }, "secondary"),
-      btn("Rotacionar", () => { saved.rotation = (saved.rotation + 90) % 360; updatePages(); }, "secondary"));
+      btn("Rotacionar", () => { saved.rotation = (saved.rotation + 90) % 360; if(Workspace.isDesktop()) resetFit("page"); else updatePages(); }, "secondary"));
+    for (const [control,label,symbol] of [[toolbar.children[0],"Zoom −","minus"],[toolbar.children[2],"Zoom +","plus"],[toolbar.children[3],"Anterior","previous"],[toolbar.children[4],"Próxima","chevron"],[toolbar.children[5],"Rotacionar","rotate"]]) { control.replaceChildren(window.ConfiaTmeHome.icon(symbol));control.setAttribute("aria-label",label);control.title=label; }
+    const fit = node("select",undefined,"viewer-fit");fit.setAttribute("aria-label","Ajuste da solução");
+    for(const [value,label] of [["page","Ajustar à página"],["width","Ajustar à largura"],["custom","Zoom manual"]]) {const option=node("option",label);option.value=value;option.disabled=value==="custom";fit.appendChild(option);}
+    fit.value=Workspace.originalFitMode(saved);
+    fit.addEventListener("change",()=>{if(fit.value!=="custom") resetFit(fit.value);});
+    toolbar.appendChild(fit);
     toolbar.classList.add("viewer-commands"); toolbar.setAttribute("aria-label", "Comandos do original"); updatePages();
     const editor = node("div", undefined, "transcription-editor"); editor.hidden = !saved.editing;
     const documentView = node("div"); documentView.hidden = Boolean(saved.editing);
     if (latest) {
       for (const index of pages) {
-        const text = latest.segments.filter(s => s.page_index === index).sort((a,b) => a.order-b.order).map(s => s.text || s.latex || "").join("\n\n");
+        const segments = latest.segments.filter(s => s.page_index === index).sort((a,b) => a.order-b.order);
+        const text = segments.map(s => s.text || s.latex || "").join("\n\n");
         const doc = node("div", undefined, "document"); doc.setAttribute("role", "document"); doc.setAttribute("aria-label", `Transcrição da página ${index + 1}`);
-        window.ConfiaRecognitionView.renderMathText(doc, text); documentView.appendChild(doc);
+        for (const segment of segments) { const block = node("div"); window.ConfiaRecognitionView.renderMathText(block, segment.text || segment.latex || "", !segment.text && Boolean(segment.latex) || segment.kind === "math"); doc.appendChild(block); } documentView.appendChild(doc);
         const area = node("textarea"); area.value = saved.editors[index] ?? text; area.addEventListener("input", () => { saved.editors[index] = area.value; });
         editor.appendChild(field(`Editar página ${index + 1}`, area));
       }
       editor.append(note("Cada salvamento cria uma revisão. Preserve a matemática escrita pelo participante."), actions(btn("Salvar nova revisão", () => saveRevision(c, editor)), btn("Cancelar edição", () => { saved.editing = false; editor.hidden = true; documentView.hidden = false; }, "secondary")));
-    } else documentView.appendChild(note("A transcrição aparecerá após o reconhecimento automático."));
+    } else documentView.appendChild(note(saved.processing === "recognition" ? "Reconhecendo solução…" : saved.feedback?.state === "FAILED" ? "Falha de reconhecimento. Isso não indica erro na solução do participante." : "Reconhecimento não concluído. A transcrição aparecerá após o reconhecimento automático."));
     transcript.append(documentView, editor);
+    let transcriptionStatus, metadata;
     const setTab = value => {
-      saved.tab = value; original.hidden = value === "transcript"; transcript.hidden = value === "original"; toolbar.hidden = value === "transcript";
+      saved.tab = value; solution.dataset.tab=value; layout.dataset.solutionTab=value; original.dataset.layout=value==="original"?"full-page":"bounded"; original.hidden = value === "transcript"; transcript.hidden = value === "original"; toolbar.hidden = value === "transcript";
+      if(transcriptionStatus) transcriptionStatus.hidden=value!=="transcript" || Boolean(latest);
+      if(metadata) metadata.hidden=value!=="transcript";
       views.classList.toggle("compare", value === "compare"); views.setAttribute("aria-labelledby", `tab-${value}`);
       for (const button of tabs.children) { button.setAttribute("aria-selected", String(button.dataset.tab === value)); button.tabIndex = button.dataset.tab === value ? 0 : -1; }
+      updatePages();
     };
     for (const [value, label] of [["original", "Original"], ["transcript", "Transcrição"], ["compare", "Comparar"]]) {
       const button = btn(label, () => setTab(value), "secondary"); button.id = `tab-${value}`; button.dataset.tab = value; button.setAttribute("role", "tab"); button.setAttribute("aria-controls", "solution-views");
@@ -402,13 +457,21 @@
     const secondary = actions(); secondary.classList.add("transcript-commands");
     if (latest) secondary.append(btn("Editar", () => { saved.editing = true; editor.hidden = false; documentView.hidden = true; setTab("transcript"); }, "secondary"), btn("Reprocessar", recognize, "secondary"));
     for (const button of secondary.children) button.disabled = state.busy;
-    solutionHeading.appendChild(secondary);
-    const provenance = node("details", undefined, "transcription-metadata"); provenance.appendChild(node("summary", latest ? "Transcrição automática · metadados" : "Originais e histórico"));
+    transcript.prepend(secondary);
+    const provenance = node("details", undefined, "transcription-metadata"); provenance.appendChild(node("summary", "Originais e histórico"));
+    if(c.source_mode==="IMAGE_SCAN") for(const index of pages) {const link=node("a",`Abrir original preservado · página ${index+1}`,"desktop-original-link");link.href=`/tme/cases/${c.case_id}/originals/${index}`;link.target="_blank";link.rel="noopener";provenance.appendChild(link);}
     const meta = saved.history?.transcription;
     if (meta) provenance.appendChild(node("p", `${meta.provider || meta.recognizer || "Provider não registrado"} · ${meta.recognizer_version || "Versão não registrada"} · ${meta.created_at ? new Date(meta.created_at).toLocaleString("pt-BR") : "Horário não registrado"}`));
     if (c.source_mode === "IMAGE_SCAN") { const adjust = btn("Voltar e ajustar páginas", adjustPages, "secondary"); adjust.disabled = state.busy; provenance.appendChild(adjust); }
     const technical = node("details", undefined, "technical-details"); technical.append(node("summary", "Detalhes técnicos da transcrição"), node("pre", JSON.stringify({ transcription: saved.history, recognition: saved.feedback }, window.ConfIAReport.publicTechnicalValue, 2))); provenance.appendChild(technical);
-    solution.append(solutionHeading, tabs, toolbar, views, provenance);
+    transcriptionStatus = node("p", saved.processing === "recognition" ? "Reconhecendo solução…" : latest ? "Transcrição disponível" : saved.feedback?.state === "FAILED" ? "Falha de reconhecimento" : "Reconhecimento não concluído", "transcription-status"); transcriptionStatus.setAttribute("role","status");
+    const provider = meta?.provider || meta?.recognizer || meta?.source;
+    metadata = node("p", undefined,"transcription-caption");
+    const compactCaption=node("span",latest?`Transcrição automática${provider?` · ${/^mathpix/i.test(provider)?"Mathpix":provider}`:""} · revisão ${latest.revision_number}`:"As páginas originais permanecem preservadas.","caption-compact");
+    metadata.append(compactCaption);
+    setTab(saved.tab);
+    const topline=node("div",undefined,"solution-topline");topline.append(solutionHeading,tabs);
+    solution.append(topline, transcriptionStatus, metadata, toolbar, views, provenance);
     const analysis = node("section", undefined, "analysis-panel"), analysisHeading = node("header", undefined, "pane-header"); analysisHeading.appendChild(node("h2", "ANÁLISE CONFIA"));
     const analysisBody = node("div"); analysisBody.id = "analysis-content"; analysisBody.hidden = Boolean(saved.analysisCollapsed);
     const collapse = btn(saved.analysisCollapsed ? "Expandir análise" : "Recolher análise", () => {
@@ -424,22 +487,38 @@
     } else if (!saved.processing) analysisBody.appendChild(note("Reconheça a solução e analise para consultar critérios, evidências e verificações."));
     const openDrawer = btn("Abrir análise", () => drawer(true), "secondary drawer-trigger"); openDrawer.setAttribute("aria-controls", "analysis-pane");
     const closeDrawer = btn("Fechar análise", () => { drawer(false); openDrawer.focus(); }, "secondary drawer-close");
-    const drawer = open => { saved.drawerOpen = open; right.dataset.open = String(open); openDrawer.setAttribute("aria-expanded", String(open)); if (open) closeDrawer.focus(); };
+    const drawer = open => { saved.drawerOpen = open; right.dataset.open = String(open); openDrawer.setAttribute("aria-expanded", String(open)); if (open) { right.scrollIntoView({block:"start",behavior:"smooth"}); closeDrawer.focus(); } };
     right.dataset.open = String(Boolean(saved.drawerOpen)); openDrawer.setAttribute("aria-expanded", String(Boolean(saved.drawerOpen)));
     right.addEventListener("keydown", event => { if (event.key === "Escape") { drawer(false); openDrawer.focus(); } });
     right.append(closeDrawer, analysis);
     const divider = node("div", undefined, "pane-splitter"); layout.append(solution, divider, right); window.ConfiaWorkspaceControls.attachSplitter(layout, divider);
     const decisionBox = decisionPanel(c, saved, run?.status === "COMPLETED" && (!run.stale || saved.decision) ? run : null);
     const actionbar = node("div", undefined, "workspace-actions");
-    const progress = saved.processing === "audit" ? "Analisando matemática · executando verificações…" : saved.processing === "recognition" ? "Reconhecendo solução…" : state.message || (run ? "Análise concluída." : latest ? "Transcrição automática disponível." : saved.feedback?.state === "FAILED" ? saved.feedback.message : "Aguardando reconhecimento");
+    const progress = saved.processing === "audit" ? "Analisando matemática · executando verificações…" : saved.processing === "recognition" ? "Reconhecendo solução…" : state.message || (run?.status === "FAILED" ? "Não foi possível concluir a análise matemática." : run ? "Análise concluída." : latest ? "Transcrição automática disponível." : saved.feedback?.state === "FAILED" ? saved.feedback.message : "Aguardando reconhecimento");
     actionbar.appendChild(note(progress));
+    actionbar.dataset.quiet=String(!state.message && !saved.processing && run?.status==="COMPLETED" && !run.stale);
     let primary;
     if (!latest) primary = btn(saved.feedback?.state === "FAILED" ? "Tentar novamente" : "Reconhecer", recognize);
     else if (!run || run.stale || run.status === "FAILED") primary = btn("Analisar com ConfIA", audit);
     if (primary) { primary.disabled = state.busy; actionbar.appendChild(primary); }
     if (saved.processing === "recognition") actionbar.appendChild(loading("Reconhecendo…"));
     const heading = context(c, saved.decision ? 3 : run ? 2 : latest ? 1 : 0); heading.appendChild(openDrawer);
-    show(heading, layout, actionbar, decisionBox);
+    const problem = state.problems?.find(p => (p.problem_id || p.id) === c.problem_id);
+    const statement = Workspace.ProblemStatement(problem,saved,state.presentations);
+    show(heading, statement, layout, actionbar, decisionBox);
+    let sticky;
+    const updateClearance=()=>Workspace.reserveDecisionSpace(root,decisionBox,sticky);
+    saved.resizeObserver?.disconnect();
+    if (window.ResizeObserver) { saved.resizeObserver=new window.ResizeObserver(()=>{updatePages();statement.updateStatementLayout();updateClearance();});saved.resizeObserver.observe(original);saved.resizeObserver.observe(statement.richContent);saved.resizeObserver.observe(decisionBox); }
+    updatePages(); statement.updateStatementLayout();
+    if (!saved.decision) {
+      sticky = node("div", undefined, "correction-action-bar"); sticky.setAttribute("aria-label","Ação da correção");
+      if (primary) { const action = btn(primary.textContent,()=>primary.click()); action.disabled=state.busy; sticky.append(node("span",saved.processing ? "Processando…" : latest ? "Transcrição disponível" : "Solução preservada"),action); }
+      else { sticky.append(node("span",run?.result?.score == null ? "Sugestão não determinada" : `Sugestão ${String(run.result.score).replace(".",",")}`,"sticky-suggestion"),btn("Ajustar",()=>saved.adjustDecision(),"secondary"),btn("Finalizar",()=>saved.submitDecision())); }
+      for(const control of sticky.querySelectorAll("button")) control.disabled=state.busy;
+      root.appendChild(sticky);saved.resizeObserver?.observe(sticky);
+    }
+    updateClearance();
   }
   async function saveRevision(c, editor) {
     if (state.busy) return;
@@ -462,49 +541,79 @@
     if (!latest) return;
     state.busy = true; saved.processing = "audit"; await renderCorrection();
     try {
-      let accepted = history.acceptances.find(a => a.revision_number === latest.revision_number);
-      // Existing integrity receipt binds the exact revision. No human-review claim.
-      if (!accepted) {
-        const receipt = await post(`/tme/cases/${c.case_id}/transcriptions/${history.transcription.transcription_id}/accept`, { revision_number: latest.revision_number, reviewer_identity_verified: false, acceptance_note: "Vinculação automática da revisão para análise a pedido do avaliador; sem conferência humana obrigatória." });
-        accepted = receipt.acceptance; history.acceptances.push(accepted);
-      }
+      const accepted = await ensureAcceptance(c, history, latest);
       const run = await post(`/tme/cases/${c.case_id}/audits`, { transcription_id: history.transcription.transcription_id, revision_number: latest.revision_number, acceptance_id: accepted.acceptance_id });
       saved.audits = [run, ...(saved.audits || []).filter(r => r.audit_run_id !== run.audit_run_id)]; state.message = run.status === "COMPLETED" ? "Análise concluída." : "Não foi possível concluir a análise matemática.";
     } catch (_) { state.message = "Não foi possível concluir a análise matemática. A solução permanece preservada; tente novamente."; }
     finally { state.busy = false; saved.processing = null; }
     if (state.current === c && state.view === "workspace") await renderCorrection();
   }
+  async function ensureAcceptance(c, history, latest) {
+    let accepted = history.acceptances.find(a => a.revision_number === latest.revision_number);
+    if (!accepted) {
+      const receipt = await post(`/tme/cases/${c.case_id}/transcriptions/${history.transcription.transcription_id}/accept`, { revision_number: latest.revision_number, reviewer_identity_verified: false, acceptance_note: "Vinculação automática da revisão para análise ou decisão a pedido do avaliador; sem conferência humana obrigatória." });
+      accepted = receipt.acceptance; history.acceptances.push(accepted);
+    } return accepted;
+  }
+  async function nextCorrection(c) {
+    if (state.busy) return;
+    const summary = await api("/tme/home-summary?period=all");
+    const next = summary.priority_cases.find(item => item.case_id !== c.case_id);
+    if (next) return openCase(next.case_id);
+    await cases(); root.prepend(note("Não há outra correção pendente na fila."));
+  }
   function decisionPanel(c, saved, run) {
-    const box = node("section", undefined, "decision-bar"); box.setAttribute("aria-label", "Decisão do avaliador");
+    const box = node("section", undefined, "decision-bar"); box.setAttribute("aria-label", "Decisão do avaliador"); box.id="evaluator-decision";
+    box.appendChild(node("h2","Decisão do avaliador"));
     const suggestion = node("div", undefined, "decision-suggestion"); suggestion.append(node("span", "Sugestão ConfIA", "quiet-label"), node("strong", run?.result?.score == null ? "Não determinada" : `${String(run.result.score).replace(".", ",")} / ${run.result.max_score}`)); box.appendChild(suggestion);
-    if (saved.decision) { box.append(node("strong", `Pontuação final do avaliador: ${saved.decision.final_points} / ${saved.decision.max_points}`), node("span", "Finalizada", "status")); const detail = node("details"); detail.append(node("summary", "Observação registrada"), node("p", saved.decision.feedback || "Sem comentário.")); box.appendChild(detail); return box; }
+    if (saved.decision) {
+      const success=note("Correção registrada");success.classList.add("decision-success");
+      box.append(success,node("strong", `Pontuação final do avaliador: ${saved.decision.final_points} / ${saved.decision.max_points}`), node("span", "Finalizada", "status"));
+      const detail = node("details"); detail.append(node("summary", "Observação registrada"), node("p", saved.decision.feedback || "Sem comentário.")); box.append(detail,actions(btn("Corrigir próxima",()=>nextCorrection(c).catch(showError)),btn("Voltar para fila",()=>navigate("cases"),"secondary")));return box;
+    }
     const form = node("form"), controls = {}, extras = node("details", undefined, "decision-observation"); extras.open = Boolean(saved.observationOpen);
     const observationFields = node("div", undefined, "observation-fields");
     extras.append(node("summary", "Adicionar observação"), observationFields); extras.addEventListener("toggle", () => { saved.observationOpen = extras.open; });
+    const expected = () => run?.result?.score == null || !Number(run?.result?.max_score) ? null : Math.round((run.result.score / run.result.max_score * Number(controls.max.value) + Number.EPSILON) * 100) / 100;
+    const reveal = () => { extras.open=true; saved.observationOpen=true; };
+    // Mirrors audit_snapshot's existing eligibility; technical failures never
+    // create a compulsory override reason that the server does not require.
+    const result=run?.result;
+    const suggestionEligible=result && result.rubric_assessment?.assessment_status!=="indeterminate" && !(result.rubric_assessment?.items||[]).some(item=>item.verification_status==="technical_error") && !(result.microclaims||[]).some(item=>item.verification_status==="technical_error") && result.pedagogical_report?.verification_status!=="technical_error";
+    const validateReason = () => { const value=expected();const differs=suggestionEligible && value!==null && controls.final.value!=="" && Number(controls.final.value)!==value;controls.reason.required=differs;if(differs)reveal(); };
     for (const [name, label] of [["max", "Pontuação máxima"], ["final", "Pontuação final"], ["feedback", "Justificativa / devolutiva"], ["reason", "Motivo para divergir da sugestão"]]) {
-      const input = node(["max", "final"].includes(name) ? "input" : "textarea"); controls[name] = input; input.name = name;
+      const input = node(["max", "final"].includes(name) ? "input" : "textarea"); controls[name] = input; input.name = name; if(name==="final") input.placeholder="—";
       if (["max", "final"].includes(name)) { input.type = "number"; input.min = name === "max" ? "0.01" : "0"; input.max = "1000"; input.step = "0.01"; input.required = true; }
+      else input.maxLength=name==="reason"?2000:10000;
       input.value = saved.draft[name] ?? (name === "max" ? String(run?.result?.max_score || 10) : "");
-      input.addEventListener("input", () => { saved.draft[name] = input.value; });
+      input.addEventListener("input", () => { saved.draft[name] = input.value; validateReason(); });
       (name === "final" ? form : observationFields).appendChild(field(label, input));
     }
-    const use = btn("Usar sugestão", () => { if (run?.result?.score != null) { controls.final.value = String(run.result.score); saved.draft.final = controls.final.value; controls.final.focus(); } }, "secondary"); use.disabled = state.busy || run?.result?.score == null;
+    validateReason();
+    const use = btn("Usar sugestão", () => { if (expected() != null) { controls.final.value = String(expected()); saved.draft.final = controls.final.value; validateReason(); controls.final.focus(); } }, "secondary"); use.disabled = state.busy || run?.result?.score == null;
+    const adjust = btn("Ajustar", () => { reveal(); controls.final.focus(); box.scrollIntoView({block:"center",behavior:"smooth"}); }, "secondary ghost"); saved.adjustDecision=()=>adjust.click();
     const error = note(""); error.classList.add("decision-error");
     const submit = btn("Finalizar correção", async () => {
       if (state.busy) return;
-      if (!controls.max.checkValidity()) { extras.open = true; controls.max.reportValidity(); return; }
+      if (!controls.max.checkValidity()) { reveal(); controls.max.reportValidity(); return; }
       if (!controls.final.reportValidity()) return;
       if (Number(controls.final.value) > Number(controls.max.value)) { error.textContent = "A pontuação final não pode superar a máxima."; return; }
-      state.busy = true; submit.disabled = true; use.disabled = true;
+      validateReason();
+      if (controls.reason.required && !controls.reason.value.trim()) { reveal(); controls.reason.focus(); controls.reason.scrollIntoView({block:"center"}); error.textContent="Informe o motivo para divergir da sugestão ConfIA."; return; }
+      if (!saved.history?.revisions.length) { error.textContent="Reconheça a solução para vincular a decisão à transcrição preservada."; return; }
+      state.busy = true; submit.disabled = true; use.disabled = true; adjust.disabled=true;
       try {
+        await ensureAcceptance(c,saved.history,saved.history.revisions.at(-1));
         saved.decision = await post(`/tme/cases/${c.case_id}/decision`, { audit_run_id: run?.audit_run_id || null, max_points: Number(controls.max.value), final_points: Number(controls.final.value), feedback: controls.feedback.value, override_reason: controls.reason.value.trim() || null });
-        saved.draft = {}; state.message = "Decisão registrada.";
-      } catch (_) { extras.open = true; error.textContent = "Não foi possível registrar a decisão. Confira a justificativa e tente novamente."; }
-      finally { state.busy = false; submit.disabled = false; use.disabled = run?.result?.score == null; }
+        saved.draft = {}; state.message = "Correção registrada."; c.status="DECIDED";
+      } catch (_) { reveal(); error.textContent = "Não foi possível registrar a decisão. Confira a justificativa e tente novamente."; }
+      finally { state.busy = false; submit.disabled = false; use.disabled = run?.result?.score == null; adjust.disabled=false; }
       if (saved.decision && state.current === c && state.view === "workspace") await renderCorrection();
-    }, run ? "" : "secondary"); submit.disabled = state.busy;
-    form.addEventListener("submit", event => { event.preventDefault(); submit.click(); }); form.append(use, extras, submit, error); box.appendChild(form); return box;
+    }, run ? "" : "secondary"); submit.disabled = state.busy; adjust.disabled=state.busy;
+    saved.submitDecision=()=>{box.scrollIntoView({block:"center",behavior:"smooth"});return submit.click();};
+    form.addEventListener("submit", event => { event.preventDefault(); submit.click(); }); form.append(use, adjust, extras, submit, error); box.appendChild(form); return box;
   }
+  if(document.body)document.body.dataset.tmeShell="modern";
   Home.HomeHeader();
   const bottomNav = document.querySelector("#home-bottom-nav");
   if (bottomNav) Home.MobileBottomNav(bottomNav, navigate);
@@ -531,5 +640,8 @@
       logout.addEventListener("click", async () => { const response = await fetch("/auth/logout", { method: "POST", credentials: "same-origin" }); if (response.ok) window.location.assign("/auth"); else detail.textContent = "Não foi possível encerrar a sessão."; });
     } catch (_) { if (detail) detail.textContent = "Sessão do piloto · acesso conforme configuração do servidor"; }
   })();
-  home();
+  currentURL="/tme"+(window.location.search||"");
+  returnTo=window.history?.state?.origin||returnTo;
+  window.history?.replaceState?.({tme:true,origin:returnTo},"",currentURL);
+  restoreRoute();
 })();

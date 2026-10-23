@@ -52,10 +52,10 @@ test('optional editing publishes a new revision and preserves unsaved decision',
 
 test('queue filters, context, progress and null score remain explicit', async () => {
   const ui = await pilot({ auditRun: run() });
-  assert.match(text(ui.root), /Código.*Questão.*Origem.*Status.*Sugestão.*Atualização/);
-  const search = walk(ui.root).find(n => n.type === 'search'); search.value = 'absent'; search.handlers.input(); assert.match(text(ui.root), /0 correções/);
-  search.value = 'PROVA'; search.handlers.input(); await ui.click('Abrir');
-  assert.match(text(ui.root), /Prova PROVA-1 · Questão 1 · Foto \/ scan/);
+  assert.match(text(ui.root), /Prova.*Questão.*Origem.*Status.*Sugestão ConfIA.*Atualização/);
+  const search = walk(ui.root).find(n => n.type === 'search'); search.value = 'absent'; search.handlers.change(); await flush(); assert.match(text(ui.root), /Nenhuma correção encontrada/);
+  const currentSearch=walk(ui.root).find(n=>n.type==='search');currentSearch.value = 'PROVA'; currentSearch.handlers.change(); await flush();await ui.click('Abrir');
+  assert.match(text(ui.root), /Prova 1.*Questão 1.*Foto \/ scan/);
   const steps = walk(ui.root).find(n => n.className === 'steps');
   assert.deepEqual(steps.children.map(n => n.textContent), ['Entrada', 'Transcrição', 'Análise', 'Decisão']);
   assert.equal(steps.children[2].attributes['aria-current'], 'step');
@@ -83,11 +83,11 @@ test('splitter supports pointer capture, keyboard bounds, reset and persisted wi
   assert.equal(layout.style['--solution-share'], '64%');
   const keydown = key => handle.handlers.keydown({ key, preventDefault() {} });
   keydown('ArrowLeft'); assert.equal(ui.storage.get(key), '62');
-  keydown('Home'); keydown('ArrowLeft'); assert.equal(ui.storage.get(key), '40');
-  keydown('End'); keydown('ArrowRight'); assert.equal(ui.storage.get(key), '75');
+  keydown('Home'); keydown('ArrowLeft'); assert.equal(ui.storage.get(key), '45');
+  keydown('End'); keydown('ArrowRight'); assert.equal(ui.storage.get(key), '70');
   handle.handlers.pointerdown({ button: 0, pointerId: 1, preventDefault() {} });
   handle.handlers.pointermove({ clientX: 570 });
-  assert.equal(handle.attributes['aria-valuenow'], '57'); assert.equal(ui.storage.get(key), '75');
+  assert.equal(handle.attributes['aria-valuenow'], '57'); assert.equal(ui.storage.get(key), '70');
   handle.handlers.pointerup(); assert.equal(Math.round(Number(ui.storage.get(key))), 57);
   await ui.nav[0].click(); await flush(); await ui.click('Abrir');
   handle = walk(ui.root).find(n => n.className === 'pane-splitter');
@@ -155,20 +155,15 @@ test('suggestion action distinguishes a valid zero from an undetermined score', 
   assert.equal(walk(pending.root).find(n => n.className === 'decision-observation').open, false);
 });
 
-test('queue filters and sidebar preference survive navigation independently of results filters', async () => {
-  const ui = await pilot({ auditRun: run(), initialStorage: [['confia.correction.sidebar-collapsed', 'true']] });
-  assert.equal(ui.shell['sidebar-toggle'].attributes['aria-expanded'], 'false');
-  const search = walk(ui.root).find(n => n.type === 'search'); search.value = 'PROVA'; search.handlers.input();
-  const selects = walk(ui.root).filter(n => n.tag === 'select');
-  selects[0].value = 'ITA2025F2Q1'; selects[0].handlers.change();
-  selects[2].value = 'Foto / scan'; selects[2].handlers.change();
-  await ui.click('Abrir'); await ui.nav[2].click(); await flush();
-  assert.equal(walk(ui.root).find(n => n.type === 'search').value, '');
-  await ui.nav[0].click(); await flush();
-  assert.equal(walk(ui.root).find(n => n.type === 'search').value, 'PROVA');
-  assert.deepEqual(walk(ui.root).filter(n => n.tag === 'select').map(n => n.value), ['ITA2025F2Q1', '', 'Foto / scan']);
-  await ui.shell['sidebar-toggle'].click(); assert.equal(ui.storage.get('confia.correction.sidebar-collapsed'), 'false');
-  assert.ok(walk(ui.shell['recent-cases']).some(n => n.attributes['aria-label']?.includes('PROVA-1')));
+test('queue filters survive modern results navigation independently of workspace state', async () => {
+  const ui = await pilot({auditRun:run()});
+  const search=walk(ui.root).find(n=>n.type==='search');search.value='PROVA';search.handlers.change();await flush();
+  let selects=walk(ui.root).filter(n=>n.tag==='select');selects[0].value='ITA2025F2Q1';selects[0].handlers.change();await flush();
+  selects=walk(ui.root).filter(n=>n.tag==='select');selects[2].value='IMAGE_SCAN';selects[2].handlers.change();await flush();
+  await ui.click('Abrir');await ui.nav[2].click();await flush();assert.match(text(ui.root),/Distribuição atual/);
+  await ui.nav[0].click();await flush();
+  assert.equal(walk(ui.root).find(n=>n.type==='search').value,'PROVA');
+  assert.deepEqual(walk(ui.root).filter(n=>n.tag==='select').map(n=>n.value),['ITA2025F2Q1','','IMAGE_SCAN']);
 });
 
 test('analysis drawer opens, retains decision draft and closes with Escape restoring focus', async () => {

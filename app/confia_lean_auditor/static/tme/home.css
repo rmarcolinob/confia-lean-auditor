@@ -1,31 +1,4 @@
-/* TME visual tokens. Reuse these in the next workspace; no parallel theme.
-   CSS media queries cannot consume var(): mobile <=767, tablet 768–1099,
-   desktop >=1100; compact fallbacks <=389 and <=359. */
-:root {
-  --confia-navy: #0B2F6B; --confia-blue: #0867D9; --confia-blue-dark: #0751AE;
-  --confia-blue-light: #EAF4FF; --confia-surface: #FFFFFF; --confia-bg: #FBFDFF;
-  --confia-text: #10254D; --confia-muted: #587099; --confia-border: #E5ECF5;
-  --confia-green: #13B76A; --confia-yellow: #F5B51B; --confia-red: #F05252;
-  --confia-green-light: #E9FBF3; --confia-yellow-light: #FFF7DE; --confia-rose-light: #FFF0F1;
-  --confia-green-ink: #147346; --confia-yellow-ink: #795B0C; --confia-rose-ink: #A33645;
-  --confia-radius: 20px; --confia-shadow: 0 8px 24px rgb(22 65 120 / 6%);
-  --confia-space-sm: var(--spacing-2); --confia-space-md: var(--spacing-4); --confia-space-lg: var(--spacing-6); --confia-space-section: var(--spacing-6);
-  --confia-control-height: var(--control-height); --confia-bottom-height: 74px; --confia-content-max: 1280px;
-  --confia-space-xs: var(--spacing-1); --confia-space-xl: var(--spacing-7);
-  --confia-radius-sm: 12px; --confia-radius-md: 16px; --confia-radius-cta: 22px;
-  --confia-font-xs: 11px; --confia-font-sm: 12px; --confia-font-caption: 13px;
-  --confia-font-body: 14px; --confia-font-label: 15px; --confia-font-input: 16px;
-  --confia-font-card-title: 17px; --confia-font-progress: 19px; --confia-font-cta-small: 21px;
-  --confia-font-brand: 32px; --confia-font-hero: 36px; --confia-font-hero-desktop: 38px;
-  --confia-font-hero-tablet: 34px; --confia-font-hero-small: 30px;
-  --confia-shadow-cta: 0 8px 20px rgb(8 103 217 / 14%);
-  --confia-font-section: 22px; --confia-font-value: 26px;
-  --confia-shadow-hover: 0 9px 26px rgb(22 65 120 / 10%);
-  --confia-blue-disc: #DCEEFF; --confia-yellow-disc: #FFF0BC;
-  --confia-green-disc: #CCF6E2; --confia-rose-disc: #FFDEE2;
-  --confia-blue-line: #9CBFE5; --confia-progress-end: #60A9F3;
-  --confia-cta-start: #0872E5; --confia-cta-end: #0756BA;
-}
+/* Shared tokens are defined in tme-theme.css; Home geometry is unchanged. */
 .home-icon { display: inline-flex; flex-shrink: 0; align-items: center; justify-content: center; width: 24px; height: 24px; }
 .home-icon svg { display: block; width: 100%; height: 100%; }
 .home-header { display: none; }
@@ -140,7 +113,7 @@ body[data-view="home"] .home-header { display: flex; }
 .home-status[data-status="Finalizada"] { color: var(--confia-green-ink); background: var(--confia-green-light); }
 .home-exam-heading > div { min-width: 0; }
 .home-exam .home-footnote { font-size: var(--confia-font-xs); display: block; line-height: 1.2; margin-top: 5px; }
-.home-primary, .home-action, .home-case, .home-text-button, .home-bottom-nav button { transition: transform 160ms ease, box-shadow 160ms ease, background-color 160ms ease; }
+.home-primary, .home-action, .home-case, .home-text-button, .home-bottom-nav button { transition: transform var(--confia-motion-fast), box-shadow var(--confia-motion-fast), background-color var(--confia-motion-fast); }
 .home-primary:active:not(:disabled), .home-action:active, .home-case:active { transform: scale(.99); }
 @media (hover: hover) and (pointer: fine) {
   .home-primary:hover:not(:disabled), .home-action:hover, .home-case:hover { transform: translateY(-1px); box-shadow: var(--confia-shadow-hover); }

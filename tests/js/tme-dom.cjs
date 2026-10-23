@@ -7,6 +7,7 @@ const Scan = require('../../app/confia_lean_auditor/static/tme/scan-model.js');
 const { flush } = require('./capture-dom.cjs');
 function element(tag) {
   return { tag, children: [], style: { setProperty(name, value) { this[name] = value; } }, dataset: {}, attributes: {}, handlers: {}, textContent: '', className: '', value: '',
+    prepend(...items) { this.children.unshift(...items); },
     append(...items) { this.children.push(...items); }, appendChild(item) { this.append(item); return item; },
     replaceChildren(...items) { this.children = items; },
     addEventListener(event, handler) { this.handlers[event] = handler; },
@@ -23,8 +24,8 @@ function walk(root) { return [root, ...root.children.flatMap(walk)]; }
 function text(root) { return walk(root).map(e => e.textContent).join(' '); }
 const json = data => ({ ok: true, json: async () => data });
 
-async function pilot({ auditRun = null, mode = 'IMAGE_SCAN', automatic = false, pendingAudit = false, initialStorage = [], pageCount = 1, startHome = false, homeCases = null, homeSummary = null, homeError = false } = {}) {
-  const root = element('main'), calls = [], rendered = [], reports = [];
+async function pilot({ auditRun = null, mode = 'IMAGE_SCAN', automatic = false, pendingAudit = false, initialStorage = [], pageCount = 1, startHome = false, desktop = false, homeCases = null, homeSummary = null, homeError = false, deepLink = false, catalog = null, presentationError = false, decisionError = false, initialSearch = null, listingError = false } = {}) {
+  const root = element('main'), calls = [], rendered = [], reports = [], statements = [];
   let existingDecision = null, revisionNumber = 1, editedText = 'x = 2', accepted = Boolean(auditRun) && !pendingAudit, hasAudit = Boolean(auditRun) && !pendingAudit;
   let current = { case_id: 'case_' + 'a'.repeat(32), source_mode: mode,
     submission_id: 'sub_' + 'b'.repeat(32), problem_id: 'ITA2025F2Q1', external_candidate_ref: 'PROVA-1' };
@@ -34,8 +35,9 @@ async function pilot({ auditRun = null, mode = 'IMAGE_SCAN', automatic = false, 
   const shell = Object.fromEntries(['sidebar-toggle', 'sidebar', 'session-label', 'session-detail', 'logout', 'recent-cases', 'home-bottom-nav', 'evaluator-avatar', 'home-session'].map(id => [id, element('div')]));
   shell['sidebar-toggle'].attributes['aria-expanded'] = 'true';
   const nav = ['cases', 'new', 'results', 'home'].map(view => { const el = element('button'); el.dataset.view = view; return el; });
+  const events = {};
   const ctx = { console, document: { body: element('body'), querySelector: selector => selector === '#app' ? root : shell[selector.slice(1)], querySelectorAll: () => nav, createElement: element },
-    Blob, File, URL: { createObjectURL: () => 'blob:preserved', revokeObjectURL() {} },
+    URLSearchParams, Blob, File, URL: { createObjectURL: () => 'blob:preserved', revokeObjectURL() {} },
     FileReader: class { readAsDataURL(file) { file.arrayBuffer().then(bytes => { this.result = 'data:image/png;base64,' + Buffer.from(bytes).toString('base64'); this.onload(); }); } },
     createImageBitmap() {},
     fetch: async (url, options = {}) => {
@@ -44,11 +46,12 @@ async function pilot({ auditRun = null, mode = 'IMAGE_SCAN', automatic = false, 
       if (url === '/auth/me') return json({ display_name: 'Avaliador de teste' });
       if (url.endsWith('/audits')) { if (options.method === 'POST') { hasAudit = true; return json(auditRun); } return json(hasAudit ? [auditRun] : []); }
       if (url.endsWith('/decision')) {
+        if (options.method === 'POST' && decisionError) throw new Error('internal error');
         if (options.method === 'POST') existingDecision = { ...JSON.parse(options.body), decided_at: acceptedAt };
         return json(existingDecision);
       }
       if (url === '/tme/cases' && options.method === 'POST') {
-        current = { ...current, case_id: 'case_' + 'c'.repeat(32), submission_id: null };
+        current = { ...current, ...JSON.parse(options.body), case_id: 'case_' + 'c'.repeat(32), submission_id: null };
         return json(current);
       }
       if (url.startsWith('/tme/home-summary?')) {
@@ -61,8 +64,20 @@ async function pilot({ auditRun = null, mode = 'IMAGE_SCAN', automatic = false, 
           generated_at:acceptedAt,
         });
       }
+      if (url.startsWith('/tme/cases?')) {
+        if(listingError||homeError)throw new Error('private stack trace');
+        const q=new URLSearchParams(url.split('?')[1]), view=q.get('view');
+        let items=(homeCases||[current]).map(c=>({...c,exam_code:c.external_candidate_ref,operational_status:c.operational_status||(c.status==='DECIDED'?'finalized':hasAudit&&auditRun?.result?.score==null?'inconclusive':c.submission_id?'in_progress':'pending'),suggested_score:auditRun?.result?.score,max_score:auditRun?.result?.max_score,suggestion_available:hasAudit,updated_at:acceptedAt}));
+        const questions=[...new Set(items.map(c=>c.problem_id))];
+        if(view==='results') {const counts={pending:0,in_progress:0,inconclusive:0,finalized:0},groups={};for(const c of items){counts[c.operational_status]++;const g=groups[c.problem_id]||={problem_id:c.problem_id,pending:0,in_progress:0,inconclusive:0,finalized:0};g[c.operational_status]++;}return json({summary:{counts},questions:Object.values(groups)});}
+        items=items.filter(c=>(!q.get('exam')||c.exam_code===q.get('exam'))&&(!q.get('question')||c.problem_id===q.get('question'))&&(!q.get('source')||c.source_mode===q.get('source'))&&(!q.get('status')||c.operational_status===q.get('status'))&&c.exam_code.toLowerCase().includes((q.get('search')||'').toLowerCase()));
+        if(view==='exams'){const groups={};for(const c of items)(groups[c.exam_code]||=[]).push(c);items=Object.entries(groups).map(([exam_code,questions])=>({exam_code,questions,known_items:questions.length,completed_items:questions.filter(c=>c.operational_status==='finalized').length,latest_update:acceptedAt}));}
+        const total=items.length,size=Number(q.get('size')||50),page=Math.min(Number(q.get('page')||1),Math.max(1,Math.ceil(total/size)));
+        return json({items:items.slice((page-1)*size,page*size),total,page,size,questions});
+      }
       if (url === '/tme/cases') { if (homeError) throw new Error('private stack trace'); return json(homeCases || [current]); }
-      if (url === '/tme/problems') return json([{ problem_id: 'ITA2025F2Q1', title: 'Questão 1' }]);
+      if (url === '/static/problem-presentations/registry.json') { if(presentationError) throw new Error('unavailable'); return json(JSON.parse(fs.readFileSync(path.join(__dirname, '../../app/confia_lean_auditor/static/problem-presentations/registry.json'), 'utf8'))); }
+      if (url === '/tme/problems') return json(catalog || [{ problem_id: 'ITA2025F2Q1', title: 'Questão 1' }]);
       if (url.endsWith('/scan-manifest')) return json({ pages: [{ index: 0, original_mime: 'image/png', captured_at: acceptedAt, rotation_degrees: 90 }] });
       if (url.endsWith('/originals/0')) return { ok: true, blob: async () => new Blob(['original-bytes'], { type: 'image/png' }) };
       if (url.endsWith('/scan') && options.method === 'POST') { current.submission_id = 'sub_' + 'd'.repeat(32); return json({ submission_id: current.submission_id }); }
@@ -86,24 +101,34 @@ async function pilot({ auditRun = null, mode = 'IMAGE_SCAN', automatic = false, 
       if (url.endsWith('/transcriptions/tr_demo')) return json({ transcription: { transcription_id: 'tr_demo' }, revisions: [revision],
         acceptances: accepted ? [{ revision_number: revisionNumber, acceptance_id: auditRun?.acceptance_id || 'accept_auto' }] : [] });
       if (url === base) return json({ ...current });
+      const sibling = homeCases?.find(c => url === `/tme/cases/${c.case_id}`); if(sibling) return json({...sibling});
       throw new Error('Unexpected route: ' + url);
     },
   };
   const storage = new Map(initialStorage);
   ctx.window = { localStorage: { getItem: key => storage.get(key), setItem: (key, value) => storage.set(key, value) }, ConfiaTMEScan: { ...Scan, derive: async () => ({ derived_png_base64: 'ZGVyaXZlZA==', derived_width: 10, derived_height: 20 }) },
     ConfiaRecognitionView: { renderMathText(node, content) { node.textContent = content; rendered.push(content); } },
-    scrollTo() {}, addEventListener() {}, location: { origin: 'http://test' } };
+    ConfiaProblemMath: { renderContent(node,source,options) { node.textContent=source;statements.push({source,options}); } },
+    matchMedia: () => ({ matches: desktop }),
+    scrollTo() {}, addEventListener(name,fn) { events[name]=fn; }, location: { origin: 'http://test', search: initialSearch ?? (deepLink ? `?case_id=${current.case_id}` : '') }, history: {} };
+  const historyEntries=[];let historyIndex=-1;
+  const history=ctx.window.history;
+  const applyHistory=entry=>{history.url=entry.url;history.state=entry.state;ctx.window.location.search=entry.url.includes('?')?'?'+entry.url.split('?')[1]:'';};
+  history.replaceState=(state,_title,url)=>{if(historyIndex<0)historyIndex=0;historyEntries[historyIndex]={state,url};applyHistory(historyEntries[historyIndex]);};
+  history.pushState=(state,_title,url)=>{historyEntries.splice(historyIndex+1);historyEntries.push({state,url});historyIndex++;applyHistory(historyEntries[historyIndex]);};
+  history.back=async()=>{if(historyIndex>0){historyIndex--;applyHistory(historyEntries[historyIndex]);await events.popstate?.();await flush();}};
+  history.forward=async()=>{if(historyIndex<historyEntries.length-1){historyIndex++;applyHistory(historyEntries[historyIndex]);await events.popstate?.();await flush();}};
   vm.runInNewContext(fs.readFileSync(path.join(__dirname, '../../app/confia_lean_auditor/static/audit-view.js'), 'utf8'), ctx);
-  for (const file of ['workspace-controls.js', 'workspace-report.js', 'home.js']) vm.runInNewContext(fs.readFileSync(path.join(__dirname, '../../app/confia_lean_auditor/static/tme/' + file), 'utf8'), ctx);
+  for (const file of ['workspace-controls.js', 'workspace-report.js', 'home.js', 'correction-workspace.js', 'secondary-views.js']) vm.runInNewContext(fs.readFileSync(path.join(__dirname, '../../app/confia_lean_auditor/static/tme/' + file), 'utf8'), ctx);
   const render = ctx.window.ConfIAReport.render;
   ctx.window.ConfIAReport.render = (data, target, options) => {
     reports.push({ data, target, options }); return render(data, target, options);
   };
   vm.runInNewContext(fs.readFileSync(path.join(__dirname, '../../app/confia_lean_auditor/static/tme/tme.js'), 'utf8'), ctx);
   await flush();
-  if (!startHome) { await nav[0].click(); await flush(); }
-  async function click(label) { const item = walk(root).find(e => e.tag === 'button' && (e.textContent === label || label === 'Abrir' && e.textContent === 'PROVA-1')); assert.ok(item, `Missing button ${label}`); await item.click(); await flush(); }
-  return { root, calls, rendered, reports, snapshot, click, acceptedAt, shell, nav, storage, window: ctx.window };
+  if (!startHome && !deepLink && initialSearch===null) { await nav[0].click(); await flush(); }
+  async function click(label) { const item = walk(root).find(e => e.tag === 'button' && (e.textContent === label || e.attributes['aria-label'] === label || label === 'Abrir' && (e.textContent === 'PROVA-1'||e.attributes['aria-label']?.startsWith('Abrir correção PROVA-1')))); assert.ok(item, `Missing button ${label}`); await item.click(); await flush(); }
+  return { root, calls, rendered, reports, statements, snapshot, click, acceptedAt, shell, nav, storage, window: ctx.window };
 }
 
 module.exports = { pilot, walk, text };

@@ -126,6 +126,6 @@ test('progress cards open the existing queue once and retain readable progress s
   assert.equal(walk(ui.root).find(n=>n.tag==='progress').attributes['aria-label'],'prova-2: 2 de 5 questões finalizadas');
   await open.click(); await flush();
   assert.equal(ui.root.dataset.view,'cases');
-  assert.equal(ui.calls.filter(c=>c.url==='/tme/cases').length,1);
+  assert.equal(ui.calls.filter(c=>c.url.startsWith('/tme/cases?')&&c.url.includes('exam=prova-2')).length,1);
   assert.equal(ui.calls.filter(c=>c.options.method==='POST').length,0);
 });

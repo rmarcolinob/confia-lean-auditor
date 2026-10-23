@@ -492,11 +492,11 @@ def test_environment_secrets_absent_from_all_outputs(pipeline, project, monkeypa
 
 
 def test_ui_disclosure_language_and_safe_technical_paths():
-    source = (ROOT / "app/confia_lean_auditor/static/app.js").read_text()
+    source = (ROOT / "app/confia_lean_auditor/static/audit-view.js").read_text()
     for label in ("Ambiente da análise", "Metadados da execução registrados.",
                   "Metadados de reprodutibilidade não registrados nesta execução.",
                   "Detalhes técnicos", "não é assinatura digital"):
         assert label in source
     assert "Execução garantidamente reproduzível" not in source
-    assert "targetPanel.appendChild(renderEnvironment(data))" in source
+    assert "technical.appendChild(renderEnvironment(data))" in source
     assert "JSON.stringify(data, publicTechnicalValue, 2)" in source
