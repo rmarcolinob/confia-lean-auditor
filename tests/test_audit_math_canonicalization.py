@@ -1,6 +1,8 @@
 import pytest
 
-from confia_lean_auditor.core.audit_math_projection import canonicalize_equality, has_equivalent_equality
+from confia_lean_auditor.core.audit_math_projection import (
+    canonicalize_equality, has_equivalent_equality, project_audit_math,
+)
 from confia_lean_auditor.claims.extractors.ita2025f2q3 import extract_claims_ita2025f2q3
 from confia_lean_auditor.student_claims.extract_f2q3_student_claims import extract_f2q3_student_claims
 
@@ -66,3 +68,49 @@ def test_complete_clause_and_prose():
     assert has_equivalent_equality('Subtraindo as equações, obtemos cos beta = sen beta + 1/2.', TARGET)
     assert not has_equivalent_equality('x + cos beta - sin beta = 1/2', TARGET)
     assert canonicalize_equality('__import__("os").system("echo bad")=0') is None
+
+
+@pytest.mark.parametrize('equation', [TARGET, 'x-y=3/7'])
+@pytest.mark.parametrize('wrapper', [
+    'Não é verdade, portanto {equation}.',
+    'Suponha provisoriamente:\n{equation}.',
+    'Se isso fosse válido, teríamos:\n{equation}.',
+    '{equation}. Essa afirmação é falsa.',
+    'Tentei:\n{equation}. Essa tentativa foi rejeitada.',
+    '"Uma citação. {equation}."',
+    r'\text{Não é verdade:}\[{equation}\]',
+])
+def test_qualifiers_are_not_erased_by_projection_or_clause_splitting(equation, wrapper):
+    source = wrapper.replace('{equation}', equation)
+    assert not has_equivalent_equality(source, equation)
+
+
+@pytest.mark.parametrize('source,target', [
+    ('Portanto x-y=3/7.', 'x-y=3/7'),
+    (r'\[\frac{3*x-y}{7}=-\frac{5}{11}\]', '11*(3*x-y)=-35'),
+    (r'\[x-y=-\frac{3}{7}\]', 'x-y=-3/7'),
+])
+def test_asserted_general_relations_preserve_signs_and_fractions(source, target):
+    assert has_equivalent_equality(source, target)
+    lhs, rhs = target.split('=')
+    assert not has_equivalent_equality(source, f'{lhs}=-({rhs})')
+
+
+@pytest.mark.parametrize('source', [
+    '1/4+x-y=3/4; x-y=-1/2',
+    'x-y=-1/2; 1/4+x-y=3/4',
+    '1/4+x-y=3/4; -1/2=x-y',
+])
+def test_explicit_value_is_not_overwritten_by_an_intermediate_rearrangement(source):
+    assert not has_equivalent_equality(source, 'x-y=1/2')
+    assert has_equivalent_equality(source, 'x-y=-1/2')
+
+
+@pytest.mark.parametrize('source', ['x-y=1/2; x-y=-1/2', 'x-y=-1/2; x-y=1/2'])
+def test_conflicting_explicit_values_do_not_choose_the_expected_answer(source):
+    assert not has_equivalent_equality(source, 'x-y=1/2')
+    assert not has_equivalent_equality(source, 'x-y=-1/2')
+
+
+def test_nested_general_fraction_projection_preserves_operand_grouping():
+    assert project_audit_math(r'\frac{a+b}{\frac{c-d}{e}}') == '(a+b)/((c-d)/e)'

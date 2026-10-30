@@ -6,8 +6,7 @@ from typing import List
 
 from confia_lean_auditor.student_claims.schemas import StudentClaim
 from confia_lean_auditor.core.audit_math_projection import (
-    canonicalize_equality,
-    iter_audit_equalities,
+    find_audit_equality,
     project_audit_math,
 )
 
@@ -66,11 +65,9 @@ def _make_claim(
 
 
 def _extract_beta_difference(solution: str, claims: List[StudentClaim]) -> None:
-    for raw in iter_audit_equalities(solution):
-        canonical = canonicalize_equality(raw)
-        for value_expr in ("1 / 2", "-1 / 2"):
-            if canonical != canonicalize_equality(f"cos(beta)-sin(beta)={value_expr}"):
-                continue
+    for value_expr in ("1 / 2", "-1 / 2"):
+        raw = find_audit_equality(solution, f"cos(beta)-sin(beta)={value_expr}")
+        if raw is not None:
             claims.append(
                 _make_claim(
                     idx=len(claims),

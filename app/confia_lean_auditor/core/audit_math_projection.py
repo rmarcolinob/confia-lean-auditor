@@ -164,22 +164,80 @@ def strip_audit_equation_prefix(clause):
 
 
 def iter_audit_equalities(text: str):
-    """Read complete equation clauses, preserving original source as evidence.
+    """Read asserted equation clauses without discarding their prose scope.
 
     Prose before an equation is accepted only as a prefix to the clause. Never
     search for a matching substring inside an expression or truncate its RHS.
+    Projection is a reading view only; grounding still indexes the original text.
     """
-    projected = project_audit_math(text)
-    for clause in re.split(r"[\n;:,]|(?<!\d)\.|\.(?!\d)", projected):
-        clause = clause.strip().strip("$").strip()
-        if "=" not in clause:
+    # Reuse the attribution boundary used by MathClaimRecord and positive credit.
+    # It must run BEFORE punctuation/prefix removal, including for HMER prose.
+    from confia_lean_auditor.rubric.positive_evidence import (
+        Rule, attributable, quoted_ranges, source_contexts,
+    )
+    quotes = tuple(quoted_ranges(text))
+    seen = set()
+    for start, end, context in source_contexts(text):
+        if any(start < b and end > a for a, b in quotes):
             continue
-        # Existing audit prose commonly introduces equations with 'obtemos'.
-        clause = strip_audit_equation_prefix(clause)
-        if canonicalize_equality(clause) is not None:
-            yield clause
+        if not attributable(context, Rule(()), ""):
+            continue
+        projected = project_audit_math(context)
+        for clause in re.split(r"[\n;:]|(?<!\d)[.,]|[.,](?!\d)", projected):
+            clause = clause.strip().strip("$").strip()
+            if "=" not in clause:
+                continue
+            clause = strip_audit_equation_prefix(clause)
+            if clause not in seen and canonicalize_equality(clause) is not None:
+                seen.add(clause)
+                yield clause
+
+
+def _symbolic_direction(canonical):
+    """Identify the same affine quantity, independently of its stated value."""
+    symbols = [(atom, coefficient) for atom, coefficient in canonical if atom]
+    if not symbols:
+        return ()
+    scale = symbols[0][1]
+    return tuple((atom, coefficient / scale) for atom, coefficient in symbols)
+
+
+def _explicit_value(clause):
+    """A constant-free affine side equated to a rational value (either order).
+
+    This is a syntactic preference, not a proof: x-y=-1 takes precedence over
+    an intermediate 2+x-y=3. No constants are moved to manufacture that claim.
+    """
+    from confia_lean_auditor.core.math_canonical import parse_math
+    sides = [parse_math(side) for side in _math_expression(clause).split("=")]
+    if len(sides) != 2 or any(s.status != "parsed" or s.canonical_form.affine is None for s in sides):
+        return False
+    left, right = (dict(s.canonical_form.affine) for s in sides)
+    return (bool(left) and "" not in left and not set(right) - {""}
+            or bool(right) and "" not in right and not set(left) - {""})
+
+
+def find_audit_equality(text: str, target: str):
+    """Select a source equation, preferring an explicit value over rearrangements.
+
+    Conflicting equally explicit declarations fail closed; neither order nor the
+    expected answer can select a winner. Standalone rearrangements remain valid.
+    """
+    canonical = canonicalize_equality(target)
+    if canonical is None:
+        return None
+    direction = _symbolic_direction(canonical)
+    candidates = []
+    for clause in iter_audit_equalities(text):
+        form = canonicalize_equality(clause)
+        if form is not None and _symbolic_direction(form) == direction:
+            candidates.append((clause, form))
+    explicit = [candidate for candidate in candidates if _explicit_value(candidate[0])]
+    pool = explicit or candidates
+    if pool and all(form == canonical for _, form in pool):
+        return pool[-1][0]
+    return None
 
 
 def has_equivalent_equality(text: str, target: str) -> bool:
-    canonical = canonicalize_equality(target)
-    return canonical is not None and any(canonicalize_equality(clause) == canonical for clause in iter_audit_equalities(text))
+    return find_audit_equality(text, target) is not None

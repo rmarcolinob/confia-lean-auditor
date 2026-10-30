@@ -17,9 +17,10 @@ ROOT = Path(__file__).resolve().parents[1]
 PROBLEMS = sorted(p.name for p in (ROOT/'problems').iterdir() if (p/'rubric.json').exists())
 
 
-def assess(pid, text, *, checks=(), verified=True, supply_source=True):
+def assess(pid, text, *, checks=(), verified=True, supply_source=True, extraction=None):
     assets = validate_problem_assets(ROOT/'problems'/pid, pid)
-    extraction = extract_claims(pid, text)
+    if extraction is None:
+        extraction = extract_claims(pid, text)
     # Explicitly controlled reference verification profile, not a Lean execution.
     microclaims = [MicroclaimResult(id=m.id, description=m.description, textual_evidence=True,
         claim_types=m.claim_types, depends_on_microclaim_ids=m.depends_on_microclaim_ids,
@@ -159,7 +160,6 @@ def test_sentence_splitting_preserves_paragraph_qualifiers(text):
 
 @pytest.mark.parametrize('pid,text,kind',[
     ('ITA2025Q1','Não podemos concluir a=15.','final_answer'),
-    ('ITA2025F2Q3','cos beta - sen beta = 1/2. Essa igualdade é falsa.','beta_difference'),
     ('ITA2025Q4','Os números 1/8 e 3/8 são positivos.','positive_witnesses'),
     ('ITA2025Q8','Estudo de sinais.','sign_analysis'),
     ('ITA2025F2Q8','A resposta é 1013. Essa tentativa foi abandonada.','final_answer'),
@@ -170,6 +170,20 @@ def test_real_legacy_detector_candidate_is_insufficient(pid,text,kind):
     item=next(i for i in rubric.items if i.positive_evidence['claim_id'] and
               next(c.type for c in extract_claims(pid,text).claims if c.id==i.claim_id)==kind)
     assert item.points is None and item.positive_evidence['supported'] is False
+
+
+def test_rejected_equality_is_not_extracted_and_a_legacy_candidate_still_gets_no_credit():
+    pid = 'ITA2025F2Q3'
+    positive = 'cos beta - sen beta = 1/2.'
+    source = positive + ' Essa igualdade é falsa.'
+    assert 'beta_difference' not in {c.type for c in extract_claims(pid, source).claims}
+    assert assess(pid, source).items[0].points is None
+    # A historical/external candidate must still fail the independent credit gate.
+    legacy = extract_claims(pid, positive)
+    assert 'beta_difference' in {c.type for c in legacy.claims}
+    item = assess(pid, source, extraction=legacy).items[0]
+    assert item.claim_id and item.points is None
+    assert item.positive_evidence['supported'] is False
 
 
 @pytest.mark.parametrize('text',['A resposta é 1013?','A resposta é 1013. Esse resultado foi rejeitado.'])
@@ -268,13 +282,17 @@ def test_explicit_final_conclusion_can_follow_a_rejected_attempt_without_losing_
     assert not gate(text+' Mas essa resposta está errada.')['supported']
 
 
-def test_positive_gate_blocks_the_known_hmer_false_candidate_without_changing_extraction():
+def test_positive_gate_still_blocks_a_legacy_hmer_false_candidate():
     from test_hmer_audit_parity import LATEX
     wrong=LATEX.replace(r'=\frac{1}{2}\\',r'=-\frac{1}{2}\\')
-    # The out-of-scope extractor regression remains visible; it cannot alone
-    # authorize first-pass points for the contradicted explicit beta statement.
-    assert 'beta_difference' in {c.type for c in extract_claims('ITA2025F2Q3',wrong).claims}
+    assert 'beta_difference' not in {c.type for c in extract_claims('ITA2025F2Q3',wrong).claims}
     assert assess('ITA2025F2Q3',wrong).items[0].points is None
+    # Preserve the original gate regression even after fixing extraction.
+    legacy = extract_claims('ITA2025F2Q3', LATEX)
+    assert 'beta_difference' in {c.type for c in legacy.claims}
+    item = assess('ITA2025F2Q3', wrong, extraction=legacy).items[0]
+    assert item.claim_id and item.points is None
+    assert item.positive_evidence['supported'] is False
 
 
 @pytest.mark.parametrize('pid,tail,criterion',[
