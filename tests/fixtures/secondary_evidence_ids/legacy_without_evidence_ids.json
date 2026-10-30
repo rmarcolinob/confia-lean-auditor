@@ -1,0 +1,63 @@
+{
+  "problem_id": "legacy_example",
+  "score": 2,
+  "max_score": 2,
+  "verdict": "correto",
+  "extracted_claims": {
+    "problem_id": "legacy_example",
+    "claims": []
+  },
+  "formal_steps": [],
+  "rubric_assessment": {
+    "score": 2,
+    "max_score": 2,
+    "items": [
+      {
+        "id": "first_pass",
+        "description": "State the equation.",
+        "detected": true,
+        "points": 1,
+        "max_points": 1,
+        "mathematical_status": "supported",
+        "scoring_basis": "first_pass"
+      },
+      {
+        "id": "legacy_award",
+        "description": "State the solution.",
+        "detected": false,
+        "points": null,
+        "max_points": 1,
+        "mathematical_status": "indeterminate",
+        "suggested_points": 1,
+        "scoring_basis": "secondary_adjudication",
+        "scoring_evidence": ["x = 2."]
+      }
+    ],
+    "secondary_adjudication": {
+      "schema_version": "secondary-schema-v2",
+      "validation_status": "accepted",
+      "criteria": [
+        {
+          "criterion_id": "legacy_award",
+          "input_status": "indeterminate",
+          "allowed_points": [0, 1],
+          "validation_status": "accepted",
+          "retry_count": 0,
+          "decision": "award",
+          "suggested_points": 1,
+          "evidence": ["x = 2."],
+          "rationale": "The solution is stated."
+        }
+      ]
+    }
+  },
+  "lean_certificate": {
+    "status": "not_used",
+    "compiled": false,
+    "exit_code": 0,
+    "uses_forbidden_token": false,
+    "forbidden_tokens_found": []
+  },
+  "microclaims": [],
+  "feedback": ""
+}

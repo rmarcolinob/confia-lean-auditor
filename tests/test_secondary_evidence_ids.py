@@ -118,15 +118,31 @@ def test_deny_empty_keeps_indeterminate_and_coverage(monkeypatch):
     assert r.items[1].points is None and r.items[1].suggested_points==0
     assert [c['id'] for c in json.loads(seen[0]['input'])['pending_criteria']]==['c1']
 
-def test_historical_artifacts_remain_readable_without_id_fabrication():
+@pytest.mark.parametrize('schema_version', ['secondary-schema-v2', 'secondary-schema-v3'])
+def test_historical_artifacts_remain_readable_without_id_fabrication(schema_version):
     from confia_lean_auditor.core.schemas import AuditResponse
-    root=Path(__file__).resolve().parents[1]
-    for folder in ['smoke_v3_20261029T200820Z','p0_secondary_live_02']:
-        p=root/'artifacts/evaluations/ita1000_v1_2'/folder/'results/ITA2025Q1_S001_L04.json'
-        raw=json.loads(p.read_text());d=AuditResponse.model_validate(raw)
-        trace=s.artifact_trace(d.rubric_assessment)
-        assert trace['schema_version']==raw['rubric_assessment']['secondary_adjudication']['schema_version']
-        assert all('selected_evidence_ids' not in c for c in trace['criteria'])
+    fixture = Path(__file__).parent / 'fixtures/secondary_evidence_ids/legacy_without_evidence_ids.json'
+    raw = json.loads(fixture.read_text(encoding='utf-8'))
+    legacy = raw['rubric_assessment']['secondary_adjudication']
+    legacy['schema_version'] = schema_version
+    before = copy.deepcopy(raw)
+
+    # Both historical schemas used textual evidence, with no candidate/selection IDs.
+    d = AuditResponse.model_validate(raw)
+    trace = s.artifact_trace(d.rubric_assessment)
+    assert trace['schema_version'] == schema_version
+    assert d.model_dump()['rubric_assessment']['secondary_adjudication'] == legacy
+    rows = {c['criterion_id']: c for c in trace['criteria']}
+    assert set(rows) == {'first_pass', 'legacy_award'}
+    assert rows['legacy_award'] == legacy['criteria'][0]
+    assert rows['legacy_award']['evidence'] == ['x = 2.']
+    assert rows['first_pass']['reason'] == 'first_pass_decided'
+    assert all(
+        field not in c
+        for c in trace['criteria']
+        for field in ('evidence_id', 'evidence_ids', 'selected_evidence_ids', 'candidate_evidence')
+    )
+    assert raw == before
 
 
 @pytest.mark.parametrize('cid',['ITA2025Q1_S001_L04','ITA2025Q1_S016_L01','ITA2025Q4_S003_L04'])
