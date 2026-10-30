@@ -46,8 +46,8 @@ class SubmissionRequest(SubmissionModel):
 
 
 class ArtifactReference(SubmissionModel):
-    filename: Annotated[str, StringConstraints(pattern=r"^(snapshot\.json|page_[123]\.png)$")]
-    media_type: Literal["application/json", "image/png"]
+    filename: Annotated[str, StringConstraints(pattern=r"^(snapshot\.json|page_[123]\.png|original_[123]\.bin)$")]
+    media_type: Literal["application/json", "image/png", "image/jpeg", "image/webp", "image/heic", "image/heif"]
     sha256: Sha256
     size_bytes: int = Field(gt=0)
     page_id: Optional[Identifier] = None
@@ -58,8 +58,8 @@ class SubmissionRecord(SubmissionModel):
     submission_id: SubmissionId
     problem_id: Identifier
     snapshot_id: Identifier
-    source: Literal["tablet"] = "tablet"
-    capture_schema_version: Literal[SCHEMA_VERSION] = SCHEMA_VERSION
+    source: Literal["tablet", "image_scan"] = "tablet"
+    capture_schema_version: Literal[SCHEMA_VERSION, "tme-scan-1.0"] = SCHEMA_VERSION
     received_at: datetime
     status: Literal["RECEIVED"] = "RECEIVED"
     snapshot: ArtifactReference
@@ -76,6 +76,10 @@ class SubmissionRecord(SubmissionModel):
     assessment_id: Optional[str] = Field(default=None, pattern=r"^asmt_[0-9a-f]{32}$")
     assessment_item_id: Optional[str] = Field(default=None, pattern=r"^ait_[0-9a-f]{32}$")
     assessment_definition_sha256: Optional[Sha256] = None
+    # Only TME scans have these fields. Historical records are parsed without
+    # adding them to any persisted canonical revision or audit source.
+    scan_originals: Optional[list[ArtifactReference]] = None
+    tme_case_id: Optional[str] = Field(default=None, pattern=r"^case_[0-9a-f]{32}$")
 
     @model_validator(mode="after")
     def assessment_binding_is_complete(self):

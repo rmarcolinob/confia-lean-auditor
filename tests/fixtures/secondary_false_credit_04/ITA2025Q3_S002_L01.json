@@ -1,0 +1,78 @@
+{
+  "dataset_id": "ITA2025Q3_S002_L01",
+  "problem_id": "ITA2025Q3",
+  "criterion_id": "parity_obstruction",
+  "kind": "false_award",
+  "payload": {
+    "problem": {
+      "statement": "Determine, com justificativa, o termo independente da expansão de (x + 1/x)^6 (x - 2/x)^5."
+    },
+    "solution_text": "Termo geral:\nC(6,i) x^(6-2i)\nC(5,j) (−2)^j x^(5-2j)\n\nNo produto o expoente de x é (6−2i)+(5−2j) = 10 − 2(i+j), que é ímpar pra qualquer i, j inteiros.\n\nÍmpar nunca é 0, então não existe termo com x⁰ na expansão, e o coeficiente de x⁰ é 0.\n\nR: 0",
+    "pending_criteria": [
+      {
+        "id": "parity_obstruction",
+        "description": "Observa que 11 - 2i - 2j é sempre ímpar, logo nunca é zero.",
+        "max_points": 3.0,
+        "allowed_points": [
+          0.0,
+          3.0
+        ],
+        "input_status": "indeterminate",
+        "verification_status": "partial",
+        "coded_requirements": [
+          {
+            "description": "odd exponent excludes zero",
+            "relation_alternatives": []
+          }
+        ],
+        "expected_bindings": null,
+        "conclusion_only": false,
+        "required_microclaims": [
+          {
+            "description": "O expoente 11 - 2i - 2j é sempre ímpar e, portanto, não pode ser zero.",
+            "status": "formal_steps_not_verified",
+            "origin": "generated_reference",
+            "does_not_prove_student_attribution": true
+          }
+        ],
+        "existing_evidence": [],
+        "grounded_claims": [],
+        "grounded_claims_omitted": 0,
+        "candidate_student_checks": [],
+        "student_checks": [],
+        "candidate_evidence": [
+          {
+            "source_start": 152,
+            "source_end": 238,
+            "source_text": "Ímpar nunca é 0, então não existe termo com x⁰ na expansão, e o coeficiente de x⁰ é 0.",
+            "source_kind": "local_context",
+            "grounding_status": "grounded",
+            "verification_status": "not_checked",
+            "evidence_id": "E4_1"
+          },
+          {
+            "source_start": 53,
+            "source_end": 150,
+            "source_text": "No produto o expoente de x é (6−2i)+(5−2j) = 10 − 2(i+j), que é ímpar pra qualquer i, j inteiros.",
+            "source_kind": "local_context",
+            "grounding_status": "grounded",
+            "verification_status": "not_checked",
+            "evidence_id": "E4_2"
+          }
+        ]
+      }
+    ]
+  },
+  "proposal": {
+    "parity_obstruction": {
+      "decision": "award",
+      "suggested_points": 3,
+      "evidence_ids": [
+        "E4_1",
+        "E4_2"
+      ],
+      "reason_code": "SATISFIES_CRITERION",
+      "rationale": "A evidência citada satisfaz o critério da pauta: «Observa que 11 - 2i - 2j é sempre ímpar, logo nunca é zero.»."
+    }
+  }
+}

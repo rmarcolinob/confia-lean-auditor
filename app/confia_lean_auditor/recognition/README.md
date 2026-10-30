@@ -6,10 +6,10 @@ do serviço, e retorna `ProviderOutput` segmentado.
 O adapter declara provider, nome/versão do adapter, modo (`strokes`, `image` ou
 `strokes_and_image`) e uma allowlist de parâmetros públicos. Factories registradas
 explicitamente no `RecognizerRegistry` isolam configuração e implementação.
-Os nomes `mathpix_image` e `vision_model` podem ser registrados
-futuramente. O provider `mathpix` para strokes está descrito em
-`docs/P2_HMER_MATHPIX_STROKES.md`. Factories futuras poderão
-ler configuração por variáveis de ambiente internamente; credenciais não fazem
+`mathpix_image` atende o scan TME pelo `/v3/text`; `vision_model` continua
+reservado. O provider `mathpix` para strokes está descrito em
+`docs/P2_HMER_MATHPIX_STROKES.md`, e o modo de imagem em
+`docs/TME_PILOT_01.md`. As factories leem configuração no backend; credenciais não fazem
 parte dos contratos, da proveniência ou das respostas ao frontend.
 
 `fake_test` existe para testes. Para habilitá-lo na API e UI, configure `CONFIA_ENV=test`

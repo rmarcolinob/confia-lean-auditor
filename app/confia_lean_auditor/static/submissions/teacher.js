@@ -680,7 +680,7 @@
         for (const warning of run.source.warnings || []) result.appendChild(node("p", `Página ${warning.page_index + 1}: ${warning.message}`)).className = "transcription-warning";
         if (attemptState !== "CONFLICT" && run.status === "COMPLETED" && run.result) {
           const report = node("div");
-          window.ConfIAReport.render(run.result, report, { context: "teacher" });
+          window.ConfIAReport.render(run.result, report, { context: "teacher", auditRun: run });
           result.appendChild(report);
         }
         const source = node("details");

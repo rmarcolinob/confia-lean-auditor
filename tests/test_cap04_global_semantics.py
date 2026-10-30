@@ -101,8 +101,9 @@ def test_independent_verified_steps_remain_evidence_when_principal_attempt_is_un
     data = client.post("/audit", json={"problem_id": "ITA2025F2Q3", "solution": solution}).json()
     assert data["score"] == 10
     assert all(item["mathematical_status"] == "supported" for item in data["rubric_assessment"]["items"])
-    assert "Parte das evidências" in data["pedagogical_report"]["summary"]
-    assert "indisponível" in data["pedagogical_report"]["summary"]
+    assert data["pedagogical_report"]["needs_review"] is True
+    assert data["pedagogical_report"]["verification_status"] == "technical_error"
+    assert "indisponib" in data["pedagogical_report"]["summary"]
 
 
 @pytest.mark.parametrize("exception", [subprocess.TimeoutExpired("lean", 30, output=b"partial diagnostic"), OSError("missing process")])
@@ -146,11 +147,9 @@ def test_high_score_cannot_supply_missing_evidence_in_summary(statuses):
         rubric=RubricAssessment(score=10, max_score=10, items=[]), student_claims=[],
         student_claim_checks=checks, microclaims=[], artifact_dir=None)
     assert report.verdict == "inconclusivo" and report.score is None
-    if "verified" not in statuses:
-        assert "conferid" not in report.summary and "verificada" not in report.summary
-        assert not any(item.result == "conferida" for item in report.evidence_items)
-    else:
-        assert "Parte das evidências pôde ser verificada" in report.summary
+    # A bare verified status cannot supply missing source binding either.
+    assert "conferid" not in report.summary and "verificada" not in report.summary
+    assert not any(item.result == "conferida" for item in report.evidence_items)
     if "technical_error" in statuses:
         assert "indisponível" in report.summary
     assert "solução correta" not in report.summary and "solução incorreta" not in report.summary

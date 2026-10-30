@@ -37,3 +37,11 @@ def extract_student_claims(problem_id: str, solution: str) -> List[StudentClaim]
         return extract_f2q6_student_claims(solution)
 
     return []
+
+
+def extract_student_claims_for_audit(problem_id: str, solution: str) -> List[StudentClaim]:
+    """Generic detection precedes semantic extractors; legacy API stays stable."""
+    from .generic_math import extract_generic_math, merge_candidates
+    generic = extract_generic_math(problem_id, solution)
+    specific = extract_student_claims(problem_id, solution)
+    return merge_candidates(specific, generic, solution)

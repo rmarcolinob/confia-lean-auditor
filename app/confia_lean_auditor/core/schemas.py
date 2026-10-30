@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Dict, List, Optional, Any, Literal
+from typing import Dict, List, Optional, Any, Literal, ClassVar
 
 from pydantic import BaseModel, Field, model_serializer
 
@@ -12,7 +12,19 @@ class AuditRequest(BaseModel):
     solution: str
 
 
-class FormalStep(BaseModel):
+class ReferenceVerificationModel(BaseModel):
+    """Scope is additive; historical documents retain their serialized shape."""
+    verification_scope: Optional[Literal["generated_reference"]] = None
+
+    @model_serializer(mode="wrap")
+    def preserve_reference_shape(self, handler):
+        data = handler(self)
+        if "verification_scope" not in self.model_fields_set:
+            data.pop("verification_scope", None)
+        return data
+
+
+class FormalStep(ReferenceVerificationModel):
     id: str
     type: str
     description: str
@@ -24,7 +36,7 @@ class FormalStep(BaseModel):
     supports_rubric_items: List[str] = Field(default_factory=list)
 
 
-class FormalStepResult(BaseModel):
+class FormalStepResult(ReferenceVerificationModel):
     id: str
     type: str
     description: str
@@ -42,7 +54,7 @@ class FormalStepResult(BaseModel):
     stderr: str = ""
 
 
-class ExtractedClaim(BaseModel):
+class ExtractedClaim(ReferenceVerificationModel):
     id: str
     type: str
     text: str
@@ -57,7 +69,21 @@ class ClaimExtraction(BaseModel):
     formal_steps: List[FormalStep] = Field(default_factory=list)
 
 
-class RubricItemResult(BaseModel):
+class ScoringCompatibleModel(BaseModel):
+    """New scoring fields must not retroactively change persisted result hashes."""
+    scoring_fields: ClassVar[set[str]] = set()
+
+    @model_serializer(mode="wrap")
+    def preserve_scoring_shape(self, handler):
+        data = handler(self)
+        for name in self.scoring_fields - self.model_fields_set:
+            data.pop(name, None)
+        return data
+
+
+class RubricItemResult(ScoringCompatibleModel):
+    scoring_fields = {"verified_points", "suggested_points", "scoring_basis",
+                      "scoring_evidence", "scoring_rationale", "positive_evidence"}
     id: str
     description: str
     detected: bool
@@ -70,18 +96,32 @@ class RubricItemResult(BaseModel):
     mathematical_status: Optional[Literal["supported", "refuted", "indeterminate"]] = None
     verification_status: Literal["available", "partial", "technical_error"] = "available"
     assessment_note: Optional[str] = None
+    verified_points: Optional[float] = None
+    suggested_points: Optional[float] = None
+    scoring_basis: Optional[Literal["first_pass", "secondary_adjudication", "unscorable"]] = None
+    scoring_evidence: List[str] = Field(default_factory=list)
+    scoring_rationale: Optional[str] = None
+    positive_evidence: Optional[Dict[str, Any]] = None
 
 
-class RubricAssessment(BaseModel):
+class RubricAssessment(ScoringCompatibleModel):
+    scoring_fields = {"scoring_policy", "coverage", "estimated_points", "needs_review",
+                      "unscorable_reason", "secondary_adjudication"}
     score: Optional[float]
     max_score: float
     items: List[RubricItemResult]
     assessment_status: Literal["complete", "partial", "indeterminate"] = "complete"
     evaluated_score: float = 0.0
     evaluated_max_score: float = 0.0
+    scoring_policy: Optional[Literal["SCORE-POLICY-02"]] = None
+    coverage: Optional[float] = None
+    estimated_points: Optional[float] = None
+    needs_review: Optional[bool] = None
+    unscorable_reason: Optional[str] = None
+    secondary_adjudication: Optional[Dict[str, Any]] = None
 
 
-class LeanCertificate(BaseModel):
+class LeanCertificate(ReferenceVerificationModel):
     status: str
     compiled: bool
     exit_code: int
@@ -93,7 +133,7 @@ class LeanCertificate(BaseModel):
     generated_theorems: List[str] = Field(default_factory=list)
 
 
-class MicroclaimResult(BaseModel):
+class MicroclaimResult(ReferenceVerificationModel):
     id: str
     description: str
     theorem: Optional[str] = None
@@ -117,7 +157,8 @@ class PedagogicalEvidenceItem(BaseModel):
     explanation: str
 
 
-class PedagogicalReport(BaseModel):
+class PedagogicalReport(ScoringCompatibleModel):
+    scoring_fields = {"scoring_policy", "coverage", "estimated_points", "needs_review", "unscorable_reason"}
     summary: str
     result: str
     score: Optional[float]
@@ -131,9 +172,16 @@ class PedagogicalReport(BaseModel):
     assessment_status: Literal["complete", "partial", "indeterminate"] = "complete"
     evaluated_score: float = 0.0
     evaluated_max_score: float = 0.0
+    scoring_policy: Optional[Literal["SCORE-POLICY-02"]] = None
+    coverage: Optional[float] = None
+    estimated_points: Optional[float] = None
+    needs_review: Optional[bool] = None
+    unscorable_reason: Optional[str] = None
 
 
-class AuditResponse(BaseModel):
+class AuditResponse(ScoringCompatibleModel):
+    scoring_fields = {"scoring_policy", "evaluated_score", "evaluated_max_score", "coverage",
+                      "estimated_points", "needs_review", "unscorable_reason"}
     problem_id: str
     score: Optional[float]
     max_score: float
@@ -150,6 +198,13 @@ class AuditResponse(BaseModel):
     pedagogical_report: Optional[PedagogicalReport] = None
     artifact_dir: Optional[str] = None
     reproducibility: Optional[ReproducibilityMetadata] = None
+    scoring_policy: Optional[Literal["SCORE-POLICY-02"]] = None
+    evaluated_score: Optional[float] = None
+    evaluated_max_score: Optional[float] = None
+    coverage: Optional[float] = None
+    estimated_points: Optional[float] = None
+    needs_review: Optional[bool] = None
+    unscorable_reason: Optional[str] = None
 
     @model_serializer(mode="wrap")
     def preserve_legacy_digest(self, handler):
@@ -158,4 +213,6 @@ class AuditResponse(BaseModel):
         # default field to their hashed representation or retroactively rehash.
         if self.reproducibility is None:
             data.pop("reproducibility", None)
+        for name in self.scoring_fields - self.model_fields_set:
+            data.pop(name, None)
         return data

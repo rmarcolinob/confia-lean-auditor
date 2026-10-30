@@ -12,6 +12,9 @@ from confia_lean_auditor.core.schemas import (
     RubricItemResult,
 )
 from confia_lean_auditor.rubric.assessment import refresh_assessment
+from confia_lean_auditor.rubric.positive_evidence import reference_dependency_evidence
+from confia_lean_auditor.claims.common.adapters import claim_from_extracted
+from confia_lean_auditor.claims.common.bridges import positive_credit_from_record
 
 
 def evaluate_rubric(
@@ -20,6 +23,11 @@ def evaluate_rubric(
     claim_extraction: ClaimExtraction,
     microclaims: Optional[List[MicroclaimResult]] = None,
     rubric_config: Optional[RubricConfig] = None,
+    *,
+    solution_text: Optional[str] = None,
+    student_claim_checks=(),
+    statement_text: str = "",
+    claim_context=None,
 ) -> RubricAssessment:
     if rubric_config is None:
         problem_dir = get_problem_dir(repo_root, problem_id)
@@ -47,8 +55,6 @@ def evaluate_rubric(
 
         required_microclaim_ids = item.required_microclaim_ids
 
-        has_claim = claim is not None
-
         if required_microclaim_ids:
             has_required_microclaims = all(
                 mc_id in verified_microclaim_ids for mc_id in required_microclaim_ids
@@ -56,7 +62,21 @@ def evaluate_rubric(
         else:
             has_required_microclaims = True
 
-        detected = has_claim and has_required_microclaims
+        common_claim = claim_from_extracted(claim, problem_id=problem_id,
+            solution_text=solution_text, rubric_links=(item.id,)) if claim is not None else None
+        positive_evidence = positive_credit_from_record(
+            problem_id=problem_id, item=item, record=common_claim,
+            solution_text=solution_text, verified_microclaim_ids=verified_microclaim_ids,
+            student_checks=student_claim_checks, statement_text=statement_text,
+            claim_context=claim_context,
+            reference_dependencies=reference_dependency_evidence(
+                problem_id=problem_id, required_ids=required_microclaim_ids,
+                microclaims_by_id=microclaims_by_id, claims_by_type=claims_by_type,
+                solution_text=solution_text, student_checks=student_claim_checks,
+                statement_text=statement_text,
+            ),
+        )
+        detected = has_required_microclaims and positive_evidence["supported"]
 
         # Neither an absent proof nor an absent extracted claim refutes the
         # student's mathematics. Keep undecidable criteria out of the score.
@@ -70,8 +90,10 @@ def evaluate_rubric(
         claim_id = None
 
         if claim is not None:
-            evidence = claim.evidence
             claim_id = claim.id
+        if detected:
+            evidence = " | ".join(dict.fromkeys(
+                span["source_text"] for span in positive_evidence["source_spans"]))
 
         items.append(
             RubricItemResult(
@@ -82,6 +104,7 @@ def evaluate_rubric(
                 max_points=float(item.points),
                 evidence=evidence,
                 claim_id=claim_id,
+                positive_evidence=positive_evidence,
                 mathematical_status="supported" if detected else "indeterminate",
                 verification_status=availability,
                 assessment_note=None if detected else (

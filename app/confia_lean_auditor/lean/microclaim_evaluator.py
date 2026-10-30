@@ -103,6 +103,7 @@ def evaluate_microclaims(
 
         first_pass.append(
             MicroclaimResult(
+                verification_scope="generated_reference",
                 id=item.id,
                 description=item.description,
                 theorem=theorem,
@@ -137,6 +138,7 @@ def evaluate_microclaims(
 
         final_results.append(
             MicroclaimResult(
+                verification_scope="generated_reference",
                 id=mc.id,
                 description=mc.description,
                 theorem=mc.theorem,

@@ -1,0 +1,22 @@
+Seja w uma raiz de x² - x + 1, então w² = w - 1 e w³ = -1, logo w⁶ = 1.
+
+Para p(x)= x⁵⁷ + a x¹⁴ + b x⁷ + 1, quando x = w o termo (x² - x + 1)c(x) some e
+p(w) = resto(w).
+
+w⁵⁷ = (w⁶)⁹ w³ = w³ = -1
+w¹⁴ = w¹² w² = (w⁶)² w² = w²
+w⁷ = w⁶ w = w
+
+Então p(w)= -1 + a w² + b w + 1 = a w² + b w
+Com w² = w - 1 fica a(w - 1) + b w = (a + b) w - a
+
+O resto pedido é 2w + 1, portanto
+(a + b) w - a = 2 w + 1
+
+Igualando os coeficientes de 1 e de w, pois 1 e w são independentes sobre R,
+-a = 1
+ a + b = 2
+
+Da primeira, a = -1. Da segunda, b = 2 - a = 3.
+
+a vale -1 e b vale 3

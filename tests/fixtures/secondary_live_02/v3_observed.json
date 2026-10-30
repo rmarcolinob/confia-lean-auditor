@@ -1,0 +1,71 @@
+[
+  {
+    "dataset_id": "ITA2025Q1_S001_L04",
+    "attempt": 1,
+    "v3_root_cause": "SCHEMA_MISMATCH",
+    "excerpt": "{\n  \"area_formula\": {\n    \"suggested_points\": 0,\n    \"evidence\": [],\n    \"rationale\": \"O conteúdo citado não apresenta a condição exigida pela pauta: «area expression».\",\n    \"decision\": \"deny\"\n  },\n  \"equation\": {\n    \"suggested_points\": 2,\n    \"evidence\": [\n      \"a² - 2a + 5 = 200\",\n      \"a² - 2a - 195 = 0\"\n    ],\n    \"rationale\": \"A evidência citada satisfaz o critério da pauta: «Monta a equação a² - 2a + 5 = 200 ou equivalente.».\",\n    \"decision\": \"award\"\n  },\n  \"positive_root\": {\n    \"suggested_points\": 0,\n    \"evidence\": [],\n    \"rationale\": \"O conteúdo citado não apresenta a condição exigida pela pauta: «positive domain and rejected negative root».\",\n    \"decision\": \"deny\"\n  }\n}",
+    "complete_json_available": true,
+    "criterion_id": "area_formula",
+    "allowed_points": [
+      0.0,
+      3.0
+    ]
+  },
+  {
+    "dataset_id": "ITA2025Q1_S001_L04",
+    "attempt": 2,
+    "v3_root_cause": "VALID",
+    "excerpt": null,
+    "complete_json_available": false,
+    "criterion_id": null,
+    "allowed_points": null
+  },
+  {
+    "dataset_id": "ITA2025Q1_S016_L01",
+    "attempt": 1,
+    "v3_root_cause": "SCHEMA_MISMATCH",
+    "excerpt": "{\n  \"coordinates\": {\n    \"suggested_points\": 0,\n    \"evidence\": [],\n    \"rationale\": \"O conteúdo citado não apresenta a condição exigida pela pauta: «Representa corretamente os pontos 1, z e z² em coordenadas reais.».\",\n    \"decision\": \"deny\"\n  },\n  \"area_formula\": {\n    \"suggested_points\": 0,\n    \"evidence\": [],\n    \"rationale\": \"O conteúdo citado não apresenta a condição exigida pela pauta: «Obtém a fórmula correta da área por determinante ou equivalente.».\",\n    \"decision\": \"deny\"\n  },\n  \"equation\": {\n    \"suggested_points\": 0,\n    \"evidence\": [],\n    \"rationale\": \"O conteúdo citado não apresenta a condição exigida pela pauta: «Monta a equação a² - 2a + 5 = 200 ou equivalente.».\",\n    \"decision\": \"deny\"\n  },\n  \"positive_root\": {\n    \"suggested_points\": 0,\n    \"evidence\": [],\n    \"rationale\": \"O conteúdo citado não apresenta a condição exigida pela pauta: «Usa a condição a > 0 para descartar a raiz negativa.».\",\n    \"decision\": \"deny\"\n  },\n  \"final_answer\": {\n    \"suggested_points\": 1,\n    \"evidence\": [\n      \"Então o valor de a é quinze, acho que é quinze, pois a outra raiz é negativa e não pode ser usada.\"\n    ],\n    \"rationale\": \"A evidência citada satisfaz o critério da pauta",
+    "complete_json_available": false,
+    "criterion_id": "coordinates",
+    "allowed_points": [
+      0.0,
+      2.0
+    ]
+  },
+  {
+    "dataset_id": "ITA2025Q1_S016_L01",
+    "attempt": 2,
+    "v3_root_cause": "SCHEMA_MISMATCH",
+    "excerpt": "{\n  \"coordinates\": {\n    \"suggested_points\": 0,\n    \"evidence\": [],\n    \"rationale\": \"O conteúdo citado não apresenta a condição exigida pela pauta: «Representa corretamente os pontos 1, z e z² em coordenadas reais.».\",\n    \"decision\": \"deny\"\n  },\n  \"area_formula\": {\n    \"suggested_points\": 0,\n    \"evidence\": [],\n    \"rationale\": \"O conteúdo citado não apresenta a condição exigida pela pauta: «Obtém a fórmula correta da área por determinante ou equivalente.».\",\n    \"decision\": \"deny\"\n  },\n  \"equation\": {\n    \"suggested_points\": 0,\n    \"evidence\": [],\n    \"rationale\": \"O conteúdo citado não apresenta a condição exigida pela pauta: «Monta a equação a² - 2a + 5 = 200 ou equivalente.».\",\n    \"decision\": \"deny\"\n  },\n  \"positive_root\": {\n    \"suggested_points\": 0,\n    \"evidence\": [],\n    \"rationale\": \"O conteúdo citado não apresenta a condição exigida pela pauta: «Usa a condição a > 0 para descartar a raiz negativa.».\",\n    \"decision\": \"deny\"\n  },\n  \"final_answer\": {\n    \"suggested_points\": 0,\n    \"evidence\": [],\n    \"rationale\": \"O conteúdo citado não apresenta a condição exigida pela pauta: «Conclui corretamente que a = 15.».\",\n    \"decision\": \"deny\"\n  }\n}",
+    "complete_json_available": true,
+    "criterion_id": "coordinates",
+    "allowed_points": [
+      0.0,
+      2.0
+    ]
+  },
+  {
+    "dataset_id": "ITA2025Q4_S003_L04",
+    "attempt": 1,
+    "v3_root_cause": "EVIDENCE_NOT_FOUND",
+    "excerpt": "{\n  \"positive_witnesses\": {\n    \"suggested_points\": 2,\n    \"evidence\": [\n      \"escolho d = 1/8, o que fornece x₁ = 1/4 + 1/8 = 3/8 e x₂ = 1/4 − 1/8 = 1/8. Ambos são positivos e distintos.\"\n    ],\n    \"rationale\": \"A evidência citada satisfaz o critério da pauta: «Escolhe testemunhas positivas adequadas, por exemplo x1 = 1/8 e x2 = 3/8.».\",\n    \"decision\": \"award\"\n  },\n  \"same_f_argument\": {\n    \"suggested_points\": 0,\n    \"evidence\": [],\n    \"rationale\": \"O conteúdo citado não apresenta a condição exigida pela pauta: «Verifica que 2x1^2 - x1 + 1 = 2x2^2 - x2 + 1.».\",\n    \"decision\": \"deny\"\n  },\n  \"distinct_g_inputs\": {\n    \"suggested_points\": 2,\n    \"evidence\": [\n      \"Os correspondentes argumentos de g são os quadrados (3/8)² = 9/64 e (1/8)² = 1/64, valores distintos entre si.\"\n    ],\n    \"rationale\": \"A evidência citada satisfaz o critério da pauta: «Verifica que x1^2 e x2^2 são distintos.».\",\n    \"decision\": \"award\"\n  },\n  \"equal_g_values\": {\n    \"suggested_points\": 0,\n    \"evidence\": [],\n    \"rationale\": \"O conteúdo citado não apresenta a condição exigida pela pauta: «Usa a hipótese funcional para concluir que g(x1^2) = g(x2^2).».\",\n    \"decision\": \"deny\"\n  }\n}",
+    "complete_json_available": true,
+    "criterion_id": "positive_witnesses",
+    "allowed_points": [
+      0.0,
+      2.0
+    ]
+  },
+  {
+    "dataset_id": "ITA2025Q4_S003_L04",
+    "attempt": 2,
+    "v3_root_cause": "EVIDENCE_NOT_FOUND",
+    "excerpt": "{\"positive_witnesses\":{\"suggested_points\":2,\"evidence\":[\"\\\"escolho d = 1/8, o que fornece x₁ = 1/4 + 1/8 = 3/8 e x₂ = 1/4 − 1/8 = 1/8. Ambos são positivos e distintos\\\"\",\"\\\"confirmando a igualdade dos argumentos de f\\\"\",\"\\\"g assume o mesmo valor nos pontos distintos 1/64 e 9/64\\\"\"],\"rationale\":\"A evidência citada satisfaz o critério da pauta: «Escolhe testemunhas positivas adequadas, por exemplo x1 = 1/8 e x2 = 3/8.».\",\"decision\":\"award\"},\"same_f_argument\":{\"suggested_points\":0,\"evidence\":[\"\\\"g(9/64) = f(h(3/8)) = f(29/32) = f(h(1/8)) = g(1/64)\\\"\",\"\\\"confirmando a igualdade dos argumentos de f\\\"\",\"\\\"A condição de simetria implica que dois valores de x distintos produzirão o mesmo valor de h\\\"\"],\"rationale\":\"O conteúdo citado não apresenta a condição exigida pela pauta: «Verifica que 2x1^2 - x1 + 1 = 2x2^2 - x2 + 1.».\",\"decision\":\"deny\"},\"distinct_g_inputs\":{\"suggested_points\":2,\"evidence\":[\"\\\"(3/8)² = 9/64 e (1/8)² = 1/64, valores distintos entre si\\\"\",\"\\\"Ambos são positivos e distintos\\\"\",\"\\\"g assume o mesmo valor nos pontos distintos 1/64 e 9/64\\\"\"],\"rationale\":\"A evidência citada satisfaz o critério da pauta: «Verifica que x1^2 e x2^2 são distintos.».\",\"decision\":\"award\"},\"equal",
+    "complete_json_available": false,
+    "criterion_id": "positive_witnesses",
+    "allowed_points": [
+      0.0,
+      2.0
+    ]
+  }
+]

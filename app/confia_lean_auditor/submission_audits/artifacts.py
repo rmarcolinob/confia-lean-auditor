@@ -24,11 +24,12 @@ def required_references(result):
                 raise ValueError("inconsistent formal step verification")
             references.append(("formal_step", step.id, step.lean_file))
     for check in result.student_claim_checks:
-        if check.get("status") == "verified":
+        formal_outcome = check.get("formal_status") or check.get("status")
+        if formal_outcome == "verified":
             if check.get("compiled") is not True:
                 raise ValueError("inconsistent student verification")
             references.append(("student_proof", check["id"], check.get("lean_file")))
-        elif check.get("status") == "refuted":
+        elif formal_outcome == "refuted":
             if check.get("refutation_verified") is not True:
                 raise ValueError("missing refutation evidence")
             references.append(("refutation", check["id"], check.get("refutation_lean_file")))

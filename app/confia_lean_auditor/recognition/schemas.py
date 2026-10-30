@@ -6,6 +6,7 @@ from typing import Annotated, Literal, Optional
 from pydantic import Field, StringConstraints, model_validator
 
 from confia_lean_auditor.capture.schemas import Identifier, MAX_PAGES
+from confia_lean_auditor.recognition.errors import RecognitionErrorCode
 from confia_lean_auditor.submissions.schemas import (
     RecognitionProvenance, SegmentKind, Sha256, SubmissionId, SubmissionModel,
     TranscriptionId, TranscriptionSourceRegion,
@@ -86,7 +87,7 @@ class RecognitionRun(SubmissionModel):
     status: Literal["NEEDS_REVIEW", "FAILED"]
     provenance: RecognitionProvenance
     result: Optional[RecognitionResult] = None
-    error_code: Optional[Literal["PROVIDER_FAILED", "INVALID_PROVIDER_OUTPUT", "PROVIDER_TIMEOUT", "PROVIDER_BUSY"]] = None
+    error_code: Optional[RecognitionErrorCode] = None
     transcription_id: Optional[TranscriptionId] = None
     revision_number: Optional[int] = Field(default=None, ge=1)
 

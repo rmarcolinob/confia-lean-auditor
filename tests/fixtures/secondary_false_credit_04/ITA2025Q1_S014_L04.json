@@ -1,0 +1,91 @@
+{
+  "dataset_id": "ITA2025Q1_S014_L04",
+  "problem_id": "ITA2025Q1",
+  "criterion_id": "coordinates",
+  "kind": "false_award",
+  "payload": {
+    "problem": {
+      "statement": "Seja z = a + 2i um número complexo, em que a ∈ R é positivo. Determine o valor de a para que as representações de 1, z e z² no plano de Argand-Gauss formem um triângulo de área 200."
+    },
+    "solution_text": "Escrevo z = a + 2i. Como os vértices são 1, z e z², começo calculando z², que é o ponto que ainda não tenho.\n\nz² = (a + 2i)² = a² + 2*a*2i + (2i)² = a² + 4ai + 4i². Aqui 4i² = 4, então z² = a² + 4ai + 4 = (a² + 4) + 4ai.\n\nAssim, no plano de Argand-Gauss, os três pontos são:\n1 = (1, 0)\nz = (a, 2)\nz² = (a² + 4, 4a)\n\nVou calcular a área por determinante, que é o método mais direto e evita montar base e altura. Para pontos (x1, y1), (x2, y2), (x3, y3), a área é metade do módulo de x1(y2 - y3) + x2(y3 - y1) + x3(y1 - y2). Substituindo os pontos:\n\nS = 1/2 | 1*(2 - 4a) + a*(4a - 0) + (a² + 4)*(0 - 2) |\n\nAgora abro cada parcela com cuidado. A primeira é 2 - 4a. A segunda é 4a². A terceira é -2a² - 8. Então dentro do módulo fica:\n\n2 - 4a + 4a² - 2a² - 8 = 2a² - 4a - 6.\n\nLogo S = 1/2 |2a² - 4a - 6| = |a² - 2a - 3|.\n\nO módulo pode ser retirado para a solução que interessa, porque a área pedida é 200 e o valor positivo de a que vai aparecer torna a² - 2a - 3 positivo. Se eu tentasse o sinal negativo, a² - 2a - 3 = -200 viraria a² - 2a + 197 = 0, cujo discriminante é 4 - 788 = -784, negativo, então não há raiz real nesse caso. Portanto fico com:\n\na² - 2a - 3 = 200.\n\nPassando 200 para o outro lado:\n\na² - 2a - 203 = 0.\n\nCalculo o discriminante:\n\nΔ = (-2)² - 4*1*(-203) = 4 + 812 = 816.\n\nComo 816 = 16*51, a raiz é 4 raiz de 51. Então:\n\na = (2 ± 4 raiz de 51) / 2 = 1 ± 2 raiz de 51.\n\nO enunciado diz que a é positivo. A raiz 1 - 2 raiz de 51 é negativa, porque raiz de 51 é aproximadamente 7,14 e 2*7,14 = 14,28, então 1 - 14,28 < 0. Fico com a raiz positiva:\n\na = 1 + 2 raiz de 51.\n\nEsse valor não é inteiro, mas o problema não exige que a seja inteiro, só positivo. Para ver que ele fecha a área, faço a conta de trás para frente. Se a = 1 + 2 raiz de 51, então:\n\na² = (1 + 2 raiz de 51)² = 1 + 4 raiz de 51 + 4*51 = 205 + 4 raiz de 51.\n\nDaí:\n\na² - 2a - 3 = (205 + 4 raiz de 51) - 2(1 + 2 raiz de 51) - 3\n= 205 + 4 raiz de 51 - 2 - 4 raiz de 51 - 3\n= 200.\n\nEntão a área é 200 mesmo. O valor de a é 1 + 2 raiz de 51, e z fica z = 1 + 2 raiz de 51 + 2i.",
+    "pending_criteria": [
+      {
+        "id": "coordinates",
+        "description": "Representa corretamente os pontos 1, z e z² em coordenadas reais.",
+        "max_points": 2.0,
+        "allowed_points": [
+          0.0,
+          2.0
+        ],
+        "input_status": "indeterminate",
+        "verification_status": "partial",
+        "coded_requirements": [
+          {
+            "description": "coordinates of z squared",
+            "relation_alternatives": [
+              [
+                "z^2=(a^2-4,4a)",
+                "z^2=a^2-4+4ai"
+              ]
+            ]
+          }
+        ],
+        "expected_bindings": null,
+        "conclusion_only": false,
+        "required_microclaims": [
+          {
+            "description": "O quadrado de z = a + 2i tem coordenadas reais (a² - 4, 4a).",
+            "status": "verified_by_lean",
+            "origin": "generated_reference",
+            "does_not_prove_student_attribution": true
+          }
+        ],
+        "existing_evidence": [],
+        "grounded_claims": [],
+        "grounded_claims_omitted": 0,
+        "candidate_student_checks": [],
+        "student_checks": [],
+        "candidate_evidence": [
+          {
+            "source_start": 222,
+            "source_end": 274,
+            "source_text": "Assim, no plano de Argand-Gauss, os três pontos são:",
+            "source_kind": "local_context",
+            "grounding_status": "grounded",
+            "verification_status": "not_checked",
+            "evidence_id": "E1_1"
+          },
+          {
+            "source_start": 222,
+            "source_end": 314,
+            "source_text": "Assim, no plano de Argand-Gauss, os três pontos são:\n1 = (1, 0)\nz = (a, 2)\nz² = (a² + 4, 4a)",
+            "source_kind": "local_context",
+            "grounding_status": "grounded",
+            "verification_status": "not_checked",
+            "evidence_id": "E1_2"
+          },
+          {
+            "source_start": 316,
+            "source_end": 546,
+            "source_text": "Vou calcular a área por determinante, que é o método mais direto e evita montar base e altura. Para pontos (x1, y1), (x2, y2), (x3, y3), a área é metade do módulo de x1(y2 - y3) + x2(y3 - y1) + x3(y1 - y2). Substituindo os pontos:",
+            "source_kind": "local_context",
+            "grounding_status": "grounded",
+            "verification_status": "not_checked",
+            "evidence_id": "E1_3"
+          }
+        ]
+      }
+    ]
+  },
+  "proposal": {
+    "coordinates": {
+      "decision": "award",
+      "suggested_points": 2,
+      "evidence_ids": [
+        "E1_2"
+      ],
+      "reason_code": "SATISFIES_CRITERION",
+      "rationale": "A evidência citada satisfaz o critério da pauta: «Representa corretamente os pontos 1, z e z² em coordenadas reais.»."
+    }
+  }
+}

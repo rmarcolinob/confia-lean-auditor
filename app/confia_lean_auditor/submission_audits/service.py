@@ -210,6 +210,9 @@ class AuditService:
                 if self._source(submission_id, request) != source:
                     raise SourceIntegrityError()
                 SubmissionStore._write_atomic_new(self._path(run_id), run.model_dump_json(indent=2).encode())
+                from confia_lean_auditor.tme.home_summary import project_submission
+                submission, _ = self.submissions._read(submission_id)
+                project_submission(submission, audit=run)
             return self.view(run)
 
     def view(self, run):

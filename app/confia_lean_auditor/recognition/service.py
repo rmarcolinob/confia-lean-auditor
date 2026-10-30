@@ -73,14 +73,16 @@ class RecognitionService:
     @staticmethod
     def _validate_mapping(output, snapshot):
         pages = {p.index: p for p in snapshot.pages}
-        strokes = {s.stroke_id: s for s in snapshot.strokes if s.stroke_id in snapshot.active_stroke_ids}
+        strokes = {s.stroke_id: s for s in snapshot.strokes if s.stroke_id in snapshot.active_stroke_ids} if isinstance(snapshot, CaptureSnapshot) else {}
         for segment in output.segments:
             if segment.page_index not in pages:
                 raise ValueError("unknown segment page")
             page = pages[segment.page_index]
             if segment.source_region is not None:
                 region = segment.source_region
-                if region.x + region.width > page.logical_width or region.y + region.height > page.logical_height:
+                width = getattr(page, "logical_width", getattr(page, "derived_width", 0))
+                height = getattr(page, "logical_height", getattr(page, "derived_height", 0))
+                if region.x + region.width > width or region.y + region.height > height:
                     raise ValueError("source region outside page")
             if segment.source_stroke_refs is not None:
                 if any(ref not in strokes or strokes[ref].page_id != page.page_id for ref in segment.source_stroke_refs):
@@ -131,7 +133,15 @@ class RecognitionService:
                 snapshot_raw = (folder / "snapshot.json").read_bytes()
                 if sha256(snapshot_raw) != submission.snapshot.sha256:
                     raise SubmissionIntegrityConflict()
-                snapshot = CaptureSnapshot.model_validate_json(snapshot_raw)
+                if submission.source == "image_scan":
+                    from confia_lean_auditor.tme.models import ScanSnapshot
+                    snapshot = ScanSnapshot.model_validate_json(snapshot_raw)
+                else:
+                    snapshot = CaptureSnapshot.model_validate_json(snapshot_raw)
+                if adapter.provider == "mathpix" and submission.source != "tablet":
+                    raise ValueError("strokes require tablet source")
+                if adapter.provider == "mathpix_image" and submission.source != "image_scan":
+                    raise ValueError("image provider requires scan source")
                 refs = input_references(submission, adapter.input_mode)
                 artifacts = tuple(RecognitionArtifact(r.filename, r.page_index, r.sha256,
                                   (folder / r.filename).read_bytes()) for r in refs)
@@ -183,6 +193,8 @@ class RecognitionService:
                     if path.parent.is_symlink():
                         raise ValueError("invalid recognition directory")
                     self.store._write_atomic_new(path, run.model_dump_json(indent=2).encode())
+                    from confia_lean_auditor.tme.home_summary import project_submission
+                    project_submission(submission, recognition=run)
                     return run, True
                 result = RecognitionResult(
                     **output.model_dump(), recognizer_run_id=run_id, submission_id=submission_id,

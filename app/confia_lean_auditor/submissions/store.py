@@ -137,7 +137,8 @@ class SubmissionStore:
         finally:
             temporary.unlink(missing_ok=True)
 
-    def receive(self, request: SubmissionRequest, owner=None, institutional_context=None, assessment_binding=None):
+    def receive(self, request: SubmissionRequest, owner=None, institutional_context=None, assessment_binding=None,
+                tme_case_id=None):
         snapshot, raw, images = validate_request(request)
         if assessment_binding is not None and (owner is None or institutional_context is None
                 or snapshot.problem_id != assessment_binding[3]):
@@ -157,6 +158,7 @@ class SubmissionStore:
                 if record.snapshot_id == snapshot.local_snapshot_id:
                     if (record.snapshot != artifact or record.page_images != page_images
                             or record.student_reference != request.student_reference
+                            or record.tme_case_id != tme_case_id
                             or (owner is not None and record.submitted_by_user_id != owner.user_id)
                             or (assessment_binding is not None and (record.assessment_id, record.assessment_item_id,
                                 record.assessment_definition_sha256) != assessment_binding[:3])
@@ -179,6 +181,8 @@ class SubmissionStore:
                                       assessment_id=assessment_binding[0] if assessment_binding else None,
                                       assessment_item_id=assessment_binding[1] if assessment_binding else None,
                                       assessment_definition_sha256=assessment_binding[2] if assessment_binding else None)
+            if tme_case_id is not None:
+                record = record.model_copy(update={"tme_case_id": tme_case_id})
             receipt = SubmissionReceipt(**record.model_dump())
             pending = Path(tempfile.mkdtemp(prefix=".pending-", dir=self.root))
             try:
@@ -196,6 +200,57 @@ class SubmissionStore:
                     shutil.rmtree(pending)
             return receipt, True
 
+    def receive_scan(self, snapshot, originals: list[bytes], derived: list[bytes], owner, case_id):
+        """Publish the device originals and OCR derivations in one immutable bundle."""
+        from confia_lean_auditor.tme.models import ScanSnapshot
+        snapshot = ScanSnapshot.model_validate(snapshot)
+        if snapshot.problem_id not in CATALOG or len(originals) != len(snapshot.pages) or len(derived) != len(originals):
+            raise ValueError("invalid scan bundle")
+        original_refs, image_refs = [], []
+        for page, original, image in zip(snapshot.pages, originals, derived):
+            if not original or len(original) > MAX_PNG_BYTES or not image or len(image) > MAX_PNG_BYTES:
+                raise SubmissionTooLarge()
+            signatures = {"image/jpeg": original.startswith(b"\xff\xd8\xff"),
+                          "image/png": original.startswith(b"\x89PNG\r\n\x1a\n"),
+                          "image/webp": original.startswith(b"RIFF") and original[8:12] == b"WEBP",
+                          "image/heic": original[4:8] == b"ftyp" and original[8:12] in {b"heic", b"heix", b"mif1"},
+                          "image/heif": original[4:8] == b"ftyp" and original[8:12] in {b"heif", b"mif1"}}
+            if not signatures[page.original_mime]:
+                raise ValueError("original image format mismatch")
+            validate_png(image, page.derived_width, page.derived_height)
+            original_refs.append(ArtifactReference(filename=f"original_{page.index + 1}.bin",
+                media_type=page.original_mime, sha256=sha256(original), size_bytes=len(original),
+                page_id=page.page_id, page_index=page.index))
+            image_refs.append(ArtifactReference(filename=f"page_{page.index + 1}.png",
+                media_type="image/png", sha256=sha256(image), size_bytes=len(image),
+                page_id=page.page_id, page_index=page.index))
+        raw = snapshot.model_dump_json().encode("utf-8")
+        snapshot_ref = ArtifactReference(filename="snapshot.json", media_type="application/json",
+                                          sha256=sha256(raw), size_bytes=len(raw))
+        record = SubmissionRecord(submission_id=f"sub_{uuid4().hex}", problem_id=snapshot.problem_id,
+            snapshot_id=snapshot.snapshot_id, source="image_scan", capture_schema_version="tme-scan-1.0",
+            received_at=datetime.now(timezone.utc),
+            snapshot=snapshot_ref, page_images=image_refs, scan_originals=original_refs,
+            submitted_by_user_id=owner.user_id if owner else None,
+            tenant_id=owner.tenant_id if owner else None, tme_case_id=case_id)
+        receipt = SubmissionReceipt(**record.model_dump())
+        with self._locked(exclusive=True):
+            pending = Path(tempfile.mkdtemp(prefix=".pending-", dir=self.root))
+            try:
+                self._write(pending / "snapshot.json", raw)
+                for refs, contents in ((original_refs, originals), (image_refs, derived)):
+                    for ref, data in zip(refs, contents):
+                        self._write(pending / ref.filename, data)
+                self._write(pending / "submission.json", record.model_dump_json(indent=2).encode())
+                self._write(pending / "receipt.json", receipt.model_dump_json(indent=2).encode())
+                self._sync_directory(pending)
+                os.replace(pending, self.root / record.submission_id)
+                self._sync_directory(self.root)
+            finally:
+                if pending.exists():
+                    shutil.rmtree(pending)
+        return receipt
+
     def list(self):
         with self._locked():
             return sorted(self._records(), key=lambda item: item.received_at, reverse=True)
@@ -207,7 +262,7 @@ class SubmissionStore:
     def _detail(self, submission_id):
         record, receipt = self._read(submission_id)
         integrity = []
-        for artifact in [record.snapshot, *record.page_images]:
+        for artifact in [record.snapshot, *record.page_images, *(record.scan_originals or [])]:
             path = self._folder(submission_id) / artifact.filename
             digest = sha256(path.read_bytes()) if path.is_file() and not path.is_symlink() else None
             integrity.append(ArtifactIntegrity(filename=artifact.filename, expected_sha256=artifact.sha256,
@@ -231,7 +286,7 @@ class SubmissionStore:
                 if path.is_symlink() or not path.is_file():
                     raise SubmissionIntegrityConflict()
             record, _ = self._read(submission_id)
-            for artifact in [record.snapshot, *record.page_images]:
+            for artifact in [record.snapshot, *record.page_images, *(record.scan_originals or [])]:
                 path = folder / artifact.filename
                 if path.is_symlink() or not path.is_file():
                     raise SubmissionIntegrityConflict()
@@ -247,9 +302,22 @@ class SubmissionStore:
                     or record.snapshot.media_type != "application/json"
                     or record.snapshot.size_bytes > MAX_IMPORT_BYTES):
                 raise SubmissionIntegrityConflict()
-            snapshot = CaptureSnapshot.model_validate_json((folder / "snapshot.json").read_bytes())
-            if snapshot.problem_id != record.problem_id or snapshot.local_snapshot_id != record.snapshot_id:
-                raise SubmissionIntegrityConflict()
+            if record.source == "image_scan":
+                from confia_lean_auditor.tme.models import ScanSnapshot
+                snapshot = ScanSnapshot.model_validate_json((folder / "snapshot.json").read_bytes())
+                if (snapshot.problem_id != record.problem_id or snapshot.snapshot_id != record.snapshot_id
+                        or not record.tme_case_id or len(record.scan_originals or []) != len(snapshot.pages)):
+                    raise SubmissionIntegrityConflict()
+                original_expected = {(p.index, p.page_id, f"original_{p.index + 1}.bin", p.original_mime)
+                                     for p in snapshot.pages}
+                original_actual = {(r.page_index, r.page_id, r.filename, r.media_type)
+                                   for r in record.scan_originals or []}
+                if original_expected != original_actual:
+                    raise SubmissionIntegrityConflict()
+            else:
+                snapshot = CaptureSnapshot.model_validate_json((folder / "snapshot.json").read_bytes())
+                if snapshot.problem_id != record.problem_id or snapshot.local_snapshot_id != record.snapshot_id:
+                    raise SubmissionIntegrityConflict()
             expected = {(page.index, page.page_id, f"page_{page.index + 1}.png") for page in snapshot.pages}
             actual = {(ref.page_index, ref.page_id, ref.filename) for ref in record.page_images}
             if (actual != expected or len(record.page_images) != len(expected)
@@ -457,6 +525,8 @@ class SubmissionStore:
         finally:
             if pending.exists():
                 shutil.rmtree(pending)
+        from confia_lean_auditor.tme.home_summary import project_submission
+        project_submission(submission, transcription=transcription, revision=revision, recognition=recognition_run)
         return revision
 
     def _read_automatic_run(self, folder, transcription=None, revisions=None):
@@ -558,12 +628,14 @@ class SubmissionStore:
                 self._revision_path(folder, revision_number),
                 revision.model_dump_json(indent=2).encode("utf-8"),
             )
+            from confia_lean_auditor.tme.home_summary import project_submission
+            project_submission(submission, transcription=record, revision=revision)
             return revision
 
     def accept_transcription(self, transcription_id: str, request: AcceptTranscriptionRequest):
         with self._locked(exclusive=True):
             folder = self._transcription_folder(transcription_id)
-            self.assert_submission_integrity(folder.parent.parent.name)
+            submission = self.assert_submission_integrity(folder.parent.parent.name)
             history = self._transcription_history(transcription_id)
             revision = next((item for item in history.revisions if item.revision_number == request.revision_number), None)
             if revision is None:
@@ -600,6 +672,9 @@ class SubmissionStore:
                 self._acceptance_path(folder, request.revision_number),
                 acceptance.model_dump_json(indent=2).encode("utf-8"),
             )
+            from confia_lean_auditor.tme.home_summary import project_submission
+            project_submission(submission, transcription=history.transcription, revision=revision,
+                               accepted_at=acceptance.accepted_at)
             return AcceptedTranscription(
                 revision=revision.model_copy(update={"status": "ACCEPTED"}), acceptance=acceptance,
             )

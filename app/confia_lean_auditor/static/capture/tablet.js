@@ -3,6 +3,9 @@
 
   const params = globalThis.location ? new URLSearchParams(globalThis.location.search) : null;
   const embedded = params?.get("embedded") === "1" && globalThis.parent !== globalThis;
+  const tmeEmbedded = embedded && /^case_[0-9a-f]{32}$/.test(params?.get("tme_case_id") || "");
+  const tmeCasePath = tmeEmbedded ? `/tme/cases/${params.get("tme_case_id")}` : null;
+  const recipient = tmeCasePath ? "avaliador" : "professor";
   let resolutionMode = embedded && params?.get("mode") === "practice" ? "practice" : "submission";
   let transitionQueue = Promise.resolve();
   let initialized = false;
@@ -13,6 +16,7 @@
     document.body.dataset.embedded = "true";
     document.body.dataset.workspaceMode = resolutionMode;
   }
+  if (tmeEmbedded) document.body.dataset.tme = "true";
 
   const Model = globalThis.ConfiaInkModel;
   const Canvas = globalThis.ConfiaInkCanvas;
@@ -158,7 +162,7 @@
     const state = submissionStates.get(captureDocument?.local_snapshot_id);
     const previewBusy = previewPending?.snapshot === captureDocument;
     const preview = transientPreview?.snapshot === captureDocument ? transientPreview : null;
-    const previewReady = !captureDocument?.active_stroke_ids?.length || Boolean(preview?.segments?.length && !preview?.loading);
+    const previewReady = Boolean(tmeCasePath) || !captureDocument?.active_stroke_ids?.length || Boolean(preview?.segments?.length && !preview?.loading);
     elements.sendSolution.disabled = resolutionMode !== "submission" || !Sender || !frozen || submissionBusy || previewBusy
       || !previewReady || Boolean(state?.receipt);
     elements.sendSolution.textContent = state?.receipt ? "Solução recebida" : "Enviar solução";
@@ -246,6 +250,14 @@
         registry: problemPresentations,
       });
     }
+    updatePilotDockOffset();
+  }
+
+  function updatePilotDockOffset() {
+    if (!tmeEmbedded) return;
+    const height = elements.problemDock.getBoundingClientRect().height;
+    // One measured dock, shared with the notebook. No duplicate statement or ink controls.
+    document.body.style.setProperty("--pilot-dock-height", `${Math.ceil(height)}px`);
   }
 
   function setProblemExpanded(expanded) {
@@ -253,6 +265,7 @@
     elements.problemStatementWrap.hidden = !expanded;
     elements.toggleProblem.setAttribute("aria-expanded", String(expanded));
     elements.toggleProblem.textContent = expanded ? "Recolher enunciado" : "Expandir enunciado";
+    updatePilotDockOffset();
   }
 
   function renderCanvas() {
@@ -492,8 +505,13 @@
 
   async function initialize() {
     try {
+      if (tmeEmbedded) {
+        // Keep the selected question first; reuse the same recovery controls below the notebook.
+        document.querySelector(".notebook-card").after(document.querySelector("#capture-recovery"));
+        document.querySelector(".notebook-controls").after(document.querySelector(".page-toolbar"));
+      }
       const [response, registry] = await Promise.all([
-        fetch("/problems", { headers: { Accept: "application/json" } }),
+        fetch(tmeCasePath ? "/tme/problems" : "/problems", { headers: { Accept: "application/json" } }),
         loadProblemPresentations(),
       ]);
       if (!response.ok) throw new Error(`Catálogo indisponível (${response.status}).`);
@@ -512,7 +530,7 @@
       renderProblem();
       // The catalog already presents the statement. Keep it available in the
       // sticky dock while giving handwriting the initial viewport priority.
-      if (embedded) setProblemExpanded(false);
+      if (embedded && !tmeEmbedded) setProblemExpanded(false);
       const requestedDraft = params?.get("draft_id");
       let restored = null;
       if (requestedDraft) {
@@ -539,13 +557,14 @@
     return queueTransition(() => changeProblem(id));
   });
   const initialSubmissionTarget = params?.get("submission_target");
-  let submissionTarget = embedded && /^\/assessments\/asmt_[0-9a-f]{32}\/items\/ait_[0-9a-f]{32}\/submissions$/.test(initialSubmissionTarget || "")
+  let submissionTarget = tmeCasePath ? `${tmeCasePath}/digital-submission` : embedded && /^\/assessments\/asmt_[0-9a-f]{32}\/items\/ait_[0-9a-f]{32}\/submissions$/.test(initialSubmissionTarget || "")
     ? initialSubmissionTarget : "/submissions";
   globalThis.addEventListener("message", event => {
     if (!embedded || !initialized || event.origin !== globalThis.location.origin || event.source !== globalThis.parent || event.data?.type !== "confia-workspace-command") return;
     const { action, problem_id: problemId, mode } = event.data;
     if (!["practice", "submission"].includes(mode)) return;
     if (action === "configure") {
+      if (tmeCasePath) return; // The case fixes the TME destination.
       const target = event.data.submission_target || "/submissions";
       if (target !== "/submissions" && !/^\/assessments\/asmt_[0-9a-f]{32}\/items\/ait_[0-9a-f]{32}\/submissions$/.test(target)) return;
       submissionTarget = target;
@@ -739,7 +758,7 @@
     transientPreview = { snapshot, segments: [], message: "Reconhecendo...", loading: true, kind: "pending" };
     renderSubmission();
     try {
-      const response = await fetch("/submissions/recognition-preview", {
+      const response = await fetch(tmeCasePath ? `${tmeCasePath}/recognition-preview` : "/submissions/recognition-preview", {
         method: "POST", headers: { "Content-Type": "application/json" }, cache: "no-store",
         body: JSON.stringify({ snapshot_json: snapshotJson, client_preview_id: clientPreviewId }),
       });
@@ -776,7 +795,7 @@
     tutorPreview = { source, segments: [], message: "Reconhecendo solução...", kind: "pending" };
     notifyContext();
     try {
-      const response = await fetch("/submissions/recognition-preview", {
+      const response = await fetch(tmeCasePath ? `${tmeCasePath}/recognition-preview` : "/submissions/recognition-preview", {
         method: "POST", headers: { "Content-Type": "application/json" }, cache: "no-store",
         body: JSON.stringify({ snapshot_json: JSON.stringify(Model.exportClone(snapshot), null, 2), client_preview_id: clientPreviewId }),
       });
@@ -809,7 +828,7 @@
     recognitionStates.set(snapshotId, state);
     renderSubmission();
     try {
-      const response = await fetch(`/submissions/${encodeURIComponent(receipt.submission_id)}/recognitions`, {
+      const response = await fetch(tmeCasePath ? `${tmeCasePath}/recognize` : `/submissions/${encodeURIComponent(receipt.submission_id)}/recognitions`, {
         method: "POST", headers: { "Content-Type": "application/json" }, cache: "no-store",
         body: JSON.stringify({ provider: "mathpix", idempotency_key: `mathpix:${state.attempt}` }),
       });
@@ -819,32 +838,35 @@
         if (summary.status === "FAILED") state.attempt += 1;
         throw new Error("O reconhecimento falhou. Toque novamente para tentar uma nova leitura.");
       }
-      const detail = await fetch(`/submissions/${encodeURIComponent(receipt.submission_id)}/recognitions/${encodeURIComponent(summary.recognizer_run_id)}`, { cache: "no-store" });
+      const detail = await fetch(`${tmeCasePath || `/submissions/${encodeURIComponent(receipt.submission_id)}`}/recognitions/${encodeURIComponent(summary.recognizer_run_id)}`, { cache: "no-store" });
       if (!detail.ok) throw new Error("A transcrição foi registrada, mas não pôde ser carregada. Toque novamente para recuperá-la.");
       const run = await detail.json();
       if (run.status !== "NEEDS_REVIEW" || !Array.isArray(run.result?.segments)) throw new Error("Transcrição automática indisponível.");
       state.segments = run.result.segments;
-      state.message = "Transcrição automática criada · aguarda conferência do professor.";
+      state.message = tmeCasePath ? "Transcrição automática disponível para análise." : `Transcrição automática criada · aguarda conferência do ${recipient}.`;
       const submission = submissionStates.get(snapshotId);
       if (submission?.receipt?.submission_id === receipt.submission_id) {
-        submissionStates.set(snapshotId, { ...submission, message: "Solução enviada ao professor. Transcrição automática aguarda conferência.", kind: "saved" });
+        submissionStates.set(snapshotId, { ...submission, message: tmeCasePath ? "Solução enviada. Transcrição automática disponível." : `Solução enviada ao ${recipient}. Transcrição automática aguarda conferência.`, kind: "saved" });
       }
     } catch (_error) {
       state.failed = true;
       state.message = "Não foi possível gerar a transcrição automática. Toque para tentar novamente.";
       const submission = submissionStates.get(snapshotId);
       if (submission?.receipt?.submission_id === receipt.submission_id) {
-        submissionStates.set(snapshotId, { ...submission, message: "Solução enviada ao professor. Não foi possível gerar a transcrição automática.", kind: "error" });
+        submissionStates.set(snapshotId, { ...submission, message: `Solução enviada ao ${recipient}. Não foi possível gerar a transcrição automática.`, kind: "error" });
       }
     } finally {
       recognitionBusy.delete(receipt.submission_id);
       renderSubmission();
+      if (tmeCasePath && embedded) globalThis.parent.postMessage({
+        type: "confia-notebook-context", context: { tmeRecognitionFinished: true, receipt },
+      }, globalThis.location.origin);
     }
   }
 
   elements.sendSolution.addEventListener("click", async () => {
     if (resolutionMode !== "submission" || !Sender || submissionBusy || captureDocument?.document_kind !== "local_snapshot" || submissionStates.get(captureDocument.local_snapshot_id)?.receipt) return;
-    if (captureDocument.active_stroke_ids.length && !(transientPreview?.snapshot === captureDocument && transientPreview.segments?.length)) return;
+    if (!tmeCasePath && captureDocument.active_stroke_ids.length && !(transientPreview?.snapshot === captureDocument && transientPreview.segments?.length)) return;
     const snapshot = Model.exportClone(captureDocument);
     const id = snapshot.local_snapshot_id;
     submissionBusy = true;
@@ -858,7 +880,7 @@
         submissionStates.set(id, { message: error.message, kind: "error" });
         return;
       }
-      submissionStates.set(id, { receipt, message: "Solução enviada ao professor. Gerando transcrição automática...", kind: "pending" });
+      submissionStates.set(id, { receipt, message: `Solução enviada ao ${recipient}. Gerando transcrição automática...`, kind: "pending" });
       notifyContext(snapshot, receipt, "submission");
       renderSubmission();
       await recognizeSubmittedSnapshot(id, receipt);
@@ -895,12 +917,17 @@
   if (typeof globalThis.ResizeObserver === "function") {
     const resizeObserver = new ResizeObserver(() => renderCanvas());
     resizeObserver.observe(elements.canvas);
+    if (tmeEmbedded) {
+      const dockObserver = new ResizeObserver(updatePilotDockOffset);
+      dockObserver.observe(elements.problemDock);
+    }
     if (embedded) {
       const layoutObserver = new ResizeObserver(() => notifyContext());
       layoutObserver.observe(document.querySelector(".capture-shell"));
     }
   } else {
     globalThis.addEventListener("resize", renderCanvas);
+    if (tmeEmbedded) globalThis.addEventListener("resize", updatePilotDockOffset);
   }
   globalThis.addEventListener("orientationchange", () => requestAnimationFrame(renderCanvas));
   initialize();

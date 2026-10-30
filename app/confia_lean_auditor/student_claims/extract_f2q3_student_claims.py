@@ -5,7 +5,11 @@ import unicodedata
 from typing import List
 
 from confia_lean_auditor.student_claims.schemas import StudentClaim
-from confia_lean_auditor.core.audit_math_projection import project_audit_math
+from confia_lean_auditor.core.audit_math_projection import (
+    canonicalize_equality,
+    iter_audit_equalities,
+    project_audit_math,
+)
 
 
 def normalize(text: str) -> str:
@@ -62,26 +66,18 @@ def _make_claim(
 
 
 def _extract_beta_difference(solution: str, claims: List[StudentClaim]) -> None:
-    t = normalize(solution)
-    c = compact(t)
-
-    candidates = [
-        ("cosbeta-sinbeta=1/2", "1 / 2", "cos beta - sin beta = 1/2"),
-        ("cos(beta)-sin(beta)=1/2", "1 / 2", "cos(beta)-sin(beta)=1/2"),
-        ("cosbeta-sinbeta=-1/2", "-1 / 2", "cos beta - sin beta = -1/2"),
-        ("cos(beta)-sin(beta)=-1/2", "-1 / 2", "cos(beta)-sin(beta)=-1/2"),
-        ("sinbeta-cosbeta=1/2", "1 / 2", "sin beta - cos beta = 1/2"),
-    ]
-
-    for needle, value_expr, raw in candidates:
-        if needle in c:
+    for raw in iter_audit_equalities(solution):
+        canonical = canonicalize_equality(raw)
+        for value_expr in ("1 / 2", "-1 / 2"):
+            if canonical != canonicalize_equality(f"cos(beta)-sin(beta)={value_expr}"):
+                continue
             claims.append(
                 _make_claim(
                     idx=len(claims),
                     claim_type="f2q3_student_beta_difference",
                     raw_text=raw,
                     normalized_text=f"cosBetaCandidate - sinBetaCandidate = {value_expr}",
-                    context=_context(solution, raw),
+                    context=solution,
                     data={"value_expr": value_expr},
                     method="ring",
                     confidence=0.86,
@@ -222,7 +218,7 @@ def _extract_final_answer(solution: str, claims: List[StudentClaim]) -> None:
             return
 
 
-def extract_f2q3_student_claims(solution: str) -> List[StudentClaim]:
+def extract_f2q3_student_claims(solution: str, *, _ground: bool = True) -> List[StudentClaim]:
     claims: List[StudentClaim] = []
 
     _extract_beta_difference(solution, claims)
@@ -230,4 +226,7 @@ def extract_f2q3_student_claims(solution: str) -> List[StudentClaim]:
     _extract_final_sin_sum(solution, claims)
     _extract_final_answer(solution, claims)
 
+    if _ground:
+        from confia_lean_auditor.student_claims.grounding import ground_student_claims
+        return ground_student_claims(solution, claims, extract_f2q3_student_claims)
     return claims

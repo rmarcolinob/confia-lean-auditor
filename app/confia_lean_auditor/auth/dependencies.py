@@ -73,7 +73,8 @@ def authorize_submission_record(user: AuthUser | None, record, *, student_write=
         legacy = (not all((record.network_id, record.school_id, record.classroom_id))
                   and allow_legacy_teacher_read()
                   and (record.tenant_id is None or record.tenant_id == user.tenant_id))
-        if not (institutional_store().teacher_can_view(user, record) or legacy):
+        tme_owned = bool(record.tme_case_id and record.submitted_by_user_id == user.user_id)
+        if not (tme_owned or institutional_store().teacher_can_view(user, record) or legacy):
             raise HTTPException(403, "Acesso não autorizado.")
     else:
         raise HTTPException(403, "Acesso não autorizado.")
@@ -120,6 +121,18 @@ def student_submission_access(submission_id: str, user: Optional[AuthUser] = Dep
     if not auth_enabled():
         return None
     return authorize_submission_record(user, _record_for_access(submission_id), student_write=True)
+
+
+def recognition_write_access(submission_id: str, user: Optional[AuthUser] = Depends(
+        require_any_role(Role.STUDENT, Role.TEACHER))):
+    if not auth_enabled():
+        return None
+    record = _record_for_access(submission_id)
+    if user.role == Role.STUDENT:
+        return authorize_submission_record(user, record, student_write=True)
+    if record.tme_case_id and record.submitted_by_user_id == user.user_id:
+        return record
+    raise HTTPException(403, "Acesso não autorizado.")
 
 
 def teacher_submission_access(submission_id: str, user: Optional[AuthUser] = Depends(

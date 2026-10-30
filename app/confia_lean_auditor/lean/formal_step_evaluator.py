@@ -470,6 +470,7 @@ def evaluate_formal_steps(
 
             results.append(
                 FormalStepResult(
+                    verification_scope="generated_reference",
                     id=step.id,
                     type=step.type,
                     description=step.description,
@@ -498,6 +499,7 @@ def evaluate_formal_steps(
 
         results.append(
             FormalStepResult(
+                verification_scope="generated_reference",
                 id=step.id,
                 type=step.type,
                 description=step.description,

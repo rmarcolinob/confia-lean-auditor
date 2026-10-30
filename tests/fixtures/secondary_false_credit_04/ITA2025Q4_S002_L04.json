@@ -1,0 +1,75 @@
+{
+  "dataset_id": "ITA2025Q4_S002_L04",
+  "problem_id": "ITA2025Q4",
+  "criterion_id": "positive_witnesses",
+  "kind": "deny",
+  "payload": {
+    "problem": {
+      "statement": "Sejam f : R -> R e g : R -> R funções reais definidas em todo R. Suponha que, para todo x > 0, vale g(x^2) = f(2x^2 - x + 1). Prove que g não é injetora."
+    },
+    "solution_text": "não sei fazer",
+    "pending_criteria": [
+      {
+        "id": "positive_witnesses",
+        "description": "Escolhe testemunhas positivas adequadas, por exemplo x1 = 1/8 e x2 = 3/8.",
+        "max_points": 2.0,
+        "allowed_points": [
+          0.0,
+          2.0
+        ],
+        "input_status": "indeterminate",
+        "verification_status": "partial",
+        "coded_requirements": [
+          {
+            "description": "positive witness assignments",
+            "relation_alternatives": [
+              [
+                "x1=1/8"
+              ],
+              [
+                "x2=3/8"
+              ]
+            ]
+          }
+        ],
+        "expected_bindings": null,
+        "conclusion_only": false,
+        "required_microclaims": [
+          {
+            "description": "As testemunhas x1 = 1/8 e x2 = 3/8 são positivas.",
+            "status": "no_textual_evidence",
+            "origin": "generated_reference",
+            "does_not_prove_student_attribution": true
+          }
+        ],
+        "existing_evidence": [],
+        "grounded_claims": [],
+        "grounded_claims_omitted": 0,
+        "candidate_student_checks": [],
+        "student_checks": [],
+        "candidate_evidence": [
+          {
+            "source_start": 0,
+            "source_end": 13,
+            "source_text": "não sei fazer",
+            "source_kind": "bounded_context",
+            "grounding_status": "grounded",
+            "verification_status": "not_checked",
+            "evidence_id": "E1_1"
+          }
+        ]
+      }
+    ]
+  },
+  "proposal": {
+    "positive_witnesses": {
+      "decision": "deny",
+      "suggested_points": 0,
+      "evidence_ids": [
+        "E1_1"
+      ],
+      "reason_code": "INSUFFICIENT_EVIDENCE",
+      "rationale": "Os candidatos disponíveis não trazem evidência suficiente para o critério da pauta: «Escolhe testemunhas positivas adequadas, por exemplo x1 = 1/8 e x2 = 3/8.»."
+    }
+  }
+}

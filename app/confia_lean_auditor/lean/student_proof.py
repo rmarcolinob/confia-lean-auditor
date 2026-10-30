@@ -7,6 +7,7 @@ import time
 
 from confia_lean_auditor.lean.run_lean import classify, detect_forbidden_tokens
 from confia_lean_auditor.student_claims.schemas import StudentClaimCheck
+from confia_lean_auditor.student_claims.grounding import has_valid_grounding
 
 
 def failure_outcome(proc):
@@ -45,7 +46,11 @@ def evaluate_student_proof(*, claim, lean_file: Path, lean_statement, method,
     check = StudentClaimCheck(id=claim.id, problem_id=claim.problem_id,
         claim_type=claim.claim_type, raw_text=claim.raw_text, normalized_text=claim.normalized_text,
         lean_statement=lean_statement, method=method, status="unverified", compiled=False,
-        lean_file=str(lean_file), stdout="", stderr="", data=claim.data)
+        lean_file=str(lean_file), stdout="", stderr="", data=claim.data,
+        grounding=claim.grounding)
+    if not has_valid_grounding(claim):
+        return replace(check, lean_file=None, failure_category="CLAIM_NOT_GROUNDED",
+                       stderr="Source binding is missing, ambiguous or inconsistent; no student verification was attempted.")
     started = time.monotonic()
     try:
         lean_file.write_text(lean_code, encoding="utf-8")
@@ -54,7 +59,7 @@ def evaluate_student_proof(*, claim, lean_file: Path, lean_statement, method,
         proc = runner(lean_file, timeout_seconds=timeout_seconds)
         check = replace(check, stdout=proc.stdout or "", stderr=proc.stderr or "")
         if proc.returncode == 0 and "declaration uses 'sorry'" not in (check.stdout + check.stderr).lower():
-            return replace(check, status="verified", compiled=True)
+            return replace(check, status="verified", formal_status="verified", compiled=True)
         status, category = failure_outcome(proc)
         check = replace(check, status=status, failure_category=category)
         if status == "technical_error":
@@ -72,7 +77,7 @@ def evaluate_student_proof(*, claim, lean_file: Path, lean_statement, method,
         neg = runner(negative, timeout_seconds=remaining)
         check = replace(check, refutation_stdout=neg.stdout or "", refutation_stderr=neg.stderr or "")
         if neg.returncode == 0 and "declaration uses 'sorry'" not in (check.refutation_stdout + check.refutation_stderr).lower():
-            return replace(check, status="refuted", refutation_verified=True, failure_category=None)
+            return replace(check, status="refuted", formal_status="refuted", refutation_verified=True, failure_category=None)
         status, category = failure_outcome(neg)
         return replace(check, status=status, failure_category=category)
     except subprocess.TimeoutExpired:
@@ -81,3 +86,44 @@ def evaluate_student_proof(*, claim, lean_file: Path, lean_statement, method,
     except OSError:
         return replace(check, status="technical_error", failure_category="PROCESS_ERROR",
                        stderr="Formal verification unavailable")
+
+
+def reconcile_attribution(check):
+    """Retain existing proposition artifacts without attributing them to a pupil.
+
+    Used for replay/imported results as well as defense in depth after a runner.
+    This never rewrites a historical artifact on disk.
+    """
+    if has_valid_grounding(check):
+        return check
+    if check.status in {"verified", "refuted"}:
+        return replace(check, formal_status=check.formal_status or check.status,
+                       status="unverified", failure_category="CLAIM_NOT_GROUNDED",
+                       grounding=_rejected_grounding(check))
+    return check
+
+
+def _rejected_grounding(claim):
+    grounding = dict(claim.grounding) if isinstance(claim.grounding, dict) else {}
+    if grounding.get("status") != "ambiguous":
+        grounding.update(status="unresolved", reason="Original source binding missing or inconsistent with structured claim")
+    return grounding
+
+
+def grounded_checker(function):
+    """Protect direct checker calls as well as registry dispatch."""
+    from functools import wraps
+
+    @wraps(function)
+    def guarded(claim, *args, **kwargs):
+        if not has_valid_grounding(claim):
+            return StudentClaimCheck(
+                id=claim.id, problem_id=claim.problem_id, claim_type=claim.claim_type,
+                raw_text=claim.raw_text, normalized_text=claim.normalized_text,
+                lean_statement="", method=claim.method, status="unverified",
+                compiled=False, lean_file=None, stdout="", stderr="",
+                data=claim.data, grounding=_rejected_grounding(claim),
+                failure_category="CLAIM_NOT_GROUNDED",
+            )
+        return reconcile_attribution(function(claim, *args, **kwargs))
+    return guarded

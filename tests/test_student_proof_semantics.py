@@ -12,6 +12,7 @@ from confia_lean_auditor.core.schemas import RubricAssessment, RubricItemResult
 from confia_lean_auditor.reports.report_builder import _build_check_evidence_items
 from confia_lean_auditor.student_claims.schemas import StudentClaim
 from test_submission_audits import source, accept, execute
+from claim_fixtures import grounded_claim
 
 
 CHECKERS = [
@@ -43,7 +44,11 @@ def test_every_checker_keeps_compile_failures_inconclusive(tmp_path, monkeypatch
     module = import_module(module_name)
     monkeypatch.setattr(module, "CHECK_DIR", tmp_path)
     monkeypatch.setattr(module, "_run_lean_file", lambda *args, **kwargs: subprocess.CompletedProcess([], 1, diagnostic, ""))
-    claim = StudentClaim("claim", problem, kind, "a=-1, b=3", "a=-1, b=3", "student", data)
+    texts = {"arithmetic_equality": "2+2=5", "f2q1_student_final_answer": "a=-1 e b=3",
+             "f2q3_student_final_answer": "resposta = (5+sqrt(7))/8",
+             "f2q5_student_final_digit": "primeiro algarismo = 5",
+             "f2q6_student_final_answer": "Portanto n=6 e n=7"}
+    claim = grounded_claim(problem, kind, texts[kind])
     check = getattr(module, function)(claim, "run", 0)
     assert check.status == expected and not check.refutation_verified
     evidence = _build_check_evidence_items([claim], [check])[0]
@@ -57,7 +62,7 @@ def test_timeout_exception_is_technical(tmp_path, monkeypatch):
     def timeout(*args, **kwargs):
         raise subprocess.TimeoutExpired("lean", 1)
     monkeypatch.setattr(module, "_run_lean_file", timeout)
-    claim = StudentClaim("claim", "ITA2025F2Q1", "f2q1_student_final_answer", "a=-1, b=3", "", "student", {"a": -1, "b": 3})
+    claim = grounded_claim("ITA2025F2Q1", "f2q1_student_final_answer", "a=-1, b=3")
     check = module.check_one_f2q1_student_claim(claim, "run", 0)
     assert check.status == "technical_error" and check.failure_category == "TIMEOUT"
 
@@ -73,7 +78,7 @@ def test_only_compiled_negation_is_refutation(tmp_path, monkeypatch, positive, n
         code = negative if refutation else positive
         return subprocess.CompletedProcess([], code, "" if code == 0 else "error: unsolved goals", "")
     monkeypatch.setattr(module, "_run_lean_file", runner)
-    claim = StudentClaim("claim", "ITA2025F2Q8", "arithmetic_equality", "2+2=5", "", "student", {"left_expr": "2+2", "right_expr": "5"})
+    claim = grounded_claim("ITA2025F2Q8", "arithmetic_equality", "2+2=5")
     check = module.check_one_student_claim(claim, "run", 0)
     assert check.status == expected
     assert check.refutation_verified is (expected == "refuted")
@@ -133,7 +138,7 @@ def test_real_arithmetic_negation_and_verified_claim(tmp_path, monkeypatch):
     module = import_module(CHECKERS[0][0])
     monkeypatch.setattr(module, "CHECK_DIR", tmp_path)
     for value, expected in (("5", "refuted"), ("4", "verified")):
-        claim = StudentClaim("claim", "ITA2025F2Q8", "arithmetic_equality", f"2+2={value}", "", "student", {"left_expr": "2+2", "right_expr": value})
+        claim = grounded_claim("ITA2025F2Q8", "arithmetic_equality", f"2+2={value}")
         check = module.check_one_student_claim(claim, f"real-{value}", 0)
         assert check.status == expected, check
         if expected == "refuted":

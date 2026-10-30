@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from typing import Any, Dict, List, Optional
 from confia_lean_auditor.student_claims.schemas import is_mathematically_refuted
+from confia_lean_auditor.student_claims.grounding import has_valid_grounding
 
 from confia_lean_auditor.core.schemas import (
     LeanCertificate,
@@ -74,8 +75,12 @@ def build_feedback(
 
     pending_items = [item.description for item in rubric.items if item.points is None]
     if pending_items:
-        parts.append("Avaliação incompleta; critérios indeterminados nesta execução: "
-                     + "; ".join(pending_items) + ". Nenhum zero foi atribuído por falta de verificação.")
+        if rubric.scoring_policy and rubric.score is not None:
+            parts.append("Critérios matematicamente indeterminados receberam sugestão por adjudicação secundária: "
+                         + "; ".join(pending_items) + ". Recomenda-se revisão do avaliador.")
+        else:
+            parts.append("Avaliação incompleta; critérios indeterminados nesta execução: "
+                         + "; ".join(pending_items) + ". Nenhum zero foi atribuído por falta de verificação.")
 
     dynamic_notes: List[str] = []
     for item in adjusted_items:
@@ -212,10 +217,21 @@ def _build_check_evidence_items(
         check_id = _field_value(check, "id")
         confidence = confidence_by_id.get(check_id)
 
-        if status == "verified":
+        grounded = has_valid_grounding(check)
+        if grounded:
+            evidence = _normalize_space(_field_value(check, "grounding")["source_text"])
+        if not grounded:
+            result = "verificação formal indisponível" if status in {"technical_error", "error"} else "não conclusiva"
+            explanation = (
+                "Não foi possível vincular esta interpretação com segurança ao texto original. "
+                "Uma eventual prova formal da proposição gerada não é atribuída ao estudante."
+            )
+            reliability = "não avaliada"
+            evidence = None
+        elif status == "verified":
             result = "conferida"
             explanation = (
-                "Esta afirmação foi reconhecida no texto e conferida automaticamente."
+                "Esta afirmação foi vinculada ao texto original e conferida por checagem automática."
             )
             reliability = _confidence_label(confidence)
         elif is_mathematically_refuted(check):
@@ -247,7 +263,7 @@ def _build_check_evidence_items(
         items.append(
             PedagogicalEvidenceItem(
                 id=str(check_id or f"student_check_{index}"),
-                title="Afirmação do estudante",
+                title="Afirmação do estudante" if grounded else "Interpretação pendente de revisão",
                 result=result,
                 evidence=evidence,
                 reliability=reliability,
@@ -269,16 +285,31 @@ def _build_rubric_evidence_items(
         if evidence and evidence in checked_evidence_texts:
             continue
 
-        if item.points is None:
+        if item.scoring_basis == "secondary_adjudication":
+            result = "pontuação sugerida"
+            reliability = "confiabilidade baixa"
+            evidence = " | ".join(item.scoring_evidence)
+            explanation = (f"Sugestão por adjudicação secundária: {item.suggested_points:g} de {item.max_points:g}. "
+                           f"{item.scoring_rationale} O estado matemático permanece indeterminado; revisão recomendada.")
+        elif item.points is None:
             result = "indeterminado"
             reliability = "não avaliada"
             explanation = item.assessment_note or "Evidência insuficiente para decidir este critério nesta execução."
+        elif item.points > 0 and item.positive_evidence and item.positive_evidence.get("supported"):
+            result = "pontuada"
+            basis = item.positive_evidence.get("verification_type")
+            reliability = "confiabilidade alta" if basis == "formal_verification" else "confiabilidade média"
+            explanation = (
+                "Crédito sustentado por afirmação vinculada ao trecho original e verificada formalmente."
+                if basis == "formal_verification" else
+                "Crédito sustentado pelo conteúdo matemático dos trechos originais indicados, conforme este critério da pauta."
+            )
         elif item.points > 0 and evidence:
             result = "pontuada"
             reliability = "confiabilidade média"
             explanation = (
-                "Este ponto da rubrica tem trecho textual correspondente, mas não foi uma "
-                "afirmação concreta checada separadamente."
+                "As evidências deste ponto foram produzidas pelo detector da rubrica. A descrição é derivada "
+                "e não constitui, por si só, citação literal nem afirmação do estudante verificada separadamente."
             )
         elif item.points > 0:
             result = "pontuada"
@@ -340,7 +371,7 @@ def build_pedagogical_report(
         if mc.textual_evidence and mc.lean_status in {"verified_by_lean", "verified_by_formal_steps"}
         and mc.dependencies_verified
     ]
-    positive = bool(verified_internal or any(item.result == "conferida" for item in check_items))
+    positive = any(item.result == "conferida" for item in check_items)
     supported = any(item.mathematical_status == "supported" for item in rubric.items)
     refuted = any(is_mathematically_refuted(check) for check in student_claim_checks)
     incomplete = (score is None or rubric.assessment_status != "complete" or
@@ -348,7 +379,10 @@ def build_pedagogical_report(
     technical = verification_status == "technical_error" or any(
         item.result == "verificação formal indisponível" for item in check_items) or any(
         item.verification_status == "technical_error" for item in rubric.items)
-    if (score is None or not (positive or supported or refuted)
+    if rubric.scoring_policy:
+        # The suggestion is distinct from verification coverage and human grading.
+        verdict = verdict_from_score(score, max_score)
+    elif (score is None or not (positive or supported or refuted)
             or not rubric.items
             or (verdict == "incorreto" and not refuted)):
         verdict = "inconclusivo"
@@ -356,13 +390,31 @@ def build_pedagogical_report(
             score = None
     if verified_internal and verdict == "correto":
         attention_points.append(
-            "As etapas centrais reconhecidas também passaram por verificação formal interna."
+            "As referências matemáticas associadas às etapas reconhecidas passaram por verificação formal interna; isso não comprova, por si só, a interpretação do texto do estudante."
         )
 
-    return PedagogicalReport(
-        summary=_summary_for_verdict(verdict, score, max_score, positive=positive, refuted=refuted,
+    summary = _summary_for_verdict(verdict, score, max_score, positive=positive, refuted=refuted,
             incomplete=incomplete, technical=technical, evaluated_score=rubric.evaluated_score,
-            evaluated_max_score=rubric.evaluated_max_score),
+            evaluated_max_score=rubric.evaluated_max_score)
+    scoring_fields = {}
+    if rubric.scoring_policy:
+        scoring_fields = {name: getattr(rubric, name) for name in
+            ("scoring_policy", "coverage", "estimated_points", "needs_review", "unscorable_reason")}
+        if score is not None:
+            summary = (f"Sugestão ConfIA: {score:g}/{max_score:g}. "
+                       f"Cobertura da primeira passagem: {100 * rubric.coverage:g}%. "
+                       f"Subtotal decidido: {rubric.evaluated_score:g} de {rubric.evaluated_max_score:g}. "
+                       f"{rubric.estimated_points:g} pontos atribuídos por adjudicação secundária. "
+                       "A sugestão não é a decisão oficial do avaliador nem uma garantia de correção matemática.")
+            if rubric.needs_review:
+                summary += " Recomenda-se revisão do avaliador."
+            if technical:
+                summary += " Houve indisponibilidade em parte das verificações formais."
+        else:
+            summary += f" Pontuação sugerida indisponível: {rubric.unscorable_reason}."
+
+    return PedagogicalReport(
+        summary=summary,
         result=verdict,
         score=score,
         max_score=max_score,
@@ -375,4 +427,5 @@ def build_pedagogical_report(
         assessment_status="indeterminate" if not rubric.items else rubric.assessment_status,
         evaluated_score=rubric.evaluated_score,
         evaluated_max_score=rubric.evaluated_max_score,
+        **scoring_fields,
     )

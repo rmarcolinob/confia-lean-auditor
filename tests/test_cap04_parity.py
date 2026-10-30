@@ -205,9 +205,25 @@ def assert_execution_invariants(data, solution, *, pipeline=True):
     microclaims = main.evaluate_microclaims(ROOT, data["problem_id"], extraction, certificate,
         certificate.generated_theorems, steps, assets.microclaims)
     assert [value.model_dump() for value in microclaims] == data["microclaims"]
-    rubric = main.evaluate_rubric(ROOT, data["problem_id"], extraction, microclaims, assets.rubric)
+    from confia_lean_auditor.claims.common.rubric_bridge import RubricClaimContext
+    from confia_lean_auditor.student_claims.schemas import StudentClaim
+    claim_context = RubricClaimContext(problem_id=data["problem_id"], solution_text=solution,
+        extraction=extraction, students=[StudentClaim(**c) for c in data["student_claims"]],
+        checks=data["student_claim_checks"], rubric_config=assets.rubric,
+        statement_text=assets.problem.statement, correct_answer=assets.problem.correct_answer)
+    rubric = main.evaluate_rubric(ROOT, data["problem_id"], extraction, microclaims, assets.rubric,
+        solution_text=solution, student_claim_checks=data["student_claim_checks"],
+        statement_text=assets.problem.statement, claim_context=claim_context)
     rubric = main.apply_student_claim_adjustments(rubric=rubric, problem_id=data["problem_id"],
                                                  student_claim_checks=data["student_claim_checks"])
+    rubric = main.apply_scoring_policy(rubric=rubric, solution=solution, assets=assets,
+        claim_extraction=extraction, microclaims=microclaims,
+        claim_context=claim_context,
+        student_claim_checks=data["student_claim_checks"],
+        technical_issue=(verification_state(certificate) == "technical_error" or
+                         any(c["status"] == "technical_error" for c in data["student_claim_checks"])))
+    if any((item.positive_evidence or {}).get('conflict') for item in rubric.items):
+        rubric.needs_review = True
     assert rubric.model_dump() == data["rubric_assessment"]
     report = main.build_pedagogical_report(score=rubric.score, max_score=rubric.max_score,
         verdict=main.verdict_from_score(rubric.score, rubric.max_score), rubric=rubric,

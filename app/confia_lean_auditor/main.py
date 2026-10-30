@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import shutil
+from contextlib import asynccontextmanager
 from dataclasses import asdict
 from datetime import datetime, timezone
 from pathlib import Path
@@ -30,10 +31,11 @@ from confia_lean_auditor.reports.report_builder import (
     verdict_from_score,
 )
 from confia_lean_auditor.rubric.rubric_evaluator import evaluate_rubric
+from confia_lean_auditor.rubric.scoring_policy import apply_scoring_policy
 from confia_lean_auditor.rubric.adjusters.registry import apply_student_claim_adjustments
 from confia_lean_auditor.llm.formal_step_extractor import FormalStepExtractionError
 from confia_lean_auditor.lean.student_claim_checkers.registry import check_student_claims_for_problem
-from confia_lean_auditor.student_claims.registry import extract_student_claims
+from confia_lean_auditor.student_claims.registry import extract_student_claims_for_audit as extract_student_claims
 from confia_lean_auditor.submissions.router import (
     router as submissions_router,
     transcriptions_router,
@@ -55,9 +57,20 @@ from confia_lean_auditor.institutional.router import router as institutional_rou
 from confia_lean_auditor.assessments.router import router as assessments_router
 from confia_lean_auditor.management.router import router as management_router
 from confia_lean_auditor.teacher_decisions.router import router as teacher_decisions_router
+from confia_lean_auditor.tme.router import router as tme_router
+from confia_lean_auditor.tme.auth import demo_no_auth_enabled
 
 
-app = FastAPI(title="ConfIA Lean Auditor", version=API_VERSION)
+@asynccontextmanager
+async def lifespan(_app):
+    demo_no_auth_enabled()  # Fail before serving any request on unsafe configuration.
+    from confia_lean_auditor.tme.home_summary import initialize_index
+    from starlette.concurrency import run_in_threadpool
+    await run_in_threadpool(initialize_index)
+    yield
+
+
+app = FastAPI(title="ConfIA Lean Auditor", version=API_VERSION, lifespan=lifespan)
 install_audit_exception_handlers(app)
 app.add_middleware(TranscriptionBodyLimitMiddleware)
 STATIC_DIR = Path(__file__).resolve().parent / "static"
@@ -70,6 +83,7 @@ app.include_router(institutional_router)
 app.include_router(assessments_router)
 app.include_router(management_router)
 app.include_router(teacher_decisions_router)
+app.include_router(tme_router)
 
 
 def repo_root() -> Path:
@@ -78,6 +92,8 @@ def repo_root() -> Path:
 
 @app.middleware("http")
 async def same_origin_mutations(request: Request, call_next):
+    if request.url.path == "/static/tme/index.html":
+        return RedirectResponse("/tme", status_code=307)
     enabled = auth_enabled()
     if enabled:
         cookie_secure()  # Reject an unsafe production configuration before serving any route.
@@ -106,7 +122,16 @@ def index(request: Request):
 
 
 @app.get("/capture", include_in_schema=False)
-def capture_notebook(_user=Depends(require_role(Role.STUDENT))):
+def capture_notebook(request: Request, _user=Depends(require_any_role(Role.STUDENT, Role.TEACHER))):
+    if _user is not None and _user.role == Role.TEACHER:
+        from confia_lean_auditor.tme.store import case_store
+        case_id = request.query_params.get("tme_case_id", "")
+        try:
+            case = case_store().for_user(case_id, _user)
+        except FileNotFoundError:
+            raise HTTPException(403, "Caderno TME não autorizado.") from None
+        if case.source_mode != "DIGITAL_INK":
+            raise HTTPException(403, "Caderno TME não autorizado.")
     return FileResponse(STATIC_DIR / "capture" / "tablet.html")
 
 
@@ -165,6 +190,10 @@ def execute_audit(req: AuditRequest) -> AuditResponse:
 
     try:
         claim_extraction = extract_claims(req.problem_id, req.solution)
+        # These legacy detectors/renderers certify generated reference propositions,
+        # not a source-grounded interpretation of the student's own statement.
+        for reference in [*claim_extraction.claims, *claim_extraction.formal_steps]:
+            reference.verification_scope = "generated_reference"
     except FormalStepExtractionError as exc:
         raise HTTPException(status_code=503, detail=str(exc)) from exc
 
@@ -196,7 +225,7 @@ def execute_audit(req: AuditRequest) -> AuditResponse:
     lean_raw["lean_file"] = str(attempt_path)
     lean_raw["generated_theorems"] = generated_theorems
 
-    lean_certificate = LeanCertificate(**lean_raw)
+    lean_certificate = LeanCertificate(**lean_raw, verification_scope="generated_reference")
 
     try:
         microclaims = evaluate_microclaims(
@@ -212,20 +241,29 @@ def execute_audit(req: AuditRequest) -> AuditResponse:
         raise HTTPException(status_code=500, detail=str(exc)) from exc
 
 
+    for reference in [*formal_steps, *microclaims]:
+        reference.verification_scope = "generated_reference"
+
     student_claims = extract_student_claims(req.problem_id, req.solution)
     student_claim_checks = check_student_claims_for_problem(
         problem_id=req.problem_id,
-        student_claims=student_claims,
+        # Generic records have no checker contract yet. Existing semantic
+        # claims (including deduplicated ones) retain their established route.
+        student_claims=[claim for claim in student_claims if not claim.claim_type.startswith('math_')],
         run_id=f"{run_id}_student_claims",
+        solution=req.solution,
     )
 
     student_claims_payload = [asdict(claim) for claim in student_claims]
+    from confia_lean_auditor.lean.student_proof import reconcile_attribution
+    student_claim_checks = [reconcile_attribution(check) for check in student_claim_checks]
     student_claim_checks_payload = [asdict(check) for check in student_claim_checks]
     # Keep mandatory proof witnesses inside this run's controlled directory.
     witnesses_dir = artifact_dir / "student_claim_checks"
     for index, check in enumerate(student_claim_checks_payload):
-        field = "lean_file" if check["status"] == "verified" else (
-            "refutation_lean_file" if check["status"] == "refuted" else None)
+        formal_outcome = check.get("formal_status") or check["status"]
+        field = "lean_file" if formal_outcome == "verified" else (
+            "refutation_lean_file" if formal_outcome == "refuted" else None)
         if field:
             witnesses_dir.mkdir(exist_ok=True)
             source_path = Path(check[field])
@@ -235,6 +273,13 @@ def execute_audit(req: AuditRequest) -> AuditResponse:
             shutil.copyfile(source_path, destination)
             check[field] = str(destination)
 
+    from confia_lean_auditor.claims.common.rubric_bridge import RubricClaimContext
+    claim_context = RubricClaimContext(
+        problem_id=req.problem_id, solution_text=req.solution, extraction=claim_extraction,
+        students=student_claims, checks=student_claim_checks_payload, rubric_config=assets.rubric,
+        statement_text=assets.problem.statement, correct_answer=assets.problem.correct_answer,
+    )
+
     try:
         rubric = evaluate_rubric(
             repo_root=root,
@@ -242,6 +287,10 @@ def execute_audit(req: AuditRequest) -> AuditResponse:
             claim_extraction=claim_extraction,
             microclaims=microclaims,
             rubric_config=assets.rubric,
+            solution_text=req.solution,
+            student_claim_checks=student_claim_checks_payload,
+            statement_text=assets.problem.statement,
+            claim_context=claim_context,
         )
     except FileNotFoundError as exc:
         raise HTTPException(status_code=404, detail=str(exc)) from exc
@@ -251,6 +300,20 @@ def execute_audit(req: AuditRequest) -> AuditResponse:
         problem_id=req.problem_id,
         student_claim_checks=student_claim_checks_payload,
     )
+
+    rubric = apply_scoring_policy(
+        rubric=rubric, solution=req.solution, assets=assets,
+        claim_extraction=claim_extraction, microclaims=microclaims,
+        student_claim_checks=student_claim_checks_payload,
+        claim_context=claim_context,
+        technical_issue=(verification_state(lean_certificate) == "technical_error" or
+                         any(c["status"] == "technical_error" for c in student_claim_checks_payload)),
+    )
+
+    # A grounded refutation still wins in the adjuster. Preserve the competing
+    # student-evidence conflict for human review even if all points are decided.
+    if any((item.positive_evidence or {}).get('conflict') for item in rubric.items):
+        rubric.needs_review = True
 
     verdict = verdict_from_score(rubric.score, rubric.max_score)
     feedback = build_feedback(rubric, lean_certificate, microclaims)
@@ -284,6 +347,13 @@ def execute_audit(req: AuditRequest) -> AuditResponse:
         pedagogical_report=pedagogical_report,
         artifact_dir=str(artifact_dir),
         reproducibility=publish_reproducibility(snapshot, artifact_dir),
+        scoring_policy=rubric.scoring_policy,
+        evaluated_score=rubric.evaluated_score,
+        evaluated_max_score=rubric.evaluated_max_score,
+        coverage=rubric.coverage,
+        estimated_points=rubric.estimated_points,
+        needs_review=rubric.needs_review,
+        unscorable_reason=rubric.unscorable_reason,
     )
 
     (artifact_dir / "solution.txt").write_text(req.solution, encoding="utf-8")
@@ -301,6 +371,21 @@ def execute_audit(req: AuditRequest) -> AuditResponse:
         json.dumps(student_claim_checks_payload, ensure_ascii=False, indent=2),
         encoding="utf-8",
     )
+
+    # Additive local trace: common claims never replace the public legacy payloads.
+    from confia_lean_auditor.claims.common.catalog import build_claim_catalog
+    common_claims = build_claim_catalog(
+        problem_id=req.problem_id, solution_text=req.solution, extraction=claim_extraction,
+        students=student_claims, checks=student_claim_checks_payload,
+        rubric_config=assets.rubric, rubric=rubric, formal_steps=formal_steps,
+        microclaims=microclaims, statement_text=assets.problem.statement,
+        claim_context=claim_context,
+    )
+    atomic_write(artifact_dir / "math_claims.json", common_claims.model_dump_json(indent=2).encode("utf-8"))
+
+    from confia_lean_auditor.rubric.secondary_adjudicator import artifact_trace
+    atomic_write(artifact_dir / "secondary_adjudication.json",
+        json.dumps(artifact_trace(rubric), ensure_ascii=False, indent=2).encode("utf-8"))
 
     # The result is the publication marker, after all referenced files exist.
     atomic_write(artifact_dir / "audit.json", response.model_dump_json(indent=2).encode("utf-8"))

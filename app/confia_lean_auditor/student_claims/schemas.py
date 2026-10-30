@@ -5,6 +5,12 @@ from typing import Any, Literal
 
 
 StudentClaimType = Literal[
+    "math_relation",
+    "math_expression",
+    "math_interval",
+    "math_value",
+    "math_bindings",
+    "math_property",
     "f2q8_student_final_answer",
     "arithmetic_equality",
     "f2q8_student_det_formula",
@@ -53,6 +59,7 @@ class StudentClaim:
     data: dict[str, Any] = field(default_factory=dict)
     method: str = "norm_num"
     confidence: float = 0.85
+    grounding: dict[str, Any] | None = None
 
 
 @dataclass
@@ -75,10 +82,14 @@ class StudentClaimCheck:
     refutation_verified: bool = False
     refutation_stdout: str = ""
     refutation_stderr: str = ""
+    grounding: dict[str, Any] | None = None
+    formal_status: str | None = None
 
 
 def is_mathematically_refuted(check) -> bool:
+    """A formal negation may penalize a pupil only with validated source binding."""
+    from confia_lean_auditor.student_claims.grounding import has_valid_grounding
     def value(name):
         return check.get(name) if isinstance(check, dict) else getattr(check, name, None)
     return (value("status") == "refuted" and value("refutation_verified") is True
-            and bool(value("refutation_lean_file")))
+            and bool(value("refutation_lean_file")) and has_valid_grounding(check))

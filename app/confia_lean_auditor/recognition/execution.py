@@ -8,6 +8,7 @@ import os
 from pathlib import Path
 from threading import BoundedSemaphore, Thread, TIMEOUT_MAX
 from time import monotonic, sleep
+from confia_lean_auditor.recognition.errors import ProviderFailure
 
 
 DEFAULT_PROVIDER_TIMEOUT_SECONDS = 30.0
@@ -114,6 +115,8 @@ def start_provider(operation, deadline):
                     outcome = (None, "PROVIDER_TIMEOUT")
             except TimeoutError:
                 outcome = (None, "PROVIDER_TIMEOUT")
+            except ProviderFailure as error:
+                outcome = (None, error.code)
             except BaseException:
                 # Do not retain exception objects/tracebacks or provider error text.
                 outcome = (None, "PROVIDER_FAILED")
