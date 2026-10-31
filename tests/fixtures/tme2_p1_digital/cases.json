@@ -1,0 +1,22 @@
+[
+  {"id":"a_complete","item":"a","text":"731-137=594","points":3,"band":"a.full"},
+  {"id":"a_single_arithmetic_error","item":"a","text":"731-137=584","points":2,"band":"a.arithmetic_only"},
+  {"id":"a_only_inverse","item":"a","text":"137","points":1,"band":"a.identification"},
+  {"id":"a_only_result","item":"a","text":"594","points":0,"band":null},
+  {"id":"a_no_evidence","item":"a","text":"Não sei resolver.","points":0,"band":null},
+  {"id":"a_wrong_setup","item":"a","text":"731-173=584","points":0,"band":null},
+  {"id":"b_complete","item":"b","text":"r=100c+10b+a.\n(100a+10b+c)-(100c+10b+a)=99a-99c=99(a-c).","points":5},
+  {"id":"b_no_factorization","item":"b","text":"r=100c+10b+a.\n(100a+10b+c)-(100c+10b+a)=99a-99c.","points":4},
+  {"id":"b_only_expression","item":"b","text":"99(a-c)","points":0},
+  {"id":"b_equivalent_algebra","item":"b","text":"r=a+10*b+100*c.\n(c+10*b+100*a)-(a+10*b+100*c)=99*a-99*c=-99*(c-a).","points":5},
+  {"id":"c_complete","item":"c","text":"D=99(a-c).\n1<=c.\na<=9.\na>c.\n(a-c) ∈ {1,2,3,4,5,6,7,8}\nD ∈ {99,198,297,396,495,594,693,792}","points":6,"band":"c.list.full","band_points":4},
+  {"id":"c_one_omission","item":"c","text":"D=99(a-c).\nD ∈ {99,198,297,396,495,594,693}","points":4,"band":"c.list.one_error","band_points":3},
+  {"id":"c_one_extraneous","item":"c","text":"{99,198,297,396,495,594,693,792,891}","points":3,"band":"c.list.one_error","band_points":3},
+  {"id":"c_several_with_pattern","item":"c","text":"D=99(a-c).\nD ∈ {99,198,297,396}","points":3,"band":"c.list.pattern","band_points":2},
+  {"id":"c_few_results","item":"c","text":"{99}","points":1,"band":"c.list.some","band_points":1},
+  {"id":"c_no_evidence","item":"c","text":"Não sei.","points":0,"band":null,"band_points":0},
+  {"id":"d_complete","item":"d","text":"99(a-c)=594.\na-c=6.\n(a,c) ∈ {(7,1),(8,2),(9,3)}\nb ∈ {0,1,2,3,4,5,6,7,8,9}\n3*10=30.","points":6},
+  {"id":"d_no_count","item":"d","text":"99(a-c)=594.\na-c=6.\n(a,c) ∈ {(7,1),(8,2),(9,3)}","points":4},
+  {"id":"d_later_error","item":"d","text":"99(a-c)=594.\na-c=6.\n(a,c) ∈ {(6,1),(7,2),(8,3)}\nb ∈ {1,2,3,4,5,6,7,8,9}\n3*9=27.","points":2},
+  {"id":"d_only_difference_then_error","item":"d","text":"a-c=6.\n(a,c) ∈ {(6,1),(7,2),(8,3)}\n30","points":0}
+]

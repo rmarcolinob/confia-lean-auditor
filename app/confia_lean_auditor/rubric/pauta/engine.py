@@ -79,7 +79,10 @@ class _Evaluation:
                 status, reason = "indeterminate", "CONDITIONAL_EVIDENCE_NOT_UNCONDITIONAL"
         return ObligationDecision(obligation_id=identifier, input_status=e.status,
             effective_status=status, origin=e.origin, evidence_refs=e.evidence_refs,
-            conditional_on=e.conditional_on, reason=reason)
+            conditional_on=e.conditional_on, reason=reason,
+            **{name: getattr(e, name) for name in
+               ("source_claim_ids", "verification_source", "grounding_status", "metadata")
+               if name in e.model_fields_set})
 
     def decision(self, rule, lower, upper, *, records=(), children=(), technical=False,
                  credit_refs=(), selected=None, carry=False, fully_satisfied=None, reason):

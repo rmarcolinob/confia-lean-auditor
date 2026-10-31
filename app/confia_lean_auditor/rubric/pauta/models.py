@@ -6,9 +6,9 @@ Decimal points keep caps and addition exact, including fractional rubrics.
 from __future__ import annotations
 
 from decimal import Decimal
-from typing import Annotated, Literal, Optional
+from typing import Annotated, Any, Literal, Optional
 
-from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr, field_validator, model_validator
+from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr, field_validator, model_serializer, model_validator
 
 Identifier = Annotated[StrictStr, Field(min_length=1, pattern=r"^\S+$")]
 Points = Annotated[Decimal, Field(ge=0, allow_inf_nan=False)]
@@ -28,7 +28,23 @@ class ConditionalContext(Contract):
     adopted_result_ref: Identifier
 
 
-class ObligationEvidence(Contract):
+class EvidenceTrace(Contract):
+    """Optional bridge provenance; old v1 payloads retain their serialized shape."""
+    source_claim_ids: tuple[Identifier, ...] = ()
+    verification_source: Optional[Literal["deterministic", "canonical_equivalence", "student_lean",
+                                         "reference_lean", "semantic", "secondary", "diagram"]] = None
+    grounding_status: Optional[Literal["grounded", "ambiguous", "unresolved", "unavailable"]] = None
+    metadata: dict[str, Any] = Field(default_factory=dict)
+
+    @model_serializer(mode="wrap")
+    def preserve_v1_shape(self, handler):
+        data = handler(self)
+        for name in {"source_claim_ids", "verification_source", "grounding_status", "metadata"} - self.model_fields_set:
+            data.pop(name, None)
+        return data
+
+
+class ObligationEvidence(EvidenceTrace):
     obligation_id: Identifier
     status: EvidenceStatus
     origin: EvidenceOrigin
@@ -44,6 +60,12 @@ class ObligationEvidence(Contract):
             raise ValueError("A mathematical decision requires existing evidence references")
         if self.origin == "secondary" and self.status == "refuted":
             raise ValueError("A secondary denial is not a mathematical refutation")
+        if self.verification_source is not None:
+            origin = "deterministic" if self.verification_source == "canonical_equivalence" else self.verification_source
+            if origin != self.origin:
+                raise ValueError("Verification source must preserve its scoring origin")
+        if self.attributable_to_student and self.grounding_status not in {None, "grounded"}:
+            raise ValueError("Attributed bridge evidence must be grounded")
         return self
 
 
@@ -177,7 +199,7 @@ class PautaConfig(Contract):
         return self
 
 
-class ObligationDecision(Contract):
+class ObligationDecision(EvidenceTrace):
     obligation_id: Identifier
     input_status: Optional[EvidenceStatus] = None
     effective_status: EvidenceStatus
