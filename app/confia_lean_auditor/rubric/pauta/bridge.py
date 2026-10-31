@@ -154,17 +154,24 @@ def _validated_status(fact, records, digest):
 
 def bridge_tme2_p1(config: PautaConfig, bundle: AuditorFactBundle) -> PautaBridgeResult:
     """Only P1; consume statuses and provenance, never expressions or points."""
+    return bridge_facts(config, bundle, problem_id=PILOT_ID,
+        obligation_map=TME2_P1_OBLIGATIONS, mapping_version="tme2-p1-obligations.v1")
+
+
+def bridge_facts(config: PautaConfig, bundle: AuditorFactBundle, *, problem_id,
+                 obligation_map, mapping_version) -> PautaBridgeResult:
+    """Shared explicit mapping, with exactly the P1 attribution/status gates."""
     config = PautaConfig.model_validate(config.model_dump())
     bundle = AuditorFactBundle.model_validate(bundle.model_dump())
-    if config.problem_id != PILOT_ID or bundle.problem_id != PILOT_ID:
-        raise ValueError("This bridge is restricted to the TME² P1 pilot")
-    if {o.id for o in config.obligations} != set(TME2_P1_OBLIGATIONS.values()):
+    if config.problem_id != problem_id or bundle.problem_id != problem_id:
+        raise ValueError("This bridge is restricted to its declared problem")
+    if {o.id for o in config.obligations} != set(obligation_map.values()):
         raise ValueError("Pilot obligation contract changed")
-    if any(f.fact_id not in TME2_P1_OBLIGATIONS for f in bundle.facts):
+    if any(f.fact_id not in obligation_map for f in bundle.facts):
         raise ValueError("Unmapped fact: no heuristic assignment to an obligation")
     by_id = {r.record_id: r for r in bundle.records}
     output = []
-    for fact_id, obligation_id in TME2_P1_OBLIGATIONS.items():
+    for fact_id, obligation_id in obligation_map.items():
         facts = [f for f in bundle.facts if f.fact_id == fact_id]
         ids = tuple(dict.fromkeys(i for f in facts for i in f.source_claim_ids))
         records = [by_id[i] for i in ids]
@@ -196,7 +203,7 @@ def bridge_tme2_p1(config: PautaConfig, bundle: AuditorFactBundle) -> PautaBridg
             attributable_to_student=bool(records) and grounding == "grounded" and all(r.source.attributable for r in records),
             source_claim_ids=ids, verification_source=mechanism, grounding_status=grounding,
             conditional_on=contexts[0] if contexts and all(c == contexts[0] for c in contexts) else None,
-            metadata={"fact_id": fact_id, "mapping_version": "tme2-p1-obligations.v1", "reason": reason,
+            metadata={"fact_id": fact_id, "mapping_version": mapping_version, "reason": reason,
                 "source_sha256": bundle.source_sha256,
                 "verifications": [{"verification_id": f.verification.verification_id,
                     "verification_source": f.verification_source, "effective_status": s,

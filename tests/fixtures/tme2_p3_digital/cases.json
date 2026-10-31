@@ -1,0 +1,161 @@
+[
+  {
+    "id": "a_complete",
+    "item": "a",
+    "text": "inferiores_brancas: 2\nprimeira_branca: 2/6=1/3",
+    "points": 4
+  },
+  {
+    "id": "a_answer_only",
+    "item": "a",
+    "text": "1/3",
+    "points": 2
+  },
+  {
+    "id": "a_count_only",
+    "item": "a",
+    "text": "inferiores_brancas: 2",
+    "points": 2
+  },
+  {
+    "id": "a_wrong_probability",
+    "item": "a",
+    "text": "inferiores_brancas: 2\nprimeira_branca: 2/6=1/2",
+    "points": 2
+  },
+  {
+    "id": "a_irrelevant",
+    "item": "a",
+    "text": "Não sei resolver.",
+    "points": 0
+  },
+  {
+    "id": "a_equivalent_answer",
+    "item": "a",
+    "text": "2/6",
+    "points": 2
+  },
+  {
+    "id": "a_finite_decimal",
+    "item": "a",
+    "text": "primeira_branca: 0.333",
+    "points": 0
+  },
+  {
+    "id": "a_repeating_decimal",
+    "item": "a",
+    "text": "primeira_branca: 0.333...",
+    "points": 0
+  },
+  {
+    "id": "b_official",
+    "item": "b",
+    "text": "pares_ordenados: 6*6=36\nfavoraveis_distintos: 2*5=10\nrepeticao_branca: {6}\nsegunda_branca: (10+1)/36=11/36",
+    "points": 8,
+    "selected_path": "b.counting"
+  },
+  {
+    "id": "b_missing_same",
+    "item": "b",
+    "text": "pares_ordenados: 6*6=36\nfavoraveis_distintos: 2*5=10\nsegunda_branca: (10+1)/36=11/36",
+    "points": 6,
+    "selected_path": "b.counting"
+  },
+  {
+    "id": "b_answer_only",
+    "item": "b",
+    "text": "11/36",
+    "points": 2,
+    "selected_path": "b.counting"
+  },
+  {
+    "id": "b_tree",
+    "item": "b",
+    "text": "ramo_1: 1/6\nramo_2: 1/6\nramo_3: 2/6\nramo_4: 2/6\nramo_5: 2/6\nramo_6: 3/6\narvore_total: (1/6)*(1/6+1/6+2/6+2/6+2/6+3/6)=11/36",
+    "points": 8,
+    "selected_path": "b.alternative"
+  },
+  {
+    "id": "b_wrong_favorable",
+    "item": "b",
+    "text": "pares_ordenados: 36\nfavoraveis_distintos: 12",
+    "points": 2,
+    "selected_path": "b.counting"
+  },
+  {
+    "id": "b_keyword_only",
+    "item": "b",
+    "text": "Árvore de possibilidades: 11/36",
+    "points": 0,
+    "selected_path": null
+  },
+  {
+    "id": "b_incomplete_tree",
+    "item": "b",
+    "text": "ramo_1: 1/6\nramo_2: 1/6\nramo_3: 2/6\nramo_4: 2/6\nramo_5: 2/6\narvore_total: (1/6)*(1/6+1/6+2/6+2/6+2/6+3/6)=11/36",
+    "points": 2,
+    "selected_path": "b.counting"
+  },
+  {
+    "id": "b_wrong_branch",
+    "item": "b",
+    "text": "ramo_1: 1/6\nramo_2: 1/6\nramo_3: 2/6\nramo_4: 2/6\nramo_5: 3/6\nramo_6: 3/6\narvore_total: (1/6)*(1/6+1/6+2/6+2/6+2/6+3/6)=11/36",
+    "points": 2,
+    "selected_path": "b.counting"
+  },
+  {
+    "id": "b_both_methods",
+    "item": "b",
+    "text": "pares_ordenados: 6*6=36\nfavoraveis_distintos: 2*5=10\nrepeticao_branca: {6}\nsegunda_branca: (10+1)/36=11/36\nramo_1: 1/6\nramo_2: 1/6\nramo_3: 2/6\nramo_4: 2/6\nramo_5: 2/6\nramo_6: 3/6\narvore_total: (1/6)*(1/6+1/6+2/6+2/6+2/6+3/6)=11/36",
+    "points": 8,
+    "selected_path": "b.counting"
+  },
+  {
+    "id": "c_complete",
+    "item": "c",
+    "text": "continuar: {1,2}\nestrategia_1: preta\ncontagem_1: 3\nestrategia_2: cinza\ncontagem_2: 3\ncondicional_1: 3/6=1/2\ncondicional_2: 3/6=1/2\ntotal: (1/6)(1/2)+(1/6)(1/2)=1/6",
+    "points": 8
+  },
+  {
+    "id": "c_no_total",
+    "item": "c",
+    "text": "continuar: {1,2}\nestrategia_1: preta\ncontagem_1: 3\nestrategia_2: cinza\ncontagem_2: 3\ncondicional_1: 3/6=1/2\ncondicional_2: 3/6=1/2",
+    "points": 6
+  },
+  {
+    "id": "c_answer_only",
+    "item": "c",
+    "text": "1/6",
+    "points": 0
+  },
+  {
+    "id": "c_wrong_second",
+    "item": "c",
+    "text": "continuar: {1,2}\nestrategia_1: preta\ncontagem_1: 3\nestrategia_2: preta\ncontagem_2: 3\ncondicional_1: 3/6=1/2\ncondicional_2: 3/6=1/2\ntotal: (1/6)(1/2)+(1/6)(1/2)=1/6",
+    "points": 3
+  },
+  {
+    "id": "c_wrong_total",
+    "item": "c",
+    "text": "continuar: {1,2}\nestrategia_1: preta\ncontagem_1: 3\nestrategia_2: cinza\ncontagem_2: 3\ncondicional_1: 3/6=1/2\ncondicional_2: 3/6=1/2\ntotal: (1/6)(1/2)+(1/6)(1/2)=1/5",
+    "points": 6
+  },
+  {
+    "id": "c_conditional_equivalent",
+    "item": "c",
+    "text": "continuar: {1,2}\nestrategia_1: preta\ncontagem_1: 3\nestrategia_2: cinza\ncontagem_2: 3\ncondicional_1: 2/4=1/2\ncondicional_2: 2/4=1/2\ntotal: (2/6)*(3/6)=1/6",
+    "points": 8
+  },
+  {
+    "id": "c_arithmetic_without_strategy",
+    "item": "c",
+    "text": "condicional_1: 3/6=1/2\ncondicional_2: 3/6=1/2\ntotal: (1/6)(1/2)+(1/6)(1/2)=1/6",
+    "points": 0
+  },
+  {
+    "id": "c_missing_continuation",
+    "item": "c",
+    "text": "estrategia_1: preta\ncontagem_1: 3\nestrategia_2: cinza\ncontagem_2: 3\ncondicional_1: 3/6=1/2\ncondicional_2: 3/6=1/2\ntotal: (1/6)(1/2)+(1/6)(1/2)=1/6",
+    "points": 5
+  }
+]
