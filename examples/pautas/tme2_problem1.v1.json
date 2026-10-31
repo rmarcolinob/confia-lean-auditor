@@ -1,0 +1,343 @@
+{
+  "schema_version": "pauta.v1",
+  "problem_id": "TME2_P1_PILOT",
+  "title": "TME² — Problema 1 (piloto do contrato de pauta fornecido)",
+  "max_score": 20,
+  "unresolved_policy": "withhold",
+  "obligations": [
+    {
+      "id": "a.identifies_137",
+      "description": "Identifica 137 como o número requerido.",
+      "accepted_origins": [
+        "deterministic",
+        "student_lean"
+      ]
+    },
+    {
+      "id": "a.constructs_subtraction",
+      "description": "Monta a subtração 731 - 137.",
+      "accepted_origins": [
+        "deterministic",
+        "student_lean"
+      ]
+    },
+    {
+      "id": "a.result_594",
+      "description": "Conclui que a subtração montada resulta em 594.",
+      "accepted_origins": [
+        "deterministic",
+        "student_lean"
+      ]
+    },
+    {
+      "id": "a.arithmetic_error_only",
+      "description": "A montagem é correta e a única falha é aritmética, conforme evidência avaliada upstream.",
+      "accepted_origins": [
+        "deterministic",
+        "student_lean"
+      ]
+    },
+    {
+      "id": "b.reversed_number",
+      "description": "Representa o invertido como 100c + 10b + a.",
+      "accepted_origins": [
+        "deterministic",
+        "student_lean"
+      ]
+    },
+    {
+      "id": "b.subtraction",
+      "description": "Monta corretamente (100a+10b+c) - (100c+10b+a).",
+      "accepted_origins": [
+        "deterministic",
+        "student_lean"
+      ]
+    },
+    {
+      "id": "b.middle_cancellation",
+      "description": "Justifica o cancelamento dos termos 10b na subtração.",
+      "accepted_origins": [
+        "deterministic",
+        "student_lean"
+      ]
+    },
+    {
+      "id": "b.factorization",
+      "description": "Desenvolve a simplificação 99a - 99c = 99(a-c), com justificação atribuída.",
+      "accepted_origins": [
+        "deterministic",
+        "student_lean"
+      ]
+    },
+    {
+      "id": "c.uses_expression",
+      "description": "Utiliza 99(a-c) no item c.",
+      "accepted_origins": [
+        "deterministic",
+        "student_lean"
+      ]
+    },
+    {
+      "id": "c.difference_domain",
+      "description": "Justifica a-c pertencente a {1,...,8}.",
+      "accepted_origins": [
+        "deterministic",
+        "student_lean"
+      ]
+    },
+    {
+      "id": "c.complete_list",
+      "description": "Lista todos os valores exigidos.",
+      "accepted_origins": [
+        "deterministic",
+        "student_lean"
+      ]
+    },
+    {
+      "id": "c.no_extraneous_values",
+      "description": "A lista não contém valores indevidos.",
+      "accepted_origins": [
+        "deterministic",
+        "student_lean"
+      ]
+    },
+    {
+      "id": "c.single_list_error",
+      "description": "A lista tem exatamente uma omissão ou exatamente um valor indevido, e nenhuma outra falha.",
+      "accepted_origins": [
+        "deterministic",
+        "student_lean"
+      ]
+    },
+    {
+      "id": "c.several_correct",
+      "description": "Apresenta vários valores corretos.",
+      "accepted_origins": [
+        "deterministic",
+        "student_lean"
+      ]
+    },
+    {
+      "id": "c.pattern_recognized",
+      "description": "Reconhece o padrão matemático dos valores.",
+      "accepted_origins": [
+        "deterministic",
+        "student_lean"
+      ]
+    },
+    {
+      "id": "c.some_correct",
+      "description": "Apresenta alguns valores corretos.",
+      "accepted_origins": [
+        "deterministic",
+        "student_lean"
+      ]
+    },
+    {
+      "id": "d.equation",
+      "description": "Estabelece 99(a-c)=594.",
+      "accepted_origins": [
+        "deterministic",
+        "student_lean"
+      ]
+    },
+    {
+      "id": "d.difference_six",
+      "description": "Obtém a-c=6.",
+      "accepted_origins": [
+        "deterministic",
+        "student_lean"
+      ]
+    },
+    {
+      "id": "d.digit_pairs",
+      "description": "Identifica exatamente os pares (7,1), (8,2), (9,3).",
+      "accepted_origins": [
+        "deterministic",
+        "student_lean"
+      ]
+    },
+    {
+      "id": "d.middle_choices",
+      "description": "Justifica dez possibilidades para b.",
+      "accepted_origins": [
+        "deterministic",
+        "student_lean"
+      ]
+    },
+    {
+      "id": "d.total_thirty",
+      "description": "Conclui o total 30 a partir dos pares e das dez possibilidades.",
+      "accepted_origins": [
+        "deterministic",
+        "student_lean"
+      ]
+    }
+  ],
+  "items": [
+    {
+      "id": "a",
+      "scoring_strategy": "banded",
+      "max_points": 3,
+      "children": [
+        {
+          "id": "a.full",
+          "scoring_strategy": "all_of",
+          "max_points": 3,
+          "obligation_ids": [
+            "a.identifies_137",
+            "a.constructs_subtraction",
+            "a.result_594"
+          ]
+        },
+        {
+          "id": "a.arithmetic_only",
+          "scoring_strategy": "all_of",
+          "max_points": 2,
+          "obligation_ids": [
+            "a.identifies_137",
+            "a.constructs_subtraction",
+            "a.arithmetic_error_only"
+          ]
+        },
+        {
+          "id": "a.identification",
+          "scoring_strategy": "all_of",
+          "max_points": 1,
+          "obligation_ids": [
+            "a.identifies_137"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b",
+      "scoring_strategy": "additive",
+      "max_points": 5,
+      "children": [
+        {
+          "id": "b.reverse",
+          "scoring_strategy": "all_of",
+          "max_points": 2,
+          "obligation_ids": [
+            "b.reversed_number"
+          ]
+        },
+        {
+          "id": "b.subtract_cancel",
+          "scoring_strategy": "all_of",
+          "max_points": 2,
+          "obligation_ids": [
+            "b.subtraction",
+            "b.middle_cancellation"
+          ]
+        },
+        {
+          "id": "b.simplify",
+          "scoring_strategy": "all_of",
+          "max_points": 1,
+          "obligation_ids": [
+            "b.factorization"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "c",
+      "scoring_strategy": "additive",
+      "max_points": 6,
+      "children": [
+        {
+          "id": "c.expression",
+          "scoring_strategy": "all_of",
+          "max_points": 1,
+          "obligation_ids": [
+            "c.uses_expression"
+          ]
+        },
+        {
+          "id": "c.domain",
+          "scoring_strategy": "all_of",
+          "max_points": 1,
+          "obligation_ids": [
+            "c.difference_domain"
+          ]
+        },
+        {
+          "id": "c.list",
+          "scoring_strategy": "banded",
+          "max_points": 4,
+          "children": [
+            {
+              "id": "c.list.full",
+              "scoring_strategy": "all_of",
+              "max_points": 4,
+              "obligation_ids": [
+                "c.complete_list",
+                "c.no_extraneous_values"
+              ]
+            },
+            {
+              "id": "c.list.one_error",
+              "scoring_strategy": "all_of",
+              "max_points": 3,
+              "obligation_ids": [
+                "c.single_list_error"
+              ]
+            },
+            {
+              "id": "c.list.pattern",
+              "scoring_strategy": "all_of",
+              "max_points": 2,
+              "obligation_ids": [
+                "c.several_correct",
+                "c.pattern_recognized"
+              ]
+            },
+            {
+              "id": "c.list.some",
+              "scoring_strategy": "all_of",
+              "max_points": 1,
+              "obligation_ids": [
+                "c.some_correct"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "d",
+      "scoring_strategy": "additive",
+      "max_points": 6,
+      "children": [
+        {
+          "id": "d.solve",
+          "scoring_strategy": "all_of",
+          "max_points": 2,
+          "obligation_ids": [
+            "d.equation",
+            "d.difference_six"
+          ]
+        },
+        {
+          "id": "d.pairs",
+          "scoring_strategy": "all_of",
+          "max_points": 2,
+          "obligation_ids": [
+            "d.digit_pairs"
+          ]
+        },
+        {
+          "id": "d.count",
+          "scoring_strategy": "all_of",
+          "max_points": 2,
+          "obligation_ids": [
+            "d.middle_choices",
+            "d.total_thirty"
+          ]
+        }
+      ]
+    }
+  ]
+}
