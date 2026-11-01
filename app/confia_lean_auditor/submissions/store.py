@@ -13,6 +13,7 @@ from uuid import uuid4
 
 from confia_lean_auditor.capture.schemas import MAX_IMPORT_BYTES
 from confia_lean_auditor.core.problem_catalog import CATALOG
+from confia_lean_auditor.tme.audit_models import PUBLIC_PROBLEMS
 from confia_lean_auditor.submissions.png import validate_png
 from confia_lean_auditor.submissions.schemas import (
     AcceptedTranscription, AcceptTranscriptionRequest, ArtifactIntegrity,
@@ -58,7 +59,7 @@ def validate_request(request: SubmissionRequest):
     if len(raw) > MAX_IMPORT_BYTES:
         raise SubmissionTooLarge()
     snapshot = CaptureSnapshot.model_validate_json(raw)
-    if snapshot.problem_id not in CATALOG:
+    if snapshot.problem_id not in (CATALOG.keys() | PUBLIC_PROBLEMS.keys()):
         raise InvalidSubmissionProblem()
     supplied = {page.page_id: page for page in request.pages}
     if len(supplied) != len(request.pages) or set(supplied) != {page.page_id for page in snapshot.pages}:
@@ -204,7 +205,7 @@ class SubmissionStore:
         """Publish the device originals and OCR derivations in one immutable bundle."""
         from confia_lean_auditor.tme.models import ScanSnapshot
         snapshot = ScanSnapshot.model_validate(snapshot)
-        if snapshot.problem_id not in CATALOG or len(originals) != len(snapshot.pages) or len(derived) != len(originals):
+        if snapshot.problem_id not in (CATALOG.keys() | PUBLIC_PROBLEMS.keys()) or len(originals) != len(snapshot.pages) or len(derived) != len(originals):
             raise ValueError("invalid scan bundle")
         original_refs, image_refs = [], []
         for page, original, image in zip(snapshot.pages, originals, derived):

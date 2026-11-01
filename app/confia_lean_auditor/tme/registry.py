@@ -17,6 +17,9 @@ TME_PROBLEMS = MappingProxyType({
 
 def audit_tme(problem_id, solution, *, solution_id=None, use_lean=True, run_id=None):
     """solution is a mapping of explicit DIGITAL items, as in the P1 pilot."""
+    # Public P1 spelling is an alias; preserve existing mathematical IDs/hashes.
+    if problem_id == "TME2026P1":
+        problem_id = "TME2_P1_PILOT"
     if problem_id not in TME_PROBLEMS:
         raise ValueError("Unsupported opt-in TME problem")
     if not isinstance(solution, dict):

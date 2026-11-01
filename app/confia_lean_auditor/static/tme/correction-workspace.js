@@ -7,11 +7,11 @@
     const code=String(value ?? "").trim(), numbered=code.match(/^prova[ _-]*(\d+)$/i);
     return numbered ? `Prova ${numbered[1]}` : code ? `Prova ${code}` : "Prova";
   };
-  const question = c => c.problem_id.match(/Q(\d+)$/)?.[1];
+  const question = c => c.problem_id.match(/[QP](\d+)$/)?.[1];
   function relatedCases(c, cases) {
-    const family = c.problem_id.replace(/Q\d+$/, "");
+    const family = c.problem_id.replace(/[QP]\d+$/, "");
     const unique = new Map();
-    for (const item of [c, ...cases]) if (item.external_candidate_ref === c.external_candidate_ref && item.problem_id.replace(/Q\d+$/, "") === family && !unique.has(item.problem_id)) unique.set(item.problem_id, item);
+    for (const item of [c, ...cases]) if (item.external_candidate_ref === c.external_candidate_ref && item.problem_id.replace(/[QP]\d+$/, "") === family && !unique.has(item.problem_id)) unique.set(item.problem_id, item);
     return [...unique.values()].sort((a,b) => a.problem_id.localeCompare(b.problem_id, undefined, {numeric:true}));
   }
   function QuestionNavigator(c, siblings, status, open, busy) {

@@ -9,6 +9,7 @@ from uuid import uuid4
 
 from confia_lean_auditor.core.paths import get_repo_root
 from confia_lean_auditor.core.problem_catalog import CATALOG
+from confia_lean_auditor.tme.audit_models import PUBLIC_PROBLEMS
 from .models import CaseCreate, CorrectionCase, EvaluatorDecision
 
 
@@ -57,7 +58,7 @@ class CaseStore:
         return case
 
     def create(self, body: CaseCreate, user):
-        if body.problem_id not in CATALOG:
+        if body.problem_id not in (CATALOG.keys() | PUBLIC_PROBLEMS.keys()):
             raise ValueError("Questão não disponível no catálogo.")
         case = CorrectionCase(**body.model_dump(), case_id=f"case_{uuid4().hex}",
             created_by_user_id=user.user_id, created_at=datetime.now(timezone.utc))

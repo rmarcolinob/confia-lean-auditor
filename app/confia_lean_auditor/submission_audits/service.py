@@ -18,8 +18,9 @@ from .source import build_source, canonical_hash, convert_segments, source_diges
 
 
 class AuditService:
-    def __init__(self, submissions: SubmissionStore, root: Path, engine):
+    def __init__(self, submissions: SubmissionStore, root: Path, engine, *, tme_use_lean=True):
         self.submissions, self.root, self.engine = submissions, root, engine
+        self.tme_use_lean = tme_use_lean
 
     def _source(self, submission_id, request):
         try:
@@ -72,7 +73,12 @@ class AuditService:
         persisted = next(item for item in self.submissions._read_revisions(folder)
                          if item.revision_number == revision.revision_number)
         receipt = self.submissions.assert_acceptance_integrity(folder, persisted, acceptance)
-        return build_source(submission, persisted, acceptance, receipt)
+        source = build_source(submission, persisted, acceptance, receipt)
+        if source.problem_id.startswith("TME"):
+            from confia_lean_auditor.tme.accepted_audit import audit_context
+            source = source.model_copy(update={"tme_context": audit_context(source.problem_id, self.tme_use_lean)})
+            source = source.model_copy(update={"source_hash": source_digest(source)})
+        return source
 
     @staticmethod
     def _validate_artifacts(result, manifest):
@@ -175,8 +181,13 @@ class AuditService:
                 return self.view(self._read(run_id))
             created_at = datetime.now(timezone.utc)
             try:
-                result = AuditResponse.model_validate(self.engine(EngineRequest(
-                    problem_id=source.problem_id, solution=source.solution_text)))
+                if source.tme_context is not None:
+                    from confia_lean_auditor.tme.accepted_audit import audit_accepted_tme_transcription
+                    from uuid import uuid4
+                    result = audit_accepted_tme_transcription(source, self.root / "artifacts" / (run_id + "-" + uuid4().hex))
+                else:
+                    result = AuditResponse.model_validate(self.engine(EngineRequest(
+                        problem_id=source.problem_id, solution=source.solution_text)))
                 if result.problem_id != source.problem_id:
                     raise ValueError("engine returned another problem")
                 manifest = capture_manifest(result)
@@ -203,7 +214,8 @@ class AuditService:
                     "unavailable" if status == "FAILED" else "legacy_unversioned"),
                 reproducibility_manifest_filename=record.filename if record else None,
                 reproducibility_manifest_sha256=record.manifest_sha256 if record else None,
-                execution_key=request.execution_key, error_code=error_code, auditor_version=None)
+                execution_key=request.execution_key, error_code=error_code,
+                auditor_version=source.tme_context.auditor_version if source.tme_context else None)
             # A newer revision leaves this accepted source valid. Changed
             # originals/acceptance block publication even after engine execution.
             with self.submissions._locked():

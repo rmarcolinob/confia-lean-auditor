@@ -6,6 +6,7 @@ from pydantic import Field, ValidationError
 
 from confia_lean_auditor.capture.schemas import Identifier, MAX_IMPORT_BYTES
 from confia_lean_auditor.core.problem_catalog import CATALOG
+from confia_lean_auditor.tme.audit_models import PUBLIC_PROBLEMS
 from confia_lean_auditor.recognition.execution import ProviderDeadline, configured_timeout_seconds, start_provider
 from confia_lean_auditor.recognition.registry import RecognitionArtifact, RecognitionInput
 from confia_lean_auditor.recognition.schemas import ProviderOutput
@@ -37,7 +38,7 @@ def recognize_preview(request: PreviewRequest, registry):
     if len(raw) > MAX_IMPORT_BYTES:
         raise PreviewError("INVALID_SNAPSHOT")
     snapshot = CaptureSnapshot.model_validate_json(raw)
-    if snapshot.problem_id not in CATALOG or not snapshot.active_stroke_ids:
+    if snapshot.problem_id not in (CATALOG.keys() | PUBLIC_PROBLEMS.keys()) or not snapshot.active_stroke_ids:
         raise PreviewError("INVALID_SNAPSHOT")
     adapter = registry.create("mathpix")
     if adapter.input_mode != "strokes":

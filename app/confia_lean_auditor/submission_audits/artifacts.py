@@ -7,6 +7,10 @@ from confia_lean_auditor.reproducibility.service import verify
 
 
 def required_references(result):
+    from confia_lean_auditor.tme.audit_models import TMEAuditResult
+    if isinstance(result, TMEAuditResult):
+        from confia_lean_auditor.tme.audit_artifacts import required_references as tme_references
+        return tme_references(result)
     root = Path(result.artifact_dir or "")
     if not result.artifact_dir or not root.is_absolute() or not root.is_dir():
         raise ValueError("invalid audit artifact directory")

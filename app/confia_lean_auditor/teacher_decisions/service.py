@@ -63,11 +63,13 @@ def audit_snapshot(record, run_id, points):
     maximum = Decimal(str(result.max_score)) if result else None
     if any(value is not None and not value.is_finite() for value in (score, maximum)):
         raise DecisionIntegrityError("non-finite audit score")
-    technical_error = result is not None and (
+    from confia_lean_auditor.tme.audit_models import TMEAuditResult
+    technical_error = (result.assessment.score is None
+        if isinstance(result, TMEAuditResult) else result is not None and (
         result.rubric_assessment.assessment_status == "indeterminate"
         or any(item.verification_status == "technical_error" for item in result.rubric_assessment.items)
         or any(item.verification_status == "technical_error" for item in result.microclaims)
-        or (result.pedagogical_report is not None and result.pedagogical_report.verification_status == "technical_error"))
+        or (result.pedagogical_report is not None and result.pedagogical_report.verification_status == "technical_error")))
     suggestion = suggested_points(points, score, maximum) if run.status == "COMPLETED" and not technical_error else None
     return dict(audit_run_id=run.audit_run_id, audit_source_sha256=run.source_hash,
                 audit_result_sha256=run.result_sha256, confia_score_raw=score,

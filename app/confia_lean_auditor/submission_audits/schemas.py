@@ -1,7 +1,7 @@
 from datetime import datetime
-from typing import Annotated, Literal, Optional
+from typing import Annotated, Literal, Optional, Union
 
-from pydantic import Field, model_validator
+from pydantic import Field, model_validator, model_serializer
 from confia_lean_auditor.submissions.integrity import model_sha256, canonical_sha256
 
 from confia_lean_auditor.core.schemas import AuditResponse
@@ -9,6 +9,8 @@ from confia_lean_auditor.submissions.schemas import (
     AcceptanceId, ArtifactReference, Sha256, SubmissionId, SubmissionModel,
     TranscriptionAcceptance, TranscriptionAcceptanceReceipt, TranscriptionId, TranscriptionRevision,
 )
+
+from confia_lean_auditor.tme.audit_models import TMEAuditContext, TMEAuditResult
 
 AuditRunId = Annotated[str, Field(pattern=r"^aud_[0-9a-f]{64}$")]
 
@@ -49,6 +51,15 @@ class AuditSource(SubmissionModel):
     provenance: AuditProvenance
     warnings: list[ConversionWarning] = Field(default_factory=list)
 
+    tme_context: Optional[TMEAuditContext] = None
+
+    @model_serializer(mode="wrap")
+    def preserve_legacy_shape(self, handler):
+        data = handler(self)
+        if "tme_context" not in self.model_fields_set:
+            data.pop("tme_context", None)
+        return data
+
     @model_validator(mode="after")
     def accepted_binding(self):
         revision, acceptance = self.provenance.revision, self.provenance.acceptance
@@ -88,7 +99,7 @@ class AuditRun(SubmissionModel):
     source: AuditSource
     created_at: datetime
     status: Literal["COMPLETED", "FAILED"]
-    result: Optional[AuditResponse] = None
+    result: Optional[Union[TMEAuditResult, AuditResponse]] = None
     result_sha256: Optional[Sha256] = None
     required_artifacts: list[RequiredArtifact] = Field(default_factory=list)
     artifact_manifest_sha256: Optional[Sha256] = None
@@ -116,6 +127,12 @@ class AuditRun(SubmissionModel):
                       "acceptance_id", "source_hash"):
             if getattr(self, field) != getattr(self.source, field):
                 raise ValueError("inconsistent audit source binding")
+        if isinstance(self.result, TMEAuditResult):
+            if (self.source.tme_context != self.result.context
+                    or self.auditor_version != self.result.context.auditor_version
+                    or self.result.accepted_transcription_revision_id != f"{self.transcription_id}:{self.revision_number}"
+                    or self.result.accepted_revision_sha256 != self.source.provenance.acceptance.accepted_revision_sha256):
+                raise ValueError("inconsistent accepted TME result")
         if self.status == "COMPLETED":
             if self.result is None or self.error_code is not None or not self.artifact_dir:
                 raise ValueError("completed audit requires a result")

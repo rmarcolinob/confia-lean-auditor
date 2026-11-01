@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import Annotated, Literal, Optional, Union
 from datetime import datetime
 
-from pydantic import BaseModel, ConfigDict, Field, StringConstraints, model_validator
+from pydantic import BaseModel, ConfigDict, Field, StringConstraints, model_validator, model_serializer
 
 from confia_lean_auditor.capture.schemas import (
     CaptureDocument, Identifier, MAX_IMPORT_BYTES, MAX_PAGES, SCHEMA_VERSION,
@@ -116,6 +116,9 @@ class TranscriptionSourceRegion(SubmissionModel):
     coordinate_system: Literal["top_left_css_pixels"] = "top_left_css_pixels"
 
 
+from confia_lean_auditor.tme.p2_diagram import DiagramSubmission
+
+
 class TranscriptionSegment(SubmissionModel):
     segment_id: Identifier
     page_index: int = Field(ge=0, lt=MAX_PAGES)
@@ -126,6 +129,18 @@ class TranscriptionSegment(SubmissionModel):
     confidence: Optional[float] = Field(default=None, ge=0, le=1)
     source_region: Optional[TranscriptionSourceRegion] = None
     source_stroke_refs: Optional[list[Identifier]] = Field(default=None, max_length=2_000)
+
+    # Optional, explicitly reviewed TME mapping; not inferred by recognition.
+    tme_item_id: Optional[Literal["a", "b", "c", "d"]] = None
+    tme_diagrams: Optional[list[DiagramSubmission]] = Field(default=None, max_length=8)
+
+    @model_serializer(mode="wrap")
+    def preserve_legacy_shape(self, handler):
+        data = handler(self)
+        for name in ("tme_item_id", "tme_diagrams"):
+            if name not in self.model_fields_set:
+                data.pop(name, None)
+        return data
 
     @model_validator(mode="after")
     def validate_stroke_references(self) -> "TranscriptionSegment":

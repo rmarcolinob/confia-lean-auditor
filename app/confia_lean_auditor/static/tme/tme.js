@@ -96,7 +96,7 @@
     if (!state.cache.has(c.case_id)) state.cache.set(c.case_id, { page: 0, zoom: 1, rotation: 0, tab: "original", draft: {}, editors: {}, audits: null, history: null, decision: undefined, detail: null, feedback: null });
     return state.cache.get(c.case_id);
   };
-  const questionNumber = c => c.problem_id.match(/Q(\d+)$/)?.[1];
+  const questionNumber = c => c.problem_id.match(/[QP](\d+)$/)?.[1];
   function renderRecentCases() {
     const recent = document.querySelector("#recent-cases"); if (!recent) return;
     recent.replaceChildren();
@@ -393,6 +393,7 @@
     tabs.setAttribute("aria-label", "Visualização da solução"); tabs.setAttribute("role", "tablist");
     const original = node("section", undefined, "original-document"), transcript = node("section", undefined, "transcript-document");
     original.setAttribute("aria-label", "Original"); transcript.setAttribute("aria-label", "Transcrição");
+    if (/^TME2026P[1-5]$/.test(c.problem_id)) transcript.appendChild(note("Identifique cada item em uma linha própria: [a], [b], [c] ou [d], conforme a questão. Confira e aceite a transcrição antes da análise."));
     const pages = [...new Set([...(saved.detail?.submission?.page_images || []).map(p => p.page_index), ...(latest?.segments || []).map(s => s.page_index)])].sort((a,b) => a-b);
     const pageNodes = pages.map(index => manuscriptPage(c, index)); original.append(...pageNodes);
     Workspace.attachPan(original,saved);

@@ -15,7 +15,77 @@
     else el.textContent=glyph(status);
     return el;
   };
+  // Presentation only: all point/status decisions come from the persisted engine.
+  const p5Labels = {
+    candidate:"Apresenta uma decomposição candidata",product:"Calcula o produto da decomposição",
+    enumeration:"Compara as decomposições possíveis",structural_max:"Justifica a maximalidade do produto",
+    normal_list:"Apresenta a lista na forma reduzida",one_domain:"Estabelece as condições para eliminar parcelas iguais a um",
+    one_sum:"Preserva a soma ao eliminar uma parcela um",one_gain:"Mostra o aumento do produto ao eliminar uma parcela um",
+    domain:"Estabelece o domínio da substituição",sum_preserved:"Preserva a soma na substituição",
+    increase:"Demonstra o aumento do produto",four_sum:"Preserva a soma ao trocar quatro por dois e dois",
+    four_product:"Preserva o produto ao trocar quatro por dois e dois",twos_sum:"Preserva a soma ao substituir três parcelas dois",
+    twos_gain:"Mostra o ganho de produto ao substituir três parcelas dois",old_contribution:"Calcula a contribuição anterior ao produto",
+    new_contribution:"Calcula a nova contribuição ao produto",comparison:"Compara os produtos antes e depois",
+    no_ones:"Exclui parcelas iguais a um no máximo",no_ge5:"Exclui parcelas maiores ou iguais a cinco",
+    threes_count:"Determina a quantidade de parcelas três",twos_count:"Determina a quantidade de parcelas dois",
+    decomposition:"Verifica a decomposição da soma",max_product:"Conclui o produto máximo",general_rule:"Apresenta a regra geral",
+    quotient:"Determina o quociente da divisão por três",general_complete:"Justifica todos os casos da regra geral",
+    residue0_twos:"Determina os dois no caso de resto zero",residue0_threes:"Determina os três no caso de resto zero",
+    residue1_twos:"Determina os dois no caso de resto um",residue1_threes:"Determina os três no caso de resto um",
+    residue2_twos:"Determina os dois no caso de resto dois",residue2_threes:"Determina os três no caso de resto dois",
+    list_twos:"Apresenta a lista com parcelas dois",list_four:"Apresenta a lista com uma parcela quatro",
+    uniqueness:"Justifica que não há outras listas máximas",size_twos:"Conta os termos da lista com parcelas dois",
+    size_four:"Conta os termos da lista com uma parcela quatro",different_sizes:"Reconhece os comprimentos distintos",
+    sizes:"Conclui os comprimentos das listas",cf_adoption:"Explicita o resultado anterior adotado",
+    cf_dependency:"Relaciona a etapa atual ao resultado adotado",cf_coherence:"Mantém o raciocínio coerente com o resultado adotado"
+  };
+  function renderTME(data, host, options) {
+    const report=n("div",null,"workspace-report"), a=data.assessment;
+    const fmt=v=>v==null?"Pendente":String(v).replace(".",",");
+    const labels={supported:"Atendido",refuted:"Afirmação refutada",indeterminate:"Não foi possível determinar com segurança — revisão necessária",technical_error:"Erro técnico — revisão necessária"};
+    const definitions=Object.fromEntries(data.pauta.obligations.map(o=>[o.id,o.description]));
+    const rules={}; const index=r=>{rules[r.id]=r;(r.children||[]).forEach(index);};data.pauta.items.forEach(index);
+    const records=Object.fromEntries(data.bridge.auditor.records.map(r=>[r.record_id,r]));
+    const title=id=>definitions[id] && definitions[id]!==id ? definitions[id].replace("avaliada upstream", "disponível") : p5Labels[id.split(".").at(-1)] || "Etapa do raciocínio";
+    const summary=n("section",null,"review-outcome");summary.setAttribute("aria-label","Resultado sugerido");
+    summary.append(n("span","Sugestão ConfIA","quiet-label"),n("p",data.score==null?"Pontuação não determinada":`${fmt(data.score)} / ${fmt(data.max_score)}`,"review-score"),n("p",a.needs_review?"Sugestão provisória — revisão necessária":"Análise concluída","review-verdict"));
+    summary.append(n("p","A nota final é uma decisão do avaliador."));report.append(summary);
+    for(const warning of data.input_warnings||[]) report.append(n("p",warning,"formal-warning"));
+    const showDecision=(decision,container,top=false)=>{
+      const row=n("details",null,"audit-criterion");row.open=top;row.dataset.criterionId=decision.item_id;
+      row.dataset.mathematicalStatus=decision.status;
+      const label=top?`Item (${decision.item_id})`:rules[decision.item_id]?.description || "Etapa da correção";
+      row.append(n("summary",`${label} — ${fmt(decision.points_awarded)} / ${fmt(decision.max_points)}`));
+      if(decision.needs_review)row.append(n("p",`Revisão necessária. Pontos confirmados: ${fmt(decision.known_points)}; possíveis: ${fmt(decision.possible_points)}.`));
+      if(decision.carry_forward_applied)row.append(n("p","Crédito pela continuidade coerente do raciocínio anterior."));
+      const seen=new Set();
+      for(const o of decision.obligations||[]){
+        if(seen.has(o.obligation_id))continue;seen.add(o.obligation_id);
+        const box=n("div",null,"criterion-evidence");box.dataset.mathematicalStatus=o.effective_status;
+        box.append(n("p",`${glyph(o.effective_status)} ${title(o.obligation_id)} — ${labels[o.effective_status]}`));
+        for(const id of o.source_claim_ids||[]){
+          const record=records[id];if(!record)continue;
+          if(record.source.raw_text)box.append(n("blockquote",record.source.raw_text,"evidence-quote"));
+          else if(record.source.kind==="diagram_structured")box.append(n("p",`Evidência encontrada: diagrama estruturado confirmado${record.source.page_index==null?"":` na página ${record.source.page_index+1}`}.`));
+        }
+        const checks=data.bridge.auditor.facts.filter(f=>f.student_check && (o.source_claim_ids||[]).some(id=>f.source_claim_ids.includes(id))).map(f=>f.student_check);
+        if(checks.some(c=>c.status==="verified" && c.compiled && c.lean_file))box.append(n("p","Verificação formal com Lean: confirmada (etapa local).","formal-status"));
+        if(checks.some(c=>c.status==="refuted" && c.refutation_verified && c.refutation_lean_file))box.append(n("p","Verificação formal: afirmação incompatível (etapa local).","formal-status"));
+        if(o.verification_source==="deterministic"||o.verification_source==="canonical_equivalence")box.append(n("p","Verificação matemática da evidência encontrada."));
+        row.append(box);
+      }
+      const selected=decision.selected_method_path || decision.selected_band;
+      const children=selected?(decision.children||[]).filter(c=>c.item_id===selected):(decision.children||[]);
+      children.forEach(child=>showDecision(child,row));container.append(row);
+    };
+    const criteria=n("section",null,"dense-criteria");criteria.append(n("h3","Critérios da pauta"));
+    a.items.forEach(item=>showDecision(item,criteria,true));report.append(criteria);
+    if(root.ConfIAReport?.presentation)report.append(root.ConfIAReport.presentation.renderTechnicalDetails(options.auditRun||data));
+    host.replaceChildren(report);
+  }
+
   function render(data, host, options) {
+    if (data.schema_version === "tme-audit-result.v1") return renderTME(data, host, options);
     const p = root.ConfIAReport.presentation, saved = options.uiState || {};
     const math = (tag, value, cls) => { const el = n(tag, null, cls); root.ConfiaRecognitionView.renderMathText(el, String(value || "")); return el; };
     const items = p.rubricItems(data), decided = items.filter(p.isDecided), checks = data.student_claim_checks || [];
