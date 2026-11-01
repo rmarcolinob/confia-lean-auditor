@@ -38,8 +38,24 @@
   function ProblemStatement(problem, saved, registry = []) {
     const section=n("section",null,"problem-statement"), heading=n("div",null,"problem-heading"), content=n("div",null,"problem-content"), rich=n("div",null,"problem-rich-text"); content.id="problem-statement";
     const source=problem?.statement||"Enunciado não disponível no catálogo desta questão.";
-    if (root.ConfiaProblemMath) root.ConfiaProblemMath.renderContent(rich,source,{problemId:problem?.problem_id||problem?.id,registry});
-    else rich.textContent=source;
+    const renderText=(target,value)=>{
+      if (root.ConfiaProblemMath) root.ConfiaProblemMath.renderContent(target,value,{problemId:problem?.problem_id||problem?.id,registry});
+      else target.textContent=value;
+    };
+    if (Array.isArray(problem?.statement_blocks) && problem.statement_blocks.length) {
+      for (const block of problem.statement_blocks) {
+        if (block.type === "text") {
+          const paragraph=n("p"); renderText(paragraph,block.text); rich.appendChild(paragraph);
+        } else if (block.type === "figure") {
+          const asset=problem.figures?.find(f=>f.id===block.figure_id);
+          // Only versioned, local problem assets; never inject catalog HTML.
+          if (!asset || !/^\/static\/problem-assets\/TME2026P[1-5]\/[a-z0-9-]+\.png$/.test(asset.src)) continue;
+          const figure=n("figure",null,"problem-figure"),img=n("img");
+          img.src=asset.src;img.alt=asset.alt;img.width=asset.width;img.height=asset.height;
+          figure.appendChild(img);rich.appendChild(figure);
+        }
+      }
+    } else renderText(rich,source);
     content.appendChild(rich);
     // Keep the same rendered subtree expanded/collapsed. At a compact boundary,
     // move the cutoff before a formula instead of slicing its fractions/glyphs.

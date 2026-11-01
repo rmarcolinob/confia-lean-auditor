@@ -36,6 +36,9 @@ body[data-view="workspace"] main { overflow: visible; }
 #app[data-view="workspace"] .problem-heading button { font-size: var(--confia-font-sm); border: 0; padding: 8px; }
 .problem-content { font-size: var(--confia-font-body); line-height: 1.55; position: relative; max-height: 6em; overflow: hidden; }
 .problem-content.expanded { max-height: none; }
+.problem-rich-text > p { margin: 0 0 .8em; }
+.problem-figure { margin: 1em auto; text-align: center; }
+.problem-figure img { display: block; max-width: 100%; height: auto; margin: auto; }
 #app[data-view="workspace"] .correction-workspace { display: block; }
 #app[data-view="workspace"] :is(.solution-panel,.analysis-column) { border: 1px solid var(--confia-border); border-radius: var(--confia-radius); background: var(--confia-surface); box-shadow: var(--confia-shadow); min-width: 0; }
 #app[data-view="workspace"] .solution-panel { display: flex; overflow: hidden; padding: 0; }

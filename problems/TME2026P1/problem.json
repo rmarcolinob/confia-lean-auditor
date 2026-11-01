@@ -1,0 +1,40 @@
+{
+  "problem_id": "TME2026P1",
+  "title": "TME² 2026 — Problema 1",
+  "max_score": 20,
+  "pauta_reference": "examples/pautas/tme2_problem1.v1.json",
+  "source": {
+    "document": "Segunda Fase TME² - Gabarito com pauta.pdf",
+    "sha256": "a2660f1c0761738a8b9232dc179feaea9538efb45102e1b2a9b991a3dd2ac384",
+    "pages": [
+      2
+    ]
+  },
+  "statement_blocks": [
+    {
+      "type": "text",
+      "text": "Uma máquina recebe um número de três algarismos que não termina em zero e cujo algarismo das centenas é maior que o algarismo das unidades. Em seguida, forma um novo número invertendo a ordem dos algarismos e subtrai esse número do número inicial. Por exemplo, quando recebe o número 804, a máquina forma o número 408 e produz como resultado: \\(804 - 408 = 396\\)."
+    },
+    {
+      "type": "text",
+      "text": "(a) Qual é o resultado produzido pela máquina quando ela recebe o número 731?",
+      "item_id": "a"
+    },
+    {
+      "type": "text",
+      "text": "(b) Beatriz fez a seguinte afirmação: se a máquina recebe o número \\(\\overline{abc} = 100a + 10b + c\\), então o resultado produzido é \\(99(a-c)\\). Mostre que Beatriz está correta.",
+      "item_id": "b"
+    },
+    {
+      "type": "text",
+      "text": "(c) Determine todos os resultados que essa máquina pode produzir.",
+      "item_id": "c"
+    },
+    {
+      "type": "text",
+      "text": "(d) Em determinado momento, a máquina produziu o resultado 594. Quantos números diferentes ela pode ter recebido?",
+      "item_id": "d"
+    }
+  ],
+  "figures": []
+}

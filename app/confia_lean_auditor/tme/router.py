@@ -13,7 +13,7 @@ from pydantic import ValidationError
 from starlette.concurrency import run_in_threadpool
 
 from confia_lean_auditor.core.paths import get_repo_root
-from confia_lean_auditor.core.problem_catalog import list_problem_catalog
+from confia_lean_auditor.core.problem_catalog import list_problem_catalog, list_tme_problem_catalog
 from confia_lean_auditor.recognition.registry import configured_registry, UnknownRecognizer
 from confia_lean_auditor.recognition.schemas import RecognitionRequest, RecognitionResponse, RecognitionRun
 from confia_lean_auditor.recognition.service import RecognitionService
@@ -103,11 +103,7 @@ def home_summary(response: Response, period: Period = "today", user=Depends(requ
 @router.get("/problems")
 def problems(response: Response, _user=Depends(require_tme_evaluator)):
     response.headers["Cache-Control"] = "no-store"
-    from .audit_models import PUBLIC_PROBLEMS
-    from .accepted_audit import pauta_for
-    return list_problem_catalog(get_repo_root()) + [dict(problem_id=key, title=f"TME 2026 — Problema {key[-1]}",
-        statement="Enunciado da questão deve ser consultado na prova. Identifique os itens da transcrição com [a], [b], [c] e [d], conforme a questão.",
-        max_score=float(pauta_for(key).max_score)) for key in PUBLIC_PROBLEMS]
+    return list_problem_catalog(get_repo_root()) + list_tme_problem_catalog(get_repo_root())
 
 
 @router.get("/cases/{case_id}/capture", include_in_schema=False)
