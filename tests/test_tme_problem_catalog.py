@@ -3,6 +3,7 @@ import hashlib
 import json
 import shutil
 from pathlib import Path
+from urllib.parse import urljoin
 
 import pytest
 
@@ -123,3 +124,30 @@ def test_auditor_without_public_content_alias_is_rejected(monkeypatch):
     monkeypatch.setattr(registry, "TME_PROBLEMS", {**TME_PROBLEMS, "TME2026P6": "unused.json"})
     with pytest.raises(ProblemCatalogError, match="registries"):
         list_tme_problem_catalog(ROOT)
+
+
+@pytest.mark.parametrize("origin", ["http://127.0.0.1:8000", "https://figure-control.trycloudflare.com"])
+def test_public_figures_are_same_origin_and_not_filesystem_paths(setup, origin):
+    """ASGI transport exercises HTTP/HTTPS origins without contacting Cloudflare."""
+    import httpx
+    from confia_lean_auditor.main import STATIC_DIR
+    client, calls, _ = setup
+    client.base_url = httpx.URL(origin)
+    response = client.get("/tme/problems")
+    assert response.status_code == 200
+    for forbidden in ("/Users/", "file://", "app/confia_lean_auditor/static/"):
+        assert forbidden not in response.text
+    figures = []
+    for problem in response.json():
+        for figure in problem.get("figures", []):
+            src = figure["src"]
+            assert src.startswith(f'/static/problem-assets/{problem["problem_id"]}/')
+            assert (STATIC_DIR / src.removeprefix("/static/")).is_file()
+            image = client.get(urljoin(origin, src))
+            assert str(image.url) == origin + src
+            assert image.status_code == 200
+            assert image.headers["content-type"] == "image/png"
+            assert hashlib.sha256(image.content).hexdigest() == figure["sha256"]
+            figures.append(src)
+    assert len(figures) == 4
+    assert calls == []

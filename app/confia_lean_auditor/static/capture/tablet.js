@@ -244,7 +244,35 @@
     elements.problemCode.textContent = problem ? (problem.problem_id || problem.id) : "—";
     elements.problemTitle.textContent = problem ? problem.title : "Questão não disponível";
     elements.problemStatement.textContent = problem ? problem.statement : "";
-    if (globalThis.ConfiaProblemMath) {
+    delete elements.problemStatementWrap.dataset.hasFigures;
+    if (tmeCasePath && /^TME2026P[1-5]$/.test(problem?.problem_id)
+        && problem.figures?.length && problem.statement_blocks?.length) {
+      // The TME notebook receives the same ordered content as the workspace.
+      // Filesystem locations never become image URLs; use the catalog's public src.
+      elements.problemStatement.replaceChildren();
+      elements.problemMathMessage.textContent = "";
+      elements.problemMathMessage.hidden = true;
+      for (const block of problem.statement_blocks) {
+        if (block.type === "text") {
+          const paragraph = document.createElement("p");
+          paragraph.className = "tme-problem-text";
+          paragraph.textContent = block.text;
+          globalThis.ConfiaProblemMath?.renderContent(paragraph, block.text, { problemId: problem.problem_id });
+          elements.problemStatement.appendChild(paragraph);
+        } else if (block.type === "figure") {
+          const asset = problem.figures.find(figure => figure.id === block.figure_id);
+          if (!asset || !/^\/static\/problem-assets\/TME2026P[1-5]\/[a-z0-9-]+\.png$/.test(asset.src)
+              || !asset.src.startsWith(`/static/problem-assets/${problem.problem_id}/`)) continue;
+          const figure = document.createElement("figure"), image = document.createElement("img");
+          figure.className = "tme-problem-figure";
+          image.src = asset.src; image.alt = asset.alt;
+          image.width = asset.width; image.height = asset.height;
+          image.addEventListener("load", updatePilotDockOffset);
+          figure.appendChild(image); elements.problemStatement.appendChild(figure);
+          elements.problemStatementWrap.dataset.hasFigures = "true";
+        }
+      }
+    } else if (globalThis.ConfiaProblemMath) {
       globalThis.ConfiaProblemMath.render(elements.problemStatement, elements.problemMathMessage, {
         problemId: problem && (problem.problem_id || problem.id),
         registry: problemPresentations,

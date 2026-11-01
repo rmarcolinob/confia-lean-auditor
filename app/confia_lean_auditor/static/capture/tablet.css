@@ -174,6 +174,21 @@ select {
   white-space: pre-wrap;
 }
 
+/* Official TME figures in the digital notebook; legacy ITA presentation is unchanged. */
+body[data-tme="true"] .tme-problem-text { margin: 0 0 .8em; }
+body[data-tme="true"] .tme-problem-figure { margin: 1em 0; }
+body[data-tme="true"] .tme-problem-figure img {
+  display: block;
+  width: auto;
+  max-width: 100%;
+  max-height: min(48vh, 360px);
+  height: auto;
+  margin: auto;
+}
+body[data-embedded="true"][data-tme="true"] .problem-dock__body[data-has-figures="true"] {
+  max-height: min(65vh, 520px);
+}
+
 /* Only wide formulas scroll locally; the page and notebook keep their width. */
 .problem-statement .katex-display {
   max-width: 100%;

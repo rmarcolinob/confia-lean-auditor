@@ -13,8 +13,9 @@ function deferred() {
   return { promise, resolve, reject };
 }
 
-function element() {
+function element(tag) {
   return {
+    tag,
     value: "", textContent: "", dataset: {}, hidden: false, disabled: false,
     height: 180, getBoundingClientRect() { return { height: this.height }; },
     attributes: {}, listeners: {}, children: [],
@@ -72,6 +73,10 @@ async function page(options = {}) {
     ConfiaSubmissionClient: options.sender ? { create: () => options.sender } : undefined,
     ConfiaProblemMath: { render(target, message, presentation) {
       mathRenders.push(target.textContent);
+      mathContexts.push(presentation);
+    }, renderContent(target, source, presentation) {
+      target.textContent = source;
+      mathRenders.push(source);
       mathContexts.push(presentation);
     } },
     document: { body: { dataset: {}, style: { setProperty(name, value) { this[name] = value; } } }, querySelector: getElement, querySelectorAll: () => [], createElement: element },
