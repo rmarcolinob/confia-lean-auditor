@@ -42,13 +42,16 @@ def negation_method(claim, method):
 
 
 def evaluate_student_proof(*, claim, lean_file: Path, lean_statement, method,
-                           lean_code, negation_code, runner, timeout_seconds):
+                           lean_code, negation_code, runner, timeout_seconds,
+                           grounding_validator=has_valid_grounding):
     check = StudentClaimCheck(id=claim.id, problem_id=claim.problem_id,
         claim_type=claim.claim_type, raw_text=claim.raw_text, normalized_text=claim.normalized_text,
         lean_statement=lean_statement, method=method, status="unverified", compiled=False,
         lean_file=str(lean_file), stdout="", stderr="", data=claim.data,
         grounding=claim.grounding)
-    if not has_valid_grounding(claim):
+    # Native opt-in projections supply a stricter source/contract validator.
+    # Legacy callers retain exactly the existing grounding gate.
+    if not grounding_validator(claim):
         return replace(check, lean_file=None, failure_category="CLAIM_NOT_GROUNDED",
                        stderr="Source binding is missing, ambiguous or inconsistent; no student verification was attempted.")
     started = time.monotonic()

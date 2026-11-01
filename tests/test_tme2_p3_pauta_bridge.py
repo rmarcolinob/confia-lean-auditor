@@ -234,13 +234,13 @@ def test_rational_formal_result_contract_and_tamper_rejection(monkeypatch, statu
 def test_registry_is_opt_in_and_preserves_p1():
     from confia_lean_auditor.core.problem_catalog import CATALOG
     from confia_lean_auditor.rubric.pauta.tme2_p1 import audit_tme2_p1_digital
-    assert set(TME_PROBLEMS) == {"TME2_P1_PILOT", "TME2026P3"}
+    assert set(TME_PROBLEMS) == {"TME2_P1_PILOT", "TME2026P3", "TME2026P4", "TME2026P5", "TME2026P2"}
     assert "TME2026P3" not in CATALOG
     cfg = load_pauta(ROOT / "examples/pautas/tme2_problem1.v1.json")
     expected = audit_tme2_p1_digital(cfg, {"a": "731-137=584"}, "same", use_lean=False)
     actual = audit_tme("TME2_P1_PILOT", {"a": "731-137=584"}, solution_id="same", use_lean=False)
     assert [r.model_dump(mode="json") for r in actual] == [r.model_dump(mode="json") for r in expected]
     with pytest.raises(ValueError):
-        audit_tme("TME2026P2", {"a": "1/3"})
+        audit_tme("TME2026P6", {"a": "1/3"})
     with pytest.raises(ValueError):
         audit_tme("TME2026P3", "1/3")

@@ -7,7 +7,9 @@ from pathlib import Path
 from confia_lean_auditor.tme.registry import TME_PROBLEMS, audit_tme
 
 ROOT = Path(__file__).resolve().parents[2]
-FIXTURES = {"TME2_P1_PILOT": "tme2_p1_digital", "TME2026P3": "tme2_p3_digital"}
+FIXTURES = {"TME2_P1_PILOT": "tme2_p1_digital", "TME2026P3": "tme2_p3_digital",
+            "TME2026P4": "tme2_p4_digital", "TME2026P5": "tme2_p5_digital",
+            "TME2026P2": "tme2_p2_digital"}
 
 
 def main():
@@ -24,7 +26,7 @@ def main():
     rows, covered, sources, outcomes, fact_outcomes = [], set(), Counter(), Counter(), Counter()
     formal_checks = []
     for case in cases:
-        bridge, assessment = audit_tme(args.problem, {case["item"]: case["text"]},
+        bridge, assessment = audit_tme(args.problem, case.get("solution", {case["item"]: case["text"]}),
             solution_id=case["id"], use_lean=case["id"] in lean_ids,
             run_id=args.problem + "-" + case["id"])
         item = next(i for i in assessment.items if i.item_id == case["item"])

@@ -130,7 +130,12 @@ def _formal_result_matches(fact, records):
     return check.get("status") == status
 
 
-def _validated_status(fact, records, digest):
+def _validated_status(fact, records, digest, structured_fact_ids=()):
+    from confia_lean_auditor.claims.common.schemas import StructuredSourceBinding
+    if any(isinstance(r.source, StructuredSourceBinding) for r in records) and fact.verification_source != 'deterministic':
+        return "indeterminate", "DIAGRAM_REQUIRES_DETERMINISTIC_VERIFICATION"
+    if any(isinstance(r.source, StructuredSourceBinding) for r in records) and fact.fact_id not in structured_fact_ids:
+        return "indeterminate", "STRUCTURED_FACT_NOT_ENABLED_FOR_THIS_BRIDGE"
     if any(record_fingerprint(r) != fact.record_fingerprints[r.record_id] for r in records):
         return "indeterminate", "RECORD_CHANGED_AFTER_VERIFICATION"
     if any(not r.source.attributable or r.source.grounding_status != "grounded"
@@ -159,7 +164,7 @@ def bridge_tme2_p1(config: PautaConfig, bundle: AuditorFactBundle) -> PautaBridg
 
 
 def bridge_facts(config: PautaConfig, bundle: AuditorFactBundle, *, problem_id,
-                 obligation_map, mapping_version) -> PautaBridgeResult:
+                 obligation_map, mapping_version, structured_fact_ids=()) -> PautaBridgeResult:
     """Shared explicit mapping, with exactly the P1 attribution/status gates."""
     config = PautaConfig.model_validate(config.model_dump())
     bundle = AuditorFactBundle.model_validate(bundle.model_dump())
@@ -175,7 +180,8 @@ def bridge_facts(config: PautaConfig, bundle: AuditorFactBundle, *, problem_id,
         facts = [f for f in bundle.facts if f.fact_id == fact_id]
         ids = tuple(dict.fromkeys(i for f in facts for i in f.source_claim_ids))
         records = [by_id[i] for i in ids]
-        checks = [_validated_status(f, [by_id[i] for i in f.source_claim_ids], bundle.source_sha256) for f in facts]
+        checks = [_validated_status(f, [by_id[i] for i in f.source_claim_ids], bundle.source_sha256,
+                                    structured_fact_ids) for f in facts]
         states = {s for s, _ in checks}
         if not facts:
             status, reason = "indeterminate", "NO_EXISTING_FACT"

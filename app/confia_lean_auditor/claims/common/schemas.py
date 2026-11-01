@@ -2,9 +2,11 @@
 from __future__ import annotations
 
 from enum import Enum
-from typing import Any, Literal, Optional
+from typing import Any, Literal, Optional, Union
+import hashlib
+import json
 
-from pydantic import BaseModel, ConfigDict, model_validator
+from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr, model_validator
 
 
 class Origin(str, Enum):
@@ -60,6 +62,48 @@ class CanonicalForm(RecordModel):
     mathematical_form: Optional[dict[str, Any]] = None
 
 
+class StructuredSourceBinding(RecordModel):
+    """Opt-in diagram provenance. No fabricated transcription or text offsets.
+
+    source_sha256 binds the textual part of the same audit envelope (possibly
+    empty); payload_sha256 separately binds the original structured diagram.
+    Neither digest claims to be a hash of an image that was not read.
+    """
+    kind: Literal['diagram_structured']
+    source_ref: StrictStr = Field(min_length=1, max_length=500)
+    image_ref: Optional[StrictStr] = Field(default=None, min_length=1, max_length=1000)
+    page_index: Optional[int] = Field(default=None, ge=0)
+    regions: dict[str, tuple[float, float, float, float]] = Field(default_factory=dict)
+    confidence: Optional[float] = Field(default=None, ge=0, le=1, allow_inf_nan=False)
+    position_confidence: dict[str, float] = Field(default_factory=dict)
+    confirmed: StrictBool
+    origin: Literal['student', 'reference', 'unknown']
+    payload: dict[str, Any]
+    payload_sha256: str = Field(pattern=r'^[0-9a-f]{64}$')
+    source_sha256: str = Field(pattern=r'^[0-9a-f]{64}$')
+    grounding_status: Literal['grounded', 'ambiguous', 'unresolved', 'unavailable']
+    attributable: StrictBool = False
+    raw_text: None = None
+    source_start: None = None
+    source_end: None = None
+
+    @model_validator(mode='after')
+    def bound_structure(self):
+        from math import isfinite
+        digest = hashlib.sha256(json.dumps(self.payload, sort_keys=True, separators=(',', ':'),
+                                           ensure_ascii=False, allow_nan=False).encode()).hexdigest()
+        if digest != self.payload_sha256:
+            raise ValueError('Structured payload digest mismatch')
+        if self.attributable and (not self.confirmed or self.origin != 'student' or self.grounding_status != 'grounded'):
+            raise ValueError('Structured attribution requires confirmed student evidence')
+        if any(not isfinite(v) or not 0 <= v <= 1 for v in self.position_confidence.values()):
+            raise ValueError('Invalid position confidence')
+        if any(any(not isfinite(v) or v < 0 for v in box) or box[2] == 0 or box[3] == 0
+               for box in self.regions.values()):
+            raise ValueError('Invalid diagram region')
+        return self
+
+
 class Provenance(RecordModel):
     origin: Origin
     channel: Literal['extracted', 'student', 'native']
@@ -92,7 +136,7 @@ class MathClaimRecord(RecordModel):
     problem_id: str
     claim_type: str
     provenance: Provenance
-    source: SourceBinding
+    source: Union[SourceBinding, StructuredSourceBinding]
     canonical_form: Optional[CanonicalForm] = None
     canonicalization_status: Optional[Literal['parsed', 'unsupported', 'ambiguous', 'invalid']] = None
     canonicalization_reason: Optional[str] = None
@@ -104,6 +148,17 @@ class MathClaimRecord(RecordModel):
     rubric_links: tuple[str, ...] = ()
     # Describes the reference contract; never grants verification authority.
     expected_obligation: Optional[ExpectedObligation] = None
+
+    @model_validator(mode='after')
+    def structured_record_is_not_a_text_projection(self):
+        if isinstance(self.source, StructuredSourceBinding):
+            if (self.claim_type != 'diagram_state' or self.provenance.channel != 'native'
+                    or self.provenance.extraction_method != 'diagram_structured.v1'
+                    or self.legacy_payload is not None or self.canonical_form is None
+                    or self.canonical_form.family != 'diagram_state'
+                    or self.canonical_form.value != self.source.payload):
+                raise ValueError('Structured evidence must retain its original diagram payload and native type')
+        return self
 
 
 class ClaimAlignment(RecordModel):
