@@ -13,7 +13,7 @@ test('existing TME selector lists all five official problems', async () => {
   await ui.nav.find(n => n.dataset.view === 'new').click();
   const options = walk(ui.root).filter(e=>e.tag==='option' && e.value);
   assert.deepEqual(options.map(e=>e.value), catalog.map(p=>p.problem_id));
-  for (const p of catalog) assert.ok(options.some(e=>e.textContent.includes(p.title)));
+  assert.deepEqual(options.map(e=>e.textContent),[1,2,3,4,5].map(n=>`Problema ${n}`));
 });
 
 for (const p of catalog) test(`${p.problem_id}: complete statement and figures in existing collapsible panel`, async () => {

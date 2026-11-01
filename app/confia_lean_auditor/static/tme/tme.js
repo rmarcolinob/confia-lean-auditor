@@ -87,7 +87,15 @@
     return data;
   }
   const post = (path, value) => api(path, { method: "POST", body: JSON.stringify(value) });
-  const problemLabel = p => `${p.problem_id || p.id} · ${p.title || p.name || "Questão"}`;
+  const problemPresentation = p => {
+    const id = p.problem_id || p.id;
+    const match = /^(ITA|TME)(\d{4})(?:F(\d+))?([QP])(\d+)$/.exec(id);
+    if (!match) return { id, group: "Outras questões", label: id, number: 0 };
+    const [, competition, year, explicitPhase, type, number] = match;
+    const phase = Number(explicitPhase || (competition === "TME" ? 2 : 1));
+    return { id, group: `${competition === "TME" ? "TME²" : competition} ${year} — ${phase}ª fase`,
+      label: `${type === "P" ? "Problema" : "Questão"} ${Number(number)}`, number: Number(number) };
+  };
   async function refreshCases() {
     if (!state.caseRequest) state.caseRequest = api("/tme/cases").finally(() => { state.caseRequest = null; });
     state.cases = await state.caseRequest; state.casesLoaded = true;
@@ -169,7 +177,18 @@
     const skeleton=Views.Loading();box.append(skeleton);show(box);
     const select = node("select"); select.required = true;
     const placeholder = node("option", "Selecione uma questão"); placeholder.value = ""; select.appendChild(placeholder);
-    try { for (const p of await api("/tme/problems")) { const option = node("option", problemLabel(p)); option.value = p.problem_id || p.id; select.appendChild(option); } }
+    try {
+      const entries = (await api("/tme/problems")).map(problemPresentation)
+        .sort((a,b) => a.group.localeCompare(b.group,"pt-BR",{numeric:true}) || a.number-b.number);
+      const groups = new Map();
+      for (const p of entries) {
+        if (!groups.has(p.group)) {
+          const group = node("optgroup"); group.label = p.group;
+          groups.set(p.group,group); select.appendChild(group);
+        }
+        const option = node("option",p.label); option.value = p.id; groups.get(p.group).appendChild(option);
+      }
+    }
     catch (_) { if(generation===state.generation){box.replaceChildren(box.heading,Views.ErrorState("Não foi possível carregar as questões.",newCase));}return; }
     if(generation!==state.generation)return;
     box.replaceChildren(box.heading);
