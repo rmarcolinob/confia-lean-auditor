@@ -116,3 +116,7 @@ body:is([data-view="cases"],[data-view="new"],[data-view="results"],[data-view="
   .tme-results-columns,.tme-exam-grid { grid-template-columns:1fr;gap:16px; }
   .tme-panel,.tme-exam-card { padding:20px; }
 }
+
+/* Discrete operational provenance within the existing queue rows. */
+.tme-row-identity { display: grid; gap: 3px; min-width: 0; }
+.tme-row-identity small { display: block; font-size: var(--confia-font-xs); font-weight: 500; color: var(--confia-muted); }

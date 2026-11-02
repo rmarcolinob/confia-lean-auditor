@@ -173,7 +173,7 @@ def test_priority_preserves_source_ready_policy_and_next_is_first(home):
     newest = [create_case(client, 'IMAGE_SCAN') for _ in range(4)]
     priority = summary(client)['priority_cases']
     assert [c['case_id'] for c in priority] == [second['case_id'], first['case_id'], newest[-1]['case_id']]
-    assert set(priority[0]) == {'case_id','exam_code','problem_id','question_label','source_mode','operational_status','updated_at'}
+    assert set(priority[0]) == {'case_id','exam_code','problem_id','question_label','source_mode','operational_status','updated_at','data_origin'}
 
 
 def test_periods_midnight_fortaleza_and_global_queue():

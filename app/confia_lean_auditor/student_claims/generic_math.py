@@ -8,6 +8,7 @@ import hashlib
 import re
 
 from confia_lean_auditor.core.math_canonical import parse_math
+from confia_lean_auditor.core.math_canonical.normalization import mathematical_dash_at
 from confia_lean_auditor.core.math_canonical.parser import FUNCTIONS, GREEK_NAMES, ALIASES
 from confia_lean_auditor.student_claims.grounding import (
     normalized, local_integer_bindings, representation_matches, _digest, _payload,
@@ -70,7 +71,8 @@ def math_runs(text):
         token = match[0]
         separator = token in {';', ':', '\n', '.', '=>'} or (token == ',' and depth == 0)
         allowed = (_math_word(token) or token[0].isdigit()
-                   or bool(re.fullmatch(r'[+*/^=<>≠≤≥−·×±(){}\[\],$-]|<=|>=|!=', token)))
+                   or bool(re.fullmatch(r'[+*/^=<>≠≤≥−·×±(){}\[\],$-]|<=|>=|!=', token))
+                   or (token == '–' and mathematical_dash_at(text, match.start())))
         # Unknown adjacent identifiers belong to the same unsupported fragment,
         # never to a discarded suffix of an apparently valid numeric value.
         if start is not None and match.start()==end and re.fullmatch(r'\w+',token):

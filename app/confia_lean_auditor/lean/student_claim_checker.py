@@ -28,7 +28,8 @@ def _run_lean_file(lean_file: Path, timeout_seconds: int = 90) -> subprocess.Com
 
 
 def _lean_int_expr(expr: str) -> str:
-    expr = expr.strip()
+    from confia_lean_auditor.core.math_canonical.normalization import mathematical_signs
+    expr = mathematical_signs(expr.strip())
 
     def repl(match: re.Match[str]) -> str:
         return f"({match.group(0)} : ℤ)"

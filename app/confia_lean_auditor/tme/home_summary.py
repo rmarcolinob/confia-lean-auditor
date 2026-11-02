@@ -34,6 +34,7 @@ class Counts(SubmissionModel):
 
 
 class PriorityCase(SubmissionModel):
+    data_origin: Literal["real", "synthetic_demo"] = "real"
     case_id: str
     exam_code: str
     problem_id: str
@@ -73,6 +74,7 @@ def touch(entry, value):
 
 def case_entry(case):
     return dict(case_id=case.case_id, owner=case.created_by_user_id,
+                data_origin=case.data_origin, demo_sample_groups=case.demo_sample_groups,
                 exam_code=case.external_candidate_ref, problem_id=case.problem_id,
                 source_mode=case.source_mode, submission_id=case.submission_id,
                 created_at=stamp(case.created_at), updated_at=stamp(case.created_at),
@@ -191,8 +193,10 @@ class OperationalIndex:
     def summary(self, owner, period="today", now=None):
         return summarize(self.entries_for(owner), period, now)
 
-    def listing(self, owner, view, *, page=1, size=50, search="", question="", status="", source="", exam=""):
+    def listing(self, owner, view, *, page=1, size=50, search="", question="", status="", source="", exam="", origin="", sample=""):
         entries = self.entries_for(owner)
+        entries = [e for e in entries if (not origin or e.get("data_origin", "real") == origin)
+                   and (not sample or e.get("demo_sample_groups"))]
         if view == "results":
             summary = summarize(entries, "all").model_dump(mode="json")
             questions = {}
@@ -281,6 +285,7 @@ def operational_status(entry):
 def listing_case(entry):
     audit = entry["audit"] or {}
     return dict(case_id=entry["case_id"], exam_code=entry["exam_code"], problem_id=entry["problem_id"],
+                data_origin=entry.get("data_origin", "real"), demo_sample_groups=entry.get("demo_sample_groups", []),
                 source_mode=entry["source_mode"], operational_status=operational_status(entry),
                 updated_at=entry["updated_at"], suggested_score=audit.get("score"),
                 max_score=audit.get("max_score"), suggestion_available="score" in audit)
@@ -316,6 +321,7 @@ def summarize(entries, period="today", now=None):
             continue
         question = re.search(r"Q\d+$", e["problem_id"])
         priority.append(PriorityCase(**{k: e[k] for k in ("case_id", "exam_code", "problem_id", "source_mode", "updated_at")},
+            data_origin=e.get("data_origin", "real"),
             question_label=question.group() if question else e["problem_id"], operational_status=operational_status(e)))
         if len(priority) == 3:
             break

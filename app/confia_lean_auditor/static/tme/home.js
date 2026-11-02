@@ -47,7 +47,7 @@
   function PriorityCaseRow(c, open) {
     c = {...c, external_candidate_ref: c.exam_code || c.external_candidate_ref};
     const n = button(null,()=>open(c.case_id),'home-case'); n.setAttribute('aria-label', `Abrir correção ${c.external_candidate_ref} · ${c.problem_id} · ${status(c)}`);
-    const identity=el('span',null,'home-case-identity'); identity.append(el('strong',c.external_candidate_ref),el('span',c.problem_id));
+    const identity=el('span',null,'home-case-identity'); identity.append(el('strong',c.external_candidate_ref),el('span',c.problem_id));if(c.data_origin==='synthetic_demo')identity.append(el('small','CASO SINTÉTICO'));
     const question=el('span',null,'home-case-question'); question.append(el('small','Questão'),el('span',c.question_label || (/Q(\d+)$/.test(c.problem_id)?`Q${c.problem_id.match(/Q(\d+)$/)[1]}`:c.problem_id)));
     const source=el('span',null,'home-case-source'), sourceValue=el('span',null,'home-source-value'); sourceValue.append(icon(c.source_mode==='IMAGE_SCAN'?'camera':'tablet'),el('span',c.source_mode==='IMAGE_SCAN'?'Foto / scan':'Escrita digital')); source.append(el('small','Origem'),sourceValue);
     n.append(icon('document'),identity,question,source,StatusPill(c),icon('chevron')); return n;

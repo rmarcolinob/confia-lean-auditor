@@ -15,7 +15,7 @@
   function Filters(values,questions,change,refresh,exams=false){const n=el('form',null,'tme-filters');n.addEventListener('submit',e=>{e.preventDefault();change('search',search.value);});
     const search=el('input');search.type='search';search.placeholder='Buscar prova…';search.value=values.search||'';search.maxLength=80;search.dataset.filter='search';const label=el('label','Buscar prova');label.append(search);n.append(label);
     search.addEventListener('change',()=>change('search',search.value));
-    if(!exams)for(const [key,title,options] of [['question','Questão',questions.map(q=>[q,q])],['status','Status',[['pending','Pendente'],['in_progress','Em andamento'],['inconclusive','Inconclusiva'],['finalized','Finalizada']]],['source','Origem',[['IMAGE_SCAN','Foto / scan'],['DIGITAL_INK','Escrita digital']]]]){
+    if(!exams)for(const [key,title,options] of [['origin','Dados',[['synthetic_demo','Sintéticos'],['real','Reais']]],['sample','Inspeção',[['selected','Amostra']]],['question','Questão',questions.map(q=>[q,q])],['status','Status',[['pending','Pendente'],['in_progress','Em andamento'],['inconclusive','Inconclusiva'],['finalized','Finalizada']]],['source','Origem',[['IMAGE_SCAN','Foto / scan'],['DIGITAL_INK','Escrita digital']]]]){
       const label=el('label',title),select=el('select');select.dataset.filter=key;for(const [value,text]of [['','Todos'],...options]){const o=el('option',text);o.value=value;select.append(o);}select.value=values[key]||'';select.addEventListener('change',()=>change(key,select.value));label.append(select);n.append(label);
     }
     const apply=button('Buscar',()=>change('search',search.value),'tme-button secondary'),actions=el('div',null,'tme-filter-actions');actions.append(apply);
@@ -23,7 +23,7 @@
   }
   function QueueRows(items,open){const list=el('div',null,'tme-queue-list');const headings=el('div',null,'tme-queue-head');headings.setAttribute('aria-hidden','true');for(const title of ['Prova','Questão','Origem','Status','Sugestão ConfIA','Atualização',''])headings.append(el('span',title));list.append(headings);
     for(const c of items){const n=button(null,()=>open(c.case_id),'tme-queue-row');n.setAttribute('aria-label',`Abrir correção ${c.exam_code} · ${c.problem_id} · ${H.status(c)}`);
-      const identity=el('span',null,'tme-row-identity');identity.append(el('strong',examName(c.exam_code)));
+      const identity=el('span',null,'tme-row-identity');identity.append(el('strong',examName(c.exam_code)));if(c.data_origin==='synthetic_demo')identity.append(el('small','CASO SINTÉTICO'));if(c.demo_sample_groups?.length)identity.append(el('small','AMOSTRA VISUAL'));
       const q=el('span',null,'tme-row-question');q.append(el('strong',question(c)),el('small',c.problem_id));
       const source=el('span',null,'tme-row-source');source.append(H.icon(c.source_mode==='IMAGE_SCAN'?'camera':'tablet'),el('span',c.source_mode==='IMAGE_SCAN'?'Foto / scan':'Escrita digital'));
       const suggestion=el('span',null,'tme-row-suggestion');suggestion.append(el('small','Sugestão ConfIA'),el('span',c.suggested_score!=null?`${c.suggested_score} / ${c.max_score??'—'}`:c.suggestion_available||c.operational_status==='inconclusive'?'Não determinada':'Não disponível'));

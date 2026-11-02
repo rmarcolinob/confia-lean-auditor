@@ -87,7 +87,8 @@ def _tokens(text, budget):
         raise Failure('invalid', 'Empty mathematical fragment')
     if len(text) > MAX_LENGTH:
         raise Failure('unsupported', 'Input length limit')
-    text = text.strip()
+    from .normalization import mathematical_signs
+    text = mathematical_signs(text.strip())
     if text.startswith('$') and text.endswith('$') and text.count('$') == 2:
         text = text[1:-1]
     elif text.startswith(r'\(') and text.endswith(r'\)'):

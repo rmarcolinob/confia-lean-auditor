@@ -11,13 +11,13 @@
   function locationRoute() {
     const query = new URLSearchParams(window.location.search || "");
     if(query.get("case_id")) return {view:"workspace",caseId:query.get("case_id")};
-    const params={};for(const key of ["search","question","status","source","exam","page"]) if(query.get(key))params[key]=query.get(key);
+    const params={};for(const key of ["search","question","status","source","origin","sample","exam","page"]) if(query.get(key))params[key]=query.get(key);
     return {view:viewNames[query.get("view")] || "home",params};
   }
   function writeRoute(view, params={}, caseId=null, replace=false) {
     const query=new URLSearchParams();
     if(caseId) query.set("case_id",caseId);
-    else { if(view!=="home")query.set("view",view==="cases"?"queue":view);for(const key of ["search","question","status","source","exam","page"])if(params[key]&&!(key==="page"&&String(params[key])==="1"))query.set(key,params[key]); }
+    else { if(view!=="home")query.set("view",view==="cases"?"queue":view);for(const key of ["search","question","status","source","origin","sample","exam","page"])if(params[key]&&!(key==="page"&&String(params[key])==="1"))query.set(key,params[key]); }
     const url="/tme"+(query.toString()?`?${query}`:"");
     const changed=url!==currentURL;
     if(changed || replace)window.history?.[replace?"replaceState":"pushState"]?.({tme:true,origin:returnTo},"",url);
@@ -101,7 +101,7 @@
     state.cases = await state.caseRequest; state.casesLoaded = true;
   }
   const local = c => {
-    if (!state.cache.has(c.case_id)) state.cache.set(c.case_id, { page: 0, zoom: 1, rotation: 0, tab: "original", draft: {}, editors: {}, audits: null, history: null, decision: undefined, detail: null, feedback: null });
+    if (!state.cache.has(c.case_id)) state.cache.set(c.case_id, { page: 0, zoom: 1, rotation: 0, tab: c.data_origin === "synthetic_demo" ? "transcript" : "original", draft: {}, editors: {}, audits: null, history: null, decision: undefined, detail: null, feedback: null });
     return state.cache.get(c.case_id);
   };
   const questionNumber = c => c.problem_id.match(/[QP](\d+)$/)?.[1];
@@ -141,7 +141,7 @@
     if (force || !saved.loaded) {
       const [summaries, audits, decision, detail, feedback] = await Promise.all([
         api(`${base}/transcriptions`), api(`${base}/audits`), api(`${base}/decision`),
-        saved.detail ? Promise.resolve(saved.detail) : api(`${base}/submission`), api(`${base}/recognition-status`),
+        saved.detail ? Promise.resolve(saved.detail) : api(`${base}/submission`), c.data_origin === "synthetic_demo" ? Promise.resolve(null) : api(`${base}/recognition-status`),
       ]);
       saved.history = summaries.length ? await api(`${base}/transcriptions/${summaries[0].transcription.transcription_id}`) : null;
       Object.assign(saved, { audits, decision, detail, feedback, loaded: true, loadError: false });
@@ -412,10 +412,12 @@
     tabs.setAttribute("aria-label", "Visualização da solução"); tabs.setAttribute("role", "tablist");
     const original = node("section", undefined, "original-document"), transcript = node("section", undefined, "transcript-document");
     original.setAttribute("aria-label", "Original"); transcript.setAttribute("aria-label", "Transcrição");
-    if (/^TME2026P[1-5]$/.test(c.problem_id)) transcript.appendChild(note("Identifique cada item em uma linha própria: [a], [b], [c] ou [d], conforme a questão. Confira e aceite a transcrição antes da análise."));
+    if(c.data_origin === "synthetic_demo") transcript.appendChild(note("Texto sintético importado. A aceitação registra fidelidade ao texto fornecido, sem avaliação humana."));
+    else if (/^TME2026P[1-5]$/.test(c.problem_id)) transcript.appendChild(note("Identifique cada item em uma linha própria: [a], [b], [c] ou [d], conforme a questão. Confira e aceite a transcrição antes da análise."));
     const pages = [...new Set([...(saved.detail?.submission?.page_images || []).map(p => p.page_index), ...(latest?.segments || []).map(s => s.page_index)])].sort((a,b) => a-b);
     const pageNodes = pages.map(index => manuscriptPage(c, index)); original.append(...pageNodes);
     Workspace.attachPan(original,saved);
+    if(c.data_origin === "synthetic_demo") original.prepend(note("CASO SINTÉTICO — fonte textual importada. Consulte a transcrição aceita."));
     if (!pages.length) original.appendChild(note("Nenhuma página original disponível."));
     saved.page = Math.min(saved.page, Math.max(0, pages.length - 1));
     const pagination = node("span", "", "page-position");
@@ -475,7 +477,10 @@
     }
     views.append(original, transcript); setTab(saved.tab);
     const secondary = actions(); secondary.classList.add("transcript-commands");
-    if (latest) secondary.append(btn("Editar", () => { saved.editing = true; editor.hidden = false; documentView.hidden = true; setTab("transcript"); }, "secondary"), btn("Reprocessar", recognize, "secondary"));
+    if (latest) {
+      secondary.append(btn("Editar", () => { saved.editing = true; editor.hidden = false; documentView.hidden = true; setTab("transcript"); }, "secondary"));
+      if(c.data_origin !== "synthetic_demo") secondary.append(btn("Reprocessar", recognize, "secondary"));
+    }
     for (const button of secondary.children) button.disabled = state.busy;
     transcript.prepend(secondary);
     const provenance = node("details", undefined, "transcription-metadata"); provenance.appendChild(node("summary", "Originais e histórico"));
@@ -487,7 +492,7 @@
     transcriptionStatus = node("p", saved.processing === "recognition" ? "Reconhecendo solução…" : latest ? "Transcrição disponível" : saved.feedback?.state === "FAILED" ? "Falha de reconhecimento" : "Reconhecimento não concluído", "transcription-status"); transcriptionStatus.setAttribute("role","status");
     const provider = meta?.provider || meta?.recognizer || meta?.source;
     metadata = node("p", undefined,"transcription-caption");
-    const compactCaption=node("span",latest?`Transcrição automática${provider?` · ${/^mathpix/i.test(provider)?"Mathpix":provider}`:""} · revisão ${latest.revision_number}`:"As páginas originais permanecem preservadas.","caption-compact");
+    const compactCaption=node("span",c.data_origin === "synthetic_demo" && latest ? `Transcrição importada · revisão ${latest.revision_number}${latest.status === "ACCEPTED" ? " · aceita" : ""}` : latest?`Transcrição automática${provider?` · ${/^mathpix/i.test(provider)?"Mathpix":provider}`:""} · revisão ${latest.revision_number}`:"As páginas originais permanecem preservadas.","caption-compact");
     metadata.append(compactCaption);
     setTab(saved.tab);
     const topline=node("div",undefined,"solution-topline");topline.append(solutionHeading,tabs);

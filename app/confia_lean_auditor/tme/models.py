@@ -43,6 +43,11 @@ class CaseCreate(SubmissionModel):
 
 
 class CorrectionCase(CaseCreate):
+    # Operational provenance only; never forwarded to the mathematical auditor.
+    data_origin: Literal["real", "synthetic_demo"] = "real"
+    demo_seed: Optional[Literal["seed_tme_synthetic_demo.v1"]] = None
+    solution_id: Optional[str] = None
+    demo_sample_groups: list[str] = Field(default_factory=list)
     case_id: str = Field(pattern=r"^case_[0-9a-f]{32}$")
     created_by_user_id: str
     created_at: datetime

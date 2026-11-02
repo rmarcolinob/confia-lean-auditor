@@ -247,16 +247,19 @@ def list_cases(response: Response, user=Depends(require_tme_evaluator),
                search: str = Query("", max_length=80), question: str = Query("", max_length=100),
                status: Literal["", "pending", "in_progress", "inconclusive", "finalized"] = "",
                source: Literal["", "IMAGE_SCAN", "DIGITAL_INK"] = "",
+               origin: Literal["", "real", "synthetic_demo"] = "",
+               sample: Literal["", "selected"] = "",
                exam: str = Query("", max_length=80)):
     response.headers["Cache-Control"] = "no-store"
     if view:
         try:
             return OperationalIndex().listing(user.user_id, view, page=page, size=size,
-                search=search, question=question, status=status, source=source, exam=exam)
+                search=search, question=question, status=status, source=source, exam=exam, origin=origin, sample=sample)
         except (OSError, ValueError, KeyError, TypeError):
             raise HTTPException(503, "Não foi possível carregar os dados operacionais.",
                                 headers={"Cache-Control": "no-store"}) from None
-    return case_store().list_for_user(user)
+    return [c for c in case_store().list_for_user(user)
+            if (not origin or c.data_origin == origin) and (not sample or c.demo_sample_groups)]
 
 
 @router.get("/cases/{case_id}", response_model=CorrectionCase)

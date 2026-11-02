@@ -47,4 +47,6 @@ def collect_digital_items(problem_id, items: Mapping[str, str], *, item_ids="abc
                   if a is not None and start <= a < b <= end]
         if len(owners) == 1:
             routed.append(record.model_copy(update={"rubric_links": tuple(owners)}))
-    return DigitalItemClaims(source, tuple(sorted(routed, key=lambda r: (r.source.source_start, r.record_id))), ranges)
+    from .semantic import supplement
+    routed, _ = supplement(problem_id, source, ranges, routed)
+    return DigitalItemClaims(source, tuple(sorted(routed, key=lambda r: (r.source.source_start if r.source.source_start is not None else len(source), r.record_id))), ranges)

@@ -44,7 +44,7 @@ def test_queue_pagination_filters_metadata_and_owner(home):
     assert len({c['case_id'] for p in (first, second, last) for c in p['items']}) == 123
     assert first['total'] == 123
     assert 'PRIVATE' not in json.dumps(first)
-    assert set(first['items'][0]) == {'case_id', 'exam_code', 'problem_id', 'source_mode',
+    assert set(first['items'][0]) == {'case_id', 'exam_code', 'problem_id', 'source_mode', 'data_origin', 'demo_sample_groups',
         'operational_status', 'updated_at', 'suggested_score', 'max_score', 'suggestion_available'}
     filtered = client.get('/tme/cases', params=dict(view='queue',search='EXAM-00000',question='ITA2025F2Q2',status='inconclusive',source='IMAGE_SCAN')).json()
     assert filtered['total'] == 1

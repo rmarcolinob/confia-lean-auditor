@@ -32,6 +32,8 @@ def eq(left, right):
 
 
 def expression(record):
+    if record.provenance.extraction_method == "semantic-claims.v1" and record.canonical_form:
+        return record.canonical_form.value.get("expression", record.source.raw_text)
     return (record.legacy_payload or {}).get("data", {}).get("expression", record.source.raw_text)
 
 
@@ -311,7 +313,10 @@ def verify_tme2_p1_digital(digital, solution_id, *, use_lean=True, run_id=None):
     for record in digital.records:
         if record.problem_id != PROBLEM_ID:
             raise ValueError("Foreign problem record")
-        if record.provenance.channel == "native":
+        if record.provenance.extraction_method == "semantic-claims.v1":
+            from confia_lean_auditor.student_claims.semantic import validate_semantic_record
+            validate_semantic_record(record, digital.source_text, digital.item_ranges)
+        elif record.provenance.channel == "native":
             if not validate_literal_record(record, digital.source_text):
                 raise ValueError("Inconsistent native source projection")
         else:

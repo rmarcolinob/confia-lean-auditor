@@ -29,6 +29,8 @@
     const goBack = button("←",back,"workspace-back secondary"); goBack.setAttribute("aria-label","Voltar para fila"); goBack.disabled=busy; goBack.replaceChildren(root.ConfiaTmeHome.icon("back"));
     const pill = n("span",status(c),"status"); pill.dataset.kind = status(c)==="Finalizada"?"success":status(c)==="Inconclusiva"?"pending":"info";
     line.append(goBack,n("h1",displayExamName(c.external_candidate_ref)),pill);
+    if(c.data_origin==="synthetic_demo")line.append(n("small","CASO SINTÉTICO · transcrição importada"));
+    if(c.demo_sample_groups?.length)line.append(n("small","AMOSTRA VISUAL · "+c.demo_sample_groups.join(", ")));
     const info = n("div",null,"case-information");
     // The catalog is not a roster: count only real, distinct CorrectionCases.
     info.append(n("strong",`Questão ${question(c)||c.problem_id}`),n("span",`${siblings.length} ${siblings.length===1?"questão disponível":"questões disponíveis"}`,"known-questions"),n("span",c.problem_id),n("span",c.source_mode==="IMAGE_SCAN"?"Foto / scan":"Escrita digital","case-source"));
