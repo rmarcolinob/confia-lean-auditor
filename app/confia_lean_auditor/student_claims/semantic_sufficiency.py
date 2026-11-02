@@ -129,15 +129,16 @@ class SemanticSufficiencyGate:
         return (provider or request_sufficiency)(payload)
 
 
-def request_sufficiency(payload, *, model: str | None = None):
+def request_sufficiency(payload, *, model: str | None = None, request_builder=None):
     from openai import OpenAI
     cfg=configuration(model=model);meta=dict(status='unavailable',model=cfg['model'],api_calls=0,retries=0)
     try:
         with OpenAI(base_url='https://api.openai.com/v1',timeout=cfg['timeout'],max_retries=0) as client:
             meta['api_calls']=1
-            response=client.responses.create(model=cfg['model'],store=False,temperature=0,max_output_tokens=cfg['max_output_tokens'],
+            request=dict(model=cfg['model'],store=False,temperature=0,max_output_tokens=cfg['max_output_tokens'],
                 input=[dict(role='system',content=PROMPT),dict(role='user',content=json.dumps(payload,ensure_ascii=False))],
                 text={'format':dict(type='json_schema',name='semantic_sufficiency',strict=True,schema=response_schema(payload))})
+            response=client.responses.create(**(request_builder(request) if request_builder else request))
         meta.update(model=response.model,response_id=response.id,raw_output=response.output_text,response_status=response.status,
             usage=response.usage.model_dump(mode='json') if response.usage else None)
         if response.status!='completed':return (),dict(meta,reason='incomplete_or_refused')

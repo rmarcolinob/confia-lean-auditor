@@ -24,7 +24,9 @@ sys.path.insert(0, str(ROOT / 'app'))
 from confia_lean_auditor.student_claims import hybrid_semantic as semantic
 from confia_lean_auditor.student_claims import semantic_sufficiency as sufficiency
 from confia_lean_auditor.student_claims import evidence_units as units_module
+from confia_lean_auditor.student_claims import model_transport
 from confia_lean_auditor.student_claims.obligation_catalog import internal_id
+from confia_lean_auditor.student_claims.sufficiency_requirements import requirements
 from confia_lean_auditor.tme.hybrid_grader import selective_audit
 from confia_lean_auditor.tme.obligation_experiment import primary_audit
 from confia_lean_auditor.tme.sufficiency_experiment import run_sufficiency_shadow
@@ -111,12 +113,29 @@ def build_plan(model_a, model_b, split, case_ids=None):
     payload_hashes = {sid: object_hash(v['payload']) for sid, v in prepared.items()}
     contract = dict(decision=sufficiency.SufficiencyDecision.model_json_schema(),
         generator_sha256=hashlib.sha256(inspect.getsource(sufficiency.response_schema).encode()).hexdigest())
+    semantic_hashes = dict(
+        obligations={sid: object_hash(v['payload']['obligations']) for sid, v in prepared.items()},
+        evidence_units={sid: object_hash(v['payload']['evidence_units']) for sid, v in prepared.items()},
+        sufficiency_rules=object_hash(dict(
+            requirements={c['problem_id']: requirements(c['problem_id']) for c in cases},
+            context=file_hash(ROOT / 'app/confia_lean_auditor/student_claims/sufficiency_context.py'),
+            prepare=inspect.getsource(sufficiency.SemanticSufficiencyGate.prepare),
+            validator=inspect.getsource(sufficiency.validate_response))),
+        reconciliation_policy=object_hash({p: file_hash(ROOT / 'app/confia_lean_auditor' / p) for p in
+            ('tme/hybrid_grader.py', 'tme/sufficiency_experiment.py', 'rubric/pauta/evidence_policy.py')}),
+        pauta={c['problem_id']: object_hash(semantic.config_for(c['problem_id']).model_dump(mode='json')) for c in cases})
     arms = {}
     for arm, model in models.items():
-        sc, gc = semantic.configuration(model=model), sufficiency.configuration(model=model)
+        sc = model_transport.build_request(semantic.configuration(model=model))
+        gc = model_transport.build_request(sufficiency.configuration(model=model))
+        transport = dict(semantic=model_transport.transport_configuration(sc),
+                         sufficiency=model_transport.transport_configuration(gc))
         arms[arm] = dict(model=model, git_sha=state['sha'], semantic_configuration=sc,
             semantic_configuration_sha256=object_hash(sc), sufficiency_configuration=gc,
             sufficiency_configuration_sha256=object_hash(gc),
+            model_transport_configuration=transport,
+            model_transport_sha256=object_hash(transport),
+            semantic_layer_hashes=semantic_hashes,
             prompt_hashes={'semantic': sc['prompt_sha256'], 'sufficiency': gc['prompt_sha256']},
             semantic_schema_hashes=dict(schema_hashes), semantic_payload_hashes=dict(payload_hashes),
             sufficiency_schema_contract_sha256=object_hash(contract),
@@ -124,7 +143,7 @@ def build_plan(model_a, model_b, split, case_ids=None):
             evidence_unit_configuration_hash=file_hash(units_module.__file__),
             protected_code_hash=object_hash(protected))
     count = 2 * len(cases)
-    plan = dict(version='tme-model-ablation.v1', git=state, split=split, shadow=True,
+    plan = dict(version='tme-model-ablation.v2', git=state, split=split, shadow=True,
         case_ids=[c['solution_id'] for c in cases], cases=len(cases), arms=arms,
         order=[dict(solution_id=c['solution_id'], arm=a) for c in cases for a in models],
         stages_per_arm=2, first_stage_calls_planned=count,
@@ -138,8 +157,10 @@ def build_plan(model_a, model_b, split, case_ids=None):
         schema_equality_scope='Identical first-stage schemas and sufficiency contract/generator. '
             'Instantiated sufficiency schemas depend on fresh selected candidates/IDs; no fictitious candidates in dry-run.',
         sufficiency_payload_status='WAITING_FOR_FRESH_FIRST_STAGE',
-        parameter_compatibility='Not checked against API; later LIVE preflight. No model-specific overrides.',
-        reasoning_override=None)
+        parameter_compatibility='Locally built with the specified transport policy; no inference preflight performed.',
+        model_transport_policy=model_transport.VERSION,
+        generation_parameter_note=model_transport.PARAMETER_NOTE,
+        reasoning_by_arm={arm: value['semantic_configuration'].get('reasoning') for arm, value in arms.items()})
     return plan, prepared, cases
 
 
@@ -147,8 +168,10 @@ def _run_arm(case, model, *, judgment_provider=None, sufficiency_provider=None, 
     """Internal: case must come from select_cases; never accepts caller source text."""
     problem, text, sid = case['problem_id'], case['solution_text'], case['solution_id']
     started = time.monotonic()
-    judge = partial(judgment_provider or semantic.request_judgments, model=model)
-    gate_provider = partial(sufficiency_provider or sufficiency.request_sufficiency, model=model)
+    judge = partial(judgment_provider or partial(semantic.request_judgments,
+                    request_builder=model_transport.build_request), model=model)
+    gate_provider = partial(sufficiency_provider or partial(sufficiency.request_sufficiency,
+                            request_builder=model_transport.build_request), model=model)
     tick = time.monotonic()
     judgments, first_meta = judge(problem, text)
     first_seconds = time.monotonic() - tick
@@ -181,6 +204,9 @@ def _run_arm(case, model, *, judgment_provider=None, sufficiency_provider=None, 
     shadow = run_sufficiency_shadow(problem, text, judgments, primary, audited,
         provider=current_gate_result, first_provider_ok=first_meta['status'] == 'completed')
     return dict(solution_id=sid, problem_id=problem, requested_model=model, shadow=True,
+        model_transport_configuration=dict(
+            semantic=model_transport.transport_configuration(semantic.configuration(model=model)),
+            sufficiency=model_transport.transport_configuration(sufficiency.configuration(model=model))),
         source_sha256=case['source_sha256'], judgments=[j.model_dump(mode='json') for j in judgments],
         first_provider=first_meta, sufficiency_provider=gate_meta,
         sufficiency_payload=payload, sufficiency_schema_sha256=object_hash(sufficiency.response_schema(payload)),
@@ -245,14 +271,17 @@ def main(argv=None):
     if args.dry_run:
         status = dict(status='DRY_RUN', cases=plan['cases'], arms=2, stages_per_arm=2,
             calls_planned=plan['total_calls_planned'], api_calls_made=0, holdout_processed=0,
-            prompts_equal=True, schemas_equal=True, schema_equality_scope=plan['schema_equality_scope'])
+            prompts_equal=True, schemas_equal=True, schema_equality_scope=plan['schema_equality_scope'],
+            model_transport_by_arm={arm: value['model_transport_configuration'] for arm, value in plan['arms'].items()},
+            generation_parameter_note=plan['generation_parameter_note'])
     else:
         def persist(arm, row):
             with (args.output / f'{args.split}_model_{arm}.jsonl').open('a') as stream:
                 stream.write(json.dumps(row, ensure_ascii=False) + '\n')
         results = execute_plan(plan, on_result=persist)
         status = dict(status='SHADOW_COMPLETED', api_calls_made=sum(r['api_calls'] for rs in results.values() for r in rs),
-            holdout_processed=0, model_quality_assessed=False, manual_review_required=True)
+            holdout_processed=0, model_quality_assessed=False, manual_review_required=True,
+            generation_parameter_note=plan['generation_parameter_note'])
     write_json(args.output / 'execution_status.json', status)
     print(json.dumps(status, ensure_ascii=False, indent=2))
     return 0

@@ -93,6 +93,8 @@ def test_plan_has_identical_payloads_contracts_and_only_model_difference(plan):
     for kind in ['semantic', 'sufficiency']:
         assert a[kind + '_configuration'].pop('model') != b[kind + '_configuration'].pop('model')
         assert a.pop(kind + '_configuration_sha256') != b.pop(kind + '_configuration_sha256')
+        assert a['model_transport_configuration'][kind]['request'].pop('model') != b['model_transport_configuration'][kind]['request'].pop('model')
+    assert a.pop('model_transport_sha256') != b.pop('model_transport_sha256')
     assert a == b
     assert plan['cases'] == 5 and plan['stages_per_arm'] == 2
     assert plan['first_stage_calls_planned'] == 10

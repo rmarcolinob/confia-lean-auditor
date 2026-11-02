@@ -166,17 +166,18 @@ def configuration(*, model: str | None = None):
                 prompt_sha256=legacy.sha(PROMPT))
 
 
-def request_judgments(problem_id, text, *, model: str | None = None):
+def request_judgments(problem_id, text, *, model: str | None = None, request_builder=None):
     from openai import OpenAI
     config = configuration(model=model)
     metadata = dict(status='unavailable', api_calls=0, retries=0, model=config['model'])
     try:
         with OpenAI(base_url='https://api.openai.com/v1', timeout=config['timeout'], max_retries=0) as client:
             metadata['api_calls'] = 1
-            response = client.responses.create(model=config['model'], store=False, temperature=0,
+            request = dict(model=config['model'], store=False, temperature=0,
                 max_output_tokens=config['max_output_tokens'],
                 input=[dict(role='system', content=PROMPT), dict(role='user', content=json.dumps(wire_payload(problem_id,text), ensure_ascii=False))],
                 text={'format':dict(type='json_schema', name='semantic_rubric_judgments', strict=True, schema=response_schema(problem_id,text))})
+            response = client.responses.create(**(request_builder(request) if request_builder else request))
         metadata.update(model=response.model, response_id=response.id, raw_output=response.output_text,
             response_status=response.status, usage=response.usage.model_dump(mode='json') if response.usage else None)
         if response.status != 'completed':
