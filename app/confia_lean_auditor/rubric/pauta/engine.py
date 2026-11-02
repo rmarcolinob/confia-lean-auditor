@@ -35,7 +35,7 @@ def _predicate(states, *, any_of=False):
 
 
 class PautaEngine:
-    def evaluate(self, config: PautaConfig, evidence: PautaEvidence) -> PautaAssessment:
+    def evaluate(self, config: PautaConfig, evidence: PautaEvidence, *, evidence_policy=None) -> PautaAssessment:
         # Also reject invalid objects made with model_construct/model_copy.
         config = PautaConfig.model_validate(config.model_dump())
         evidence = PautaEvidence.model_validate(evidence.model_dump())
@@ -45,7 +45,7 @@ class PautaEngine:
         observed = {e.obligation_id: e for e in evidence.obligations}
         if not set(observed) <= set(declarations):
             raise ValueError("Evidence references undeclared obligations")
-        evaluator = _Evaluation(config, declarations, observed)
+        evaluator = _Evaluation(config, declarations, observed, evidence_policy)
         items = tuple(evaluator.rule(item) for item in config.items)
         score = None if any(i.points_awarded is None for i in items) else sum(i.points_awarded for i in items)
         return PautaAssessment(
@@ -59,8 +59,9 @@ class PautaEngine:
 
 
 class _Evaluation:
-    def __init__(self, config, declarations, observed):
+    def __init__(self, config, declarations, observed, evidence_policy=None):
         self.config, self.declarations, self.observed = config, declarations, observed
+        self.evidence_policy = evidence_policy
 
     def observe(self, identifier, *, context=None, require_conditional=False):
         e = self.observed.get(identifier)
@@ -71,7 +72,8 @@ class _Evaluation:
         if status in {"supported", "refuted"}:
             if not e.attributable_to_student:
                 status, reason = "indeterminate", "NOT_ATTRIBUTABLE_TO_STUDENT"
-            elif e.origin not in self.declarations[identifier].accepted_origins:
+            elif (e.origin not in self.declarations[identifier].accepted_origins
+                  and not (self.evidence_policy and self.evidence_policy.accepts(e))):
                 status, reason = "indeterminate", "ORIGIN_NOT_ACCEPTED"
             elif require_conditional and (context is None or e.conditional_on != context):
                 status, reason = "indeterminate", "CARRY_FORWARD_BINDING_MISSING_OR_MISMATCHED"
@@ -107,8 +109,10 @@ class _Evaluation:
             carry_forward_applied=carry,
             evidence_refs=_unique(ref for o in records for ref in o.evidence_refs),
             credit_evidence_refs=_unique(credit_refs),
-            needs_review=uncertain or bool(categories["technical_error"]) or any(o.origin in {"secondary", "semantic", "diagram"}
-                and o.effective_status in {"supported", "refuted"} for o in records),
+            needs_review=uncertain or bool(categories["technical_error"]) or any(
+                self.evidence_policy.needs_review(o) if self.evidence_policy else
+                (o.origin in {"secondary", "semantic", "diagram"}
+                 and o.effective_status in {"supported", "refuted"}) for o in records),
             reason=reason, obligations=records, children=children,
         )
 
