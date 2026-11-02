@@ -160,15 +160,15 @@ def validate_response(raw, problem_id, text):
     return tuple(response.judgments)
 
 
-def configuration():
-    return dict(version=VERSION, model='gpt-4o-mini-2024-07-18', timeout=180,
+def configuration(*, model: str | None = None):
+    return dict(version=VERSION, model='gpt-4o-mini-2024-07-18' if model is None else model, timeout=180,
                 max_output_tokens=16000, max_retries=0, temperature=0, store=False,
                 prompt_sha256=legacy.sha(PROMPT))
 
 
-def request_judgments(problem_id, text):
+def request_judgments(problem_id, text, *, model: str | None = None):
     from openai import OpenAI
-    config = configuration()
+    config = configuration(model=model)
     metadata = dict(status='unavailable', api_calls=0, retries=0, model=config['model'])
     try:
         with OpenAI(base_url='https://api.openai.com/v1', timeout=config['timeout'], max_retries=0) as client:

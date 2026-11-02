@@ -1,4 +1,6 @@
 """Independent evidence sufficiency. No first-evaluator rationale or reference answer."""
+from __future__ import annotations
+
 import json
 from typing import Literal
 from pydantic import Field,model_validator
@@ -63,8 +65,8 @@ class SufficiencyDecision(StrictModel):
         return self
 
 
-def configuration():
-    return dict(version=VERSION,model='gpt-4o-mini-2024-07-18',temperature=0,store=False,
+def configuration(*, model: str | None = None):
+    return dict(version=VERSION,model='gpt-4o-mini-2024-07-18' if model is None else model,temperature=0,store=False,
                 max_output_tokens=16000,timeout=180,max_retries=0,prompt_sha256=sha(PROMPT))
 
 
@@ -127,9 +129,9 @@ class SemanticSufficiencyGate:
         return (provider or request_sufficiency)(payload)
 
 
-def request_sufficiency(payload):
+def request_sufficiency(payload, *, model: str | None = None):
     from openai import OpenAI
-    cfg=configuration();meta=dict(status='unavailable',model=cfg['model'],api_calls=0,retries=0)
+    cfg=configuration(model=model);meta=dict(status='unavailable',model=cfg['model'],api_calls=0,retries=0)
     try:
         with OpenAI(base_url='https://api.openai.com/v1',timeout=cfg['timeout'],max_retries=0) as client:
             meta['api_calls']=1
