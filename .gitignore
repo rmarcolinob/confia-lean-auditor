@@ -37,3 +37,5 @@ benchmarks/**/reports/
 runtime/
 
 dataset_1000_v1.2/
+
+datasets/
