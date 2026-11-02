@@ -15,9 +15,11 @@ def item_regions(text):
         prefix=text[:m.start()];line=prefix.rsplit('\n',1)[-1]
         suffix=text[m.end():].lstrip(' \t')
         if suffix and suffix[0] in '=+*/^<>≤≥−':continue
-        # A standalone heading or explicit topical transition; never '+ a)'.
+        # A heading may start a line or sentence, including "Em (b), ...".
+        # A reference inside its body ("os valores obtidos em (b)") cannot
+        # restart the section or relabel the following evidence.
         beginning=not line.strip()
-        topical=bool(re.search(r'\b(?:para|em)\s*$',line,re.I))
+        topical=bool(re.search(r'(?:^|[.!?;:])\s*(?:para|em)\s*$',line,re.I))
         sentence_boundary=bool(re.search(r'[.!?;:]\s*$',line))
         if not (beginning or topical or sentence_boundary):continue
         if re.search(r'\b(?:pelo|do|ao|no)?\s*item\s*$',line,re.I):continue
