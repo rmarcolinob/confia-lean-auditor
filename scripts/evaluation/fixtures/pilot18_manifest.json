@@ -1,0 +1,100 @@
+{
+  "selection_rule": "sort IDs within problem; floor(i*(N-1)/5), i=0..5",
+  "dataset": "/Users/LinMarcolino/Library/CloudStorage/Dropbox/envio_v2.0/solucoes_v2.0.csv",
+  "population_count": 252,
+  "selected_count": 18,
+  "gold_used": false,
+  "executed": false,
+  "cases": [
+    {
+      "solution_id": "ITA2025F2Q1_S001_L04",
+      "problem_id": "ITA2025F2Q1",
+      "source_sha256": "5b87dc8d4659f6071790553ae2ebf20e472b17124ecf1ef5fe156f29a008b26e"
+    },
+    {
+      "solution_id": "ITA2025F2Q1_S018_L01",
+      "problem_id": "ITA2025F2Q1",
+      "source_sha256": "5a351740170b5b66b9c44f78ee98b03f51443061ed78f2b365b0775218fa0825"
+    },
+    {
+      "solution_id": "ITA2025F2Q1_S030_L04",
+      "problem_id": "ITA2025F2Q1",
+      "source_sha256": "808b96d171fd2c9c0bf7fd20f4ee274d3f55b3c802baed83d1f383a4c6c6fec4"
+    },
+    {
+      "solution_id": "ITA2025F2Q1_S046_L02",
+      "problem_id": "ITA2025F2Q1",
+      "source_sha256": "d01b580616d77682416a700ee55cb98e215763f8d0bc876e5f6d18767ff19a71"
+    },
+    {
+      "solution_id": "ITA2025F2Q1_S065_L04",
+      "problem_id": "ITA2025F2Q1",
+      "source_sha256": "d33a0caa48cb2a446f38a7eb810e53a9aed351c39024aa63af6952617c4f39c0"
+    },
+    {
+      "solution_id": "ITA2025F2Q1_S083_L04",
+      "problem_id": "ITA2025F2Q1",
+      "source_sha256": "1cfc7ec728467f70a887c368cc11a9847b2c83533bf6e0fc4d7fb9d323e885e6"
+    },
+    {
+      "solution_id": "ITA2025F2Q5_S003_L01",
+      "problem_id": "ITA2025F2Q5",
+      "source_sha256": "072c2957cf46b2e83f354f4af083fc491098374022fe2da5d07b174ba1977874"
+    },
+    {
+      "solution_id": "ITA2025F2Q5_S022_L04",
+      "problem_id": "ITA2025F2Q5",
+      "source_sha256": "11145a128f314f35052037408775dc7759dc9686d4e80d3dde8b7276fb7765b9"
+    },
+    {
+      "solution_id": "ITA2025F2Q5_S039_L04",
+      "problem_id": "ITA2025F2Q5",
+      "source_sha256": "1981ff7007fd3b61a0c5491e9eaa46a5c9f9c8a518d70bd08357b26da279d7e8"
+    },
+    {
+      "solution_id": "ITA2025F2Q5_S052_L04",
+      "problem_id": "ITA2025F2Q5",
+      "source_sha256": "e75316ef16a9583800854e576f76a9fe1b7cbb9159c0f7045d6a6ac34916516a"
+    },
+    {
+      "solution_id": "ITA2025F2Q5_S068_L04",
+      "problem_id": "ITA2025F2Q5",
+      "source_sha256": "67320f0e541c6a378f09ea4e29c471b6f2b9ed5c83e13a9eb3c247623fe72d88"
+    },
+    {
+      "solution_id": "ITA2025F2Q5_S084_L04",
+      "problem_id": "ITA2025F2Q5",
+      "source_sha256": "d7b0a1804685c3082c1cb07ef578d1643fbe3579f088bb291ca10aa112c06e5a"
+    },
+    {
+      "solution_id": "ITA2025F2Q6_S001_L04",
+      "problem_id": "ITA2025F2Q6",
+      "source_sha256": "e0a172774203e4f0b26b79afc6f9ace595a156889897ea95c8c0ff166cf1e4ed"
+    },
+    {
+      "solution_id": "ITA2025F2Q6_S018_L04",
+      "problem_id": "ITA2025F2Q6",
+      "source_sha256": "0ed79cfabfc348fff04f989d5583732ab66c6ef9e1751268942f22a7eab72ed6"
+    },
+    {
+      "solution_id": "ITA2025F2Q6_S034_L02",
+      "problem_id": "ITA2025F2Q6",
+      "source_sha256": "0637b19bb4d96d84fb6146fc6781007f255c1709b219e3a9bec7ab5652dd4376"
+    },
+    {
+      "solution_id": "ITA2025F2Q6_S048_L04",
+      "problem_id": "ITA2025F2Q6",
+      "source_sha256": "fd5d6854fffbc231ea7e122eb8325fe8b3034098c4b16fbd5e3ed9746ca2b14f"
+    },
+    {
+      "solution_id": "ITA2025F2Q6_S064_L04",
+      "problem_id": "ITA2025F2Q6",
+      "source_sha256": "16a9bca3f2ced1351da5d802c05a5624afa5c6515c24dd5008df2b10bc746071"
+    },
+    {
+      "solution_id": "ITA2025F2Q6_S084_L04",
+      "problem_id": "ITA2025F2Q6",
+      "source_sha256": "dbd37b718adacfd5d5efaf40d6352dc977a8ae49958386378eb4b153dbb6d785"
+    }
+  ]
+}
