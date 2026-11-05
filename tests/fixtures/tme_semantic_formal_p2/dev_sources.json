@@ -1,0 +1,42 @@
+[
+  {
+    "case_id": "p2_dev_pairs",
+    "problem_id": "TME2026P2",
+    "solution_text": "a) Os pares são {(1,9),(2,8),(3,7),(4,6)}"
+  },
+  {
+    "case_id": "p2_dev_integrality",
+    "problem_id": "TME2026P2",
+    "solution_text": "b) Contando as linhas, 4*S=45+3*x.\nA soma S é inteiro.\nOs centros possíveis são {1,5,9}."
+  },
+  {
+    "case_id": "p2_dev_typed_formula",
+    "problem_id": "TME2026P2",
+    "solution_text": "b) balance_relation: 4*S=45+3*x\nsum_formula: (45+3*x)/4"
+  },
+  {
+    "case_id": "p2_dev_count",
+    "problem_id": "TME2026P2",
+    "solution_text": "c) As distribuições dos pares são 4!=24.\nAs orientações são 2^4=16.\nO total de preenchimentos é 24*16=384."
+  },
+  {
+    "case_id": "p2_dev_wrong_count",
+    "problem_id": "TME2026P2",
+    "solution_text": "c) As distribuições são 4!=20.\nO total de preenchimentos é 24*16=364."
+  },
+  {
+    "case_id": "p2_dev_context",
+    "problem_id": "TME2026P2",
+    "solution_text": "c) Suponha:\npair_permutations: 4!=24\nNão é verdade:\ncounting_product: 24*16=384"
+  },
+  {
+    "case_id": "p2_dev_conflict",
+    "problem_id": "TME2026P2",
+    "solution_text": "c) pair_permutations: 4!=24\npair_permutations: 4!=20"
+  },
+  {
+    "case_id": "p2_dev_partial",
+    "problem_id": "TME2026P2",
+    "solution_text": "c) pair_permutations: 24\npair_orientations: 16\ntotal: 384"
+  }
+]
