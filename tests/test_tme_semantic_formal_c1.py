@@ -122,15 +122,14 @@ def test_all_21_routes_closed_and_only_two_formal(oid):
     if oid in FORMAL_OBLIGATIONS:
         assert ClaimRouter().route(e, oid) == 'FORMAL'
     else:
-        with pytest.raises(ValueError, match='invented_formal_route'):
-            ClaimRouter().route(e, oid)
+        assert ClaimRouter().route(e, oid) == 'DETERMINISTIC'
 
 
 def test_suggestion_cannot_downgrade_formal_or_claim_unrelated_obligation():
     text = '(a)\n731-137=594'
     c = claim(text, '731-137=594', ['a.result_594'], verification_route_candidate='SEMANTIC')
     r = run(text, [c])
-    assert r['verification_results'][0]['status'] == 'FORMAL_UNPROVED'
+    assert r['verification_results'][0]['status'] == 'FORMAL_NOT_ATTEMPTED'
     assert r['verification_results'][0]['route'] == 'FORMAL'
     text = '(b)\n99(a-c)'
     r = run(text, [claim(text, '99(a-c)', ['b.factorization'])])
@@ -337,7 +336,8 @@ def test_score_range_and_missing_evidence():
 
 
 def test_local_verification_meanings_do_not_collapse():
-    assert verification_status('FORMAL', 'unverified') == 'FORMAL_UNPROVED'
+    assert verification_status('FORMAL', 'unverified', formal_attempted=True) == 'FORMAL_UNPROVED'
+    assert verification_status('FORMAL', 'unverified') == 'FORMAL_NOT_ATTEMPTED'
     assert verification_status('FORMAL', 'technical_error') == 'FORMAL_ERROR'
     assert verification_status('DETERMINISTIC', 'refuted') == 'DETERMINISTIC_FAILED'
 

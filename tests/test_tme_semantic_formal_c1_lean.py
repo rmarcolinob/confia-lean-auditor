@@ -12,12 +12,13 @@ from test_tme_semantic_formal_c1 import claim, run
 ])
 def test_real_p1_a_positive_and_refutation(span, status, score, tmp_path):
     text = '(a)\n' + span
-    c = claim(text, span, ['a.identifies_137', 'a.constructs_subtraction', 'a.result_594', 'a.arithmetic_error_only'])
+    c = claim(text, span, ['a.identifies_137', 'a.constructs_subtraction', 'a.result_594', 'a.arithmetic_error_only'],
+              verification_route_candidate='FORMAL')
     result = run(text, [c], use_lean=True)
     proof = next(r for r in result['verification_results'] if r['obligation_id'] == 'a.result_594')
     assert proof['status'] == status and result['score'] == score
     check = proof['checker_result']
-    assert check['method'] == 'norm_num' and not result['technical_uncertainty']
+    assert proof['formal_attempted'] and check['method'] == 'norm_num' and not result['technical_uncertainty']
     if status == 'FORMAL_VERIFIED':
         assert check['compiled'] and check['formal_status'] == 'verified'
         assert Path(check['lean_file']).is_file()
@@ -39,7 +40,7 @@ def test_real_p1_d_counting_equality(tmp_path):
           claim(text, '3*10=30', ['d.total_thirty'])]
     result = run(text, cs, use_lean=True)
     proof = next(r for r in result['verification_results'] if r['obligation_id'] == 'd.total_thirty')
-    assert proof['status'] == 'FORMAL_VERIFIED'
+    assert proof['status'] == 'FORMAL_VERIFIED' and proof['formal_attempted']
     check = proof['checker_result']
     assert check['compiled'] and check['formal_status'] == 'verified'
     assert Path(check['lean_file']).is_file()
@@ -48,3 +49,19 @@ def test_real_p1_d_counting_equality(tmp_path):
     assert any(c['rule_id'] == 'd.count' and c['points'] == 2 for c in result['formal_awards'])
     (tmp_path/'real-result.json').write_text(json.dumps(result, ensure_ascii=False, indent=2))
     print(json.dumps(dict(obligation='d.total_thirty', status=proof['status'], checker=check), ensure_ascii=False))
+
+
+def test_real_p1_complete_after_bridge_fixes(tmp_path):
+    from test_tme_semantic_formal_c1_fix import replay
+    result = replay('p1_complete_regression', use_lean=True)
+    assert result['score'] == 20
+    assert [i['points_awarded'] for i in result['rubric_items']] == ['3', '5', '6', '6']
+    formal = [r for r in result['verification_results'] if r['route'] == 'FORMAL']
+    assert {r['obligation_id'] for r in formal} == {'a.result_594', 'd.total_thirty'}
+    assert all(r['formal_attempted'] and r['status'] == 'FORMAL_VERIFIED'
+               and r['checker_result']['compiled'] for r in formal)
+    assert not result['technical_uncertainty'] and not result['conflicts']
+    (tmp_path/'real-result.json').write_text(json.dumps(result, ensure_ascii=False, indent=2))
+    print(json.dumps(dict(case='p1_complete_regression', score=result['score'],
+                         formal=[dict(obligation=r['obligation_id'], checker=r['checker_result']) for r in formal]),
+                     ensure_ascii=False))

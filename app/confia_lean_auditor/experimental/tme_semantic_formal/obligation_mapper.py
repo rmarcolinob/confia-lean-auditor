@@ -36,19 +36,47 @@ class SourceDocument:
 
 
 class ObligationMapper:
+    @staticmethod
+    def candidates(document, evidence):
+        """Recover the existing standalone inverse-answer role, never a substring.
+
+        Only an entire item-a literal answer can use this narrow correction.
+        Equations, labelled results, prose, other items and values extracted from
+        a larger expression retain their original candidates and checker gates.
+        This selects an obligation; it does not verify or authorize any credit.
+        """
+        from confia_lean_auditor.student_claims.digital_literals import literal_form
+        from confia_lean_auditor.lean.student_claim_checkers.tme2_p1 import eq
+        raw = evidence.source_span.strip()
+        literal = literal_form(raw)
+        if (evidence.claim_type == 'expression' and literal and literal[0] == 'math_literal'
+                and evidence.normalized_claim.strip() == raw
+                and document.items.get('a', '').strip() == raw
+                and 'a' in evidence.rubric_candidates
+                and all(o.startswith('a.') for o in evidence.obligation_candidates)
+                and eq(raw, '137')):
+            return ('a.identifies_137',)
+        return evidence.obligation_candidates
+
     def map(self, document, evidence):
         reqs = {r['obligation_id']: r for r in requirements(PROBLEM_ID)}
         mapped = []
         interpretations = {}
         for e in evidence:
-            for oid in e.obligation_candidates:
+            for oid in self.candidates(document, e):
                 key = (e.source_start, e.source_end, e.normalized_claim, oid)
                 interpretations.setdefault(key, set()).add((e.assertion_status, e.polarity,
                     e.scope, e.hypothetical, e.abandoned, e.attributed_to_student))
         for e in evidence:
-            for oid in e.obligation_candidates:
+            candidates = self.candidates(document, e)
+            for oid in candidates:
                 row = dict(evidence_id=e.evidence_id, obligation_id=oid, accepted=False,
-                           effective_route=None, reason='', context_valid=False)
+                           effective_route=None, reason='', context_valid=False,
+                           suggested_route=e.verification_route_candidate,
+                           route_override_reason=None,
+                           suggested_obligation_candidates=list(e.obligation_candidates),
+                           mapping_override_reason='standalone_item_a_inverse_role'
+                               if tuple(candidates) != tuple(e.obligation_candidates) else None)
                 try:
                     if oid not in REGISTRY:
                         raise ValueError('unknown_obligation')
@@ -64,6 +92,8 @@ class ObligationMapper:
                     if REGISTRY[oid].rubric_item not in e.rubric_candidates:
                         raise ValueError('rubric_candidate_mismatch')
                     route = ClaimRouter().route(e, oid)
+                    if route != e.verification_route_candidate:
+                        row['route_override_reason'] = 'obligation_registry'
                     # Even a hostile model cannot turn quoted/negative source into support.
                     _, attributable = contextual_role(document.text, e.source_start, e.source_end)
                     link = link_evidence(document.text, reqs[oid], e.source_evidence_ids)

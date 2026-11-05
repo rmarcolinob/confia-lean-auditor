@@ -7,8 +7,6 @@ class ClaimRouter:
         spec = REGISTRY[obligation_id]
         if evidence.claim_type not in spec.allowed_claim_types:
             raise ValueError('claim_type_not_allowed_for_obligation')
-        if evidence.verification_route_candidate == 'FORMAL' and obligation_id not in FORMAL_OBLIGATIONS:
-            raise ValueError('invented_formal_route')
         if evidence.claim_type == 'qualitative':
             from confia_lean_auditor.core.math_canonical import parse_math
             from confia_lean_auditor.student_claims.digital_literals import literal_form

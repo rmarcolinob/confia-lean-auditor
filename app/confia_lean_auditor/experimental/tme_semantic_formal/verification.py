@@ -13,8 +13,27 @@ from .obligation_registry import PROBLEM_ID, REGISTRY, FORMAL_OBLIGATIONS
 from .semantic_extractor import transport
 
 
-def verification_status(route, status):
+def formal_execution(check):
+    """Confirm execution from the existing checker contract, not just a route.
+
+    Some technical failures can happen before subprocess creation. Their old
+    contract cannot establish whether Lean started; keep that fact unknown.
+    """
+    if not (check and check.get('lean_statement') and check.get('lean_file')):
+        return False
+    if check.get('status') in {'unsupported', 'ungrounded'}:
+        return False
+    if check.get('failure_category') in {'INVALID_PROOF', 'PROCESS_ERROR'}:
+        return None
+    return True
+
+
+def verification_status(route, status, *, formal_attempted=False):
     if route == 'FORMAL':
+        if status == 'technical_error':
+            return 'FORMAL_ERROR'
+        if not formal_attempted:
+            return 'FORMAL_NOT_ATTEMPTED'
         return {'verified': 'FORMAL_VERIFIED', 'refuted': 'FORMAL_REFUTED',
                 'technical_error': 'FORMAL_ERROR'}.get(status, 'FORMAL_UNPROVED')
     return 'DETERMINISTIC_VERIFIED' if status == 'verified' else 'DETERMINISTIC_FAILED'
@@ -56,18 +75,34 @@ class ClaimProjection:
             original_start = self.document.ranges[owner][0]
             a = ranges[owner][0] + e.source_start - original_start
             b = a + len(e.source_span)
-            candidate = legacy.SemanticClaimCandidate(candidate_id=e.evidence_id,
-                claim_kind='finite_set' if e.claim_type == 'collection' else 'algebraic_relation',
-                source_text=e.source_span, source_start=a, source_end=b, assertion_mode='asserted',
-                normalized_payload=legacy.NormalizedPayload(subject=e.claim_type,
-                    expression=e.normalized_claim, item_id=owner))
-            record, event = legacy.convert_candidate(problem, source, candidate, ranges)
             if source[a:b] != e.source_span:
                 raise ValueError('coordinate_translation_failed')
-            # One record may support several obligations; preserve every evidence binding.
-            records[record.record_id] = record
-            bindings.setdefault(record.record_id, []).append(e.evidence_id)
-            events.append(dict(evidence_id=e.evidence_id, **event))
+            segments = [(0, len(e.source_span), e.normalized_claim)]
+            # Match the baseline's adjacent-equality grammar, only within this
+            # selected, unchanged written chain. Never infer endpoint equalities.
+            if (owner == 'b' and e.claim_type == 'expression' and e.source_span.count('=') > 1
+                    and legacy.notation_view(e.source_span).rstrip('.')
+                    == legacy.notation_view(e.normalized_claim).rstrip('.')):
+                from confia_lean_auditor.student_claims.generic_math import candidate_spans
+                adjacent = [(x, y, data['expression']) for x, y, kind, data in candidate_spans(e.source_span)
+                            if kind == 'math_relation' and data.get('expression', '').count('=') == 1]
+                if len(adjacent) == e.source_span.count('='):
+                    segments = sorted(adjacent)
+            for index, (x, y, expression) in enumerate(segments):
+                candidate = legacy.SemanticClaimCandidate(candidate_id=e.evidence_id,
+                    claim_kind='finite_set' if e.claim_type == 'collection' else 'algebraic_relation',
+                    source_text=e.source_span[x:y], source_start=a+x, source_end=a+y, assertion_mode='asserted',
+                    normalized_payload=legacy.NormalizedPayload(subject=e.claim_type,
+                        expression=expression, item_id=owner))
+                record, event = legacy.convert_candidate(problem, source, candidate, ranges)
+                records[record.record_id] = record
+                bindings.setdefault(record.record_id, []).append(e.evidence_id)
+                events.append(dict(evidence_id=e.evidence_id, **event,
+                    parent_source_span=e.source_span, parent_normalized_claim=e.normalized_claim,
+                    derived_source_span=e.source_span[x:y], derived_expression=expression,
+                    original_source_start=e.source_start+x, original_source_end=e.source_start+y,
+                    segment_index=index, segment_count=len(segments),
+                    derivation='written_adjacent_equality' if len(segments) > 1 else 'selected_claim'))
         if observe:
             self.bindings, self.events = bindings, events
         return tuple(records.values()), None
@@ -95,14 +130,17 @@ def mathematical_verification(document, evidence, mapping, config, case_id, *, u
                                               for i in session.bindings.get(rid, [])))
         route = 'FORMAL' if oid in FORMAL_OBLIGATIONS else 'DETERMINISTIC'
         validated, reason = _validated_status(fact, [records[i] for i in fact.source_claim_ids], bundle.source_sha256)
-        status = verification_status(route, fact.verification.status)
+        attempted = (route == 'FORMAL' and fact.verification_source == 'student_lean'
+                     and formal_execution(fact.student_check))
+        status = verification_status(route, fact.verification.status, formal_attempted=attempted)
         if validated not in {'supported', 'refuted', 'technical_error'}:
-            status = 'FORMAL_UNPROVED' if route == 'FORMAL' else 'DETERMINISTIC_FAILED'
-        if route == 'FORMAL' and fact.verification_source != 'student_lean':
-            status = 'FORMAL_UNPROVED'  # disabling Lean never relabels local math as formal
+            status = ('FORMAL_UNPROVED' if attempted else 'FORMAL_NOT_ATTEMPTED') if route == 'FORMAL' else 'DETERMINISTIC_FAILED'
+        if route == 'FORMAL' and not attempted and status != 'FORMAL_ERROR':
+            status = 'FORMAL_NOT_ATTEMPTED'
             reason = 'formal_checker_not_executed_for_this_representation'
         results.append(dict(obligation_id=oid, evidence_ids=ids, prerequisite_evidence_ids=prerequisite_ids,
-            route=route, status=status, technical_uncertainty=fact.verification.status == 'technical_error',
+            route=route, status=status, formal_attempted=attempted,
+            technical_uncertainty=fact.verification.status == 'technical_error',
             mathematical_refutation=validated == 'refuted' and (route != 'FORMAL' or status == 'FORMAL_REFUTED'),
             source_claim_ids=list(fact.source_claim_ids), verification_id=fact.verification.verification_id,
             verification_ref=fact.verification.artifact_ref, checker_result=fact.student_check,
@@ -115,7 +153,8 @@ def mathematical_verification(document, evidence, mapping, config, case_id, *, u
                 r['obligation_id'] == m['obligation_id'] and m['evidence_id'] in r['evidence_ids'] for r in results):
             results.append(dict(obligation_id=m['obligation_id'], evidence_ids=[m['evidence_id']],
                 prerequisite_evidence_ids=[], route=m['effective_route'],
-                status='FORMAL_UNPROVED' if m['effective_route'] == 'FORMAL' else 'DETERMINISTIC_FAILED',
+                status='FORMAL_NOT_ATTEMPTED' if m['effective_route'] == 'FORMAL' else 'DETERMINISTIC_FAILED',
+                formal_attempted=False,
                 technical_uncertainty=False, mathematical_refutation=False,
                 reason='no_existing_fact_for_selected_claim',
                 sufficiency_decision=dict(sufficient=False, basis='missing_checker_fact')))

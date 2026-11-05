@@ -14,7 +14,7 @@ from .obligation_registry import PROBLEM_ID, REGISTRY, require_p1, registry_rows
 from .obligation_mapper import SourceDocument, ObligationMapper
 from .semantic_extractor import SemanticExtractorTME
 from .verification import mathematical_verification, semantic_verification
-from .verification import verification_status, complete_item_sufficiency
+from .verification import verification_status, formal_execution, complete_item_sufficiency
 from .reconciliation import reconcile
 from .award_gate import AwardGate, credited_rules
 from .score_closure import ScoreClosurePolicy
@@ -45,7 +45,9 @@ def current_verification_results(bridge):
         route = 'FORMAL' if fact.verification_source == 'student_lean' else 'DETERMINISTIC'
         result.append(dict(obligation_id=TME2_P1_OBLIGATIONS[fact.fact_id], evidence_ids=[],
             source_claim_ids=list(fact.source_claim_ids), route=route,
-            status=verification_status(route, fact.verification.status),
+            status=verification_status(route, fact.verification.status,
+                                       formal_attempted=formal_execution(fact.student_check)),
+            formal_attempted=formal_execution(fact.student_check),
             technical_uncertainty=fact.verification.status == 'technical_error',
             verification_ref=fact.verification.artifact_ref, checker_result=fact.student_check,
             provenance='TME_CURRENT_original_fact', original_fact=fact.model_dump(mode='json')))
