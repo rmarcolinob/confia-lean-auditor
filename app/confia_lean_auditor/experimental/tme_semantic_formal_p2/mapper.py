@@ -8,7 +8,7 @@ from confia_lean_auditor.student_claims.tme2_p2_digital import VOCABULARY
 from confia_lean_auditor.student_claims.generic_math import contextual_role
 from confia_lean_auditor.student_claims.sufficiency_context import link_evidence,context_gate
 from confia_lean_auditor.student_claims.sufficiency_requirements import requirements
-from .registry import PROBLEM_ID,REGISTRY
+from .registry import PROBLEM_ID,REGISTRY,route_for_expression
 
 class SourceDocument:
     @staticmethod
@@ -103,7 +103,9 @@ class ObligationMapper:
                     if not attributable or not gate['valid'] or link['unassigned_item']: raise ValueError('source_context_rejected')
                     if e.subject not in spec.subjects or e.claim_type not in spec.claim_types: raise ValueError('obligation_subject_type_mismatch')
                     representation(e)
-                    row.update(accepted=True,context_valid=True,reason='compatible_pending_checker',item_linkage=link)
+                    route=route_for_expression(oid,e.normalized_claim)
+                    row.update(accepted=True,context_valid=True,reason='compatible_pending_checker',item_linkage=link,
+                        effective_route=route,route_override_reason='obligation_registry' if e.route_candidate!=route else None)
                 except ValueError as error: row['reason']=str(error)
                 rows.append(row)
         return rows

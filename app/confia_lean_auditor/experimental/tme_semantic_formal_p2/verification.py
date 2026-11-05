@@ -7,7 +7,7 @@ from confia_lean_auditor.experimental.tme_p2_checker_first.engine import StrongP
 from confia_lean_auditor.rubric.pauta.tme2_p2 import bridge_tme2_p2
 from confia_lean_auditor.rubric.pauta.bridge import _validated_status
 from .mapper import representation
-from .registry import REGISTRY,PROBLEM_ID
+from .registry import REGISTRY,PROBLEM_ID,route_for_expression
 from . import VERSION
 
 POSITIVE={'FORMAL_VERIFIED','DETERMINISTIC_VERIFIED','COMPOSITE_VERIFIED'}
@@ -57,12 +57,14 @@ def verify(document,evidence,mapping,config,case_id,*,use_lean):
         validated,reason=_validated_status(fact,[records[r] for r in fact.source_claim_ids],bundle.source_sha256)
         state=fact.verification.status;components=fact.metadata.get('components',[])
         attempted=False;check=fact.student_check
-        if spec.route=='FORMAL':
+        expression=records[fact.source_claim_ids[0]].canonical_form.value.get('expression','')
+        route=route_for_expression(oid,expression)
+        if route=='FORMAL':
             status,attempted=arithmetic_status(state,check)
             if not check: status='FORMAL_NOT_ATTEMPTED'
             if validated not in {'supported','refuted','technical_error'}:
                 status='FORMAL_UNPROVED' if attempted else 'FORMAL_NOT_ATTEMPTED'
-        elif spec.route=='COMPOSITE':
+        elif route=='COMPOSITE':
             status={'supported':'COMPOSITE_VERIFIED','refuted':'COMPOSITE_FAILED'}.get(validated,'COMPOSITE_INCOMPLETE')
             arithmetic=next((c for c in components if c['name']=='arithmetic'),{})
             attempted=arithmetic.get('formal_attempted',False);check=arithmetic.get('checker_result')
@@ -70,12 +72,15 @@ def verify(document,evidence,mapping,config,case_id,*,use_lean):
             status='DETERMINISTIC_VERIFIED' if validated=='supported' else 'DETERMINISTIC_FAILED'
         sufficient=status in POSITIVE and validated=='supported'
         results.append(dict(obligation_id=oid,evidence_ids=ids,source_claim_ids=list(fact.source_claim_ids),
-            route=spec.route,status=status,formal_attempted=attempted,reason=reason,
+            route=route,status=status,formal_attempted=attempted,reason=reason,
             mathematical_refutation=validated=='refuted',technical_uncertainty=state=='technical_error',
             checker_result=check,subchecks=components,checker_metadata=fact.metadata,
             verification_id=fact.verification.verification_id,verification_ref=fact.verification.artifact_ref,
             sufficiency_decision=dict(sufficient=sufficient,policy=spec.sufficiency_policy,basis='frozen_P2_checker_and_validated_binding'),
             original_fact=fact.model_dump(mode='json')))
+        if oid=='c.total':
+            results[-1].update(formal_status=status if route=='FORMAL' else 'FORMAL_NOT_ATTEMPTED',
+                verification_kind='written_total_value' if route=='DETERMINISTIC' else 'written_total_equality')
     for m in mapping:
         if not m['accepted']:
             status='CONFLICTING_EVIDENCE' if m['reason']=='conflicting_extractor_interpretation' else 'CONTEXT_REJECTED'

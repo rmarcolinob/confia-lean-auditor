@@ -14,6 +14,7 @@ class ObligationSpec:
     description: str
     coverage: str
     route: str
+    allowed_routes: tuple[str, ...]
     subjects: tuple[str, ...]
     claim_types: tuple[str, ...]
     checker: str
@@ -34,7 +35,9 @@ def _row(row):
     subchecks = ('arithmetic','counting_components','relation') if route == 'COMPOSITE' else ('existing_checker',)
     policy = ('all_three_components_verified' if route == 'COMPOSITE' else
               'executed_lean_verified_and_existing_dependencies' if route == 'FORMAL' else 'existing_exact_checker_verified')
-    return ObligationSpec(oid, oid[0], description, row['coverage'], route, subjects,
+    allowed_routes = ('FORMAL','DETERMINISTIC') if oid == 'c.total' else (route,)
+    if oid == 'c.total': policy = 'written_total_value_or_verified_written_equality'
+    return ObligationSpec(oid, oid[0], description, row['coverage'], route, allowed_routes, subjects,
         tuple(sorted({VOCABULARY[s]['kind'] for s in subjects})),row['primary_checker'],policy,subchecks)
 
 REGISTRY = MappingProxyType({r['obligation_id']:_row(r) for r in coverage_rows()})
@@ -43,3 +46,18 @@ def registry_rows(): return [asdict(s) for s in REGISTRY.values()]
 
 def require_p2(problem):
     if problem != PROBLEM_ID: raise ValueError('semantic_formal_p2_only')
+
+
+def route_for_expression(obligation_id, expression):
+    """Choose by written representation, never by truth or failed Lean outcome.
+
+    A single closed total expression denotes a value. Written equalities keep
+    the formal route even when unrenderable, unproved, erroneous or refuted.
+    """
+    spec = REGISTRY[obligation_id]
+    if obligation_id == 'c.total':
+        from confia_lean_auditor.core.math_canonical.combinatorial import factorial_form
+        form = factorial_form(expression)
+        if form and len(form['original_parts']) == 1:
+            return 'DETERMINISTIC'
+    return spec.route

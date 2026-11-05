@@ -45,10 +45,11 @@ def test_false_formal_claim_is_refuted_not_unknown(oid,value,tmp_path):
     assert not next(a for a in r['awards'] if a['obligation_id']==oid)['eligible']
 
 
-def test_unrendered_formal_claim_is_not_attempted_and_not_credited(tmp_path):
+def test_explicit_total_value_is_credited_without_formal_execution(tmp_path):
     r,v=real('c.total',tmp_path,'384')
-    assert v['status']=='FORMAL_NOT_ATTEMPTED' and v['formal_attempted'] is False
-    assert not v['mathematical_refutation'] and r['score']==0
+    assert v['status']=='DETERMINISTIC_VERIFIED' and v['formal_attempted'] is False
+    assert v['formal_status']=='FORMAL_NOT_ATTEMPTED' and v['route']=='DETERMINISTIC'
+    assert not v['mathematical_refutation'] and r['score']==1
 
 
 @pytest.mark.parametrize('proof,status,category',[

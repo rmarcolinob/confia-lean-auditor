@@ -50,15 +50,15 @@ def reconcile(results,math_bridge,guard_bridge):
 
 
 def award(case_id,evidence,mapping,results,conflicts):
-    eligible={(m['evidence_id'],m['obligation_id']) for m in mapping if m['accepted'] and m['context_valid']}
+    eligible={(m['evidence_id'],m['obligation_id'],m['effective_route']) for m in mapping if m['accepted'] and m['context_valid']}
     by_id={e.evidence_id:e for e in evidence};blocked={c['obligation_id'] for c in conflicts if not c['resolved']}
     observations=[];awards=[]
     for oid,spec in REGISTRY.items():
         rows=[r for r in results if r['obligation_id']==oid]
-        positives=[r for r in rows if r['status'] in POSITIVE and r['route']==spec.route
+        positives=[r for r in rows if r['status'] in POSITIVE and r['route'] in spec.allowed_routes
             and r['sufficiency_decision']['sufficient'] and r.get('verification_id')
             and r.get('original_fact') and r['evidence_ids']
-            and all((i,oid) in eligible and i in by_id and by_id[i].assertion_status=='asserted'
+            and all((i,oid,r['route']) in eligible and i in by_id and by_id[i].assertion_status=='asserted'
                     and by_id[i].polarity=='positive' and by_id[i].attributed_to_student
                     and not by_id[i].hypothetical and not by_id[i].abandoned for i in r['evidence_ids'])]
         negative=any(r['mathematical_refutation'] for r in rows)
@@ -66,13 +66,14 @@ def award(case_id,evidence,mapping,results,conflicts):
         technical=any(r['technical_uncertainty'] for r in rows)
         status='supported' if chosen else 'indeterminate' if oid in blocked else 'refuted' if negative else 'technical_error' if technical else 'indeterminate'
         refs=list(dict.fromkeys(i for r in rows for i in r['evidence_ids']))
-        origin='student_lean' if spec.route=='FORMAL' else 'deterministic'
+        effective_route=chosen['route'] if chosen else rows[0]['route'] if rows else spec.route
+        origin='student_lean' if effective_route=='FORMAL' else 'deterministic'
         reason='verified_and_sufficient' if chosen else 'blocked_conflict' if oid in blocked else 'no_sufficient_checker_result'
         observations.append(ObligationEvidence(obligation_id=oid,status=status,origin=origin,verification_source=origin,
             attributable_to_student=bool(chosen or negative),evidence_refs=tuple(refs),source_claim_ids=tuple(chosen['source_claim_ids']) if chosen else (),
             grounding_status='grounded' if refs else 'unavailable',metadata=dict(reason=reason,version=VERSION,conflict=oid in blocked)))
         awards.append(dict(obligation_id=oid,rubric_item=spec.rubric_item,eligible=chosen is not None,
-            evidence_ids=chosen['evidence_ids'] if chosen else [],verification_route=spec.route if chosen else None,
+            evidence_ids=chosen['evidence_ids'] if chosen else [],verification_route=chosen['route'] if chosen else None,
             verification_status=chosen['status'] if chosen else None,verification_result=chosen,
             sufficiency_decision=chosen['sufficiency_decision'] if chosen else None,award_decision=reason,technical_uncertainty=technical))
     return PautaEvidence(problem_id=PROBLEM_ID,solution_id=case_id,obligations=tuple(observations)),awards
