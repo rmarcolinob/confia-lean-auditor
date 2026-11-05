@@ -1,0 +1,182 @@
+[
+  {
+    "case_id": "A01_menos",
+    "problem_id": "TME2026P1",
+    "solution_text": "(a)\n731 menos 137 é igual a 594."
+  },
+  {
+    "case_id": "A02_subtraindo",
+    "problem_id": "TME2026P1",
+    "solution_text": "(a)\nO número invertido é 137. Subtraindo 137 de 731, obtenho 594."
+  },
+  {
+    "case_id": "A03_resultado_por_extenso",
+    "problem_id": "TME2026P1",
+    "solution_text": "(a)\n731 menos 137 é quinhentos e noventa e quatro."
+  },
+  {
+    "case_id": "A04_invertido_em_prosa",
+    "problem_id": "TME2026P1",
+    "solution_text": "(b)\nO número invertido é 100c+10b+a."
+  },
+  {
+    "case_id": "A05_lista_em_prosa",
+    "problem_id": "TME2026P1",
+    "solution_text": "(c)\nA diferença é dada por D=99(a-c). Os valores são D ∈ {99,198,297,396,495,594,693,792}."
+  },
+  {
+    "case_id": "A06_contagem_em_prosa",
+    "problem_id": "TME2026P1",
+    "solution_text": "(d)\nHá os pares (a,c) ∈ {(7,1),(8,2),(9,3)}. Para a dezena, b ∈ {0,1,2,3,4,5,6,7,8,9}. Portanto 3*10=30."
+  },
+  {
+    "case_id": "B01_sinais_espacos",
+    "problem_id": "TME2026P1",
+    "solution_text": "(a)\n731 − 137 = 594"
+  },
+  {
+    "case_id": "B02_posicional_reordenada",
+    "problem_id": "TME2026P1",
+    "solution_text": "(b)\nR=a+10*b+100*c."
+  },
+  {
+    "case_id": "B03_algebra_equivalente",
+    "problem_id": "TME2026P1",
+    "solution_text": "(b)\nr=a+10*b+100*c.\n(c+10*b+100*a)-(a+10*b+100*c)=99*a-99*c=-99*(c-a)."
+  },
+  {
+    "case_id": "B04_formula_sinal",
+    "problem_id": "TME2026P1",
+    "solution_text": "(c)\nD=-99(c-a)."
+  },
+  {
+    "case_id": "B05_equacoes_simetrizadas",
+    "problem_id": "TME2026P1",
+    "solution_text": "(d)\n594=99(a-c).\n6=a-c."
+  },
+  {
+    "case_id": "B06_produto_comutado",
+    "problem_id": "TME2026P1",
+    "solution_text": "(d)\n(a,c) ∈ {(7,1),(8,2),(9,3)}\nb ∈ {0,1,2,3,4,5,6,7,8,9}\n10*3=30."
+  },
+  {
+    "case_id": "C01_b_passos_reordenados",
+    "problem_id": "TME2026P1",
+    "solution_text": "(b)\n99a-99c=99(a-c).\nr=100c+10b+a.\n(100a+10b+c)-(100c+10b+a)=99a-99c."
+  },
+  {
+    "case_id": "C02_c_lista_primeiro",
+    "problem_id": "TME2026P1",
+    "solution_text": "(c)\nD ∈ {99,198,297,396,495,594,693,792}\na>c.\nD=99(a-c).\n(a-c) ∈ {1,2,3,4,5,6,7,8}\na<=9.\n1<=c."
+  },
+  {
+    "case_id": "C03_d_produto_primeiro",
+    "problem_id": "TME2026P1",
+    "solution_text": "(d)\n3*10=30.\nb ∈ {0,1,2,3,4,5,6,7,8,9}\n(a,c) ∈ {(7,1),(8,2),(9,3)}\na-c=6.\n99(a-c)=594."
+  },
+  {
+    "case_id": "C04_itens_d_b_a_c",
+    "problem_id": "TME2026P1",
+    "solution_text": "(d)\n99(a-c)=594.\na-c=6.\n(a,c) ∈ {(7,1),(8,2),(9,3)}\nb ∈ {0,1,2,3,4,5,6,7,8,9}\n3*10=30.\n(b)\nr=100c+10b+a.\n(100a+10b+c)-(100c+10b+a)=99a-99c=99(a-c).\n(a)\n731-137=594\n(c)\nD=99(a-c).\n1<=c.\na<=9.\na>c.\n(a-c) ∈ {1,2,3,4,5,6,7,8}\nD ∈ {99,198,297,396,495,594,693,792}"
+  },
+  {
+    "case_id": "C05_c_parcial_lista_primeiro",
+    "problem_id": "TME2026P1",
+    "solution_text": "(c)\nD ∈ {99,198,297,396,495,594,693}\nD=99(a-c)."
+  },
+  {
+    "case_id": "C06_d_contagem_reordenada",
+    "problem_id": "TME2026P1",
+    "solution_text": "(d)\nb ∈ {0,1,2,3,4,5,6,7,8,9}\n3*10=30.\n(a,c) ∈ {(7,1),(8,2),(9,3)}"
+  },
+  {
+    "case_id": "D01_identificacao",
+    "problem_id": "TME2026P1",
+    "solution_text": "(a)\n137"
+  },
+  {
+    "case_id": "D02_montagem_sem_resultado",
+    "problem_id": "TME2026P1",
+    "solution_text": "(a)\n731-137"
+  },
+  {
+    "case_id": "D03_erro_aritmetico",
+    "problem_id": "TME2026P1",
+    "solution_text": "(a)\n731-137=584"
+  },
+  {
+    "case_id": "D04_somente_invertido",
+    "problem_id": "TME2026P1",
+    "solution_text": "(b)\nr=100c+10b+a."
+  },
+  {
+    "case_id": "D05_um_valor",
+    "problem_id": "TME2026P1",
+    "solution_text": "(c)\n{99}"
+  },
+  {
+    "case_id": "D06_equacao_e_diferenca",
+    "problem_id": "TME2026P1",
+    "solution_text": "(d)\n99(a-c)=594.\na-c=6."
+  },
+  {
+    "case_id": "E01_hipotese",
+    "problem_id": "TME2026P1",
+    "solution_text": "(a)\nSuponha que 731-137=594. Não adoto esta hipótese como minha solução."
+  },
+  {
+    "case_id": "E02_negacao",
+    "problem_id": "TME2026P1",
+    "solution_text": "(a)\nNão é verdade que 731-137=594."
+  },
+  {
+    "case_id": "E03_abandono",
+    "problem_id": "TME2026P1",
+    "solution_text": "(b)\nTentativa abandonada: r=100c+10b+a."
+  },
+  {
+    "case_id": "E04_citacao",
+    "problem_id": "TME2026P1",
+    "solution_text": "(c)\nCito apenas uma tentativa de outra pessoa: \"D=99(a-c).\" Não a adoto como solução."
+  },
+  {
+    "case_id": "E05_rejeicao_explicita",
+    "problem_id": "TME2026P1",
+    "solution_text": "(d)\nRejeito a afirmação 99(a-c)=594; não a uso na minha solução."
+  },
+  {
+    "case_id": "E06_misto_adotado_descartado",
+    "problem_id": "TME2026P1",
+    "solution_text": "(a)\nO número invertido que adoto é 137.\nApenas a conta a seguir foi abandonada: 731-137=594."
+  },
+  {
+    "case_id": "F01_soma_verdadeira",
+    "problem_id": "TME2026P1",
+    "solution_text": "(a)\n2+2=4"
+  },
+  {
+    "case_id": "F02_identidade_alheia",
+    "problem_id": "TME2026P1",
+    "solution_text": "(b)\n(x+y)^2=x^2+2*x*y+y^2"
+  },
+  {
+    "case_id": "F03_quadrados",
+    "problem_id": "TME2026P1",
+    "solution_text": "(c)\n{1,4,9,16}"
+  },
+  {
+    "case_id": "F04_diferenca_numerica",
+    "problem_id": "TME2026P1",
+    "solution_text": "(d)\n7-1=6"
+  },
+  {
+    "case_id": "F05_conta_correta_com_ruido",
+    "problem_id": "TME2026P1",
+    "solution_text": "(a)\n731-137=594.\n5*5=25."
+  },
+  {
+    "case_id": "F06_contagem_com_ruido",
+    "problem_id": "TME2026P1",
+    "solution_text": "(d)\n(a,c) ∈ {(7,1),(8,2),(9,3)}\n2+2=4.\nb ∈ {0,1,2,3,4,5,6,7,8,9}\n3*10=30."
+  }
+]
