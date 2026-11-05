@@ -60,13 +60,19 @@ def summarize(rows):
         technical_uncertainty_cases=sum(r['technical_uncertainty'] for r in rows),
         review_recommended_cases=sum(r['review_recommended'] for r in rows),
         mean_score=sum(r['score'] for r in rows)/len(rows) if rows else 0.0)
-    for name in ('formal_verified', 'formal_refuted', 'formal_unproved', 'formal_error',
+    for name in ('formal_verified', 'formal_refuted', 'formal_unproved', 'formal_not_attempted', 'formal_error',
                  'deterministic_verified', 'deterministic_failed', 'semantic_supported',
                  'semantic_insufficient', 'context_rejected'):
         result[name] = counts[name]
     for route in ('formal', 'deterministic', 'semantic'):
         result[route + '_routes'] = routes[route]
+    result['formal_attempts'] = sum(bool(r.get('formal_attempted')) for row in rows for r in row['verification_results'])
+    result['formal_execution_unknown'] = sum(r.get('status') == 'FORMAL_ERROR' and r.get('formal_attempted') is None
+                                             for row in rows for r in row['verification_results'])
     result['metric_definitions'] = dict(routes='verification result rows, including composite obligation checks',
+        formal_attempts='result rows with execution confirmed by the existing Lean checker contract',
+        formal_execution_unknown='technical errors whose existing checker result cannot establish subprocess execution',
+        formal_not_attempted='formal candidate without a Lean execution; never a mathematical refutation',
         items_scored='top-level rubric items with positive authorized points',
         obligations_with_evidence='unique obligations with context-compatible mapped candidates per case',
         baseline='baseline/fallback verification rows come from original facts; C1 extraction/mapping metrics are zero')

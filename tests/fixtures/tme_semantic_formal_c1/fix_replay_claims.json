@@ -1,0 +1,698 @@
+[
+  {
+    "case_id": "a_complete",
+    "evidence": [
+      {
+        "source_evidence_ids": [
+          "E002"
+        ],
+        "source_span": "731-137=594",
+        "normalized_claim": "731-137=594",
+        "claim_type": "expression",
+        "assertion_status": "asserted",
+        "polarity": "positive",
+        "scope": "final_conclusion",
+        "hypothetical": false,
+        "abandoned": false,
+        "attributed_to_student": true,
+        "rubric_candidates": [
+          "a"
+        ],
+        "obligation_candidates": [
+          "a.identifies_137",
+          "a.constructs_subtraction",
+          "a.result_594",
+          "a.arithmetic_error_only"
+        ],
+        "verification_route_candidate": "FORMAL"
+      }
+    ]
+  },
+  {
+    "case_id": "a_only_inverse",
+    "evidence": [
+      {
+        "source_evidence_ids": [
+          "E002"
+        ],
+        "source_span": "137",
+        "normalized_claim": "137",
+        "claim_type": "expression",
+        "assertion_status": "asserted",
+        "polarity": "positive",
+        "scope": "final_conclusion",
+        "hypothetical": false,
+        "abandoned": false,
+        "attributed_to_student": true,
+        "rubric_candidates": [
+          "a"
+        ],
+        "obligation_candidates": [
+          "a.result_594"
+        ],
+        "verification_route_candidate": "DETERMINISTIC"
+      }
+    ]
+  },
+  {
+    "case_id": "b_complete",
+    "evidence": [
+      {
+        "source_evidence_ids": [
+          "E002"
+        ],
+        "source_span": "r=100c+10b+a.",
+        "normalized_claim": "r=100c+10b+a",
+        "claim_type": "expression",
+        "assertion_status": "asserted",
+        "polarity": "positive",
+        "scope": "main_argument",
+        "hypothetical": false,
+        "abandoned": false,
+        "attributed_to_student": true,
+        "rubric_candidates": [
+          "b"
+        ],
+        "obligation_candidates": [
+          "b.reversed_number"
+        ],
+        "verification_route_candidate": "DETERMINISTIC"
+      },
+      {
+        "source_evidence_ids": [
+          "E003"
+        ],
+        "source_span": "(100a+10b+c)-(100c+10b+a)=99a-99c=99(a-c).",
+        "normalized_claim": "(100a+10b+c)-(100c+10b+a)=99a-99c=99(a-c)",
+        "claim_type": "expression",
+        "assertion_status": "asserted",
+        "polarity": "positive",
+        "scope": "main_argument",
+        "hypothetical": false,
+        "abandoned": false,
+        "attributed_to_student": true,
+        "rubric_candidates": [
+          "b"
+        ],
+        "obligation_candidates": [
+          "b.subtraction",
+          "b.middle_cancellation",
+          "b.factorization"
+        ],
+        "verification_route_candidate": "DETERMINISTIC"
+      }
+    ]
+  },
+  {
+    "case_id": "b_equivalent_algebra",
+    "evidence": [
+      {
+        "source_evidence_ids": [
+          "E002"
+        ],
+        "source_span": "r=a+10*b+100*c.",
+        "normalized_claim": "r=a+10*b+100*c",
+        "claim_type": "expression",
+        "assertion_status": "asserted",
+        "polarity": "positive",
+        "scope": "main_argument",
+        "hypothetical": false,
+        "abandoned": false,
+        "attributed_to_student": true,
+        "rubric_candidates": [
+          "b"
+        ],
+        "obligation_candidates": [
+          "b.reversed_number"
+        ],
+        "verification_route_candidate": "DETERMINISTIC"
+      },
+      {
+        "source_evidence_ids": [
+          "E003"
+        ],
+        "source_span": "(c+10*b+100*a)-(a+10*b+100*c)=99*a-99*c=-99*(c-a).",
+        "normalized_claim": "(c+10*b+100*a)-(a+10*b+100*c)=99*a-99*c=-99*(c-a)",
+        "claim_type": "expression",
+        "assertion_status": "asserted",
+        "polarity": "positive",
+        "scope": "main_argument",
+        "hypothetical": false,
+        "abandoned": false,
+        "attributed_to_student": true,
+        "rubric_candidates": [
+          "b"
+        ],
+        "obligation_candidates": [
+          "b.subtraction",
+          "b.middle_cancellation",
+          "b.factorization"
+        ],
+        "verification_route_candidate": "DETERMINISTIC"
+      }
+    ]
+  },
+  {
+    "case_id": "p1_complete_regression",
+    "evidence": [
+      {
+        "source_evidence_ids": [
+          "E002"
+        ],
+        "source_span": "731-137=594",
+        "normalized_claim": "731-137=594",
+        "claim_type": "expression",
+        "assertion_status": "asserted",
+        "polarity": "positive",
+        "scope": "final_conclusion",
+        "hypothetical": false,
+        "abandoned": false,
+        "attributed_to_student": true,
+        "rubric_candidates": [
+          "a"
+        ],
+        "obligation_candidates": [
+          "a.identifies_137",
+          "a.constructs_subtraction",
+          "a.result_594",
+          "a.arithmetic_error_only"
+        ],
+        "verification_route_candidate": "DETERMINISTIC"
+      },
+      {
+        "source_evidence_ids": [
+          "E004"
+        ],
+        "source_span": "r=100c+10b+a.",
+        "normalized_claim": "r=100c+10b+a",
+        "claim_type": "expression",
+        "assertion_status": "asserted",
+        "polarity": "positive",
+        "scope": "main_argument",
+        "hypothetical": false,
+        "abandoned": false,
+        "attributed_to_student": true,
+        "rubric_candidates": [
+          "b"
+        ],
+        "obligation_candidates": [
+          "b.reversed_number"
+        ],
+        "verification_route_candidate": "DETERMINISTIC"
+      },
+      {
+        "source_evidence_ids": [
+          "E005"
+        ],
+        "source_span": "(100a+10b+c)-(100c+10b+a)=99a-99c=99(a-c).",
+        "normalized_claim": "(100a+10b+c)-(100c+10b+a)=99a-99c=99(a-c)",
+        "claim_type": "expression",
+        "assertion_status": "asserted",
+        "polarity": "positive",
+        "scope": "main_argument",
+        "hypothetical": false,
+        "abandoned": false,
+        "attributed_to_student": true,
+        "rubric_candidates": [
+          "b"
+        ],
+        "obligation_candidates": [
+          "b.subtraction",
+          "b.middle_cancellation",
+          "b.factorization"
+        ],
+        "verification_route_candidate": "DETERMINISTIC"
+      },
+      {
+        "source_evidence_ids": [
+          "E007"
+        ],
+        "source_span": "D=99(a-c).",
+        "normalized_claim": "D=99(a-c)",
+        "claim_type": "expression",
+        "assertion_status": "asserted",
+        "polarity": "positive",
+        "scope": "main_argument",
+        "hypothetical": false,
+        "abandoned": false,
+        "attributed_to_student": true,
+        "rubric_candidates": [
+          "c"
+        ],
+        "obligation_candidates": [
+          "c.uses_expression",
+          "c.pattern_recognized"
+        ],
+        "verification_route_candidate": "DETERMINISTIC"
+      },
+      {
+        "source_evidence_ids": [
+          "E008"
+        ],
+        "source_span": "1<=c.",
+        "normalized_claim": "1<=c",
+        "claim_type": "expression",
+        "assertion_status": "asserted",
+        "polarity": "positive",
+        "scope": "main_argument",
+        "hypothetical": false,
+        "abandoned": false,
+        "attributed_to_student": true,
+        "rubric_candidates": [
+          "c"
+        ],
+        "obligation_candidates": [
+          "c.difference_domain"
+        ],
+        "verification_route_candidate": "DETERMINISTIC"
+      },
+      {
+        "source_evidence_ids": [
+          "E009"
+        ],
+        "source_span": "a<=9.",
+        "normalized_claim": "a<=9",
+        "claim_type": "expression",
+        "assertion_status": "asserted",
+        "polarity": "positive",
+        "scope": "main_argument",
+        "hypothetical": false,
+        "abandoned": false,
+        "attributed_to_student": true,
+        "rubric_candidates": [
+          "c"
+        ],
+        "obligation_candidates": [
+          "c.difference_domain"
+        ],
+        "verification_route_candidate": "DETERMINISTIC"
+      },
+      {
+        "source_evidence_ids": [
+          "E010"
+        ],
+        "source_span": "a>c.",
+        "normalized_claim": "a>c",
+        "claim_type": "expression",
+        "assertion_status": "asserted",
+        "polarity": "positive",
+        "scope": "main_argument",
+        "hypothetical": false,
+        "abandoned": false,
+        "attributed_to_student": true,
+        "rubric_candidates": [
+          "c"
+        ],
+        "obligation_candidates": [
+          "c.difference_domain"
+        ],
+        "verification_route_candidate": "DETERMINISTIC"
+      },
+      {
+        "source_evidence_ids": [
+          "E011"
+        ],
+        "source_span": "(a-c) ∈ {1,2,3,4,5,6,7,8}",
+        "normalized_claim": "(a-c) ∈ {1,2,3,4,5,6,7,8}",
+        "claim_type": "collection",
+        "assertion_status": "asserted",
+        "polarity": "positive",
+        "scope": "main_argument",
+        "hypothetical": false,
+        "abandoned": false,
+        "attributed_to_student": true,
+        "rubric_candidates": [
+          "c"
+        ],
+        "obligation_candidates": [
+          "c.difference_domain"
+        ],
+        "verification_route_candidate": "DETERMINISTIC"
+      },
+      {
+        "source_evidence_ids": [
+          "E012"
+        ],
+        "source_span": "D ∈ {99,198,297,396,495,594,693,792}",
+        "normalized_claim": "D ∈ {99,198,297,396,495,594,693,792}",
+        "claim_type": "collection",
+        "assertion_status": "asserted",
+        "polarity": "positive",
+        "scope": "final_conclusion",
+        "hypothetical": false,
+        "abandoned": false,
+        "attributed_to_student": true,
+        "rubric_candidates": [
+          "c"
+        ],
+        "obligation_candidates": [
+          "c.complete_list",
+          "c.no_extraneous_values",
+          "c.single_list_error",
+          "c.several_correct",
+          "c.pattern_recognized",
+          "c.some_correct"
+        ],
+        "verification_route_candidate": "DETERMINISTIC"
+      },
+      {
+        "source_evidence_ids": [
+          "E014"
+        ],
+        "source_span": "99(a-c)=594.",
+        "normalized_claim": "99(a-c)=594",
+        "claim_type": "expression",
+        "assertion_status": "asserted",
+        "polarity": "positive",
+        "scope": "main_argument",
+        "hypothetical": false,
+        "abandoned": false,
+        "attributed_to_student": true,
+        "rubric_candidates": [
+          "d"
+        ],
+        "obligation_candidates": [
+          "d.equation"
+        ],
+        "verification_route_candidate": "DETERMINISTIC"
+      },
+      {
+        "source_evidence_ids": [
+          "E015"
+        ],
+        "source_span": "a-c=6.",
+        "normalized_claim": "a-c=6",
+        "claim_type": "expression",
+        "assertion_status": "asserted",
+        "polarity": "positive",
+        "scope": "main_argument",
+        "hypothetical": false,
+        "abandoned": false,
+        "attributed_to_student": true,
+        "rubric_candidates": [
+          "d"
+        ],
+        "obligation_candidates": [
+          "d.difference_six"
+        ],
+        "verification_route_candidate": "DETERMINISTIC"
+      },
+      {
+        "source_evidence_ids": [
+          "E016"
+        ],
+        "source_span": "(a,c) ∈ {(7,1),(8,2),(9,3)}",
+        "normalized_claim": "(a,c) ∈ {(7,1),(8,2),(9,3)}",
+        "claim_type": "collection",
+        "assertion_status": "asserted",
+        "polarity": "positive",
+        "scope": "main_argument",
+        "hypothetical": false,
+        "abandoned": false,
+        "attributed_to_student": true,
+        "rubric_candidates": [
+          "d"
+        ],
+        "obligation_candidates": [
+          "d.digit_pairs"
+        ],
+        "verification_route_candidate": "DETERMINISTIC"
+      },
+      {
+        "source_evidence_ids": [
+          "E017"
+        ],
+        "source_span": "b ∈ {0,1,2,3,4,5,6,7,8,9}",
+        "normalized_claim": "b ∈ {0,1,2,3,4,5,6,7,8,9}",
+        "claim_type": "collection",
+        "assertion_status": "asserted",
+        "polarity": "positive",
+        "scope": "main_argument",
+        "hypothetical": false,
+        "abandoned": false,
+        "attributed_to_student": true,
+        "rubric_candidates": [
+          "d"
+        ],
+        "obligation_candidates": [
+          "d.middle_choices"
+        ],
+        "verification_route_candidate": "DETERMINISTIC"
+      },
+      {
+        "source_evidence_ids": [
+          "E018"
+        ],
+        "source_span": "3*10=30.",
+        "normalized_claim": "3*10=30",
+        "claim_type": "expression",
+        "assertion_status": "asserted",
+        "polarity": "positive",
+        "scope": "final_conclusion",
+        "hypothetical": false,
+        "abandoned": false,
+        "attributed_to_student": true,
+        "rubric_candidates": [
+          "d"
+        ],
+        "obligation_candidates": [
+          "d.total_thirty"
+        ],
+        "verification_route_candidate": "FORMAL"
+      }
+    ]
+  },
+  {
+    "case_id": "a_only_result",
+    "evidence": [
+      {
+        "source_evidence_ids": [
+          "E002"
+        ],
+        "source_span": "594",
+        "normalized_claim": "594",
+        "claim_type": "expression",
+        "assertion_status": "asserted",
+        "polarity": "positive",
+        "scope": "final_conclusion",
+        "hypothetical": false,
+        "abandoned": false,
+        "attributed_to_student": true,
+        "rubric_candidates": [
+          "a"
+        ],
+        "obligation_candidates": [
+          "a.result_594"
+        ],
+        "verification_route_candidate": "DETERMINISTIC"
+      }
+    ]
+  },
+  {
+    "case_id": "a_wrong_setup",
+    "evidence": [
+      {
+        "source_evidence_ids": [
+          "E002"
+        ],
+        "source_span": "731-173=584",
+        "normalized_claim": "731-173=584",
+        "claim_type": "expression",
+        "assertion_status": "asserted",
+        "polarity": "positive",
+        "scope": "final_conclusion",
+        "hypothetical": false,
+        "abandoned": false,
+        "attributed_to_student": true,
+        "rubric_candidates": [
+          "a"
+        ],
+        "obligation_candidates": [
+          "a.identifies_137",
+          "a.constructs_subtraction",
+          "a.result_594",
+          "a.arithmetic_error_only"
+        ],
+        "verification_route_candidate": "DETERMINISTIC"
+      }
+    ]
+  },
+  {
+    "case_id": "d_later_error",
+    "evidence": [
+      {
+        "source_evidence_ids": [
+          "E002"
+        ],
+        "source_span": "99(a-c)=594.",
+        "normalized_claim": "99(a-c)=594",
+        "claim_type": "expression",
+        "assertion_status": "asserted",
+        "polarity": "positive",
+        "scope": "main_argument",
+        "hypothetical": false,
+        "abandoned": false,
+        "attributed_to_student": true,
+        "rubric_candidates": [
+          "d"
+        ],
+        "obligation_candidates": [
+          "d.equation"
+        ],
+        "verification_route_candidate": "DETERMINISTIC"
+      },
+      {
+        "source_evidence_ids": [
+          "E003"
+        ],
+        "source_span": "a-c=6.",
+        "normalized_claim": "a-c=6",
+        "claim_type": "expression",
+        "assertion_status": "asserted",
+        "polarity": "positive",
+        "scope": "main_argument",
+        "hypothetical": false,
+        "abandoned": false,
+        "attributed_to_student": true,
+        "rubric_candidates": [
+          "d"
+        ],
+        "obligation_candidates": [
+          "d.difference_six"
+        ],
+        "verification_route_candidate": "DETERMINISTIC"
+      },
+      {
+        "source_evidence_ids": [
+          "E004"
+        ],
+        "source_span": "(a,c) ∈ {(6,1),(7,2),(8,3)}",
+        "normalized_claim": "(a,c) ∈ {(6,1),(7,2),(8,3)}",
+        "claim_type": "collection",
+        "assertion_status": "asserted",
+        "polarity": "positive",
+        "scope": "main_argument",
+        "hypothetical": false,
+        "abandoned": false,
+        "attributed_to_student": true,
+        "rubric_candidates": [
+          "d"
+        ],
+        "obligation_candidates": [
+          "d.digit_pairs"
+        ],
+        "verification_route_candidate": "DETERMINISTIC"
+      },
+      {
+        "source_evidence_ids": [
+          "E005"
+        ],
+        "source_span": "b ∈ {1,2,3,4,5,6,7,8,9}",
+        "normalized_claim": "b ∈ {1,2,3,4,5,6,7,8,9}",
+        "claim_type": "collection",
+        "assertion_status": "asserted",
+        "polarity": "positive",
+        "scope": "main_argument",
+        "hypothetical": false,
+        "abandoned": false,
+        "attributed_to_student": true,
+        "rubric_candidates": [
+          "d"
+        ],
+        "obligation_candidates": [
+          "d.middle_choices"
+        ],
+        "verification_route_candidate": "DETERMINISTIC"
+      },
+      {
+        "source_evidence_ids": [
+          "E006"
+        ],
+        "source_span": "3*9=27.",
+        "normalized_claim": "3*9=27",
+        "claim_type": "expression",
+        "assertion_status": "asserted",
+        "polarity": "positive",
+        "scope": "final_conclusion",
+        "hypothetical": false,
+        "abandoned": false,
+        "attributed_to_student": true,
+        "rubric_candidates": [
+          "d"
+        ],
+        "obligation_candidates": [
+          "d.total_thirty"
+        ],
+        "verification_route_candidate": "FORMAL"
+      }
+    ]
+  },
+  {
+    "case_id": "d_only_difference_then_error",
+    "evidence": [
+      {
+        "source_evidence_ids": [
+          "E002"
+        ],
+        "source_span": "a-c=6.",
+        "normalized_claim": "a-c=6",
+        "claim_type": "expression",
+        "assertion_status": "asserted",
+        "polarity": "positive",
+        "scope": "main_argument",
+        "hypothetical": false,
+        "abandoned": false,
+        "attributed_to_student": true,
+        "rubric_candidates": [
+          "d"
+        ],
+        "obligation_candidates": [
+          "d.difference_six"
+        ],
+        "verification_route_candidate": "DETERMINISTIC"
+      },
+      {
+        "source_evidence_ids": [
+          "E003"
+        ],
+        "source_span": "(a,c) ∈ {(6,1),(7,2),(8,3)}",
+        "normalized_claim": "(a,c) ∈ {(6,1),(7,2),(8,3)}",
+        "claim_type": "collection",
+        "assertion_status": "asserted",
+        "polarity": "positive",
+        "scope": "main_argument",
+        "hypothetical": false,
+        "abandoned": false,
+        "attributed_to_student": true,
+        "rubric_candidates": [
+          "d"
+        ],
+        "obligation_candidates": [
+          "d.digit_pairs"
+        ],
+        "verification_route_candidate": "DETERMINISTIC"
+      },
+      {
+        "source_evidence_ids": [
+          "E004"
+        ],
+        "source_span": "30",
+        "normalized_claim": "30",
+        "claim_type": "expression",
+        "assertion_status": "asserted",
+        "polarity": "positive",
+        "scope": "final_conclusion",
+        "hypothetical": false,
+        "abandoned": false,
+        "attributed_to_student": true,
+        "rubric_candidates": [
+          "d"
+        ],
+        "obligation_candidates": [
+          "d.total_thirty"
+        ],
+        "verification_route_candidate": "DETERMINISTIC"
+      }
+    ]
+  }
+]
