@@ -1,0 +1,23 @@
+[
+  "a_complete",
+  "a_single_arithmetic_error",
+  "a_only_inverse",
+  "a_only_result",
+  "a_no_evidence",
+  "a_wrong_setup",
+  "b_complete",
+  "b_no_factorization",
+  "b_only_expression",
+  "b_equivalent_algebra",
+  "c_complete",
+  "c_one_omission",
+  "c_one_extraneous",
+  "c_several_with_pattern",
+  "c_few_results",
+  "c_no_evidence",
+  "d_complete",
+  "d_no_count",
+  "d_later_error",
+  "d_only_difference_then_error",
+  "p1_complete_regression"
+]

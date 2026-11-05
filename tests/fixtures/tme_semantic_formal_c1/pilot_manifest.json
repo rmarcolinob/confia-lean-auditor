@@ -1,0 +1,45 @@
+{
+  "version": "c1-p1-structural-pilot.v1",
+  "prepared_only": true,
+  "executed": false,
+  "base_sha": "1b3daea41ba4ce31c0cfd35dd07907da3d03669f",
+  "source_fixture": "tests/fixtures/tme2_p1_digital/cases.json",
+  "projection_fields": [
+    "id",
+    "item",
+    "text"
+  ],
+  "case_ids": [
+    "a_complete",
+    "a_single_arithmetic_error",
+    "a_only_inverse",
+    "a_only_result",
+    "a_no_evidence",
+    "a_wrong_setup",
+    "b_complete",
+    "b_no_factorization",
+    "b_only_expression",
+    "b_equivalent_algebra",
+    "c_complete",
+    "c_one_omission",
+    "c_one_extraneous",
+    "c_several_with_pattern",
+    "c_few_results",
+    "c_no_evidence",
+    "d_complete",
+    "d_no_count",
+    "d_later_error",
+    "d_only_difference_then_error",
+    "p1_complete_regression"
+  ],
+  "compound_case_origin": "tests/test_tme2_p1_pauta_bridge.py::test_full_problem_keeps_items_separate_and_reaches_twenty",
+  "modes": [
+    "tme_current",
+    "tme_semantic_formal"
+  ],
+  "gold_fields_in_execution_input": false,
+  "files": {
+    "pilot_sources.json": "339ef5ad9be6f1f01117c5e9c1fc300df76ffb06e7f26e982bb4395edfc2e3f8",
+    "pilot_ids.json": "5e5789989839a469064ad3f3bb875652468fe75fc383c22dc60e63a2e2e7ef82"
+  }
+}
