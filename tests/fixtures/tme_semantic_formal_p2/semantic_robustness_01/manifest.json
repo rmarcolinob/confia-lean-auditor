@@ -1,0 +1,68 @@
+{
+  "version": "p2-semantic-robustness-01",
+  "frozen_sha": "4fcc943521a1af566bed68e285462025f86b6b51",
+  "cases": 48,
+  "families": {
+    "A": 8,
+    "B": 8,
+    "C": 8,
+    "D": 8,
+    "E": 8,
+    "F": 8
+  },
+  "positive_obligation_coverage": [
+    "a.complete_configuration",
+    "a.line_sum",
+    "a.pair_sum",
+    "a.pairs",
+    "a.placement",
+    "b.admissible_center",
+    "b.balance_relation",
+    "b.center_sums",
+    "b.centers",
+    "b.integral_sum",
+    "b.modular_condition",
+    "b.realizable_1",
+    "b.realizable_5",
+    "b.realizable_9",
+    "b.sum_at_five",
+    "b.sum_formula",
+    "c.counting_product",
+    "c.max_center",
+    "c.max_sum",
+    "c.pair_orientations",
+    "c.pair_permutations",
+    "c.pairs",
+    "c.total"
+  ],
+  "input_schema": [
+    "case_id",
+    "problem_id",
+    "solution_text"
+  ],
+  "files_sha256": {
+    "expectations.json": "ecf1fd6e728f7545f57258d20e654bcf42bb6bd3f176cae2a0f4868d4bce92fc",
+    "sources.json": "4128d9ba4e721f31c290770043e5e5a905bb28b522cfa565324e9759a3347c6e",
+    "ids.json": "c7854dc49b1cba9c849ac41423439334a656152b9dc0363097be157bfe25e368",
+    "construction_receipts.json": "fe422baf6078c0093b9bdd04b9e6bf0bb166c5723fd86cdef9a1c664062df4ac"
+  },
+  "model": "gpt-6.1-sol",
+  "reasoning_effort": "medium",
+  "CONFIA_TME_SEMANTIC_ENABLED": "0",
+  "lean_enabled_for_evaluation": true,
+  "external_gold": false,
+  "holdout": false,
+  "expectations_visible_to_model": false,
+  "freeze_policy": "No dataset/expectation edits after first evaluation starts; no reruns/tuning.",
+  "construction": "Deterministic frozen checker-first reference + PautaEngine; reference normalization manually specified before outcomes. No LLM judge or extractor in construction.",
+  "metrics": {
+    "obligation_detection": "eligible awards; effective supported obligations, including auxiliary IDs without points; micro TP/FP/FN",
+    "context_accuracy": "No eligible support sourced from any specified rejected span; omission is safe suppression, explicit rejection reported separately.",
+    "conflict_accuracy": "Expected IDs explicitly flagged unresolved AND not eligible; safe suppression without flag counted separately.",
+    "refutation_preservation": "Expected negative ID has checker mathematical refutation, including subcheck FORMAL_REFUTED; absence not a refutation.",
+    "score": "exact, mean absolute error, signed bias semantic minus expected, within1 inclusive, under/over counts and points",
+    "false_credit": "positive excess score AND separately false-positive obligations; equal score may hide false support",
+    "verdict": "ADVANTAGE if MAE strictly lower, exact noninferior, excess points nonincreasing, obligation precision noninferior, context and conflict accuracy noninferior; NONINFERIOR if same but MAE tied; otherwise REGRESSION. No significance claim.",
+    "undefined_denominator": "null / n/a"
+  }
+}

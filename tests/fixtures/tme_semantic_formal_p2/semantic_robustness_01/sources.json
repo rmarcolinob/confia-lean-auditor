@@ -1,0 +1,242 @@
+[
+  {
+    "case_id": "p2_rob_A01_balanco",
+    "problem_id": "TME2026P2",
+    "solution_text": "b) Somando as quatro linhas, contamos o centro x quatro vezes e os outros números uma vez. Assim, para a soma comum S, escrevo 4S = 45 + 3x."
+  },
+  {
+    "case_id": "p2_rob_A02_integralidade",
+    "problem_id": "TME2026P2",
+    "solution_text": "b) A soma S precisa ser inteira porque soma três inteiros. O balanço é 4*S=45+3*x. Portanto os centros possíveis são {1,5,9}."
+  },
+  {
+    "case_id": "p2_rob_A03_maximo_pares",
+    "problem_id": "TME2026P2",
+    "solution_text": "c) A maior soma comum é 18 e ocorre com o centro 9. Os pares das extremidades são {(1,8),(2,7),(3,6),(4,5)}."
+  },
+  {
+    "case_id": "p2_rob_A04_distribuicoes_verbais",
+    "problem_id": "TME2026P2",
+    "solution_text": "c) Os quatro pares podem ser distribuídos pelas quatro retas de 24 formas."
+  },
+  {
+    "case_id": "p2_rob_A05_orientacoes",
+    "problem_id": "TME2026P2",
+    "solution_text": "c) Cada um dos quatro pares admite duas posições independentes. Para as orientações, multiplico 2*2*2*2=16."
+  },
+  {
+    "case_id": "p2_rob_A06_conclusao",
+    "problem_id": "TME2026P2",
+    "solution_text": "c) Concluo que o total de preenchimentos é 384."
+  },
+  {
+    "case_id": "p2_rob_A07_pares_cinco",
+    "problem_id": "TME2026P2",
+    "solution_text": "a) Com o centro 5, cada par oposto soma 10 e cada linha soma 15. Os pares são {(1,9),(2,8),(3,7),(4,6)}."
+  },
+  {
+    "case_id": "p2_rob_A08_formula_somas",
+    "problem_id": "TME2026P2",
+    "solution_text": "b) O balanço entre a soma S e o centro x é 4*S=45+3*x. Isolando a soma, S=(45+3*x)/4. As correspondências centro-soma são {(1,12),(5,15),(9,18)}. Para o centro 5 a soma é 15; o centro 1 é admissível."
+  },
+  {
+    "case_id": "p2_rob_B01_balanco_equivalente",
+    "problem_id": "TME2026P2",
+    "solution_text": "b) balance_relation: 4*S-3*x=45"
+  },
+  {
+    "case_id": "p2_rob_B02_formula_equivalente",
+    "problem_id": "TME2026P2",
+    "solution_text": "b) balance_relation: 4*S=45+3*x\nsum_formula: 3*x/4+45/4"
+  },
+  {
+    "case_id": "p2_rob_B03_centros_reordenados",
+    "problem_id": "TME2026P2",
+    "solution_text": "b) modular_condition: x ≡ 1 (mod 4)\ncenters: {9,1,5}"
+  },
+  {
+    "case_id": "p2_rob_B04_pares_reordenados",
+    "problem_id": "TME2026P2",
+    "solution_text": "c) pairs: {(5,4),(8,1),(6,3),(7,2)}"
+  },
+  {
+    "case_id": "p2_rob_B05_produto_comutado",
+    "problem_id": "TME2026P2",
+    "solution_text": "c) counting_product: 16*24=384"
+  },
+  {
+    "case_id": "p2_rob_B06_total_fatorial",
+    "problem_id": "TME2026P2",
+    "solution_text": "c) total: 4!*2^4"
+  },
+  {
+    "case_id": "p2_rob_B07_colocacao",
+    "problem_id": "TME2026P2",
+    "solution_text": "a) line_sum: 15\nplacement: {center:5,A:1,B:2,C:3,D:4,E:9,F:8,G:7,H:6}"
+  },
+  {
+    "case_id": "p2_rob_B08_realizacoes",
+    "problem_id": "TME2026P2",
+    "solution_text": "b) realizable_9: {(1,8),(2,7),(3,6),(4,5)}\nrealizable_1: {(2,9),(3,8),(4,7),(5,6)}\nrealizable_5: {(1,9),(2,8),(3,7),(4,6)}"
+  },
+  {
+    "case_id": "p2_rob_C01_numeros",
+    "problem_id": "TME2026P2",
+    "solution_text": "c) 24. 16."
+  },
+  {
+    "case_id": "p2_rob_C02_rotulos",
+    "problem_id": "TME2026P2",
+    "solution_text": "c) pair_permutations: 24\npair_orientations: 16"
+  },
+  {
+    "case_id": "p2_rob_C03_relacao_verbal",
+    "problem_id": "TME2026P2",
+    "solution_text": "c) Distribuo um par em cada reta: há quatro escolhas para a primeira, três para a segunda, duas para a terceira e uma para a última, dando 24 distribuições. Cada par pode inverter suas duas pontas independentemente, resultando em 16 orientações."
+  },
+  {
+    "case_id": "p2_rob_C04_aritmetica_tautologica",
+    "problem_id": "TME2026P2",
+    "solution_text": "c) pair_permutations: 24=24\npair_orientations: 16=16"
+  },
+  {
+    "case_id": "p2_rob_C05_justificacao_completa",
+    "problem_id": "TME2026P2",
+    "solution_text": "c) Distribuo os quatro pares por 4*3*2*1=24 maneiras. As orientações independentes dos quatro pares dão 2*2*2*2=16. O total de preenchimentos é 384."
+  },
+  {
+    "case_id": "p2_rob_C06_aritmetica_falsa",
+    "problem_id": "TME2026P2",
+    "solution_text": "c) pair_permutations: 4!=25\npair_orientations: 2^4=15"
+  },
+  {
+    "case_id": "p2_rob_C07_relacao_inadequada",
+    "problem_id": "TME2026P2",
+    "solution_text": "c) pair_permutations: 2^3*3=24\npair_orientations: 4+12=16"
+  },
+  {
+    "case_id": "p2_rob_C08_conclusao_insuficiente",
+    "problem_id": "TME2026P2",
+    "solution_text": "c) pair_permutations: 24\npair_orientations: 16\ntotal: 384"
+  },
+  {
+    "case_id": "p2_rob_D01_so_balanco",
+    "problem_id": "TME2026P2",
+    "solution_text": "b) balance_relation: 4*S=45+3*x"
+  },
+  {
+    "case_id": "p2_rob_D02_so_integralidade",
+    "problem_id": "TME2026P2",
+    "solution_text": "b) integral_sum: integer"
+  },
+  {
+    "case_id": "p2_rob_D03_centros_sem_base",
+    "problem_id": "TME2026P2",
+    "solution_text": "b) centers: {1,5,9}"
+  },
+  {
+    "case_id": "p2_rob_D04_so_pares",
+    "problem_id": "TME2026P2",
+    "solution_text": "c) pairs: {(1,8),(2,7),(3,6),(4,5)}"
+  },
+  {
+    "case_id": "p2_rob_D05_total_expressao",
+    "problem_id": "TME2026P2",
+    "solution_text": "c) total: 24*16"
+  },
+  {
+    "case_id": "p2_rob_D06_etapas_sem_total",
+    "problem_id": "TME2026P2",
+    "solution_text": "c) pair_permutations: 4!\npair_orientations: 2^4"
+  },
+  {
+    "case_id": "p2_rob_D07_total_literal",
+    "problem_id": "TME2026P2",
+    "solution_text": "c) total: 384"
+  },
+  {
+    "case_id": "p2_rob_D08_subconjunto_misto",
+    "problem_id": "TME2026P2",
+    "solution_text": "b) modular_condition: x ≡ 1 (mod 4)\ncenters: {1,5,9}\nadmissible_center: 9\nsum_at_five: 15\nrealizable_1: {(2,9),(3,8),(4,7),(5,6)}\nrealizable_5: {(1,9),(2,8),(3,7),(4,6)}\nrealizable_9: {(1,8),(2,7),(3,6),(4,5)}\nc) max_center: 9"
+  },
+  {
+    "case_id": "p2_rob_E01_hipotese",
+    "problem_id": "TME2026P2",
+    "solution_text": "c) Se eu supusesse total: 384, ainda seria apenas uma hipótese, não minha resposta."
+  },
+  {
+    "case_id": "p2_rob_E02_negacao",
+    "problem_id": "TME2026P2",
+    "solution_text": "c) Não afirmo que total: 384. Não adoto esse resultado."
+  },
+  {
+    "case_id": "p2_rob_E03_abandonado",
+    "problem_id": "TME2026P2",
+    "solution_text": "c) Tentativa abandonada: pair_permutations: 4!=24. Descarto essa solução."
+  },
+  {
+    "case_id": "p2_rob_E04_citacao",
+    "problem_id": "TME2026P2",
+    "solution_text": "b) Um colega escreveu \"balance_relation: 4*S=45+3*x\". Estou apenas citando, não adotando o argumento."
+  },
+  {
+    "case_id": "p2_rob_E05_enunciado",
+    "problem_id": "TME2026P2",
+    "solution_text": "c) Transcrição do enunciado, não minha solução: max_sum: 18."
+  },
+  {
+    "case_id": "p2_rob_E06_tentativa",
+    "problem_id": "TME2026P2",
+    "solution_text": "c) Rascunho não adotado: counting_product: 24*16=384. Ainda não tenho solução."
+  },
+  {
+    "case_id": "p2_rob_E07_abandono_e_conclusao",
+    "problem_id": "TME2026P2",
+    "solution_text": "c) Tentativa abandonada: total: 384.\nMinha conclusão final é total: 385."
+  },
+  {
+    "case_id": "p2_rob_E08_misto_contexto",
+    "problem_id": "TME2026P2",
+    "solution_text": "c) Hipótese descartada: total: 384.\nComo solução efetiva, os pares das extremidades são {(1,8),(2,7),(3,6),(4,5)}."
+  },
+  {
+    "case_id": "p2_rob_F01_verdade_irrelevante",
+    "problem_id": "TME2026P2",
+    "solution_text": "c) A conta 12*32=384 está correta, mas é um exemplo alheio e não representa a contagem dos preenchimentos."
+  },
+  {
+    "case_id": "p2_rob_F02_igualdade_contraditoria",
+    "problem_id": "TME2026P2",
+    "solution_text": "c) total: 384\ntotal: 24*16=364"
+  },
+  {
+    "case_id": "p2_rob_F03_valores_incompativeis",
+    "problem_id": "TME2026P2",
+    "solution_text": "c) total: 384\ntotal: 385"
+  },
+  {
+    "case_id": "p2_rob_F04_item_errado",
+    "problem_id": "TME2026P2",
+    "solution_text": "a) total: 384\npair_permutations: 4!=24"
+  },
+  {
+    "case_id": "p2_rob_F05_numeros_sem_relacao",
+    "problem_id": "TME2026P2",
+    "solution_text": "c) pair_permutations: 24\npair_orientations: 16\ncounting_product: 384"
+  },
+  {
+    "case_id": "p2_rob_F06_conclusao_errada",
+    "problem_id": "TME2026P2",
+    "solution_text": "c) pair_permutations: 4!=24\npair_orientations: 2^4=16\ntotal: 24*16=385"
+  },
+  {
+    "case_id": "p2_rob_F07_retracao",
+    "problem_id": "TME2026P2",
+    "solution_text": "c) total: 384.\nRetiro explicitamente minha afirmação anterior: não aceito que o total seja 384. Não apresento outra conclusão."
+  },
+  {
+    "case_id": "p2_rob_F08_numeros_incidentais",
+    "problem_id": "TME2026P2",
+    "solution_text": "c) Consultei a página 24, o exercício 16 e a ficha de matrícula 384. Ainda não resolvi a contagem."
+  }
+]
