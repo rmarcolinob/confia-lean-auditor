@@ -1,0 +1,10 @@
+[
+  {"case_id":"p3_dev_initial_count","problem_id":"TME2026P3","solution_text":"a) Há duas bolas brancas embaixo. A probabilidade da primeira branca é 2/6=1/3."},
+  {"case_id":"p3_dev_isolated_answer","problem_id":"TME2026P3","solution_text":"a) 1/3"},
+  {"case_id":"p3_dev_sample_space","problem_id":"TME2026P3","solution_text":"b) As duas escolhas de compartimento são uniformes. O espaço amostral de pares ordenados tem 6*6=36 possibilidades."},
+  {"case_id":"p3_dev_favorable_partition","problem_id":"TME2026P3","solution_text":"b) Para os pares ordenados, 6*6=36.\nOs casos favoráveis com compartimentos diferentes são 2*5=10.\nAo repetir o mesmo compartimento, somente o sexto libera branca.\nA probabilidade da segunda branca é (10+1)/36=11/36."},
+  {"case_id":"p3_dev_complete_strategy","problem_id":"TME2026P3","solution_text":"c) O jogo continua somente nos compartimentos 1 e 2.\nApós sair branca do compartimento 1, escolho preta, que aparece três vezes.\nNo caso 1, a probabilidade condicional de sucesso é 3/6=1/2.\nApós sair branca do compartimento 2, escolho cinza, que aparece três vezes.\nNo caso 2, a probabilidade condicional de sucesso é 3/6=1/2.\nA probabilidade total de vitória é (1/6)*(1/2)+(1/6)*(1/2)=1/6."},
+  {"case_id":"p3_dev_probability_error","problem_id":"TME2026P3","solution_text":"b) Os casos favoráveis com compartimentos diferentes são 2*6=12.\nAo repetir o mesmo compartimento, somente o sexto libera branca.\nA probabilidade da segunda branca é (12+1)/36=13/36."},
+  {"case_id":"p3_dev_hypothesis_context","problem_id":"TME2026P3","solution_text":"a) Hipótese não adotada: a probabilidade da primeira branca seria 1/2.\n\nMinha resposta: a probabilidade da primeira branca é 1/3."},
+  {"case_id":"p3_dev_partial_conflict","problem_id":"TME2026P3","solution_text":"a) Há duas bolas brancas embaixo.\nb) Ao repetir o mesmo compartimento, somente o sexto libera branca.\nAo repetir o mesmo compartimento, o quinto também libera branca.\nA probabilidade da segunda branca é 11/36.\nA probabilidade da segunda branca é 12/36."}
+]
