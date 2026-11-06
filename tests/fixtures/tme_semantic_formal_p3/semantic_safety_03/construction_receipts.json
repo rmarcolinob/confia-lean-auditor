@@ -1,0 +1,538 @@
+[
+  {
+    "case_id": "p3_s03_a01",
+    "construction_rationale": "Contagem ativa correta, nenhuma probabilidade fornecida.",
+    "expected_state_summary": {
+      "ACTIVE": 1
+    },
+    "expected_score": 2.0,
+    "expected_obligations": [
+      "a.bottom_white_count"
+    ],
+    "source_sha256": "c5755b6a91284ad41bd090ed0ce74052d4c25a5440302e7a06850a6ff1e9f071",
+    "expectation_sha256": "31f4581145e33ee77accf49757af94d2a302995919c76f164bb94d9b783cffcd"
+  },
+  {
+    "case_id": "p3_s03_a02",
+    "construction_rationale": "Probabilidade ativa falsa, sem resgate pelo valor correto não escrito.",
+    "expected_state_summary": {
+      "ACTIVE": 1
+    },
+    "expected_score": 0.0,
+    "expected_obligations": [],
+    "source_sha256": "12b0585ae51a99b29051c4beed9b7fe9e60e8027b7bb7d4f042c18b4fdb7c5d8",
+    "expectation_sha256": "f847e5393eda397cbc4d170d13793c988f70b5d0c73604749142475205d6dcbe"
+  },
+  {
+    "case_id": "p3_s03_a03",
+    "construction_rationale": "Resultado 36 sem produto não satisfaz a relação de b.space.",
+    "expected_state_summary": {
+      "ACTIVE": 1
+    },
+    "expected_score": 0.0,
+    "expected_obligations": [],
+    "source_sha256": "380fcd75824dbe0a77b909214976904d002daec83b8de247d08653cd2cca3196",
+    "expectation_sha256": "b9de3d0c996e8da3b280d4a50e560d450eab999521330ea96c77f430b55c490e"
+  },
+  {
+    "case_id": "p3_s03_a04",
+    "construction_rationale": "Produto atribuído à dupla escolha; relação e aritmética suficientes.",
+    "expected_state_summary": {
+      "ACTIVE": 1
+    },
+    "expected_score": 2.0,
+    "expected_obligations": [
+      "b.ordered_pairs"
+    ],
+    "source_sha256": "add0cd2095b56cd5f7e158822bca9dd2cc5c88c88151f42e021ed1638864189b",
+    "expectation_sha256": "de8946c5d66657c3a799b0c65a4eaea88266384e7362cabd109ee90af28cbbf5"
+  },
+  {
+    "case_id": "p3_s03_a05",
+    "construction_rationale": "Exclusividade e inclusão falsa estão ambas adotadas, sem revisão.",
+    "expected_state_summary": {
+      "ACTIVE": 2
+    },
+    "expected_score": 0.0,
+    "expected_obligations": [],
+    "source_sha256": "db8aa4d74053445f7a37a73b08b4571fea1841bbe294c98d481af99a2eda7ff5",
+    "expectation_sha256": "0015134068e664c9ccac28dd920586e32027cf2a11a5ad3c2b347d5567c3d902"
+  },
+  {
+    "case_id": "p3_s03_a06",
+    "construction_rationale": "Cor e quantidade escritas para o caso 1; modelo finito estabelece optimalidade.",
+    "expected_state_summary": {
+      "ACTIVE": 2
+    },
+    "expected_score": 2.0,
+    "expected_obligations": [
+      "c.strategy_case_1"
+    ],
+    "source_sha256": "f619a40185196b42702d60f6131da79390b637d8602c1376d0b12f3b5c66a355",
+    "expectation_sha256": "5a068d6f240224dcf71aa3b0d5c5956ea8560a0f743d83d7d4ad1459e8faf1fd"
+  },
+  {
+    "case_id": "p3_s03_a07",
+    "construction_rationale": "Escolha e contagem do caso 2 são falsas: preta ocorre duas vezes.",
+    "expected_state_summary": {
+      "ACTIVE": 2
+    },
+    "expected_score": 0.0,
+    "expected_obligations": [],
+    "source_sha256": "b05cacecbe7cce18016289fb11f33a8d57fbdbc9270d1504eeac44057df13853",
+    "expectation_sha256": "24d3230777e1f080851dfa2a99ae85b629bcb15c1821a1bf7423fdfc1f79749d"
+  },
+  {
+    "case_id": "p3_s03_a08",
+    "construction_rationale": "Resultados racionais equivalentes autorizados, sem crédito de método.",
+    "expected_state_summary": {
+      "ACTIVE": 2
+    },
+    "expected_score": 4.0,
+    "expected_obligations": [
+      "a.first_white_probability",
+      "b.second_white_probability"
+    ],
+    "source_sha256": "e7bc1b2722714a731e0237e1da9fba72df126b68039983b192dc80299d340435",
+    "expectation_sha256": "28d94cdc1b9fff0fd724343a33b468c252da434ba13e7d0e08e3c17cd1f29112"
+  },
+  {
+    "case_id": "p3_s03_b01",
+    "construction_rationale": "Revisão imediata do mesmo atributo; 5 retirado em favor de 2.",
+    "expected_state_summary": {
+      "SUPERSEDED": 1,
+      "ACTIVE": 1
+    },
+    "expected_score": 2.0,
+    "expected_obligations": [
+      "a.bottom_white_count"
+    ],
+    "source_sha256": "6071c7a2564ee4fabc8a5cfda372bdbb33bf5355c193536ec64b56390b19bf27",
+    "expectation_sha256": "81c348ea295832c66fecd77013777e8fd3b6ed7d768f1bfc6d61cfb2c85ab4c8"
+  },
+  {
+    "case_id": "p3_s03_b02",
+    "construction_rationale": "Correção após conta; igualdade escrita verifica a resposta nova.",
+    "expected_state_summary": {
+      "SUPERSEDED": 1,
+      "ACTIVE": 1
+    },
+    "expected_score": 2.0,
+    "expected_obligations": [
+      "a.first_white_probability"
+    ],
+    "source_sha256": "fca2b5420e8a318aa1d2ab9157312a82ece9d38a22c3b05028cecb4e233011dc",
+    "expectation_sha256": "cb0e300d0b223991f94460b2db3d2e6a681ea6381122910e53bfc1165663d0dd"
+  },
+  {
+    "case_id": "p3_s03_b03",
+    "construction_rationale": "Substituição explícita do valor final, apenas os dois pontos do resultado.",
+    "expected_state_summary": {
+      "SUPERSEDED": 1,
+      "ACTIVE": 1
+    },
+    "expected_score": 2.0,
+    "expected_obligations": [
+      "b.second_white_probability"
+    ],
+    "source_sha256": "ddaeb9b75a88a53811bc52d30b9d76b9c1984a6208d5de01e485af8b5a4f70e3",
+    "expectation_sha256": "e5a90910669576f292d7934bdf431aee9fa6931ce19c3871b8e59a427b07018f"
+  },
+  {
+    "case_id": "p3_s03_b04",
+    "construction_rationale": "Correção de um índice do conjunto, não ampliação cumulativa.",
+    "expected_state_summary": {
+      "SUPERSEDED": 1,
+      "ACTIVE": 1
+    },
+    "expected_score": 1.0,
+    "expected_obligations": [
+      "c.continue_compartments"
+    ],
+    "source_sha256": "e8146fdd53dcb633d97b4ba2c0ea6c72f903327f42f65715016c5c26aa9a3de0",
+    "expectation_sha256": "f950eae69f676bb0369c3ea8f167ff65fe14a0c94f956fcb532c1bc141fb3fcf"
+  },
+  {
+    "case_id": "p3_s03_b05",
+    "construction_rationale": "Probabilidade revisada; referência inequívoca ao valor anterior.",
+    "expected_state_summary": {
+      "SUPERSEDED": 1,
+      "ACTIVE": 1
+    },
+    "expected_score": 2.0,
+    "expected_obligations": [
+      "b.second_white_probability"
+    ],
+    "source_sha256": "3c6ddc03d20b062df288a0f830df6899074a24152ff128f0f0a130519c3a5fab",
+    "expectation_sha256": "2385e24ef5f209398cb8f8d6f2afa9675fa4409361b40fd985d4b9c1599b2f54"
+  },
+  {
+    "case_id": "p3_s03_b06",
+    "construction_rationale": "Revisão de cor no mesmo caso; contagem nova refere-se à preta.",
+    "expected_state_summary": {
+      "SUPERSEDED": 1,
+      "ACTIVE": 2
+    },
+    "expected_score": 2.0,
+    "expected_obligations": [
+      "c.strategy_case_1"
+    ],
+    "source_sha256": "1b7ef0a0406900bb656eba1f6dd55960f640b1ef7ac8372c1ced670262aa0fdd",
+    "expectation_sha256": "e74d16195f0b4c7cf04639175ef023aeb276f79b534f48ebe5f9bc7a1be03eef"
+  },
+  {
+    "case_id": "p3_s03_b07",
+    "construction_rationale": "Substituição simbólica com direção e adoção verbal explícitas.",
+    "expected_state_summary": {
+      "SUPERSEDED": 2,
+      "ACTIVE": 1
+    },
+    "expected_score": 2.0,
+    "expected_obligations": [
+      "a.first_white_probability"
+    ],
+    "source_sha256": "04e7ac00fb5cde6dd2afb3c6079889bb8b2f31e3486760a11e3ec6d7594a28bf",
+    "expectation_sha256": "372bae8544dc1d2dd588b63e246d65c3de306fc96d008af60fcc0d9d910ce4f2"
+  },
+  {
+    "case_id": "p3_s03_b08",
+    "construction_rationale": "Revisão verbal retrospectiva de alvo único, sem hipótese alternativa.",
+    "expected_state_summary": {
+      "SUPERSEDED": 1,
+      "ACTIVE": 1
+    },
+    "expected_score": 2.0,
+    "expected_obligations": [
+      "a.bottom_white_count"
+    ],
+    "source_sha256": "46fea745f555c9c7f522a05515b5ca68bfc98fc8260bf9ea3ef23990d45d5733",
+    "expectation_sha256": "dcccd2b5c48a56bde5d9fcf63e259d1609aa68459a47197ba602de52e6c4d19a"
+  },
+  {
+    "case_id": "p3_s03_c01",
+    "construction_rationale": "Hipótese sem adoção; contagem própria independente.",
+    "expected_state_summary": {
+      "NON_ADOPTED": 1,
+      "ACTIVE": 1
+    },
+    "expected_score": 2.0,
+    "expected_obligations": [
+      "a.bottom_white_count"
+    ],
+    "source_sha256": "e6b871a508bb603e75ef3fbe471921b77c4d38d345ff6c9d647d0b0eeb7e7b45",
+    "expectation_sha256": "ab8ab8899f4ac69500fec3cc94c8f28003af3c0b14a50dfefcbf91d931b381bc"
+  },
+  {
+    "case_id": "p3_s03_c02",
+    "construction_rationale": "Terceiro citado sem adesão, resposta própria explícita.",
+    "expected_state_summary": {
+      "NON_ADOPTED": 1,
+      "ACTIVE": 1
+    },
+    "expected_score": 2.0,
+    "expected_obligations": [
+      "a.first_white_probability"
+    ],
+    "source_sha256": "2c9896d5c54b5f1416e0e5728648cc3c32d53e5bae73def49ee6d9e0d4401a2d",
+    "expectation_sha256": "1e6dbfd7d422a1e8b797a4a2cdfb7cc9041a61ec31292ff745919520888ad3ea"
+  },
+  {
+    "case_id": "p3_s03_c03",
+    "construction_rationale": "Dado copiado não prova obrigação; conjunto de continuação é resposta adotada.",
+    "expected_state_summary": {
+      "NON_ADOPTED": 1,
+      "ACTIVE": 1
+    },
+    "expected_score": 1.0,
+    "expected_obligations": [
+      "c.continue_compartments"
+    ],
+    "source_sha256": "035d7994a557d82db1f67cda3f6349404ccde060c68cedd90a78b5750d921eaf",
+    "expectation_sha256": "5583ee29899fe818e5288c2be27cf98dbecb7120f41cbd82a9afa9052fb46ed9"
+  },
+  {
+    "case_id": "p3_s03_c04",
+    "construction_rationale": "Alternativa não adotada, sem substituição de posição previamente própria.",
+    "expected_state_summary": {
+      "NON_ADOPTED": 1,
+      "ACTIVE": 1
+    },
+    "expected_score": 2.0,
+    "expected_obligations": [
+      "b.second_white_probability"
+    ],
+    "source_sha256": "2bd4c24e12a59aaf211a227d453b212b884dd4acdb5f5e88d36ca3ec2c76bbcd",
+    "expectation_sha256": "2baa877061185a08444845847ca3b144ac9ae08ff0410a35c64f9edfe0649a6d"
+  },
+  {
+    "case_id": "p3_s03_c05",
+    "construction_rationale": "Comparação explicitamente de outro objeto, sem autoridade nesta máquina.",
+    "expected_state_summary": {
+      "NON_ADOPTED": 1,
+      "ACTIVE": 1
+    },
+    "expected_score": 2.0,
+    "expected_obligations": [
+      "a.first_white_probability"
+    ],
+    "source_sha256": "c8a3e77bb9b8744bad1ecafe3960ac643511b54d7b7af80181d5ac21db47a597",
+    "expectation_sha256": "92110ed69e8d8ca9ea01e00f705325180df303467f4d7a5573be32f5f7442c0f"
+  },
+  {
+    "case_id": "p3_s03_c06",
+    "construction_rationale": "Erro mencionado, não tentativa própria retirada; contagem correta independente.",
+    "expected_state_summary": {
+      "NON_ADOPTED": 1,
+      "ACTIVE": 1
+    },
+    "expected_score": 2.0,
+    "expected_obligations": [
+      "a.bottom_white_count"
+    ],
+    "source_sha256": "367abf40178d42db2fe50cbccd318a4c94f1aef1794b02f5c04006486ec61631",
+    "expectation_sha256": "d057036b7a423de98be98e2dfbe7b5248499b79278d5361deab6b4bcdf1d7148"
+  },
+  {
+    "case_id": "p3_s03_c07",
+    "construction_rationale": "Interrogação negada como assertiva; produto amostral próprio.",
+    "expected_state_summary": {
+      "NON_ADOPTED": 1,
+      "ACTIVE": 1
+    },
+    "expected_score": 2.0,
+    "expected_obligations": [
+      "b.ordered_pairs"
+    ],
+    "source_sha256": "fc9c2a8fece9fa774af8a25366cdcab71882315fe318aee2acf2e74a097760da",
+    "expectation_sha256": "078d2d0ff301a3b427a1bc1b3b1092c6515078c7e8b6a56df20470dd850ebaa9"
+  },
+  {
+    "case_id": "p3_s03_c08",
+    "construction_rationale": "Tentativa retirada sem estratégia substituta é NON_ADOPTED, não SUPERSEDED.",
+    "expected_state_summary": {
+      "NON_ADOPTED": 2,
+      "ACTIVE": 1
+    },
+    "expected_score": 1.0,
+    "expected_obligations": [
+      "c.continue_compartments"
+    ],
+    "source_sha256": "a0ff89830b695efb3b967904cf0c14b7eb21c7869e966e02c25fa2f7e22b42f7",
+    "expectation_sha256": "16e91b7ce5c018ade28ae83ee12cb47a0b5576fe95976caedd274e607b6e95ad"
+  },
+  {
+    "case_id": "p3_s03_d01",
+    "construction_rationale": "Alternativas sem escolha não são duas assertivas adotadas.",
+    "expected_state_summary": {
+      "AMBIGUOUS": 2
+    },
+    "expected_score": 0.0,
+    "expected_obligations": [],
+    "source_sha256": "f0715d6028b094fc0eb2a1bbe43e18485c9bcc7d816d449f1413fd1559d64212",
+    "expectation_sha256": "22eb4b305c7f08063c7ceb62f3a7492c8b9bb845f3ab8c52c40f8c10b7205841"
+  },
+  {
+    "case_id": "p3_s03_d02",
+    "construction_rationale": "Adoção pronominal tem dois referentes; contagem separada não depende disso.",
+    "expected_state_summary": {
+      "AMBIGUOUS": 2,
+      "ACTIVE": 1
+    },
+    "expected_score": 2.0,
+    "expected_obligations": [
+      "a.bottom_white_count"
+    ],
+    "source_sha256": "3f83013c395253107c596600fc47f59f5cf4934c3557705a2e232c67b67e75d6",
+    "expectation_sha256": "58e755238e7799d4bb34138dd696344c73f54fe799bb0efb66d830068e9990ff"
+  },
+  {
+    "case_id": "p3_s03_d03",
+    "construction_rationale": "Correção distante de alvo incerto não permite selecionar coluna.",
+    "expected_state_summary": {
+      "AMBIGUOUS": 2
+    },
+    "expected_score": 0.0,
+    "expected_obligations": [],
+    "source_sha256": "d47e6bd9e324738a7060badbf5663c6c3c946975df7e3c05a5ddddd70d0400ee",
+    "expectation_sha256": "f7c170fc055389338de8b33545ea6e262f39835a2579b27c52dfeed985dfcfa5"
+  },
+  {
+    "case_id": "p3_s03_d04",
+    "construction_rationale": "Mudança de assunto não resolve referente de adoção.",
+    "expected_state_summary": {
+      "AMBIGUOUS": 2
+    },
+    "expected_score": 0.0,
+    "expected_obligations": [],
+    "source_sha256": "1b88e695f1de38133ba308bc077ac229683b555daece3b744abc17c342f9c002",
+    "expectation_sha256": "3c074148de014ed8f65df1ebaeb82d187bd522d4ef98824e23a75510b665a077"
+  },
+  {
+    "case_id": "p3_s03_d05",
+    "construction_rationale": "Subject de caso não identificado; não emprestar estratégia do 1 ao 2.",
+    "expected_state_summary": {
+      "AMBIGUOUS": 4
+    },
+    "expected_score": 0.0,
+    "expected_obligations": [],
+    "source_sha256": "7fd0db28f6d106f9dd5486ae5c25a01fbb89188b69d35dbee6edcb260b3ee04a",
+    "expectation_sha256": "d484306246cf444c85d2234c246607bebcf074720f6c2a2dc43385a18628c1de"
+  },
+  {
+    "case_id": "p3_s03_d06",
+    "construction_rationale": "Claim truncado sem valor inferível; contagem íntegra independente.",
+    "expected_state_summary": {
+      "AMBIGUOUS": 1,
+      "ACTIVE": 1
+    },
+    "expected_score": 2.0,
+    "expected_obligations": [
+      "a.bottom_white_count"
+    ],
+    "source_sha256": "ebebe5a23a0f2cd6af66eb7060172dea8d5c05f6567bf9ef63fbe206f0e2354d",
+    "expectation_sha256": "ac4d7104452fc25f89f7d06c0edceb3207156709f8d7c7cf0b1dd9cd25db9a98"
+  },
+  {
+    "case_id": "p3_s03_d07",
+    "construction_rationale": "Anotação interrogativa marginal sem prioridade/adoção.",
+    "expected_state_summary": {
+      "AMBIGUOUS": 2
+    },
+    "expected_score": 0.0,
+    "expected_obligations": [],
+    "source_sha256": "64704aa7f6eaaa2b091f91f0e7cfd1a8c05356aabbf3a3e573db3bad5b7f1a02",
+    "expectation_sha256": "0f13ba1e58cf197f6e0f0de54e3423ce042cfd41a8d54ffb9c5bc939efeebae4"
+  },
+  {
+    "case_id": "p3_s03_d08",
+    "construction_rationale": "Ambiguidade de continuação não veta estratégia independente do caso 2.",
+    "expected_state_summary": {
+      "AMBIGUOUS": 2,
+      "ACTIVE": 2
+    },
+    "expected_score": 2.0,
+    "expected_obligations": [
+      "c.strategy_case_2"
+    ],
+    "source_sha256": "fe09c72413be443c24c7413d7f4f7d7f196fb60488bc9ed171c0c97aadf798c4",
+    "expectation_sha256": "653354dca5cf2a1e75eec91101546144cc570109db2366bcfff877397c6a6ea0"
+  },
+  {
+    "case_id": "p3_s03_e01",
+    "construction_rationale": "Citação falsa não pode derrotar duas respostas ativas corretas.",
+    "expected_state_summary": {
+      "NON_ADOPTED": 1,
+      "ACTIVE": 2
+    },
+    "expected_score": 4.0,
+    "expected_obligations": [
+      "a.bottom_white_count",
+      "a.first_white_probability"
+    ],
+    "source_sha256": "d332f8efe967c67311554cf5b353a18fd50c5ce8f181e2f3ada405a52819562f",
+    "expectation_sha256": "5769482bbf6a599f76fec880f8db6b497e21ec9c0b5891a340c938bcf2612c1f"
+  },
+  {
+    "case_id": "p3_s03_e02",
+    "construction_rationale": "Correção matematicamente errada ainda retira a posição anterior correta.",
+    "expected_state_summary": {
+      "SUPERSEDED": 1,
+      "ACTIVE": 1
+    },
+    "expected_score": 0.0,
+    "expected_obligations": [],
+    "source_sha256": "baed50492181607b6afd8c96e7803ff9b140ee359e4df314744d9e235af99db8",
+    "expectation_sha256": "c242b48847117fc8bc593a8a3ae90d4494fe9d211a5be4e4d5b6788c14eebe30"
+  },
+  {
+    "case_id": "p3_s03_e03",
+    "construction_rationale": "Retração falsa→correta com outra parcela ativa preservada.",
+    "expected_state_summary": {
+      "SUPERSEDED": 1,
+      "ACTIVE": 2
+    },
+    "expected_score": 4.0,
+    "expected_obligations": [
+      "a.bottom_white_count",
+      "a.first_white_probability"
+    ],
+    "source_sha256": "5eb271332e46645526a5414c60a9f6a4e6cf0b08bf441e12403717472097757f",
+    "expectation_sha256": "8676ecdc2719b0a8fa2b561adb4c951423a3b39f423f51b489aff9e4a9e2831c"
+  },
+  {
+    "case_id": "p3_s03_e04",
+    "construction_rationale": "Ambiguidade em b não afeta contagem confirmada em a.",
+    "expected_state_summary": {
+      "ACTIVE": 1,
+      "AMBIGUOUS": 2
+    },
+    "expected_score": 2.0,
+    "expected_obligations": [
+      "a.bottom_white_count"
+    ],
+    "source_sha256": "c5792ee3a47735c5f68bba9a31aae9192f593a16fa9503c7d614b830c9b09fca",
+    "expectation_sha256": "37651416d4604eba7c0546dbb9da4a920f532f24a5116e531d902d80855e56ea"
+  },
+  {
+    "case_id": "p3_s03_e05",
+    "construction_rationale": "Citação não é ancestral da autocorreção própria.",
+    "expected_state_summary": {
+      "NON_ADOPTED": 1,
+      "SUPERSEDED": 1,
+      "ACTIVE": 1
+    },
+    "expected_score": 2.0,
+    "expected_obligations": [
+      "a.bottom_white_count"
+    ],
+    "source_sha256": "9e04aa7a396edfa8d2a55bb832b343bf171874339ffa33eb70d063493a309394",
+    "expectation_sha256": "eb3f56ba89df88e1ce34625008d77c877cc4d53f10944d6c0b6540321ee5627a"
+  },
+  {
+    "case_id": "p3_s03_e06",
+    "construction_rationale": "Hipótese antecede solução; produto e resultado têm autoridade própria.",
+    "expected_state_summary": {
+      "NON_ADOPTED": 1,
+      "ACTIVE": 2
+    },
+    "expected_score": 4.0,
+    "expected_obligations": [
+      "b.different_favorable",
+      "b.second_white_probability"
+    ],
+    "source_sha256": "42f7b83a86e20f52198ff94460b6a84eebc315cae56190f9fb2f108b4e5fa56b",
+    "expectation_sha256": "6007fdc567781adce54906a9cd76639c152f6eb204d79efe530cc3e91fa1f578"
+  },
+  {
+    "case_id": "p3_s03_e07",
+    "construction_rationale": "Conflito adotado na contagem de b bloqueia conclusão dependente, não a.",
+    "expected_state_summary": {
+      "ACTIVE": 4
+    },
+    "expected_score": 2.0,
+    "expected_obligations": [
+      "a.first_white_probability"
+    ],
+    "source_sha256": "03430b7cadf3545c90158832b0d60fa399becdd67dd03a6444e9347b86a7ab5b",
+    "expectation_sha256": "91b434266da8518adb7e46a9b0e8816e46e06f76e6f6f2c6d3175e7ea27311ea"
+  },
+  {
+    "case_id": "p3_s03_e08",
+    "construction_rationale": "Estratégia revista antes de condicionais e total completo; nenhum empréstimo da cor antiga.",
+    "expected_state_summary": {
+      "SUPERSEDED": 1,
+      "ACTIVE": 8
+    },
+    "expected_score": 8.0,
+    "expected_obligations": [
+      "c.conditional_success_1",
+      "c.conditional_success_2",
+      "c.continue_compartments",
+      "c.strategy_case_1",
+      "c.strategy_case_2",
+      "c.total_win_probability"
+    ],
+    "source_sha256": "c36108574964447c4c09b2b7009b8d83c798de4dbace7193736b79af893aacc3",
+    "expectation_sha256": "7474bb78481a7c4aed48fd1a9f52245267746692bdfc2fd97773db6aecc9acae"
+  }
+]

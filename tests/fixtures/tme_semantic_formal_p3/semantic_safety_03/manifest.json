@@ -1,0 +1,1061 @@
+{
+  "dataset": "semantic_safety_03",
+  "role": "INDEPENDENT_POST_FIX_SAFETY_EVALUATION_AT_FREEZE",
+  "sha": "6fb07d4d15626e27b7c759a4e32f9cb3b415d2ea",
+  "initial_worktree_clean": true,
+  "cases": 40,
+  "families": {
+    "A": 8,
+    "B": 8,
+    "C": 8,
+    "D": 8,
+    "E": 8
+  },
+  "created_at": "2026-11-06T20:46:12.554120+00:00",
+  "frozen": true,
+  "source_construction": "Written from scratch from problem/rubric and normative discourse contract; historical text only used by novelty screen after authoring.",
+  "deterministic_preflight": {
+    "cases": 40,
+    "passed": true,
+    "no_model_calls": true,
+    "no_pipeline_grading": true,
+    "independent_finite_model": {
+      "bottom_white": [
+        1,
+        2
+      ],
+      "second_white_events": 11,
+      "different_favorable": 10,
+      "same_favorable": [
+        6
+      ]
+    },
+    "case_checks": [
+      {
+        "case_id": "p3_s03_a01",
+        "valid_source": true,
+        "all_anchor_ranges_exact": true,
+        "coverage_known": true,
+        "math_checks": [
+          {
+            "claim_id": "p3_s03_a01:C1",
+            "correct": true
+          }
+        ],
+        "retraction_edges_valid": true,
+        "pauta_score_consistent": true
+      },
+      {
+        "case_id": "p3_s03_a02",
+        "valid_source": true,
+        "all_anchor_ranges_exact": true,
+        "coverage_known": true,
+        "math_checks": [
+          {
+            "claim_id": "p3_s03_a02:C1",
+            "correct": false
+          }
+        ],
+        "retraction_edges_valid": true,
+        "pauta_score_consistent": true
+      },
+      {
+        "case_id": "p3_s03_a03",
+        "valid_source": true,
+        "all_anchor_ranges_exact": true,
+        "coverage_known": true,
+        "math_checks": [
+          {
+            "claim_id": "p3_s03_a03:C1",
+            "correct": true
+          }
+        ],
+        "retraction_edges_valid": true,
+        "pauta_score_consistent": true
+      },
+      {
+        "case_id": "p3_s03_a04",
+        "valid_source": true,
+        "all_anchor_ranges_exact": true,
+        "coverage_known": true,
+        "math_checks": [
+          {
+            "claim_id": "p3_s03_a04:C1",
+            "correct": true
+          }
+        ],
+        "retraction_edges_valid": true,
+        "pauta_score_consistent": true
+      },
+      {
+        "case_id": "p3_s03_a05",
+        "valid_source": true,
+        "all_anchor_ranges_exact": true,
+        "coverage_known": true,
+        "math_checks": [
+          {
+            "claim_id": "p3_s03_a05:C1",
+            "correct": true
+          },
+          {
+            "claim_id": "p3_s03_a05:C2",
+            "correct": false
+          }
+        ],
+        "retraction_edges_valid": true,
+        "pauta_score_consistent": true
+      },
+      {
+        "case_id": "p3_s03_a06",
+        "valid_source": true,
+        "all_anchor_ranges_exact": true,
+        "coverage_known": true,
+        "math_checks": [
+          {
+            "claim_id": "p3_s03_a06:C1",
+            "correct": true
+          },
+          {
+            "claim_id": "p3_s03_a06:C2",
+            "correct": true
+          }
+        ],
+        "retraction_edges_valid": true,
+        "pauta_score_consistent": true
+      },
+      {
+        "case_id": "p3_s03_a07",
+        "valid_source": true,
+        "all_anchor_ranges_exact": true,
+        "coverage_known": true,
+        "math_checks": [
+          {
+            "claim_id": "p3_s03_a07:C1",
+            "correct": false
+          },
+          {
+            "claim_id": "p3_s03_a07:C2",
+            "correct": true
+          }
+        ],
+        "retraction_edges_valid": true,
+        "pauta_score_consistent": true
+      },
+      {
+        "case_id": "p3_s03_a08",
+        "valid_source": true,
+        "all_anchor_ranges_exact": true,
+        "coverage_known": true,
+        "math_checks": [
+          {
+            "claim_id": "p3_s03_a08:C1",
+            "correct": true
+          },
+          {
+            "claim_id": "p3_s03_a08:C2",
+            "correct": true
+          }
+        ],
+        "retraction_edges_valid": true,
+        "pauta_score_consistent": true
+      },
+      {
+        "case_id": "p3_s03_b01",
+        "valid_source": true,
+        "all_anchor_ranges_exact": true,
+        "coverage_known": true,
+        "math_checks": [
+          {
+            "claim_id": "p3_s03_b01:C1",
+            "correct": false
+          },
+          {
+            "claim_id": "p3_s03_b01:C2",
+            "correct": true
+          }
+        ],
+        "retraction_edges_valid": true,
+        "pauta_score_consistent": true
+      },
+      {
+        "case_id": "p3_s03_b02",
+        "valid_source": true,
+        "all_anchor_ranges_exact": true,
+        "coverage_known": true,
+        "math_checks": [
+          {
+            "claim_id": "p3_s03_b02:C1",
+            "correct": false
+          },
+          {
+            "claim_id": "p3_s03_b02:C2",
+            "correct": true
+          }
+        ],
+        "retraction_edges_valid": true,
+        "pauta_score_consistent": true
+      },
+      {
+        "case_id": "p3_s03_b03",
+        "valid_source": true,
+        "all_anchor_ranges_exact": true,
+        "coverage_known": true,
+        "math_checks": [
+          {
+            "claim_id": "p3_s03_b03:C1",
+            "correct": false
+          },
+          {
+            "claim_id": "p3_s03_b03:C2",
+            "correct": true
+          }
+        ],
+        "retraction_edges_valid": true,
+        "pauta_score_consistent": true
+      },
+      {
+        "case_id": "p3_s03_b04",
+        "valid_source": true,
+        "all_anchor_ranges_exact": true,
+        "coverage_known": true,
+        "math_checks": [
+          {
+            "claim_id": "p3_s03_b04:C1",
+            "correct": false
+          },
+          {
+            "claim_id": "p3_s03_b04:C2",
+            "correct": true
+          }
+        ],
+        "retraction_edges_valid": true,
+        "pauta_score_consistent": true
+      },
+      {
+        "case_id": "p3_s03_b05",
+        "valid_source": true,
+        "all_anchor_ranges_exact": true,
+        "coverage_known": true,
+        "math_checks": [
+          {
+            "claim_id": "p3_s03_b05:C1",
+            "correct": false
+          },
+          {
+            "claim_id": "p3_s03_b05:C2",
+            "correct": true
+          }
+        ],
+        "retraction_edges_valid": true,
+        "pauta_score_consistent": true
+      },
+      {
+        "case_id": "p3_s03_b06",
+        "valid_source": true,
+        "all_anchor_ranges_exact": true,
+        "coverage_known": true,
+        "math_checks": [
+          {
+            "claim_id": "p3_s03_b06:C1",
+            "correct": false
+          },
+          {
+            "claim_id": "p3_s03_b06:C2",
+            "correct": true
+          },
+          {
+            "claim_id": "p3_s03_b06:C3",
+            "correct": true
+          }
+        ],
+        "retraction_edges_valid": true,
+        "pauta_score_consistent": true
+      },
+      {
+        "case_id": "p3_s03_b07",
+        "valid_source": true,
+        "all_anchor_ranges_exact": true,
+        "coverage_known": true,
+        "math_checks": [
+          {
+            "claim_id": "p3_s03_b07:C1",
+            "correct": false
+          },
+          {
+            "claim_id": "p3_s03_b07:C2",
+            "correct": false
+          },
+          {
+            "claim_id": "p3_s03_b07:C3",
+            "correct": true
+          }
+        ],
+        "retraction_edges_valid": true,
+        "pauta_score_consistent": true
+      },
+      {
+        "case_id": "p3_s03_b08",
+        "valid_source": true,
+        "all_anchor_ranges_exact": true,
+        "coverage_known": true,
+        "math_checks": [
+          {
+            "claim_id": "p3_s03_b08:C1",
+            "correct": false
+          },
+          {
+            "claim_id": "p3_s03_b08:C2",
+            "correct": true
+          }
+        ],
+        "retraction_edges_valid": true,
+        "pauta_score_consistent": true
+      },
+      {
+        "case_id": "p3_s03_c01",
+        "valid_source": true,
+        "all_anchor_ranges_exact": true,
+        "coverage_known": true,
+        "math_checks": [
+          {
+            "claim_id": "p3_s03_c01:C1",
+            "correct": false
+          },
+          {
+            "claim_id": "p3_s03_c01:C2",
+            "correct": true
+          }
+        ],
+        "retraction_edges_valid": true,
+        "pauta_score_consistent": true
+      },
+      {
+        "case_id": "p3_s03_c02",
+        "valid_source": true,
+        "all_anchor_ranges_exact": true,
+        "coverage_known": true,
+        "math_checks": [
+          {
+            "claim_id": "p3_s03_c02:C1",
+            "correct": false
+          },
+          {
+            "claim_id": "p3_s03_c02:C2",
+            "correct": true
+          }
+        ],
+        "retraction_edges_valid": true,
+        "pauta_score_consistent": true
+      },
+      {
+        "case_id": "p3_s03_c03",
+        "valid_source": true,
+        "all_anchor_ranges_exact": true,
+        "coverage_known": true,
+        "math_checks": [
+          {
+            "claim_id": "p3_s03_c03:C1",
+            "correct": null
+          },
+          {
+            "claim_id": "p3_s03_c03:C2",
+            "correct": true
+          }
+        ],
+        "retraction_edges_valid": true,
+        "pauta_score_consistent": true
+      },
+      {
+        "case_id": "p3_s03_c04",
+        "valid_source": true,
+        "all_anchor_ranges_exact": true,
+        "coverage_known": true,
+        "math_checks": [
+          {
+            "claim_id": "p3_s03_c04:C1",
+            "correct": false
+          },
+          {
+            "claim_id": "p3_s03_c04:C2",
+            "correct": true
+          }
+        ],
+        "retraction_edges_valid": true,
+        "pauta_score_consistent": true
+      },
+      {
+        "case_id": "p3_s03_c05",
+        "valid_source": true,
+        "all_anchor_ranges_exact": true,
+        "coverage_known": true,
+        "math_checks": [
+          {
+            "claim_id": "p3_s03_c05:C1",
+            "correct": false
+          },
+          {
+            "claim_id": "p3_s03_c05:C2",
+            "correct": true
+          }
+        ],
+        "retraction_edges_valid": true,
+        "pauta_score_consistent": true
+      },
+      {
+        "case_id": "p3_s03_c06",
+        "valid_source": true,
+        "all_anchor_ranges_exact": true,
+        "coverage_known": true,
+        "math_checks": [
+          {
+            "claim_id": "p3_s03_c06:C1",
+            "correct": false
+          },
+          {
+            "claim_id": "p3_s03_c06:C2",
+            "correct": true
+          }
+        ],
+        "retraction_edges_valid": true,
+        "pauta_score_consistent": true
+      },
+      {
+        "case_id": "p3_s03_c07",
+        "valid_source": true,
+        "all_anchor_ranges_exact": true,
+        "coverage_known": true,
+        "math_checks": [
+          {
+            "claim_id": "p3_s03_c07:C1",
+            "correct": false
+          },
+          {
+            "claim_id": "p3_s03_c07:C2",
+            "correct": true
+          }
+        ],
+        "retraction_edges_valid": true,
+        "pauta_score_consistent": true
+      },
+      {
+        "case_id": "p3_s03_c08",
+        "valid_source": true,
+        "all_anchor_ranges_exact": true,
+        "coverage_known": true,
+        "math_checks": [
+          {
+            "claim_id": "p3_s03_c08:C1",
+            "correct": false
+          },
+          {
+            "claim_id": "p3_s03_c08:C2",
+            "correct": false
+          },
+          {
+            "claim_id": "p3_s03_c08:C3",
+            "correct": true
+          }
+        ],
+        "retraction_edges_valid": true,
+        "pauta_score_consistent": true
+      },
+      {
+        "case_id": "p3_s03_d01",
+        "valid_source": true,
+        "all_anchor_ranges_exact": true,
+        "coverage_known": true,
+        "math_checks": [
+          {
+            "claim_id": "p3_s03_d01:C1",
+            "correct": true
+          },
+          {
+            "claim_id": "p3_s03_d01:C2",
+            "correct": false
+          }
+        ],
+        "retraction_edges_valid": true,
+        "pauta_score_consistent": true
+      },
+      {
+        "case_id": "p3_s03_d02",
+        "valid_source": true,
+        "all_anchor_ranges_exact": true,
+        "coverage_known": true,
+        "math_checks": [
+          {
+            "claim_id": "p3_s03_d02:C1",
+            "correct": true
+          },
+          {
+            "claim_id": "p3_s03_d02:C2",
+            "correct": false
+          },
+          {
+            "claim_id": "p3_s03_d02:C3",
+            "correct": true
+          }
+        ],
+        "retraction_edges_valid": true,
+        "pauta_score_consistent": true
+      },
+      {
+        "case_id": "p3_s03_d03",
+        "valid_source": true,
+        "all_anchor_ranges_exact": true,
+        "coverage_known": true,
+        "math_checks": [
+          {
+            "claim_id": "p3_s03_d03:C1",
+            "correct": false
+          },
+          {
+            "claim_id": "p3_s03_d03:C2",
+            "correct": true
+          }
+        ],
+        "retraction_edges_valid": true,
+        "pauta_score_consistent": true
+      },
+      {
+        "case_id": "p3_s03_d04",
+        "valid_source": true,
+        "all_anchor_ranges_exact": true,
+        "coverage_known": true,
+        "math_checks": [
+          {
+            "claim_id": "p3_s03_d04:C1",
+            "correct": true
+          },
+          {
+            "claim_id": "p3_s03_d04:C2",
+            "correct": false
+          }
+        ],
+        "retraction_edges_valid": true,
+        "pauta_score_consistent": true
+      },
+      {
+        "case_id": "p3_s03_d05",
+        "valid_source": true,
+        "all_anchor_ranges_exact": true,
+        "coverage_known": true,
+        "math_checks": [
+          {
+            "claim_id": "p3_s03_d05:C1",
+            "correct": true
+          },
+          {
+            "claim_id": "p3_s03_d05:C2",
+            "correct": true
+          },
+          {
+            "claim_id": "p3_s03_d05:C3",
+            "correct": false
+          },
+          {
+            "claim_id": "p3_s03_d05:C4",
+            "correct": true
+          }
+        ],
+        "retraction_edges_valid": true,
+        "pauta_score_consistent": true
+      },
+      {
+        "case_id": "p3_s03_d06",
+        "valid_source": true,
+        "all_anchor_ranges_exact": true,
+        "coverage_known": true,
+        "math_checks": [
+          {
+            "claim_id": "p3_s03_d06:C1",
+            "correct": null
+          },
+          {
+            "claim_id": "p3_s03_d06:C2",
+            "correct": true
+          }
+        ],
+        "retraction_edges_valid": true,
+        "pauta_score_consistent": true
+      },
+      {
+        "case_id": "p3_s03_d07",
+        "valid_source": true,
+        "all_anchor_ranges_exact": true,
+        "coverage_known": true,
+        "math_checks": [
+          {
+            "claim_id": "p3_s03_d07:C1",
+            "correct": true
+          },
+          {
+            "claim_id": "p3_s03_d07:C2",
+            "correct": false
+          }
+        ],
+        "retraction_edges_valid": true,
+        "pauta_score_consistent": true
+      },
+      {
+        "case_id": "p3_s03_d08",
+        "valid_source": true,
+        "all_anchor_ranges_exact": true,
+        "coverage_known": true,
+        "math_checks": [
+          {
+            "claim_id": "p3_s03_d08:C1",
+            "correct": true
+          },
+          {
+            "claim_id": "p3_s03_d08:C2",
+            "correct": false
+          },
+          {
+            "claim_id": "p3_s03_d08:C3",
+            "correct": true
+          },
+          {
+            "claim_id": "p3_s03_d08:C4",
+            "correct": true
+          }
+        ],
+        "retraction_edges_valid": true,
+        "pauta_score_consistent": true
+      },
+      {
+        "case_id": "p3_s03_e01",
+        "valid_source": true,
+        "all_anchor_ranges_exact": true,
+        "coverage_known": true,
+        "math_checks": [
+          {
+            "claim_id": "p3_s03_e01:C1",
+            "correct": false
+          },
+          {
+            "claim_id": "p3_s03_e01:C2",
+            "correct": true
+          },
+          {
+            "claim_id": "p3_s03_e01:C3",
+            "correct": true
+          }
+        ],
+        "retraction_edges_valid": true,
+        "pauta_score_consistent": true
+      },
+      {
+        "case_id": "p3_s03_e02",
+        "valid_source": true,
+        "all_anchor_ranges_exact": true,
+        "coverage_known": true,
+        "math_checks": [
+          {
+            "claim_id": "p3_s03_e02:C1",
+            "correct": true
+          },
+          {
+            "claim_id": "p3_s03_e02:C2",
+            "correct": false
+          }
+        ],
+        "retraction_edges_valid": true,
+        "pauta_score_consistent": true
+      },
+      {
+        "case_id": "p3_s03_e03",
+        "valid_source": true,
+        "all_anchor_ranges_exact": true,
+        "coverage_known": true,
+        "math_checks": [
+          {
+            "claim_id": "p3_s03_e03:C1",
+            "correct": false
+          },
+          {
+            "claim_id": "p3_s03_e03:C2",
+            "correct": true
+          },
+          {
+            "claim_id": "p3_s03_e03:C3",
+            "correct": true
+          }
+        ],
+        "retraction_edges_valid": true,
+        "pauta_score_consistent": true
+      },
+      {
+        "case_id": "p3_s03_e04",
+        "valid_source": true,
+        "all_anchor_ranges_exact": true,
+        "coverage_known": true,
+        "math_checks": [
+          {
+            "claim_id": "p3_s03_e04:C1",
+            "correct": true
+          },
+          {
+            "claim_id": "p3_s03_e04:C2",
+            "correct": true
+          },
+          {
+            "claim_id": "p3_s03_e04:C3",
+            "correct": false
+          }
+        ],
+        "retraction_edges_valid": true,
+        "pauta_score_consistent": true
+      },
+      {
+        "case_id": "p3_s03_e05",
+        "valid_source": true,
+        "all_anchor_ranges_exact": true,
+        "coverage_known": true,
+        "math_checks": [
+          {
+            "claim_id": "p3_s03_e05:C1",
+            "correct": false
+          },
+          {
+            "claim_id": "p3_s03_e05:C2",
+            "correct": false
+          },
+          {
+            "claim_id": "p3_s03_e05:C3",
+            "correct": true
+          }
+        ],
+        "retraction_edges_valid": true,
+        "pauta_score_consistent": true
+      },
+      {
+        "case_id": "p3_s03_e06",
+        "valid_source": true,
+        "all_anchor_ranges_exact": true,
+        "coverage_known": true,
+        "math_checks": [
+          {
+            "claim_id": "p3_s03_e06:C1",
+            "correct": false
+          },
+          {
+            "claim_id": "p3_s03_e06:C2",
+            "correct": true
+          },
+          {
+            "claim_id": "p3_s03_e06:C3",
+            "correct": true
+          }
+        ],
+        "retraction_edges_valid": true,
+        "pauta_score_consistent": true
+      },
+      {
+        "case_id": "p3_s03_e07",
+        "valid_source": true,
+        "all_anchor_ranges_exact": true,
+        "coverage_known": true,
+        "math_checks": [
+          {
+            "claim_id": "p3_s03_e07:C1",
+            "correct": true
+          },
+          {
+            "claim_id": "p3_s03_e07:C2",
+            "correct": true
+          },
+          {
+            "claim_id": "p3_s03_e07:C3",
+            "correct": false
+          },
+          {
+            "claim_id": "p3_s03_e07:C4",
+            "correct": true
+          }
+        ],
+        "retraction_edges_valid": true,
+        "pauta_score_consistent": true
+      },
+      {
+        "case_id": "p3_s03_e08",
+        "valid_source": true,
+        "all_anchor_ranges_exact": true,
+        "coverage_known": true,
+        "math_checks": [
+          {
+            "claim_id": "p3_s03_e08:C1",
+            "correct": false
+          },
+          {
+            "claim_id": "p3_s03_e08:C2",
+            "correct": true
+          },
+          {
+            "claim_id": "p3_s03_e08:C3",
+            "correct": true
+          },
+          {
+            "claim_id": "p3_s03_e08:C4",
+            "correct": true
+          },
+          {
+            "claim_id": "p3_s03_e08:C5",
+            "correct": true
+          },
+          {
+            "claim_id": "p3_s03_e08:C6",
+            "correct": true
+          },
+          {
+            "claim_id": "p3_s03_e08:C7",
+            "correct": true
+          },
+          {
+            "claim_id": "p3_s03_e08:C8",
+            "correct": true
+          },
+          {
+            "claim_id": "p3_s03_e08:C9",
+            "correct": true
+          }
+        ],
+        "retraction_edges_valid": true,
+        "pauta_score_consistent": true
+      }
+    ]
+  },
+  "novelty_screen": [
+    {
+      "case_id": "p3_s03_a01",
+      "max_7gram_jaccard": 0.0,
+      "closest_old_id": "p3_safe_s4_08"
+    },
+    {
+      "case_id": "p3_s03_a02",
+      "max_7gram_jaccard": 0.0,
+      "closest_old_id": "p3_safe_s4_08"
+    },
+    {
+      "case_id": "p3_s03_a03",
+      "max_7gram_jaccard": 0.0,
+      "closest_old_id": "p3_safe_s4_08"
+    },
+    {
+      "case_id": "p3_s03_a04",
+      "max_7gram_jaccard": 0.0,
+      "closest_old_id": "p3_safe_s4_08"
+    },
+    {
+      "case_id": "p3_s03_a05",
+      "max_7gram_jaccard": 0.0,
+      "closest_old_id": "p3_safe_s4_08"
+    },
+    {
+      "case_id": "p3_s03_a06",
+      "max_7gram_jaccard": 0.0,
+      "closest_old_id": "p3_safe_s4_08"
+    },
+    {
+      "case_id": "p3_s03_a07",
+      "max_7gram_jaccard": 0.0,
+      "closest_old_id": "p3_safe_s4_08"
+    },
+    {
+      "case_id": "p3_s03_a08",
+      "max_7gram_jaccard": 0.0,
+      "closest_old_id": "p3_safe_s4_08"
+    },
+    {
+      "case_id": "p3_s03_b01",
+      "max_7gram_jaccard": 0.0,
+      "closest_old_id": "p3_safe_s4_08"
+    },
+    {
+      "case_id": "p3_s03_b02",
+      "max_7gram_jaccard": 0.0,
+      "closest_old_id": "p3_safe_s4_08"
+    },
+    {
+      "case_id": "p3_s03_b03",
+      "max_7gram_jaccard": 0.0,
+      "closest_old_id": "p3_safe_s4_08"
+    },
+    {
+      "case_id": "p3_s03_b04",
+      "max_7gram_jaccard": 0.0,
+      "closest_old_id": "p3_safe_s4_08"
+    },
+    {
+      "case_id": "p3_s03_b05",
+      "max_7gram_jaccard": 0.0,
+      "closest_old_id": "p3_safe_s4_08"
+    },
+    {
+      "case_id": "p3_s03_b06",
+      "max_7gram_jaccard": 0.0,
+      "closest_old_id": "p3_safe_s4_08"
+    },
+    {
+      "case_id": "p3_s03_b07",
+      "max_7gram_jaccard": 0.0,
+      "closest_old_id": "p3_safe_s4_08"
+    },
+    {
+      "case_id": "p3_s03_b08",
+      "max_7gram_jaccard": 0.0,
+      "closest_old_id": "p3_safe_s4_08"
+    },
+    {
+      "case_id": "p3_s03_c01",
+      "max_7gram_jaccard": 0.0,
+      "closest_old_id": "p3_safe_s4_08"
+    },
+    {
+      "case_id": "p3_s03_c02",
+      "max_7gram_jaccard": 0.0,
+      "closest_old_id": "p3_safe_s4_08"
+    },
+    {
+      "case_id": "p3_s03_c03",
+      "max_7gram_jaccard": 0.0,
+      "closest_old_id": "p3_safe_s4_08"
+    },
+    {
+      "case_id": "p3_s03_c04",
+      "max_7gram_jaccard": 0.0,
+      "closest_old_id": "p3_safe_s4_08"
+    },
+    {
+      "case_id": "p3_s03_c05",
+      "max_7gram_jaccard": 0.0,
+      "closest_old_id": "p3_safe_s4_08"
+    },
+    {
+      "case_id": "p3_s03_c06",
+      "max_7gram_jaccard": 0.0,
+      "closest_old_id": "p3_safe_s4_08"
+    },
+    {
+      "case_id": "p3_s03_c07",
+      "max_7gram_jaccard": 0.0,
+      "closest_old_id": "p3_safe_s4_08"
+    },
+    {
+      "case_id": "p3_s03_c08",
+      "max_7gram_jaccard": 0.0,
+      "closest_old_id": "p3_safe_s4_08"
+    },
+    {
+      "case_id": "p3_s03_d01",
+      "max_7gram_jaccard": 0.0,
+      "closest_old_id": "p3_safe_s4_08"
+    },
+    {
+      "case_id": "p3_s03_d02",
+      "max_7gram_jaccard": 0.0,
+      "closest_old_id": "p3_safe_s4_08"
+    },
+    {
+      "case_id": "p3_s03_d03",
+      "max_7gram_jaccard": 0.0,
+      "closest_old_id": "p3_safe_s4_08"
+    },
+    {
+      "case_id": "p3_s03_d04",
+      "max_7gram_jaccard": 0.0,
+      "closest_old_id": "p3_safe_s4_08"
+    },
+    {
+      "case_id": "p3_s03_d05",
+      "max_7gram_jaccard": 0.0,
+      "closest_old_id": "p3_safe_s4_08"
+    },
+    {
+      "case_id": "p3_s03_d06",
+      "max_7gram_jaccard": 0.0,
+      "closest_old_id": "p3_safe_s4_08"
+    },
+    {
+      "case_id": "p3_s03_d07",
+      "max_7gram_jaccard": 0.0,
+      "closest_old_id": "p3_safe_s4_08"
+    },
+    {
+      "case_id": "p3_s03_d08",
+      "max_7gram_jaccard": 0.0,
+      "closest_old_id": "p3_safe_s4_08"
+    },
+    {
+      "case_id": "p3_s03_e01",
+      "max_7gram_jaccard": 0.0,
+      "closest_old_id": "p3_safe_s4_08"
+    },
+    {
+      "case_id": "p3_s03_e02",
+      "max_7gram_jaccard": 0.0,
+      "closest_old_id": "p3_safe_s4_08"
+    },
+    {
+      "case_id": "p3_s03_e03",
+      "max_7gram_jaccard": 0.047619047619047616,
+      "closest_old_id": "p3_rob_d06"
+    },
+    {
+      "case_id": "p3_s03_e04",
+      "max_7gram_jaccard": 0.0,
+      "closest_old_id": "p3_safe_s4_08"
+    },
+    {
+      "case_id": "p3_s03_e05",
+      "max_7gram_jaccard": 0.0,
+      "closest_old_id": "p3_safe_s4_08"
+    },
+    {
+      "case_id": "p3_s03_e06",
+      "max_7gram_jaccard": 0.0,
+      "closest_old_id": "p3_safe_s4_08"
+    },
+    {
+      "case_id": "p3_s03_e07",
+      "max_7gram_jaccard": 0.0,
+      "closest_old_id": "p3_safe_s4_08"
+    },
+    {
+      "case_id": "p3_s03_e08",
+      "max_7gram_jaccard": 0.0,
+      "closest_old_id": "p3_safe_s4_08"
+    }
+  ],
+  "hashes": {
+    "sources.json": "79fce6d0062b6cd5cd237dfb5838779a3f89603079233230af34a746954d836d",
+    "ids.json": "46b8b660f49e7a999a7e85e2f1a337bf5364f70fd72ee435ed4a86c1d1795fd5",
+    "expectations.json": "d79bdde532db58f394d952df818ec1fc349af97a951416e5c9be7d3ebbdb51e2",
+    "construction_receipts.json": "96331e54a1d6907c546e7cc5c40b64e41eaf7144ec4bc12f83a5ee130daa55af"
+  },
+  "protocol": {
+    "model": "gpt-6.1-sol",
+    "reasoning_effort": "medium",
+    "CONFIA_TME_SEMANTIC_ENABLED": "0",
+    "modes": [
+      "tme_current",
+      "tme_semantic_formal"
+    ],
+    "runs_per_mode": 1,
+    "max_retries": 0,
+    "timeout": 180,
+    "use_lean": true,
+    "expectations_sent_to_model": false,
+    "evaluation_denominators": [
+      "ALL40",
+      "SEMANTIC_SUCCESS_ONLY"
+    ],
+    "state_metric": "source-anchored expected claims; all matched ledger aliases must agree, missing and mixed reported separately; no silent omission",
+    "false_credit": "actual paid rule absent from frozen expected_awards; also audit paid witnesses for non-ACTIVE use; no cancellation against missed credit",
+    "false_veto": "legitimate expected obligation blocked by applied hard veto; distinguish representation loss",
+    "ambiguity_policy": "no positive authority or hard veto for unresolved adoption; independent ACTIVE credit survives",
+    "retraction_policy": "same subject, directed replacement, explicit adopted final; correctness-independent",
+    "invariant_opportunities": "actual exposed inputs; unexposed branches NOT_EXERCISED, not passed"
+  },
+  "implementation_preservation_sha256": "ac1528c4b6207dc5e071c1d1a609c2144e19e51272bea088aac9f2ccc6cc8bb2"
+}

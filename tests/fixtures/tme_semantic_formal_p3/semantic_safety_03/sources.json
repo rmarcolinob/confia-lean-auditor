@@ -1,0 +1,202 @@
+[
+  {
+    "case_id": "p3_s03_a01",
+    "problem_id": "TME2026P3",
+    "solution_text": "a) Minha leitura das saídas inferiores dá uma contagem de 2 bolas brancas. É essa contagem que entrego, sem calcular a chance."
+  },
+  {
+    "case_id": "p3_s03_a02",
+    "problem_id": "TME2026P3",
+    "solution_text": "a) Fecho a primeira retirada com probabilidade de branca igual a 2/5. Não apresento outra resposta para essa chance."
+  },
+  {
+    "case_id": "p3_s03_a03",
+    "problem_id": "TME2026P3",
+    "solution_text": "b) Para listar os pares de escolhas ordenados, escrevi somente o número 36. A organização da lista ficou por fazer."
+  },
+  {
+    "case_id": "p3_s03_a04",
+    "problem_id": "TME2026P3",
+    "solution_text": "b) Montei uma grade: cada uma das 6 escolhas iniciais acompanha as 6 escolhas seguintes. Assim, os pares ordenados são 6*6=36."
+  },
+  {
+    "case_id": "p3_s03_a05",
+    "problem_id": "TME2026P3",
+    "solution_text": "b) Minha lista fechada de compartimentos que dão branca ao repetir é {6}. Acrescento uma afirmação que também considero válida: repetir o compartimento 3 dá branca."
+  },
+  {
+    "case_id": "p3_s03_a06",
+    "problem_id": "TME2026P3",
+    "solution_text": "c) No cenário em que a primeira branca veio do compartimento 1, aposto na preta para a segunda retirada. Nesse cenário, conto 3 saídas pretas entre as seis."
+  },
+  {
+    "case_id": "p3_s03_a07",
+    "problem_id": "TME2026P3",
+    "solution_text": "c) Depois da branca retirada do compartimento 2, escolho a cor preta. No estado resultante do caso 2, atribuo 3 saídas à preta."
+  },
+  {
+    "case_id": "p3_s03_a08",
+    "problem_id": "TME2026P3",
+    "solution_text": "a) A chance pedida para a primeira branca fica em 4/12.\nb) Para a segunda branca deixo o resultado 22/72, sem desenvolvimento adicional."
+  },
+  {
+    "case_id": "p3_s03_b01",
+    "problem_id": "TME2026P3",
+    "solution_text": "a) Para a contagem inferior branca registrei 5. Corrijo imediatamente essa contagem: são 2 bolas brancas inferiores."
+  },
+  {
+    "case_id": "p3_s03_b02",
+    "problem_id": "TME2026P3",
+    "solution_text": "a) Minha chance de branca na primeira retirada era 1/2. Refaço a conta e substituo essa chance por primeira_branca: 2/6=1/3."
+  },
+  {
+    "case_id": "p3_s03_b03",
+    "problem_id": "TME2026P3",
+    "solution_text": "b) Registrei segunda_branca: 1/4. Apago esse valor da segunda branca e em seu lugar adoto segunda_branca: 11/36."
+  },
+  {
+    "case_id": "p3_s03_b04",
+    "problem_id": "TME2026P3",
+    "solution_text": "c) A indicação para continuar era o conjunto {1,4}. Retifico os compartimentos de continuação: continuar: {1,2}. Esta é a indicação definitiva."
+  },
+  {
+    "case_id": "p3_s03_b05",
+    "problem_id": "TME2026P3",
+    "solution_text": "b) A probabilidade da segunda branca ficou anotada como 7/36. Depois de conferir a partição, invalido esse valor e assino o resultado da segunda branca: 11/36."
+  },
+  {
+    "case_id": "p3_s03_b06",
+    "problem_id": "TME2026P3",
+    "solution_text": "c) Para a branca inicial do compartimento 1, minha aposta era cinza. Troco a aposta desse caso 1: estrategia_1: preta. No mesmo estado conto contagem_1: 3."
+  },
+  {
+    "case_id": "p3_s03_b07",
+    "problem_id": "TME2026P3",
+    "solution_text": "a) Escrevi primeira_branca: 1/6. A seta de substituição da minha resposta é primeira_branca: 1/6 → primeira_branca: 1/3; vale apenas o termo à direita."
+  },
+  {
+    "case_id": "p3_s03_b08",
+    "problem_id": "TME2026P3",
+    "solution_text": "a) Eu havia dito quatro brancas na base. Volto a essa contagem e retiro o quatro: minha resposta para as bolas brancas inferiores é duas."
+  },
+  {
+    "case_id": "p3_s03_c01",
+    "problem_id": "TME2026P3",
+    "solution_text": "a) Exploro uma hipótese que não assumo na resposta: a chance de primeira branca seria 3/4. Fora dessa hipótese, afirmo que a base contém 2 bolas brancas."
+  },
+  {
+    "case_id": "p3_s03_c02",
+    "problem_id": "TME2026P3",
+    "solution_text": "a) Na discussão, Raul defendeu primeira_branca: 1/5; não endosso a fala dele. Minha resposta, separadamente, é primeira_branca: 1/3."
+  },
+  {
+    "case_id": "p3_s03_c03",
+    "problem_id": "TME2026P3",
+    "solution_text": "c) Copio apenas um dado da figura do enunciado, não uma etapa da minha solução: a primeira bola de baixo do compartimento 1 é branca. Minha decisão para quando o jogo continua é continuar: {1,2}."
+  },
+  {
+    "case_id": "p3_s03_c04",
+    "problem_id": "TME2026P3",
+    "solution_text": "b) Ponho de lado a alternativa segunda_branca: 5/18; não a escolho. A resposta que entrego para a segunda branca é 11/36."
+  },
+  {
+    "case_id": "p3_s03_c05",
+    "problem_id": "TME2026P3",
+    "solution_text": "a) Como comparação com outra máquina, imagine primeira_branca: 2/3; esse exemplo não descreve esta questão. Nesta máquina a probabilidade da primeira branca que calculo é 1/3."
+  },
+  {
+    "case_id": "p3_s03_c06",
+    "problem_id": "TME2026P3",
+    "solution_text": "a) O erro que estou explicando é escrever inferiores_brancas: 6, pois isso trataria todas as cores como brancas. Não assumo essa contagem. Minha contagem efetiva é inferiores_brancas: 2."
+  },
+  {
+    "case_id": "p3_s03_c07",
+    "problem_id": "TME2026P3",
+    "solution_text": "b) Será que a segunda branca teria probabilidade 1? Essa pergunta é retórica, não afirmo essa chance. Para os pares ordenados, uso 6*6=36."
+  },
+  {
+    "case_id": "p3_s03_c08",
+    "problem_id": "TME2026P3",
+    "solution_text": "c) Tentativa descartada sem substituta: após branca do compartimento 2 eu apostaria preta, contando 4 pretas. Não uso essa tentativa no que entrego. A única decisão que mantenho é continuar: {1,2}."
+  },
+  {
+    "case_id": "p3_s03_d01",
+    "problem_id": "TME2026P3",
+    "solution_text": "a) Restaram duas respostas lado a lado para primeira_branca: 1/3 e primeira_branca: 1/2. Não está indicado qual delas é a minha escolha final."
+  },
+  {
+    "case_id": "p3_s03_d02",
+    "problem_id": "TME2026P3",
+    "solution_text": "a) Há duas propostas para a primeira branca: Lia escreveu 1/3 e Nuno escreveu 1/2. Anotei «fico com a dela», mas não identifiquei a quem o pronome se refere. Minha contagem de bolas brancas inferiores é 2."
+  },
+  {
+    "case_id": "p3_s03_d03",
+    "problem_id": "TME2026P3",
+    "solution_text": "a) Deixei primeira_branca: 1/2 em uma coluna e primeira_branca: 1/3 em outra, ainda sem marcar qual vale.\n\nDepois de revisar o caderno, anotei à distância: «uma dessas fica corrigida», sem seta nem identificação."
+  },
+  {
+    "case_id": "p3_s03_d04",
+    "problem_id": "TME2026P3",
+    "solution_text": "b) O rascunho guarda segunda_branca: 11/36 e segunda_branca: 1/4 como candidatos sem seleção. Em seguida passei a discutir as cores do jogo; ao voltar escrevi apenas «a anterior vale», sem dizer qual candidato."
+  },
+  {
+    "case_id": "p3_s03_d05",
+    "problem_id": "TME2026P3",
+    "solution_text": "c) O bilhete diz «no caso dele, estrategia: preta; contagem: 3». Não consegui dizer se o caso referido é a branca inicial do compartimento 1 ou a do 2; deixo essa referência em aberto."
+  },
+  {
+    "case_id": "p3_s03_d06",
+    "problem_id": "TME2026P3",
+    "solution_text": "a) A linha da primeira probabilidade foi cortada: «primeira_branca: 1/». Não completei o denominador. Em outra linha completa deixo inferiores_brancas: 2."
+  },
+  {
+    "case_id": "p3_s03_d07",
+    "problem_id": "TME2026P3",
+    "solution_text": "b) Na margem ficaram «segunda_branca: 11/36?» e «segunda_branca: 1/3?», com um sinal ilegível entre elas; nenhuma marca permite reconhecer minha resposta."
+  },
+  {
+    "case_id": "p3_s03_d08",
+    "problem_id": "TME2026P3",
+    "solution_text": "c) Para continuar tenho duas opções ainda abertas, continuar: {1,2} ou continuar: {2,6}; não assinalei nenhuma. Independentemente dessa escolha, depois da branca do compartimento 2 minha aposta é cinza e conto 3 saídas cinzas nesse estado."
+  },
+  {
+    "case_id": "p3_s03_e01",
+    "problem_id": "TME2026P3",
+    "solution_text": "a) A nota de uma colega dizia primeira_branca: 7/12; transcrevo sem concordar. Na minha resolução, primeira_branca: 1/3 e inferiores_brancas: 2."
+  },
+  {
+    "case_id": "p3_s03_e02",
+    "problem_id": "TME2026P3",
+    "solution_text": "b) Eu adotava segunda_branca: 11/36. Revogo minha resposta anterior da segunda branca: a que escolho agora é segunda_branca: 1/2. Quero que esta última substitua a anterior."
+  },
+  {
+    "case_id": "p3_s03_e03",
+    "problem_id": "TME2026P3",
+    "solution_text": "a) Inicialmente contei inferiores_brancas: 3. Retiro essa contagem inicial e passo a adotar inferiores_brancas: 2. Além disso, minha probabilidade da primeira branca é 1/3."
+  },
+  {
+    "case_id": "p3_s03_e04",
+    "problem_id": "TME2026P3",
+    "solution_text": "a) A resposta que confirmo para a contagem inferior é inferiores_brancas: 2.\nb) Num papel separado deixei segunda_branca: 11/36 ou segunda_branca: 5/12; ainda não decidi qual delas sustento."
+  },
+  {
+    "case_id": "p3_s03_e05",
+    "problem_id": "TME2026P3",
+    "solution_text": "a) Cito sem adotar a fala de Célia: «inferiores_brancas: 6». Quanto à minha própria resposta, registrei inferiores_brancas: 1; corrijo minha própria contagem para inferiores_brancas: 2."
+  },
+  {
+    "case_id": "p3_s03_e06",
+    "problem_id": "TME2026P3",
+    "solution_text": "b) Experimento mental não assumido: se a segunda branca tivesse chance 1/6, minha conta seria outra. Para esta questão, contudo, os favoráveis com escolhas distintas são 2*5=10, e o resultado da segunda branca que assumo é 11/36."
+  },
+  {
+    "case_id": "p3_s03_e07",
+    "problem_id": "TME2026P3",
+    "solution_text": "a) A minha chance para a primeira branca é 1/3.\nb) Para as escolhas distintas adoto favoraveis_distintos: 2*5=10. Mantenho também favoraveis_distintos: 2*4=8 como contagem dos mesmos favoráveis; afirmo ambas, sem retirar nenhuma. Minha conclusão é segunda_branca: 11/36."
+  },
+  {
+    "case_id": "p3_s03_e08",
+    "problem_id": "TME2026P3",
+    "solution_text": "c) Minha antiga aposta após branca do compartimento 2 era preta; retiro essa escolha e a substituo por estrategia_2: cinza. Para essa escolha revisada, contagem_2: 3.\nNo caso da branca do compartimento 1, estrategia_1: preta e contagem_1: 3.\nO jogo prossegue com continuar: {1,2}.\nPara as apostas finais, condicional_1: 3/6=1/2 e condicional_2: 3/6=1/2.\nPondero os dois caminhos no total: (1/6)*(1/2)+(1/6)*(1/2)=1/6."
+  }
+]

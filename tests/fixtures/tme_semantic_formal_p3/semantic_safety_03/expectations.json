@@ -1,0 +1,4808 @@
+[
+  {
+    "case_id": "p3_s03_a01",
+    "family": "A",
+    "expected_score_by_construction": 2.0,
+    "expected_discourse_states": [
+      {
+        "claim_id": "p3_s03_a01:C1",
+        "source_span": "contagem de 2 bolas brancas",
+        "source_start": 46,
+        "source_end": 73,
+        "subject": "inferiores_brancas",
+        "obligation_id": "a.bottom_white_count",
+        "expected_state": "ACTIVE",
+        "written_value": "2",
+        "mathematically_correct": true,
+        "superseded_by": []
+      }
+    ],
+    "expected_obligations_satisfied": [
+      "a.bottom_white_count"
+    ],
+    "expected_obligations_unsatisfied": [
+      "a.first_white_probability",
+      "b.alternative_complete",
+      "b.different_favorable",
+      "b.ordered_pairs",
+      "b.same_compartment",
+      "b.second_white_probability",
+      "c.conditional_success_1",
+      "c.conditional_success_2",
+      "c.continue_compartments",
+      "c.strategy_case_1",
+      "c.strategy_case_2",
+      "c.total_win_probability"
+    ],
+    "expected_conflicts": [],
+    "expected_hard_vetoes": [],
+    "expected_non_veto_conflict_visibility": [],
+    "expected_awards": [
+      {
+        "rubric_item": "a",
+        "rule_id": "a.count",
+        "points": 2.0,
+        "routes": [
+          "DETERMINISTIC"
+        ],
+        "obligations": [
+          {
+            "obligation_id": "a.bottom_white_count",
+            "eligible": true,
+            "verification_route": "DETERMINISTIC",
+            "evidence_ids": [
+              "p3_s03_a01"
+            ]
+          }
+        ]
+      }
+    ],
+    "expected_guard_behavior": {
+      "guard_generated_awards": 0,
+      "hard_veto_only_from_active_checked_contradiction": true,
+      "nonactive_hard_veto": false
+    },
+    "rationale": "Contagem ativa correta, nenhuma probabilidade fornecida.",
+    "expected_active_claims": [
+      {
+        "claim_id": "p3_s03_a01:C1",
+        "source_span": "contagem de 2 bolas brancas",
+        "source_start": 46,
+        "source_end": 73,
+        "subject": "inferiores_brancas",
+        "obligation_id": "a.bottom_white_count",
+        "expected_state": "ACTIVE",
+        "written_value": "2",
+        "mathematically_correct": true,
+        "superseded_by": []
+      }
+    ],
+    "expected_superseded_claims": [],
+    "expected_non_adopted_claims": [],
+    "expected_ambiguous_claims": []
+  },
+  {
+    "case_id": "p3_s03_a02",
+    "family": "A",
+    "expected_score_by_construction": 0.0,
+    "expected_discourse_states": [
+      {
+        "claim_id": "p3_s03_a02:C1",
+        "source_span": "probabilidade de branca igual a 2/5",
+        "source_start": 33,
+        "source_end": 68,
+        "subject": "primeira_branca",
+        "obligation_id": "a.first_white_probability",
+        "expected_state": "ACTIVE",
+        "written_value": "2/5",
+        "mathematically_correct": false,
+        "superseded_by": []
+      }
+    ],
+    "expected_obligations_satisfied": [],
+    "expected_obligations_unsatisfied": [
+      "a.bottom_white_count",
+      "a.first_white_probability",
+      "b.alternative_complete",
+      "b.different_favorable",
+      "b.ordered_pairs",
+      "b.same_compartment",
+      "b.second_white_probability",
+      "c.conditional_success_1",
+      "c.conditional_success_2",
+      "c.continue_compartments",
+      "c.strategy_case_1",
+      "c.strategy_case_2",
+      "c.total_win_probability"
+    ],
+    "expected_conflicts": [],
+    "expected_hard_vetoes": [
+      "a.first_white_probability"
+    ],
+    "expected_non_veto_conflict_visibility": [],
+    "expected_awards": [],
+    "expected_guard_behavior": {
+      "guard_generated_awards": 0,
+      "hard_veto_only_from_active_checked_contradiction": true,
+      "nonactive_hard_veto": false
+    },
+    "rationale": "Probabilidade ativa falsa, sem resgate pelo valor correto não escrito.",
+    "expected_active_claims": [
+      {
+        "claim_id": "p3_s03_a02:C1",
+        "source_span": "probabilidade de branca igual a 2/5",
+        "source_start": 33,
+        "source_end": 68,
+        "subject": "primeira_branca",
+        "obligation_id": "a.first_white_probability",
+        "expected_state": "ACTIVE",
+        "written_value": "2/5",
+        "mathematically_correct": false,
+        "superseded_by": []
+      }
+    ],
+    "expected_superseded_claims": [],
+    "expected_non_adopted_claims": [],
+    "expected_ambiguous_claims": []
+  },
+  {
+    "case_id": "p3_s03_a03",
+    "family": "A",
+    "expected_score_by_construction": 0.0,
+    "expected_discourse_states": [
+      {
+        "claim_id": "p3_s03_a03:C1",
+        "source_span": "pares de escolhas ordenados, escrevi somente o número 36",
+        "source_start": 18,
+        "source_end": 74,
+        "subject": "pares_ordenados",
+        "obligation_id": "b.ordered_pairs",
+        "expected_state": "ACTIVE",
+        "written_value": "36",
+        "mathematically_correct": true,
+        "superseded_by": []
+      }
+    ],
+    "expected_obligations_satisfied": [],
+    "expected_obligations_unsatisfied": [
+      "a.bottom_white_count",
+      "a.first_white_probability",
+      "b.alternative_complete",
+      "b.different_favorable",
+      "b.ordered_pairs",
+      "b.same_compartment",
+      "b.second_white_probability",
+      "c.conditional_success_1",
+      "c.conditional_success_2",
+      "c.continue_compartments",
+      "c.strategy_case_1",
+      "c.strategy_case_2",
+      "c.total_win_probability"
+    ],
+    "expected_conflicts": [],
+    "expected_hard_vetoes": [],
+    "expected_non_veto_conflict_visibility": [],
+    "expected_awards": [],
+    "expected_guard_behavior": {
+      "guard_generated_awards": 0,
+      "hard_veto_only_from_active_checked_contradiction": true,
+      "nonactive_hard_veto": false
+    },
+    "rationale": "Resultado 36 sem produto não satisfaz a relação de b.space.",
+    "expected_active_claims": [
+      {
+        "claim_id": "p3_s03_a03:C1",
+        "source_span": "pares de escolhas ordenados, escrevi somente o número 36",
+        "source_start": 18,
+        "source_end": 74,
+        "subject": "pares_ordenados",
+        "obligation_id": "b.ordered_pairs",
+        "expected_state": "ACTIVE",
+        "written_value": "36",
+        "mathematically_correct": true,
+        "superseded_by": []
+      }
+    ],
+    "expected_superseded_claims": [],
+    "expected_non_adopted_claims": [],
+    "expected_ambiguous_claims": []
+  },
+  {
+    "case_id": "p3_s03_a04",
+    "family": "A",
+    "expected_score_by_construction": 2.0,
+    "expected_discourse_states": [
+      {
+        "claim_id": "p3_s03_a04:C1",
+        "source_span": "os pares ordenados são 6*6=36",
+        "source_start": 96,
+        "source_end": 125,
+        "subject": "pares_ordenados",
+        "obligation_id": "b.ordered_pairs",
+        "expected_state": "ACTIVE",
+        "written_value": "6*6=36",
+        "mathematically_correct": true,
+        "superseded_by": []
+      }
+    ],
+    "expected_obligations_satisfied": [
+      "b.ordered_pairs"
+    ],
+    "expected_obligations_unsatisfied": [
+      "a.bottom_white_count",
+      "a.first_white_probability",
+      "b.alternative_complete",
+      "b.different_favorable",
+      "b.same_compartment",
+      "b.second_white_probability",
+      "c.conditional_success_1",
+      "c.conditional_success_2",
+      "c.continue_compartments",
+      "c.strategy_case_1",
+      "c.strategy_case_2",
+      "c.total_win_probability"
+    ],
+    "expected_conflicts": [],
+    "expected_hard_vetoes": [],
+    "expected_non_veto_conflict_visibility": [],
+    "expected_awards": [
+      {
+        "rubric_item": "b",
+        "rule_id": "b.space",
+        "points": 2.0,
+        "routes": [
+          "DETERMINISTIC"
+        ],
+        "obligations": [
+          {
+            "obligation_id": "b.ordered_pairs",
+            "eligible": true,
+            "verification_route": "DETERMINISTIC",
+            "evidence_ids": [
+              "p3_s03_a04"
+            ]
+          }
+        ]
+      }
+    ],
+    "expected_guard_behavior": {
+      "guard_generated_awards": 0,
+      "hard_veto_only_from_active_checked_contradiction": true,
+      "nonactive_hard_veto": false
+    },
+    "rationale": "Produto atribuído à dupla escolha; relação e aritmética suficientes.",
+    "expected_active_claims": [
+      {
+        "claim_id": "p3_s03_a04:C1",
+        "source_span": "os pares ordenados são 6*6=36",
+        "source_start": 96,
+        "source_end": 125,
+        "subject": "pares_ordenados",
+        "obligation_id": "b.ordered_pairs",
+        "expected_state": "ACTIVE",
+        "written_value": "6*6=36",
+        "mathematically_correct": true,
+        "superseded_by": []
+      }
+    ],
+    "expected_superseded_claims": [],
+    "expected_non_adopted_claims": [],
+    "expected_ambiguous_claims": []
+  },
+  {
+    "case_id": "p3_s03_a05",
+    "family": "A",
+    "expected_score_by_construction": 0.0,
+    "expected_discourse_states": [
+      {
+        "claim_id": "p3_s03_a05:C1",
+        "source_span": "lista fechada de compartimentos que dão branca ao repetir é {6}",
+        "source_start": 9,
+        "source_end": 72,
+        "subject": "repeticao_branca",
+        "obligation_id": "b.same_compartment",
+        "expected_state": "ACTIVE",
+        "written_value": "{6}",
+        "mathematically_correct": true,
+        "superseded_by": []
+      },
+      {
+        "claim_id": "p3_s03_a05:C2",
+        "source_span": "repetir o compartimento 3 dá branca",
+        "source_start": 128,
+        "source_end": 163,
+        "subject": "repeticao_branca",
+        "obligation_id": "b.same_compartment",
+        "expected_state": "ACTIVE",
+        "written_value": "member:3",
+        "mathematically_correct": false,
+        "superseded_by": []
+      }
+    ],
+    "expected_obligations_satisfied": [],
+    "expected_obligations_unsatisfied": [
+      "a.bottom_white_count",
+      "a.first_white_probability",
+      "b.alternative_complete",
+      "b.different_favorable",
+      "b.ordered_pairs",
+      "b.same_compartment",
+      "b.second_white_probability",
+      "c.conditional_success_1",
+      "c.conditional_success_2",
+      "c.continue_compartments",
+      "c.strategy_case_1",
+      "c.strategy_case_2",
+      "c.total_win_probability"
+    ],
+    "expected_conflicts": [
+      "b.same_compartment"
+    ],
+    "expected_hard_vetoes": [
+      "b.same_compartment",
+      "b.second_white_probability"
+    ],
+    "expected_non_veto_conflict_visibility": [],
+    "expected_awards": [],
+    "expected_guard_behavior": {
+      "guard_generated_awards": 0,
+      "hard_veto_only_from_active_checked_contradiction": true,
+      "nonactive_hard_veto": false
+    },
+    "rationale": "Exclusividade e inclusão falsa estão ambas adotadas, sem revisão.",
+    "expected_active_claims": [
+      {
+        "claim_id": "p3_s03_a05:C1",
+        "source_span": "lista fechada de compartimentos que dão branca ao repetir é {6}",
+        "source_start": 9,
+        "source_end": 72,
+        "subject": "repeticao_branca",
+        "obligation_id": "b.same_compartment",
+        "expected_state": "ACTIVE",
+        "written_value": "{6}",
+        "mathematically_correct": true,
+        "superseded_by": []
+      },
+      {
+        "claim_id": "p3_s03_a05:C2",
+        "source_span": "repetir o compartimento 3 dá branca",
+        "source_start": 128,
+        "source_end": 163,
+        "subject": "repeticao_branca",
+        "obligation_id": "b.same_compartment",
+        "expected_state": "ACTIVE",
+        "written_value": "member:3",
+        "mathematically_correct": false,
+        "superseded_by": []
+      }
+    ],
+    "expected_superseded_claims": [],
+    "expected_non_adopted_claims": [],
+    "expected_ambiguous_claims": []
+  },
+  {
+    "case_id": "p3_s03_a06",
+    "family": "A",
+    "expected_score_by_construction": 2.0,
+    "expected_discourse_states": [
+      {
+        "claim_id": "p3_s03_a06:C1",
+        "source_span": "aposto na preta para a segunda retirada",
+        "source_start": 64,
+        "source_end": 103,
+        "subject": "estrategia_1",
+        "obligation_id": "c.strategy_case_1",
+        "expected_state": "ACTIVE",
+        "written_value": "preta",
+        "mathematically_correct": true,
+        "superseded_by": []
+      },
+      {
+        "claim_id": "p3_s03_a06:C2",
+        "source_span": "conto 3 saídas pretas entre as seis",
+        "source_start": 120,
+        "source_end": 155,
+        "subject": "contagem_1",
+        "obligation_id": "c.strategy_case_1",
+        "expected_state": "ACTIVE",
+        "written_value": "3",
+        "mathematically_correct": true,
+        "superseded_by": []
+      }
+    ],
+    "expected_obligations_satisfied": [
+      "c.strategy_case_1"
+    ],
+    "expected_obligations_unsatisfied": [
+      "a.bottom_white_count",
+      "a.first_white_probability",
+      "b.alternative_complete",
+      "b.different_favorable",
+      "b.ordered_pairs",
+      "b.same_compartment",
+      "b.second_white_probability",
+      "c.conditional_success_1",
+      "c.conditional_success_2",
+      "c.continue_compartments",
+      "c.strategy_case_2",
+      "c.total_win_probability"
+    ],
+    "expected_conflicts": [],
+    "expected_hard_vetoes": [],
+    "expected_non_veto_conflict_visibility": [],
+    "expected_awards": [
+      {
+        "rubric_item": "c",
+        "rule_id": "c.first_strategy",
+        "points": 2.0,
+        "routes": [
+          "DETERMINISTIC"
+        ],
+        "obligations": [
+          {
+            "obligation_id": "c.strategy_case_1",
+            "eligible": true,
+            "verification_route": "DETERMINISTIC",
+            "evidence_ids": [
+              "p3_s03_a06"
+            ]
+          }
+        ]
+      }
+    ],
+    "expected_guard_behavior": {
+      "guard_generated_awards": 0,
+      "hard_veto_only_from_active_checked_contradiction": true,
+      "nonactive_hard_veto": false
+    },
+    "rationale": "Cor e quantidade escritas para o caso 1; modelo finito estabelece optimalidade.",
+    "expected_active_claims": [
+      {
+        "claim_id": "p3_s03_a06:C1",
+        "source_span": "aposto na preta para a segunda retirada",
+        "source_start": 64,
+        "source_end": 103,
+        "subject": "estrategia_1",
+        "obligation_id": "c.strategy_case_1",
+        "expected_state": "ACTIVE",
+        "written_value": "preta",
+        "mathematically_correct": true,
+        "superseded_by": []
+      },
+      {
+        "claim_id": "p3_s03_a06:C2",
+        "source_span": "conto 3 saídas pretas entre as seis",
+        "source_start": 120,
+        "source_end": 155,
+        "subject": "contagem_1",
+        "obligation_id": "c.strategy_case_1",
+        "expected_state": "ACTIVE",
+        "written_value": "3",
+        "mathematically_correct": true,
+        "superseded_by": []
+      }
+    ],
+    "expected_superseded_claims": [],
+    "expected_non_adopted_claims": [],
+    "expected_ambiguous_claims": []
+  },
+  {
+    "case_id": "p3_s03_a07",
+    "family": "A",
+    "expected_score_by_construction": 0.0,
+    "expected_discourse_states": [
+      {
+        "claim_id": "p3_s03_a07:C1",
+        "source_span": "escolho a cor preta",
+        "source_start": 49,
+        "source_end": 68,
+        "subject": "estrategia_2",
+        "obligation_id": "c.strategy_case_2",
+        "expected_state": "ACTIVE",
+        "written_value": "preta",
+        "mathematically_correct": false,
+        "superseded_by": []
+      },
+      {
+        "claim_id": "p3_s03_a07:C2",
+        "source_span": "atribuo 3 saídas à preta",
+        "source_start": 102,
+        "source_end": 126,
+        "subject": "contagem_2",
+        "obligation_id": "c.strategy_case_2",
+        "expected_state": "ACTIVE",
+        "written_value": "3",
+        "mathematically_correct": true,
+        "superseded_by": []
+      }
+    ],
+    "expected_obligations_satisfied": [],
+    "expected_obligations_unsatisfied": [
+      "a.bottom_white_count",
+      "a.first_white_probability",
+      "b.alternative_complete",
+      "b.different_favorable",
+      "b.ordered_pairs",
+      "b.same_compartment",
+      "b.second_white_probability",
+      "c.conditional_success_1",
+      "c.conditional_success_2",
+      "c.continue_compartments",
+      "c.strategy_case_1",
+      "c.strategy_case_2",
+      "c.total_win_probability"
+    ],
+    "expected_conflicts": [],
+    "expected_hard_vetoes": [
+      "c.strategy_case_2",
+      "c.conditional_success_2",
+      "c.total_win_probability"
+    ],
+    "expected_non_veto_conflict_visibility": [],
+    "expected_awards": [],
+    "expected_guard_behavior": {
+      "guard_generated_awards": 0,
+      "hard_veto_only_from_active_checked_contradiction": true,
+      "nonactive_hard_veto": false
+    },
+    "rationale": "Escolha e contagem do caso 2 são falsas: preta ocorre duas vezes.",
+    "expected_active_claims": [
+      {
+        "claim_id": "p3_s03_a07:C1",
+        "source_span": "escolho a cor preta",
+        "source_start": 49,
+        "source_end": 68,
+        "subject": "estrategia_2",
+        "obligation_id": "c.strategy_case_2",
+        "expected_state": "ACTIVE",
+        "written_value": "preta",
+        "mathematically_correct": false,
+        "superseded_by": []
+      },
+      {
+        "claim_id": "p3_s03_a07:C2",
+        "source_span": "atribuo 3 saídas à preta",
+        "source_start": 102,
+        "source_end": 126,
+        "subject": "contagem_2",
+        "obligation_id": "c.strategy_case_2",
+        "expected_state": "ACTIVE",
+        "written_value": "3",
+        "mathematically_correct": true,
+        "superseded_by": []
+      }
+    ],
+    "expected_superseded_claims": [],
+    "expected_non_adopted_claims": [],
+    "expected_ambiguous_claims": []
+  },
+  {
+    "case_id": "p3_s03_a08",
+    "family": "A",
+    "expected_score_by_construction": 4.0,
+    "expected_discourse_states": [
+      {
+        "claim_id": "p3_s03_a08:C1",
+        "source_span": "chance pedida para a primeira branca fica em 4/12",
+        "source_start": 5,
+        "source_end": 54,
+        "subject": "primeira_branca",
+        "obligation_id": "a.first_white_probability",
+        "expected_state": "ACTIVE",
+        "written_value": "4/12",
+        "mathematically_correct": true,
+        "superseded_by": []
+      },
+      {
+        "claim_id": "p3_s03_a08:C2",
+        "source_span": "segunda branca deixo o resultado 22/72",
+        "source_start": 66,
+        "source_end": 104,
+        "subject": "segunda_branca",
+        "obligation_id": "b.second_white_probability",
+        "expected_state": "ACTIVE",
+        "written_value": "22/72",
+        "mathematically_correct": true,
+        "superseded_by": []
+      }
+    ],
+    "expected_obligations_satisfied": [
+      "a.first_white_probability",
+      "b.second_white_probability"
+    ],
+    "expected_obligations_unsatisfied": [
+      "a.bottom_white_count",
+      "b.alternative_complete",
+      "b.different_favorable",
+      "b.ordered_pairs",
+      "b.same_compartment",
+      "c.conditional_success_1",
+      "c.conditional_success_2",
+      "c.continue_compartments",
+      "c.strategy_case_1",
+      "c.strategy_case_2",
+      "c.total_win_probability"
+    ],
+    "expected_conflicts": [],
+    "expected_hard_vetoes": [],
+    "expected_non_veto_conflict_visibility": [],
+    "expected_awards": [
+      {
+        "rubric_item": "a",
+        "rule_id": "a.probability",
+        "points": 2.0,
+        "routes": [
+          "DETERMINISTIC"
+        ],
+        "obligations": [
+          {
+            "obligation_id": "a.first_white_probability",
+            "eligible": true,
+            "verification_route": "DETERMINISTIC",
+            "evidence_ids": [
+              "p3_s03_a08"
+            ]
+          }
+        ]
+      },
+      {
+        "rubric_item": "b",
+        "rule_id": "b.conclusion",
+        "points": 2.0,
+        "routes": [
+          "DETERMINISTIC"
+        ],
+        "obligations": [
+          {
+            "obligation_id": "b.second_white_probability",
+            "eligible": true,
+            "verification_route": "DETERMINISTIC",
+            "evidence_ids": [
+              "p3_s03_a08"
+            ]
+          }
+        ]
+      }
+    ],
+    "expected_guard_behavior": {
+      "guard_generated_awards": 0,
+      "hard_veto_only_from_active_checked_contradiction": true,
+      "nonactive_hard_veto": false
+    },
+    "rationale": "Resultados racionais equivalentes autorizados, sem crédito de método.",
+    "expected_active_claims": [
+      {
+        "claim_id": "p3_s03_a08:C1",
+        "source_span": "chance pedida para a primeira branca fica em 4/12",
+        "source_start": 5,
+        "source_end": 54,
+        "subject": "primeira_branca",
+        "obligation_id": "a.first_white_probability",
+        "expected_state": "ACTIVE",
+        "written_value": "4/12",
+        "mathematically_correct": true,
+        "superseded_by": []
+      },
+      {
+        "claim_id": "p3_s03_a08:C2",
+        "source_span": "segunda branca deixo o resultado 22/72",
+        "source_start": 66,
+        "source_end": 104,
+        "subject": "segunda_branca",
+        "obligation_id": "b.second_white_probability",
+        "expected_state": "ACTIVE",
+        "written_value": "22/72",
+        "mathematically_correct": true,
+        "superseded_by": []
+      }
+    ],
+    "expected_superseded_claims": [],
+    "expected_non_adopted_claims": [],
+    "expected_ambiguous_claims": []
+  },
+  {
+    "case_id": "p3_s03_b01",
+    "family": "B",
+    "expected_score_by_construction": 2.0,
+    "expected_discourse_states": [
+      {
+        "claim_id": "p3_s03_b01:C1",
+        "source_span": "contagem inferior branca registrei 5",
+        "source_start": 10,
+        "source_end": 46,
+        "subject": "inferiores_brancas",
+        "obligation_id": "a.bottom_white_count",
+        "expected_state": "SUPERSEDED",
+        "written_value": "5",
+        "mathematically_correct": false,
+        "superseded_by": [
+          "p3_s03_b01:C2"
+        ]
+      },
+      {
+        "claim_id": "p3_s03_b01:C2",
+        "source_span": "são 2 bolas brancas inferiores",
+        "source_start": 85,
+        "source_end": 115,
+        "subject": "inferiores_brancas",
+        "obligation_id": "a.bottom_white_count",
+        "expected_state": "ACTIVE",
+        "written_value": "2",
+        "mathematically_correct": true,
+        "superseded_by": []
+      }
+    ],
+    "expected_obligations_satisfied": [
+      "a.bottom_white_count"
+    ],
+    "expected_obligations_unsatisfied": [
+      "a.first_white_probability",
+      "b.alternative_complete",
+      "b.different_favorable",
+      "b.ordered_pairs",
+      "b.same_compartment",
+      "b.second_white_probability",
+      "c.conditional_success_1",
+      "c.conditional_success_2",
+      "c.continue_compartments",
+      "c.strategy_case_1",
+      "c.strategy_case_2",
+      "c.total_win_probability"
+    ],
+    "expected_conflicts": [],
+    "expected_hard_vetoes": [],
+    "expected_non_veto_conflict_visibility": [],
+    "expected_awards": [
+      {
+        "rubric_item": "a",
+        "rule_id": "a.count",
+        "points": 2.0,
+        "routes": [
+          "DETERMINISTIC"
+        ],
+        "obligations": [
+          {
+            "obligation_id": "a.bottom_white_count",
+            "eligible": true,
+            "verification_route": "DETERMINISTIC",
+            "evidence_ids": [
+              "p3_s03_b01"
+            ]
+          }
+        ]
+      }
+    ],
+    "expected_guard_behavior": {
+      "guard_generated_awards": 0,
+      "hard_veto_only_from_active_checked_contradiction": true,
+      "nonactive_hard_veto": false
+    },
+    "rationale": "Revisão imediata do mesmo atributo; 5 retirado em favor de 2.",
+    "expected_active_claims": [
+      {
+        "claim_id": "p3_s03_b01:C2",
+        "source_span": "são 2 bolas brancas inferiores",
+        "source_start": 85,
+        "source_end": 115,
+        "subject": "inferiores_brancas",
+        "obligation_id": "a.bottom_white_count",
+        "expected_state": "ACTIVE",
+        "written_value": "2",
+        "mathematically_correct": true,
+        "superseded_by": []
+      }
+    ],
+    "expected_superseded_claims": [
+      {
+        "claim_id": "p3_s03_b01:C1",
+        "source_span": "contagem inferior branca registrei 5",
+        "source_start": 10,
+        "source_end": 46,
+        "subject": "inferiores_brancas",
+        "obligation_id": "a.bottom_white_count",
+        "expected_state": "SUPERSEDED",
+        "written_value": "5",
+        "mathematically_correct": false,
+        "superseded_by": [
+          "p3_s03_b01:C2"
+        ]
+      }
+    ],
+    "expected_non_adopted_claims": [],
+    "expected_ambiguous_claims": []
+  },
+  {
+    "case_id": "p3_s03_b02",
+    "family": "B",
+    "expected_score_by_construction": 2.0,
+    "expected_discourse_states": [
+      {
+        "claim_id": "p3_s03_b02:C1",
+        "source_span": "chance de branca na primeira retirada era 1/2",
+        "source_start": 9,
+        "source_end": 54,
+        "subject": "primeira_branca",
+        "obligation_id": "a.first_white_probability",
+        "expected_state": "SUPERSEDED",
+        "written_value": "1/2",
+        "mathematically_correct": false,
+        "superseded_by": [
+          "p3_s03_b02:C2"
+        ]
+      },
+      {
+        "claim_id": "p3_s03_b02:C2",
+        "source_span": "primeira_branca: 2/6=1/3",
+        "source_start": 99,
+        "source_end": 123,
+        "subject": "primeira_branca",
+        "obligation_id": "a.first_white_probability",
+        "expected_state": "ACTIVE",
+        "written_value": "2/6=1/3",
+        "mathematically_correct": true,
+        "superseded_by": []
+      }
+    ],
+    "expected_obligations_satisfied": [
+      "a.first_white_probability"
+    ],
+    "expected_obligations_unsatisfied": [
+      "a.bottom_white_count",
+      "b.alternative_complete",
+      "b.different_favorable",
+      "b.ordered_pairs",
+      "b.same_compartment",
+      "b.second_white_probability",
+      "c.conditional_success_1",
+      "c.conditional_success_2",
+      "c.continue_compartments",
+      "c.strategy_case_1",
+      "c.strategy_case_2",
+      "c.total_win_probability"
+    ],
+    "expected_conflicts": [],
+    "expected_hard_vetoes": [],
+    "expected_non_veto_conflict_visibility": [],
+    "expected_awards": [
+      {
+        "rubric_item": "a",
+        "rule_id": "a.probability",
+        "points": 2.0,
+        "routes": [
+          "DETERMINISTIC"
+        ],
+        "obligations": [
+          {
+            "obligation_id": "a.first_white_probability",
+            "eligible": true,
+            "verification_route": "DETERMINISTIC",
+            "evidence_ids": [
+              "p3_s03_b02"
+            ]
+          }
+        ]
+      }
+    ],
+    "expected_guard_behavior": {
+      "guard_generated_awards": 0,
+      "hard_veto_only_from_active_checked_contradiction": true,
+      "nonactive_hard_veto": false
+    },
+    "rationale": "Correção após conta; igualdade escrita verifica a resposta nova.",
+    "expected_active_claims": [
+      {
+        "claim_id": "p3_s03_b02:C2",
+        "source_span": "primeira_branca: 2/6=1/3",
+        "source_start": 99,
+        "source_end": 123,
+        "subject": "primeira_branca",
+        "obligation_id": "a.first_white_probability",
+        "expected_state": "ACTIVE",
+        "written_value": "2/6=1/3",
+        "mathematically_correct": true,
+        "superseded_by": []
+      }
+    ],
+    "expected_superseded_claims": [
+      {
+        "claim_id": "p3_s03_b02:C1",
+        "source_span": "chance de branca na primeira retirada era 1/2",
+        "source_start": 9,
+        "source_end": 54,
+        "subject": "primeira_branca",
+        "obligation_id": "a.first_white_probability",
+        "expected_state": "SUPERSEDED",
+        "written_value": "1/2",
+        "mathematically_correct": false,
+        "superseded_by": [
+          "p3_s03_b02:C2"
+        ]
+      }
+    ],
+    "expected_non_adopted_claims": [],
+    "expected_ambiguous_claims": []
+  },
+  {
+    "case_id": "p3_s03_b03",
+    "family": "B",
+    "expected_score_by_construction": 2.0,
+    "expected_discourse_states": [
+      {
+        "claim_id": "p3_s03_b03:C1",
+        "source_span": "Registrei segunda_branca: 1/4",
+        "source_start": 3,
+        "source_end": 32,
+        "subject": "segunda_branca",
+        "obligation_id": "b.second_white_probability",
+        "expected_state": "SUPERSEDED",
+        "written_value": "1/4",
+        "mathematically_correct": false,
+        "superseded_by": [
+          "p3_s03_b03:C2"
+        ]
+      },
+      {
+        "claim_id": "p3_s03_b03:C2",
+        "source_span": "adoto segunda_branca: 11/36",
+        "source_start": 84,
+        "source_end": 111,
+        "subject": "segunda_branca",
+        "obligation_id": "b.second_white_probability",
+        "expected_state": "ACTIVE",
+        "written_value": "11/36",
+        "mathematically_correct": true,
+        "superseded_by": []
+      }
+    ],
+    "expected_obligations_satisfied": [
+      "b.second_white_probability"
+    ],
+    "expected_obligations_unsatisfied": [
+      "a.bottom_white_count",
+      "a.first_white_probability",
+      "b.alternative_complete",
+      "b.different_favorable",
+      "b.ordered_pairs",
+      "b.same_compartment",
+      "c.conditional_success_1",
+      "c.conditional_success_2",
+      "c.continue_compartments",
+      "c.strategy_case_1",
+      "c.strategy_case_2",
+      "c.total_win_probability"
+    ],
+    "expected_conflicts": [],
+    "expected_hard_vetoes": [],
+    "expected_non_veto_conflict_visibility": [],
+    "expected_awards": [
+      {
+        "rubric_item": "b",
+        "rule_id": "b.conclusion",
+        "points": 2.0,
+        "routes": [
+          "DETERMINISTIC"
+        ],
+        "obligations": [
+          {
+            "obligation_id": "b.second_white_probability",
+            "eligible": true,
+            "verification_route": "DETERMINISTIC",
+            "evidence_ids": [
+              "p3_s03_b03"
+            ]
+          }
+        ]
+      }
+    ],
+    "expected_guard_behavior": {
+      "guard_generated_awards": 0,
+      "hard_veto_only_from_active_checked_contradiction": true,
+      "nonactive_hard_veto": false
+    },
+    "rationale": "Substituição explícita do valor final, apenas os dois pontos do resultado.",
+    "expected_active_claims": [
+      {
+        "claim_id": "p3_s03_b03:C2",
+        "source_span": "adoto segunda_branca: 11/36",
+        "source_start": 84,
+        "source_end": 111,
+        "subject": "segunda_branca",
+        "obligation_id": "b.second_white_probability",
+        "expected_state": "ACTIVE",
+        "written_value": "11/36",
+        "mathematically_correct": true,
+        "superseded_by": []
+      }
+    ],
+    "expected_superseded_claims": [
+      {
+        "claim_id": "p3_s03_b03:C1",
+        "source_span": "Registrei segunda_branca: 1/4",
+        "source_start": 3,
+        "source_end": 32,
+        "subject": "segunda_branca",
+        "obligation_id": "b.second_white_probability",
+        "expected_state": "SUPERSEDED",
+        "written_value": "1/4",
+        "mathematically_correct": false,
+        "superseded_by": [
+          "p3_s03_b03:C2"
+        ]
+      }
+    ],
+    "expected_non_adopted_claims": [],
+    "expected_ambiguous_claims": []
+  },
+  {
+    "case_id": "p3_s03_b04",
+    "family": "B",
+    "expected_score_by_construction": 1.0,
+    "expected_discourse_states": [
+      {
+        "claim_id": "p3_s03_b04:C1",
+        "source_span": "indicação para continuar era o conjunto {1,4}",
+        "source_start": 5,
+        "source_end": 50,
+        "subject": "continuar",
+        "obligation_id": "c.continue_compartments",
+        "expected_state": "SUPERSEDED",
+        "written_value": "{1,4}",
+        "mathematically_correct": false,
+        "superseded_by": [
+          "p3_s03_b04:C2"
+        ]
+      },
+      {
+        "claim_id": "p3_s03_b04:C2",
+        "source_span": "continuar: {1,2}",
+        "source_start": 95,
+        "source_end": 111,
+        "subject": "continuar",
+        "obligation_id": "c.continue_compartments",
+        "expected_state": "ACTIVE",
+        "written_value": "{1,2}",
+        "mathematically_correct": true,
+        "superseded_by": []
+      }
+    ],
+    "expected_obligations_satisfied": [
+      "c.continue_compartments"
+    ],
+    "expected_obligations_unsatisfied": [
+      "a.bottom_white_count",
+      "a.first_white_probability",
+      "b.alternative_complete",
+      "b.different_favorable",
+      "b.ordered_pairs",
+      "b.same_compartment",
+      "b.second_white_probability",
+      "c.conditional_success_1",
+      "c.conditional_success_2",
+      "c.strategy_case_1",
+      "c.strategy_case_2",
+      "c.total_win_probability"
+    ],
+    "expected_conflicts": [],
+    "expected_hard_vetoes": [],
+    "expected_non_veto_conflict_visibility": [],
+    "expected_awards": [
+      {
+        "rubric_item": "c",
+        "rule_id": "c.continue",
+        "points": 1.0,
+        "routes": [
+          "DETERMINISTIC"
+        ],
+        "obligations": [
+          {
+            "obligation_id": "c.continue_compartments",
+            "eligible": true,
+            "verification_route": "DETERMINISTIC",
+            "evidence_ids": [
+              "p3_s03_b04"
+            ]
+          }
+        ]
+      }
+    ],
+    "expected_guard_behavior": {
+      "guard_generated_awards": 0,
+      "hard_veto_only_from_active_checked_contradiction": true,
+      "nonactive_hard_veto": false
+    },
+    "rationale": "Correção de um índice do conjunto, não ampliação cumulativa.",
+    "expected_active_claims": [
+      {
+        "claim_id": "p3_s03_b04:C2",
+        "source_span": "continuar: {1,2}",
+        "source_start": 95,
+        "source_end": 111,
+        "subject": "continuar",
+        "obligation_id": "c.continue_compartments",
+        "expected_state": "ACTIVE",
+        "written_value": "{1,2}",
+        "mathematically_correct": true,
+        "superseded_by": []
+      }
+    ],
+    "expected_superseded_claims": [
+      {
+        "claim_id": "p3_s03_b04:C1",
+        "source_span": "indicação para continuar era o conjunto {1,4}",
+        "source_start": 5,
+        "source_end": 50,
+        "subject": "continuar",
+        "obligation_id": "c.continue_compartments",
+        "expected_state": "SUPERSEDED",
+        "written_value": "{1,4}",
+        "mathematically_correct": false,
+        "superseded_by": [
+          "p3_s03_b04:C2"
+        ]
+      }
+    ],
+    "expected_non_adopted_claims": [],
+    "expected_ambiguous_claims": []
+  },
+  {
+    "case_id": "p3_s03_b05",
+    "family": "B",
+    "expected_score_by_construction": 2.0,
+    "expected_discourse_states": [
+      {
+        "claim_id": "p3_s03_b05:C1",
+        "source_span": "probabilidade da segunda branca ficou anotada como 7/36",
+        "source_start": 5,
+        "source_end": 60,
+        "subject": "segunda_branca",
+        "obligation_id": "b.second_white_probability",
+        "expected_state": "SUPERSEDED",
+        "written_value": "7/36",
+        "mathematically_correct": false,
+        "superseded_by": [
+          "p3_s03_b05:C2"
+        ]
+      },
+      {
+        "claim_id": "p3_s03_b05:C2",
+        "source_span": "resultado da segunda branca: 11/36",
+        "source_start": 124,
+        "source_end": 158,
+        "subject": "segunda_branca",
+        "obligation_id": "b.second_white_probability",
+        "expected_state": "ACTIVE",
+        "written_value": "11/36",
+        "mathematically_correct": true,
+        "superseded_by": []
+      }
+    ],
+    "expected_obligations_satisfied": [
+      "b.second_white_probability"
+    ],
+    "expected_obligations_unsatisfied": [
+      "a.bottom_white_count",
+      "a.first_white_probability",
+      "b.alternative_complete",
+      "b.different_favorable",
+      "b.ordered_pairs",
+      "b.same_compartment",
+      "c.conditional_success_1",
+      "c.conditional_success_2",
+      "c.continue_compartments",
+      "c.strategy_case_1",
+      "c.strategy_case_2",
+      "c.total_win_probability"
+    ],
+    "expected_conflicts": [],
+    "expected_hard_vetoes": [],
+    "expected_non_veto_conflict_visibility": [],
+    "expected_awards": [
+      {
+        "rubric_item": "b",
+        "rule_id": "b.conclusion",
+        "points": 2.0,
+        "routes": [
+          "DETERMINISTIC"
+        ],
+        "obligations": [
+          {
+            "obligation_id": "b.second_white_probability",
+            "eligible": true,
+            "verification_route": "DETERMINISTIC",
+            "evidence_ids": [
+              "p3_s03_b05"
+            ]
+          }
+        ]
+      }
+    ],
+    "expected_guard_behavior": {
+      "guard_generated_awards": 0,
+      "hard_veto_only_from_active_checked_contradiction": true,
+      "nonactive_hard_veto": false
+    },
+    "rationale": "Probabilidade revisada; referência inequívoca ao valor anterior.",
+    "expected_active_claims": [
+      {
+        "claim_id": "p3_s03_b05:C2",
+        "source_span": "resultado da segunda branca: 11/36",
+        "source_start": 124,
+        "source_end": 158,
+        "subject": "segunda_branca",
+        "obligation_id": "b.second_white_probability",
+        "expected_state": "ACTIVE",
+        "written_value": "11/36",
+        "mathematically_correct": true,
+        "superseded_by": []
+      }
+    ],
+    "expected_superseded_claims": [
+      {
+        "claim_id": "p3_s03_b05:C1",
+        "source_span": "probabilidade da segunda branca ficou anotada como 7/36",
+        "source_start": 5,
+        "source_end": 60,
+        "subject": "segunda_branca",
+        "obligation_id": "b.second_white_probability",
+        "expected_state": "SUPERSEDED",
+        "written_value": "7/36",
+        "mathematically_correct": false,
+        "superseded_by": [
+          "p3_s03_b05:C2"
+        ]
+      }
+    ],
+    "expected_non_adopted_claims": [],
+    "expected_ambiguous_claims": []
+  },
+  {
+    "case_id": "p3_s03_b06",
+    "family": "B",
+    "expected_score_by_construction": 2.0,
+    "expected_discourse_states": [
+      {
+        "claim_id": "p3_s03_b06:C1",
+        "source_span": "minha aposta era cinza",
+        "source_start": 45,
+        "source_end": 67,
+        "subject": "estrategia_1",
+        "obligation_id": "c.strategy_case_1",
+        "expected_state": "SUPERSEDED",
+        "written_value": "cinza",
+        "mathematically_correct": false,
+        "superseded_by": [
+          "p3_s03_b06:C2"
+        ]
+      },
+      {
+        "claim_id": "p3_s03_b06:C2",
+        "source_span": "estrategia_1: preta",
+        "source_start": 98,
+        "source_end": 117,
+        "subject": "estrategia_1",
+        "obligation_id": "c.strategy_case_1",
+        "expected_state": "ACTIVE",
+        "written_value": "preta",
+        "mathematically_correct": true,
+        "superseded_by": []
+      },
+      {
+        "claim_id": "p3_s03_b06:C3",
+        "source_span": "contagem_1: 3",
+        "source_start": 141,
+        "source_end": 154,
+        "subject": "contagem_1",
+        "obligation_id": "c.strategy_case_1",
+        "expected_state": "ACTIVE",
+        "written_value": "3",
+        "mathematically_correct": true,
+        "superseded_by": []
+      }
+    ],
+    "expected_obligations_satisfied": [
+      "c.strategy_case_1"
+    ],
+    "expected_obligations_unsatisfied": [
+      "a.bottom_white_count",
+      "a.first_white_probability",
+      "b.alternative_complete",
+      "b.different_favorable",
+      "b.ordered_pairs",
+      "b.same_compartment",
+      "b.second_white_probability",
+      "c.conditional_success_1",
+      "c.conditional_success_2",
+      "c.continue_compartments",
+      "c.strategy_case_2",
+      "c.total_win_probability"
+    ],
+    "expected_conflicts": [],
+    "expected_hard_vetoes": [],
+    "expected_non_veto_conflict_visibility": [],
+    "expected_awards": [
+      {
+        "rubric_item": "c",
+        "rule_id": "c.first_strategy",
+        "points": 2.0,
+        "routes": [
+          "DETERMINISTIC"
+        ],
+        "obligations": [
+          {
+            "obligation_id": "c.strategy_case_1",
+            "eligible": true,
+            "verification_route": "DETERMINISTIC",
+            "evidence_ids": [
+              "p3_s03_b06"
+            ]
+          }
+        ]
+      }
+    ],
+    "expected_guard_behavior": {
+      "guard_generated_awards": 0,
+      "hard_veto_only_from_active_checked_contradiction": true,
+      "nonactive_hard_veto": false
+    },
+    "rationale": "Revisão de cor no mesmo caso; contagem nova refere-se à preta.",
+    "expected_active_claims": [
+      {
+        "claim_id": "p3_s03_b06:C2",
+        "source_span": "estrategia_1: preta",
+        "source_start": 98,
+        "source_end": 117,
+        "subject": "estrategia_1",
+        "obligation_id": "c.strategy_case_1",
+        "expected_state": "ACTIVE",
+        "written_value": "preta",
+        "mathematically_correct": true,
+        "superseded_by": []
+      },
+      {
+        "claim_id": "p3_s03_b06:C3",
+        "source_span": "contagem_1: 3",
+        "source_start": 141,
+        "source_end": 154,
+        "subject": "contagem_1",
+        "obligation_id": "c.strategy_case_1",
+        "expected_state": "ACTIVE",
+        "written_value": "3",
+        "mathematically_correct": true,
+        "superseded_by": []
+      }
+    ],
+    "expected_superseded_claims": [
+      {
+        "claim_id": "p3_s03_b06:C1",
+        "source_span": "minha aposta era cinza",
+        "source_start": 45,
+        "source_end": 67,
+        "subject": "estrategia_1",
+        "obligation_id": "c.strategy_case_1",
+        "expected_state": "SUPERSEDED",
+        "written_value": "cinza",
+        "mathematically_correct": false,
+        "superseded_by": [
+          "p3_s03_b06:C2"
+        ]
+      }
+    ],
+    "expected_non_adopted_claims": [],
+    "expected_ambiguous_claims": []
+  },
+  {
+    "case_id": "p3_s03_b07",
+    "family": "B",
+    "expected_score_by_construction": 2.0,
+    "expected_discourse_states": [
+      {
+        "claim_id": "p3_s03_b07:C1",
+        "source_span": "Escrevi primeira_branca: 1/6",
+        "source_start": 3,
+        "source_end": 31,
+        "subject": "primeira_branca",
+        "obligation_id": "a.first_white_probability",
+        "expected_state": "SUPERSEDED",
+        "written_value": "1/6",
+        "mathematically_correct": false,
+        "superseded_by": [
+          "p3_s03_b07:C3"
+        ]
+      },
+      {
+        "claim_id": "p3_s03_b07:C2",
+        "source_span": "primeira_branca: 1/6 →",
+        "source_start": 76,
+        "source_end": 98,
+        "subject": "primeira_branca",
+        "obligation_id": "a.first_white_probability",
+        "expected_state": "SUPERSEDED",
+        "written_value": "1/6",
+        "mathematically_correct": false,
+        "superseded_by": [
+          "p3_s03_b07:C3"
+        ]
+      },
+      {
+        "claim_id": "p3_s03_b07:C3",
+        "source_span": "primeira_branca: 1/3",
+        "source_start": 99,
+        "source_end": 119,
+        "subject": "primeira_branca",
+        "obligation_id": "a.first_white_probability",
+        "expected_state": "ACTIVE",
+        "written_value": "1/3",
+        "mathematically_correct": true,
+        "superseded_by": []
+      }
+    ],
+    "expected_obligations_satisfied": [
+      "a.first_white_probability"
+    ],
+    "expected_obligations_unsatisfied": [
+      "a.bottom_white_count",
+      "b.alternative_complete",
+      "b.different_favorable",
+      "b.ordered_pairs",
+      "b.same_compartment",
+      "b.second_white_probability",
+      "c.conditional_success_1",
+      "c.conditional_success_2",
+      "c.continue_compartments",
+      "c.strategy_case_1",
+      "c.strategy_case_2",
+      "c.total_win_probability"
+    ],
+    "expected_conflicts": [],
+    "expected_hard_vetoes": [],
+    "expected_non_veto_conflict_visibility": [],
+    "expected_awards": [
+      {
+        "rubric_item": "a",
+        "rule_id": "a.probability",
+        "points": 2.0,
+        "routes": [
+          "DETERMINISTIC"
+        ],
+        "obligations": [
+          {
+            "obligation_id": "a.first_white_probability",
+            "eligible": true,
+            "verification_route": "DETERMINISTIC",
+            "evidence_ids": [
+              "p3_s03_b07"
+            ]
+          }
+        ]
+      }
+    ],
+    "expected_guard_behavior": {
+      "guard_generated_awards": 0,
+      "hard_veto_only_from_active_checked_contradiction": true,
+      "nonactive_hard_veto": false
+    },
+    "rationale": "Substituição simbólica com direção e adoção verbal explícitas.",
+    "expected_active_claims": [
+      {
+        "claim_id": "p3_s03_b07:C3",
+        "source_span": "primeira_branca: 1/3",
+        "source_start": 99,
+        "source_end": 119,
+        "subject": "primeira_branca",
+        "obligation_id": "a.first_white_probability",
+        "expected_state": "ACTIVE",
+        "written_value": "1/3",
+        "mathematically_correct": true,
+        "superseded_by": []
+      }
+    ],
+    "expected_superseded_claims": [
+      {
+        "claim_id": "p3_s03_b07:C1",
+        "source_span": "Escrevi primeira_branca: 1/6",
+        "source_start": 3,
+        "source_end": 31,
+        "subject": "primeira_branca",
+        "obligation_id": "a.first_white_probability",
+        "expected_state": "SUPERSEDED",
+        "written_value": "1/6",
+        "mathematically_correct": false,
+        "superseded_by": [
+          "p3_s03_b07:C3"
+        ]
+      },
+      {
+        "claim_id": "p3_s03_b07:C2",
+        "source_span": "primeira_branca: 1/6 →",
+        "source_start": 76,
+        "source_end": 98,
+        "subject": "primeira_branca",
+        "obligation_id": "a.first_white_probability",
+        "expected_state": "SUPERSEDED",
+        "written_value": "1/6",
+        "mathematically_correct": false,
+        "superseded_by": [
+          "p3_s03_b07:C3"
+        ]
+      }
+    ],
+    "expected_non_adopted_claims": [],
+    "expected_ambiguous_claims": []
+  },
+  {
+    "case_id": "p3_s03_b08",
+    "family": "B",
+    "expected_score_by_construction": 2.0,
+    "expected_discourse_states": [
+      {
+        "claim_id": "p3_s03_b08:C1",
+        "source_span": "quatro brancas na base",
+        "source_start": 17,
+        "source_end": 39,
+        "subject": "inferiores_brancas",
+        "obligation_id": "a.bottom_white_count",
+        "expected_state": "SUPERSEDED",
+        "written_value": "4",
+        "mathematically_correct": false,
+        "superseded_by": [
+          "p3_s03_b08:C2"
+        ]
+      },
+      {
+        "claim_id": "p3_s03_b08:C2",
+        "source_span": "bolas brancas inferiores é duas",
+        "source_start": 105,
+        "source_end": 136,
+        "subject": "inferiores_brancas",
+        "obligation_id": "a.bottom_white_count",
+        "expected_state": "ACTIVE",
+        "written_value": "2",
+        "mathematically_correct": true,
+        "superseded_by": []
+      }
+    ],
+    "expected_obligations_satisfied": [
+      "a.bottom_white_count"
+    ],
+    "expected_obligations_unsatisfied": [
+      "a.first_white_probability",
+      "b.alternative_complete",
+      "b.different_favorable",
+      "b.ordered_pairs",
+      "b.same_compartment",
+      "b.second_white_probability",
+      "c.conditional_success_1",
+      "c.conditional_success_2",
+      "c.continue_compartments",
+      "c.strategy_case_1",
+      "c.strategy_case_2",
+      "c.total_win_probability"
+    ],
+    "expected_conflicts": [],
+    "expected_hard_vetoes": [],
+    "expected_non_veto_conflict_visibility": [],
+    "expected_awards": [
+      {
+        "rubric_item": "a",
+        "rule_id": "a.count",
+        "points": 2.0,
+        "routes": [
+          "DETERMINISTIC"
+        ],
+        "obligations": [
+          {
+            "obligation_id": "a.bottom_white_count",
+            "eligible": true,
+            "verification_route": "DETERMINISTIC",
+            "evidence_ids": [
+              "p3_s03_b08"
+            ]
+          }
+        ]
+      }
+    ],
+    "expected_guard_behavior": {
+      "guard_generated_awards": 0,
+      "hard_veto_only_from_active_checked_contradiction": true,
+      "nonactive_hard_veto": false
+    },
+    "rationale": "Revisão verbal retrospectiva de alvo único, sem hipótese alternativa.",
+    "expected_active_claims": [
+      {
+        "claim_id": "p3_s03_b08:C2",
+        "source_span": "bolas brancas inferiores é duas",
+        "source_start": 105,
+        "source_end": 136,
+        "subject": "inferiores_brancas",
+        "obligation_id": "a.bottom_white_count",
+        "expected_state": "ACTIVE",
+        "written_value": "2",
+        "mathematically_correct": true,
+        "superseded_by": []
+      }
+    ],
+    "expected_superseded_claims": [
+      {
+        "claim_id": "p3_s03_b08:C1",
+        "source_span": "quatro brancas na base",
+        "source_start": 17,
+        "source_end": 39,
+        "subject": "inferiores_brancas",
+        "obligation_id": "a.bottom_white_count",
+        "expected_state": "SUPERSEDED",
+        "written_value": "4",
+        "mathematically_correct": false,
+        "superseded_by": [
+          "p3_s03_b08:C2"
+        ]
+      }
+    ],
+    "expected_non_adopted_claims": [],
+    "expected_ambiguous_claims": []
+  },
+  {
+    "case_id": "p3_s03_c01",
+    "family": "C",
+    "expected_score_by_construction": 2.0,
+    "expected_discourse_states": [
+      {
+        "claim_id": "p3_s03_c01:C1",
+        "source_span": "chance de primeira branca seria 3/4",
+        "source_start": 54,
+        "source_end": 89,
+        "subject": "primeira_branca",
+        "obligation_id": "a.first_white_probability",
+        "expected_state": "NON_ADOPTED",
+        "written_value": "3/4",
+        "mathematically_correct": false,
+        "superseded_by": []
+      },
+      {
+        "claim_id": "p3_s03_c01:C2",
+        "source_span": "base contém 2 bolas brancas",
+        "source_start": 125,
+        "source_end": 152,
+        "subject": "inferiores_brancas",
+        "obligation_id": "a.bottom_white_count",
+        "expected_state": "ACTIVE",
+        "written_value": "2",
+        "mathematically_correct": true,
+        "superseded_by": []
+      }
+    ],
+    "expected_obligations_satisfied": [
+      "a.bottom_white_count"
+    ],
+    "expected_obligations_unsatisfied": [
+      "a.first_white_probability",
+      "b.alternative_complete",
+      "b.different_favorable",
+      "b.ordered_pairs",
+      "b.same_compartment",
+      "b.second_white_probability",
+      "c.conditional_success_1",
+      "c.conditional_success_2",
+      "c.continue_compartments",
+      "c.strategy_case_1",
+      "c.strategy_case_2",
+      "c.total_win_probability"
+    ],
+    "expected_conflicts": [],
+    "expected_hard_vetoes": [],
+    "expected_non_veto_conflict_visibility": [],
+    "expected_awards": [
+      {
+        "rubric_item": "a",
+        "rule_id": "a.count",
+        "points": 2.0,
+        "routes": [
+          "DETERMINISTIC"
+        ],
+        "obligations": [
+          {
+            "obligation_id": "a.bottom_white_count",
+            "eligible": true,
+            "verification_route": "DETERMINISTIC",
+            "evidence_ids": [
+              "p3_s03_c01"
+            ]
+          }
+        ]
+      }
+    ],
+    "expected_guard_behavior": {
+      "guard_generated_awards": 0,
+      "hard_veto_only_from_active_checked_contradiction": true,
+      "nonactive_hard_veto": false
+    },
+    "rationale": "Hipótese sem adoção; contagem própria independente.",
+    "expected_active_claims": [
+      {
+        "claim_id": "p3_s03_c01:C2",
+        "source_span": "base contém 2 bolas brancas",
+        "source_start": 125,
+        "source_end": 152,
+        "subject": "inferiores_brancas",
+        "obligation_id": "a.bottom_white_count",
+        "expected_state": "ACTIVE",
+        "written_value": "2",
+        "mathematically_correct": true,
+        "superseded_by": []
+      }
+    ],
+    "expected_superseded_claims": [],
+    "expected_non_adopted_claims": [
+      {
+        "claim_id": "p3_s03_c01:C1",
+        "source_span": "chance de primeira branca seria 3/4",
+        "source_start": 54,
+        "source_end": 89,
+        "subject": "primeira_branca",
+        "obligation_id": "a.first_white_probability",
+        "expected_state": "NON_ADOPTED",
+        "written_value": "3/4",
+        "mathematically_correct": false,
+        "superseded_by": []
+      }
+    ],
+    "expected_ambiguous_claims": []
+  },
+  {
+    "case_id": "p3_s03_c02",
+    "family": "C",
+    "expected_score_by_construction": 2.0,
+    "expected_discourse_states": [
+      {
+        "claim_id": "p3_s03_c02:C1",
+        "source_span": "Raul defendeu primeira_branca: 1/5",
+        "source_start": 17,
+        "source_end": 51,
+        "subject": "primeira_branca",
+        "obligation_id": "a.first_white_probability",
+        "expected_state": "NON_ADOPTED",
+        "written_value": "1/5",
+        "mathematically_correct": false,
+        "superseded_by": []
+      },
+      {
+        "claim_id": "p3_s03_c02:C2",
+        "source_span": "Minha resposta, separadamente, é primeira_branca: 1/3",
+        "source_start": 78,
+        "source_end": 131,
+        "subject": "primeira_branca",
+        "obligation_id": "a.first_white_probability",
+        "expected_state": "ACTIVE",
+        "written_value": "1/3",
+        "mathematically_correct": true,
+        "superseded_by": []
+      }
+    ],
+    "expected_obligations_satisfied": [
+      "a.first_white_probability"
+    ],
+    "expected_obligations_unsatisfied": [
+      "a.bottom_white_count",
+      "b.alternative_complete",
+      "b.different_favorable",
+      "b.ordered_pairs",
+      "b.same_compartment",
+      "b.second_white_probability",
+      "c.conditional_success_1",
+      "c.conditional_success_2",
+      "c.continue_compartments",
+      "c.strategy_case_1",
+      "c.strategy_case_2",
+      "c.total_win_probability"
+    ],
+    "expected_conflicts": [],
+    "expected_hard_vetoes": [],
+    "expected_non_veto_conflict_visibility": [],
+    "expected_awards": [
+      {
+        "rubric_item": "a",
+        "rule_id": "a.probability",
+        "points": 2.0,
+        "routes": [
+          "DETERMINISTIC"
+        ],
+        "obligations": [
+          {
+            "obligation_id": "a.first_white_probability",
+            "eligible": true,
+            "verification_route": "DETERMINISTIC",
+            "evidence_ids": [
+              "p3_s03_c02"
+            ]
+          }
+        ]
+      }
+    ],
+    "expected_guard_behavior": {
+      "guard_generated_awards": 0,
+      "hard_veto_only_from_active_checked_contradiction": true,
+      "nonactive_hard_veto": false
+    },
+    "rationale": "Terceiro citado sem adesão, resposta própria explícita.",
+    "expected_active_claims": [
+      {
+        "claim_id": "p3_s03_c02:C2",
+        "source_span": "Minha resposta, separadamente, é primeira_branca: 1/3",
+        "source_start": 78,
+        "source_end": 131,
+        "subject": "primeira_branca",
+        "obligation_id": "a.first_white_probability",
+        "expected_state": "ACTIVE",
+        "written_value": "1/3",
+        "mathematically_correct": true,
+        "superseded_by": []
+      }
+    ],
+    "expected_superseded_claims": [],
+    "expected_non_adopted_claims": [
+      {
+        "claim_id": "p3_s03_c02:C1",
+        "source_span": "Raul defendeu primeira_branca: 1/5",
+        "source_start": 17,
+        "source_end": 51,
+        "subject": "primeira_branca",
+        "obligation_id": "a.first_white_probability",
+        "expected_state": "NON_ADOPTED",
+        "written_value": "1/5",
+        "mathematically_correct": false,
+        "superseded_by": []
+      }
+    ],
+    "expected_ambiguous_claims": []
+  },
+  {
+    "case_id": "p3_s03_c03",
+    "family": "C",
+    "expected_score_by_construction": 1.0,
+    "expected_discourse_states": [
+      {
+        "claim_id": "p3_s03_c03:C1",
+        "source_span": "a primeira bola de baixo do compartimento 1 é branca",
+        "source_start": 80,
+        "source_end": 132,
+        "subject": "unmapped",
+        "obligation_id": null,
+        "expected_state": "NON_ADOPTED",
+        "written_value": null,
+        "mathematically_correct": null,
+        "superseded_by": []
+      },
+      {
+        "claim_id": "p3_s03_c03:C2",
+        "source_span": "continuar: {1,2}",
+        "source_start": 178,
+        "source_end": 194,
+        "subject": "continuar",
+        "obligation_id": "c.continue_compartments",
+        "expected_state": "ACTIVE",
+        "written_value": "{1,2}",
+        "mathematically_correct": true,
+        "superseded_by": []
+      }
+    ],
+    "expected_obligations_satisfied": [
+      "c.continue_compartments"
+    ],
+    "expected_obligations_unsatisfied": [
+      "a.bottom_white_count",
+      "a.first_white_probability",
+      "b.alternative_complete",
+      "b.different_favorable",
+      "b.ordered_pairs",
+      "b.same_compartment",
+      "b.second_white_probability",
+      "c.conditional_success_1",
+      "c.conditional_success_2",
+      "c.strategy_case_1",
+      "c.strategy_case_2",
+      "c.total_win_probability"
+    ],
+    "expected_conflicts": [],
+    "expected_hard_vetoes": [],
+    "expected_non_veto_conflict_visibility": [],
+    "expected_awards": [
+      {
+        "rubric_item": "c",
+        "rule_id": "c.continue",
+        "points": 1.0,
+        "routes": [
+          "DETERMINISTIC"
+        ],
+        "obligations": [
+          {
+            "obligation_id": "c.continue_compartments",
+            "eligible": true,
+            "verification_route": "DETERMINISTIC",
+            "evidence_ids": [
+              "p3_s03_c03"
+            ]
+          }
+        ]
+      }
+    ],
+    "expected_guard_behavior": {
+      "guard_generated_awards": 0,
+      "hard_veto_only_from_active_checked_contradiction": true,
+      "nonactive_hard_veto": false
+    },
+    "rationale": "Dado copiado não prova obrigação; conjunto de continuação é resposta adotada.",
+    "expected_active_claims": [
+      {
+        "claim_id": "p3_s03_c03:C2",
+        "source_span": "continuar: {1,2}",
+        "source_start": 178,
+        "source_end": 194,
+        "subject": "continuar",
+        "obligation_id": "c.continue_compartments",
+        "expected_state": "ACTIVE",
+        "written_value": "{1,2}",
+        "mathematically_correct": true,
+        "superseded_by": []
+      }
+    ],
+    "expected_superseded_claims": [],
+    "expected_non_adopted_claims": [
+      {
+        "claim_id": "p3_s03_c03:C1",
+        "source_span": "a primeira bola de baixo do compartimento 1 é branca",
+        "source_start": 80,
+        "source_end": 132,
+        "subject": "unmapped",
+        "obligation_id": null,
+        "expected_state": "NON_ADOPTED",
+        "written_value": null,
+        "mathematically_correct": null,
+        "superseded_by": []
+      }
+    ],
+    "expected_ambiguous_claims": []
+  },
+  {
+    "case_id": "p3_s03_c04",
+    "family": "C",
+    "expected_score_by_construction": 2.0,
+    "expected_discourse_states": [
+      {
+        "claim_id": "p3_s03_c04:C1",
+        "source_span": "alternativa segunda_branca: 5/18",
+        "source_start": 19,
+        "source_end": 51,
+        "subject": "segunda_branca",
+        "obligation_id": "b.second_white_probability",
+        "expected_state": "NON_ADOPTED",
+        "written_value": "5/18",
+        "mathematically_correct": false,
+        "superseded_by": []
+      },
+      {
+        "claim_id": "p3_s03_c04:C2",
+        "source_span": "resposta que entrego para a segunda branca é 11/36",
+        "source_start": 70,
+        "source_end": 120,
+        "subject": "segunda_branca",
+        "obligation_id": "b.second_white_probability",
+        "expected_state": "ACTIVE",
+        "written_value": "11/36",
+        "mathematically_correct": true,
+        "superseded_by": []
+      }
+    ],
+    "expected_obligations_satisfied": [
+      "b.second_white_probability"
+    ],
+    "expected_obligations_unsatisfied": [
+      "a.bottom_white_count",
+      "a.first_white_probability",
+      "b.alternative_complete",
+      "b.different_favorable",
+      "b.ordered_pairs",
+      "b.same_compartment",
+      "c.conditional_success_1",
+      "c.conditional_success_2",
+      "c.continue_compartments",
+      "c.strategy_case_1",
+      "c.strategy_case_2",
+      "c.total_win_probability"
+    ],
+    "expected_conflicts": [],
+    "expected_hard_vetoes": [],
+    "expected_non_veto_conflict_visibility": [],
+    "expected_awards": [
+      {
+        "rubric_item": "b",
+        "rule_id": "b.conclusion",
+        "points": 2.0,
+        "routes": [
+          "DETERMINISTIC"
+        ],
+        "obligations": [
+          {
+            "obligation_id": "b.second_white_probability",
+            "eligible": true,
+            "verification_route": "DETERMINISTIC",
+            "evidence_ids": [
+              "p3_s03_c04"
+            ]
+          }
+        ]
+      }
+    ],
+    "expected_guard_behavior": {
+      "guard_generated_awards": 0,
+      "hard_veto_only_from_active_checked_contradiction": true,
+      "nonactive_hard_veto": false
+    },
+    "rationale": "Alternativa não adotada, sem substituição de posição previamente própria.",
+    "expected_active_claims": [
+      {
+        "claim_id": "p3_s03_c04:C2",
+        "source_span": "resposta que entrego para a segunda branca é 11/36",
+        "source_start": 70,
+        "source_end": 120,
+        "subject": "segunda_branca",
+        "obligation_id": "b.second_white_probability",
+        "expected_state": "ACTIVE",
+        "written_value": "11/36",
+        "mathematically_correct": true,
+        "superseded_by": []
+      }
+    ],
+    "expected_superseded_claims": [],
+    "expected_non_adopted_claims": [
+      {
+        "claim_id": "p3_s03_c04:C1",
+        "source_span": "alternativa segunda_branca: 5/18",
+        "source_start": 19,
+        "source_end": 51,
+        "subject": "segunda_branca",
+        "obligation_id": "b.second_white_probability",
+        "expected_state": "NON_ADOPTED",
+        "written_value": "5/18",
+        "mathematically_correct": false,
+        "superseded_by": []
+      }
+    ],
+    "expected_ambiguous_claims": []
+  },
+  {
+    "case_id": "p3_s03_c05",
+    "family": "C",
+    "expected_score_by_construction": 2.0,
+    "expected_discourse_states": [
+      {
+        "claim_id": "p3_s03_c05:C1",
+        "source_span": "imagine primeira_branca: 2/3",
+        "source_start": 38,
+        "source_end": 66,
+        "subject": "primeira_branca",
+        "obligation_id": "a.first_white_probability",
+        "expected_state": "NON_ADOPTED",
+        "written_value": "2/3",
+        "mathematically_correct": false,
+        "superseded_by": []
+      },
+      {
+        "claim_id": "p3_s03_c05:C2",
+        "source_span": "probabilidade da primeira branca que calculo é 1/3",
+        "source_start": 124,
+        "source_end": 174,
+        "subject": "primeira_branca",
+        "obligation_id": "a.first_white_probability",
+        "expected_state": "ACTIVE",
+        "written_value": "1/3",
+        "mathematically_correct": true,
+        "superseded_by": []
+      }
+    ],
+    "expected_obligations_satisfied": [
+      "a.first_white_probability"
+    ],
+    "expected_obligations_unsatisfied": [
+      "a.bottom_white_count",
+      "b.alternative_complete",
+      "b.different_favorable",
+      "b.ordered_pairs",
+      "b.same_compartment",
+      "b.second_white_probability",
+      "c.conditional_success_1",
+      "c.conditional_success_2",
+      "c.continue_compartments",
+      "c.strategy_case_1",
+      "c.strategy_case_2",
+      "c.total_win_probability"
+    ],
+    "expected_conflicts": [],
+    "expected_hard_vetoes": [],
+    "expected_non_veto_conflict_visibility": [],
+    "expected_awards": [
+      {
+        "rubric_item": "a",
+        "rule_id": "a.probability",
+        "points": 2.0,
+        "routes": [
+          "DETERMINISTIC"
+        ],
+        "obligations": [
+          {
+            "obligation_id": "a.first_white_probability",
+            "eligible": true,
+            "verification_route": "DETERMINISTIC",
+            "evidence_ids": [
+              "p3_s03_c05"
+            ]
+          }
+        ]
+      }
+    ],
+    "expected_guard_behavior": {
+      "guard_generated_awards": 0,
+      "hard_veto_only_from_active_checked_contradiction": true,
+      "nonactive_hard_veto": false
+    },
+    "rationale": "Comparação explicitamente de outro objeto, sem autoridade nesta máquina.",
+    "expected_active_claims": [
+      {
+        "claim_id": "p3_s03_c05:C2",
+        "source_span": "probabilidade da primeira branca que calculo é 1/3",
+        "source_start": 124,
+        "source_end": 174,
+        "subject": "primeira_branca",
+        "obligation_id": "a.first_white_probability",
+        "expected_state": "ACTIVE",
+        "written_value": "1/3",
+        "mathematically_correct": true,
+        "superseded_by": []
+      }
+    ],
+    "expected_superseded_claims": [],
+    "expected_non_adopted_claims": [
+      {
+        "claim_id": "p3_s03_c05:C1",
+        "source_span": "imagine primeira_branca: 2/3",
+        "source_start": 38,
+        "source_end": 66,
+        "subject": "primeira_branca",
+        "obligation_id": "a.first_white_probability",
+        "expected_state": "NON_ADOPTED",
+        "written_value": "2/3",
+        "mathematically_correct": false,
+        "superseded_by": []
+      }
+    ],
+    "expected_ambiguous_claims": []
+  },
+  {
+    "case_id": "p3_s03_c06",
+    "family": "C",
+    "expected_score_by_construction": 2.0,
+    "expected_discourse_states": [
+      {
+        "claim_id": "p3_s03_c06:C1",
+        "source_span": "erro que estou explicando é escrever inferiores_brancas: 6",
+        "source_start": 5,
+        "source_end": 63,
+        "subject": "inferiores_brancas",
+        "obligation_id": "a.bottom_white_count",
+        "expected_state": "NON_ADOPTED",
+        "written_value": "6",
+        "mathematically_correct": false,
+        "superseded_by": []
+      },
+      {
+        "claim_id": "p3_s03_c06:C2",
+        "source_span": "Minha contagem efetiva é inferiores_brancas: 2",
+        "source_start": 139,
+        "source_end": 185,
+        "subject": "inferiores_brancas",
+        "obligation_id": "a.bottom_white_count",
+        "expected_state": "ACTIVE",
+        "written_value": "2",
+        "mathematically_correct": true,
+        "superseded_by": []
+      }
+    ],
+    "expected_obligations_satisfied": [
+      "a.bottom_white_count"
+    ],
+    "expected_obligations_unsatisfied": [
+      "a.first_white_probability",
+      "b.alternative_complete",
+      "b.different_favorable",
+      "b.ordered_pairs",
+      "b.same_compartment",
+      "b.second_white_probability",
+      "c.conditional_success_1",
+      "c.conditional_success_2",
+      "c.continue_compartments",
+      "c.strategy_case_1",
+      "c.strategy_case_2",
+      "c.total_win_probability"
+    ],
+    "expected_conflicts": [],
+    "expected_hard_vetoes": [],
+    "expected_non_veto_conflict_visibility": [],
+    "expected_awards": [
+      {
+        "rubric_item": "a",
+        "rule_id": "a.count",
+        "points": 2.0,
+        "routes": [
+          "DETERMINISTIC"
+        ],
+        "obligations": [
+          {
+            "obligation_id": "a.bottom_white_count",
+            "eligible": true,
+            "verification_route": "DETERMINISTIC",
+            "evidence_ids": [
+              "p3_s03_c06"
+            ]
+          }
+        ]
+      }
+    ],
+    "expected_guard_behavior": {
+      "guard_generated_awards": 0,
+      "hard_veto_only_from_active_checked_contradiction": true,
+      "nonactive_hard_veto": false
+    },
+    "rationale": "Erro mencionado, não tentativa própria retirada; contagem correta independente.",
+    "expected_active_claims": [
+      {
+        "claim_id": "p3_s03_c06:C2",
+        "source_span": "Minha contagem efetiva é inferiores_brancas: 2",
+        "source_start": 139,
+        "source_end": 185,
+        "subject": "inferiores_brancas",
+        "obligation_id": "a.bottom_white_count",
+        "expected_state": "ACTIVE",
+        "written_value": "2",
+        "mathematically_correct": true,
+        "superseded_by": []
+      }
+    ],
+    "expected_superseded_claims": [],
+    "expected_non_adopted_claims": [
+      {
+        "claim_id": "p3_s03_c06:C1",
+        "source_span": "erro que estou explicando é escrever inferiores_brancas: 6",
+        "source_start": 5,
+        "source_end": 63,
+        "subject": "inferiores_brancas",
+        "obligation_id": "a.bottom_white_count",
+        "expected_state": "NON_ADOPTED",
+        "written_value": "6",
+        "mathematically_correct": false,
+        "superseded_by": []
+      }
+    ],
+    "expected_ambiguous_claims": []
+  },
+  {
+    "case_id": "p3_s03_c07",
+    "family": "C",
+    "expected_score_by_construction": 2.0,
+    "expected_discourse_states": [
+      {
+        "claim_id": "p3_s03_c07:C1",
+        "source_span": "segunda branca teria probabilidade 1",
+        "source_start": 14,
+        "source_end": 50,
+        "subject": "segunda_branca",
+        "obligation_id": "b.second_white_probability",
+        "expected_state": "NON_ADOPTED",
+        "written_value": "1",
+        "mathematically_correct": false,
+        "superseded_by": []
+      },
+      {
+        "claim_id": "p3_s03_c07:C2",
+        "source_span": "pares ordenados, uso 6*6=36",
+        "source_start": 110,
+        "source_end": 137,
+        "subject": "pares_ordenados",
+        "obligation_id": "b.ordered_pairs",
+        "expected_state": "ACTIVE",
+        "written_value": "6*6=36",
+        "mathematically_correct": true,
+        "superseded_by": []
+      }
+    ],
+    "expected_obligations_satisfied": [
+      "b.ordered_pairs"
+    ],
+    "expected_obligations_unsatisfied": [
+      "a.bottom_white_count",
+      "a.first_white_probability",
+      "b.alternative_complete",
+      "b.different_favorable",
+      "b.same_compartment",
+      "b.second_white_probability",
+      "c.conditional_success_1",
+      "c.conditional_success_2",
+      "c.continue_compartments",
+      "c.strategy_case_1",
+      "c.strategy_case_2",
+      "c.total_win_probability"
+    ],
+    "expected_conflicts": [],
+    "expected_hard_vetoes": [],
+    "expected_non_veto_conflict_visibility": [],
+    "expected_awards": [
+      {
+        "rubric_item": "b",
+        "rule_id": "b.space",
+        "points": 2.0,
+        "routes": [
+          "DETERMINISTIC"
+        ],
+        "obligations": [
+          {
+            "obligation_id": "b.ordered_pairs",
+            "eligible": true,
+            "verification_route": "DETERMINISTIC",
+            "evidence_ids": [
+              "p3_s03_c07"
+            ]
+          }
+        ]
+      }
+    ],
+    "expected_guard_behavior": {
+      "guard_generated_awards": 0,
+      "hard_veto_only_from_active_checked_contradiction": true,
+      "nonactive_hard_veto": false
+    },
+    "rationale": "Interrogação negada como assertiva; produto amostral próprio.",
+    "expected_active_claims": [
+      {
+        "claim_id": "p3_s03_c07:C2",
+        "source_span": "pares ordenados, uso 6*6=36",
+        "source_start": 110,
+        "source_end": 137,
+        "subject": "pares_ordenados",
+        "obligation_id": "b.ordered_pairs",
+        "expected_state": "ACTIVE",
+        "written_value": "6*6=36",
+        "mathematically_correct": true,
+        "superseded_by": []
+      }
+    ],
+    "expected_superseded_claims": [],
+    "expected_non_adopted_claims": [
+      {
+        "claim_id": "p3_s03_c07:C1",
+        "source_span": "segunda branca teria probabilidade 1",
+        "source_start": 14,
+        "source_end": 50,
+        "subject": "segunda_branca",
+        "obligation_id": "b.second_white_probability",
+        "expected_state": "NON_ADOPTED",
+        "written_value": "1",
+        "mathematically_correct": false,
+        "superseded_by": []
+      }
+    ],
+    "expected_ambiguous_claims": []
+  },
+  {
+    "case_id": "p3_s03_c08",
+    "family": "C",
+    "expected_score_by_construction": 1.0,
+    "expected_discourse_states": [
+      {
+        "claim_id": "p3_s03_c08:C1",
+        "source_span": "após branca do compartimento 2 eu apostaria preta",
+        "source_start": 40,
+        "source_end": 89,
+        "subject": "estrategia_2",
+        "obligation_id": "c.strategy_case_2",
+        "expected_state": "NON_ADOPTED",
+        "written_value": "preta",
+        "mathematically_correct": false,
+        "superseded_by": []
+      },
+      {
+        "claim_id": "p3_s03_c08:C2",
+        "source_span": "contando 4 pretas",
+        "source_start": 91,
+        "source_end": 108,
+        "subject": "contagem_2",
+        "obligation_id": "c.strategy_case_2",
+        "expected_state": "NON_ADOPTED",
+        "written_value": "4",
+        "mathematically_correct": false,
+        "superseded_by": []
+      },
+      {
+        "claim_id": "p3_s03_c08:C3",
+        "source_span": "continuar: {1,2}",
+        "source_start": 180,
+        "source_end": 196,
+        "subject": "continuar",
+        "obligation_id": "c.continue_compartments",
+        "expected_state": "ACTIVE",
+        "written_value": "{1,2}",
+        "mathematically_correct": true,
+        "superseded_by": []
+      }
+    ],
+    "expected_obligations_satisfied": [
+      "c.continue_compartments"
+    ],
+    "expected_obligations_unsatisfied": [
+      "a.bottom_white_count",
+      "a.first_white_probability",
+      "b.alternative_complete",
+      "b.different_favorable",
+      "b.ordered_pairs",
+      "b.same_compartment",
+      "b.second_white_probability",
+      "c.conditional_success_1",
+      "c.conditional_success_2",
+      "c.strategy_case_1",
+      "c.strategy_case_2",
+      "c.total_win_probability"
+    ],
+    "expected_conflicts": [],
+    "expected_hard_vetoes": [],
+    "expected_non_veto_conflict_visibility": [],
+    "expected_awards": [
+      {
+        "rubric_item": "c",
+        "rule_id": "c.continue",
+        "points": 1.0,
+        "routes": [
+          "DETERMINISTIC"
+        ],
+        "obligations": [
+          {
+            "obligation_id": "c.continue_compartments",
+            "eligible": true,
+            "verification_route": "DETERMINISTIC",
+            "evidence_ids": [
+              "p3_s03_c08"
+            ]
+          }
+        ]
+      }
+    ],
+    "expected_guard_behavior": {
+      "guard_generated_awards": 0,
+      "hard_veto_only_from_active_checked_contradiction": true,
+      "nonactive_hard_veto": false
+    },
+    "rationale": "Tentativa retirada sem estratégia substituta é NON_ADOPTED, não SUPERSEDED.",
+    "expected_active_claims": [
+      {
+        "claim_id": "p3_s03_c08:C3",
+        "source_span": "continuar: {1,2}",
+        "source_start": 180,
+        "source_end": 196,
+        "subject": "continuar",
+        "obligation_id": "c.continue_compartments",
+        "expected_state": "ACTIVE",
+        "written_value": "{1,2}",
+        "mathematically_correct": true,
+        "superseded_by": []
+      }
+    ],
+    "expected_superseded_claims": [],
+    "expected_non_adopted_claims": [
+      {
+        "claim_id": "p3_s03_c08:C1",
+        "source_span": "após branca do compartimento 2 eu apostaria preta",
+        "source_start": 40,
+        "source_end": 89,
+        "subject": "estrategia_2",
+        "obligation_id": "c.strategy_case_2",
+        "expected_state": "NON_ADOPTED",
+        "written_value": "preta",
+        "mathematically_correct": false,
+        "superseded_by": []
+      },
+      {
+        "claim_id": "p3_s03_c08:C2",
+        "source_span": "contando 4 pretas",
+        "source_start": 91,
+        "source_end": 108,
+        "subject": "contagem_2",
+        "obligation_id": "c.strategy_case_2",
+        "expected_state": "NON_ADOPTED",
+        "written_value": "4",
+        "mathematically_correct": false,
+        "superseded_by": []
+      }
+    ],
+    "expected_ambiguous_claims": []
+  },
+  {
+    "case_id": "p3_s03_d01",
+    "family": "D",
+    "expected_score_by_construction": 0.0,
+    "expected_discourse_states": [
+      {
+        "claim_id": "p3_s03_d01:C1",
+        "source_span": "primeira_branca: 1/3",
+        "source_start": 44,
+        "source_end": 64,
+        "subject": "primeira_branca",
+        "obligation_id": "a.first_white_probability",
+        "expected_state": "AMBIGUOUS",
+        "written_value": "1/3",
+        "mathematically_correct": true,
+        "superseded_by": []
+      },
+      {
+        "claim_id": "p3_s03_d01:C2",
+        "source_span": "primeira_branca: 1/2",
+        "source_start": 67,
+        "source_end": 87,
+        "subject": "primeira_branca",
+        "obligation_id": "a.first_white_probability",
+        "expected_state": "AMBIGUOUS",
+        "written_value": "1/2",
+        "mathematically_correct": false,
+        "superseded_by": []
+      }
+    ],
+    "expected_obligations_satisfied": [],
+    "expected_obligations_unsatisfied": [
+      "a.bottom_white_count",
+      "a.first_white_probability",
+      "b.alternative_complete",
+      "b.different_favorable",
+      "b.ordered_pairs",
+      "b.same_compartment",
+      "b.second_white_probability",
+      "c.conditional_success_1",
+      "c.conditional_success_2",
+      "c.continue_compartments",
+      "c.strategy_case_1",
+      "c.strategy_case_2",
+      "c.total_win_probability"
+    ],
+    "expected_conflicts": [],
+    "expected_hard_vetoes": [],
+    "expected_non_veto_conflict_visibility": [
+      "p3_s03_d01:C1",
+      "p3_s03_d01:C2"
+    ],
+    "expected_awards": [],
+    "expected_guard_behavior": {
+      "guard_generated_awards": 0,
+      "hard_veto_only_from_active_checked_contradiction": true,
+      "nonactive_hard_veto": false
+    },
+    "rationale": "Alternativas sem escolha não são duas assertivas adotadas.",
+    "expected_active_claims": [],
+    "expected_superseded_claims": [],
+    "expected_non_adopted_claims": [],
+    "expected_ambiguous_claims": [
+      {
+        "claim_id": "p3_s03_d01:C1",
+        "source_span": "primeira_branca: 1/3",
+        "source_start": 44,
+        "source_end": 64,
+        "subject": "primeira_branca",
+        "obligation_id": "a.first_white_probability",
+        "expected_state": "AMBIGUOUS",
+        "written_value": "1/3",
+        "mathematically_correct": true,
+        "superseded_by": []
+      },
+      {
+        "claim_id": "p3_s03_d01:C2",
+        "source_span": "primeira_branca: 1/2",
+        "source_start": 67,
+        "source_end": 87,
+        "subject": "primeira_branca",
+        "obligation_id": "a.first_white_probability",
+        "expected_state": "AMBIGUOUS",
+        "written_value": "1/2",
+        "mathematically_correct": false,
+        "superseded_by": []
+      }
+    ]
+  },
+  {
+    "case_id": "p3_s03_d02",
+    "family": "D",
+    "expected_score_by_construction": 2.0,
+    "expected_discourse_states": [
+      {
+        "claim_id": "p3_s03_d02:C1",
+        "source_span": "Lia escreveu 1/3",
+        "source_start": 45,
+        "source_end": 61,
+        "subject": "primeira_branca",
+        "obligation_id": "a.first_white_probability",
+        "expected_state": "AMBIGUOUS",
+        "written_value": "1/3",
+        "mathematically_correct": true,
+        "superseded_by": []
+      },
+      {
+        "claim_id": "p3_s03_d02:C2",
+        "source_span": "Nuno escreveu 1/2",
+        "source_start": 64,
+        "source_end": 81,
+        "subject": "primeira_branca",
+        "obligation_id": "a.first_white_probability",
+        "expected_state": "AMBIGUOUS",
+        "written_value": "1/2",
+        "mathematically_correct": false,
+        "superseded_by": []
+      },
+      {
+        "claim_id": "p3_s03_d02:C3",
+        "source_span": "contagem de bolas brancas inferiores é 2",
+        "source_start": 164,
+        "source_end": 204,
+        "subject": "inferiores_brancas",
+        "obligation_id": "a.bottom_white_count",
+        "expected_state": "ACTIVE",
+        "written_value": "2",
+        "mathematically_correct": true,
+        "superseded_by": []
+      }
+    ],
+    "expected_obligations_satisfied": [
+      "a.bottom_white_count"
+    ],
+    "expected_obligations_unsatisfied": [
+      "a.first_white_probability",
+      "b.alternative_complete",
+      "b.different_favorable",
+      "b.ordered_pairs",
+      "b.same_compartment",
+      "b.second_white_probability",
+      "c.conditional_success_1",
+      "c.conditional_success_2",
+      "c.continue_compartments",
+      "c.strategy_case_1",
+      "c.strategy_case_2",
+      "c.total_win_probability"
+    ],
+    "expected_conflicts": [],
+    "expected_hard_vetoes": [],
+    "expected_non_veto_conflict_visibility": [
+      "p3_s03_d02:C1",
+      "p3_s03_d02:C2"
+    ],
+    "expected_awards": [
+      {
+        "rubric_item": "a",
+        "rule_id": "a.count",
+        "points": 2.0,
+        "routes": [
+          "DETERMINISTIC"
+        ],
+        "obligations": [
+          {
+            "obligation_id": "a.bottom_white_count",
+            "eligible": true,
+            "verification_route": "DETERMINISTIC",
+            "evidence_ids": [
+              "p3_s03_d02"
+            ]
+          }
+        ]
+      }
+    ],
+    "expected_guard_behavior": {
+      "guard_generated_awards": 0,
+      "hard_veto_only_from_active_checked_contradiction": true,
+      "nonactive_hard_veto": false
+    },
+    "rationale": "Adoção pronominal tem dois referentes; contagem separada não depende disso.",
+    "expected_active_claims": [
+      {
+        "claim_id": "p3_s03_d02:C3",
+        "source_span": "contagem de bolas brancas inferiores é 2",
+        "source_start": 164,
+        "source_end": 204,
+        "subject": "inferiores_brancas",
+        "obligation_id": "a.bottom_white_count",
+        "expected_state": "ACTIVE",
+        "written_value": "2",
+        "mathematically_correct": true,
+        "superseded_by": []
+      }
+    ],
+    "expected_superseded_claims": [],
+    "expected_non_adopted_claims": [],
+    "expected_ambiguous_claims": [
+      {
+        "claim_id": "p3_s03_d02:C1",
+        "source_span": "Lia escreveu 1/3",
+        "source_start": 45,
+        "source_end": 61,
+        "subject": "primeira_branca",
+        "obligation_id": "a.first_white_probability",
+        "expected_state": "AMBIGUOUS",
+        "written_value": "1/3",
+        "mathematically_correct": true,
+        "superseded_by": []
+      },
+      {
+        "claim_id": "p3_s03_d02:C2",
+        "source_span": "Nuno escreveu 1/2",
+        "source_start": 64,
+        "source_end": 81,
+        "subject": "primeira_branca",
+        "obligation_id": "a.first_white_probability",
+        "expected_state": "AMBIGUOUS",
+        "written_value": "1/2",
+        "mathematically_correct": false,
+        "superseded_by": []
+      }
+    ]
+  },
+  {
+    "case_id": "p3_s03_d03",
+    "family": "D",
+    "expected_score_by_construction": 0.0,
+    "expected_discourse_states": [
+      {
+        "claim_id": "p3_s03_d03:C1",
+        "source_span": "primeira_branca: 1/2",
+        "source_start": 10,
+        "source_end": 30,
+        "subject": "primeira_branca",
+        "obligation_id": "a.first_white_probability",
+        "expected_state": "AMBIGUOUS",
+        "written_value": "1/2",
+        "mathematically_correct": false,
+        "superseded_by": []
+      },
+      {
+        "claim_id": "p3_s03_d03:C2",
+        "source_span": "primeira_branca: 1/3",
+        "source_start": 47,
+        "source_end": 67,
+        "subject": "primeira_branca",
+        "obligation_id": "a.first_white_probability",
+        "expected_state": "AMBIGUOUS",
+        "written_value": "1/3",
+        "mathematically_correct": true,
+        "superseded_by": []
+      }
+    ],
+    "expected_obligations_satisfied": [],
+    "expected_obligations_unsatisfied": [
+      "a.bottom_white_count",
+      "a.first_white_probability",
+      "b.alternative_complete",
+      "b.different_favorable",
+      "b.ordered_pairs",
+      "b.same_compartment",
+      "b.second_white_probability",
+      "c.conditional_success_1",
+      "c.conditional_success_2",
+      "c.continue_compartments",
+      "c.strategy_case_1",
+      "c.strategy_case_2",
+      "c.total_win_probability"
+    ],
+    "expected_conflicts": [],
+    "expected_hard_vetoes": [],
+    "expected_non_veto_conflict_visibility": [
+      "p3_s03_d03:C1",
+      "p3_s03_d03:C2"
+    ],
+    "expected_awards": [],
+    "expected_guard_behavior": {
+      "guard_generated_awards": 0,
+      "hard_veto_only_from_active_checked_contradiction": true,
+      "nonactive_hard_veto": false
+    },
+    "rationale": "Correção distante de alvo incerto não permite selecionar coluna.",
+    "expected_active_claims": [],
+    "expected_superseded_claims": [],
+    "expected_non_adopted_claims": [],
+    "expected_ambiguous_claims": [
+      {
+        "claim_id": "p3_s03_d03:C1",
+        "source_span": "primeira_branca: 1/2",
+        "source_start": 10,
+        "source_end": 30,
+        "subject": "primeira_branca",
+        "obligation_id": "a.first_white_probability",
+        "expected_state": "AMBIGUOUS",
+        "written_value": "1/2",
+        "mathematically_correct": false,
+        "superseded_by": []
+      },
+      {
+        "claim_id": "p3_s03_d03:C2",
+        "source_span": "primeira_branca: 1/3",
+        "source_start": 47,
+        "source_end": 67,
+        "subject": "primeira_branca",
+        "obligation_id": "a.first_white_probability",
+        "expected_state": "AMBIGUOUS",
+        "written_value": "1/3",
+        "mathematically_correct": true,
+        "superseded_by": []
+      }
+    ]
+  },
+  {
+    "case_id": "p3_s03_d04",
+    "family": "D",
+    "expected_score_by_construction": 0.0,
+    "expected_discourse_states": [
+      {
+        "claim_id": "p3_s03_d04:C1",
+        "source_span": "segunda_branca: 11/36",
+        "source_start": 21,
+        "source_end": 42,
+        "subject": "segunda_branca",
+        "obligation_id": "b.second_white_probability",
+        "expected_state": "AMBIGUOUS",
+        "written_value": "11/36",
+        "mathematically_correct": true,
+        "superseded_by": []
+      },
+      {
+        "claim_id": "p3_s03_d04:C2",
+        "source_span": "segunda_branca: 1/4",
+        "source_start": 45,
+        "source_end": 64,
+        "subject": "segunda_branca",
+        "obligation_id": "b.second_white_probability",
+        "expected_state": "AMBIGUOUS",
+        "written_value": "1/4",
+        "mathematically_correct": false,
+        "superseded_by": []
+      }
+    ],
+    "expected_obligations_satisfied": [],
+    "expected_obligations_unsatisfied": [
+      "a.bottom_white_count",
+      "a.first_white_probability",
+      "b.alternative_complete",
+      "b.different_favorable",
+      "b.ordered_pairs",
+      "b.same_compartment",
+      "b.second_white_probability",
+      "c.conditional_success_1",
+      "c.conditional_success_2",
+      "c.continue_compartments",
+      "c.strategy_case_1",
+      "c.strategy_case_2",
+      "c.total_win_probability"
+    ],
+    "expected_conflicts": [],
+    "expected_hard_vetoes": [],
+    "expected_non_veto_conflict_visibility": [
+      "p3_s03_d04:C1",
+      "p3_s03_d04:C2"
+    ],
+    "expected_awards": [],
+    "expected_guard_behavior": {
+      "guard_generated_awards": 0,
+      "hard_veto_only_from_active_checked_contradiction": true,
+      "nonactive_hard_veto": false
+    },
+    "rationale": "Mudança de assunto não resolve referente de adoção.",
+    "expected_active_claims": [],
+    "expected_superseded_claims": [],
+    "expected_non_adopted_claims": [],
+    "expected_ambiguous_claims": [
+      {
+        "claim_id": "p3_s03_d04:C1",
+        "source_span": "segunda_branca: 11/36",
+        "source_start": 21,
+        "source_end": 42,
+        "subject": "segunda_branca",
+        "obligation_id": "b.second_white_probability",
+        "expected_state": "AMBIGUOUS",
+        "written_value": "11/36",
+        "mathematically_correct": true,
+        "superseded_by": []
+      },
+      {
+        "claim_id": "p3_s03_d04:C2",
+        "source_span": "segunda_branca: 1/4",
+        "source_start": 45,
+        "source_end": 64,
+        "subject": "segunda_branca",
+        "obligation_id": "b.second_white_probability",
+        "expected_state": "AMBIGUOUS",
+        "written_value": "1/4",
+        "mathematically_correct": false,
+        "superseded_by": []
+      }
+    ]
+  },
+  {
+    "case_id": "p3_s03_d05",
+    "family": "D",
+    "expected_score_by_construction": 0.0,
+    "expected_discourse_states": [
+      {
+        "claim_id": "p3_s03_d05:C1",
+        "source_span": "estrategia: preta",
+        "source_start": 32,
+        "source_end": 49,
+        "subject": "estrategia_1",
+        "obligation_id": "c.strategy_case_1",
+        "expected_state": "AMBIGUOUS",
+        "written_value": "preta",
+        "mathematically_correct": true,
+        "superseded_by": []
+      },
+      {
+        "claim_id": "p3_s03_d05:C2",
+        "source_span": "contagem: 3",
+        "source_start": 51,
+        "source_end": 62,
+        "subject": "contagem_1",
+        "obligation_id": "c.strategy_case_1",
+        "expected_state": "AMBIGUOUS",
+        "written_value": "3",
+        "mathematically_correct": true,
+        "superseded_by": []
+      },
+      {
+        "claim_id": "p3_s03_d05:C3",
+        "source_span": "estrategia: preta",
+        "source_start": 32,
+        "source_end": 49,
+        "subject": "estrategia_2",
+        "obligation_id": "c.strategy_case_2",
+        "expected_state": "AMBIGUOUS",
+        "written_value": "preta",
+        "mathematically_correct": false,
+        "superseded_by": []
+      },
+      {
+        "claim_id": "p3_s03_d05:C4",
+        "source_span": "contagem: 3",
+        "source_start": 51,
+        "source_end": 62,
+        "subject": "contagem_2",
+        "obligation_id": "c.strategy_case_2",
+        "expected_state": "AMBIGUOUS",
+        "written_value": "3",
+        "mathematically_correct": true,
+        "superseded_by": []
+      }
+    ],
+    "expected_obligations_satisfied": [],
+    "expected_obligations_unsatisfied": [
+      "a.bottom_white_count",
+      "a.first_white_probability",
+      "b.alternative_complete",
+      "b.different_favorable",
+      "b.ordered_pairs",
+      "b.same_compartment",
+      "b.second_white_probability",
+      "c.conditional_success_1",
+      "c.conditional_success_2",
+      "c.continue_compartments",
+      "c.strategy_case_1",
+      "c.strategy_case_2",
+      "c.total_win_probability"
+    ],
+    "expected_conflicts": [],
+    "expected_hard_vetoes": [],
+    "expected_non_veto_conflict_visibility": [
+      "p3_s03_d05:C1",
+      "p3_s03_d05:C2",
+      "p3_s03_d05:C3",
+      "p3_s03_d05:C4"
+    ],
+    "expected_awards": [],
+    "expected_guard_behavior": {
+      "guard_generated_awards": 0,
+      "hard_veto_only_from_active_checked_contradiction": true,
+      "nonactive_hard_veto": false
+    },
+    "rationale": "Subject de caso não identificado; não emprestar estratégia do 1 ao 2.",
+    "expected_active_claims": [],
+    "expected_superseded_claims": [],
+    "expected_non_adopted_claims": [],
+    "expected_ambiguous_claims": [
+      {
+        "claim_id": "p3_s03_d05:C1",
+        "source_span": "estrategia: preta",
+        "source_start": 32,
+        "source_end": 49,
+        "subject": "estrategia_1",
+        "obligation_id": "c.strategy_case_1",
+        "expected_state": "AMBIGUOUS",
+        "written_value": "preta",
+        "mathematically_correct": true,
+        "superseded_by": []
+      },
+      {
+        "claim_id": "p3_s03_d05:C2",
+        "source_span": "contagem: 3",
+        "source_start": 51,
+        "source_end": 62,
+        "subject": "contagem_1",
+        "obligation_id": "c.strategy_case_1",
+        "expected_state": "AMBIGUOUS",
+        "written_value": "3",
+        "mathematically_correct": true,
+        "superseded_by": []
+      },
+      {
+        "claim_id": "p3_s03_d05:C3",
+        "source_span": "estrategia: preta",
+        "source_start": 32,
+        "source_end": 49,
+        "subject": "estrategia_2",
+        "obligation_id": "c.strategy_case_2",
+        "expected_state": "AMBIGUOUS",
+        "written_value": "preta",
+        "mathematically_correct": false,
+        "superseded_by": []
+      },
+      {
+        "claim_id": "p3_s03_d05:C4",
+        "source_span": "contagem: 3",
+        "source_start": 51,
+        "source_end": 62,
+        "subject": "contagem_2",
+        "obligation_id": "c.strategy_case_2",
+        "expected_state": "AMBIGUOUS",
+        "written_value": "3",
+        "mathematically_correct": true,
+        "superseded_by": []
+      }
+    ]
+  },
+  {
+    "case_id": "p3_s03_d06",
+    "family": "D",
+    "expected_score_by_construction": 2.0,
+    "expected_discourse_states": [
+      {
+        "claim_id": "p3_s03_d06:C1",
+        "source_span": "primeira_branca: 1/",
+        "source_start": 51,
+        "source_end": 70,
+        "subject": "primeira_branca",
+        "obligation_id": "a.first_white_probability",
+        "expected_state": "AMBIGUOUS",
+        "written_value": "1/",
+        "mathematically_correct": null,
+        "superseded_by": []
+      },
+      {
+        "claim_id": "p3_s03_d06:C2",
+        "source_span": "inferiores_brancas: 2",
+        "source_start": 132,
+        "source_end": 153,
+        "subject": "inferiores_brancas",
+        "obligation_id": "a.bottom_white_count",
+        "expected_state": "ACTIVE",
+        "written_value": "2",
+        "mathematically_correct": true,
+        "superseded_by": []
+      }
+    ],
+    "expected_obligations_satisfied": [
+      "a.bottom_white_count"
+    ],
+    "expected_obligations_unsatisfied": [
+      "a.first_white_probability",
+      "b.alternative_complete",
+      "b.different_favorable",
+      "b.ordered_pairs",
+      "b.same_compartment",
+      "b.second_white_probability",
+      "c.conditional_success_1",
+      "c.conditional_success_2",
+      "c.continue_compartments",
+      "c.strategy_case_1",
+      "c.strategy_case_2",
+      "c.total_win_probability"
+    ],
+    "expected_conflicts": [],
+    "expected_hard_vetoes": [],
+    "expected_non_veto_conflict_visibility": [
+      "p3_s03_d06:C1"
+    ],
+    "expected_awards": [
+      {
+        "rubric_item": "a",
+        "rule_id": "a.count",
+        "points": 2.0,
+        "routes": [
+          "DETERMINISTIC"
+        ],
+        "obligations": [
+          {
+            "obligation_id": "a.bottom_white_count",
+            "eligible": true,
+            "verification_route": "DETERMINISTIC",
+            "evidence_ids": [
+              "p3_s03_d06"
+            ]
+          }
+        ]
+      }
+    ],
+    "expected_guard_behavior": {
+      "guard_generated_awards": 0,
+      "hard_veto_only_from_active_checked_contradiction": true,
+      "nonactive_hard_veto": false
+    },
+    "rationale": "Claim truncado sem valor inferível; contagem íntegra independente.",
+    "expected_active_claims": [
+      {
+        "claim_id": "p3_s03_d06:C2",
+        "source_span": "inferiores_brancas: 2",
+        "source_start": 132,
+        "source_end": 153,
+        "subject": "inferiores_brancas",
+        "obligation_id": "a.bottom_white_count",
+        "expected_state": "ACTIVE",
+        "written_value": "2",
+        "mathematically_correct": true,
+        "superseded_by": []
+      }
+    ],
+    "expected_superseded_claims": [],
+    "expected_non_adopted_claims": [],
+    "expected_ambiguous_claims": [
+      {
+        "claim_id": "p3_s03_d06:C1",
+        "source_span": "primeira_branca: 1/",
+        "source_start": 51,
+        "source_end": 70,
+        "subject": "primeira_branca",
+        "obligation_id": "a.first_white_probability",
+        "expected_state": "AMBIGUOUS",
+        "written_value": "1/",
+        "mathematically_correct": null,
+        "superseded_by": []
+      }
+    ]
+  },
+  {
+    "case_id": "p3_s03_d07",
+    "family": "D",
+    "expected_score_by_construction": 0.0,
+    "expected_discourse_states": [
+      {
+        "claim_id": "p3_s03_d07:C1",
+        "source_span": "segunda_branca: 11/36",
+        "source_start": 22,
+        "source_end": 43,
+        "subject": "segunda_branca",
+        "obligation_id": "b.second_white_probability",
+        "expected_state": "AMBIGUOUS",
+        "written_value": "11/36",
+        "mathematically_correct": true,
+        "superseded_by": []
+      },
+      {
+        "claim_id": "p3_s03_d07:C2",
+        "source_span": "segunda_branca: 1/3",
+        "source_start": 49,
+        "source_end": 68,
+        "subject": "segunda_branca",
+        "obligation_id": "b.second_white_probability",
+        "expected_state": "AMBIGUOUS",
+        "written_value": "1/3",
+        "mathematically_correct": false,
+        "superseded_by": []
+      }
+    ],
+    "expected_obligations_satisfied": [],
+    "expected_obligations_unsatisfied": [
+      "a.bottom_white_count",
+      "a.first_white_probability",
+      "b.alternative_complete",
+      "b.different_favorable",
+      "b.ordered_pairs",
+      "b.same_compartment",
+      "b.second_white_probability",
+      "c.conditional_success_1",
+      "c.conditional_success_2",
+      "c.continue_compartments",
+      "c.strategy_case_1",
+      "c.strategy_case_2",
+      "c.total_win_probability"
+    ],
+    "expected_conflicts": [],
+    "expected_hard_vetoes": [],
+    "expected_non_veto_conflict_visibility": [
+      "p3_s03_d07:C1",
+      "p3_s03_d07:C2"
+    ],
+    "expected_awards": [],
+    "expected_guard_behavior": {
+      "guard_generated_awards": 0,
+      "hard_veto_only_from_active_checked_contradiction": true,
+      "nonactive_hard_veto": false
+    },
+    "rationale": "Anotação interrogativa marginal sem prioridade/adoção.",
+    "expected_active_claims": [],
+    "expected_superseded_claims": [],
+    "expected_non_adopted_claims": [],
+    "expected_ambiguous_claims": [
+      {
+        "claim_id": "p3_s03_d07:C1",
+        "source_span": "segunda_branca: 11/36",
+        "source_start": 22,
+        "source_end": 43,
+        "subject": "segunda_branca",
+        "obligation_id": "b.second_white_probability",
+        "expected_state": "AMBIGUOUS",
+        "written_value": "11/36",
+        "mathematically_correct": true,
+        "superseded_by": []
+      },
+      {
+        "claim_id": "p3_s03_d07:C2",
+        "source_span": "segunda_branca: 1/3",
+        "source_start": 49,
+        "source_end": 68,
+        "subject": "segunda_branca",
+        "obligation_id": "b.second_white_probability",
+        "expected_state": "AMBIGUOUS",
+        "written_value": "1/3",
+        "mathematically_correct": false,
+        "superseded_by": []
+      }
+    ]
+  },
+  {
+    "case_id": "p3_s03_d08",
+    "family": "D",
+    "expected_score_by_construction": 2.0,
+    "expected_discourse_states": [
+      {
+        "claim_id": "p3_s03_d08:C1",
+        "source_span": "continuar: {1,2}",
+        "source_start": 51,
+        "source_end": 67,
+        "subject": "continuar",
+        "obligation_id": "c.continue_compartments",
+        "expected_state": "AMBIGUOUS",
+        "written_value": "{1,2}",
+        "mathematically_correct": true,
+        "superseded_by": []
+      },
+      {
+        "claim_id": "p3_s03_d08:C2",
+        "source_span": "continuar: {2,6}",
+        "source_start": 71,
+        "source_end": 87,
+        "subject": "continuar",
+        "obligation_id": "c.continue_compartments",
+        "expected_state": "AMBIGUOUS",
+        "written_value": "{2,6}",
+        "mathematically_correct": false,
+        "superseded_by": []
+      },
+      {
+        "claim_id": "p3_s03_d08:C3",
+        "source_span": "minha aposta é cinza",
+        "source_start": 181,
+        "source_end": 201,
+        "subject": "estrategia_2",
+        "obligation_id": "c.strategy_case_2",
+        "expected_state": "ACTIVE",
+        "written_value": "cinza",
+        "mathematically_correct": true,
+        "superseded_by": []
+      },
+      {
+        "claim_id": "p3_s03_d08:C4",
+        "source_span": "conto 3 saídas cinzas nesse estado",
+        "source_start": 204,
+        "source_end": 238,
+        "subject": "contagem_2",
+        "obligation_id": "c.strategy_case_2",
+        "expected_state": "ACTIVE",
+        "written_value": "3",
+        "mathematically_correct": true,
+        "superseded_by": []
+      }
+    ],
+    "expected_obligations_satisfied": [
+      "c.strategy_case_2"
+    ],
+    "expected_obligations_unsatisfied": [
+      "a.bottom_white_count",
+      "a.first_white_probability",
+      "b.alternative_complete",
+      "b.different_favorable",
+      "b.ordered_pairs",
+      "b.same_compartment",
+      "b.second_white_probability",
+      "c.conditional_success_1",
+      "c.conditional_success_2",
+      "c.continue_compartments",
+      "c.strategy_case_1",
+      "c.total_win_probability"
+    ],
+    "expected_conflicts": [],
+    "expected_hard_vetoes": [],
+    "expected_non_veto_conflict_visibility": [
+      "p3_s03_d08:C1",
+      "p3_s03_d08:C2"
+    ],
+    "expected_awards": [
+      {
+        "rubric_item": "c",
+        "rule_id": "c.second_strategy",
+        "points": 2.0,
+        "routes": [
+          "DETERMINISTIC"
+        ],
+        "obligations": [
+          {
+            "obligation_id": "c.strategy_case_2",
+            "eligible": true,
+            "verification_route": "DETERMINISTIC",
+            "evidence_ids": [
+              "p3_s03_d08"
+            ]
+          }
+        ]
+      }
+    ],
+    "expected_guard_behavior": {
+      "guard_generated_awards": 0,
+      "hard_veto_only_from_active_checked_contradiction": true,
+      "nonactive_hard_veto": false
+    },
+    "rationale": "Ambiguidade de continuação não veta estratégia independente do caso 2.",
+    "expected_active_claims": [
+      {
+        "claim_id": "p3_s03_d08:C3",
+        "source_span": "minha aposta é cinza",
+        "source_start": 181,
+        "source_end": 201,
+        "subject": "estrategia_2",
+        "obligation_id": "c.strategy_case_2",
+        "expected_state": "ACTIVE",
+        "written_value": "cinza",
+        "mathematically_correct": true,
+        "superseded_by": []
+      },
+      {
+        "claim_id": "p3_s03_d08:C4",
+        "source_span": "conto 3 saídas cinzas nesse estado",
+        "source_start": 204,
+        "source_end": 238,
+        "subject": "contagem_2",
+        "obligation_id": "c.strategy_case_2",
+        "expected_state": "ACTIVE",
+        "written_value": "3",
+        "mathematically_correct": true,
+        "superseded_by": []
+      }
+    ],
+    "expected_superseded_claims": [],
+    "expected_non_adopted_claims": [],
+    "expected_ambiguous_claims": [
+      {
+        "claim_id": "p3_s03_d08:C1",
+        "source_span": "continuar: {1,2}",
+        "source_start": 51,
+        "source_end": 67,
+        "subject": "continuar",
+        "obligation_id": "c.continue_compartments",
+        "expected_state": "AMBIGUOUS",
+        "written_value": "{1,2}",
+        "mathematically_correct": true,
+        "superseded_by": []
+      },
+      {
+        "claim_id": "p3_s03_d08:C2",
+        "source_span": "continuar: {2,6}",
+        "source_start": 71,
+        "source_end": 87,
+        "subject": "continuar",
+        "obligation_id": "c.continue_compartments",
+        "expected_state": "AMBIGUOUS",
+        "written_value": "{2,6}",
+        "mathematically_correct": false,
+        "superseded_by": []
+      }
+    ]
+  },
+  {
+    "case_id": "p3_s03_e01",
+    "family": "E",
+    "expected_score_by_construction": 4.0,
+    "expected_discourse_states": [
+      {
+        "claim_id": "p3_s03_e01:C1",
+        "source_span": "nota de uma colega dizia primeira_branca: 7/12",
+        "source_start": 5,
+        "source_end": 51,
+        "subject": "primeira_branca",
+        "obligation_id": "a.first_white_probability",
+        "expected_state": "NON_ADOPTED",
+        "written_value": "7/12",
+        "mathematically_correct": false,
+        "superseded_by": []
+      },
+      {
+        "claim_id": "p3_s03_e01:C2",
+        "source_span": "Na minha resolução, primeira_branca: 1/3",
+        "source_start": 79,
+        "source_end": 119,
+        "subject": "primeira_branca",
+        "obligation_id": "a.first_white_probability",
+        "expected_state": "ACTIVE",
+        "written_value": "1/3",
+        "mathematically_correct": true,
+        "superseded_by": []
+      },
+      {
+        "claim_id": "p3_s03_e01:C3",
+        "source_span": "inferiores_brancas: 2",
+        "source_start": 122,
+        "source_end": 143,
+        "subject": "inferiores_brancas",
+        "obligation_id": "a.bottom_white_count",
+        "expected_state": "ACTIVE",
+        "written_value": "2",
+        "mathematically_correct": true,
+        "superseded_by": []
+      }
+    ],
+    "expected_obligations_satisfied": [
+      "a.bottom_white_count",
+      "a.first_white_probability"
+    ],
+    "expected_obligations_unsatisfied": [
+      "b.alternative_complete",
+      "b.different_favorable",
+      "b.ordered_pairs",
+      "b.same_compartment",
+      "b.second_white_probability",
+      "c.conditional_success_1",
+      "c.conditional_success_2",
+      "c.continue_compartments",
+      "c.strategy_case_1",
+      "c.strategy_case_2",
+      "c.total_win_probability"
+    ],
+    "expected_conflicts": [],
+    "expected_hard_vetoes": [],
+    "expected_non_veto_conflict_visibility": [],
+    "expected_awards": [
+      {
+        "rubric_item": "a",
+        "rule_id": "a.count",
+        "points": 2.0,
+        "routes": [
+          "DETERMINISTIC"
+        ],
+        "obligations": [
+          {
+            "obligation_id": "a.bottom_white_count",
+            "eligible": true,
+            "verification_route": "DETERMINISTIC",
+            "evidence_ids": [
+              "p3_s03_e01"
+            ]
+          }
+        ]
+      },
+      {
+        "rubric_item": "a",
+        "rule_id": "a.probability",
+        "points": 2.0,
+        "routes": [
+          "DETERMINISTIC"
+        ],
+        "obligations": [
+          {
+            "obligation_id": "a.first_white_probability",
+            "eligible": true,
+            "verification_route": "DETERMINISTIC",
+            "evidence_ids": [
+              "p3_s03_e01"
+            ]
+          }
+        ]
+      }
+    ],
+    "expected_guard_behavior": {
+      "guard_generated_awards": 0,
+      "hard_veto_only_from_active_checked_contradiction": true,
+      "nonactive_hard_veto": false
+    },
+    "rationale": "Citação falsa não pode derrotar duas respostas ativas corretas.",
+    "expected_active_claims": [
+      {
+        "claim_id": "p3_s03_e01:C2",
+        "source_span": "Na minha resolução, primeira_branca: 1/3",
+        "source_start": 79,
+        "source_end": 119,
+        "subject": "primeira_branca",
+        "obligation_id": "a.first_white_probability",
+        "expected_state": "ACTIVE",
+        "written_value": "1/3",
+        "mathematically_correct": true,
+        "superseded_by": []
+      },
+      {
+        "claim_id": "p3_s03_e01:C3",
+        "source_span": "inferiores_brancas: 2",
+        "source_start": 122,
+        "source_end": 143,
+        "subject": "inferiores_brancas",
+        "obligation_id": "a.bottom_white_count",
+        "expected_state": "ACTIVE",
+        "written_value": "2",
+        "mathematically_correct": true,
+        "superseded_by": []
+      }
+    ],
+    "expected_superseded_claims": [],
+    "expected_non_adopted_claims": [
+      {
+        "claim_id": "p3_s03_e01:C1",
+        "source_span": "nota de uma colega dizia primeira_branca: 7/12",
+        "source_start": 5,
+        "source_end": 51,
+        "subject": "primeira_branca",
+        "obligation_id": "a.first_white_probability",
+        "expected_state": "NON_ADOPTED",
+        "written_value": "7/12",
+        "mathematically_correct": false,
+        "superseded_by": []
+      }
+    ],
+    "expected_ambiguous_claims": []
+  },
+  {
+    "case_id": "p3_s03_e02",
+    "family": "E",
+    "expected_score_by_construction": 0.0,
+    "expected_discourse_states": [
+      {
+        "claim_id": "p3_s03_e02:C1",
+        "source_span": "Eu adotava segunda_branca: 11/36",
+        "source_start": 3,
+        "source_end": 35,
+        "subject": "segunda_branca",
+        "obligation_id": "b.second_white_probability",
+        "expected_state": "SUPERSEDED",
+        "written_value": "11/36",
+        "mathematically_correct": true,
+        "superseded_by": [
+          "p3_s03_e02:C2"
+        ]
+      },
+      {
+        "claim_id": "p3_s03_e02:C2",
+        "source_span": "segunda_branca: 1/2",
+        "source_start": 109,
+        "source_end": 128,
+        "subject": "segunda_branca",
+        "obligation_id": "b.second_white_probability",
+        "expected_state": "ACTIVE",
+        "written_value": "1/2",
+        "mathematically_correct": false,
+        "superseded_by": []
+      }
+    ],
+    "expected_obligations_satisfied": [],
+    "expected_obligations_unsatisfied": [
+      "a.bottom_white_count",
+      "a.first_white_probability",
+      "b.alternative_complete",
+      "b.different_favorable",
+      "b.ordered_pairs",
+      "b.same_compartment",
+      "b.second_white_probability",
+      "c.conditional_success_1",
+      "c.conditional_success_2",
+      "c.continue_compartments",
+      "c.strategy_case_1",
+      "c.strategy_case_2",
+      "c.total_win_probability"
+    ],
+    "expected_conflicts": [],
+    "expected_hard_vetoes": [
+      "b.second_white_probability"
+    ],
+    "expected_non_veto_conflict_visibility": [],
+    "expected_awards": [],
+    "expected_guard_behavior": {
+      "guard_generated_awards": 0,
+      "hard_veto_only_from_active_checked_contradiction": true,
+      "nonactive_hard_veto": false
+    },
+    "rationale": "Correção matematicamente errada ainda retira a posição anterior correta.",
+    "expected_active_claims": [
+      {
+        "claim_id": "p3_s03_e02:C2",
+        "source_span": "segunda_branca: 1/2",
+        "source_start": 109,
+        "source_end": 128,
+        "subject": "segunda_branca",
+        "obligation_id": "b.second_white_probability",
+        "expected_state": "ACTIVE",
+        "written_value": "1/2",
+        "mathematically_correct": false,
+        "superseded_by": []
+      }
+    ],
+    "expected_superseded_claims": [
+      {
+        "claim_id": "p3_s03_e02:C1",
+        "source_span": "Eu adotava segunda_branca: 11/36",
+        "source_start": 3,
+        "source_end": 35,
+        "subject": "segunda_branca",
+        "obligation_id": "b.second_white_probability",
+        "expected_state": "SUPERSEDED",
+        "written_value": "11/36",
+        "mathematically_correct": true,
+        "superseded_by": [
+          "p3_s03_e02:C2"
+        ]
+      }
+    ],
+    "expected_non_adopted_claims": [],
+    "expected_ambiguous_claims": []
+  },
+  {
+    "case_id": "p3_s03_e03",
+    "family": "E",
+    "expected_score_by_construction": 4.0,
+    "expected_discourse_states": [
+      {
+        "claim_id": "p3_s03_e03:C1",
+        "source_span": "Inicialmente contei inferiores_brancas: 3",
+        "source_start": 3,
+        "source_end": 44,
+        "subject": "inferiores_brancas",
+        "obligation_id": "a.bottom_white_count",
+        "expected_state": "SUPERSEDED",
+        "written_value": "3",
+        "mathematically_correct": false,
+        "superseded_by": [
+          "p3_s03_e03:C2"
+        ]
+      },
+      {
+        "claim_id": "p3_s03_e03:C2",
+        "source_span": "adotar inferiores_brancas: 2",
+        "source_start": 85,
+        "source_end": 113,
+        "subject": "inferiores_brancas",
+        "obligation_id": "a.bottom_white_count",
+        "expected_state": "ACTIVE",
+        "written_value": "2",
+        "mathematically_correct": true,
+        "superseded_by": []
+      },
+      {
+        "claim_id": "p3_s03_e03:C3",
+        "source_span": "probabilidade da primeira branca é 1/3",
+        "source_start": 133,
+        "source_end": 171,
+        "subject": "primeira_branca",
+        "obligation_id": "a.first_white_probability",
+        "expected_state": "ACTIVE",
+        "written_value": "1/3",
+        "mathematically_correct": true,
+        "superseded_by": []
+      }
+    ],
+    "expected_obligations_satisfied": [
+      "a.bottom_white_count",
+      "a.first_white_probability"
+    ],
+    "expected_obligations_unsatisfied": [
+      "b.alternative_complete",
+      "b.different_favorable",
+      "b.ordered_pairs",
+      "b.same_compartment",
+      "b.second_white_probability",
+      "c.conditional_success_1",
+      "c.conditional_success_2",
+      "c.continue_compartments",
+      "c.strategy_case_1",
+      "c.strategy_case_2",
+      "c.total_win_probability"
+    ],
+    "expected_conflicts": [],
+    "expected_hard_vetoes": [],
+    "expected_non_veto_conflict_visibility": [],
+    "expected_awards": [
+      {
+        "rubric_item": "a",
+        "rule_id": "a.count",
+        "points": 2.0,
+        "routes": [
+          "DETERMINISTIC"
+        ],
+        "obligations": [
+          {
+            "obligation_id": "a.bottom_white_count",
+            "eligible": true,
+            "verification_route": "DETERMINISTIC",
+            "evidence_ids": [
+              "p3_s03_e03"
+            ]
+          }
+        ]
+      },
+      {
+        "rubric_item": "a",
+        "rule_id": "a.probability",
+        "points": 2.0,
+        "routes": [
+          "DETERMINISTIC"
+        ],
+        "obligations": [
+          {
+            "obligation_id": "a.first_white_probability",
+            "eligible": true,
+            "verification_route": "DETERMINISTIC",
+            "evidence_ids": [
+              "p3_s03_e03"
+            ]
+          }
+        ]
+      }
+    ],
+    "expected_guard_behavior": {
+      "guard_generated_awards": 0,
+      "hard_veto_only_from_active_checked_contradiction": true,
+      "nonactive_hard_veto": false
+    },
+    "rationale": "Retração falsa→correta com outra parcela ativa preservada.",
+    "expected_active_claims": [
+      {
+        "claim_id": "p3_s03_e03:C2",
+        "source_span": "adotar inferiores_brancas: 2",
+        "source_start": 85,
+        "source_end": 113,
+        "subject": "inferiores_brancas",
+        "obligation_id": "a.bottom_white_count",
+        "expected_state": "ACTIVE",
+        "written_value": "2",
+        "mathematically_correct": true,
+        "superseded_by": []
+      },
+      {
+        "claim_id": "p3_s03_e03:C3",
+        "source_span": "probabilidade da primeira branca é 1/3",
+        "source_start": 133,
+        "source_end": 171,
+        "subject": "primeira_branca",
+        "obligation_id": "a.first_white_probability",
+        "expected_state": "ACTIVE",
+        "written_value": "1/3",
+        "mathematically_correct": true,
+        "superseded_by": []
+      }
+    ],
+    "expected_superseded_claims": [
+      {
+        "claim_id": "p3_s03_e03:C1",
+        "source_span": "Inicialmente contei inferiores_brancas: 3",
+        "source_start": 3,
+        "source_end": 44,
+        "subject": "inferiores_brancas",
+        "obligation_id": "a.bottom_white_count",
+        "expected_state": "SUPERSEDED",
+        "written_value": "3",
+        "mathematically_correct": false,
+        "superseded_by": [
+          "p3_s03_e03:C2"
+        ]
+      }
+    ],
+    "expected_non_adopted_claims": [],
+    "expected_ambiguous_claims": []
+  },
+  {
+    "case_id": "p3_s03_e04",
+    "family": "E",
+    "expected_score_by_construction": 2.0,
+    "expected_discourse_states": [
+      {
+        "claim_id": "p3_s03_e04:C1",
+        "source_span": "inferiores_brancas: 2",
+        "source_start": 54,
+        "source_end": 75,
+        "subject": "inferiores_brancas",
+        "obligation_id": "a.bottom_white_count",
+        "expected_state": "ACTIVE",
+        "written_value": "2",
+        "mathematically_correct": true,
+        "superseded_by": []
+      },
+      {
+        "claim_id": "p3_s03_e04:C2",
+        "source_span": "segunda_branca: 11/36",
+        "source_start": 106,
+        "source_end": 127,
+        "subject": "segunda_branca",
+        "obligation_id": "b.second_white_probability",
+        "expected_state": "AMBIGUOUS",
+        "written_value": "11/36",
+        "mathematically_correct": true,
+        "superseded_by": []
+      },
+      {
+        "claim_id": "p3_s03_e04:C3",
+        "source_span": "segunda_branca: 5/12",
+        "source_start": 131,
+        "source_end": 151,
+        "subject": "segunda_branca",
+        "obligation_id": "b.second_white_probability",
+        "expected_state": "AMBIGUOUS",
+        "written_value": "5/12",
+        "mathematically_correct": false,
+        "superseded_by": []
+      }
+    ],
+    "expected_obligations_satisfied": [
+      "a.bottom_white_count"
+    ],
+    "expected_obligations_unsatisfied": [
+      "a.first_white_probability",
+      "b.alternative_complete",
+      "b.different_favorable",
+      "b.ordered_pairs",
+      "b.same_compartment",
+      "b.second_white_probability",
+      "c.conditional_success_1",
+      "c.conditional_success_2",
+      "c.continue_compartments",
+      "c.strategy_case_1",
+      "c.strategy_case_2",
+      "c.total_win_probability"
+    ],
+    "expected_conflicts": [],
+    "expected_hard_vetoes": [],
+    "expected_non_veto_conflict_visibility": [
+      "p3_s03_e04:C2",
+      "p3_s03_e04:C3"
+    ],
+    "expected_awards": [
+      {
+        "rubric_item": "a",
+        "rule_id": "a.count",
+        "points": 2.0,
+        "routes": [
+          "DETERMINISTIC"
+        ],
+        "obligations": [
+          {
+            "obligation_id": "a.bottom_white_count",
+            "eligible": true,
+            "verification_route": "DETERMINISTIC",
+            "evidence_ids": [
+              "p3_s03_e04"
+            ]
+          }
+        ]
+      }
+    ],
+    "expected_guard_behavior": {
+      "guard_generated_awards": 0,
+      "hard_veto_only_from_active_checked_contradiction": true,
+      "nonactive_hard_veto": false
+    },
+    "rationale": "Ambiguidade em b não afeta contagem confirmada em a.",
+    "expected_active_claims": [
+      {
+        "claim_id": "p3_s03_e04:C1",
+        "source_span": "inferiores_brancas: 2",
+        "source_start": 54,
+        "source_end": 75,
+        "subject": "inferiores_brancas",
+        "obligation_id": "a.bottom_white_count",
+        "expected_state": "ACTIVE",
+        "written_value": "2",
+        "mathematically_correct": true,
+        "superseded_by": []
+      }
+    ],
+    "expected_superseded_claims": [],
+    "expected_non_adopted_claims": [],
+    "expected_ambiguous_claims": [
+      {
+        "claim_id": "p3_s03_e04:C2",
+        "source_span": "segunda_branca: 11/36",
+        "source_start": 106,
+        "source_end": 127,
+        "subject": "segunda_branca",
+        "obligation_id": "b.second_white_probability",
+        "expected_state": "AMBIGUOUS",
+        "written_value": "11/36",
+        "mathematically_correct": true,
+        "superseded_by": []
+      },
+      {
+        "claim_id": "p3_s03_e04:C3",
+        "source_span": "segunda_branca: 5/12",
+        "source_start": 131,
+        "source_end": 151,
+        "subject": "segunda_branca",
+        "obligation_id": "b.second_white_probability",
+        "expected_state": "AMBIGUOUS",
+        "written_value": "5/12",
+        "mathematically_correct": false,
+        "superseded_by": []
+      }
+    ]
+  },
+  {
+    "case_id": "p3_s03_e05",
+    "family": "E",
+    "expected_score_by_construction": 2.0,
+    "expected_discourse_states": [
+      {
+        "claim_id": "p3_s03_e05:C1",
+        "source_span": "Célia: «inferiores_brancas: 6»",
+        "source_start": 29,
+        "source_end": 59,
+        "subject": "inferiores_brancas",
+        "obligation_id": "a.bottom_white_count",
+        "expected_state": "NON_ADOPTED",
+        "written_value": "6",
+        "mathematically_correct": false,
+        "superseded_by": []
+      },
+      {
+        "claim_id": "p3_s03_e05:C2",
+        "source_span": "registrei inferiores_brancas: 1",
+        "source_start": 94,
+        "source_end": 125,
+        "subject": "inferiores_brancas",
+        "obligation_id": "a.bottom_white_count",
+        "expected_state": "SUPERSEDED",
+        "written_value": "1",
+        "mathematically_correct": false,
+        "superseded_by": [
+          "p3_s03_e05:C3"
+        ]
+      },
+      {
+        "claim_id": "p3_s03_e05:C3",
+        "source_span": "corrijo minha própria contagem para inferiores_brancas: 2",
+        "source_start": 127,
+        "source_end": 184,
+        "subject": "inferiores_brancas",
+        "obligation_id": "a.bottom_white_count",
+        "expected_state": "ACTIVE",
+        "written_value": "2",
+        "mathematically_correct": true,
+        "superseded_by": []
+      }
+    ],
+    "expected_obligations_satisfied": [
+      "a.bottom_white_count"
+    ],
+    "expected_obligations_unsatisfied": [
+      "a.first_white_probability",
+      "b.alternative_complete",
+      "b.different_favorable",
+      "b.ordered_pairs",
+      "b.same_compartment",
+      "b.second_white_probability",
+      "c.conditional_success_1",
+      "c.conditional_success_2",
+      "c.continue_compartments",
+      "c.strategy_case_1",
+      "c.strategy_case_2",
+      "c.total_win_probability"
+    ],
+    "expected_conflicts": [],
+    "expected_hard_vetoes": [],
+    "expected_non_veto_conflict_visibility": [],
+    "expected_awards": [
+      {
+        "rubric_item": "a",
+        "rule_id": "a.count",
+        "points": 2.0,
+        "routes": [
+          "DETERMINISTIC"
+        ],
+        "obligations": [
+          {
+            "obligation_id": "a.bottom_white_count",
+            "eligible": true,
+            "verification_route": "DETERMINISTIC",
+            "evidence_ids": [
+              "p3_s03_e05"
+            ]
+          }
+        ]
+      }
+    ],
+    "expected_guard_behavior": {
+      "guard_generated_awards": 0,
+      "hard_veto_only_from_active_checked_contradiction": true,
+      "nonactive_hard_veto": false
+    },
+    "rationale": "Citação não é ancestral da autocorreção própria.",
+    "expected_active_claims": [
+      {
+        "claim_id": "p3_s03_e05:C3",
+        "source_span": "corrijo minha própria contagem para inferiores_brancas: 2",
+        "source_start": 127,
+        "source_end": 184,
+        "subject": "inferiores_brancas",
+        "obligation_id": "a.bottom_white_count",
+        "expected_state": "ACTIVE",
+        "written_value": "2",
+        "mathematically_correct": true,
+        "superseded_by": []
+      }
+    ],
+    "expected_superseded_claims": [
+      {
+        "claim_id": "p3_s03_e05:C2",
+        "source_span": "registrei inferiores_brancas: 1",
+        "source_start": 94,
+        "source_end": 125,
+        "subject": "inferiores_brancas",
+        "obligation_id": "a.bottom_white_count",
+        "expected_state": "SUPERSEDED",
+        "written_value": "1",
+        "mathematically_correct": false,
+        "superseded_by": [
+          "p3_s03_e05:C3"
+        ]
+      }
+    ],
+    "expected_non_adopted_claims": [
+      {
+        "claim_id": "p3_s03_e05:C1",
+        "source_span": "Célia: «inferiores_brancas: 6»",
+        "source_start": 29,
+        "source_end": 59,
+        "subject": "inferiores_brancas",
+        "obligation_id": "a.bottom_white_count",
+        "expected_state": "NON_ADOPTED",
+        "written_value": "6",
+        "mathematically_correct": false,
+        "superseded_by": []
+      }
+    ],
+    "expected_ambiguous_claims": []
+  },
+  {
+    "case_id": "p3_s03_e06",
+    "family": "E",
+    "expected_score_by_construction": 4.0,
+    "expected_discourse_states": [
+      {
+        "claim_id": "p3_s03_e06:C1",
+        "source_span": "segunda branca tivesse chance 1/6",
+        "source_start": 41,
+        "source_end": 74,
+        "subject": "segunda_branca",
+        "obligation_id": "b.second_white_probability",
+        "expected_state": "NON_ADOPTED",
+        "written_value": "1/6",
+        "mathematically_correct": false,
+        "superseded_by": []
+      },
+      {
+        "claim_id": "p3_s03_e06:C2",
+        "source_span": "favoráveis com escolhas distintas são 2*5=10",
+        "source_start": 132,
+        "source_end": 176,
+        "subject": "favoraveis_distintos",
+        "obligation_id": "b.different_favorable",
+        "expected_state": "ACTIVE",
+        "written_value": "2*5=10",
+        "mathematically_correct": true,
+        "superseded_by": []
+      },
+      {
+        "claim_id": "p3_s03_e06:C3",
+        "source_span": "resultado da segunda branca que assumo é 11/36",
+        "source_start": 182,
+        "source_end": 228,
+        "subject": "segunda_branca",
+        "obligation_id": "b.second_white_probability",
+        "expected_state": "ACTIVE",
+        "written_value": "11/36",
+        "mathematically_correct": true,
+        "superseded_by": []
+      }
+    ],
+    "expected_obligations_satisfied": [
+      "b.different_favorable",
+      "b.second_white_probability"
+    ],
+    "expected_obligations_unsatisfied": [
+      "a.bottom_white_count",
+      "a.first_white_probability",
+      "b.alternative_complete",
+      "b.ordered_pairs",
+      "b.same_compartment",
+      "c.conditional_success_1",
+      "c.conditional_success_2",
+      "c.continue_compartments",
+      "c.strategy_case_1",
+      "c.strategy_case_2",
+      "c.total_win_probability"
+    ],
+    "expected_conflicts": [],
+    "expected_hard_vetoes": [],
+    "expected_non_veto_conflict_visibility": [],
+    "expected_awards": [
+      {
+        "rubric_item": "b",
+        "rule_id": "b.different",
+        "points": 2.0,
+        "routes": [
+          "DETERMINISTIC"
+        ],
+        "obligations": [
+          {
+            "obligation_id": "b.different_favorable",
+            "eligible": true,
+            "verification_route": "DETERMINISTIC",
+            "evidence_ids": [
+              "p3_s03_e06"
+            ]
+          }
+        ]
+      },
+      {
+        "rubric_item": "b",
+        "rule_id": "b.conclusion",
+        "points": 2.0,
+        "routes": [
+          "DETERMINISTIC"
+        ],
+        "obligations": [
+          {
+            "obligation_id": "b.second_white_probability",
+            "eligible": true,
+            "verification_route": "DETERMINISTIC",
+            "evidence_ids": [
+              "p3_s03_e06"
+            ]
+          }
+        ]
+      }
+    ],
+    "expected_guard_behavior": {
+      "guard_generated_awards": 0,
+      "hard_veto_only_from_active_checked_contradiction": true,
+      "nonactive_hard_veto": false
+    },
+    "rationale": "Hipótese antecede solução; produto e resultado têm autoridade própria.",
+    "expected_active_claims": [
+      {
+        "claim_id": "p3_s03_e06:C2",
+        "source_span": "favoráveis com escolhas distintas são 2*5=10",
+        "source_start": 132,
+        "source_end": 176,
+        "subject": "favoraveis_distintos",
+        "obligation_id": "b.different_favorable",
+        "expected_state": "ACTIVE",
+        "written_value": "2*5=10",
+        "mathematically_correct": true,
+        "superseded_by": []
+      },
+      {
+        "claim_id": "p3_s03_e06:C3",
+        "source_span": "resultado da segunda branca que assumo é 11/36",
+        "source_start": 182,
+        "source_end": 228,
+        "subject": "segunda_branca",
+        "obligation_id": "b.second_white_probability",
+        "expected_state": "ACTIVE",
+        "written_value": "11/36",
+        "mathematically_correct": true,
+        "superseded_by": []
+      }
+    ],
+    "expected_superseded_claims": [],
+    "expected_non_adopted_claims": [
+      {
+        "claim_id": "p3_s03_e06:C1",
+        "source_span": "segunda branca tivesse chance 1/6",
+        "source_start": 41,
+        "source_end": 74,
+        "subject": "segunda_branca",
+        "obligation_id": "b.second_white_probability",
+        "expected_state": "NON_ADOPTED",
+        "written_value": "1/6",
+        "mathematically_correct": false,
+        "superseded_by": []
+      }
+    ],
+    "expected_ambiguous_claims": []
+  },
+  {
+    "case_id": "p3_s03_e07",
+    "family": "E",
+    "expected_score_by_construction": 2.0,
+    "expected_discourse_states": [
+      {
+        "claim_id": "p3_s03_e07:C1",
+        "source_span": "chance para a primeira branca é 1/3",
+        "source_start": 11,
+        "source_end": 46,
+        "subject": "primeira_branca",
+        "obligation_id": "a.first_white_probability",
+        "expected_state": "ACTIVE",
+        "written_value": "1/3",
+        "mathematically_correct": true,
+        "superseded_by": []
+      },
+      {
+        "claim_id": "p3_s03_e07:C2",
+        "source_span": "favoraveis_distintos: 2*5=10",
+        "source_start": 84,
+        "source_end": 112,
+        "subject": "favoraveis_distintos",
+        "obligation_id": "b.different_favorable",
+        "expected_state": "ACTIVE",
+        "written_value": "2*5=10",
+        "mathematically_correct": true,
+        "superseded_by": []
+      },
+      {
+        "claim_id": "p3_s03_e07:C3",
+        "source_span": "favoraveis_distintos: 2*4=8",
+        "source_start": 130,
+        "source_end": 157,
+        "subject": "favoraveis_distintos",
+        "obligation_id": "b.different_favorable",
+        "expected_state": "ACTIVE",
+        "written_value": "2*4=8",
+        "mathematically_correct": false,
+        "superseded_by": []
+      },
+      {
+        "claim_id": "p3_s03_e07:C4",
+        "source_span": "segunda_branca: 11/36",
+        "source_start": 248,
+        "source_end": 269,
+        "subject": "segunda_branca",
+        "obligation_id": "b.second_white_probability",
+        "expected_state": "ACTIVE",
+        "written_value": "11/36",
+        "mathematically_correct": true,
+        "superseded_by": []
+      }
+    ],
+    "expected_obligations_satisfied": [
+      "a.first_white_probability"
+    ],
+    "expected_obligations_unsatisfied": [
+      "a.bottom_white_count",
+      "b.alternative_complete",
+      "b.different_favorable",
+      "b.ordered_pairs",
+      "b.same_compartment",
+      "b.second_white_probability",
+      "c.conditional_success_1",
+      "c.conditional_success_2",
+      "c.continue_compartments",
+      "c.strategy_case_1",
+      "c.strategy_case_2",
+      "c.total_win_probability"
+    ],
+    "expected_conflicts": [
+      "b.different_favorable",
+      "b.second_white_probability"
+    ],
+    "expected_hard_vetoes": [
+      "b.different_favorable",
+      "b.second_white_probability"
+    ],
+    "expected_non_veto_conflict_visibility": [],
+    "expected_awards": [
+      {
+        "rubric_item": "a",
+        "rule_id": "a.probability",
+        "points": 2.0,
+        "routes": [
+          "DETERMINISTIC"
+        ],
+        "obligations": [
+          {
+            "obligation_id": "a.first_white_probability",
+            "eligible": true,
+            "verification_route": "DETERMINISTIC",
+            "evidence_ids": [
+              "p3_s03_e07"
+            ]
+          }
+        ]
+      }
+    ],
+    "expected_guard_behavior": {
+      "guard_generated_awards": 0,
+      "hard_veto_only_from_active_checked_contradiction": true,
+      "nonactive_hard_veto": false
+    },
+    "rationale": "Conflito adotado na contagem de b bloqueia conclusão dependente, não a.",
+    "expected_active_claims": [
+      {
+        "claim_id": "p3_s03_e07:C1",
+        "source_span": "chance para a primeira branca é 1/3",
+        "source_start": 11,
+        "source_end": 46,
+        "subject": "primeira_branca",
+        "obligation_id": "a.first_white_probability",
+        "expected_state": "ACTIVE",
+        "written_value": "1/3",
+        "mathematically_correct": true,
+        "superseded_by": []
+      },
+      {
+        "claim_id": "p3_s03_e07:C2",
+        "source_span": "favoraveis_distintos: 2*5=10",
+        "source_start": 84,
+        "source_end": 112,
+        "subject": "favoraveis_distintos",
+        "obligation_id": "b.different_favorable",
+        "expected_state": "ACTIVE",
+        "written_value": "2*5=10",
+        "mathematically_correct": true,
+        "superseded_by": []
+      },
+      {
+        "claim_id": "p3_s03_e07:C3",
+        "source_span": "favoraveis_distintos: 2*4=8",
+        "source_start": 130,
+        "source_end": 157,
+        "subject": "favoraveis_distintos",
+        "obligation_id": "b.different_favorable",
+        "expected_state": "ACTIVE",
+        "written_value": "2*4=8",
+        "mathematically_correct": false,
+        "superseded_by": []
+      },
+      {
+        "claim_id": "p3_s03_e07:C4",
+        "source_span": "segunda_branca: 11/36",
+        "source_start": 248,
+        "source_end": 269,
+        "subject": "segunda_branca",
+        "obligation_id": "b.second_white_probability",
+        "expected_state": "ACTIVE",
+        "written_value": "11/36",
+        "mathematically_correct": true,
+        "superseded_by": []
+      }
+    ],
+    "expected_superseded_claims": [],
+    "expected_non_adopted_claims": [],
+    "expected_ambiguous_claims": []
+  },
+  {
+    "case_id": "p3_s03_e08",
+    "family": "E",
+    "expected_score_by_construction": 8.0,
+    "expected_discourse_states": [
+      {
+        "claim_id": "p3_s03_e08:C1",
+        "source_span": "Minha antiga aposta após branca do compartimento 2 era preta",
+        "source_start": 3,
+        "source_end": 63,
+        "subject": "estrategia_2",
+        "obligation_id": "c.strategy_case_2",
+        "expected_state": "SUPERSEDED",
+        "written_value": "preta",
+        "mathematically_correct": false,
+        "superseded_by": [
+          "p3_s03_e08:C2"
+        ]
+      },
+      {
+        "claim_id": "p3_s03_e08:C2",
+        "source_span": "estrategia_2: cinza",
+        "source_start": 103,
+        "source_end": 122,
+        "subject": "estrategia_2",
+        "obligation_id": "c.strategy_case_2",
+        "expected_state": "ACTIVE",
+        "written_value": "cinza",
+        "mathematically_correct": true,
+        "superseded_by": []
+      },
+      {
+        "claim_id": "p3_s03_e08:C3",
+        "source_span": "contagem_2: 3",
+        "source_start": 152,
+        "source_end": 165,
+        "subject": "contagem_2",
+        "obligation_id": "c.strategy_case_2",
+        "expected_state": "ACTIVE",
+        "written_value": "3",
+        "mathematically_correct": true,
+        "superseded_by": []
+      },
+      {
+        "claim_id": "p3_s03_e08:C4",
+        "source_span": "estrategia_1: preta",
+        "source_start": 205,
+        "source_end": 224,
+        "subject": "estrategia_1",
+        "obligation_id": "c.strategy_case_1",
+        "expected_state": "ACTIVE",
+        "written_value": "preta",
+        "mathematically_correct": true,
+        "superseded_by": []
+      },
+      {
+        "claim_id": "p3_s03_e08:C5",
+        "source_span": "contagem_1: 3",
+        "source_start": 227,
+        "source_end": 240,
+        "subject": "contagem_1",
+        "obligation_id": "c.strategy_case_1",
+        "expected_state": "ACTIVE",
+        "written_value": "3",
+        "mathematically_correct": true,
+        "superseded_by": []
+      },
+      {
+        "claim_id": "p3_s03_e08:C6",
+        "source_span": "continuar: {1,2}",
+        "source_start": 263,
+        "source_end": 279,
+        "subject": "continuar",
+        "obligation_id": "c.continue_compartments",
+        "expected_state": "ACTIVE",
+        "written_value": "{1,2}",
+        "mathematically_correct": true,
+        "superseded_by": []
+      },
+      {
+        "claim_id": "p3_s03_e08:C7",
+        "source_span": "condicional_1: 3/6=1/2",
+        "source_start": 305,
+        "source_end": 327,
+        "subject": "condicional_1",
+        "obligation_id": "c.conditional_success_1",
+        "expected_state": "ACTIVE",
+        "written_value": "3/6=1/2",
+        "mathematically_correct": true,
+        "superseded_by": []
+      },
+      {
+        "claim_id": "p3_s03_e08:C8",
+        "source_span": "condicional_2: 3/6=1/2",
+        "source_start": 330,
+        "source_end": 352,
+        "subject": "condicional_2",
+        "obligation_id": "c.conditional_success_2",
+        "expected_state": "ACTIVE",
+        "written_value": "3/6=1/2",
+        "mathematically_correct": true,
+        "superseded_by": []
+      },
+      {
+        "claim_id": "p3_s03_e08:C9",
+        "source_span": "total: (1/6)*(1/2)+(1/6)*(1/2)=1/6",
+        "source_start": 382,
+        "source_end": 416,
+        "subject": "total",
+        "obligation_id": "c.total_win_probability",
+        "expected_state": "ACTIVE",
+        "written_value": "(1/6)*(1/2)+(1/6)*(1/2)=1/6",
+        "mathematically_correct": true,
+        "superseded_by": []
+      }
+    ],
+    "expected_obligations_satisfied": [
+      "c.conditional_success_1",
+      "c.conditional_success_2",
+      "c.continue_compartments",
+      "c.strategy_case_1",
+      "c.strategy_case_2",
+      "c.total_win_probability"
+    ],
+    "expected_obligations_unsatisfied": [
+      "a.bottom_white_count",
+      "a.first_white_probability",
+      "b.alternative_complete",
+      "b.different_favorable",
+      "b.ordered_pairs",
+      "b.same_compartment",
+      "b.second_white_probability"
+    ],
+    "expected_conflicts": [],
+    "expected_hard_vetoes": [],
+    "expected_non_veto_conflict_visibility": [],
+    "expected_awards": [
+      {
+        "rubric_item": "c",
+        "rule_id": "c.continue",
+        "points": 1.0,
+        "routes": [
+          "DETERMINISTIC"
+        ],
+        "obligations": [
+          {
+            "obligation_id": "c.continue_compartments",
+            "eligible": true,
+            "verification_route": "DETERMINISTIC",
+            "evidence_ids": [
+              "p3_s03_e08"
+            ]
+          }
+        ]
+      },
+      {
+        "rubric_item": "c",
+        "rule_id": "c.first_strategy",
+        "points": 2.0,
+        "routes": [
+          "DETERMINISTIC"
+        ],
+        "obligations": [
+          {
+            "obligation_id": "c.strategy_case_1",
+            "eligible": true,
+            "verification_route": "DETERMINISTIC",
+            "evidence_ids": [
+              "p3_s03_e08"
+            ]
+          }
+        ]
+      },
+      {
+        "rubric_item": "c",
+        "rule_id": "c.second_strategy",
+        "points": 2.0,
+        "routes": [
+          "DETERMINISTIC"
+        ],
+        "obligations": [
+          {
+            "obligation_id": "c.strategy_case_2",
+            "eligible": true,
+            "verification_route": "DETERMINISTIC",
+            "evidence_ids": [
+              "p3_s03_e08"
+            ]
+          }
+        ]
+      },
+      {
+        "rubric_item": "c",
+        "rule_id": "c.conditionals",
+        "points": 1.0,
+        "routes": [
+          "DETERMINISTIC"
+        ],
+        "obligations": [
+          {
+            "obligation_id": "c.conditional_success_1",
+            "eligible": true,
+            "verification_route": "DETERMINISTIC",
+            "evidence_ids": [
+              "p3_s03_e08"
+            ]
+          },
+          {
+            "obligation_id": "c.conditional_success_2",
+            "eligible": true,
+            "verification_route": "DETERMINISTIC",
+            "evidence_ids": [
+              "p3_s03_e08"
+            ]
+          },
+          {
+            "obligation_id": "c.strategy_case_1",
+            "eligible": true,
+            "verification_route": "DETERMINISTIC",
+            "evidence_ids": [
+              "p3_s03_e08"
+            ]
+          },
+          {
+            "obligation_id": "c.strategy_case_2",
+            "eligible": true,
+            "verification_route": "DETERMINISTIC",
+            "evidence_ids": [
+              "p3_s03_e08"
+            ]
+          }
+        ]
+      },
+      {
+        "rubric_item": "c",
+        "rule_id": "c.total",
+        "points": 2.0,
+        "routes": [
+          "DETERMINISTIC"
+        ],
+        "obligations": [
+          {
+            "obligation_id": "c.total_win_probability",
+            "eligible": true,
+            "verification_route": "DETERMINISTIC",
+            "evidence_ids": [
+              "p3_s03_e08"
+            ]
+          },
+          {
+            "obligation_id": "c.continue_compartments",
+            "eligible": true,
+            "verification_route": "DETERMINISTIC",
+            "evidence_ids": [
+              "p3_s03_e08"
+            ]
+          },
+          {
+            "obligation_id": "c.strategy_case_1",
+            "eligible": true,
+            "verification_route": "DETERMINISTIC",
+            "evidence_ids": [
+              "p3_s03_e08"
+            ]
+          },
+          {
+            "obligation_id": "c.strategy_case_2",
+            "eligible": true,
+            "verification_route": "DETERMINISTIC",
+            "evidence_ids": [
+              "p3_s03_e08"
+            ]
+          },
+          {
+            "obligation_id": "c.conditional_success_1",
+            "eligible": true,
+            "verification_route": "DETERMINISTIC",
+            "evidence_ids": [
+              "p3_s03_e08"
+            ]
+          },
+          {
+            "obligation_id": "c.conditional_success_2",
+            "eligible": true,
+            "verification_route": "DETERMINISTIC",
+            "evidence_ids": [
+              "p3_s03_e08"
+            ]
+          }
+        ]
+      }
+    ],
+    "expected_guard_behavior": {
+      "guard_generated_awards": 0,
+      "hard_veto_only_from_active_checked_contradiction": true,
+      "nonactive_hard_veto": false
+    },
+    "rationale": "Estratégia revista antes de condicionais e total completo; nenhum empréstimo da cor antiga.",
+    "expected_active_claims": [
+      {
+        "claim_id": "p3_s03_e08:C2",
+        "source_span": "estrategia_2: cinza",
+        "source_start": 103,
+        "source_end": 122,
+        "subject": "estrategia_2",
+        "obligation_id": "c.strategy_case_2",
+        "expected_state": "ACTIVE",
+        "written_value": "cinza",
+        "mathematically_correct": true,
+        "superseded_by": []
+      },
+      {
+        "claim_id": "p3_s03_e08:C3",
+        "source_span": "contagem_2: 3",
+        "source_start": 152,
+        "source_end": 165,
+        "subject": "contagem_2",
+        "obligation_id": "c.strategy_case_2",
+        "expected_state": "ACTIVE",
+        "written_value": "3",
+        "mathematically_correct": true,
+        "superseded_by": []
+      },
+      {
+        "claim_id": "p3_s03_e08:C4",
+        "source_span": "estrategia_1: preta",
+        "source_start": 205,
+        "source_end": 224,
+        "subject": "estrategia_1",
+        "obligation_id": "c.strategy_case_1",
+        "expected_state": "ACTIVE",
+        "written_value": "preta",
+        "mathematically_correct": true,
+        "superseded_by": []
+      },
+      {
+        "claim_id": "p3_s03_e08:C5",
+        "source_span": "contagem_1: 3",
+        "source_start": 227,
+        "source_end": 240,
+        "subject": "contagem_1",
+        "obligation_id": "c.strategy_case_1",
+        "expected_state": "ACTIVE",
+        "written_value": "3",
+        "mathematically_correct": true,
+        "superseded_by": []
+      },
+      {
+        "claim_id": "p3_s03_e08:C6",
+        "source_span": "continuar: {1,2}",
+        "source_start": 263,
+        "source_end": 279,
+        "subject": "continuar",
+        "obligation_id": "c.continue_compartments",
+        "expected_state": "ACTIVE",
+        "written_value": "{1,2}",
+        "mathematically_correct": true,
+        "superseded_by": []
+      },
+      {
+        "claim_id": "p3_s03_e08:C7",
+        "source_span": "condicional_1: 3/6=1/2",
+        "source_start": 305,
+        "source_end": 327,
+        "subject": "condicional_1",
+        "obligation_id": "c.conditional_success_1",
+        "expected_state": "ACTIVE",
+        "written_value": "3/6=1/2",
+        "mathematically_correct": true,
+        "superseded_by": []
+      },
+      {
+        "claim_id": "p3_s03_e08:C8",
+        "source_span": "condicional_2: 3/6=1/2",
+        "source_start": 330,
+        "source_end": 352,
+        "subject": "condicional_2",
+        "obligation_id": "c.conditional_success_2",
+        "expected_state": "ACTIVE",
+        "written_value": "3/6=1/2",
+        "mathematically_correct": true,
+        "superseded_by": []
+      },
+      {
+        "claim_id": "p3_s03_e08:C9",
+        "source_span": "total: (1/6)*(1/2)+(1/6)*(1/2)=1/6",
+        "source_start": 382,
+        "source_end": 416,
+        "subject": "total",
+        "obligation_id": "c.total_win_probability",
+        "expected_state": "ACTIVE",
+        "written_value": "(1/6)*(1/2)+(1/6)*(1/2)=1/6",
+        "mathematically_correct": true,
+        "superseded_by": []
+      }
+    ],
+    "expected_superseded_claims": [
+      {
+        "claim_id": "p3_s03_e08:C1",
+        "source_span": "Minha antiga aposta após branca do compartimento 2 era preta",
+        "source_start": 3,
+        "source_end": 63,
+        "subject": "estrategia_2",
+        "obligation_id": "c.strategy_case_2",
+        "expected_state": "SUPERSEDED",
+        "written_value": "preta",
+        "mathematically_correct": false,
+        "superseded_by": [
+          "p3_s03_e08:C2"
+        ]
+      }
+    ],
+    "expected_non_adopted_claims": [],
+    "expected_ambiguous_claims": []
+  }
+]
