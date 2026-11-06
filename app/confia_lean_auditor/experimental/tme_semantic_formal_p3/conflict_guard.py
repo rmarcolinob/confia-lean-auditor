@@ -97,6 +97,7 @@ def conflict_guards(document, evidence, mapping):
                     relation='same_compartment_second_white', literal_token=token,
                     literal_start=start, literal_end=start + len(token)),
                 original_normalized_claim=e.normalized_claim,
+                abandonment_decision=e.metadata.get('abandonment_safety'),
                 positive_mapping_rejection=rejected[e.evidence_id],
                 route='DETERMINISTIC', guard_only=True, award_eligible=False,
                 formal_status='FORMAL_NOT_ATTEMPTED', formal_attempted=False,

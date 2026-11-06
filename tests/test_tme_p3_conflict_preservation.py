@@ -77,8 +77,9 @@ def test_context_rejected_atomic_source_does_not_block_valid_independent_span(pr
     assert not r['conflict_guard_results'] and not r['conflicts']
 
 @pytest.mark.parametrize('change',[
- {'assertion_status':'hypothetical'},{'hypothetical':True},{'assertion_status':'abandoned'},
- {'abandoned':True},{'attributed_to_student':False},{'polarity':'negative'},
+ # Unsupported abandoned-only flags now have dedicated safety tests.
+ {'assertion_status':'hypothetical'},{'hypothetical':True},
+ {'attributed_to_student':False},{'polarity':'negative'},
  {'scope':'exploration'},{'scope':'side_calculation'},{'scope':'unknown'},
  {'assertion_status':'quoted'}])
 def test_model_context_flags_remain_vetoes(change):

@@ -16,6 +16,7 @@ from .mapper import SourceDocument,ObligationMapper
 from .verification import verify,POSITIVE
 from .verification import formal_state
 from .conflict_guard import conflict_guards
+from .abandonment import conflict_visibility, regular_safety_checks
 from confia_lean_auditor.experimental.tme_p3_checker_first.engine import audit_p3_checker_first
 
 ROOT=Path(__file__).resolve().parents[4]
@@ -31,7 +32,7 @@ def configuration_hashes(extractor,config):
         runner=sha(runner.read_text()),lean_toolchain=sha((ROOT/'lean-toolchain').read_text()),lake_manifest=sha((ROOT/'lake-manifest.json').read_text()),machine=sha((ROOT/'examples/pautas/tme2_problem3.machine.v1.json').read_text()))
 
 
-def reconcile(results,math_bridge,guard_bridge,atomic_guards=()):
+def reconcile(results,math_bridge,guard_bridge,atomic_guards=(),abandonment_guards=()):
     """Guard evidence is veto-only; omitted positive source cannot award points."""
     current={o['obligation_id']:o for o in guard_bridge['bridge']['evidence']['obligations']}
     guard_conflicts={c['obligation_id'] for c in guard_bridge['conflicts']}
@@ -40,16 +41,17 @@ def reconcile(results,math_bridge,guard_bridge,atomic_guards=()):
     for oid in REGISTRY:
         rows=[r for r in results if r['obligation_id']==oid]
         atomic_negative=[g for g in atomic_guards if g['obligation_id']==oid and g['mathematical_refutation']]
+        abandonment_negative=[g for g in abandonment_guards if g['obligation_id']==oid and g['mathematical_refutation']]
         positive=any(r['status'] in POSITIVE for r in rows)
         negative=any(r['mathematical_refutation'] for r in rows)
         contradictory=lambda o:o.metadata.get('reason') in {'CONFLICTING_FACT_RESULTS','CONFLICTING_CONDITIONAL_CONTEXTS'}
-        if (atomic_negative or positive and negative or any(r['status']=='CONFLICTING_EVIDENCE' for r in rows)
+        if (atomic_negative or abandonment_negative or positive and negative or any(r['status']=='CONFLICTING_EVIDENCE' for r in rows)
                 or any(r.get('checker_metadata',{}).get('decision',{}).get('reason')=='conflicting_source_evidence' for r in rows)
                 or contradictory(math[oid]) or oid in guard_conflicts or positive and current[oid]['status']=='refuted'):
             conflicts.append(dict(obligation_id=oid,status='CONFLICTING_EVIDENCE',resolved=False,
                 resolution_rule=None,reason='conflicting_source_or_checker_evidence',
-                evidence_ids=list(dict.fromkeys([i for r in rows for i in r['evidence_ids']]+[g['evidence_id'] for g in atomic_negative])),
-                atomic_guard_results=atomic_negative,
+                evidence_ids=list(dict.fromkeys([i for r in rows for i in r['evidence_ids']]+[g['evidence_id'] for g in atomic_negative+abandonment_negative])),
+                atomic_guard_results=atomic_negative,abandonment_guard_results=abandonment_negative,
                 selected_evidence=math[oid].model_dump(mode='json'),guard_evidence=current[oid],
                 guard_source_records=[r for r in guard_bridge['bridge']['auditor']['records'] if r['record_id'] in current[oid]['source_claim_ids']]))
     return conflicts
@@ -129,8 +131,12 @@ def evaluate(case_id,problem_id,text,*,mode='tme_semantic_formal',model='gpt-6.1
         mapping=ObligationMapper().map(document,units)
         bridge,results,projection=verify(document,units,mapping,config,case_id,use_lean=use_lean)
         guard=audit_p3_checker_first(document.items,solution_id=case_id,use_lean=False)
-        atomic_guards=conflict_guards(document,units,mapping)
-        conflicts=reconcile(results,bridge,guard,atomic_guards)
+        safety_units,abandonment_decisions=conflict_visibility(document,units)
+        recovered={d['evidence_id'] for d in abandonment_decisions if d['effective_conflict_visibility']}
+        safety_mapping=ObligationMapper().map(document,safety_units) if recovered else mapping
+        atomic_guards=conflict_guards(document,safety_units,safety_mapping)
+        abandonment_guards=regular_safety_checks(document,safety_units,safety_mapping,config,case_id,recovered)
+        conflicts=reconcile(results,bridge,guard,atomic_guards,abandonment_guards)
         observations,awards=award(case_id,units,mapping,results,conflicts)
         assessment=PautaEngine().evaluate(config,observations)
         credits=credited_rules(assessment,awards)
@@ -138,7 +144,8 @@ def evaluate(case_id,problem_id,text,*,mode='tme_semantic_formal',model='gpt-6.1
         blocked={c['obligation_id'] for c in conflicts if not c['resolved']}
         output.update(extracted_evidence=[u.model_dump(mode='json') for u in units],obligation_mapping=mapping,
             verification_results=results,awards=awards,credits=credits,conflicts=conflicts,projection=projection,
-            conflict_guard_results=atomic_guards,
+            conflict_guard_results=atomic_guards,abandonment_decisions=abandonment_decisions,
+            abandonment_guard_results=abandonment_guards,
             rejected_evidence=[r for r in results if r['status'] not in POSITIVE or not r['sufficiency_decision']['sufficient'] or r['obligation_id'] in blocked],
             mathematical_bridge=bridge.model_dump(mode='json'),evidence=observations.model_dump(mode='json'),
             pauta_assessment=assessment.model_dump(mode='json'),rubric_items=[i.model_dump(mode='json') for i in assessment.items])
