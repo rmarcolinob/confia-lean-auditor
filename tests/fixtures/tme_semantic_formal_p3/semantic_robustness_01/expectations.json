@@ -1,0 +1,2490 @@
+[
+  {
+    "case_id": "p3_rob_a01",
+    "family": "A",
+    "expected_score_by_construction": 2,
+    "expected_obligations_satisfied": [
+      "a.bottom_white_count"
+    ],
+    "expected_obligations_unsatisfied": [
+      "a.first_white_probability",
+      "b.ordered_pairs",
+      "b.different_favorable",
+      "b.same_compartment",
+      "b.second_white_probability",
+      "b.alternative_complete",
+      "c.continue_compartments",
+      "c.strategy_case_1",
+      "c.strategy_case_2",
+      "c.conditional_success_1",
+      "c.conditional_success_2",
+      "c.total_win_probability"
+    ],
+    "expected_context_rejections": [],
+    "expected_conflicts": [],
+    "expected_checker_routes": {
+      "a.bottom_white_count": "DETERMINISTIC",
+      "a.first_white_probability": "DETERMINISTIC",
+      "b.ordered_pairs": "COMPOSITE",
+      "b.different_favorable": "COMPOSITE",
+      "b.same_compartment": "DETERMINISTIC",
+      "b.second_white_probability": "COMPOSITE",
+      "b.alternative_complete": "COMPOSITE",
+      "c.continue_compartments": "DETERMINISTIC",
+      "c.strategy_case_1": "COMPOSITE",
+      "c.strategy_case_2": "COMPOSITE",
+      "c.conditional_success_1": "COMPOSITE",
+      "c.conditional_success_2": "COMPOSITE",
+      "c.total_win_probability": "COMPOSITE"
+    },
+    "expected_credit_rules": [
+      {
+        "rule_id": "a.count",
+        "points": 2,
+        "obligations": [
+          "a.bottom_white_count"
+        ]
+      }
+    ],
+    "expected_atomic_guard": "not_applicable",
+    "expected_mathematical_refutations": [],
+    "rationale": "Contagem explícita de duas inferiores brancas; a.count=2. A paráfrase não declara probabilidade."
+  },
+  {
+    "case_id": "p3_rob_a02",
+    "family": "A",
+    "expected_score_by_construction": 2,
+    "expected_obligations_satisfied": [
+      "a.first_white_probability"
+    ],
+    "expected_obligations_unsatisfied": [
+      "a.bottom_white_count",
+      "b.ordered_pairs",
+      "b.different_favorable",
+      "b.same_compartment",
+      "b.second_white_probability",
+      "b.alternative_complete",
+      "c.continue_compartments",
+      "c.strategy_case_1",
+      "c.strategy_case_2",
+      "c.conditional_success_1",
+      "c.conditional_success_2",
+      "c.total_win_probability"
+    ],
+    "expected_context_rejections": [],
+    "expected_conflicts": [],
+    "expected_checker_routes": {
+      "a.bottom_white_count": "DETERMINISTIC",
+      "a.first_white_probability": "DETERMINISTIC",
+      "b.ordered_pairs": "COMPOSITE",
+      "b.different_favorable": "COMPOSITE",
+      "b.same_compartment": "DETERMINISTIC",
+      "b.second_white_probability": "COMPOSITE",
+      "b.alternative_complete": "COMPOSITE",
+      "c.continue_compartments": "DETERMINISTIC",
+      "c.strategy_case_1": "COMPOSITE",
+      "c.strategy_case_2": "COMPOSITE",
+      "c.conditional_success_1": "COMPOSITE",
+      "c.conditional_success_2": "COMPOSITE",
+      "c.total_win_probability": "COMPOSITE"
+    },
+    "expected_credit_rules": [
+      {
+        "rule_id": "a.probability",
+        "points": 2,
+        "obligations": [
+          "a.first_white_probability"
+        ]
+      }
+    ],
+    "expected_atomic_guard": "not_applicable",
+    "expected_mathematical_refutations": [],
+    "rationale": "Valor 1/3 por extenso; resposta de a autoriza 2, sem inferir contagem."
+  },
+  {
+    "case_id": "p3_rob_a03",
+    "family": "A",
+    "expected_score_by_construction": 2,
+    "expected_obligations_satisfied": [
+      "b.ordered_pairs"
+    ],
+    "expected_obligations_unsatisfied": [
+      "a.bottom_white_count",
+      "a.first_white_probability",
+      "b.different_favorable",
+      "b.same_compartment",
+      "b.second_white_probability",
+      "b.alternative_complete",
+      "c.continue_compartments",
+      "c.strategy_case_1",
+      "c.strategy_case_2",
+      "c.conditional_success_1",
+      "c.conditional_success_2",
+      "c.total_win_probability"
+    ],
+    "expected_context_rejections": [],
+    "expected_conflicts": [],
+    "expected_checker_routes": {
+      "a.bottom_white_count": "DETERMINISTIC",
+      "a.first_white_probability": "DETERMINISTIC",
+      "b.ordered_pairs": "COMPOSITE",
+      "b.different_favorable": "COMPOSITE",
+      "b.same_compartment": "DETERMINISTIC",
+      "b.second_white_probability": "COMPOSITE",
+      "b.alternative_complete": "COMPOSITE",
+      "c.continue_compartments": "DETERMINISTIC",
+      "c.strategy_case_1": "COMPOSITE",
+      "c.strategy_case_2": "COMPOSITE",
+      "c.conditional_success_1": "COMPOSITE",
+      "c.conditional_success_2": "COMPOSITE",
+      "c.total_win_probability": "COMPOSITE"
+    },
+    "expected_credit_rules": [
+      {
+        "rule_id": "b.space",
+        "points": 2,
+        "obligations": [
+          "b.ordered_pairs"
+        ]
+      }
+    ],
+    "expected_atomic_guard": "not_applicable",
+    "expected_mathematical_refutations": [],
+    "rationale": "Relação 6*6 explicitamente escrita satisfaz b.space; apenas 36 não bastaria."
+  },
+  {
+    "case_id": "p3_rob_a04",
+    "family": "A",
+    "expected_score_by_construction": 2,
+    "expected_obligations_satisfied": [
+      "b.different_favorable"
+    ],
+    "expected_obligations_unsatisfied": [
+      "a.bottom_white_count",
+      "a.first_white_probability",
+      "b.ordered_pairs",
+      "b.same_compartment",
+      "b.second_white_probability",
+      "b.alternative_complete",
+      "c.continue_compartments",
+      "c.strategy_case_1",
+      "c.strategy_case_2",
+      "c.conditional_success_1",
+      "c.conditional_success_2",
+      "c.total_win_probability"
+    ],
+    "expected_context_rejections": [],
+    "expected_conflicts": [],
+    "expected_checker_routes": {
+      "a.bottom_white_count": "DETERMINISTIC",
+      "a.first_white_probability": "DETERMINISTIC",
+      "b.ordered_pairs": "COMPOSITE",
+      "b.different_favorable": "COMPOSITE",
+      "b.same_compartment": "DETERMINISTIC",
+      "b.second_white_probability": "COMPOSITE",
+      "b.alternative_complete": "COMPOSITE",
+      "c.continue_compartments": "DETERMINISTIC",
+      "c.strategy_case_1": "COMPOSITE",
+      "c.strategy_case_2": "COMPOSITE",
+      "c.conditional_success_1": "COMPOSITE",
+      "c.conditional_success_2": "COMPOSITE",
+      "c.total_win_probability": "COMPOSITE"
+    },
+    "expected_credit_rules": [
+      {
+        "rule_id": "b.different",
+        "points": 2,
+        "obligations": [
+          "b.different_favorable"
+        ]
+      }
+    ],
+    "expected_atomic_guard": "not_applicable",
+    "expected_mathematical_refutations": [],
+    "rationale": "Relação explícita 2*5=10 satisfaz b.different."
+  },
+  {
+    "case_id": "p3_rob_a05",
+    "family": "A",
+    "expected_score_by_construction": 2,
+    "expected_obligations_satisfied": [
+      "b.same_compartment"
+    ],
+    "expected_obligations_unsatisfied": [
+      "a.bottom_white_count",
+      "a.first_white_probability",
+      "b.ordered_pairs",
+      "b.different_favorable",
+      "b.second_white_probability",
+      "b.alternative_complete",
+      "c.continue_compartments",
+      "c.strategy_case_1",
+      "c.strategy_case_2",
+      "c.conditional_success_1",
+      "c.conditional_success_2",
+      "c.total_win_probability"
+    ],
+    "expected_context_rejections": [],
+    "expected_conflicts": [],
+    "expected_checker_routes": {
+      "a.bottom_white_count": "DETERMINISTIC",
+      "a.first_white_probability": "DETERMINISTIC",
+      "b.ordered_pairs": "COMPOSITE",
+      "b.different_favorable": "COMPOSITE",
+      "b.same_compartment": "DETERMINISTIC",
+      "b.second_white_probability": "COMPOSITE",
+      "b.alternative_complete": "COMPOSITE",
+      "c.continue_compartments": "DETERMINISTIC",
+      "c.strategy_case_1": "COMPOSITE",
+      "c.strategy_case_2": "COMPOSITE",
+      "c.conditional_success_1": "COMPOSITE",
+      "c.conditional_success_2": "COMPOSITE",
+      "c.total_win_probability": "COMPOSITE"
+    },
+    "expected_credit_rules": [
+      {
+        "rule_id": "b.same",
+        "points": 2,
+        "obligations": [
+          "b.same_compartment"
+        ]
+      }
+    ],
+    "expected_atomic_guard": "not_applicable",
+    "expected_mathematical_refutations": [],
+    "rationale": "Exclusividade do sexto escrita em prosa; comparação com diagonal do modelo."
+  },
+  {
+    "case_id": "p3_rob_a06",
+    "family": "A",
+    "expected_score_by_construction": 2,
+    "expected_obligations_satisfied": [
+      "c.strategy_case_1"
+    ],
+    "expected_obligations_unsatisfied": [
+      "a.bottom_white_count",
+      "a.first_white_probability",
+      "b.ordered_pairs",
+      "b.different_favorable",
+      "b.same_compartment",
+      "b.second_white_probability",
+      "b.alternative_complete",
+      "c.continue_compartments",
+      "c.strategy_case_2",
+      "c.conditional_success_1",
+      "c.conditional_success_2",
+      "c.total_win_probability"
+    ],
+    "expected_context_rejections": [],
+    "expected_conflicts": [],
+    "expected_checker_routes": {
+      "a.bottom_white_count": "DETERMINISTIC",
+      "a.first_white_probability": "DETERMINISTIC",
+      "b.ordered_pairs": "COMPOSITE",
+      "b.different_favorable": "COMPOSITE",
+      "b.same_compartment": "DETERMINISTIC",
+      "b.second_white_probability": "COMPOSITE",
+      "b.alternative_complete": "COMPOSITE",
+      "c.continue_compartments": "DETERMINISTIC",
+      "c.strategy_case_1": "COMPOSITE",
+      "c.strategy_case_2": "COMPOSITE",
+      "c.conditional_success_1": "COMPOSITE",
+      "c.conditional_success_2": "COMPOSITE",
+      "c.total_win_probability": "COMPOSITE"
+    },
+    "expected_credit_rules": [
+      {
+        "rule_id": "c.first_strategy",
+        "points": 2,
+        "obligations": [
+          "c.strategy_case_1"
+        ]
+      }
+    ],
+    "expected_atomic_guard": "not_applicable",
+    "expected_mathematical_refutations": [],
+    "rationale": "Cor preta e contagem três associadas ao caso 1; sem condicional/global."
+  },
+  {
+    "case_id": "p3_rob_a07",
+    "family": "A",
+    "expected_score_by_construction": 2,
+    "expected_obligations_satisfied": [
+      "c.strategy_case_2"
+    ],
+    "expected_obligations_unsatisfied": [
+      "a.bottom_white_count",
+      "a.first_white_probability",
+      "b.ordered_pairs",
+      "b.different_favorable",
+      "b.same_compartment",
+      "b.second_white_probability",
+      "b.alternative_complete",
+      "c.continue_compartments",
+      "c.strategy_case_1",
+      "c.conditional_success_1",
+      "c.conditional_success_2",
+      "c.total_win_probability"
+    ],
+    "expected_context_rejections": [],
+    "expected_conflicts": [],
+    "expected_checker_routes": {
+      "a.bottom_white_count": "DETERMINISTIC",
+      "a.first_white_probability": "DETERMINISTIC",
+      "b.ordered_pairs": "COMPOSITE",
+      "b.different_favorable": "COMPOSITE",
+      "b.same_compartment": "DETERMINISTIC",
+      "b.second_white_probability": "COMPOSITE",
+      "b.alternative_complete": "COMPOSITE",
+      "c.continue_compartments": "DETERMINISTIC",
+      "c.strategy_case_1": "COMPOSITE",
+      "c.strategy_case_2": "COMPOSITE",
+      "c.conditional_success_1": "COMPOSITE",
+      "c.conditional_success_2": "COMPOSITE",
+      "c.total_win_probability": "COMPOSITE"
+    },
+    "expected_credit_rules": [
+      {
+        "rule_id": "c.second_strategy",
+        "points": 2,
+        "obligations": [
+          "c.strategy_case_2"
+        ]
+      }
+    ],
+    "expected_atomic_guard": "not_applicable",
+    "expected_mathematical_refutations": [],
+    "rationale": "Cor cinza e contagem três do caso 2; maximização confirmável pela máquina."
+  },
+  {
+    "case_id": "p3_rob_a08",
+    "family": "A",
+    "expected_score_by_construction": 8,
+    "expected_obligations_satisfied": [
+      "c.continue_compartments",
+      "c.strategy_case_1",
+      "c.strategy_case_2",
+      "c.conditional_success_1",
+      "c.conditional_success_2",
+      "c.total_win_probability"
+    ],
+    "expected_obligations_unsatisfied": [
+      "a.bottom_white_count",
+      "a.first_white_probability",
+      "b.ordered_pairs",
+      "b.different_favorable",
+      "b.same_compartment",
+      "b.second_white_probability",
+      "b.alternative_complete"
+    ],
+    "expected_context_rejections": [],
+    "expected_conflicts": [],
+    "expected_checker_routes": {
+      "a.bottom_white_count": "DETERMINISTIC",
+      "a.first_white_probability": "DETERMINISTIC",
+      "b.ordered_pairs": "COMPOSITE",
+      "b.different_favorable": "COMPOSITE",
+      "b.same_compartment": "DETERMINISTIC",
+      "b.second_white_probability": "COMPOSITE",
+      "b.alternative_complete": "COMPOSITE",
+      "c.continue_compartments": "DETERMINISTIC",
+      "c.strategy_case_1": "COMPOSITE",
+      "c.strategy_case_2": "COMPOSITE",
+      "c.conditional_success_1": "COMPOSITE",
+      "c.conditional_success_2": "COMPOSITE",
+      "c.total_win_probability": "COMPOSITE"
+    },
+    "expected_credit_rules": [
+      {
+        "rule_id": "c.continue",
+        "points": 1,
+        "obligations": [
+          "c.continue_compartments"
+        ]
+      },
+      {
+        "rule_id": "c.first_strategy",
+        "points": 2,
+        "obligations": [
+          "c.strategy_case_1"
+        ]
+      },
+      {
+        "rule_id": "c.second_strategy",
+        "points": 2,
+        "obligations": [
+          "c.strategy_case_2"
+        ]
+      },
+      {
+        "rule_id": "c.conditionals",
+        "points": 1,
+        "obligations": [
+          "c.conditional_success_1",
+          "c.conditional_success_2",
+          "c.strategy_case_1",
+          "c.strategy_case_2"
+        ]
+      },
+      {
+        "rule_id": "c.total",
+        "points": 2,
+        "obligations": [
+          "c.total_win_probability",
+          "c.continue_compartments",
+          "c.strategy_case_1",
+          "c.strategy_case_2",
+          "c.conditional_success_1",
+          "c.conditional_success_2"
+        ]
+      }
+    ],
+    "expected_atomic_guard": "not_applicable",
+    "expected_mathematical_refutations": [],
+    "rationale": "Ordem global antes dos casos não elimina dependências escritas depois. Desenvolvimento combinado autorizado; total 8."
+  },
+  {
+    "case_id": "p3_rob_b01",
+    "family": "B",
+    "expected_score_by_construction": 2,
+    "expected_obligations_satisfied": [
+      "a.first_white_probability"
+    ],
+    "expected_obligations_unsatisfied": [
+      "a.bottom_white_count",
+      "b.ordered_pairs",
+      "b.different_favorable",
+      "b.same_compartment",
+      "b.second_white_probability",
+      "b.alternative_complete",
+      "c.continue_compartments",
+      "c.strategy_case_1",
+      "c.strategy_case_2",
+      "c.conditional_success_1",
+      "c.conditional_success_2",
+      "c.total_win_probability"
+    ],
+    "expected_context_rejections": [],
+    "expected_conflicts": [],
+    "expected_checker_routes": {
+      "a.bottom_white_count": "DETERMINISTIC",
+      "a.first_white_probability": "FORMAL",
+      "b.ordered_pairs": "COMPOSITE",
+      "b.different_favorable": "COMPOSITE",
+      "b.same_compartment": "DETERMINISTIC",
+      "b.second_white_probability": "COMPOSITE",
+      "b.alternative_complete": "COMPOSITE",
+      "c.continue_compartments": "DETERMINISTIC",
+      "c.strategy_case_1": "COMPOSITE",
+      "c.strategy_case_2": "COMPOSITE",
+      "c.conditional_success_1": "COMPOSITE",
+      "c.conditional_success_2": "COMPOSITE",
+      "c.total_win_probability": "COMPOSITE"
+    },
+    "expected_credit_rules": [
+      {
+        "rule_id": "a.probability",
+        "points": 2,
+        "obligations": [
+          "a.first_white_probability"
+        ]
+      }
+    ],
+    "expected_atomic_guard": "not_applicable",
+    "expected_mathematical_refutations": [],
+    "rationale": "Igualdade racional escrita; não infere a.count."
+  },
+  {
+    "case_id": "p3_rob_b02",
+    "family": "B",
+    "expected_score_by_construction": 2,
+    "expected_obligations_satisfied": [
+      "a.first_white_probability"
+    ],
+    "expected_obligations_unsatisfied": [
+      "a.bottom_white_count",
+      "b.ordered_pairs",
+      "b.different_favorable",
+      "b.same_compartment",
+      "b.second_white_probability",
+      "b.alternative_complete",
+      "c.continue_compartments",
+      "c.strategy_case_1",
+      "c.strategy_case_2",
+      "c.conditional_success_1",
+      "c.conditional_success_2",
+      "c.total_win_probability"
+    ],
+    "expected_context_rejections": [],
+    "expected_conflicts": [],
+    "expected_checker_routes": {
+      "a.bottom_white_count": "DETERMINISTIC",
+      "a.first_white_probability": "DETERMINISTIC",
+      "b.ordered_pairs": "COMPOSITE",
+      "b.different_favorable": "COMPOSITE",
+      "b.same_compartment": "DETERMINISTIC",
+      "b.second_white_probability": "COMPOSITE",
+      "b.alternative_complete": "COMPOSITE",
+      "c.continue_compartments": "DETERMINISTIC",
+      "c.strategy_case_1": "COMPOSITE",
+      "c.strategy_case_2": "COMPOSITE",
+      "c.conditional_success_1": "COMPOSITE",
+      "c.conditional_success_2": "COMPOSITE",
+      "c.total_win_probability": "COMPOSITE"
+    },
+    "expected_credit_rules": [
+      {
+        "rule_id": "a.probability",
+        "points": 2,
+        "obligations": [
+          "a.first_white_probability"
+        ]
+      }
+    ],
+    "expected_atomic_guard": "not_applicable",
+    "expected_mathematical_refutations": [],
+    "rationale": "Valor isolado expressamente autorizado em a; rota determinística."
+  },
+  {
+    "case_id": "p3_rob_b03",
+    "family": "B",
+    "expected_score_by_construction": 2,
+    "expected_obligations_satisfied": [
+      "b.ordered_pairs"
+    ],
+    "expected_obligations_unsatisfied": [
+      "a.bottom_white_count",
+      "a.first_white_probability",
+      "b.different_favorable",
+      "b.same_compartment",
+      "b.second_white_probability",
+      "b.alternative_complete",
+      "c.continue_compartments",
+      "c.strategy_case_1",
+      "c.strategy_case_2",
+      "c.conditional_success_1",
+      "c.conditional_success_2",
+      "c.total_win_probability"
+    ],
+    "expected_context_rejections": [],
+    "expected_conflicts": [],
+    "expected_checker_routes": {
+      "a.bottom_white_count": "DETERMINISTIC",
+      "a.first_white_probability": "DETERMINISTIC",
+      "b.ordered_pairs": "COMPOSITE",
+      "b.different_favorable": "COMPOSITE",
+      "b.same_compartment": "DETERMINISTIC",
+      "b.second_white_probability": "COMPOSITE",
+      "b.alternative_complete": "COMPOSITE",
+      "c.continue_compartments": "DETERMINISTIC",
+      "c.strategy_case_1": "COMPOSITE",
+      "c.strategy_case_2": "COMPOSITE",
+      "c.conditional_success_1": "COMPOSITE",
+      "c.conditional_success_2": "COMPOSITE",
+      "c.total_win_probability": "COMPOSITE"
+    },
+    "expected_credit_rules": [
+      {
+        "rule_id": "b.space",
+        "points": 2,
+        "obligations": [
+          "b.ordered_pairs"
+        ]
+      }
+    ],
+    "expected_atomic_guard": "not_applicable",
+    "expected_mathematical_refutations": [],
+    "rationale": "Potência n^2 representa as duas escolhas; count_relation admite potência de expoente 2."
+  },
+  {
+    "case_id": "p3_rob_b04",
+    "family": "B",
+    "expected_score_by_construction": 2,
+    "expected_obligations_satisfied": [
+      "b.ordered_pairs"
+    ],
+    "expected_obligations_unsatisfied": [
+      "a.bottom_white_count",
+      "a.first_white_probability",
+      "b.different_favorable",
+      "b.same_compartment",
+      "b.second_white_probability",
+      "b.alternative_complete",
+      "c.continue_compartments",
+      "c.strategy_case_1",
+      "c.strategy_case_2",
+      "c.conditional_success_1",
+      "c.conditional_success_2",
+      "c.total_win_probability"
+    ],
+    "expected_context_rejections": [],
+    "expected_conflicts": [],
+    "expected_checker_routes": {
+      "a.bottom_white_count": "DETERMINISTIC",
+      "a.first_white_probability": "DETERMINISTIC",
+      "b.ordered_pairs": "COMPOSITE",
+      "b.different_favorable": "COMPOSITE",
+      "b.same_compartment": "DETERMINISTIC",
+      "b.second_white_probability": "COMPOSITE",
+      "b.alternative_complete": "COMPOSITE",
+      "c.continue_compartments": "DETERMINISTIC",
+      "c.strategy_case_1": "COMPOSITE",
+      "c.strategy_case_2": "COMPOSITE",
+      "c.conditional_success_1": "COMPOSITE",
+      "c.conditional_success_2": "COMPOSITE",
+      "c.total_win_probability": "COMPOSITE"
+    },
+    "expected_credit_rules": [
+      {
+        "rule_id": "b.space",
+        "points": 2,
+        "obligations": [
+          "b.ordered_pairs"
+        ]
+      }
+    ],
+    "expected_atomic_guard": "not_applicable",
+    "expected_mathematical_refutations": [],
+    "rationale": "Representação tipada exata da relação de duas escolhas."
+  },
+  {
+    "case_id": "p3_rob_b05",
+    "family": "B",
+    "expected_score_by_construction": 2,
+    "expected_obligations_satisfied": [
+      "b.different_favorable"
+    ],
+    "expected_obligations_unsatisfied": [
+      "a.bottom_white_count",
+      "a.first_white_probability",
+      "b.ordered_pairs",
+      "b.same_compartment",
+      "b.second_white_probability",
+      "b.alternative_complete",
+      "c.continue_compartments",
+      "c.strategy_case_1",
+      "c.strategy_case_2",
+      "c.conditional_success_1",
+      "c.conditional_success_2",
+      "c.total_win_probability"
+    ],
+    "expected_context_rejections": [],
+    "expected_conflicts": [],
+    "expected_checker_routes": {
+      "a.bottom_white_count": "DETERMINISTIC",
+      "a.first_white_probability": "DETERMINISTIC",
+      "b.ordered_pairs": "COMPOSITE",
+      "b.different_favorable": "COMPOSITE",
+      "b.same_compartment": "DETERMINISTIC",
+      "b.second_white_probability": "COMPOSITE",
+      "b.alternative_complete": "COMPOSITE",
+      "c.continue_compartments": "DETERMINISTIC",
+      "c.strategy_case_1": "COMPOSITE",
+      "c.strategy_case_2": "COMPOSITE",
+      "c.conditional_success_1": "COMPOSITE",
+      "c.conditional_success_2": "COMPOSITE",
+      "c.total_win_probability": "COMPOSITE"
+    },
+    "expected_credit_rules": [
+      {
+        "rule_id": "b.different",
+        "points": 2,
+        "obligations": [
+          "b.different_favorable"
+        ]
+      }
+    ],
+    "expected_atomic_guard": "not_applicable",
+    "expected_mathematical_refutations": [],
+    "rationale": "Produto correto distinto; não conclui probabilidade."
+  },
+  {
+    "case_id": "p3_rob_b06",
+    "family": "B",
+    "expected_score_by_construction": 2,
+    "expected_obligations_satisfied": [
+      "b.second_white_probability"
+    ],
+    "expected_obligations_unsatisfied": [
+      "a.bottom_white_count",
+      "a.first_white_probability",
+      "b.ordered_pairs",
+      "b.different_favorable",
+      "b.same_compartment",
+      "b.alternative_complete",
+      "c.continue_compartments",
+      "c.strategy_case_1",
+      "c.strategy_case_2",
+      "c.conditional_success_1",
+      "c.conditional_success_2",
+      "c.total_win_probability"
+    ],
+    "expected_context_rejections": [],
+    "expected_conflicts": [],
+    "expected_checker_routes": {
+      "a.bottom_white_count": "DETERMINISTIC",
+      "a.first_white_probability": "DETERMINISTIC",
+      "b.ordered_pairs": "COMPOSITE",
+      "b.different_favorable": "COMPOSITE",
+      "b.same_compartment": "DETERMINISTIC",
+      "b.second_white_probability": "COMPOSITE",
+      "b.alternative_complete": "COMPOSITE",
+      "c.continue_compartments": "DETERMINISTIC",
+      "c.strategy_case_1": "COMPOSITE",
+      "c.strategy_case_2": "COMPOSITE",
+      "c.conditional_success_1": "COMPOSITE",
+      "c.conditional_success_2": "COMPOSITE",
+      "c.total_win_probability": "COMPOSITE"
+    },
+    "expected_credit_rules": [
+      {
+        "rule_id": "b.conclusion",
+        "points": 2,
+        "obligations": [
+          "b.second_white_probability"
+        ]
+      }
+    ],
+    "expected_atomic_guard": "not_applicable",
+    "expected_mathematical_refutations": [],
+    "rationale": "Partição 10+1/36 escrita e verificável; não inventa os argumentos de b.space/b.different."
+  },
+  {
+    "case_id": "p3_rob_b07",
+    "family": "B",
+    "expected_score_by_construction": 2,
+    "expected_obligations_satisfied": [
+      "c.strategy_case_1",
+      "c.conditional_success_1"
+    ],
+    "expected_obligations_unsatisfied": [
+      "a.bottom_white_count",
+      "a.first_white_probability",
+      "b.ordered_pairs",
+      "b.different_favorable",
+      "b.same_compartment",
+      "b.second_white_probability",
+      "b.alternative_complete",
+      "c.continue_compartments",
+      "c.strategy_case_2",
+      "c.conditional_success_2",
+      "c.total_win_probability"
+    ],
+    "expected_context_rejections": [],
+    "expected_conflicts": [],
+    "expected_checker_routes": {
+      "a.bottom_white_count": "DETERMINISTIC",
+      "a.first_white_probability": "DETERMINISTIC",
+      "b.ordered_pairs": "COMPOSITE",
+      "b.different_favorable": "COMPOSITE",
+      "b.same_compartment": "DETERMINISTIC",
+      "b.second_white_probability": "COMPOSITE",
+      "b.alternative_complete": "COMPOSITE",
+      "c.continue_compartments": "DETERMINISTIC",
+      "c.strategy_case_1": "COMPOSITE",
+      "c.strategy_case_2": "COMPOSITE",
+      "c.conditional_success_1": "COMPOSITE",
+      "c.conditional_success_2": "COMPOSITE",
+      "c.total_win_probability": "COMPOSITE"
+    },
+    "expected_credit_rules": [
+      {
+        "rule_id": "c.first_strategy",
+        "points": 2,
+        "obligations": [
+          "c.strategy_case_1"
+        ]
+      }
+    ],
+    "expected_atomic_guard": "not_applicable",
+    "expected_mathematical_refutations": [],
+    "rationale": "Uma estratégia e sua condicional; all_of de c.conditionals requer também caso 2, logo somente 2 pontos."
+  },
+  {
+    "case_id": "p3_rob_b08",
+    "family": "B",
+    "expected_score_by_construction": 8,
+    "expected_obligations_satisfied": [
+      "c.continue_compartments",
+      "c.strategy_case_1",
+      "c.strategy_case_2",
+      "c.conditional_success_1",
+      "c.conditional_success_2",
+      "c.total_win_probability"
+    ],
+    "expected_obligations_unsatisfied": [
+      "a.bottom_white_count",
+      "a.first_white_probability",
+      "b.ordered_pairs",
+      "b.different_favorable",
+      "b.same_compartment",
+      "b.second_white_probability",
+      "b.alternative_complete"
+    ],
+    "expected_context_rejections": [],
+    "expected_conflicts": [],
+    "expected_checker_routes": {
+      "a.bottom_white_count": "DETERMINISTIC",
+      "a.first_white_probability": "DETERMINISTIC",
+      "b.ordered_pairs": "COMPOSITE",
+      "b.different_favorable": "COMPOSITE",
+      "b.same_compartment": "DETERMINISTIC",
+      "b.second_white_probability": "COMPOSITE",
+      "b.alternative_complete": "COMPOSITE",
+      "c.continue_compartments": "DETERMINISTIC",
+      "c.strategy_case_1": "COMPOSITE",
+      "c.strategy_case_2": "COMPOSITE",
+      "c.conditional_success_1": "COMPOSITE",
+      "c.conditional_success_2": "COMPOSITE",
+      "c.total_win_probability": "COMPOSITE"
+    },
+    "expected_credit_rules": [
+      {
+        "rule_id": "c.continue",
+        "points": 1,
+        "obligations": [
+          "c.continue_compartments"
+        ]
+      },
+      {
+        "rule_id": "c.first_strategy",
+        "points": 2,
+        "obligations": [
+          "c.strategy_case_1"
+        ]
+      },
+      {
+        "rule_id": "c.second_strategy",
+        "points": 2,
+        "obligations": [
+          "c.strategy_case_2"
+        ]
+      },
+      {
+        "rule_id": "c.conditionals",
+        "points": 1,
+        "obligations": [
+          "c.conditional_success_1",
+          "c.conditional_success_2",
+          "c.strategy_case_1",
+          "c.strategy_case_2"
+        ]
+      },
+      {
+        "rule_id": "c.total",
+        "points": 2,
+        "obligations": [
+          "c.total_win_probability",
+          "c.continue_compartments",
+          "c.strategy_case_1",
+          "c.strategy_case_2",
+          "c.conditional_success_1",
+          "c.conditional_success_2"
+        ]
+      }
+    ],
+    "expected_atomic_guard": "not_applicable",
+    "expected_mathematical_refutations": [],
+    "rationale": "Produto combinado em ordem invertida admitido pelo checker, com contexto completo."
+  },
+  {
+    "case_id": "p3_rob_c01",
+    "family": "C",
+    "expected_score_by_construction": 2,
+    "expected_obligations_satisfied": [
+      "a.first_white_probability"
+    ],
+    "expected_obligations_unsatisfied": [
+      "a.bottom_white_count",
+      "b.ordered_pairs",
+      "b.different_favorable",
+      "b.same_compartment",
+      "b.second_white_probability",
+      "b.alternative_complete",
+      "c.continue_compartments",
+      "c.strategy_case_1",
+      "c.strategy_case_2",
+      "c.conditional_success_1",
+      "c.conditional_success_2",
+      "c.total_win_probability"
+    ],
+    "expected_context_rejections": [],
+    "expected_conflicts": [],
+    "expected_checker_routes": {
+      "a.bottom_white_count": "DETERMINISTIC",
+      "a.first_white_probability": "DETERMINISTIC",
+      "b.ordered_pairs": "COMPOSITE",
+      "b.different_favorable": "COMPOSITE",
+      "b.same_compartment": "DETERMINISTIC",
+      "b.second_white_probability": "COMPOSITE",
+      "b.alternative_complete": "COMPOSITE",
+      "c.continue_compartments": "DETERMINISTIC",
+      "c.strategy_case_1": "COMPOSITE",
+      "c.strategy_case_2": "COMPOSITE",
+      "c.conditional_success_1": "COMPOSITE",
+      "c.conditional_success_2": "COMPOSITE",
+      "c.total_win_probability": "COMPOSITE"
+    },
+    "expected_credit_rules": [
+      {
+        "rule_id": "a.probability",
+        "points": 2,
+        "obligations": [
+          "a.first_white_probability"
+        ]
+      }
+    ],
+    "expected_atomic_guard": "not_applicable",
+    "expected_mathematical_refutations": [],
+    "rationale": "Resultado isolado de a autoriza 2 pontos."
+  },
+  {
+    "case_id": "p3_rob_c02",
+    "family": "C",
+    "expected_score_by_construction": 2,
+    "expected_obligations_satisfied": [
+      "a.bottom_white_count"
+    ],
+    "expected_obligations_unsatisfied": [
+      "a.first_white_probability",
+      "b.ordered_pairs",
+      "b.different_favorable",
+      "b.same_compartment",
+      "b.second_white_probability",
+      "b.alternative_complete",
+      "c.continue_compartments",
+      "c.strategy_case_1",
+      "c.strategy_case_2",
+      "c.conditional_success_1",
+      "c.conditional_success_2",
+      "c.total_win_probability"
+    ],
+    "expected_context_rejections": [],
+    "expected_conflicts": [],
+    "expected_checker_routes": {
+      "a.bottom_white_count": "DETERMINISTIC",
+      "a.first_white_probability": "DETERMINISTIC",
+      "b.ordered_pairs": "COMPOSITE",
+      "b.different_favorable": "COMPOSITE",
+      "b.same_compartment": "DETERMINISTIC",
+      "b.second_white_probability": "COMPOSITE",
+      "b.alternative_complete": "COMPOSITE",
+      "c.continue_compartments": "DETERMINISTIC",
+      "c.strategy_case_1": "COMPOSITE",
+      "c.strategy_case_2": "COMPOSITE",
+      "c.conditional_success_1": "COMPOSITE",
+      "c.conditional_success_2": "COMPOSITE",
+      "c.total_win_probability": "COMPOSITE"
+    },
+    "expected_credit_rules": [
+      {
+        "rule_id": "a.count",
+        "points": 2,
+        "obligations": [
+          "a.bottom_white_count"
+        ]
+      }
+    ],
+    "expected_atomic_guard": "not_applicable",
+    "expected_mathematical_refutations": [],
+    "rationale": "Somente contagem, não cálculo da probabilidade."
+  },
+  {
+    "case_id": "p3_rob_c03",
+    "family": "C",
+    "expected_score_by_construction": 0,
+    "expected_obligations_satisfied": [],
+    "expected_obligations_unsatisfied": [
+      "a.bottom_white_count",
+      "a.first_white_probability",
+      "b.ordered_pairs",
+      "b.different_favorable",
+      "b.same_compartment",
+      "b.second_white_probability",
+      "b.alternative_complete",
+      "c.continue_compartments",
+      "c.strategy_case_1",
+      "c.strategy_case_2",
+      "c.conditional_success_1",
+      "c.conditional_success_2",
+      "c.total_win_probability"
+    ],
+    "expected_context_rejections": [],
+    "expected_conflicts": [],
+    "expected_checker_routes": {
+      "a.bottom_white_count": "DETERMINISTIC",
+      "a.first_white_probability": "DETERMINISTIC",
+      "b.ordered_pairs": "COMPOSITE",
+      "b.different_favorable": "COMPOSITE",
+      "b.same_compartment": "DETERMINISTIC",
+      "b.second_white_probability": "COMPOSITE",
+      "b.alternative_complete": "COMPOSITE",
+      "c.continue_compartments": "DETERMINISTIC",
+      "c.strategy_case_1": "COMPOSITE",
+      "c.strategy_case_2": "COMPOSITE",
+      "c.conditional_success_1": "COMPOSITE",
+      "c.conditional_success_2": "COMPOSITE",
+      "c.total_win_probability": "COMPOSITE"
+    },
+    "expected_credit_rules": [],
+    "expected_atomic_guard": "not_applicable",
+    "expected_mathematical_refutations": [],
+    "rationale": "36 isolado não demonstra relação 6*6/6^2 e não é 11/36; zero."
+  },
+  {
+    "case_id": "p3_rob_c04",
+    "family": "C",
+    "expected_score_by_construction": 2,
+    "expected_obligations_satisfied": [
+      "b.second_white_probability"
+    ],
+    "expected_obligations_unsatisfied": [
+      "a.bottom_white_count",
+      "a.first_white_probability",
+      "b.ordered_pairs",
+      "b.different_favorable",
+      "b.same_compartment",
+      "b.alternative_complete",
+      "c.continue_compartments",
+      "c.strategy_case_1",
+      "c.strategy_case_2",
+      "c.conditional_success_1",
+      "c.conditional_success_2",
+      "c.total_win_probability"
+    ],
+    "expected_context_rejections": [],
+    "expected_conflicts": [],
+    "expected_checker_routes": {
+      "a.bottom_white_count": "DETERMINISTIC",
+      "a.first_white_probability": "DETERMINISTIC",
+      "b.ordered_pairs": "COMPOSITE",
+      "b.different_favorable": "COMPOSITE",
+      "b.same_compartment": "DETERMINISTIC",
+      "b.second_white_probability": "COMPOSITE",
+      "b.alternative_complete": "COMPOSITE",
+      "c.continue_compartments": "DETERMINISTIC",
+      "c.strategy_case_1": "COMPOSITE",
+      "c.strategy_case_2": "COMPOSITE",
+      "c.conditional_success_1": "COMPOSITE",
+      "c.conditional_success_2": "COMPOSITE",
+      "c.total_win_probability": "COMPOSITE"
+    },
+    "expected_credit_rules": [
+      {
+        "rule_id": "b.conclusion",
+        "points": 2,
+        "obligations": [
+          "b.second_white_probability"
+        ]
+      }
+    ],
+    "expected_atomic_guard": "not_applicable",
+    "expected_mathematical_refutations": [],
+    "rationale": "Contrato result_value de b.conclusion autoriza somente 2, sem método."
+  },
+  {
+    "case_id": "p3_rob_c05",
+    "family": "C",
+    "expected_score_by_construction": 0,
+    "expected_obligations_satisfied": [],
+    "expected_obligations_unsatisfied": [
+      "a.bottom_white_count",
+      "a.first_white_probability",
+      "b.ordered_pairs",
+      "b.different_favorable",
+      "b.same_compartment",
+      "b.second_white_probability",
+      "b.alternative_complete",
+      "c.continue_compartments",
+      "c.strategy_case_1",
+      "c.strategy_case_2",
+      "c.conditional_success_1",
+      "c.conditional_success_2",
+      "c.total_win_probability"
+    ],
+    "expected_context_rejections": [],
+    "expected_conflicts": [],
+    "expected_checker_routes": {
+      "a.bottom_white_count": "DETERMINISTIC",
+      "a.first_white_probability": "DETERMINISTIC",
+      "b.ordered_pairs": "COMPOSITE",
+      "b.different_favorable": "COMPOSITE",
+      "b.same_compartment": "DETERMINISTIC",
+      "b.second_white_probability": "COMPOSITE",
+      "b.alternative_complete": "COMPOSITE",
+      "c.continue_compartments": "DETERMINISTIC",
+      "c.strategy_case_1": "COMPOSITE",
+      "c.strategy_case_2": "COMPOSITE",
+      "c.conditional_success_1": "COMPOSITE",
+      "c.conditional_success_2": "COMPOSITE",
+      "c.total_win_probability": "COMPOSITE"
+    },
+    "expected_credit_rules": [],
+    "expected_atomic_guard": "not_applicable",
+    "expected_mathematical_refutations": [],
+    "rationale": "Contagem correta sem relação 2*5: COMPOSITE_INCOMPLETE, zero no contrato fortalecido."
+  },
+  {
+    "case_id": "p3_rob_c06",
+    "family": "C",
+    "expected_score_by_construction": 2,
+    "expected_obligations_satisfied": [
+      "b.same_compartment"
+    ],
+    "expected_obligations_unsatisfied": [
+      "a.bottom_white_count",
+      "a.first_white_probability",
+      "b.ordered_pairs",
+      "b.different_favorable",
+      "b.second_white_probability",
+      "b.alternative_complete",
+      "c.continue_compartments",
+      "c.strategy_case_1",
+      "c.strategy_case_2",
+      "c.conditional_success_1",
+      "c.conditional_success_2",
+      "c.total_win_probability"
+    ],
+    "expected_context_rejections": [],
+    "expected_conflicts": [],
+    "expected_checker_routes": {
+      "a.bottom_white_count": "DETERMINISTIC",
+      "a.first_white_probability": "DETERMINISTIC",
+      "b.ordered_pairs": "COMPOSITE",
+      "b.different_favorable": "COMPOSITE",
+      "b.same_compartment": "DETERMINISTIC",
+      "b.second_white_probability": "COMPOSITE",
+      "b.alternative_complete": "COMPOSITE",
+      "c.continue_compartments": "DETERMINISTIC",
+      "c.strategy_case_1": "COMPOSITE",
+      "c.strategy_case_2": "COMPOSITE",
+      "c.conditional_success_1": "COMPOSITE",
+      "c.conditional_success_2": "COMPOSITE",
+      "c.total_win_probability": "COMPOSITE"
+    },
+    "expected_credit_rules": [
+      {
+        "rule_id": "b.same",
+        "points": 2,
+        "obligations": [
+          "b.same_compartment"
+        ]
+      }
+    ],
+    "expected_atomic_guard": "not_applicable",
+    "expected_mathematical_refutations": [],
+    "rationale": "Lista exclusiva {6} explícita, comparável ao modelo; 2 pontos independentes."
+  },
+  {
+    "case_id": "p3_rob_c07",
+    "family": "C",
+    "expected_score_by_construction": 5,
+    "expected_obligations_satisfied": [
+      "c.continue_compartments",
+      "c.strategy_case_1",
+      "c.strategy_case_2"
+    ],
+    "expected_obligations_unsatisfied": [
+      "a.bottom_white_count",
+      "a.first_white_probability",
+      "b.ordered_pairs",
+      "b.different_favorable",
+      "b.same_compartment",
+      "b.second_white_probability",
+      "b.alternative_complete",
+      "c.conditional_success_1",
+      "c.conditional_success_2",
+      "c.total_win_probability"
+    ],
+    "expected_context_rejections": [],
+    "expected_conflicts": [],
+    "expected_checker_routes": {
+      "a.bottom_white_count": "DETERMINISTIC",
+      "a.first_white_probability": "DETERMINISTIC",
+      "b.ordered_pairs": "COMPOSITE",
+      "b.different_favorable": "COMPOSITE",
+      "b.same_compartment": "DETERMINISTIC",
+      "b.second_white_probability": "COMPOSITE",
+      "b.alternative_complete": "COMPOSITE",
+      "c.continue_compartments": "DETERMINISTIC",
+      "c.strategy_case_1": "COMPOSITE",
+      "c.strategy_case_2": "COMPOSITE",
+      "c.conditional_success_1": "COMPOSITE",
+      "c.conditional_success_2": "COMPOSITE",
+      "c.total_win_probability": "COMPOSITE"
+    },
+    "expected_credit_rules": [
+      {
+        "rule_id": "c.continue",
+        "points": 1,
+        "obligations": [
+          "c.continue_compartments"
+        ]
+      },
+      {
+        "rule_id": "c.first_strategy",
+        "points": 2,
+        "obligations": [
+          "c.strategy_case_1"
+        ]
+      },
+      {
+        "rule_id": "c.second_strategy",
+        "points": 2,
+        "obligations": [
+          "c.strategy_case_2"
+        ]
+      }
+    ],
+    "expected_atomic_guard": "not_applicable",
+    "expected_mathematical_refutations": [],
+    "rationale": "Duas estratégias com contagens e continuação: 1+2+2=5; nenhuma condicional ou global escrita."
+  },
+  {
+    "case_id": "p3_rob_c08",
+    "family": "C",
+    "expected_score_by_construction": 0,
+    "expected_obligations_satisfied": [],
+    "expected_obligations_unsatisfied": [
+      "a.bottom_white_count",
+      "a.first_white_probability",
+      "b.ordered_pairs",
+      "b.different_favorable",
+      "b.same_compartment",
+      "b.second_white_probability",
+      "b.alternative_complete",
+      "c.continue_compartments",
+      "c.strategy_case_1",
+      "c.strategy_case_2",
+      "c.conditional_success_1",
+      "c.conditional_success_2",
+      "c.total_win_probability"
+    ],
+    "expected_context_rejections": [],
+    "expected_conflicts": [],
+    "expected_checker_routes": {
+      "a.bottom_white_count": "DETERMINISTIC",
+      "a.first_white_probability": "DETERMINISTIC",
+      "b.ordered_pairs": "COMPOSITE",
+      "b.different_favorable": "COMPOSITE",
+      "b.same_compartment": "DETERMINISTIC",
+      "b.second_white_probability": "COMPOSITE",
+      "b.alternative_complete": "COMPOSITE",
+      "c.continue_compartments": "DETERMINISTIC",
+      "c.strategy_case_1": "COMPOSITE",
+      "c.strategy_case_2": "COMPOSITE",
+      "c.conditional_success_1": "COMPOSITE",
+      "c.conditional_success_2": "COMPOSITE",
+      "c.total_win_probability": "COMPOSITE"
+    },
+    "expected_credit_rules": [],
+    "expected_atomic_guard": "not_applicable",
+    "expected_mathematical_refutations": [],
+    "rationale": "Valor global isolado não satisfaz estratégia, condicionais nem desenvolvimento; zero."
+  },
+  {
+    "case_id": "p3_rob_d01",
+    "family": "D",
+    "expected_score_by_construction": 0,
+    "expected_obligations_satisfied": [],
+    "expected_obligations_unsatisfied": [
+      "a.bottom_white_count",
+      "a.first_white_probability",
+      "b.ordered_pairs",
+      "b.different_favorable",
+      "b.same_compartment",
+      "b.second_white_probability",
+      "b.alternative_complete",
+      "c.continue_compartments",
+      "c.strategy_case_1",
+      "c.strategy_case_2",
+      "c.conditional_success_1",
+      "c.conditional_success_2",
+      "c.total_win_probability"
+    ],
+    "expected_context_rejections": [
+      {
+        "source_span": "Hipótese não adotada: a probabilidade da primeira branca seria 1/3.",
+        "obligation_id": "a.first_white_probability",
+        "reason": "hypothetical_not_adopted"
+      }
+    ],
+    "expected_conflicts": [],
+    "expected_checker_routes": {
+      "a.bottom_white_count": "DETERMINISTIC",
+      "a.first_white_probability": "DETERMINISTIC",
+      "b.ordered_pairs": "COMPOSITE",
+      "b.different_favorable": "COMPOSITE",
+      "b.same_compartment": "DETERMINISTIC",
+      "b.second_white_probability": "COMPOSITE",
+      "b.alternative_complete": "COMPOSITE",
+      "c.continue_compartments": "DETERMINISTIC",
+      "c.strategy_case_1": "COMPOSITE",
+      "c.strategy_case_2": "COMPOSITE",
+      "c.conditional_success_1": "COMPOSITE",
+      "c.conditional_success_2": "COMPOSITE",
+      "c.total_win_probability": "COMPOSITE"
+    },
+    "expected_credit_rules": [],
+    "expected_atomic_guard": "not_applicable",
+    "expected_mathematical_refutations": [],
+    "rationale": "Valor verdadeiro em hipótese não adotada não gera crédito."
+  },
+  {
+    "case_id": "p3_rob_d02",
+    "family": "D",
+    "expected_score_by_construction": 0,
+    "expected_obligations_satisfied": [],
+    "expected_obligations_unsatisfied": [
+      "a.bottom_white_count",
+      "a.first_white_probability",
+      "b.ordered_pairs",
+      "b.different_favorable",
+      "b.same_compartment",
+      "b.second_white_probability",
+      "b.alternative_complete",
+      "c.continue_compartments",
+      "c.strategy_case_1",
+      "c.strategy_case_2",
+      "c.conditional_success_1",
+      "c.conditional_success_2",
+      "c.total_win_probability"
+    ],
+    "expected_context_rejections": [
+      {
+        "source_span": "Tentativa abandonada: há duas bolas brancas embaixo.",
+        "obligation_id": "a.bottom_white_count",
+        "reason": "abandoned"
+      }
+    ],
+    "expected_conflicts": [],
+    "expected_checker_routes": {
+      "a.bottom_white_count": "DETERMINISTIC",
+      "a.first_white_probability": "DETERMINISTIC",
+      "b.ordered_pairs": "COMPOSITE",
+      "b.different_favorable": "COMPOSITE",
+      "b.same_compartment": "DETERMINISTIC",
+      "b.second_white_probability": "COMPOSITE",
+      "b.alternative_complete": "COMPOSITE",
+      "c.continue_compartments": "DETERMINISTIC",
+      "c.strategy_case_1": "COMPOSITE",
+      "c.strategy_case_2": "COMPOSITE",
+      "c.conditional_success_1": "COMPOSITE",
+      "c.conditional_success_2": "COMPOSITE",
+      "c.total_win_probability": "COMPOSITE"
+    },
+    "expected_credit_rules": [],
+    "expected_atomic_guard": "not_applicable",
+    "expected_mathematical_refutations": [],
+    "rationale": "Contagem em tentativa abandonada não pertence à solução adotada."
+  },
+  {
+    "case_id": "p3_rob_d03",
+    "family": "D",
+    "expected_score_by_construction": 2,
+    "expected_obligations_satisfied": [
+      "a.first_white_probability"
+    ],
+    "expected_obligations_unsatisfied": [
+      "a.bottom_white_count",
+      "b.ordered_pairs",
+      "b.different_favorable",
+      "b.same_compartment",
+      "b.second_white_probability",
+      "b.alternative_complete",
+      "c.continue_compartments",
+      "c.strategy_case_1",
+      "c.strategy_case_2",
+      "c.conditional_success_1",
+      "c.conditional_success_2",
+      "c.total_win_probability"
+    ],
+    "expected_context_rejections": [
+      {
+        "source_span": "Tentativa abandonada: a probabilidade da primeira branca é 1/2.",
+        "obligation_id": "a.first_white_probability",
+        "reason": "explicit_abandonment"
+      }
+    ],
+    "expected_conflicts": [],
+    "expected_checker_routes": {
+      "a.bottom_white_count": "DETERMINISTIC",
+      "a.first_white_probability": "DETERMINISTIC",
+      "b.ordered_pairs": "COMPOSITE",
+      "b.different_favorable": "COMPOSITE",
+      "b.same_compartment": "DETERMINISTIC",
+      "b.second_white_probability": "COMPOSITE",
+      "b.alternative_complete": "COMPOSITE",
+      "c.continue_compartments": "DETERMINISTIC",
+      "c.strategy_case_1": "COMPOSITE",
+      "c.strategy_case_2": "COMPOSITE",
+      "c.conditional_success_1": "COMPOSITE",
+      "c.conditional_success_2": "COMPOSITE",
+      "c.total_win_probability": "COMPOSITE"
+    },
+    "expected_credit_rules": [
+      {
+        "rule_id": "a.probability",
+        "points": 2,
+        "obligations": [
+          "a.first_white_probability"
+        ]
+      }
+    ],
+    "expected_atomic_guard": "not_applicable",
+    "expected_mathematical_refutations": [],
+    "rationale": "Abandono explícito e parágrafo final delimitam correção; não é last-wins implícito."
+  },
+  {
+    "case_id": "p3_rob_d04",
+    "family": "D",
+    "expected_score_by_construction": 0,
+    "expected_obligations_satisfied": [],
+    "expected_obligations_unsatisfied": [
+      "a.bottom_white_count",
+      "a.first_white_probability",
+      "b.ordered_pairs",
+      "b.different_favorable",
+      "b.same_compartment",
+      "b.second_white_probability",
+      "b.alternative_complete",
+      "c.continue_compartments",
+      "c.strategy_case_1",
+      "c.strategy_case_2",
+      "c.conditional_success_1",
+      "c.conditional_success_2",
+      "c.total_win_probability"
+    ],
+    "expected_context_rejections": [
+      {
+        "source_span": "Beatriz disse que, ao repetir o mesmo compartimento, somente o sexto libera branca.",
+        "obligation_id": "b.same_compartment",
+        "reason": "third_party"
+      }
+    ],
+    "expected_conflicts": [],
+    "expected_checker_routes": {
+      "a.bottom_white_count": "DETERMINISTIC",
+      "a.first_white_probability": "DETERMINISTIC",
+      "b.ordered_pairs": "COMPOSITE",
+      "b.different_favorable": "COMPOSITE",
+      "b.same_compartment": "DETERMINISTIC",
+      "b.second_white_probability": "COMPOSITE",
+      "b.alternative_complete": "COMPOSITE",
+      "c.continue_compartments": "DETERMINISTIC",
+      "c.strategy_case_1": "COMPOSITE",
+      "c.strategy_case_2": "COMPOSITE",
+      "c.conditional_success_1": "COMPOSITE",
+      "c.conditional_success_2": "COMPOSITE",
+      "c.total_win_probability": "COMPOSITE"
+    },
+    "expected_credit_rules": [],
+    "expected_atomic_guard": "not_applicable",
+    "expected_mathematical_refutations": [],
+    "rationale": "Citação sem adoção é evidência de terceiro, mesmo sendo verdadeira."
+  },
+  {
+    "case_id": "p3_rob_d05",
+    "family": "D",
+    "expected_score_by_construction": 0,
+    "expected_obligations_satisfied": [],
+    "expected_obligations_unsatisfied": [
+      "a.bottom_white_count",
+      "a.first_white_probability",
+      "b.ordered_pairs",
+      "b.different_favorable",
+      "b.same_compartment",
+      "b.second_white_probability",
+      "b.alternative_complete",
+      "c.continue_compartments",
+      "c.strategy_case_1",
+      "c.strategy_case_2",
+      "c.conditional_success_1",
+      "c.conditional_success_2",
+      "c.total_win_probability"
+    ],
+    "expected_context_rejections": [
+      {
+        "source_span": "Enunciado: há duas bolas brancas inferiores.",
+        "obligation_id": "a.bottom_white_count",
+        "reason": "problem_statement"
+      }
+    ],
+    "expected_conflicts": [],
+    "expected_checker_routes": {
+      "a.bottom_white_count": "DETERMINISTIC",
+      "a.first_white_probability": "DETERMINISTIC",
+      "b.ordered_pairs": "COMPOSITE",
+      "b.different_favorable": "COMPOSITE",
+      "b.same_compartment": "DETERMINISTIC",
+      "b.second_white_probability": "COMPOSITE",
+      "b.alternative_complete": "COMPOSITE",
+      "c.continue_compartments": "DETERMINISTIC",
+      "c.strategy_case_1": "COMPOSITE",
+      "c.strategy_case_2": "COMPOSITE",
+      "c.conditional_success_1": "COMPOSITE",
+      "c.conditional_success_2": "COMPOSITE",
+      "c.total_win_probability": "COMPOSITE"
+    },
+    "expected_credit_rules": [],
+    "expected_atomic_guard": "not_applicable",
+    "expected_mathematical_refutations": [],
+    "rationale": "Texto explicitamente atribuído ao enunciado não é afirmação do aluno."
+  },
+  {
+    "case_id": "p3_rob_d06",
+    "family": "D",
+    "expected_score_by_construction": 0,
+    "expected_obligations_satisfied": [],
+    "expected_obligations_unsatisfied": [
+      "a.bottom_white_count",
+      "a.first_white_probability",
+      "b.ordered_pairs",
+      "b.different_favorable",
+      "b.same_compartment",
+      "b.second_white_probability",
+      "b.alternative_complete",
+      "c.continue_compartments",
+      "c.strategy_case_1",
+      "c.strategy_case_2",
+      "c.conditional_success_1",
+      "c.conditional_success_2",
+      "c.total_win_probability"
+    ],
+    "expected_context_rejections": [
+      {
+        "source_span": "A probabilidade da primeira branca é 1/3.",
+        "obligation_id": "a.first_white_probability",
+        "reason": "wrong_item"
+      }
+    ],
+    "expected_conflicts": [],
+    "expected_checker_routes": {
+      "a.bottom_white_count": "DETERMINISTIC",
+      "a.first_white_probability": "DETERMINISTIC",
+      "b.ordered_pairs": "COMPOSITE",
+      "b.different_favorable": "COMPOSITE",
+      "b.same_compartment": "DETERMINISTIC",
+      "b.second_white_probability": "COMPOSITE",
+      "b.alternative_complete": "COMPOSITE",
+      "c.continue_compartments": "DETERMINISTIC",
+      "c.strategy_case_1": "COMPOSITE",
+      "c.strategy_case_2": "COMPOSITE",
+      "c.conditional_success_1": "COMPOSITE",
+      "c.conditional_success_2": "COMPOSITE",
+      "c.total_win_probability": "COMPOSITE"
+    },
+    "expected_credit_rules": [],
+    "expected_atomic_guard": "not_applicable",
+    "expected_mathematical_refutations": [],
+    "rationale": "Claim de a colocado em c: same_item_required; não transferir crédito."
+  },
+  {
+    "case_id": "p3_rob_d07",
+    "family": "D",
+    "expected_score_by_construction": 4,
+    "expected_obligations_satisfied": [
+      "a.bottom_white_count",
+      "a.first_white_probability"
+    ],
+    "expected_obligations_unsatisfied": [
+      "b.ordered_pairs",
+      "b.different_favorable",
+      "b.same_compartment",
+      "b.second_white_probability",
+      "b.alternative_complete",
+      "c.continue_compartments",
+      "c.strategy_case_1",
+      "c.strategy_case_2",
+      "c.conditional_success_1",
+      "c.conditional_success_2",
+      "c.total_win_probability"
+    ],
+    "expected_context_rejections": [
+      {
+        "source_span": "Hipótese não adotada: a probabilidade da primeira branca seria 1/2.",
+        "obligation_id": "a.first_white_probability",
+        "reason": "hypothetical_not_adopted"
+      }
+    ],
+    "expected_conflicts": [],
+    "expected_checker_routes": {
+      "a.bottom_white_count": "DETERMINISTIC",
+      "a.first_white_probability": "DETERMINISTIC",
+      "b.ordered_pairs": "COMPOSITE",
+      "b.different_favorable": "COMPOSITE",
+      "b.same_compartment": "DETERMINISTIC",
+      "b.second_white_probability": "COMPOSITE",
+      "b.alternative_complete": "COMPOSITE",
+      "c.continue_compartments": "DETERMINISTIC",
+      "c.strategy_case_1": "COMPOSITE",
+      "c.strategy_case_2": "COMPOSITE",
+      "c.conditional_success_1": "COMPOSITE",
+      "c.conditional_success_2": "COMPOSITE",
+      "c.total_win_probability": "COMPOSITE"
+    },
+    "expected_credit_rules": [
+      {
+        "rule_id": "a.count",
+        "points": 2,
+        "obligations": [
+          "a.bottom_white_count"
+        ]
+      },
+      {
+        "rule_id": "a.probability",
+        "points": 2,
+        "obligations": [
+          "a.first_white_probability"
+        ]
+      }
+    ],
+    "expected_atomic_guard": "not_applicable",
+    "expected_mathematical_refutations": [],
+    "rationale": "Veto contextual local; duas evidências afirmadas após novo parágrafo devem permanecer."
+  },
+  {
+    "case_id": "p3_rob_d08",
+    "family": "D",
+    "expected_score_by_construction": 2,
+    "expected_obligations_satisfied": [
+      "c.strategy_case_1",
+      "c.conditional_success_1"
+    ],
+    "expected_obligations_unsatisfied": [
+      "a.bottom_white_count",
+      "a.first_white_probability",
+      "b.ordered_pairs",
+      "b.different_favorable",
+      "b.same_compartment",
+      "b.second_white_probability",
+      "b.alternative_complete",
+      "c.continue_compartments",
+      "c.strategy_case_2",
+      "c.conditional_success_2",
+      "c.total_win_probability"
+    ],
+    "expected_context_rejections": [],
+    "expected_conflicts": [],
+    "expected_checker_routes": {
+      "a.bottom_white_count": "DETERMINISTIC",
+      "a.first_white_probability": "DETERMINISTIC",
+      "b.ordered_pairs": "COMPOSITE",
+      "b.different_favorable": "COMPOSITE",
+      "b.same_compartment": "DETERMINISTIC",
+      "b.second_white_probability": "COMPOSITE",
+      "b.alternative_complete": "COMPOSITE",
+      "c.continue_compartments": "DETERMINISTIC",
+      "c.strategy_case_1": "COMPOSITE",
+      "c.strategy_case_2": "COMPOSITE",
+      "c.conditional_success_1": "COMPOSITE",
+      "c.conditional_success_2": "COMPOSITE",
+      "c.total_win_probability": "COMPOSITE"
+    },
+    "expected_credit_rules": [
+      {
+        "rule_id": "c.first_strategy",
+        "points": 2,
+        "obligations": [
+          "c.strategy_case_1"
+        ]
+      }
+    ],
+    "expected_atomic_guard": "not_applicable",
+    "expected_mathematical_refutations": [],
+    "rationale": "Condição matemática adotada de ramo, não hipótese exploratória. Crédito da estratégia=2; só um ramo não completa c.conditionals."
+  },
+  {
+    "case_id": "p3_rob_e01",
+    "family": "E",
+    "expected_score_by_construction": 2,
+    "expected_obligations_satisfied": [
+      "a.bottom_white_count"
+    ],
+    "expected_obligations_unsatisfied": [
+      "a.first_white_probability",
+      "b.ordered_pairs",
+      "b.different_favorable",
+      "b.same_compartment",
+      "b.second_white_probability",
+      "b.alternative_complete",
+      "c.continue_compartments",
+      "c.strategy_case_1",
+      "c.strategy_case_2",
+      "c.conditional_success_1",
+      "c.conditional_success_2",
+      "c.total_win_probability"
+    ],
+    "expected_context_rejections": [],
+    "expected_conflicts": [
+      {
+        "obligation_id": "b.same_compartment",
+        "expected_detection": "regular_if_set_payload_else_atomic_guard"
+      }
+    ],
+    "expected_checker_routes": {
+      "a.bottom_white_count": "DETERMINISTIC",
+      "a.first_white_probability": "DETERMINISTIC",
+      "b.ordered_pairs": "COMPOSITE",
+      "b.different_favorable": "COMPOSITE",
+      "b.same_compartment": "DETERMINISTIC",
+      "b.second_white_probability": "COMPOSITE",
+      "b.alternative_complete": "COMPOSITE",
+      "c.continue_compartments": "DETERMINISTIC",
+      "c.strategy_case_1": "COMPOSITE",
+      "c.strategy_case_2": "COMPOSITE",
+      "c.conditional_success_1": "COMPOSITE",
+      "c.conditional_success_2": "COMPOSITE",
+      "c.total_win_probability": "COMPOSITE"
+    },
+    "expected_credit_rules": [
+      {
+        "rule_id": "a.count",
+        "points": 2,
+        "obligations": [
+          "a.bottom_white_count"
+        ]
+      }
+    ],
+    "expected_atomic_guard": "regular_if_set_payload_else_atomic_guard",
+    "expected_mathematical_refutations": [
+      "b.same_compartment"
+    ],
+    "rationale": "Afirmações adotadas incompatíveis; bloquear b.same, preservar a.count."
+  },
+  {
+    "case_id": "p3_rob_e02",
+    "family": "E",
+    "expected_score_by_construction": 2,
+    "expected_obligations_satisfied": [
+      "a.bottom_white_count"
+    ],
+    "expected_obligations_unsatisfied": [
+      "a.first_white_probability",
+      "b.ordered_pairs",
+      "b.different_favorable",
+      "b.same_compartment",
+      "b.second_white_probability",
+      "b.alternative_complete",
+      "c.continue_compartments",
+      "c.strategy_case_1",
+      "c.strategy_case_2",
+      "c.conditional_success_1",
+      "c.conditional_success_2",
+      "c.total_win_probability"
+    ],
+    "expected_context_rejections": [],
+    "expected_conflicts": [
+      {
+        "obligation_id": "b.same_compartment",
+        "expected_detection": "regular_if_set_payload_else_atomic_guard"
+      }
+    ],
+    "expected_checker_routes": {
+      "a.bottom_white_count": "DETERMINISTIC",
+      "a.first_white_probability": "DETERMINISTIC",
+      "b.ordered_pairs": "COMPOSITE",
+      "b.different_favorable": "COMPOSITE",
+      "b.same_compartment": "DETERMINISTIC",
+      "b.second_white_probability": "COMPOSITE",
+      "b.alternative_complete": "COMPOSITE",
+      "c.continue_compartments": "DETERMINISTIC",
+      "c.strategy_case_1": "COMPOSITE",
+      "c.strategy_case_2": "COMPOSITE",
+      "c.conditional_success_1": "COMPOSITE",
+      "c.conditional_success_2": "COMPOSITE",
+      "c.total_win_probability": "COMPOSITE"
+    },
+    "expected_credit_rules": [
+      {
+        "rule_id": "a.count",
+        "points": 2,
+        "obligations": [
+          "a.bottom_white_count"
+        ]
+      }
+    ],
+    "expected_atomic_guard": "regular_if_set_payload_else_atomic_guard",
+    "expected_mathematical_refutations": [
+      "b.same_compartment"
+    ],
+    "rationale": "Ordem invertida sem abandono explícito não revoga a outra afirmação; mesmo veto."
+  },
+  {
+    "case_id": "p3_rob_e03",
+    "family": "E",
+    "expected_score_by_construction": 2,
+    "expected_obligations_satisfied": [
+      "a.bottom_white_count"
+    ],
+    "expected_obligations_unsatisfied": [
+      "a.first_white_probability",
+      "b.ordered_pairs",
+      "b.different_favorable",
+      "b.same_compartment",
+      "b.second_white_probability",
+      "b.alternative_complete",
+      "c.continue_compartments",
+      "c.strategy_case_1",
+      "c.strategy_case_2",
+      "c.conditional_success_1",
+      "c.conditional_success_2",
+      "c.total_win_probability"
+    ],
+    "expected_context_rejections": [],
+    "expected_conflicts": [
+      {
+        "obligation_id": "b.same_compartment",
+        "expected_detection": "regular_if_set_payload_else_atomic_guard"
+      }
+    ],
+    "expected_checker_routes": {
+      "a.bottom_white_count": "DETERMINISTIC",
+      "a.first_white_probability": "DETERMINISTIC",
+      "b.ordered_pairs": "COMPOSITE",
+      "b.different_favorable": "COMPOSITE",
+      "b.same_compartment": "DETERMINISTIC",
+      "b.second_white_probability": "COMPOSITE",
+      "b.alternative_complete": "COMPOSITE",
+      "c.continue_compartments": "DETERMINISTIC",
+      "c.strategy_case_1": "COMPOSITE",
+      "c.strategy_case_2": "COMPOSITE",
+      "c.conditional_success_1": "COMPOSITE",
+      "c.conditional_success_2": "COMPOSITE",
+      "c.total_win_probability": "COMPOSITE"
+    },
+    "expected_credit_rules": [
+      {
+        "rule_id": "a.count",
+        "points": 2,
+        "obligations": [
+          "a.bottom_white_count"
+        ]
+      }
+    ],
+    "expected_atomic_guard": "regular_if_set_payload_else_atomic_guard",
+    "expected_mathematical_refutations": [
+      "b.same_compartment"
+    ],
+    "rationale": "Conjunto tipado correto não supera membership falso adotado."
+  },
+  {
+    "case_id": "p3_rob_e04",
+    "family": "E",
+    "expected_score_by_construction": 2,
+    "expected_obligations_satisfied": [
+      "a.bottom_white_count"
+    ],
+    "expected_obligations_unsatisfied": [
+      "a.first_white_probability",
+      "b.ordered_pairs",
+      "b.different_favorable",
+      "b.same_compartment",
+      "b.second_white_probability",
+      "b.alternative_complete",
+      "c.continue_compartments",
+      "c.strategy_case_1",
+      "c.strategy_case_2",
+      "c.conditional_success_1",
+      "c.conditional_success_2",
+      "c.total_win_probability"
+    ],
+    "expected_context_rejections": [],
+    "expected_conflicts": [
+      {
+        "obligation_id": "b.same_compartment",
+        "expected_detection": "atomic_guard"
+      }
+    ],
+    "expected_checker_routes": {
+      "a.bottom_white_count": "DETERMINISTIC",
+      "a.first_white_probability": "DETERMINISTIC",
+      "b.ordered_pairs": "COMPOSITE",
+      "b.different_favorable": "COMPOSITE",
+      "b.same_compartment": "DETERMINISTIC",
+      "b.second_white_probability": "COMPOSITE",
+      "b.alternative_complete": "COMPOSITE",
+      "c.continue_compartments": "DETERMINISTIC",
+      "c.strategy_case_1": "COMPOSITE",
+      "c.strategy_case_2": "COMPOSITE",
+      "c.conditional_success_1": "COMPOSITE",
+      "c.conditional_success_2": "COMPOSITE",
+      "c.total_win_probability": "COMPOSITE"
+    },
+    "expected_credit_rules": [
+      {
+        "rule_id": "a.count",
+        "points": 2,
+        "obligations": [
+          "a.bottom_white_count"
+        ]
+      }
+    ],
+    "expected_atomic_guard": "atomic_guard",
+    "expected_mathematical_refutations": [
+      "b.same_compartment"
+    ],
+    "rationale": "Elipse parcial com relação ancorada no span anterior; não inventar conjunto completo. Mapper positivo sem âncora deve deixar membership para guard."
+  },
+  {
+    "case_id": "p3_rob_e05",
+    "family": "E",
+    "expected_score_by_construction": 0,
+    "expected_obligations_satisfied": [],
+    "expected_obligations_unsatisfied": [
+      "a.bottom_white_count",
+      "a.first_white_probability",
+      "b.ordered_pairs",
+      "b.different_favorable",
+      "b.same_compartment",
+      "b.second_white_probability",
+      "b.alternative_complete",
+      "c.continue_compartments",
+      "c.strategy_case_1",
+      "c.strategy_case_2",
+      "c.conditional_success_1",
+      "c.conditional_success_2",
+      "c.total_win_probability"
+    ],
+    "expected_context_rejections": [],
+    "expected_conflicts": [
+      {
+        "obligation_id": "b.second_white_probability",
+        "expected_detection": "regular_checker"
+      }
+    ],
+    "expected_checker_routes": {
+      "a.bottom_white_count": "DETERMINISTIC",
+      "a.first_white_probability": "DETERMINISTIC",
+      "b.ordered_pairs": "COMPOSITE",
+      "b.different_favorable": "COMPOSITE",
+      "b.same_compartment": "DETERMINISTIC",
+      "b.second_white_probability": "COMPOSITE",
+      "b.alternative_complete": "COMPOSITE",
+      "c.continue_compartments": "DETERMINISTIC",
+      "c.strategy_case_1": "COMPOSITE",
+      "c.strategy_case_2": "COMPOSITE",
+      "c.conditional_success_1": "COMPOSITE",
+      "c.conditional_success_2": "COMPOSITE",
+      "c.total_win_probability": "COMPOSITE"
+    },
+    "expected_credit_rules": [],
+    "expected_atomic_guard": "regular_checker",
+    "expected_mathematical_refutations": [
+      "b.second_white_probability"
+    ],
+    "rationale": "Valores incompatíveis adotados da mesma probabilidade; checker regular e reconciliação."
+  },
+  {
+    "case_id": "p3_rob_e06",
+    "family": "E",
+    "expected_score_by_construction": 0,
+    "expected_obligations_satisfied": [],
+    "expected_obligations_unsatisfied": [
+      "a.bottom_white_count",
+      "a.first_white_probability",
+      "b.ordered_pairs",
+      "b.different_favorable",
+      "b.same_compartment",
+      "b.second_white_probability",
+      "b.alternative_complete",
+      "c.continue_compartments",
+      "c.strategy_case_1",
+      "c.strategy_case_2",
+      "c.conditional_success_1",
+      "c.conditional_success_2",
+      "c.total_win_probability"
+    ],
+    "expected_context_rejections": [],
+    "expected_conflicts": [
+      {
+        "obligation_id": "c.strategy_case_1",
+        "expected_detection": "regular_checker"
+      }
+    ],
+    "expected_checker_routes": {
+      "a.bottom_white_count": "DETERMINISTIC",
+      "a.first_white_probability": "DETERMINISTIC",
+      "b.ordered_pairs": "COMPOSITE",
+      "b.different_favorable": "COMPOSITE",
+      "b.same_compartment": "DETERMINISTIC",
+      "b.second_white_probability": "COMPOSITE",
+      "b.alternative_complete": "COMPOSITE",
+      "c.continue_compartments": "DETERMINISTIC",
+      "c.strategy_case_1": "COMPOSITE",
+      "c.strategy_case_2": "COMPOSITE",
+      "c.conditional_success_1": "COMPOSITE",
+      "c.conditional_success_2": "COMPOSITE",
+      "c.total_win_probability": "COMPOSITE"
+    },
+    "expected_credit_rules": [],
+    "expected_atomic_guard": "regular_checker",
+    "expected_mathematical_refutations": [
+      "c.strategy_case_1"
+    ],
+    "rationale": "Duas estratégias incompatíveis no mesmo estado; refutar combinação falsa e bloquear a família."
+  },
+  {
+    "case_id": "p3_rob_e07",
+    "family": "E",
+    "expected_score_by_construction": 2,
+    "expected_obligations_satisfied": [
+      "b.same_compartment"
+    ],
+    "expected_obligations_unsatisfied": [
+      "a.bottom_white_count",
+      "a.first_white_probability",
+      "b.ordered_pairs",
+      "b.different_favorable",
+      "b.second_white_probability",
+      "b.alternative_complete",
+      "c.continue_compartments",
+      "c.strategy_case_1",
+      "c.strategy_case_2",
+      "c.conditional_success_1",
+      "c.conditional_success_2",
+      "c.total_win_probability"
+    ],
+    "expected_context_rejections": [
+      {
+        "source_span": "Tentativa abandonada: ao repetir o mesmo compartimento, o quinto também libera branca.",
+        "obligation_id": "b.same_compartment",
+        "reason": "abandoned"
+      }
+    ],
+    "expected_conflicts": [],
+    "expected_checker_routes": {
+      "a.bottom_white_count": "DETERMINISTIC",
+      "a.first_white_probability": "DETERMINISTIC",
+      "b.ordered_pairs": "COMPOSITE",
+      "b.different_favorable": "COMPOSITE",
+      "b.same_compartment": "DETERMINISTIC",
+      "b.second_white_probability": "COMPOSITE",
+      "b.alternative_complete": "COMPOSITE",
+      "c.continue_compartments": "DETERMINISTIC",
+      "c.strategy_case_1": "COMPOSITE",
+      "c.strategy_case_2": "COMPOSITE",
+      "c.conditional_success_1": "COMPOSITE",
+      "c.conditional_success_2": "COMPOSITE",
+      "c.total_win_probability": "COMPOSITE"
+    },
+    "expected_credit_rules": [
+      {
+        "rule_id": "b.same",
+        "points": 2,
+        "obligations": [
+          "b.same_compartment"
+        ]
+      }
+    ],
+    "expected_atomic_guard": "none_context_rejected",
+    "expected_mathematical_refutations": [],
+    "rationale": "Contradição descartada não bloqueia solução válida independente."
+  },
+  {
+    "case_id": "p3_rob_e08",
+    "family": "E",
+    "expected_score_by_construction": 2,
+    "expected_obligations_satisfied": [
+      "b.same_compartment"
+    ],
+    "expected_obligations_unsatisfied": [
+      "a.bottom_white_count",
+      "a.first_white_probability",
+      "b.ordered_pairs",
+      "b.different_favorable",
+      "b.second_white_probability",
+      "b.alternative_complete",
+      "c.continue_compartments",
+      "c.strategy_case_1",
+      "c.strategy_case_2",
+      "c.conditional_success_1",
+      "c.conditional_success_2",
+      "c.total_win_probability"
+    ],
+    "expected_context_rejections": [
+      {
+        "source_span": "Beatriz disse que, ao repetir o mesmo compartimento, o quinto também libera branca.",
+        "obligation_id": "b.same_compartment",
+        "reason": "third_party"
+      }
+    ],
+    "expected_conflicts": [],
+    "expected_checker_routes": {
+      "a.bottom_white_count": "DETERMINISTIC",
+      "a.first_white_probability": "DETERMINISTIC",
+      "b.ordered_pairs": "COMPOSITE",
+      "b.different_favorable": "COMPOSITE",
+      "b.same_compartment": "DETERMINISTIC",
+      "b.second_white_probability": "COMPOSITE",
+      "b.alternative_complete": "COMPOSITE",
+      "c.continue_compartments": "DETERMINISTIC",
+      "c.strategy_case_1": "COMPOSITE",
+      "c.strategy_case_2": "COMPOSITE",
+      "c.conditional_success_1": "COMPOSITE",
+      "c.conditional_success_2": "COMPOSITE",
+      "c.total_win_probability": "COMPOSITE"
+    },
+    "expected_credit_rules": [
+      {
+        "rule_id": "b.same",
+        "points": 2,
+        "obligations": [
+          "b.same_compartment"
+        ]
+      }
+    ],
+    "expected_atomic_guard": "none_context_rejected",
+    "expected_mathematical_refutations": [],
+    "rationale": "Contradição de terceiro não adotada não deve contaminar afirmação do aluno."
+  },
+  {
+    "case_id": "p3_rob_f01",
+    "family": "F",
+    "expected_score_by_construction": 0,
+    "expected_obligations_satisfied": [],
+    "expected_obligations_unsatisfied": [
+      "a.bottom_white_count",
+      "a.first_white_probability",
+      "b.ordered_pairs",
+      "b.different_favorable",
+      "b.same_compartment",
+      "b.second_white_probability",
+      "b.alternative_complete",
+      "c.continue_compartments",
+      "c.strategy_case_1",
+      "c.strategy_case_2",
+      "c.conditional_success_1",
+      "c.conditional_success_2",
+      "c.total_win_probability"
+    ],
+    "expected_context_rejections": [],
+    "expected_conflicts": [],
+    "expected_checker_routes": {
+      "a.bottom_white_count": "DETERMINISTIC",
+      "a.first_white_probability": "DETERMINISTIC",
+      "b.ordered_pairs": "COMPOSITE",
+      "b.different_favorable": "COMPOSITE",
+      "b.same_compartment": "DETERMINISTIC",
+      "b.second_white_probability": "COMPOSITE",
+      "b.alternative_complete": "COMPOSITE",
+      "c.continue_compartments": "DETERMINISTIC",
+      "c.strategy_case_1": "COMPOSITE",
+      "c.strategy_case_2": "COMPOSITE",
+      "c.conditional_success_1": "COMPOSITE",
+      "c.conditional_success_2": "COMPOSITE",
+      "c.total_win_probability": "COMPOSITE"
+    },
+    "expected_credit_rules": [],
+    "expected_atomic_guard": "not_applicable",
+    "expected_mathematical_refutations": [
+      "a.bottom_white_count"
+    ],
+    "rationale": "Contagem 3 refutada pela máquina, que deriva 2."
+  },
+  {
+    "case_id": "p3_rob_f02",
+    "family": "F",
+    "expected_score_by_construction": 0,
+    "expected_obligations_satisfied": [],
+    "expected_obligations_unsatisfied": [
+      "a.bottom_white_count",
+      "a.first_white_probability",
+      "b.ordered_pairs",
+      "b.different_favorable",
+      "b.same_compartment",
+      "b.second_white_probability",
+      "b.alternative_complete",
+      "c.continue_compartments",
+      "c.strategy_case_1",
+      "c.strategy_case_2",
+      "c.conditional_success_1",
+      "c.conditional_success_2",
+      "c.total_win_probability"
+    ],
+    "expected_context_rejections": [],
+    "expected_conflicts": [],
+    "expected_checker_routes": {
+      "a.bottom_white_count": "DETERMINISTIC",
+      "a.first_white_probability": "DETERMINISTIC",
+      "b.ordered_pairs": "COMPOSITE",
+      "b.different_favorable": "COMPOSITE",
+      "b.same_compartment": "DETERMINISTIC",
+      "b.second_white_probability": "COMPOSITE",
+      "b.alternative_complete": "COMPOSITE",
+      "c.continue_compartments": "DETERMINISTIC",
+      "c.strategy_case_1": "COMPOSITE",
+      "c.strategy_case_2": "COMPOSITE",
+      "c.conditional_success_1": "COMPOSITE",
+      "c.conditional_success_2": "COMPOSITE",
+      "c.total_win_probability": "COMPOSITE"
+    },
+    "expected_credit_rules": [],
+    "expected_atomic_guard": "not_applicable",
+    "expected_mathematical_refutations": [
+      "b.ordered_pairs"
+    ],
+    "rationale": "30 não é espaço de duas escolhas independentes entre 6; zero."
+  },
+  {
+    "case_id": "p3_rob_f03",
+    "family": "F",
+    "expected_score_by_construction": 0,
+    "expected_obligations_satisfied": [],
+    "expected_obligations_unsatisfied": [
+      "a.bottom_white_count",
+      "a.first_white_probability",
+      "b.ordered_pairs",
+      "b.different_favorable",
+      "b.same_compartment",
+      "b.second_white_probability",
+      "b.alternative_complete",
+      "c.continue_compartments",
+      "c.strategy_case_1",
+      "c.strategy_case_2",
+      "c.conditional_success_1",
+      "c.conditional_success_2",
+      "c.total_win_probability"
+    ],
+    "expected_context_rejections": [],
+    "expected_conflicts": [],
+    "expected_checker_routes": {
+      "a.bottom_white_count": "DETERMINISTIC",
+      "a.first_white_probability": "DETERMINISTIC",
+      "b.ordered_pairs": "COMPOSITE",
+      "b.different_favorable": "COMPOSITE",
+      "b.same_compartment": "DETERMINISTIC",
+      "b.second_white_probability": "COMPOSITE",
+      "b.alternative_complete": "COMPOSITE",
+      "c.continue_compartments": "DETERMINISTIC",
+      "c.strategy_case_1": "COMPOSITE",
+      "c.strategy_case_2": "COMPOSITE",
+      "c.conditional_success_1": "COMPOSITE",
+      "c.conditional_success_2": "COMPOSITE",
+      "c.total_win_probability": "COMPOSITE"
+    },
+    "expected_credit_rules": [],
+    "expected_atomic_guard": "not_applicable",
+    "expected_mathematical_refutations": [],
+    "rationale": "Aritmética correta não estabelece fatores 2 e 5; incompleto, não inventar justificativa."
+  },
+  {
+    "case_id": "p3_rob_f04",
+    "family": "F",
+    "expected_score_by_construction": 0,
+    "expected_obligations_satisfied": [],
+    "expected_obligations_unsatisfied": [
+      "a.bottom_white_count",
+      "a.first_white_probability",
+      "b.ordered_pairs",
+      "b.different_favorable",
+      "b.same_compartment",
+      "b.second_white_probability",
+      "b.alternative_complete",
+      "c.continue_compartments",
+      "c.strategy_case_1",
+      "c.strategy_case_2",
+      "c.conditional_success_1",
+      "c.conditional_success_2",
+      "c.total_win_probability"
+    ],
+    "expected_context_rejections": [],
+    "expected_conflicts": [],
+    "expected_checker_routes": {
+      "a.bottom_white_count": "DETERMINISTIC",
+      "a.first_white_probability": "DETERMINISTIC",
+      "b.ordered_pairs": "COMPOSITE",
+      "b.different_favorable": "COMPOSITE",
+      "b.same_compartment": "DETERMINISTIC",
+      "b.second_white_probability": "COMPOSITE",
+      "b.alternative_complete": "COMPOSITE",
+      "c.continue_compartments": "DETERMINISTIC",
+      "c.strategy_case_1": "COMPOSITE",
+      "c.strategy_case_2": "COMPOSITE",
+      "c.conditional_success_1": "COMPOSITE",
+      "c.conditional_success_2": "COMPOSITE",
+      "c.total_win_probability": "COMPOSITE"
+    },
+    "expected_credit_rules": [],
+    "expected_atomic_guard": "not_applicable",
+    "expected_mathematical_refutations": [
+      "b.same_compartment"
+    ],
+    "rationale": "Conjunto {5} falso; modelo deriva {6}."
+  },
+  {
+    "case_id": "p3_rob_f05",
+    "family": "F",
+    "expected_score_by_construction": 0,
+    "expected_obligations_satisfied": [],
+    "expected_obligations_unsatisfied": [
+      "a.bottom_white_count",
+      "a.first_white_probability",
+      "b.ordered_pairs",
+      "b.different_favorable",
+      "b.same_compartment",
+      "b.second_white_probability",
+      "b.alternative_complete",
+      "c.continue_compartments",
+      "c.strategy_case_1",
+      "c.strategy_case_2",
+      "c.conditional_success_1",
+      "c.conditional_success_2",
+      "c.total_win_probability"
+    ],
+    "expected_context_rejections": [],
+    "expected_conflicts": [],
+    "expected_checker_routes": {
+      "a.bottom_white_count": "DETERMINISTIC",
+      "a.first_white_probability": "DETERMINISTIC",
+      "b.ordered_pairs": "COMPOSITE",
+      "b.different_favorable": "COMPOSITE",
+      "b.same_compartment": "DETERMINISTIC",
+      "b.second_white_probability": "COMPOSITE",
+      "b.alternative_complete": "COMPOSITE",
+      "c.continue_compartments": "DETERMINISTIC",
+      "c.strategy_case_1": "COMPOSITE",
+      "c.strategy_case_2": "COMPOSITE",
+      "c.conditional_success_1": "COMPOSITE",
+      "c.conditional_success_2": "COMPOSITE",
+      "c.total_win_probability": "COMPOSITE"
+    },
+    "expected_credit_rules": [],
+    "expected_atomic_guard": "not_applicable",
+    "expected_mathematical_refutations": [
+      "b.second_white_probability"
+    ],
+    "rationale": "Igualdade verdadeira com partição falsa 9+2; refutação relacional deve prevalecer."
+  },
+  {
+    "case_id": "p3_rob_f06",
+    "family": "F",
+    "expected_score_by_construction": 0,
+    "expected_obligations_satisfied": [],
+    "expected_obligations_unsatisfied": [
+      "a.bottom_white_count",
+      "a.first_white_probability",
+      "b.ordered_pairs",
+      "b.different_favorable",
+      "b.same_compartment",
+      "b.second_white_probability",
+      "b.alternative_complete",
+      "c.continue_compartments",
+      "c.strategy_case_1",
+      "c.strategy_case_2",
+      "c.conditional_success_1",
+      "c.conditional_success_2",
+      "c.total_win_probability"
+    ],
+    "expected_context_rejections": [],
+    "expected_conflicts": [],
+    "expected_checker_routes": {
+      "a.bottom_white_count": "DETERMINISTIC",
+      "a.first_white_probability": "DETERMINISTIC",
+      "b.ordered_pairs": "COMPOSITE",
+      "b.different_favorable": "COMPOSITE",
+      "b.same_compartment": "DETERMINISTIC",
+      "b.second_white_probability": "COMPOSITE",
+      "b.alternative_complete": "COMPOSITE",
+      "c.continue_compartments": "DETERMINISTIC",
+      "c.strategy_case_1": "COMPOSITE",
+      "c.strategy_case_2": "COMPOSITE",
+      "c.conditional_success_1": "COMPOSITE",
+      "c.conditional_success_2": "COMPOSITE",
+      "c.total_win_probability": "COMPOSITE"
+    },
+    "expected_credit_rules": [],
+    "expected_atomic_guard": "not_applicable",
+    "expected_mathematical_refutations": [
+      "c.strategy_case_1"
+    ],
+    "rationale": "Cinza subótima no caso 1; valor numericamente correto não corrige estratégia nem global."
+  },
+  {
+    "case_id": "p3_rob_f07",
+    "family": "F",
+    "expected_score_by_construction": 0,
+    "expected_obligations_satisfied": [],
+    "expected_obligations_unsatisfied": [
+      "a.bottom_white_count",
+      "a.first_white_probability",
+      "b.ordered_pairs",
+      "b.different_favorable",
+      "b.same_compartment",
+      "b.second_white_probability",
+      "b.alternative_complete",
+      "c.continue_compartments",
+      "c.strategy_case_1",
+      "c.strategy_case_2",
+      "c.conditional_success_1",
+      "c.conditional_success_2",
+      "c.total_win_probability"
+    ],
+    "expected_context_rejections": [],
+    "expected_conflicts": [],
+    "expected_checker_routes": {
+      "a.bottom_white_count": "DETERMINISTIC",
+      "a.first_white_probability": "DETERMINISTIC",
+      "b.ordered_pairs": "COMPOSITE",
+      "b.different_favorable": "COMPOSITE",
+      "b.same_compartment": "DETERMINISTIC",
+      "b.second_white_probability": "COMPOSITE",
+      "b.alternative_complete": "COMPOSITE",
+      "c.continue_compartments": "DETERMINISTIC",
+      "c.strategy_case_1": "COMPOSITE",
+      "c.strategy_case_2": "COMPOSITE",
+      "c.conditional_success_1": "COMPOSITE",
+      "c.conditional_success_2": "COMPOSITE",
+      "c.total_win_probability": "COMPOSITE"
+    },
+    "expected_credit_rules": [],
+    "expected_atomic_guard": "not_applicable",
+    "expected_mathematical_refutations": [
+      "c.strategy_case_1",
+      "c.strategy_case_2"
+    ],
+    "rationale": "Estratégias/contagens trocadas entre estados; condicionais numericamente corretas não validam contextos falsos."
+  },
+  {
+    "case_id": "p3_rob_f08",
+    "family": "F",
+    "expected_score_by_construction": 0,
+    "expected_obligations_satisfied": [],
+    "expected_obligations_unsatisfied": [
+      "a.bottom_white_count",
+      "a.first_white_probability",
+      "b.ordered_pairs",
+      "b.different_favorable",
+      "b.same_compartment",
+      "b.second_white_probability",
+      "b.alternative_complete",
+      "c.continue_compartments",
+      "c.strategy_case_1",
+      "c.strategy_case_2",
+      "c.conditional_success_1",
+      "c.conditional_success_2",
+      "c.total_win_probability"
+    ],
+    "expected_context_rejections": [],
+    "expected_conflicts": [],
+    "expected_checker_routes": {
+      "a.bottom_white_count": "DETERMINISTIC",
+      "a.first_white_probability": "DETERMINISTIC",
+      "b.ordered_pairs": "COMPOSITE",
+      "b.different_favorable": "COMPOSITE",
+      "b.same_compartment": "DETERMINISTIC",
+      "b.second_white_probability": "COMPOSITE",
+      "b.alternative_complete": "COMPOSITE",
+      "c.continue_compartments": "DETERMINISTIC",
+      "c.strategy_case_1": "COMPOSITE",
+      "c.strategy_case_2": "COMPOSITE",
+      "c.conditional_success_1": "COMPOSITE",
+      "c.conditional_success_2": "COMPOSITE",
+      "c.total_win_probability": "COMPOSITE"
+    },
+    "expected_credit_rules": [],
+    "expected_atomic_guard": "not_applicable",
+    "expected_mathematical_refutations": [],
+    "rationale": "Números incidentais sem claim de probabilidade/contagem não satisfazem obrigações."
+  }
+]

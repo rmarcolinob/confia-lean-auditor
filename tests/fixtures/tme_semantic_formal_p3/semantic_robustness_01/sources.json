@@ -1,0 +1,242 @@
+[
+  {
+    "case_id": "p3_rob_a01",
+    "problem_id": "TME2026P3",
+    "solution_text": "a) Duas das seis bolas inferiores são brancas."
+  },
+  {
+    "case_id": "p3_rob_a02",
+    "problem_id": "TME2026P3",
+    "solution_text": "a) A chance de a primeira bola ser branca é uma em três."
+  },
+  {
+    "case_id": "p3_rob_a03",
+    "problem_id": "TME2026P3",
+    "solution_text": "b) Há trinta e seis sequências possíveis de escolhas: os pares ordenados vêm de seis opções em cada uma das duas escolhas, 6*6=36."
+  },
+  {
+    "case_id": "p3_rob_a04",
+    "problem_id": "TME2026P3",
+    "solution_text": "b) Dez casos favoráveis vêm de compartimentos diferentes: duas escolhas brancas para a segunda retirada e cinco primeiras escolhas distintas, 2*5=10."
+  },
+  {
+    "case_id": "p3_rob_a05",
+    "problem_id": "TME2026P3",
+    "solution_text": "b) Para obter branca repetindo o mesmo compartimento, apenas repetir o sexto funciona."
+  },
+  {
+    "case_id": "p3_rob_a06",
+    "problem_id": "TME2026P3",
+    "solution_text": "c) Depois da branca no primeiro compartimento, preta é a melhor escolha; no caso 1 a preta aparece três vezes."
+  },
+  {
+    "case_id": "p3_rob_a07",
+    "problem_id": "TME2026P3",
+    "solution_text": "c) No segundo compartimento, após a branca, cinza maximiza a chance; no caso 2 a cinza aparece três vezes."
+  },
+  {
+    "case_id": "p3_rob_a08",
+    "problem_id": "TME2026P3",
+    "solution_text": "c) A probabilidade total de vitória é um sexto, com (2/6)*(1/2)=1/6.\nApós sair branca do compartimento 2, escolho cinza, que aparece três vezes.\nNo caso 2, a probabilidade condicional de sucesso é 3/6=1/2.\nO jogo continua somente nos compartimentos 1 e 2.\nApós sair branca do compartimento 1, escolho preta, que aparece três vezes.\nNo caso 1, a probabilidade condicional de sucesso é 3/6=1/2."
+  },
+  {
+    "case_id": "p3_rob_b01",
+    "problem_id": "TME2026P3",
+    "solution_text": "a) A probabilidade da primeira branca é 2/6 = 1/3."
+  },
+  {
+    "case_id": "p3_rob_b02",
+    "problem_id": "TME2026P3",
+    "solution_text": "a) 1/3"
+  },
+  {
+    "case_id": "p3_rob_b03",
+    "problem_id": "TME2026P3",
+    "solution_text": "b) O espaço amostral de pares ordenados equiprováveis tem 6² = 36 possibilidades."
+  },
+  {
+    "case_id": "p3_rob_b04",
+    "problem_id": "TME2026P3",
+    "solution_text": "b) pares_ordenados: 6*6=36"
+  },
+  {
+    "case_id": "p3_rob_b05",
+    "problem_id": "TME2026P3",
+    "solution_text": "b) favoraveis_distintos: 2*5=10"
+  },
+  {
+    "case_id": "p3_rob_b06",
+    "problem_id": "TME2026P3",
+    "solution_text": "b) A probabilidade da segunda branca é (10+1)/36=11/36."
+  },
+  {
+    "case_id": "p3_rob_b07",
+    "problem_id": "TME2026P3",
+    "solution_text": "c) Após sair branca do compartimento 1, escolho preta, que aparece três vezes.\nNo caso 1, a probabilidade condicional de sucesso é 3/6=1/2."
+  },
+  {
+    "case_id": "p3_rob_b08",
+    "problem_id": "TME2026P3",
+    "solution_text": "c) O jogo continua somente nos compartimentos 1 e 2.\nApós sair branca do compartimento 1, escolho preta, que aparece três vezes.\nNo caso 1, a probabilidade condicional de sucesso é 3/6=1/2.\nApós sair branca do compartimento 2, escolho cinza, que aparece três vezes.\nNo caso 2, a probabilidade condicional de sucesso é 3/6=1/2.\nA probabilidade total de vitória é (1/2)*(2/6)=1/6."
+  },
+  {
+    "case_id": "p3_rob_c01",
+    "problem_id": "TME2026P3",
+    "solution_text": "a) 1/3"
+  },
+  {
+    "case_id": "p3_rob_c02",
+    "problem_id": "TME2026P3",
+    "solution_text": "a) Há duas bolas brancas embaixo."
+  },
+  {
+    "case_id": "p3_rob_c03",
+    "problem_id": "TME2026P3",
+    "solution_text": "b) 36"
+  },
+  {
+    "case_id": "p3_rob_c04",
+    "problem_id": "TME2026P3",
+    "solution_text": "b) 11/36"
+  },
+  {
+    "case_id": "p3_rob_c05",
+    "problem_id": "TME2026P3",
+    "solution_text": "b) Os casos favoráveis com compartimentos diferentes são 10."
+  },
+  {
+    "case_id": "p3_rob_c06",
+    "problem_id": "TME2026P3",
+    "solution_text": "b) Ao repetir o mesmo compartimento, somente o sexto libera branca."
+  },
+  {
+    "case_id": "p3_rob_c07",
+    "problem_id": "TME2026P3",
+    "solution_text": "c) O jogo continua somente nos compartimentos 1 e 2.\nApós sair branca do compartimento 1, escolho preta, que aparece três vezes.\nApós sair branca do compartimento 2, escolho cinza, que aparece três vezes."
+  },
+  {
+    "case_id": "p3_rob_c08",
+    "problem_id": "TME2026P3",
+    "solution_text": "c) 1/6"
+  },
+  {
+    "case_id": "p3_rob_d01",
+    "problem_id": "TME2026P3",
+    "solution_text": "a) Hipótese não adotada: a probabilidade da primeira branca seria 1/3."
+  },
+  {
+    "case_id": "p3_rob_d02",
+    "problem_id": "TME2026P3",
+    "solution_text": "a) Tentativa abandonada: há duas bolas brancas embaixo."
+  },
+  {
+    "case_id": "p3_rob_d03",
+    "problem_id": "TME2026P3",
+    "solution_text": "a) Tentativa abandonada: a probabilidade da primeira branca é 1/2.\n\nResposta final: a probabilidade da primeira branca é 1/3."
+  },
+  {
+    "case_id": "p3_rob_d04",
+    "problem_id": "TME2026P3",
+    "solution_text": "b) Beatriz disse que, ao repetir o mesmo compartimento, somente o sexto libera branca."
+  },
+  {
+    "case_id": "p3_rob_d05",
+    "problem_id": "TME2026P3",
+    "solution_text": "a) Enunciado: há duas bolas brancas inferiores."
+  },
+  {
+    "case_id": "p3_rob_d06",
+    "problem_id": "TME2026P3",
+    "solution_text": "c) A probabilidade da primeira branca é 1/3."
+  },
+  {
+    "case_id": "p3_rob_d07",
+    "problem_id": "TME2026P3",
+    "solution_text": "a) Hipótese não adotada: a probabilidade da primeira branca seria 1/2.\n\nMinha resposta: há duas bolas brancas embaixo.\nA probabilidade da primeira branca é 1/3."
+  },
+  {
+    "case_id": "p3_rob_d08",
+    "problem_id": "TME2026P3",
+    "solution_text": "c) Se a primeira branca saiu do compartimento 1, escolho preta, que aparece três vezes.\nNo caso 1, a probabilidade condicional de sucesso é 3/6=1/2."
+  },
+  {
+    "case_id": "p3_rob_e01",
+    "problem_id": "TME2026P3",
+    "solution_text": "a) Há duas bolas brancas embaixo.\nb) Ao repetir o mesmo compartimento, somente o sexto libera branca.\nAo repetir o mesmo compartimento, o quinto também libera branca."
+  },
+  {
+    "case_id": "p3_rob_e02",
+    "problem_id": "TME2026P3",
+    "solution_text": "a) Há duas bolas brancas embaixo.\nb) Ao repetir o mesmo compartimento, o quinto também libera branca.\nNa verdade, ao repetir o mesmo compartimento, somente o sexto libera branca."
+  },
+  {
+    "case_id": "p3_rob_e03",
+    "problem_id": "TME2026P3",
+    "solution_text": "a) Há duas bolas brancas embaixo.\nb) repeticao_branca: {6}\nAo repetir o mesmo compartimento, o quinto também libera branca."
+  },
+  {
+    "case_id": "p3_rob_e04",
+    "problem_id": "TME2026P3",
+    "solution_text": "a) Há duas bolas brancas embaixo.\nb) Ao repetir o mesmo compartimento, somente o sexto libera branca.\nO quinto também."
+  },
+  {
+    "case_id": "p3_rob_e05",
+    "problem_id": "TME2026P3",
+    "solution_text": "b) segunda_branca: 11/36\nsegunda_branca: 12/36"
+  },
+  {
+    "case_id": "p3_rob_e06",
+    "problem_id": "TME2026P3",
+    "solution_text": "c) Após sair branca do compartimento 1, escolho preta, que aparece três vezes.\nApós sair branca do compartimento 1, escolho cinza, que aparece três vezes."
+  },
+  {
+    "case_id": "p3_rob_e07",
+    "problem_id": "TME2026P3",
+    "solution_text": "b) Tentativa abandonada: ao repetir o mesmo compartimento, o quinto também libera branca.\n\nResposta final: ao repetir o mesmo compartimento, somente o sexto libera branca."
+  },
+  {
+    "case_id": "p3_rob_e08",
+    "problem_id": "TME2026P3",
+    "solution_text": "b) Beatriz disse que, ao repetir o mesmo compartimento, o quinto também libera branca.\n\nMinha resposta: ao repetir o mesmo compartimento, somente o sexto libera branca."
+  },
+  {
+    "case_id": "p3_rob_f01",
+    "problem_id": "TME2026P3",
+    "solution_text": "a) Há três bolas brancas inferiores."
+  },
+  {
+    "case_id": "p3_rob_f02",
+    "problem_id": "TME2026P3",
+    "solution_text": "b) pares_ordenados: 6*5=30"
+  },
+  {
+    "case_id": "p3_rob_f03",
+    "problem_id": "TME2026P3",
+    "solution_text": "b) favoraveis_distintos: 1*10=10"
+  },
+  {
+    "case_id": "p3_rob_f04",
+    "problem_id": "TME2026P3",
+    "solution_text": "b) Ao repetir o mesmo compartimento, somente o quinto libera branca."
+  },
+  {
+    "case_id": "p3_rob_f05",
+    "problem_id": "TME2026P3",
+    "solution_text": "b) A probabilidade da segunda branca é (9+2)/36=11/36."
+  },
+  {
+    "case_id": "p3_rob_f06",
+    "problem_id": "TME2026P3",
+    "solution_text": "c) Após sair branca do compartimento 1, escolho cinza, que aparece duas vezes.\nNo caso 1, a probabilidade condicional de sucesso é 1/2.\nA probabilidade total de vitória é 1/6."
+  },
+  {
+    "case_id": "p3_rob_f07",
+    "problem_id": "TME2026P3",
+    "solution_text": "c) Após sair branca do compartimento 1, escolho cinza, que aparece três vezes.\nNo caso 1, a probabilidade condicional de sucesso é 3/6=1/2.\nApós sair branca do compartimento 2, escolho preta, que aparece três vezes.\nNo caso 2, a probabilidade condicional de sucesso é 3/6=1/2."
+  },
+  {
+    "case_id": "p3_rob_f08",
+    "problem_id": "TME2026P3",
+    "solution_text": "b) Meu caderno tem as páginas 2, 6, 10, 11 e 36 marcadas. Esses números identificam páginas de anotações."
+  }
+]

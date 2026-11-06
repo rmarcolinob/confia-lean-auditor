@@ -1,0 +1,1169 @@
+[
+  {
+    "case_id": "p3_rob_a01",
+    "construction_reference": [
+      "examples/pautas/tme2_problem3.v1.json",
+      "app/confia_lean_auditor/lean/student_claim_checkers/tme2_p3.py",
+      "app/confia_lean_auditor/experimental/tme_p3_checker_first/components.py"
+    ],
+    "interpretation_rule": "Contagem explícita de duas inferiores brancas; a.count=2. A paráfrase não declara probabilidade.",
+    "reference_checker": [
+      "P3Checks._a/_b/_c",
+      "StrongP3Checks",
+      "finite_certificate"
+    ],
+    "expected_score": 2,
+    "expected_obligations": [
+      "a.bottom_white_count"
+    ],
+    "expected_conflict_context_behavior": {
+      "contexts": [],
+      "conflicts": [],
+      "guard": "not_applicable"
+    }
+  },
+  {
+    "case_id": "p3_rob_a02",
+    "construction_reference": [
+      "examples/pautas/tme2_problem3.v1.json",
+      "app/confia_lean_auditor/lean/student_claim_checkers/tme2_p3.py",
+      "app/confia_lean_auditor/experimental/tme_p3_checker_first/components.py"
+    ],
+    "interpretation_rule": "Valor 1/3 por extenso; resposta de a autoriza 2, sem inferir contagem.",
+    "reference_checker": [
+      "P3Checks._a/_b/_c",
+      "StrongP3Checks",
+      "finite_certificate"
+    ],
+    "expected_score": 2,
+    "expected_obligations": [
+      "a.first_white_probability"
+    ],
+    "expected_conflict_context_behavior": {
+      "contexts": [],
+      "conflicts": [],
+      "guard": "not_applicable"
+    }
+  },
+  {
+    "case_id": "p3_rob_a03",
+    "construction_reference": [
+      "examples/pautas/tme2_problem3.v1.json",
+      "app/confia_lean_auditor/lean/student_claim_checkers/tme2_p3.py",
+      "app/confia_lean_auditor/experimental/tme_p3_checker_first/components.py"
+    ],
+    "interpretation_rule": "Relação 6*6 explicitamente escrita satisfaz b.space; apenas 36 não bastaria.",
+    "reference_checker": [
+      "P3Checks._a/_b/_c",
+      "StrongP3Checks",
+      "finite_certificate"
+    ],
+    "expected_score": 2,
+    "expected_obligations": [
+      "b.ordered_pairs"
+    ],
+    "expected_conflict_context_behavior": {
+      "contexts": [],
+      "conflicts": [],
+      "guard": "not_applicable"
+    }
+  },
+  {
+    "case_id": "p3_rob_a04",
+    "construction_reference": [
+      "examples/pautas/tme2_problem3.v1.json",
+      "app/confia_lean_auditor/lean/student_claim_checkers/tme2_p3.py",
+      "app/confia_lean_auditor/experimental/tme_p3_checker_first/components.py"
+    ],
+    "interpretation_rule": "Relação explícita 2*5=10 satisfaz b.different.",
+    "reference_checker": [
+      "P3Checks._a/_b/_c",
+      "StrongP3Checks",
+      "finite_certificate"
+    ],
+    "expected_score": 2,
+    "expected_obligations": [
+      "b.different_favorable"
+    ],
+    "expected_conflict_context_behavior": {
+      "contexts": [],
+      "conflicts": [],
+      "guard": "not_applicable"
+    }
+  },
+  {
+    "case_id": "p3_rob_a05",
+    "construction_reference": [
+      "examples/pautas/tme2_problem3.v1.json",
+      "app/confia_lean_auditor/lean/student_claim_checkers/tme2_p3.py",
+      "app/confia_lean_auditor/experimental/tme_p3_checker_first/components.py"
+    ],
+    "interpretation_rule": "Exclusividade do sexto escrita em prosa; comparação com diagonal do modelo.",
+    "reference_checker": [
+      "P3Checks._a/_b/_c",
+      "StrongP3Checks",
+      "finite_certificate"
+    ],
+    "expected_score": 2,
+    "expected_obligations": [
+      "b.same_compartment"
+    ],
+    "expected_conflict_context_behavior": {
+      "contexts": [],
+      "conflicts": [],
+      "guard": "not_applicable"
+    }
+  },
+  {
+    "case_id": "p3_rob_a06",
+    "construction_reference": [
+      "examples/pautas/tme2_problem3.v1.json",
+      "app/confia_lean_auditor/lean/student_claim_checkers/tme2_p3.py",
+      "app/confia_lean_auditor/experimental/tme_p3_checker_first/components.py"
+    ],
+    "interpretation_rule": "Cor preta e contagem três associadas ao caso 1; sem condicional/global.",
+    "reference_checker": [
+      "P3Checks._a/_b/_c",
+      "StrongP3Checks",
+      "finite_certificate"
+    ],
+    "expected_score": 2,
+    "expected_obligations": [
+      "c.strategy_case_1"
+    ],
+    "expected_conflict_context_behavior": {
+      "contexts": [],
+      "conflicts": [],
+      "guard": "not_applicable"
+    }
+  },
+  {
+    "case_id": "p3_rob_a07",
+    "construction_reference": [
+      "examples/pautas/tme2_problem3.v1.json",
+      "app/confia_lean_auditor/lean/student_claim_checkers/tme2_p3.py",
+      "app/confia_lean_auditor/experimental/tme_p3_checker_first/components.py"
+    ],
+    "interpretation_rule": "Cor cinza e contagem três do caso 2; maximização confirmável pela máquina.",
+    "reference_checker": [
+      "P3Checks._a/_b/_c",
+      "StrongP3Checks",
+      "finite_certificate"
+    ],
+    "expected_score": 2,
+    "expected_obligations": [
+      "c.strategy_case_2"
+    ],
+    "expected_conflict_context_behavior": {
+      "contexts": [],
+      "conflicts": [],
+      "guard": "not_applicable"
+    }
+  },
+  {
+    "case_id": "p3_rob_a08",
+    "construction_reference": [
+      "examples/pautas/tme2_problem3.v1.json",
+      "app/confia_lean_auditor/lean/student_claim_checkers/tme2_p3.py",
+      "app/confia_lean_auditor/experimental/tme_p3_checker_first/components.py"
+    ],
+    "interpretation_rule": "Ordem global antes dos casos não elimina dependências escritas depois. Desenvolvimento combinado autorizado; total 8.",
+    "reference_checker": [
+      "P3Checks._a/_b/_c",
+      "StrongP3Checks",
+      "finite_certificate"
+    ],
+    "expected_score": 8,
+    "expected_obligations": [
+      "c.continue_compartments",
+      "c.strategy_case_1",
+      "c.strategy_case_2",
+      "c.conditional_success_1",
+      "c.conditional_success_2",
+      "c.total_win_probability"
+    ],
+    "expected_conflict_context_behavior": {
+      "contexts": [],
+      "conflicts": [],
+      "guard": "not_applicable"
+    }
+  },
+  {
+    "case_id": "p3_rob_b01",
+    "construction_reference": [
+      "examples/pautas/tme2_problem3.v1.json",
+      "app/confia_lean_auditor/lean/student_claim_checkers/tme2_p3.py",
+      "app/confia_lean_auditor/experimental/tme_p3_checker_first/components.py"
+    ],
+    "interpretation_rule": "Igualdade racional escrita; não infere a.count.",
+    "reference_checker": [
+      "P3Checks._a/_b/_c",
+      "StrongP3Checks",
+      "finite_certificate"
+    ],
+    "expected_score": 2,
+    "expected_obligations": [
+      "a.first_white_probability"
+    ],
+    "expected_conflict_context_behavior": {
+      "contexts": [],
+      "conflicts": [],
+      "guard": "not_applicable"
+    }
+  },
+  {
+    "case_id": "p3_rob_b02",
+    "construction_reference": [
+      "examples/pautas/tme2_problem3.v1.json",
+      "app/confia_lean_auditor/lean/student_claim_checkers/tme2_p3.py",
+      "app/confia_lean_auditor/experimental/tme_p3_checker_first/components.py"
+    ],
+    "interpretation_rule": "Valor isolado expressamente autorizado em a; rota determinística.",
+    "reference_checker": [
+      "P3Checks._a/_b/_c",
+      "StrongP3Checks",
+      "finite_certificate"
+    ],
+    "expected_score": 2,
+    "expected_obligations": [
+      "a.first_white_probability"
+    ],
+    "expected_conflict_context_behavior": {
+      "contexts": [],
+      "conflicts": [],
+      "guard": "not_applicable"
+    }
+  },
+  {
+    "case_id": "p3_rob_b03",
+    "construction_reference": [
+      "examples/pautas/tme2_problem3.v1.json",
+      "app/confia_lean_auditor/lean/student_claim_checkers/tme2_p3.py",
+      "app/confia_lean_auditor/experimental/tme_p3_checker_first/components.py"
+    ],
+    "interpretation_rule": "Potência n^2 representa as duas escolhas; count_relation admite potência de expoente 2.",
+    "reference_checker": [
+      "P3Checks._a/_b/_c",
+      "StrongP3Checks",
+      "finite_certificate"
+    ],
+    "expected_score": 2,
+    "expected_obligations": [
+      "b.ordered_pairs"
+    ],
+    "expected_conflict_context_behavior": {
+      "contexts": [],
+      "conflicts": [],
+      "guard": "not_applicable"
+    }
+  },
+  {
+    "case_id": "p3_rob_b04",
+    "construction_reference": [
+      "examples/pautas/tme2_problem3.v1.json",
+      "app/confia_lean_auditor/lean/student_claim_checkers/tme2_p3.py",
+      "app/confia_lean_auditor/experimental/tme_p3_checker_first/components.py"
+    ],
+    "interpretation_rule": "Representação tipada exata da relação de duas escolhas.",
+    "reference_checker": [
+      "P3Checks._a/_b/_c",
+      "StrongP3Checks",
+      "finite_certificate"
+    ],
+    "expected_score": 2,
+    "expected_obligations": [
+      "b.ordered_pairs"
+    ],
+    "expected_conflict_context_behavior": {
+      "contexts": [],
+      "conflicts": [],
+      "guard": "not_applicable"
+    }
+  },
+  {
+    "case_id": "p3_rob_b05",
+    "construction_reference": [
+      "examples/pautas/tme2_problem3.v1.json",
+      "app/confia_lean_auditor/lean/student_claim_checkers/tme2_p3.py",
+      "app/confia_lean_auditor/experimental/tme_p3_checker_first/components.py"
+    ],
+    "interpretation_rule": "Produto correto distinto; não conclui probabilidade.",
+    "reference_checker": [
+      "P3Checks._a/_b/_c",
+      "StrongP3Checks",
+      "finite_certificate"
+    ],
+    "expected_score": 2,
+    "expected_obligations": [
+      "b.different_favorable"
+    ],
+    "expected_conflict_context_behavior": {
+      "contexts": [],
+      "conflicts": [],
+      "guard": "not_applicable"
+    }
+  },
+  {
+    "case_id": "p3_rob_b06",
+    "construction_reference": [
+      "examples/pautas/tme2_problem3.v1.json",
+      "app/confia_lean_auditor/lean/student_claim_checkers/tme2_p3.py",
+      "app/confia_lean_auditor/experimental/tme_p3_checker_first/components.py"
+    ],
+    "interpretation_rule": "Partição 10+1/36 escrita e verificável; não inventa os argumentos de b.space/b.different.",
+    "reference_checker": [
+      "P3Checks._a/_b/_c",
+      "StrongP3Checks",
+      "finite_certificate"
+    ],
+    "expected_score": 2,
+    "expected_obligations": [
+      "b.second_white_probability"
+    ],
+    "expected_conflict_context_behavior": {
+      "contexts": [],
+      "conflicts": [],
+      "guard": "not_applicable"
+    }
+  },
+  {
+    "case_id": "p3_rob_b07",
+    "construction_reference": [
+      "examples/pautas/tme2_problem3.v1.json",
+      "app/confia_lean_auditor/lean/student_claim_checkers/tme2_p3.py",
+      "app/confia_lean_auditor/experimental/tme_p3_checker_first/components.py"
+    ],
+    "interpretation_rule": "Uma estratégia e sua condicional; all_of de c.conditionals requer também caso 2, logo somente 2 pontos.",
+    "reference_checker": [
+      "P3Checks._a/_b/_c",
+      "StrongP3Checks",
+      "finite_certificate"
+    ],
+    "expected_score": 2,
+    "expected_obligations": [
+      "c.strategy_case_1",
+      "c.conditional_success_1"
+    ],
+    "expected_conflict_context_behavior": {
+      "contexts": [],
+      "conflicts": [],
+      "guard": "not_applicable"
+    }
+  },
+  {
+    "case_id": "p3_rob_b08",
+    "construction_reference": [
+      "examples/pautas/tme2_problem3.v1.json",
+      "app/confia_lean_auditor/lean/student_claim_checkers/tme2_p3.py",
+      "app/confia_lean_auditor/experimental/tme_p3_checker_first/components.py"
+    ],
+    "interpretation_rule": "Produto combinado em ordem invertida admitido pelo checker, com contexto completo.",
+    "reference_checker": [
+      "P3Checks._a/_b/_c",
+      "StrongP3Checks",
+      "finite_certificate"
+    ],
+    "expected_score": 8,
+    "expected_obligations": [
+      "c.continue_compartments",
+      "c.strategy_case_1",
+      "c.strategy_case_2",
+      "c.conditional_success_1",
+      "c.conditional_success_2",
+      "c.total_win_probability"
+    ],
+    "expected_conflict_context_behavior": {
+      "contexts": [],
+      "conflicts": [],
+      "guard": "not_applicable"
+    }
+  },
+  {
+    "case_id": "p3_rob_c01",
+    "construction_reference": [
+      "examples/pautas/tme2_problem3.v1.json",
+      "app/confia_lean_auditor/lean/student_claim_checkers/tme2_p3.py",
+      "app/confia_lean_auditor/experimental/tme_p3_checker_first/components.py"
+    ],
+    "interpretation_rule": "Resultado isolado de a autoriza 2 pontos.",
+    "reference_checker": [
+      "P3Checks._a/_b/_c",
+      "StrongP3Checks",
+      "finite_certificate"
+    ],
+    "expected_score": 2,
+    "expected_obligations": [
+      "a.first_white_probability"
+    ],
+    "expected_conflict_context_behavior": {
+      "contexts": [],
+      "conflicts": [],
+      "guard": "not_applicable"
+    }
+  },
+  {
+    "case_id": "p3_rob_c02",
+    "construction_reference": [
+      "examples/pautas/tme2_problem3.v1.json",
+      "app/confia_lean_auditor/lean/student_claim_checkers/tme2_p3.py",
+      "app/confia_lean_auditor/experimental/tme_p3_checker_first/components.py"
+    ],
+    "interpretation_rule": "Somente contagem, não cálculo da probabilidade.",
+    "reference_checker": [
+      "P3Checks._a/_b/_c",
+      "StrongP3Checks",
+      "finite_certificate"
+    ],
+    "expected_score": 2,
+    "expected_obligations": [
+      "a.bottom_white_count"
+    ],
+    "expected_conflict_context_behavior": {
+      "contexts": [],
+      "conflicts": [],
+      "guard": "not_applicable"
+    }
+  },
+  {
+    "case_id": "p3_rob_c03",
+    "construction_reference": [
+      "examples/pautas/tme2_problem3.v1.json",
+      "app/confia_lean_auditor/lean/student_claim_checkers/tme2_p3.py",
+      "app/confia_lean_auditor/experimental/tme_p3_checker_first/components.py"
+    ],
+    "interpretation_rule": "36 isolado não demonstra relação 6*6/6^2 e não é 11/36; zero.",
+    "reference_checker": [
+      "P3Checks._a/_b/_c",
+      "StrongP3Checks",
+      "finite_certificate"
+    ],
+    "expected_score": 0,
+    "expected_obligations": [],
+    "expected_conflict_context_behavior": {
+      "contexts": [],
+      "conflicts": [],
+      "guard": "not_applicable"
+    }
+  },
+  {
+    "case_id": "p3_rob_c04",
+    "construction_reference": [
+      "examples/pautas/tme2_problem3.v1.json",
+      "app/confia_lean_auditor/lean/student_claim_checkers/tme2_p3.py",
+      "app/confia_lean_auditor/experimental/tme_p3_checker_first/components.py"
+    ],
+    "interpretation_rule": "Contrato result_value de b.conclusion autoriza somente 2, sem método.",
+    "reference_checker": [
+      "P3Checks._a/_b/_c",
+      "StrongP3Checks",
+      "finite_certificate"
+    ],
+    "expected_score": 2,
+    "expected_obligations": [
+      "b.second_white_probability"
+    ],
+    "expected_conflict_context_behavior": {
+      "contexts": [],
+      "conflicts": [],
+      "guard": "not_applicable"
+    }
+  },
+  {
+    "case_id": "p3_rob_c05",
+    "construction_reference": [
+      "examples/pautas/tme2_problem3.v1.json",
+      "app/confia_lean_auditor/lean/student_claim_checkers/tme2_p3.py",
+      "app/confia_lean_auditor/experimental/tme_p3_checker_first/components.py"
+    ],
+    "interpretation_rule": "Contagem correta sem relação 2*5: COMPOSITE_INCOMPLETE, zero no contrato fortalecido.",
+    "reference_checker": [
+      "P3Checks._a/_b/_c",
+      "StrongP3Checks",
+      "finite_certificate"
+    ],
+    "expected_score": 0,
+    "expected_obligations": [],
+    "expected_conflict_context_behavior": {
+      "contexts": [],
+      "conflicts": [],
+      "guard": "not_applicable"
+    }
+  },
+  {
+    "case_id": "p3_rob_c06",
+    "construction_reference": [
+      "examples/pautas/tme2_problem3.v1.json",
+      "app/confia_lean_auditor/lean/student_claim_checkers/tme2_p3.py",
+      "app/confia_lean_auditor/experimental/tme_p3_checker_first/components.py"
+    ],
+    "interpretation_rule": "Lista exclusiva {6} explícita, comparável ao modelo; 2 pontos independentes.",
+    "reference_checker": [
+      "P3Checks._a/_b/_c",
+      "StrongP3Checks",
+      "finite_certificate"
+    ],
+    "expected_score": 2,
+    "expected_obligations": [
+      "b.same_compartment"
+    ],
+    "expected_conflict_context_behavior": {
+      "contexts": [],
+      "conflicts": [],
+      "guard": "not_applicable"
+    }
+  },
+  {
+    "case_id": "p3_rob_c07",
+    "construction_reference": [
+      "examples/pautas/tme2_problem3.v1.json",
+      "app/confia_lean_auditor/lean/student_claim_checkers/tme2_p3.py",
+      "app/confia_lean_auditor/experimental/tme_p3_checker_first/components.py"
+    ],
+    "interpretation_rule": "Duas estratégias com contagens e continuação: 1+2+2=5; nenhuma condicional ou global escrita.",
+    "reference_checker": [
+      "P3Checks._a/_b/_c",
+      "StrongP3Checks",
+      "finite_certificate"
+    ],
+    "expected_score": 5,
+    "expected_obligations": [
+      "c.continue_compartments",
+      "c.strategy_case_1",
+      "c.strategy_case_2"
+    ],
+    "expected_conflict_context_behavior": {
+      "contexts": [],
+      "conflicts": [],
+      "guard": "not_applicable"
+    }
+  },
+  {
+    "case_id": "p3_rob_c08",
+    "construction_reference": [
+      "examples/pautas/tme2_problem3.v1.json",
+      "app/confia_lean_auditor/lean/student_claim_checkers/tme2_p3.py",
+      "app/confia_lean_auditor/experimental/tme_p3_checker_first/components.py"
+    ],
+    "interpretation_rule": "Valor global isolado não satisfaz estratégia, condicionais nem desenvolvimento; zero.",
+    "reference_checker": [
+      "P3Checks._a/_b/_c",
+      "StrongP3Checks",
+      "finite_certificate"
+    ],
+    "expected_score": 0,
+    "expected_obligations": [],
+    "expected_conflict_context_behavior": {
+      "contexts": [],
+      "conflicts": [],
+      "guard": "not_applicable"
+    }
+  },
+  {
+    "case_id": "p3_rob_d01",
+    "construction_reference": [
+      "examples/pautas/tme2_problem3.v1.json",
+      "app/confia_lean_auditor/lean/student_claim_checkers/tme2_p3.py",
+      "app/confia_lean_auditor/experimental/tme_p3_checker_first/components.py"
+    ],
+    "interpretation_rule": "Valor verdadeiro em hipótese não adotada não gera crédito.",
+    "reference_checker": [
+      "P3Checks._a/_b/_c",
+      "StrongP3Checks",
+      "finite_certificate"
+    ],
+    "expected_score": 0,
+    "expected_obligations": [],
+    "expected_conflict_context_behavior": {
+      "contexts": [
+        {
+          "source_span": "Hipótese não adotada: a probabilidade da primeira branca seria 1/3.",
+          "obligation_id": "a.first_white_probability",
+          "reason": "hypothetical_not_adopted"
+        }
+      ],
+      "conflicts": [],
+      "guard": "not_applicable"
+    }
+  },
+  {
+    "case_id": "p3_rob_d02",
+    "construction_reference": [
+      "examples/pautas/tme2_problem3.v1.json",
+      "app/confia_lean_auditor/lean/student_claim_checkers/tme2_p3.py",
+      "app/confia_lean_auditor/experimental/tme_p3_checker_first/components.py"
+    ],
+    "interpretation_rule": "Contagem em tentativa abandonada não pertence à solução adotada.",
+    "reference_checker": [
+      "P3Checks._a/_b/_c",
+      "StrongP3Checks",
+      "finite_certificate"
+    ],
+    "expected_score": 0,
+    "expected_obligations": [],
+    "expected_conflict_context_behavior": {
+      "contexts": [
+        {
+          "source_span": "Tentativa abandonada: há duas bolas brancas embaixo.",
+          "obligation_id": "a.bottom_white_count",
+          "reason": "abandoned"
+        }
+      ],
+      "conflicts": [],
+      "guard": "not_applicable"
+    }
+  },
+  {
+    "case_id": "p3_rob_d03",
+    "construction_reference": [
+      "examples/pautas/tme2_problem3.v1.json",
+      "app/confia_lean_auditor/lean/student_claim_checkers/tme2_p3.py",
+      "app/confia_lean_auditor/experimental/tme_p3_checker_first/components.py"
+    ],
+    "interpretation_rule": "Abandono explícito e parágrafo final delimitam correção; não é last-wins implícito.",
+    "reference_checker": [
+      "P3Checks._a/_b/_c",
+      "StrongP3Checks",
+      "finite_certificate"
+    ],
+    "expected_score": 2,
+    "expected_obligations": [
+      "a.first_white_probability"
+    ],
+    "expected_conflict_context_behavior": {
+      "contexts": [
+        {
+          "source_span": "Tentativa abandonada: a probabilidade da primeira branca é 1/2.",
+          "obligation_id": "a.first_white_probability",
+          "reason": "explicit_abandonment"
+        }
+      ],
+      "conflicts": [],
+      "guard": "not_applicable"
+    }
+  },
+  {
+    "case_id": "p3_rob_d04",
+    "construction_reference": [
+      "examples/pautas/tme2_problem3.v1.json",
+      "app/confia_lean_auditor/lean/student_claim_checkers/tme2_p3.py",
+      "app/confia_lean_auditor/experimental/tme_p3_checker_first/components.py"
+    ],
+    "interpretation_rule": "Citação sem adoção é evidência de terceiro, mesmo sendo verdadeira.",
+    "reference_checker": [
+      "P3Checks._a/_b/_c",
+      "StrongP3Checks",
+      "finite_certificate"
+    ],
+    "expected_score": 0,
+    "expected_obligations": [],
+    "expected_conflict_context_behavior": {
+      "contexts": [
+        {
+          "source_span": "Beatriz disse que, ao repetir o mesmo compartimento, somente o sexto libera branca.",
+          "obligation_id": "b.same_compartment",
+          "reason": "third_party"
+        }
+      ],
+      "conflicts": [],
+      "guard": "not_applicable"
+    }
+  },
+  {
+    "case_id": "p3_rob_d05",
+    "construction_reference": [
+      "examples/pautas/tme2_problem3.v1.json",
+      "app/confia_lean_auditor/lean/student_claim_checkers/tme2_p3.py",
+      "app/confia_lean_auditor/experimental/tme_p3_checker_first/components.py"
+    ],
+    "interpretation_rule": "Texto explicitamente atribuído ao enunciado não é afirmação do aluno.",
+    "reference_checker": [
+      "P3Checks._a/_b/_c",
+      "StrongP3Checks",
+      "finite_certificate"
+    ],
+    "expected_score": 0,
+    "expected_obligations": [],
+    "expected_conflict_context_behavior": {
+      "contexts": [
+        {
+          "source_span": "Enunciado: há duas bolas brancas inferiores.",
+          "obligation_id": "a.bottom_white_count",
+          "reason": "problem_statement"
+        }
+      ],
+      "conflicts": [],
+      "guard": "not_applicable"
+    }
+  },
+  {
+    "case_id": "p3_rob_d06",
+    "construction_reference": [
+      "examples/pautas/tme2_problem3.v1.json",
+      "app/confia_lean_auditor/lean/student_claim_checkers/tme2_p3.py",
+      "app/confia_lean_auditor/experimental/tme_p3_checker_first/components.py"
+    ],
+    "interpretation_rule": "Claim de a colocado em c: same_item_required; não transferir crédito.",
+    "reference_checker": [
+      "P3Checks._a/_b/_c",
+      "StrongP3Checks",
+      "finite_certificate"
+    ],
+    "expected_score": 0,
+    "expected_obligations": [],
+    "expected_conflict_context_behavior": {
+      "contexts": [
+        {
+          "source_span": "A probabilidade da primeira branca é 1/3.",
+          "obligation_id": "a.first_white_probability",
+          "reason": "wrong_item"
+        }
+      ],
+      "conflicts": [],
+      "guard": "not_applicable"
+    }
+  },
+  {
+    "case_id": "p3_rob_d07",
+    "construction_reference": [
+      "examples/pautas/tme2_problem3.v1.json",
+      "app/confia_lean_auditor/lean/student_claim_checkers/tme2_p3.py",
+      "app/confia_lean_auditor/experimental/tme_p3_checker_first/components.py"
+    ],
+    "interpretation_rule": "Veto contextual local; duas evidências afirmadas após novo parágrafo devem permanecer.",
+    "reference_checker": [
+      "P3Checks._a/_b/_c",
+      "StrongP3Checks",
+      "finite_certificate"
+    ],
+    "expected_score": 4,
+    "expected_obligations": [
+      "a.bottom_white_count",
+      "a.first_white_probability"
+    ],
+    "expected_conflict_context_behavior": {
+      "contexts": [
+        {
+          "source_span": "Hipótese não adotada: a probabilidade da primeira branca seria 1/2.",
+          "obligation_id": "a.first_white_probability",
+          "reason": "hypothetical_not_adopted"
+        }
+      ],
+      "conflicts": [],
+      "guard": "not_applicable"
+    }
+  },
+  {
+    "case_id": "p3_rob_d08",
+    "construction_reference": [
+      "examples/pautas/tme2_problem3.v1.json",
+      "app/confia_lean_auditor/lean/student_claim_checkers/tme2_p3.py",
+      "app/confia_lean_auditor/experimental/tme_p3_checker_first/components.py"
+    ],
+    "interpretation_rule": "Condição matemática adotada de ramo, não hipótese exploratória. Crédito da estratégia=2; só um ramo não completa c.conditionals.",
+    "reference_checker": [
+      "P3Checks._a/_b/_c",
+      "StrongP3Checks",
+      "finite_certificate"
+    ],
+    "expected_score": 2,
+    "expected_obligations": [
+      "c.strategy_case_1",
+      "c.conditional_success_1"
+    ],
+    "expected_conflict_context_behavior": {
+      "contexts": [],
+      "conflicts": [],
+      "guard": "not_applicable"
+    }
+  },
+  {
+    "case_id": "p3_rob_e01",
+    "construction_reference": [
+      "examples/pautas/tme2_problem3.v1.json",
+      "app/confia_lean_auditor/lean/student_claim_checkers/tme2_p3.py",
+      "app/confia_lean_auditor/experimental/tme_p3_checker_first/components.py"
+    ],
+    "interpretation_rule": "Afirmações adotadas incompatíveis; bloquear b.same, preservar a.count.",
+    "reference_checker": [
+      "P3Checks._a/_b/_c",
+      "StrongP3Checks",
+      "finite_certificate"
+    ],
+    "expected_score": 2,
+    "expected_obligations": [
+      "a.bottom_white_count"
+    ],
+    "expected_conflict_context_behavior": {
+      "contexts": [],
+      "conflicts": [
+        {
+          "obligation_id": "b.same_compartment",
+          "expected_detection": "regular_if_set_payload_else_atomic_guard"
+        }
+      ],
+      "guard": "regular_if_set_payload_else_atomic_guard"
+    }
+  },
+  {
+    "case_id": "p3_rob_e02",
+    "construction_reference": [
+      "examples/pautas/tme2_problem3.v1.json",
+      "app/confia_lean_auditor/lean/student_claim_checkers/tme2_p3.py",
+      "app/confia_lean_auditor/experimental/tme_p3_checker_first/components.py"
+    ],
+    "interpretation_rule": "Ordem invertida sem abandono explícito não revoga a outra afirmação; mesmo veto.",
+    "reference_checker": [
+      "P3Checks._a/_b/_c",
+      "StrongP3Checks",
+      "finite_certificate"
+    ],
+    "expected_score": 2,
+    "expected_obligations": [
+      "a.bottom_white_count"
+    ],
+    "expected_conflict_context_behavior": {
+      "contexts": [],
+      "conflicts": [
+        {
+          "obligation_id": "b.same_compartment",
+          "expected_detection": "regular_if_set_payload_else_atomic_guard"
+        }
+      ],
+      "guard": "regular_if_set_payload_else_atomic_guard"
+    }
+  },
+  {
+    "case_id": "p3_rob_e03",
+    "construction_reference": [
+      "examples/pautas/tme2_problem3.v1.json",
+      "app/confia_lean_auditor/lean/student_claim_checkers/tme2_p3.py",
+      "app/confia_lean_auditor/experimental/tme_p3_checker_first/components.py"
+    ],
+    "interpretation_rule": "Conjunto tipado correto não supera membership falso adotado.",
+    "reference_checker": [
+      "P3Checks._a/_b/_c",
+      "StrongP3Checks",
+      "finite_certificate"
+    ],
+    "expected_score": 2,
+    "expected_obligations": [
+      "a.bottom_white_count"
+    ],
+    "expected_conflict_context_behavior": {
+      "contexts": [],
+      "conflicts": [
+        {
+          "obligation_id": "b.same_compartment",
+          "expected_detection": "regular_if_set_payload_else_atomic_guard"
+        }
+      ],
+      "guard": "regular_if_set_payload_else_atomic_guard"
+    }
+  },
+  {
+    "case_id": "p3_rob_e04",
+    "construction_reference": [
+      "examples/pautas/tme2_problem3.v1.json",
+      "app/confia_lean_auditor/lean/student_claim_checkers/tme2_p3.py",
+      "app/confia_lean_auditor/experimental/tme_p3_checker_first/components.py"
+    ],
+    "interpretation_rule": "Elipse parcial com relação ancorada no span anterior; não inventar conjunto completo. Mapper positivo sem âncora deve deixar membership para guard.",
+    "reference_checker": [
+      "P3Checks._a/_b/_c",
+      "StrongP3Checks",
+      "finite_certificate"
+    ],
+    "expected_score": 2,
+    "expected_obligations": [
+      "a.bottom_white_count"
+    ],
+    "expected_conflict_context_behavior": {
+      "contexts": [],
+      "conflicts": [
+        {
+          "obligation_id": "b.same_compartment",
+          "expected_detection": "atomic_guard"
+        }
+      ],
+      "guard": "atomic_guard"
+    }
+  },
+  {
+    "case_id": "p3_rob_e05",
+    "construction_reference": [
+      "examples/pautas/tme2_problem3.v1.json",
+      "app/confia_lean_auditor/lean/student_claim_checkers/tme2_p3.py",
+      "app/confia_lean_auditor/experimental/tme_p3_checker_first/components.py"
+    ],
+    "interpretation_rule": "Valores incompatíveis adotados da mesma probabilidade; checker regular e reconciliação.",
+    "reference_checker": [
+      "P3Checks._a/_b/_c",
+      "StrongP3Checks",
+      "finite_certificate"
+    ],
+    "expected_score": 0,
+    "expected_obligations": [],
+    "expected_conflict_context_behavior": {
+      "contexts": [],
+      "conflicts": [
+        {
+          "obligation_id": "b.second_white_probability",
+          "expected_detection": "regular_checker"
+        }
+      ],
+      "guard": "regular_checker"
+    }
+  },
+  {
+    "case_id": "p3_rob_e06",
+    "construction_reference": [
+      "examples/pautas/tme2_problem3.v1.json",
+      "app/confia_lean_auditor/lean/student_claim_checkers/tme2_p3.py",
+      "app/confia_lean_auditor/experimental/tme_p3_checker_first/components.py"
+    ],
+    "interpretation_rule": "Duas estratégias incompatíveis no mesmo estado; refutar combinação falsa e bloquear a família.",
+    "reference_checker": [
+      "P3Checks._a/_b/_c",
+      "StrongP3Checks",
+      "finite_certificate"
+    ],
+    "expected_score": 0,
+    "expected_obligations": [],
+    "expected_conflict_context_behavior": {
+      "contexts": [],
+      "conflicts": [
+        {
+          "obligation_id": "c.strategy_case_1",
+          "expected_detection": "regular_checker"
+        }
+      ],
+      "guard": "regular_checker"
+    }
+  },
+  {
+    "case_id": "p3_rob_e07",
+    "construction_reference": [
+      "examples/pautas/tme2_problem3.v1.json",
+      "app/confia_lean_auditor/lean/student_claim_checkers/tme2_p3.py",
+      "app/confia_lean_auditor/experimental/tme_p3_checker_first/components.py"
+    ],
+    "interpretation_rule": "Contradição descartada não bloqueia solução válida independente.",
+    "reference_checker": [
+      "P3Checks._a/_b/_c",
+      "StrongP3Checks",
+      "finite_certificate"
+    ],
+    "expected_score": 2,
+    "expected_obligations": [
+      "b.same_compartment"
+    ],
+    "expected_conflict_context_behavior": {
+      "contexts": [
+        {
+          "source_span": "Tentativa abandonada: ao repetir o mesmo compartimento, o quinto também libera branca.",
+          "obligation_id": "b.same_compartment",
+          "reason": "abandoned"
+        }
+      ],
+      "conflicts": [],
+      "guard": "none_context_rejected"
+    }
+  },
+  {
+    "case_id": "p3_rob_e08",
+    "construction_reference": [
+      "examples/pautas/tme2_problem3.v1.json",
+      "app/confia_lean_auditor/lean/student_claim_checkers/tme2_p3.py",
+      "app/confia_lean_auditor/experimental/tme_p3_checker_first/components.py"
+    ],
+    "interpretation_rule": "Contradição de terceiro não adotada não deve contaminar afirmação do aluno.",
+    "reference_checker": [
+      "P3Checks._a/_b/_c",
+      "StrongP3Checks",
+      "finite_certificate"
+    ],
+    "expected_score": 2,
+    "expected_obligations": [
+      "b.same_compartment"
+    ],
+    "expected_conflict_context_behavior": {
+      "contexts": [
+        {
+          "source_span": "Beatriz disse que, ao repetir o mesmo compartimento, o quinto também libera branca.",
+          "obligation_id": "b.same_compartment",
+          "reason": "third_party"
+        }
+      ],
+      "conflicts": [],
+      "guard": "none_context_rejected"
+    }
+  },
+  {
+    "case_id": "p3_rob_f01",
+    "construction_reference": [
+      "examples/pautas/tme2_problem3.v1.json",
+      "app/confia_lean_auditor/lean/student_claim_checkers/tme2_p3.py",
+      "app/confia_lean_auditor/experimental/tme_p3_checker_first/components.py"
+    ],
+    "interpretation_rule": "Contagem 3 refutada pela máquina, que deriva 2.",
+    "reference_checker": [
+      "P3Checks._a/_b/_c",
+      "StrongP3Checks",
+      "finite_certificate"
+    ],
+    "expected_score": 0,
+    "expected_obligations": [],
+    "expected_conflict_context_behavior": {
+      "contexts": [],
+      "conflicts": [],
+      "guard": "not_applicable"
+    }
+  },
+  {
+    "case_id": "p3_rob_f02",
+    "construction_reference": [
+      "examples/pautas/tme2_problem3.v1.json",
+      "app/confia_lean_auditor/lean/student_claim_checkers/tme2_p3.py",
+      "app/confia_lean_auditor/experimental/tme_p3_checker_first/components.py"
+    ],
+    "interpretation_rule": "30 não é espaço de duas escolhas independentes entre 6; zero.",
+    "reference_checker": [
+      "P3Checks._a/_b/_c",
+      "StrongP3Checks",
+      "finite_certificate"
+    ],
+    "expected_score": 0,
+    "expected_obligations": [],
+    "expected_conflict_context_behavior": {
+      "contexts": [],
+      "conflicts": [],
+      "guard": "not_applicable"
+    }
+  },
+  {
+    "case_id": "p3_rob_f03",
+    "construction_reference": [
+      "examples/pautas/tme2_problem3.v1.json",
+      "app/confia_lean_auditor/lean/student_claim_checkers/tme2_p3.py",
+      "app/confia_lean_auditor/experimental/tme_p3_checker_first/components.py"
+    ],
+    "interpretation_rule": "Aritmética correta não estabelece fatores 2 e 5; incompleto, não inventar justificativa.",
+    "reference_checker": [
+      "P3Checks._a/_b/_c",
+      "StrongP3Checks",
+      "finite_certificate"
+    ],
+    "expected_score": 0,
+    "expected_obligations": [],
+    "expected_conflict_context_behavior": {
+      "contexts": [],
+      "conflicts": [],
+      "guard": "not_applicable"
+    }
+  },
+  {
+    "case_id": "p3_rob_f04",
+    "construction_reference": [
+      "examples/pautas/tme2_problem3.v1.json",
+      "app/confia_lean_auditor/lean/student_claim_checkers/tme2_p3.py",
+      "app/confia_lean_auditor/experimental/tme_p3_checker_first/components.py"
+    ],
+    "interpretation_rule": "Conjunto {5} falso; modelo deriva {6}.",
+    "reference_checker": [
+      "P3Checks._a/_b/_c",
+      "StrongP3Checks",
+      "finite_certificate"
+    ],
+    "expected_score": 0,
+    "expected_obligations": [],
+    "expected_conflict_context_behavior": {
+      "contexts": [],
+      "conflicts": [],
+      "guard": "not_applicable"
+    }
+  },
+  {
+    "case_id": "p3_rob_f05",
+    "construction_reference": [
+      "examples/pautas/tme2_problem3.v1.json",
+      "app/confia_lean_auditor/lean/student_claim_checkers/tme2_p3.py",
+      "app/confia_lean_auditor/experimental/tme_p3_checker_first/components.py"
+    ],
+    "interpretation_rule": "Igualdade verdadeira com partição falsa 9+2; refutação relacional deve prevalecer.",
+    "reference_checker": [
+      "P3Checks._a/_b/_c",
+      "StrongP3Checks",
+      "finite_certificate"
+    ],
+    "expected_score": 0,
+    "expected_obligations": [],
+    "expected_conflict_context_behavior": {
+      "contexts": [],
+      "conflicts": [],
+      "guard": "not_applicable"
+    }
+  },
+  {
+    "case_id": "p3_rob_f06",
+    "construction_reference": [
+      "examples/pautas/tme2_problem3.v1.json",
+      "app/confia_lean_auditor/lean/student_claim_checkers/tme2_p3.py",
+      "app/confia_lean_auditor/experimental/tme_p3_checker_first/components.py"
+    ],
+    "interpretation_rule": "Cinza subótima no caso 1; valor numericamente correto não corrige estratégia nem global.",
+    "reference_checker": [
+      "P3Checks._a/_b/_c",
+      "StrongP3Checks",
+      "finite_certificate"
+    ],
+    "expected_score": 0,
+    "expected_obligations": [],
+    "expected_conflict_context_behavior": {
+      "contexts": [],
+      "conflicts": [],
+      "guard": "not_applicable"
+    }
+  },
+  {
+    "case_id": "p3_rob_f07",
+    "construction_reference": [
+      "examples/pautas/tme2_problem3.v1.json",
+      "app/confia_lean_auditor/lean/student_claim_checkers/tme2_p3.py",
+      "app/confia_lean_auditor/experimental/tme_p3_checker_first/components.py"
+    ],
+    "interpretation_rule": "Estratégias/contagens trocadas entre estados; condicionais numericamente corretas não validam contextos falsos.",
+    "reference_checker": [
+      "P3Checks._a/_b/_c",
+      "StrongP3Checks",
+      "finite_certificate"
+    ],
+    "expected_score": 0,
+    "expected_obligations": [],
+    "expected_conflict_context_behavior": {
+      "contexts": [],
+      "conflicts": [],
+      "guard": "not_applicable"
+    }
+  },
+  {
+    "case_id": "p3_rob_f08",
+    "construction_reference": [
+      "examples/pautas/tme2_problem3.v1.json",
+      "app/confia_lean_auditor/lean/student_claim_checkers/tme2_p3.py",
+      "app/confia_lean_auditor/experimental/tme_p3_checker_first/components.py"
+    ],
+    "interpretation_rule": "Números incidentais sem claim de probabilidade/contagem não satisfazem obrigações.",
+    "reference_checker": [
+      "P3Checks._a/_b/_c",
+      "StrongP3Checks",
+      "finite_certificate"
+    ],
+    "expected_score": 0,
+    "expected_obligations": [],
+    "expected_conflict_context_behavior": {
+      "contexts": [],
+      "conflicts": [],
+      "guard": "not_applicable"
+    }
+  }
+]
