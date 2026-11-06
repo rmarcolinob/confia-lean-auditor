@@ -14,7 +14,7 @@ from .mapper import local_context, ORDINALS
 OBLIGATION = 'b.same_compartment'
 SUBJECT = 'repeticao_branca'
 REPRESENTATION_REJECTIONS = frozenset({
-    'unsupported_checker_payload', 'explicit_integer_set_required',
+    'partial_membership_not_complete_set', 'unsupported_checker_payload', 'explicit_integer_set_required',
     'set_members_not_written', 'set_payload_omits_source_members',
     'subject_not_uniquely_bound_to_source_clause',
 })

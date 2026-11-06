@@ -129,12 +129,17 @@ class ObligationMapper:
                 try:
                     if not spec: raise ValueError('unknown_obligation')
                     if document.text[e.source_start:e.source_end]!=e.source_span or e.metadata.get('source_sha256')!=legacy.sha(document.text): raise ValueError('source_binding_changed')
-                    if len(interpretations[(e.source_start,e.source_end,e.subject)])>1: raise ValueError('conflicting_extractor_interpretation')
+                    discourse=e.metadata.get('discourse_decision')
+                    if discourse and not discourse['positive_credit_eligibility']: raise ValueError('discourse_'+discourse['resolved_discourse_state'].lower())
+                    if not discourse and len(interpretations[(e.source_start,e.source_end,e.subject)])>1: raise ValueError('conflicting_extractor_interpretation')
                     if not (e.assertion_status=='asserted' and e.polarity=='positive' and e.attributed_to_student and not e.hypothetical and not e.abandoned and e.scope in {'main_argument','final_conclusion'}): raise ValueError('nonasserted_or_unattributed_context')
                     owner=[k for k,(a,b) in document.ranges.items() if a<=e.source_start<e.source_end<=b]
                     if owner!=[spec.rubric_item] or e.item_id!=spec.rubric_item: raise ValueError('same_item_required')
-                    if not local_context(document,e): raise ValueError('source_context_rejected')
+                    if not discourse and not local_context(document,e): raise ValueError('source_context_rejected')
                     if e.subject not in spec.subjects or e.claim_type not in spec.claim_types: raise ValueError('obligation_subject_type_mismatch')
+                    if discourse and e.claim_type=='integer_set':
+                        from .source_adapter import member_atom
+                        if member_atom(e): raise ValueError('partial_membership_not_complete_set')
                     representation(e,document)
                     route=route_for_expression(oid,e.normalized_claim)
                     row.update(accepted=True,context_valid=True,reason='compatible_pending_checker',effective_route=route,

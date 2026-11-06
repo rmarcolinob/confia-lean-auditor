@@ -12,12 +12,10 @@ from confia_lean_auditor.experimental.tme_semantic_formal.award_gate import cred
 from . import VERSION
 from .registry import PROBLEM_ID,REGISTRY,require_p3,registry_rows
 from .extractor import SemanticExtractorP3
-from .mapper import SourceDocument,ObligationMapper
-from .verification import verify,POSITIVE
+from .mapper import SourceDocument
+from .verification import POSITIVE
 from .verification import formal_state
-from .conflict_guard import conflict_guards
-from .abandonment import conflict_visibility, regular_safety_checks
-from confia_lean_auditor.experimental.tme_p3_checker_first.engine import audit_p3_checker_first
+from .unified import run_unified
 
 ROOT=Path(__file__).resolve().parents[4]
 
@@ -32,35 +30,12 @@ def configuration_hashes(extractor,config):
         runner=sha(runner.read_text()),lean_toolchain=sha((ROOT/'lean-toolchain').read_text()),lake_manifest=sha((ROOT/'lake-manifest.json').read_text()),machine=sha((ROOT/'examples/pautas/tme2_problem3.machine.v1.json').read_text()))
 
 
-def reconcile(results,math_bridge,guard_bridge,atomic_guards=(),abandonment_guards=()):
-    """Guard evidence is veto-only; omitted positive source cannot award points."""
-    current={o['obligation_id']:o for o in guard_bridge['bridge']['evidence']['obligations']}
-    guard_conflicts={c['obligation_id'] for c in guard_bridge['conflicts']}
-    math={o.obligation_id:o for o in math_bridge.evidence.obligations}
-    conflicts=[]
-    for oid in REGISTRY:
-        rows=[r for r in results if r['obligation_id']==oid]
-        atomic_negative=[g for g in atomic_guards if g['obligation_id']==oid and g['mathematical_refutation']]
-        abandonment_negative=[g for g in abandonment_guards if g['obligation_id']==oid and g['mathematical_refutation']]
-        positive=any(r['status'] in POSITIVE for r in rows)
-        negative=any(r['mathematical_refutation'] for r in rows)
-        contradictory=lambda o:o.metadata.get('reason') in {'CONFLICTING_FACT_RESULTS','CONFLICTING_CONDITIONAL_CONTEXTS'}
-        if (atomic_negative or abandonment_negative or positive and negative or any(r['status']=='CONFLICTING_EVIDENCE' for r in rows)
-                or any(r.get('checker_metadata',{}).get('decision',{}).get('reason')=='conflicting_source_evidence' for r in rows)
-                or contradictory(math[oid]) or oid in guard_conflicts or positive and current[oid]['status']=='refuted'):
-            conflicts.append(dict(obligation_id=oid,status='CONFLICTING_EVIDENCE',resolved=False,
-                resolution_rule=None,reason='conflicting_source_or_checker_evidence',
-                evidence_ids=list(dict.fromkeys([i for r in rows for i in r['evidence_ids']]+[g['evidence_id'] for g in atomic_negative+abandonment_negative])),
-                atomic_guard_results=atomic_negative,abandonment_guard_results=abandonment_negative,
-                selected_evidence=math[oid].model_dump(mode='json'),guard_evidence=current[oid],
-                guard_source_records=[r for r in guard_bridge['bridge']['auditor']['records'] if r['record_id'] in current[oid]['source_claim_ids']]))
-    return conflicts
-
-
-def award(case_id,evidence,mapping,results,conflicts):
+def award(case_id,evidence,mapping,results,conflicts,policy):
+    if not policy.snapshot.valid():raise ValueError('stale_discourse_snapshot')
     eligible={(m['evidence_id'],m['obligation_id'],m['effective_route']) for m in mapping if m['accepted'] and m['context_valid']}
     accepted_ids={i for i,_,_ in eligible}
-    by_id={e.evidence_id:e for e in evidence};blocked={c['obligation_id'] for c in conflicts if not c['resolved']}
+    by_id={e.evidence_id:e for e in evidence}
+    blocked={c['obligation_id'] for c in conflicts if any(c['obligation_id'] in d['target_obligation_ids'] for d in policy.applied(c.get('policy_decisions',[])))}
     observations=[];awards=[]
     for oid,spec in REGISTRY.items():
         rows=[r for r in results if r['obligation_id']==oid]
@@ -68,14 +43,16 @@ def award(case_id,evidence,mapping,results,conflicts):
             and r['sufficiency_decision']['sufficient'] and r.get('verification_id')
             and r.get('original_fact') and r['evidence_ids']
             and any((i,oid,r['route']) in eligible for i in r['primary_evidence_ids'])
-            and all(i in accepted_ids and i in by_id and by_id[i].assertion_status=='asserted'
-                    and by_id[i].polarity=='positive' and by_id[i].attributed_to_student
-                    and not by_id[i].hypothetical and not by_id[i].abandoned for i in r['evidence_ids'])]
-        negative=any(r['mathematical_refutation'] for r in rows)
-        chosen=next(iter(positives),None) if oid not in blocked and not negative else None
+            and not r.get('guard_only',False)
+            and all(i in accepted_ids and i in by_id and policy.snapshot.get(i)
+                    and policy.snapshot.get(i).positive_credit_eligible
+                    and by_id[i].metadata.get('ledger_revision')==policy.snapshot.ledger_revision
+                    and by_id[i].metadata.get('source_sha256')==policy.snapshot.source_sha256 for i in r['evidence_ids'])]
+        negative=oid in blocked
+        chosen=next(iter(sorted(positives,key=lambda r:r['verification_id'])),None) if oid not in blocked else None
         technical=any(r['technical_uncertainty'] for r in rows)
         status='supported' if chosen else 'indeterminate' if oid in blocked else 'refuted' if negative else 'technical_error' if technical else 'indeterminate'
-        refs=list(dict.fromkeys(i for r in rows for i in r['evidence_ids']))
+        refs=sorted({i for r in rows for i in r['evidence_ids']} | {i for c in conflicts if c['obligation_id']==oid for d in policy.applied(c.get('policy_decisions',[])) for i in d['evidence_ids']})
         effective_route=chosen['route'] if chosen else rows[0]['route'] if rows else spec.route
         origin='student_lean' if effective_route=='FORMAL' else 'deterministic'
         reason='verified_and_sufficient' if chosen else 'blocked_conflict' if oid in blocked else 'no_sufficient_checker_result'
@@ -85,7 +62,11 @@ def award(case_id,evidence,mapping,results,conflicts):
         awards.append(dict(obligation_id=oid,rubric_item=spec.rubric_item,eligible=chosen is not None,
             evidence_ids=chosen['evidence_ids'] if chosen else [],verification_route=chosen['route'] if chosen else None,
             verification_status=chosen['status'] if chosen else None,verification_result=chosen,
-            sufficiency_decision=chosen['sufficiency_decision'] if chosen else None,award_decision=reason,technical_uncertainty=technical))
+            sufficiency_decision=chosen['sufficiency_decision'] if chosen else None,award_decision=reason,technical_uncertainty=technical,
+            decision_receipt=dict(ledger_revision=policy.snapshot.ledger_revision,source_sha256=policy.snapshot.source_sha256,
+                positive_witness=chosen.get('verification_id') if chosen else None,
+                veto_decisions=[d['decision_id'] for c in conflicts if c['obligation_id']==oid for d in policy.applied(c.get('policy_decisions',[]))],
+                absence_reason=None if chosen or oid in blocked else 'no_current_sufficient_checker_witness')))
     return PautaEvidence(problem_id=PROBLEM_ID,solution_id=case_id,obligations=tuple(observations)),awards
 
 
@@ -103,9 +84,8 @@ def evaluate(case_id,problem_id,text,*,mode='tme_semantic_formal',model='gpt-6.1
     units=();meta=dict(status='not_requested',api_calls=0)
     if mode!='tme_current':units,meta=extractor.extract(PROBLEM_ID,text,provider=extraction_provider)
     output['extractor']=meta
-    if mode=='tme_current' or meta['status']!='completed':
+    if mode=='tme_current':
         bridge,assessment=primary_audit(PROBLEM_ID,document.items,solution_id=case_id,use_lean=use_lean)
-        if mode!='tme_current':output.update(effective_mode='TME_CURRENT_FALLBACK',fallback=True,fallback_used=True,fallback_reason=meta.get('reason','extractor_unavailable'))
         output.update(ScoreClosurePolicy().close(assessment))
         current_results=[]
         for fact in bridge.auditor.facts:
@@ -128,28 +108,24 @@ def evaluate(case_id,problem_id,text,*,mode='tme_semantic_formal',model='gpt-6.1
             rejected_evidence=[r for r in current_results if r['state']!='verified' or r['obligation_id'] in blocked],
             rubric_items=[i.model_dump(mode='json') for i in assessment.items])
     else:
-        mapping=ObligationMapper().map(document,units)
-        bridge,results,projection=verify(document,units,mapping,config,case_id,use_lean=use_lean)
-        guard=audit_p3_checker_first(document.items,solution_id=case_id,use_lean=False)
-        safety_units,abandonment_decisions=conflict_visibility(document,units)
-        recovered={d['evidence_id'] for d in abandonment_decisions if d['effective_conflict_visibility']}
-        safety_mapping=ObligationMapper().map(document,safety_units) if recovered else mapping
-        atomic_guards=conflict_guards(document,safety_units,safety_mapping)
-        abandonment_guards=regular_safety_checks(document,safety_units,safety_mapping,config,case_id,recovered)
-        conflicts=reconcile(results,bridge,guard,atomic_guards,abandonment_guards)
-        observations,awards=award(case_id,units,mapping,results,conflicts)
+        fallback=meta['status']!='completed'
+        if fallback:
+            output.update(effective_mode='TME_SEMANTIC_FORMAL_NATIVE_FALLBACK',fallback=True,
+                fallback_used=True,fallback_reason=meta.get('reason','extractor_unavailable'))
+        views,mapping,bridge,results,projection,policy,conflicts,trace=run_unified(
+            document,units,config,case_id,use_lean=use_lean,fallback=fallback)
+        observations,awards=award(case_id,views,mapping,results,conflicts,policy)
+        output.update(trace)
         assessment=PautaEngine().evaluate(config,observations)
         credits=credited_rules(assessment,awards)
         if sum(c['points'] for c in credits)!=float(assessment.known_points):raise ValueError('credit_trace_does_not_close')
         blocked={c['obligation_id'] for c in conflicts if not c['resolved']}
         output.update(extracted_evidence=[u.model_dump(mode='json') for u in units],obligation_mapping=mapping,
             verification_results=results,awards=awards,credits=credits,conflicts=conflicts,projection=projection,
-            conflict_guard_results=atomic_guards,abandonment_decisions=abandonment_decisions,
-            abandonment_guard_results=abandonment_guards,
             rejected_evidence=[r for r in results if r['status'] not in POSITIVE or not r['sufficiency_decision']['sufficient'] or r['obligation_id'] in blocked],
             mathematical_bridge=bridge.model_dump(mode='json'),evidence=observations.model_dump(mode='json'),
             pauta_assessment=assessment.model_dump(mode='json'),rubric_items=[i.model_dump(mode='json') for i in assessment.items])
-        output.update(ScoreClosurePolicy().close(assessment,technical_uncertainty=any(r['technical_uncertainty'] for r in results),
-            review_recommended=bool(conflicts) or bool(output['rejected_evidence'])))
+        output.update(ScoreClosurePolicy().close(assessment,technical_uncertainty=any(r.get('technical_uncertainty',False) for r in results+trace['native_guard_results']+trace['conflict_guard_results']),
+            review_recommended=bool(conflicts) or bool(output['rejected_evidence']) or any(d.state=='AMBIGUOUS' for d in policy.snapshot.decisions)))
     output['latency']=time.monotonic()-start
     return output

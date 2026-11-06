@@ -52,10 +52,16 @@ def test_membership_truth_changes_with_trusted_machine_not_literal_five():
 @pytest.mark.parametrize('reverse',[False,True])
 def test_conflict_blocks_only_same_family_without_last_assertion_precedence(reverse):
     text,claims=situation(reverse=reverse);r=run(text,claims)
+    if reverse:
+        # The helper writes a same-subject 'Na verdade' correction; approved
+        # source policy supersedes it even if the model did not mark abandoned.
+        assert r['score']==4 and not r['conflicts']
+        assert any(d['resolved_discourse_state']=='SUPERSEDED' for d in r['discourse_decisions'])
+        return
     assert r['score']==2 and isinstance(r['score'],float) and not r['fallback']
     assert award(r,'a.bottom_white_count')['eligible']
     assert not award(r,'b.same_compartment')['eligible']
-    assert [c['obligation_id'] for c in r['conflicts']]==['b.same_compartment']
+    assert [c['obligation_id'] for c in r['conflicts']]==['b.same_compartment','b.second_white_probability']
     g=r['conflict_guard_results'][0]
     assert g['guard_only'] and not g['award_eligible'] and not g['sufficiency_decision']['sufficient']
     assert g['status']=='DETERMINISTIC_FAILED' and g['atomic_claim']['compartment']==5
@@ -63,7 +69,7 @@ def test_conflict_blocks_only_same_family_without_last_assertion_precedence(reve
     assert text[g['atomic_claim']['literal_start']:g['atomic_claim']['literal_end']]=='quinto'
     assert g['atomic_claim']['kind']=='membership_claim' and 'set' not in g['atomic_claim']
     assert g['checker_receipt']['event']['second_color']=='black'
-    assert r['conflicts'][0]['atomic_guard_results']==[g] and r['review_recommended']
+    assert any(d['provenance']['producer']=='atomic_guard' and d['hard_veto_eligible'] for d in r['veto_decisions']) and r['review_recommended']
     assert any(v['status']=='CONTEXT_REJECTED' for v in r['verification_results'])
 
 @pytest.mark.parametrize('prefix',[
@@ -82,9 +88,10 @@ def test_context_rejected_atomic_source_does_not_block_valid_independent_span(pr
  {'attributed_to_student':False},{'polarity':'negative'},
  {'scope':'exploration'},{'scope':'side_calculation'},{'scope':'unknown'},
  {'assertion_status':'quoted'}])
-def test_model_context_flags_remain_vetoes(change):
+def test_model_context_flags_cannot_hide_written_active_refutation(change):
     text,claims=situation(changes=change);r=run(text,claims)
-    assert r['score']==4 and not r['conflict_guard_results']
+    assert r['score']==2 and r['conflict_guard_results']
+    assert any(d['hard_veto_eligible'] for d in r['veto_decisions'])
 
 @pytest.mark.parametrize('change',[{'subject':'favoraveis_distintos','claim_type':'math'},
     {'obligation_candidates':['b.different_favorable']},{'item_id':'c'}])

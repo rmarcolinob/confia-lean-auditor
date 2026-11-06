@@ -85,10 +85,12 @@ def test_route_suggestion_cannot_override_registry(oid):
  {'assertion_status':'quoted'},{'assertion_status':'unclear'},{'polarity':'negative'},
  {'hypothetical':True},{'abandoned':True},{'attributed_to_student':False},
  {'scope':'exploration'},{'scope':'side_calculation'},{'scope':'unknown'}])
-def test_model_context_cannot_credit(change):
+def test_model_flags_cannot_override_source_validated_adoption(change):
     text=sample('b.ordered_pairs');claims=typed_claims(text);claims[0].update(change)
     r=run(text,claims)
-    assert r['score']==0 and r['verification_results'][0]['status']=='CONTEXT_REJECTED'
+    # Approved architecture: flags are suggestions; source and checker decide.
+    assert r['score']==2 and r['verification_results'][0]['status']=='COMPOSITE_VERIFIED'
+    assert r['discourse_decisions'][0]['resolved_discourse_state']=='ACTIVE'
 
 @pytest.mark.parametrize('prefix',['Suponha:\n','Não é verdade:\n','Tentativa descartada:\n','Citação:\n','Segundo João: '])
 def test_source_context_overrules_hostile_model(prefix):
@@ -171,7 +173,7 @@ def test_guard_is_veto_only_not_positive_evidence():
 def test_schema_binding_failures_fallback_explicitly(field,value):
     text=sample('a.bottom_white_count');cs=typed_claims(text);cs[0][field]=value
     r=run(text,cs)
-    assert r['fallback'] and r['fallback_used'] and r['effective_mode']=='TME_CURRENT_FALLBACK'
+    assert r['fallback'] and r['fallback_used'] and r['effective_mode']=='TME_SEMANTIC_FORMAL_NATIVE_FALLBACK'
     assert r['fallback_reason'] and r['score']==2 and not r['extracted_evidence']
 
 def test_api_failure_fallback_is_numeric_and_explicit():
@@ -257,10 +259,11 @@ def test_written_equality_keeps_formal_route_when_lean_disabled():
     assert v['route']=='FORMAL' and v['formal_status']=='FORMAL_NOT_ATTEMPTED'
     assert not v['formal_attempted'] and r['score']==0
 
-def test_changed_interpretation_of_same_span_is_conflict_not_positive_selection():
+def test_changed_model_polarity_is_resolved_from_written_positive_assertion():
     text='a) primeira_branca: 1/3';cs=typed_claims(text);cs.append(dict(cs[0],polarity='negative'))
     r=run(text,cs)
-    assert r['score']==0 and r['conflicts']
+    assert r['score']==2 and not r['conflicts']
+    assert all(d['resolved_discourse_state']=='ACTIVE' for d in r['discourse_decisions'])
 
 @pytest.mark.parametrize('fails',[False,True])
 def test_transport_configuration_and_zero_hidden_retries(monkeypatch,fails):

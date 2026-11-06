@@ -34,7 +34,7 @@ def test_inferred_abandonment_preserves_atomic_or_regular_refutation(flags,value
     assert not award(r,'b.same_compartment')['eligible']
     decision=r['abandonment_decisions'][0]
     assert decision['effective_conflict_visibility'] and not decision['abandonment_textually_supported']
-    assert not decision['positive_credit_eligible']
+    assert decision['positive_credit_eligible']  # Admission only; partial membership cannot award
     guards=r['conflict_guard_results']+r['abandonment_guard_results']
     assert any(g['mathematical_refutation'] for g in guards)
     assert all(g['guard_only'] and not g['award_eligible'] and not g['sufficiency_decision']['sufficient'] for g in guards)
@@ -74,7 +74,7 @@ def test_na_verdade_adjacent_bound_correction_is_supported():
     claims[1].update(assertion_status='abandoned',abandoned=True)
     r=run(text,claims)
     assert r['score']==4 and not r['conflicts']
-    assert r['abandonment_decisions'][0]['abandonment_reason']=='adjacent_same_subject_correction'
+    assert r['abandonment_decisions'][0]['abandonment_reason']=='validated_local_replacement'
 
 
 @pytest.mark.parametrize('intervening',[
