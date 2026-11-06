@@ -1,0 +1,162 @@
+[
+  {
+    "case_id": "p3_safe_s1_01",
+    "problem_id": "TME2026P3",
+    "solution_text": "a) Minha estimativa para a primeira bola branca é 2/3.\nNa verdade, a chance da primeira bola branca é 1/3.\nNa base encontro exatamente 2 bolas brancas."
+  },
+  {
+    "case_id": "p3_safe_s1_02",
+    "problem_id": "TME2026P3",
+    "solution_text": "b) Minha primeira linha de contagem foi:\npares_ordenados: 6*5=30\nCorrigindo a minha afirmação anterior:\npares_ordenados: 6^2=36"
+  },
+  {
+    "case_id": "p3_safe_s1_03",
+    "problem_id": "TME2026P3",
+    "solution_text": "c) No estado após branca do compartimento 2, escolho preta e conto 3 posições dessa cor.\nPensando melhor, retiro essa escolha de cor e sua contagem.\nPara o compartimento 2, após a branca, escolho cinza, que aparece 3 vezes."
+  },
+  {
+    "case_id": "p3_safe_s1_04",
+    "problem_id": "TME2026P3",
+    "solution_text": "a) Contei 4 bolas brancas inferiores.\nIsto estava errado: eu incluí bolas que não estão na base.\nApós a revisão, identifico 2 bolas brancas inferiores."
+  },
+  {
+    "case_id": "p3_safe_s1_05",
+    "problem_id": "TME2026P3",
+    "solution_text": "b) Deixo inicialmente segunda_branca: 1/6\nO correto é segunda_branca: 11/36\nA linha correta substitui integralmente minha primeira estimativa; ela é a única resposta que mantenho."
+  },
+  {
+    "case_id": "p3_safe_s1_06",
+    "problem_id": "TME2026P3",
+    "solution_text": "a) Registro de cálculo:\n~~primeira_branca: 5/6~~\nO risco acima anula aquela resposta. Abaixo está a resposta que entrego:\nprimeira_branca: 1/3"
+  },
+  {
+    "case_id": "p3_safe_s1_07",
+    "problem_id": "TME2026P3",
+    "solution_text": "c) No registro inicial escrevi\ncontinuar: {2,3}\nSubstituo integralmente esse conjunto pelo seguinte, que é o único adotado:\ncontinuar: {1,2}"
+  },
+  {
+    "case_id": "p3_safe_s1_08",
+    "problem_id": "TME2026P3",
+    "solution_text": "a) Para a primeira branca, reescrevo a linha de cálculo:\n(3/6=1/2) [anulado] ⇒ (2/6=1/3) [válido].\nÚnica linha que mantenho:\nprimeira_branca: 2/6=1/3"
+  },
+  {
+    "case_id": "p3_safe_s2_01",
+    "problem_id": "TME2026P3",
+    "solution_text": "a) Na minha resposta mantenho as três linhas abaixo, sem cancelar nenhuma:\ninferiores_brancas: 2\nTambém sustento que há 3 bolas brancas inferiores.\nprimeira_branca: 1/3"
+  },
+  {
+    "case_id": "p3_safe_s2_02",
+    "problem_id": "TME2026P3",
+    "solution_text": "a) A chance da primeira bola branca é 1/6.\nMais adiante registro também: A chance da primeira bola branca é 1/3.\nSão duas conclusões que mantenho simultaneamente, não uma correção."
+  },
+  {
+    "case_id": "p3_safe_s2_03",
+    "problem_id": "TME2026P3",
+    "solution_text": "c) Registro os estados em que decido continuar: continuar: {1,2}.\nTambém mantenho o jogo em curso se a primeira branca for atribuída ao compartimento 4; essa inclusão integra minha resposta."
+  },
+  {
+    "case_id": "p3_safe_s2_04",
+    "problem_id": "TME2026P3",
+    "solution_text": "b) Uso ao mesmo tempo as duas expressões abaixo como probabilidade da segunda branca:\nsegunda_branca: (10+1)/36=11/36\nsegunda_branca: 1/4\nNenhuma das duas foi descartada."
+  },
+  {
+    "case_id": "p3_safe_s2_05",
+    "problem_id": "TME2026P3",
+    "solution_text": "c) Minha política mantém ambas as escolhas a seguir:\nPara a branca que veio do compartimento 2, adoto cinza, que aparece 3 vezes.\nPara esse mesmo caso 2, adoto igualmente preta, que aparece 3 vezes.\nAs duas escolhas ficam como decisões atuais."
+  },
+  {
+    "case_id": "p3_safe_s2_06",
+    "problem_id": "TME2026P3",
+    "solution_text": "b) Separei os eventos de compartimentos diferentes na linha\nfavoraveis_distintos: 2*5=10\nNa minha enumeração, ao repetir o compartimento, o terceiro também fornece uma bola branca.\nApesar dessa inclusão, mantenho a probabilidade da segunda branca em 11/36."
+  },
+  {
+    "case_id": "p3_safe_s2_07",
+    "problem_id": "TME2026P3",
+    "solution_text": "a) Minha folha apresenta duas igualdades que afirmo serem válidas para a mesma primeira branca:\nprimeira_branca: 2/6=1/3\nprimeira_branca: 2/6=2/3"
+  },
+  {
+    "case_id": "p3_safe_s2_08",
+    "problem_id": "TME2026P3",
+    "solution_text": "b) Para duas retiradas do mesmo local, proponho a lista\nrepeticao_branca: {2,4}\nDeclaro essa lista exaustiva.\nNa repetição do mesmo compartimento, o primeiro também produz branca; mantenho expressamente as duas alegações."
+  },
+  {
+    "case_id": "p3_safe_s3_01",
+    "problem_id": "TME2026P3",
+    "solution_text": "b) Hipótese exploratória que não adoto na resposta:\npares_ordenados: 6^2=36\nEsta linha é apenas a hipótese sob exame; não apresento uma conclusão."
+  },
+  {
+    "case_id": "p3_safe_s3_02",
+    "problem_id": "TME2026P3",
+    "solution_text": "c) Tentativa explicitamente descartada:\nNo caso 1, após branca, preta aparece 3 vezes e seria minha escolha.\n\na) Resposta que mantenho: Na base do dispositivo identifico 2 bolas brancas inferiores."
+  },
+  {
+    "case_id": "p3_safe_s3_03",
+    "problem_id": "TME2026P3",
+    "solution_text": "a) Rafael afirmou: a probabilidade da primeira bola branca é 1/3.\nEstou apenas transcrevendo a fala dele; não a adoto como minha resposta."
+  },
+  {
+    "case_id": "p3_safe_s3_04",
+    "problem_id": "TME2026P3",
+    "solution_text": "c) Transcrição identificada como enunciado, não como solução:\ncontinuar: {1,2}\nNão apresento aqui uma estratégia própria."
+  },
+  {
+    "case_id": "p3_safe_s3_05",
+    "problem_id": "TME2026P3",
+    "solution_text": "a) Seria a probabilidade da primeira branca igual a 1/2? Essa é uma pergunta retórica, não uma resposta afirmada.\nMinha afirmação é que existem 2 bolas brancas inferiores."
+  },
+  {
+    "case_id": "p3_safe_s3_06",
+    "problem_id": "TME2026P3",
+    "solution_text": "c) Condicionado à retirada de branca do compartimento 1, escolho preta, que aparece 3 vezes.\nNesse caso 1, a probabilidade condicional de sucesso é 3/6=1/2."
+  },
+  {
+    "case_id": "p3_safe_s3_07",
+    "problem_id": "TME2026P3",
+    "solution_text": "c) Comparo uma alternativa com minha escolha final.\nNão escolho cinza no caso 1, embora essa alternativa tenha 2 posições.\nMinha decisão para a branca do compartimento 1 é preta, que aparece 3 vezes."
+  },
+  {
+    "case_id": "p3_safe_s3_08",
+    "problem_id": "TME2026P3",
+    "solution_text": "b) A frase \"a probabilidade da segunda branca é 12/36\" é um erro que estou refutando, e não minha resposta.\nPara minha contagem dos pares ordenados uso 6*6=36."
+  },
+  {
+    "case_id": "p3_safe_s4_01",
+    "problem_id": "TME2026P3",
+    "solution_text": "a) Mantenho a contagem\ninferiores_brancas: 4\nNa verdade, a probabilidade da primeira branca é 1/3.\nAlém disso, mantenho a outra contagem\ninferiores_brancas: 2"
+  },
+  {
+    "case_id": "p3_safe_s4_02",
+    "problem_id": "TME2026P3",
+    "solution_text": "a) Registro como resposta\nprimeira_branca: 1/2\n\nDepois desenhei a disposição das filas.\nAnotei a ordem das tentativas.\nSeparei uma folha para os cálculos.\n\nCorrigindo um cálculo que não identifico aqui, registro também\nprimeira_branca: 1/3\nNão indico qual anotação anterior foi retirada."
+  },
+  {
+    "case_id": "p3_safe_s4_03",
+    "problem_id": "TME2026P3",
+    "solution_text": "a) Minha resposta neste item permanece\nprimeira_branca: 1/2\n\nb) Na verdade, a probabilidade da primeira branca é 1/3. A frase está escrita apenas neste item."
+  },
+  {
+    "case_id": "p3_safe_s4_04",
+    "problem_id": "TME2026P3",
+    "solution_text": "c) No caso 1 após branca, escolho preta, que aparece 3 vezes.\n\na) Na verdade, existem 3 bolas brancas inferiores.\nTambém mantenho inferiores_brancas: 2"
+  },
+  {
+    "case_id": "p3_safe_s4_05",
+    "problem_id": "TME2026P3",
+    "solution_text": "b) Estas são três respostas concorrentes que mantenho, sem escolher uma ou apagar as outras:\nsegunda_branca: 11/36\nsegunda_branca: 7/18\nsegunda_branca: 1/2"
+  },
+  {
+    "case_id": "p3_safe_s4_06",
+    "problem_id": "TME2026P3",
+    "solution_text": "a) Não aceito a proposição de que a probabilidade da primeira branca é 1/3.\nMinha afirmação atual é primeira_branca: 1/2"
+  },
+  {
+    "case_id": "p3_safe_s4_07",
+    "problem_id": "TME2026P3",
+    "solution_text": "a) Meu registro inicial contém duas quantidades:\ninferiores_brancas: 5\nprimeira_branca: 5/6\nCorrigindo apenas a contagem das bolas inferiores, substituo aquela contagem por\ninferiores_brancas: 2\nA probabilidade 5/6 permanece sendo minha resposta."
+  },
+  {
+    "case_id": "p3_safe_s4_08",
+    "problem_id": "TME2026P3",
+    "solution_text": "a) Uma ficha contém\ninferiores_brancas: 2\nprimeira_branca: 1/3\nOutra ficha, também adotada, contém\ninferiores_brancas: 4\nprimeira_branca: 2/3\nDigo que \"isso\" deve ser corrigido, sem identificar a ficha ou a quantidade. Ambas as fichas ainda constam como minhas respostas."
+  }
+]

@@ -1,0 +1,67 @@
+{
+  "version": "semantic_safety_02",
+  "git_sha": "89cda1cab89648d3888775bbcead42ea85bd4861",
+  "frozen_at": "2026-11-06T03:39:10.051412+00:00",
+  "cases": 32,
+  "families": {
+    "S1": 8,
+    "S2": 8,
+    "S3": 8,
+    "S4": 8
+  },
+  "dataset_role": "NEW_SAFETY_BENCHMARK_SEPARATE_FROM_OBSERVED_REGRESSION",
+  "construction_inputs": [
+    "current_P3_pauta",
+    "frozen_checker_contract",
+    "clarified_retraction_policy"
+  ],
+  "independence": "No old benchmark file was loaded by this construction script; no E02/E04 text, template or expected award reused. Shared mathematical constants/typed vocabulary are intrinsic to P3. This is directed synthetic DEV, not a blind statistical holdout.",
+  "file_sha256": {
+    "expectations.json": "d8407e4ec10262a6067404f97b7d93280a5a5be2d221006518ad58e834a051a7",
+    "sources.json": "39bddd7575ab463cab38d8246d0233efb3ef510ec93f150d47655183df78d77a",
+    "ids.json": "87ff2e971a2171b19d89f9a7bfb6766d3b06b236b55e18b35d11745f7dfe954c",
+    "construction_receipts.json": "5e85faebeefe1b3279df1aa53cb68b58fdadf8434a1b183a2e4ca8d620ec0e31"
+  },
+  "source_only_extractor_inputs": [
+    "sources.json",
+    "ids.json"
+  ],
+  "configuration": {
+    "model": "gpt-6.1-sol",
+    "reasoning_effort": "medium",
+    "CONFIA_TME_SEMANTIC_ENABLED": "0",
+    "max_retries": 0,
+    "timeout": 180
+  },
+  "metric_policy": {
+    "false_automatic_credit": "any credited rule not in expected_awards, even when total score matches",
+    "legitimate_retraction_acceptance": "all expected final awards present, no false awards, superseded source contributes neither positive credit nor active veto; report trace-based suppression separately",
+    "conflict_preservation": "all expected obligation families have unresolved conflict AND no corresponding award; separately report award-block-only and refutation-only",
+    "context_suppression": "invalid spans do not support positive awards or safety veto; distinguish explicit rejection from omission",
+    "obligations": "unique eligible award obligation_ids against predeclared expected_obligations_satisfied",
+    "atomic_guard": "report actual exposures and correct negative decisions; no exposure is not success",
+    "guard_false_positive": "negative guard on superseded/nonadopted source or mathematically true claim",
+    "guard_awards": "guard marked award eligible or selected as credit authority; must be zero",
+    "fallback": "report ALL32 and successful extraction subset; never treat fallback as extractor success",
+    "verdict": "any material false credit in NEW32 => P3_SAFETY_FAILURE; otherwise limitations/fallback/failed safety behaviors/unexercised atomic path => P3_SAFETY_NONINFERIOR_WITH_LIMITATIONS; full primary safety checks without these limitations => P3_SAFETY_REVALIDATED"
+  },
+  "observed_regression_policy": {
+    "run_after_new32": true,
+    "role": "OBSERVED_REGRESSION",
+    "separate_metrics": true,
+    "expectation_override": {
+      "p3_rob_e02": {
+        "score": 4,
+        "add_obligation": "b.same_compartment",
+        "add_award": "b.same",
+        "reason": "explicit user clarification accepting local retraction; original frozen expectations stay unchanged"
+      }
+    },
+    "no_other_expectation_changes": true
+  },
+  "limitations": [
+    "No all-six-branch alternative proof; targets safety behavior rather than full scoring coverage.",
+    "Expected correction acceptance reflects source meaning and clarified policy, not the lexical coverage of the current mapper.",
+    "New32 becomes observed DEV after execution; not a reusable independent evaluation."
+  ]
+}

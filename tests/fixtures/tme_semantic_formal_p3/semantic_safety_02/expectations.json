@@ -1,0 +1,1701 @@
+[
+  {
+    "case_id": "p3_safe_s1_01",
+    "family": "S1",
+    "expected_score_by_construction": 4,
+    "expected_active_claims": [
+      {
+        "source_span": "Na verdade, a chance da primeira bola branca é 1/3.",
+        "subject": "primeira_branca",
+        "payload": "1/3",
+        "obligation_id": "a.first_white_probability",
+        "source_start": 55,
+        "source_end": 106
+      },
+      {
+        "source_span": "Na base encontro exatamente 2 bolas brancas.",
+        "subject": "inferiores_brancas",
+        "payload": "2",
+        "obligation_id": "a.bottom_white_count",
+        "source_start": 107,
+        "source_end": 151
+      }
+    ],
+    "expected_superseded_claims": [
+      {
+        "source_span": "Minha estimativa para a primeira bola branca é 2/3.",
+        "subject": "primeira_branca",
+        "payload": "2/3",
+        "obligation_id": "a.first_white_probability",
+        "source_start": 3,
+        "source_end": 54
+      }
+    ],
+    "expected_conflicts": [],
+    "expected_context_rejections": [],
+    "expected_awards": [
+      {
+        "rule_id": "a.count",
+        "points": 2,
+        "obligations": [
+          "a.bottom_white_count"
+        ]
+      },
+      {
+        "rule_id": "a.probability",
+        "points": 2,
+        "obligations": [
+          "a.first_white_probability"
+        ]
+      }
+    ],
+    "expected_guard_behavior": "no_guard_required",
+    "expected_obligations_satisfied": [
+      "a.bottom_white_count",
+      "a.first_white_probability"
+    ],
+    "expected_obligations_unsatisfied": [
+      "b.ordered_pairs",
+      "b.different_favorable",
+      "b.same_compartment",
+      "b.second_white_probability",
+      "b.alternative_complete",
+      "c.continue_compartments",
+      "c.strategy_case_1",
+      "c.strategy_case_2",
+      "c.conditional_success_1",
+      "c.conditional_success_2",
+      "c.total_win_probability"
+    ],
+    "rationale": "Correção adjacente da mesma probabilidade, com marcador explícito; contagem independente. 2+2=4."
+  },
+  {
+    "case_id": "p3_safe_s1_02",
+    "family": "S1",
+    "expected_score_by_construction": 2,
+    "expected_active_claims": [
+      {
+        "source_span": "pares_ordenados: 6^2=36",
+        "subject": "pares_ordenados",
+        "payload": "6^2=36",
+        "obligation_id": "b.ordered_pairs",
+        "source_start": 104,
+        "source_end": 127
+      }
+    ],
+    "expected_superseded_claims": [
+      {
+        "source_span": "pares_ordenados: 6*5=30",
+        "subject": "pares_ordenados",
+        "payload": "6*5=30",
+        "obligation_id": "b.ordered_pairs",
+        "source_start": 41,
+        "source_end": 64
+      }
+    ],
+    "expected_conflicts": [],
+    "expected_context_rejections": [],
+    "expected_awards": [
+      {
+        "rule_id": "b.space",
+        "points": 2,
+        "obligations": [
+          "b.ordered_pairs"
+        ]
+      }
+    ],
+    "expected_guard_behavior": "no_guard_required",
+    "expected_obligations_satisfied": [
+      "b.ordered_pairs"
+    ],
+    "expected_obligations_unsatisfied": [
+      "a.bottom_white_count",
+      "a.first_white_probability",
+      "b.different_favorable",
+      "b.same_compartment",
+      "b.second_white_probability",
+      "b.alternative_complete",
+      "c.continue_compartments",
+      "c.strategy_case_1",
+      "c.strategy_case_2",
+      "c.conditional_success_1",
+      "c.conditional_success_2",
+      "c.total_win_probability"
+    ],
+    "rationale": "Retratação deítica inequívoca da linha anterior; a nova potência representa duas escolhas uniformes."
+  },
+  {
+    "case_id": "p3_safe_s1_03",
+    "family": "S1",
+    "expected_score_by_construction": 2,
+    "expected_active_claims": [
+      {
+        "source_span": "Para o compartimento 2, após a branca, escolho cinza, que aparece 3 vezes.",
+        "subject": "estrategia_2/contagem_2",
+        "payload": "cinza;3",
+        "obligation_id": "c.strategy_case_2",
+        "source_start": 149,
+        "source_end": 223
+      }
+    ],
+    "expected_superseded_claims": [
+      {
+        "source_span": "No estado após branca do compartimento 2, escolho preta e conto 3 posições dessa cor.",
+        "subject": "estrategia_2/contagem_2",
+        "payload": "preta;3",
+        "obligation_id": "c.strategy_case_2",
+        "source_start": 3,
+        "source_end": 88
+      }
+    ],
+    "expected_conflicts": [],
+    "expected_context_rejections": [],
+    "expected_awards": [
+      {
+        "rule_id": "c.second_strategy",
+        "points": 2,
+        "obligations": [
+          "c.strategy_case_2"
+        ]
+      }
+    ],
+    "expected_guard_behavior": "no_guard_required",
+    "expected_obligations_satisfied": [
+      "c.strategy_case_2"
+    ],
+    "expected_obligations_unsatisfied": [
+      "a.bottom_white_count",
+      "a.first_white_probability",
+      "b.ordered_pairs",
+      "b.different_favorable",
+      "b.same_compartment",
+      "b.second_white_probability",
+      "b.alternative_complete",
+      "c.continue_compartments",
+      "c.strategy_case_1",
+      "c.conditional_success_1",
+      "c.conditional_success_2",
+      "c.total_win_probability"
+    ],
+    "rationale": "Pensando melhor acompanhado de retirada explícita da cor/contagem; estratégia corrigida do caso 2 vale 2, sem inferir condicionais."
+  },
+  {
+    "case_id": "p3_safe_s1_04",
+    "family": "S1",
+    "expected_score_by_construction": 2,
+    "expected_active_claims": [
+      {
+        "source_span": "Após a revisão, identifico 2 bolas brancas inferiores.",
+        "subject": "inferiores_brancas",
+        "payload": "2",
+        "obligation_id": "a.bottom_white_count",
+        "source_start": 97,
+        "source_end": 151
+      }
+    ],
+    "expected_superseded_claims": [
+      {
+        "source_span": "Contei 4 bolas brancas inferiores.",
+        "subject": "inferiores_brancas",
+        "payload": "4",
+        "obligation_id": "a.bottom_white_count",
+        "source_start": 3,
+        "source_end": 37
+      }
+    ],
+    "expected_conflicts": [],
+    "expected_context_rejections": [],
+    "expected_awards": [
+      {
+        "rule_id": "a.count",
+        "points": 2,
+        "obligations": [
+          "a.bottom_white_count"
+        ]
+      }
+    ],
+    "expected_guard_behavior": "no_guard_required",
+    "expected_obligations_satisfied": [
+      "a.bottom_white_count"
+    ],
+    "expected_obligations_unsatisfied": [
+      "a.first_white_probability",
+      "b.ordered_pairs",
+      "b.different_favorable",
+      "b.same_compartment",
+      "b.second_white_probability",
+      "b.alternative_complete",
+      "c.continue_compartments",
+      "c.strategy_case_1",
+      "c.strategy_case_2",
+      "c.conditional_success_1",
+      "c.conditional_success_2",
+      "c.total_win_probability"
+    ],
+    "rationale": "Rejeição inequívoca da contagem anterior e nova contagem explícita; nenhuma probabilidade declarada."
+  },
+  {
+    "case_id": "p3_safe_s1_05",
+    "family": "S1",
+    "expected_score_by_construction": 2,
+    "expected_active_claims": [
+      {
+        "source_span": "O correto é segunda_branca: 11/36",
+        "subject": "segunda_branca",
+        "payload": "11/36",
+        "obligation_id": "b.second_white_probability",
+        "source_start": 42,
+        "source_end": 75
+      }
+    ],
+    "expected_superseded_claims": [
+      {
+        "source_span": "Deixo inicialmente segunda_branca: 1/6",
+        "subject": "segunda_branca",
+        "payload": "1/6",
+        "obligation_id": "b.second_white_probability",
+        "source_start": 3,
+        "source_end": 41
+      }
+    ],
+    "expected_conflicts": [],
+    "expected_context_rejections": [],
+    "expected_awards": [
+      {
+        "rule_id": "b.conclusion",
+        "points": 2,
+        "obligations": [
+          "b.second_white_probability"
+        ]
+      }
+    ],
+    "expected_guard_behavior": "no_guard_required",
+    "expected_obligations_satisfied": [
+      "b.second_white_probability"
+    ],
+    "expected_obligations_unsatisfied": [
+      "a.bottom_white_count",
+      "a.first_white_probability",
+      "b.ordered_pairs",
+      "b.different_favorable",
+      "b.same_compartment",
+      "b.alternative_complete",
+      "c.continue_compartments",
+      "c.strategy_case_1",
+      "c.strategy_case_2",
+      "c.conditional_success_1",
+      "c.conditional_success_2",
+      "c.total_win_probability"
+    ],
+    "rationale": "O correto é mais substituição explícita; valor final de b concede somente b.conclusion=2."
+  },
+  {
+    "case_id": "p3_safe_s1_06",
+    "family": "S1",
+    "expected_score_by_construction": 2,
+    "expected_active_claims": [
+      {
+        "source_span": "primeira_branca: 1/3",
+        "subject": "primeira_branca",
+        "payload": "1/3",
+        "obligation_id": "a.first_white_probability",
+        "source_start": 122,
+        "source_end": 142
+      }
+    ],
+    "expected_superseded_claims": [
+      {
+        "source_span": "~~primeira_branca: 5/6~~",
+        "subject": "primeira_branca",
+        "payload": "5/6",
+        "obligation_id": "a.first_white_probability",
+        "source_start": 24,
+        "source_end": 48
+      }
+    ],
+    "expected_conflicts": [],
+    "expected_context_rejections": [],
+    "expected_awards": [
+      {
+        "rule_id": "a.probability",
+        "points": 2,
+        "obligations": [
+          "a.first_white_probability"
+        ]
+      }
+    ],
+    "expected_guard_behavior": "no_guard_required",
+    "expected_obligations_satisfied": [
+      "a.first_white_probability"
+    ],
+    "expected_obligations_unsatisfied": [
+      "a.bottom_white_count",
+      "b.ordered_pairs",
+      "b.different_favorable",
+      "b.same_compartment",
+      "b.second_white_probability",
+      "b.alternative_complete",
+      "c.continue_compartments",
+      "c.strategy_case_1",
+      "c.strategy_case_2",
+      "c.conditional_success_1",
+      "c.conditional_success_2",
+      "c.total_win_probability"
+    ],
+    "rationale": "Risco acompanhado de explicação literal de anulação, sem depender só de Markdown; a resposta final isolada é autorizada."
+  },
+  {
+    "case_id": "p3_safe_s1_07",
+    "family": "S1",
+    "expected_score_by_construction": 1,
+    "expected_active_claims": [
+      {
+        "source_span": "continuar: {1,2}",
+        "subject": "continuar",
+        "payload": "{1,2}",
+        "obligation_id": "c.continue_compartments",
+        "source_start": 124,
+        "source_end": 140
+      }
+    ],
+    "expected_superseded_claims": [
+      {
+        "source_span": "continuar: {2,3}",
+        "subject": "continuar",
+        "payload": "{2,3}",
+        "obligation_id": "c.continue_compartments",
+        "source_start": 31,
+        "source_end": 47
+      }
+    ],
+    "expected_conflicts": [],
+    "expected_context_rejections": [],
+    "expected_awards": [
+      {
+        "rule_id": "c.continue",
+        "points": 1,
+        "obligations": [
+          "c.continue_compartments"
+        ]
+      }
+    ],
+    "expected_guard_behavior": "no_guard_required",
+    "expected_obligations_satisfied": [
+      "c.continue_compartments"
+    ],
+    "expected_obligations_unsatisfied": [
+      "a.bottom_white_count",
+      "a.first_white_probability",
+      "b.ordered_pairs",
+      "b.different_favorable",
+      "b.same_compartment",
+      "b.second_white_probability",
+      "b.alternative_complete",
+      "c.strategy_case_1",
+      "c.strategy_case_2",
+      "c.conditional_success_1",
+      "c.conditional_success_2",
+      "c.total_win_probability"
+    ],
+    "rationale": "Substituição explicitamente vinculada ao conjunto, sem inventar estratégias; c.continue=1."
+  },
+  {
+    "case_id": "p3_safe_s1_08",
+    "family": "S1",
+    "expected_score_by_construction": 2,
+    "expected_active_claims": [
+      {
+        "source_span": "primeira_branca: 2/6=1/3",
+        "subject": "primeira_branca",
+        "payload": "2/6=1/3",
+        "obligation_id": "a.first_white_probability",
+        "source_start": 125,
+        "source_end": 149
+      }
+    ],
+    "expected_superseded_claims": [
+      {
+        "source_span": "(3/6=1/2) [anulado]",
+        "subject": "primeira_branca",
+        "payload": "3/6=1/2",
+        "obligation_id": "a.first_white_probability",
+        "source_start": 57,
+        "source_end": 76
+      }
+    ],
+    "expected_conflicts": [],
+    "expected_context_rejections": [],
+    "expected_awards": [
+      {
+        "rule_id": "a.probability",
+        "points": 2,
+        "obligations": [
+          "a.first_white_probability"
+        ]
+      }
+    ],
+    "expected_guard_behavior": "no_guard_required",
+    "expected_obligations_satisfied": [
+      "a.first_white_probability"
+    ],
+    "expected_obligations_unsatisfied": [
+      "a.bottom_white_count",
+      "b.ordered_pairs",
+      "b.different_favorable",
+      "b.same_compartment",
+      "b.second_white_probability",
+      "b.alternative_complete",
+      "c.continue_compartments",
+      "c.strategy_case_1",
+      "c.strategy_case_2",
+      "c.conditional_success_1",
+      "c.conditional_success_2",
+      "c.total_win_probability"
+    ],
+    "rationale": "Autocorreção em notação com anulado/válido e confirmação da única linha mantida. Igualdade de a verificada, sem inferir a.count."
+  },
+  {
+    "case_id": "p3_safe_s2_01",
+    "family": "S2",
+    "expected_score_by_construction": 2,
+    "expected_active_claims": [
+      {
+        "source_span": "inferiores_brancas: 2",
+        "subject": "inferiores_brancas",
+        "payload": "2",
+        "obligation_id": "a.bottom_white_count",
+        "source_start": 75,
+        "source_end": 96
+      },
+      {
+        "source_span": "Também sustento que há 3 bolas brancas inferiores.",
+        "subject": "inferiores_brancas",
+        "payload": "3",
+        "obligation_id": "a.bottom_white_count",
+        "source_start": 97,
+        "source_end": 147
+      },
+      {
+        "source_span": "primeira_branca: 1/3",
+        "subject": "primeira_branca",
+        "payload": "1/3",
+        "obligation_id": "a.first_white_probability",
+        "source_start": 148,
+        "source_end": 168
+      }
+    ],
+    "expected_superseded_claims": [],
+    "expected_conflicts": [
+      "a.bottom_white_count"
+    ],
+    "expected_context_rejections": [],
+    "expected_awards": [
+      {
+        "rule_id": "a.probability",
+        "points": 2,
+        "obligations": [
+          "a.first_white_probability"
+        ]
+      }
+    ],
+    "expected_guard_behavior": "regular_refutation",
+    "expected_obligations_satisfied": [
+      "a.first_white_probability"
+    ],
+    "expected_obligations_unsatisfied": [
+      "a.bottom_white_count",
+      "b.ordered_pairs",
+      "b.different_favorable",
+      "b.same_compartment",
+      "b.second_white_probability",
+      "b.alternative_complete",
+      "c.continue_compartments",
+      "c.strategy_case_1",
+      "c.strategy_case_2",
+      "c.conditional_success_1",
+      "c.conditional_success_2",
+      "c.total_win_probability"
+    ],
+    "rationale": "Contagens 2 e 3 adotadas conflitam; a.count bloqueado. Probabilidade de a é parcela independente e continua valendo 2."
+  },
+  {
+    "case_id": "p3_safe_s2_02",
+    "family": "S2",
+    "expected_score_by_construction": 0,
+    "expected_active_claims": [
+      {
+        "source_span": "A chance da primeira bola branca é 1/6.",
+        "subject": "primeira_branca",
+        "payload": "1/6",
+        "obligation_id": "a.first_white_probability",
+        "source_start": 3,
+        "source_end": 42
+      },
+      {
+        "source_span": "A chance da primeira bola branca é 1/3.",
+        "subject": "primeira_branca",
+        "payload": "1/3",
+        "obligation_id": "a.first_white_probability",
+        "source_start": 73,
+        "source_end": 112
+      }
+    ],
+    "expected_superseded_claims": [],
+    "expected_conflicts": [
+      "a.first_white_probability"
+    ],
+    "expected_context_rejections": [],
+    "expected_awards": [],
+    "expected_guard_behavior": "regular_refutation",
+    "expected_obligations_satisfied": [],
+    "expected_obligations_unsatisfied": [
+      "a.bottom_white_count",
+      "a.first_white_probability",
+      "b.ordered_pairs",
+      "b.different_favorable",
+      "b.same_compartment",
+      "b.second_white_probability",
+      "b.alternative_complete",
+      "c.continue_compartments",
+      "c.strategy_case_1",
+      "c.strategy_case_2",
+      "c.conditional_success_1",
+      "c.conditional_success_2",
+      "c.total_win_probability"
+    ],
+    "rationale": "Valor falso antes do correto, ambos explicitamente adotados; ausência de retratação impede crédito de a.probability."
+  },
+  {
+    "case_id": "p3_safe_s2_03",
+    "family": "S2",
+    "expected_score_by_construction": 0,
+    "expected_active_claims": [
+      {
+        "source_span": "continuar: {1,2}",
+        "subject": "continuar",
+        "payload": "{1,2}",
+        "obligation_id": "c.continue_compartments",
+        "source_start": 48,
+        "source_end": 64
+      },
+      {
+        "source_span": "Também mantenho o jogo em curso se a primeira branca for atribuída ao compartimento 4; essa inclusão integra minha resposta.",
+        "subject": "continuar",
+        "payload": "membership(4)",
+        "obligation_id": "c.continue_compartments",
+        "source_start": 66,
+        "source_end": 190
+      }
+    ],
+    "expected_superseded_claims": [],
+    "expected_conflicts": [
+      "c.continue_compartments"
+    ],
+    "expected_context_rejections": [],
+    "expected_awards": [],
+    "expected_guard_behavior": "regular_or_safety_for_continuation_not_b_atomic",
+    "expected_obligations_satisfied": [],
+    "expected_obligations_unsatisfied": [
+      "a.bottom_white_count",
+      "a.first_white_probability",
+      "b.ordered_pairs",
+      "b.different_favorable",
+      "b.same_compartment",
+      "b.second_white_probability",
+      "b.alternative_complete",
+      "c.continue_compartments",
+      "c.strategy_case_1",
+      "c.strategy_case_2",
+      "c.conditional_success_1",
+      "c.conditional_success_2",
+      "c.total_win_probability"
+    ],
+    "rationale": "Lista exaustiva de continuação e inclusão de outro estado são incompatíveis. A propriedade é continuação em c, não repetição de b; não transplantar o guard b."
+  },
+  {
+    "case_id": "p3_safe_s2_04",
+    "family": "S2",
+    "expected_score_by_construction": 0,
+    "expected_active_claims": [
+      {
+        "source_span": "segunda_branca: (10+1)/36=11/36",
+        "subject": "segunda_branca",
+        "payload": "(10+1)/36=11/36",
+        "obligation_id": "b.second_white_probability",
+        "source_start": 86,
+        "source_end": 117
+      },
+      {
+        "source_span": "segunda_branca: 1/4",
+        "subject": "segunda_branca",
+        "payload": "1/4",
+        "obligation_id": "b.second_white_probability",
+        "source_start": 118,
+        "source_end": 137
+      }
+    ],
+    "expected_superseded_claims": [],
+    "expected_conflicts": [
+      "b.second_white_probability"
+    ],
+    "expected_context_rejections": [],
+    "expected_awards": [],
+    "expected_guard_behavior": "regular_refutation",
+    "expected_obligations_satisfied": [],
+    "expected_obligations_unsatisfied": [
+      "a.bottom_white_count",
+      "a.first_white_probability",
+      "b.ordered_pairs",
+      "b.different_favorable",
+      "b.same_compartment",
+      "b.second_white_probability",
+      "b.alternative_complete",
+      "c.continue_compartments",
+      "c.strategy_case_1",
+      "c.strategy_case_2",
+      "c.conditional_success_1",
+      "c.conditional_success_2",
+      "c.total_win_probability"
+    ],
+    "rationale": "A conta verdadeira não apaga a afirmação 1/4 da mesma probabilidade; b.conclusion bloqueado."
+  },
+  {
+    "case_id": "p3_safe_s2_05",
+    "family": "S2",
+    "expected_score_by_construction": 0,
+    "expected_active_claims": [
+      {
+        "source_span": "Para a branca que veio do compartimento 2, adoto cinza, que aparece 3 vezes.",
+        "subject": "estrategia_2/contagem_2",
+        "payload": "cinza;3",
+        "obligation_id": "c.strategy_case_2",
+        "source_start": 53,
+        "source_end": 129
+      },
+      {
+        "source_span": "Para esse mesmo caso 2, adoto igualmente preta, que aparece 3 vezes.",
+        "subject": "estrategia_2/contagem_2",
+        "payload": "preta;3",
+        "obligation_id": "c.strategy_case_2",
+        "source_start": 130,
+        "source_end": 198
+      }
+    ],
+    "expected_superseded_claims": [],
+    "expected_conflicts": [
+      "c.strategy_case_2"
+    ],
+    "expected_context_rejections": [],
+    "expected_awards": [],
+    "expected_guard_behavior": "regular_refutation",
+    "expected_obligations_satisfied": [],
+    "expected_obligations_unsatisfied": [
+      "a.bottom_white_count",
+      "a.first_white_probability",
+      "b.ordered_pairs",
+      "b.different_favorable",
+      "b.same_compartment",
+      "b.second_white_probability",
+      "b.alternative_complete",
+      "c.continue_compartments",
+      "c.strategy_case_1",
+      "c.strategy_case_2",
+      "c.conditional_success_1",
+      "c.conditional_success_2",
+      "c.total_win_probability"
+    ],
+    "rationale": "Estratégias incompatíveis no mesmo estado; a estratégia verdadeira não pode ganhar a mesma parcela diante da outra adotada."
+  },
+  {
+    "case_id": "p3_safe_s2_06",
+    "family": "S2",
+    "expected_score_by_construction": 2,
+    "expected_active_claims": [
+      {
+        "source_span": "favoraveis_distintos: 2*5=10",
+        "subject": "favoraveis_distintos",
+        "payload": "2*5=10",
+        "obligation_id": "b.different_favorable",
+        "source_start": 60,
+        "source_end": 88
+      },
+      {
+        "source_span": "Na minha enumeração, ao repetir o compartimento, o terceiro também fornece uma bola branca.",
+        "subject": "repeticao_branca",
+        "payload": "membership(3)",
+        "obligation_id": "b.same_compartment",
+        "source_start": 89,
+        "source_end": 180
+      },
+      {
+        "source_span": "Apesar dessa inclusão, mantenho a probabilidade da segunda branca em 11/36.",
+        "subject": "segunda_branca",
+        "payload": "11/36",
+        "obligation_id": "b.second_white_probability",
+        "source_start": 181,
+        "source_end": 256
+      }
+    ],
+    "expected_superseded_claims": [],
+    "expected_conflicts": [
+      "b.second_white_probability"
+    ],
+    "expected_context_rejections": [],
+    "expected_awards": [
+      {
+        "rule_id": "b.different",
+        "points": 2,
+        "obligations": [
+          "b.different_favorable"
+        ]
+      }
+    ],
+    "expected_guard_behavior": "atomic_if_partial_payload_otherwise_regular; negative_context_must_reach_conclusion",
+    "expected_obligations_satisfied": [
+      "b.different_favorable"
+    ],
+    "expected_obligations_unsatisfied": [
+      "a.bottom_white_count",
+      "a.first_white_probability",
+      "b.ordered_pairs",
+      "b.same_compartment",
+      "b.second_white_probability",
+      "b.alternative_complete",
+      "c.continue_compartments",
+      "c.strategy_case_1",
+      "c.strategy_case_2",
+      "c.conditional_success_1",
+      "c.conditional_success_2",
+      "c.total_win_probability"
+    ],
+    "rationale": "A relação dos diferentes é correta e independente. A afirmação falsa de repetição deve vetar b.conclusion por source_consistency; total correto não saneia contexto de contagem falso."
+  },
+  {
+    "case_id": "p3_safe_s2_07",
+    "family": "S2",
+    "expected_score_by_construction": 0,
+    "expected_active_claims": [
+      {
+        "source_span": "primeira_branca: 2/6=1/3",
+        "subject": "primeira_branca",
+        "payload": "2/6=1/3",
+        "obligation_id": "a.first_white_probability",
+        "source_start": 96,
+        "source_end": 120
+      },
+      {
+        "source_span": "primeira_branca: 2/6=2/3",
+        "subject": "primeira_branca",
+        "payload": "2/6=2/3",
+        "obligation_id": "a.first_white_probability",
+        "source_start": 121,
+        "source_end": 145
+      }
+    ],
+    "expected_superseded_claims": [],
+    "expected_conflicts": [
+      "a.first_white_probability"
+    ],
+    "expected_context_rejections": [],
+    "expected_awards": [],
+    "expected_guard_behavior": "regular_formal_or_deterministic_refutation",
+    "expected_obligations_satisfied": [],
+    "expected_obligations_unsatisfied": [
+      "a.bottom_white_count",
+      "a.first_white_probability",
+      "b.ordered_pairs",
+      "b.different_favorable",
+      "b.same_compartment",
+      "b.second_white_probability",
+      "b.alternative_complete",
+      "c.continue_compartments",
+      "c.strategy_case_1",
+      "c.strategy_case_2",
+      "c.conditional_success_1",
+      "c.conditional_success_2",
+      "c.total_win_probability"
+    ],
+    "rationale": "Uma igualdade aritmética é falsa. A prova da outra não autoriza ignorar refutação da mesma obrigação."
+  },
+  {
+    "case_id": "p3_safe_s2_08",
+    "family": "S2",
+    "expected_score_by_construction": 0,
+    "expected_active_claims": [
+      {
+        "source_span": "repeticao_branca: {2,4}",
+        "subject": "repeticao_branca",
+        "payload": "{2,4}",
+        "obligation_id": "b.same_compartment",
+        "source_start": 56,
+        "source_end": 79
+      },
+      {
+        "source_span": "Na repetição do mesmo compartimento, o primeiro também produz branca; mantenho expressamente as duas alegações.",
+        "subject": "repeticao_branca",
+        "payload": "membership(1)",
+        "obligation_id": "b.same_compartment",
+        "source_start": 110,
+        "source_end": 221
+      }
+    ],
+    "expected_superseded_claims": [],
+    "expected_conflicts": [
+      "b.same_compartment"
+    ],
+    "expected_context_rejections": [],
+    "expected_awards": [],
+    "expected_guard_behavior": "atomic_if_partial_payload_otherwise_regular",
+    "expected_obligations_satisfied": [],
+    "expected_obligations_unsatisfied": [
+      "a.bottom_white_count",
+      "a.first_white_probability",
+      "b.ordered_pairs",
+      "b.different_favorable",
+      "b.same_compartment",
+      "b.second_white_probability",
+      "b.alternative_complete",
+      "c.continue_compartments",
+      "c.strategy_case_1",
+      "c.strategy_case_2",
+      "c.conditional_success_1",
+      "c.conditional_success_2",
+      "c.total_win_probability"
+    ],
+    "rationale": "Exaustividade {2,4} e inclusão de 1 são incompatíveis e ambas falsas no modelo. Nenhum número correto da diagonal é fornecido. Exigir retenção da incompatibilidade, não apenas zero por ausência de positivo."
+  },
+  {
+    "case_id": "p3_safe_s3_01",
+    "family": "S3",
+    "expected_score_by_construction": 0,
+    "expected_active_claims": [],
+    "expected_superseded_claims": [],
+    "expected_conflicts": [],
+    "expected_context_rejections": [
+      {
+        "source_span": "pares_ordenados: 6^2=36",
+        "subject": "pares_ordenados",
+        "payload": "6^2=36",
+        "obligation_id": "b.ordered_pairs",
+        "source_start": 52,
+        "source_end": 75
+      }
+    ],
+    "expected_awards": [],
+    "expected_guard_behavior": "no_guard_required",
+    "expected_obligations_satisfied": [],
+    "expected_obligations_unsatisfied": [
+      "a.bottom_white_count",
+      "a.first_white_probability",
+      "b.ordered_pairs",
+      "b.different_favorable",
+      "b.same_compartment",
+      "b.second_white_probability",
+      "b.alternative_complete",
+      "c.continue_compartments",
+      "c.strategy_case_1",
+      "c.strategy_case_2",
+      "c.conditional_success_1",
+      "c.conditional_success_2",
+      "c.total_win_probability"
+    ],
+    "rationale": "Uma relação verdadeira explicitamente hipotética não constitui evidência adotada."
+  },
+  {
+    "case_id": "p3_safe_s3_02",
+    "family": "S3",
+    "expected_score_by_construction": 2,
+    "expected_active_claims": [
+      {
+        "source_span": "Na base do dispositivo identifico 2 bolas brancas inferiores.",
+        "subject": "inferiores_brancas",
+        "payload": "2",
+        "obligation_id": "a.bottom_white_count",
+        "source_start": 136,
+        "source_end": 197
+      }
+    ],
+    "expected_superseded_claims": [],
+    "expected_conflicts": [],
+    "expected_context_rejections": [
+      {
+        "source_span": "No caso 1, após branca, preta aparece 3 vezes e seria minha escolha.",
+        "subject": "estrategia_1/contagem_1",
+        "payload": "preta;3",
+        "obligation_id": "c.strategy_case_1",
+        "source_start": 40,
+        "source_end": 108
+      }
+    ],
+    "expected_awards": [
+      {
+        "rule_id": "a.count",
+        "points": 2,
+        "obligations": [
+          "a.bottom_white_count"
+        ]
+      }
+    ],
+    "expected_guard_behavior": "no_guard_required",
+    "expected_obligations_satisfied": [
+      "a.bottom_white_count"
+    ],
+    "expected_obligations_unsatisfied": [
+      "a.first_white_probability",
+      "b.ordered_pairs",
+      "b.different_favorable",
+      "b.same_compartment",
+      "b.second_white_probability",
+      "b.alternative_complete",
+      "c.continue_compartments",
+      "c.strategy_case_1",
+      "c.strategy_case_2",
+      "c.conditional_success_1",
+      "c.conditional_success_2",
+      "c.total_win_probability"
+    ],
+    "rationale": "Tentativa descartada não pontua c. Afirmação adotada de outro item permanece independente."
+  },
+  {
+    "case_id": "p3_safe_s3_03",
+    "family": "S3",
+    "expected_score_by_construction": 0,
+    "expected_active_claims": [],
+    "expected_superseded_claims": [],
+    "expected_conflicts": [],
+    "expected_context_rejections": [
+      {
+        "source_span": "Rafael afirmou: a probabilidade da primeira bola branca é 1/3.",
+        "subject": "primeira_branca",
+        "payload": "1/3",
+        "obligation_id": "a.first_white_probability",
+        "source_start": 3,
+        "source_end": 65
+      }
+    ],
+    "expected_awards": [],
+    "expected_guard_behavior": "no_guard_required",
+    "expected_obligations_satisfied": [],
+    "expected_obligations_unsatisfied": [
+      "a.bottom_white_count",
+      "a.first_white_probability",
+      "b.ordered_pairs",
+      "b.different_favorable",
+      "b.same_compartment",
+      "b.second_white_probability",
+      "b.alternative_complete",
+      "c.continue_compartments",
+      "c.strategy_case_1",
+      "c.strategy_case_2",
+      "c.conditional_success_1",
+      "c.conditional_success_2",
+      "c.total_win_probability"
+    ],
+    "rationale": "Atribuição exclusiva a terceiro, sem adoção; nenhum crédito por valor verdadeiro citado."
+  },
+  {
+    "case_id": "p3_safe_s3_04",
+    "family": "S3",
+    "expected_score_by_construction": 0,
+    "expected_active_claims": [],
+    "expected_superseded_claims": [],
+    "expected_conflicts": [],
+    "expected_context_rejections": [
+      {
+        "source_span": "continuar: {1,2}",
+        "subject": "continuar",
+        "payload": "{1,2}",
+        "obligation_id": "c.continue_compartments",
+        "source_start": 62,
+        "source_end": 78
+      }
+    ],
+    "expected_awards": [],
+    "expected_guard_behavior": "no_guard_required",
+    "expected_obligations_satisfied": [],
+    "expected_obligations_unsatisfied": [
+      "a.bottom_white_count",
+      "a.first_white_probability",
+      "b.ordered_pairs",
+      "b.different_favorable",
+      "b.same_compartment",
+      "b.second_white_probability",
+      "b.alternative_complete",
+      "c.continue_compartments",
+      "c.strategy_case_1",
+      "c.strategy_case_2",
+      "c.conditional_success_1",
+      "c.conditional_success_2",
+      "c.total_win_probability"
+    ],
+    "rationale": "Conteúdo atribuído ao enunciado não preenche a obrigação do aluno."
+  },
+  {
+    "case_id": "p3_safe_s3_05",
+    "family": "S3",
+    "expected_score_by_construction": 2,
+    "expected_active_claims": [
+      {
+        "source_span": "Minha afirmação é que existem 2 bolas brancas inferiores.",
+        "subject": "inferiores_brancas",
+        "payload": "2",
+        "obligation_id": "a.bottom_white_count",
+        "source_start": 114,
+        "source_end": 171
+      }
+    ],
+    "expected_superseded_claims": [],
+    "expected_conflicts": [],
+    "expected_context_rejections": [
+      {
+        "source_span": "Seria a probabilidade da primeira branca igual a 1/2?",
+        "subject": "primeira_branca",
+        "payload": "1/2",
+        "obligation_id": "a.first_white_probability",
+        "source_start": 3,
+        "source_end": 56
+      }
+    ],
+    "expected_awards": [
+      {
+        "rule_id": "a.count",
+        "points": 2,
+        "obligations": [
+          "a.bottom_white_count"
+        ]
+      }
+    ],
+    "expected_guard_behavior": "no_guard_required",
+    "expected_obligations_satisfied": [
+      "a.bottom_white_count"
+    ],
+    "expected_obligations_unsatisfied": [
+      "a.first_white_probability",
+      "b.ordered_pairs",
+      "b.different_favorable",
+      "b.same_compartment",
+      "b.second_white_probability",
+      "b.alternative_complete",
+      "c.continue_compartments",
+      "c.strategy_case_1",
+      "c.strategy_case_2",
+      "c.conditional_success_1",
+      "c.conditional_success_2",
+      "c.total_win_probability"
+    ],
+    "rationale": "Pergunta não adotada não é contradição ativa; a contagem afirmada permite apenas a.count."
+  },
+  {
+    "case_id": "p3_safe_s3_06",
+    "family": "S3",
+    "expected_score_by_construction": 2,
+    "expected_active_claims": [
+      {
+        "source_span": "Condicionado à retirada de branca do compartimento 1, escolho preta, que aparece 3 vezes.",
+        "subject": "estrategia_1/contagem_1",
+        "payload": "preta;3",
+        "obligation_id": "c.strategy_case_1",
+        "source_start": 3,
+        "source_end": 92
+      },
+      {
+        "source_span": "Nesse caso 1, a probabilidade condicional de sucesso é 3/6=1/2.",
+        "subject": "condicional_1",
+        "payload": "3/6=1/2",
+        "obligation_id": "c.conditional_success_1",
+        "source_start": 93,
+        "source_end": 156
+      }
+    ],
+    "expected_superseded_claims": [],
+    "expected_conflicts": [],
+    "expected_context_rejections": [],
+    "expected_awards": [
+      {
+        "rule_id": "c.first_strategy",
+        "points": 2,
+        "obligations": [
+          "c.strategy_case_1"
+        ]
+      }
+    ],
+    "expected_guard_behavior": "no_guard_required",
+    "expected_obligations_satisfied": [
+      "c.strategy_case_1",
+      "c.conditional_success_1"
+    ],
+    "expected_obligations_unsatisfied": [
+      "a.bottom_white_count",
+      "a.first_white_probability",
+      "b.ordered_pairs",
+      "b.different_favorable",
+      "b.same_compartment",
+      "b.second_white_probability",
+      "b.alternative_complete",
+      "c.continue_compartments",
+      "c.strategy_case_2",
+      "c.conditional_success_2",
+      "c.total_win_probability"
+    ],
+    "rationale": "Condição matemática de ramo adotada não é hipótese exploratória. Estratégia vale 2; só uma condicional não completa a parcela conjunta."
+  },
+  {
+    "case_id": "p3_safe_s3_07",
+    "family": "S3",
+    "expected_score_by_construction": 2,
+    "expected_active_claims": [
+      {
+        "source_span": "Minha decisão para a branca do compartimento 1 é preta, que aparece 3 vezes.",
+        "subject": "estrategia_1/contagem_1",
+        "payload": "preta;3",
+        "obligation_id": "c.strategy_case_1",
+        "source_start": 123,
+        "source_end": 199
+      }
+    ],
+    "expected_superseded_claims": [],
+    "expected_conflicts": [],
+    "expected_context_rejections": [
+      {
+        "source_span": "Não escolho cinza no caso 1, embora essa alternativa tenha 2 posições.",
+        "subject": "estrategia_1/contagem_1",
+        "payload": "cinza;2",
+        "obligation_id": "c.strategy_case_1",
+        "source_start": 52,
+        "source_end": 122
+      }
+    ],
+    "expected_awards": [
+      {
+        "rule_id": "c.first_strategy",
+        "points": 2,
+        "obligations": [
+          "c.strategy_case_1"
+        ]
+      }
+    ],
+    "expected_guard_behavior": "no_guard_required",
+    "expected_obligations_satisfied": [
+      "c.strategy_case_1"
+    ],
+    "expected_obligations_unsatisfied": [
+      "a.bottom_white_count",
+      "a.first_white_probability",
+      "b.ordered_pairs",
+      "b.different_favorable",
+      "b.same_compartment",
+      "b.second_white_probability",
+      "b.alternative_complete",
+      "c.continue_compartments",
+      "c.strategy_case_2",
+      "c.conditional_success_1",
+      "c.conditional_success_2",
+      "c.total_win_probability"
+    ],
+    "rationale": "Alternativa explicitamente negada não é decisão concorrente; somente a estratégia adotada é pontuável."
+  },
+  {
+    "case_id": "p3_safe_s3_08",
+    "family": "S3",
+    "expected_score_by_construction": 2,
+    "expected_active_claims": [
+      {
+        "source_span": "Para minha contagem dos pares ordenados uso 6*6=36.",
+        "subject": "pares_ordenados",
+        "payload": "6*6=36",
+        "obligation_id": "b.ordered_pairs",
+        "source_start": 108,
+        "source_end": 159
+      }
+    ],
+    "expected_superseded_claims": [],
+    "expected_conflicts": [],
+    "expected_context_rejections": [
+      {
+        "source_span": "A frase \"a probabilidade da segunda branca é 12/36\" é um erro que estou refutando, e não minha resposta.",
+        "subject": "segunda_branca",
+        "payload": "12/36",
+        "obligation_id": "b.second_white_probability",
+        "source_start": 3,
+        "source_end": 107
+      }
+    ],
+    "expected_awards": [
+      {
+        "rule_id": "b.space",
+        "points": 2,
+        "obligations": [
+          "b.ordered_pairs"
+        ]
+      }
+    ],
+    "expected_guard_behavior": "no_guard_required",
+    "expected_obligations_satisfied": [
+      "b.ordered_pairs"
+    ],
+    "expected_obligations_unsatisfied": [
+      "a.bottom_white_count",
+      "a.first_white_probability",
+      "b.different_favorable",
+      "b.same_compartment",
+      "b.second_white_probability",
+      "b.alternative_complete",
+      "c.continue_compartments",
+      "c.strategy_case_1",
+      "c.strategy_case_2",
+      "c.conditional_success_1",
+      "c.conditional_success_2",
+      "c.total_win_probability"
+    ],
+    "rationale": "Erro citado para refutação não vira afirmação ativa; relação de pares ordenados é evidência independente válida."
+  },
+  {
+    "case_id": "p3_safe_s4_01",
+    "family": "S4",
+    "expected_score_by_construction": 2,
+    "expected_active_claims": [
+      {
+        "source_span": "inferiores_brancas: 4",
+        "subject": "inferiores_brancas",
+        "payload": "4",
+        "obligation_id": "a.bottom_white_count",
+        "source_start": 23,
+        "source_end": 44
+      },
+      {
+        "source_span": "Na verdade, a probabilidade da primeira branca é 1/3.",
+        "subject": "primeira_branca",
+        "payload": "1/3",
+        "obligation_id": "a.first_white_probability",
+        "source_start": 45,
+        "source_end": 98
+      },
+      {
+        "source_span": "inferiores_brancas: 2",
+        "subject": "inferiores_brancas",
+        "payload": "2",
+        "obligation_id": "a.bottom_white_count",
+        "source_start": 137,
+        "source_end": 158
+      }
+    ],
+    "expected_superseded_claims": [],
+    "expected_conflicts": [
+      "a.bottom_white_count"
+    ],
+    "expected_context_rejections": [],
+    "expected_awards": [
+      {
+        "rule_id": "a.probability",
+        "points": 2,
+        "obligations": [
+          "a.first_white_probability"
+        ]
+      }
+    ],
+    "expected_guard_behavior": "preserve_unrelated_subject_conflict",
+    "expected_obligations_satisfied": [
+      "a.first_white_probability"
+    ],
+    "expected_obligations_unsatisfied": [
+      "a.bottom_white_count",
+      "b.ordered_pairs",
+      "b.different_favorable",
+      "b.same_compartment",
+      "b.second_white_probability",
+      "b.alternative_complete",
+      "c.continue_compartments",
+      "c.strategy_case_1",
+      "c.strategy_case_2",
+      "c.conditional_success_1",
+      "c.conditional_success_2",
+      "c.total_win_probability"
+    ],
+    "rationale": "Na verdade trata da probabilidade e não revoga a contagem. As duas contagens continuam adotadas; a.probability é independente."
+  },
+  {
+    "case_id": "p3_safe_s4_02",
+    "family": "S4",
+    "expected_score_by_construction": 0,
+    "expected_active_claims": [
+      {
+        "source_span": "primeira_branca: 1/2",
+        "subject": "primeira_branca",
+        "payload": "1/2",
+        "obligation_id": "a.first_white_probability",
+        "source_start": 26,
+        "source_end": 46
+      },
+      {
+        "source_span": "primeira_branca: 1/3",
+        "subject": "primeira_branca",
+        "payload": "1/3",
+        "obligation_id": "a.first_white_probability",
+        "source_start": 219,
+        "source_end": 239
+      }
+    ],
+    "expected_superseded_claims": [],
+    "expected_conflicts": [
+      "a.first_white_probability"
+    ],
+    "expected_context_rejections": [],
+    "expected_awards": [],
+    "expected_guard_behavior": "conservative_ambiguous_retraction",
+    "expected_obligations_satisfied": [],
+    "expected_obligations_unsatisfied": [
+      "a.bottom_white_count",
+      "a.first_white_probability",
+      "b.ordered_pairs",
+      "b.different_favorable",
+      "b.same_compartment",
+      "b.second_white_probability",
+      "b.alternative_complete",
+      "c.continue_compartments",
+      "c.strategy_case_1",
+      "c.strategy_case_2",
+      "c.conditional_success_1",
+      "c.conditional_success_2",
+      "c.total_win_probability"
+    ],
+    "rationale": "Marcador distante e alvo não identificado: não há autorização para apagar a primeira resposta. Conservar conflito e zero na obrigação."
+  },
+  {
+    "case_id": "p3_safe_s4_03",
+    "family": "S4",
+    "expected_score_by_construction": 0,
+    "expected_active_claims": [
+      {
+        "source_span": "primeira_branca: 1/2",
+        "subject": "primeira_branca",
+        "payload": "1/2",
+        "obligation_id": "a.first_white_probability",
+        "source_start": 39,
+        "source_end": 59
+      }
+    ],
+    "expected_superseded_claims": [],
+    "expected_conflicts": [],
+    "expected_context_rejections": [
+      {
+        "source_span": "Na verdade, a probabilidade da primeira branca é 1/3.",
+        "subject": "primeira_branca",
+        "payload": "1/3",
+        "obligation_id": "a.first_white_probability",
+        "source_start": 64,
+        "source_end": 117
+      }
+    ],
+    "expected_awards": [],
+    "expected_guard_behavior": "no_cross_item_retraction",
+    "expected_obligations_satisfied": [],
+    "expected_obligations_unsatisfied": [
+      "a.bottom_white_count",
+      "a.first_white_probability",
+      "b.ordered_pairs",
+      "b.different_favorable",
+      "b.same_compartment",
+      "b.second_white_probability",
+      "b.alternative_complete",
+      "c.continue_compartments",
+      "c.strategy_case_1",
+      "c.strategy_case_2",
+      "c.conditional_success_1",
+      "c.conditional_success_2",
+      "c.total_win_probability"
+    ],
+    "rationale": "Correção em outro item não revoga a nem ganha crédito de a; em b não é a probabilidade da segunda branca."
+  },
+  {
+    "case_id": "p3_safe_s4_04",
+    "family": "S4",
+    "expected_score_by_construction": 2,
+    "expected_active_claims": [
+      {
+        "source_span": "No caso 1 após branca, escolho preta, que aparece 3 vezes.",
+        "subject": "estrategia_1/contagem_1",
+        "payload": "preta;3",
+        "obligation_id": "c.strategy_case_1",
+        "source_start": 3,
+        "source_end": 61
+      },
+      {
+        "source_span": "Na verdade, existem 3 bolas brancas inferiores.",
+        "subject": "inferiores_brancas",
+        "payload": "3",
+        "obligation_id": "a.bottom_white_count",
+        "source_start": 66,
+        "source_end": 113
+      },
+      {
+        "source_span": "Também mantenho inferiores_brancas: 2",
+        "subject": "inferiores_brancas",
+        "payload": "2",
+        "obligation_id": "a.bottom_white_count",
+        "source_start": 114,
+        "source_end": 151
+      }
+    ],
+    "expected_superseded_claims": [],
+    "expected_conflicts": [
+      "a.bottom_white_count"
+    ],
+    "expected_context_rejections": [],
+    "expected_awards": [
+      {
+        "rule_id": "c.first_strategy",
+        "points": 2,
+        "obligations": [
+          "c.strategy_case_1"
+        ]
+      }
+    ],
+    "expected_guard_behavior": "no_number_based_cross_subject_retraction",
+    "expected_obligations_satisfied": [
+      "c.strategy_case_1"
+    ],
+    "expected_obligations_unsatisfied": [
+      "a.bottom_white_count",
+      "a.first_white_probability",
+      "b.ordered_pairs",
+      "b.different_favorable",
+      "b.same_compartment",
+      "b.second_white_probability",
+      "b.alternative_complete",
+      "c.continue_compartments",
+      "c.strategy_case_2",
+      "c.conditional_success_1",
+      "c.conditional_success_2",
+      "c.total_win_probability"
+    ],
+    "rationale": "Número 3 de uma estratégia não se confunde com contagem inicial. c.strategy_case_1=2; as duas contagens de a conflitam."
+  },
+  {
+    "case_id": "p3_safe_s4_05",
+    "family": "S4",
+    "expected_score_by_construction": 0,
+    "expected_active_claims": [
+      {
+        "source_span": "segunda_branca: 11/36",
+        "subject": "segunda_branca",
+        "payload": "11/36",
+        "obligation_id": "b.second_white_probability",
+        "source_start": 93,
+        "source_end": 114
+      },
+      {
+        "source_span": "segunda_branca: 7/18",
+        "subject": "segunda_branca",
+        "payload": "7/18",
+        "obligation_id": "b.second_white_probability",
+        "source_start": 115,
+        "source_end": 135
+      },
+      {
+        "source_span": "segunda_branca: 1/2",
+        "subject": "segunda_branca",
+        "payload": "1/2",
+        "obligation_id": "b.second_white_probability",
+        "source_start": 136,
+        "source_end": 155
+      }
+    ],
+    "expected_superseded_claims": [],
+    "expected_conflicts": [
+      "b.second_white_probability"
+    ],
+    "expected_context_rejections": [],
+    "expected_awards": [],
+    "expected_guard_behavior": "preserve_multiple_current_claims",
+    "expected_obligations_satisfied": [],
+    "expected_obligations_unsatisfied": [
+      "a.bottom_white_count",
+      "a.first_white_probability",
+      "b.ordered_pairs",
+      "b.different_favorable",
+      "b.same_compartment",
+      "b.second_white_probability",
+      "b.alternative_complete",
+      "c.continue_compartments",
+      "c.strategy_case_1",
+      "c.strategy_case_2",
+      "c.conditional_success_1",
+      "c.conditional_success_2",
+      "c.total_win_probability"
+    ],
+    "rationale": "Várias afirmações atuais incompatíveis; número correto entre elas não autoriza b.conclusion."
+  },
+  {
+    "case_id": "p3_safe_s4_06",
+    "family": "S4",
+    "expected_score_by_construction": 0,
+    "expected_active_claims": [
+      {
+        "source_span": "Minha afirmação atual é primeira_branca: 1/2",
+        "subject": "primeira_branca",
+        "payload": "1/2",
+        "obligation_id": "a.first_white_probability",
+        "source_start": 76,
+        "source_end": 120
+      }
+    ],
+    "expected_superseded_claims": [],
+    "expected_conflicts": [],
+    "expected_context_rejections": [
+      {
+        "source_span": "Não aceito a proposição de que a probabilidade da primeira branca é 1/3.",
+        "subject": "primeira_branca",
+        "payload": "1/3",
+        "obligation_id": "a.first_white_probability",
+        "source_start": 3,
+        "source_end": 75
+      }
+    ],
+    "expected_awards": [],
+    "expected_guard_behavior": "no_award_from_negated_true_value",
+    "expected_obligations_satisfied": [],
+    "expected_obligations_unsatisfied": [
+      "a.bottom_white_count",
+      "a.first_white_probability",
+      "b.ordered_pairs",
+      "b.different_favorable",
+      "b.same_compartment",
+      "b.second_white_probability",
+      "b.alternative_complete",
+      "c.continue_compartments",
+      "c.strategy_case_1",
+      "c.strategy_case_2",
+      "c.conditional_success_1",
+      "c.conditional_success_2",
+      "c.total_win_probability"
+    ],
+    "rationale": "Valor correto está negado, valor adotado é falso; não promover o primeiro a resposta do aluno."
+  },
+  {
+    "case_id": "p3_safe_s4_07",
+    "family": "S4",
+    "expected_score_by_construction": 2,
+    "expected_active_claims": [
+      {
+        "source_span": "primeira_branca: 5/6",
+        "subject": "primeira_branca",
+        "payload": "5/6",
+        "obligation_id": "a.first_white_probability",
+        "source_start": 71,
+        "source_end": 91
+      },
+      {
+        "source_span": "inferiores_brancas: 2",
+        "subject": "inferiores_brancas",
+        "payload": "2",
+        "obligation_id": "a.bottom_white_count",
+        "source_start": 173,
+        "source_end": 194
+      }
+    ],
+    "expected_superseded_claims": [
+      {
+        "source_span": "inferiores_brancas: 5",
+        "subject": "inferiores_brancas",
+        "payload": "5",
+        "obligation_id": "a.bottom_white_count",
+        "source_start": 49,
+        "source_end": 70
+      }
+    ],
+    "expected_conflicts": [],
+    "expected_context_rejections": [],
+    "expected_awards": [
+      {
+        "rule_id": "a.count",
+        "points": 2,
+        "obligations": [
+          "a.bottom_white_count"
+        ]
+      }
+    ],
+    "expected_guard_behavior": "partial_retraction_only_targeted_count",
+    "expected_obligations_satisfied": [
+      "a.bottom_white_count"
+    ],
+    "expected_obligations_unsatisfied": [
+      "a.first_white_probability",
+      "b.ordered_pairs",
+      "b.different_favorable",
+      "b.same_compartment",
+      "b.second_white_probability",
+      "b.alternative_complete",
+      "c.continue_compartments",
+      "c.strategy_case_1",
+      "c.strategy_case_2",
+      "c.conditional_success_1",
+      "c.conditional_success_2",
+      "c.total_win_probability"
+    ],
+    "rationale": "Retratação tem alvo inequívoco apesar da linha interveniente: só contagem. Aceitar a.count=2, refutar a probabilidade 5/6 mantida."
+  },
+  {
+    "case_id": "p3_safe_s4_08",
+    "family": "S4",
+    "expected_score_by_construction": 0,
+    "expected_active_claims": [
+      {
+        "source_span": "inferiores_brancas: 2",
+        "subject": "inferiores_brancas",
+        "payload": "2",
+        "obligation_id": "a.bottom_white_count",
+        "source_start": 20,
+        "source_end": 41
+      },
+      {
+        "source_span": "primeira_branca: 1/3",
+        "subject": "primeira_branca",
+        "payload": "1/3",
+        "obligation_id": "a.first_white_probability",
+        "source_start": 42,
+        "source_end": 62
+      },
+      {
+        "source_span": "inferiores_brancas: 4",
+        "subject": "inferiores_brancas",
+        "payload": "4",
+        "obligation_id": "a.bottom_white_count",
+        "source_start": 99,
+        "source_end": 120
+      },
+      {
+        "source_span": "primeira_branca: 2/3",
+        "subject": "primeira_branca",
+        "payload": "2/3",
+        "obligation_id": "a.first_white_probability",
+        "source_start": 121,
+        "source_end": 141
+      }
+    ],
+    "expected_superseded_claims": [],
+    "expected_conflicts": [
+      "a.bottom_white_count",
+      "a.first_white_probability"
+    ],
+    "expected_context_rejections": [],
+    "expected_awards": [],
+    "expected_guard_behavior": "conservative_ambiguous_referent",
+    "expected_obligations_satisfied": [],
+    "expected_obligations_unsatisfied": [
+      "a.bottom_white_count",
+      "a.first_white_probability",
+      "b.ordered_pairs",
+      "b.different_favorable",
+      "b.same_compartment",
+      "b.second_white_probability",
+      "b.alternative_complete",
+      "c.continue_compartments",
+      "c.strategy_case_1",
+      "c.strategy_case_2",
+      "c.conditional_success_1",
+      "c.conditional_success_2",
+      "c.total_win_probability"
+    ],
+    "rationale": "Pronome sem referente não autoriza apagar seletivamente os valores falsos. Ambas as obrigações conflitam; score zero."
+  }
+]

@@ -1,0 +1,579 @@
+[
+  {
+    "case_id": "p3_safe_s1_01",
+    "construction_reference": [
+      "examples/pautas/tme2_problem3.v1.json",
+      "app/confia_lean_auditor/lean/student_claim_checkers/tme2_p3.py",
+      "app/confia_lean_auditor/experimental/tme_p3_checker_first/components.py"
+    ],
+    "interpretation_rule": "Correção adjacente da mesma probabilidade, com marcador explícito; contagem independente. 2+2=4.",
+    "expected_score": 4,
+    "expected_obligations": [
+      "a.bottom_white_count",
+      "a.first_white_probability"
+    ],
+    "active_claims": 2,
+    "superseded_claims": 1,
+    "context_rejections": 0,
+    "conflicts": [],
+    "guard": "no_guard_required"
+  },
+  {
+    "case_id": "p3_safe_s1_02",
+    "construction_reference": [
+      "examples/pautas/tme2_problem3.v1.json",
+      "app/confia_lean_auditor/lean/student_claim_checkers/tme2_p3.py",
+      "app/confia_lean_auditor/experimental/tme_p3_checker_first/components.py"
+    ],
+    "interpretation_rule": "Retratação deítica inequívoca da linha anterior; a nova potência representa duas escolhas uniformes.",
+    "expected_score": 2,
+    "expected_obligations": [
+      "b.ordered_pairs"
+    ],
+    "active_claims": 1,
+    "superseded_claims": 1,
+    "context_rejections": 0,
+    "conflicts": [],
+    "guard": "no_guard_required"
+  },
+  {
+    "case_id": "p3_safe_s1_03",
+    "construction_reference": [
+      "examples/pautas/tme2_problem3.v1.json",
+      "app/confia_lean_auditor/lean/student_claim_checkers/tme2_p3.py",
+      "app/confia_lean_auditor/experimental/tme_p3_checker_first/components.py"
+    ],
+    "interpretation_rule": "Pensando melhor acompanhado de retirada explícita da cor/contagem; estratégia corrigida do caso 2 vale 2, sem inferir condicionais.",
+    "expected_score": 2,
+    "expected_obligations": [
+      "c.strategy_case_2"
+    ],
+    "active_claims": 1,
+    "superseded_claims": 1,
+    "context_rejections": 0,
+    "conflicts": [],
+    "guard": "no_guard_required"
+  },
+  {
+    "case_id": "p3_safe_s1_04",
+    "construction_reference": [
+      "examples/pautas/tme2_problem3.v1.json",
+      "app/confia_lean_auditor/lean/student_claim_checkers/tme2_p3.py",
+      "app/confia_lean_auditor/experimental/tme_p3_checker_first/components.py"
+    ],
+    "interpretation_rule": "Rejeição inequívoca da contagem anterior e nova contagem explícita; nenhuma probabilidade declarada.",
+    "expected_score": 2,
+    "expected_obligations": [
+      "a.bottom_white_count"
+    ],
+    "active_claims": 1,
+    "superseded_claims": 1,
+    "context_rejections": 0,
+    "conflicts": [],
+    "guard": "no_guard_required"
+  },
+  {
+    "case_id": "p3_safe_s1_05",
+    "construction_reference": [
+      "examples/pautas/tme2_problem3.v1.json",
+      "app/confia_lean_auditor/lean/student_claim_checkers/tme2_p3.py",
+      "app/confia_lean_auditor/experimental/tme_p3_checker_first/components.py"
+    ],
+    "interpretation_rule": "O correto é mais substituição explícita; valor final de b concede somente b.conclusion=2.",
+    "expected_score": 2,
+    "expected_obligations": [
+      "b.second_white_probability"
+    ],
+    "active_claims": 1,
+    "superseded_claims": 1,
+    "context_rejections": 0,
+    "conflicts": [],
+    "guard": "no_guard_required"
+  },
+  {
+    "case_id": "p3_safe_s1_06",
+    "construction_reference": [
+      "examples/pautas/tme2_problem3.v1.json",
+      "app/confia_lean_auditor/lean/student_claim_checkers/tme2_p3.py",
+      "app/confia_lean_auditor/experimental/tme_p3_checker_first/components.py"
+    ],
+    "interpretation_rule": "Risco acompanhado de explicação literal de anulação, sem depender só de Markdown; a resposta final isolada é autorizada.",
+    "expected_score": 2,
+    "expected_obligations": [
+      "a.first_white_probability"
+    ],
+    "active_claims": 1,
+    "superseded_claims": 1,
+    "context_rejections": 0,
+    "conflicts": [],
+    "guard": "no_guard_required"
+  },
+  {
+    "case_id": "p3_safe_s1_07",
+    "construction_reference": [
+      "examples/pautas/tme2_problem3.v1.json",
+      "app/confia_lean_auditor/lean/student_claim_checkers/tme2_p3.py",
+      "app/confia_lean_auditor/experimental/tme_p3_checker_first/components.py"
+    ],
+    "interpretation_rule": "Substituição explicitamente vinculada ao conjunto, sem inventar estratégias; c.continue=1.",
+    "expected_score": 1,
+    "expected_obligations": [
+      "c.continue_compartments"
+    ],
+    "active_claims": 1,
+    "superseded_claims": 1,
+    "context_rejections": 0,
+    "conflicts": [],
+    "guard": "no_guard_required"
+  },
+  {
+    "case_id": "p3_safe_s1_08",
+    "construction_reference": [
+      "examples/pautas/tme2_problem3.v1.json",
+      "app/confia_lean_auditor/lean/student_claim_checkers/tme2_p3.py",
+      "app/confia_lean_auditor/experimental/tme_p3_checker_first/components.py"
+    ],
+    "interpretation_rule": "Autocorreção em notação com anulado/válido e confirmação da única linha mantida. Igualdade de a verificada, sem inferir a.count.",
+    "expected_score": 2,
+    "expected_obligations": [
+      "a.first_white_probability"
+    ],
+    "active_claims": 1,
+    "superseded_claims": 1,
+    "context_rejections": 0,
+    "conflicts": [],
+    "guard": "no_guard_required"
+  },
+  {
+    "case_id": "p3_safe_s2_01",
+    "construction_reference": [
+      "examples/pautas/tme2_problem3.v1.json",
+      "app/confia_lean_auditor/lean/student_claim_checkers/tme2_p3.py",
+      "app/confia_lean_auditor/experimental/tme_p3_checker_first/components.py"
+    ],
+    "interpretation_rule": "Contagens 2 e 3 adotadas conflitam; a.count bloqueado. Probabilidade de a é parcela independente e continua valendo 2.",
+    "expected_score": 2,
+    "expected_obligations": [
+      "a.first_white_probability"
+    ],
+    "active_claims": 3,
+    "superseded_claims": 0,
+    "context_rejections": 0,
+    "conflicts": [
+      "a.bottom_white_count"
+    ],
+    "guard": "regular_refutation"
+  },
+  {
+    "case_id": "p3_safe_s2_02",
+    "construction_reference": [
+      "examples/pautas/tme2_problem3.v1.json",
+      "app/confia_lean_auditor/lean/student_claim_checkers/tme2_p3.py",
+      "app/confia_lean_auditor/experimental/tme_p3_checker_first/components.py"
+    ],
+    "interpretation_rule": "Valor falso antes do correto, ambos explicitamente adotados; ausência de retratação impede crédito de a.probability.",
+    "expected_score": 0,
+    "expected_obligations": [],
+    "active_claims": 2,
+    "superseded_claims": 0,
+    "context_rejections": 0,
+    "conflicts": [
+      "a.first_white_probability"
+    ],
+    "guard": "regular_refutation"
+  },
+  {
+    "case_id": "p3_safe_s2_03",
+    "construction_reference": [
+      "examples/pautas/tme2_problem3.v1.json",
+      "app/confia_lean_auditor/lean/student_claim_checkers/tme2_p3.py",
+      "app/confia_lean_auditor/experimental/tme_p3_checker_first/components.py"
+    ],
+    "interpretation_rule": "Lista exaustiva de continuação e inclusão de outro estado são incompatíveis. A propriedade é continuação em c, não repetição de b; não transplantar o guard b.",
+    "expected_score": 0,
+    "expected_obligations": [],
+    "active_claims": 2,
+    "superseded_claims": 0,
+    "context_rejections": 0,
+    "conflicts": [
+      "c.continue_compartments"
+    ],
+    "guard": "regular_or_safety_for_continuation_not_b_atomic"
+  },
+  {
+    "case_id": "p3_safe_s2_04",
+    "construction_reference": [
+      "examples/pautas/tme2_problem3.v1.json",
+      "app/confia_lean_auditor/lean/student_claim_checkers/tme2_p3.py",
+      "app/confia_lean_auditor/experimental/tme_p3_checker_first/components.py"
+    ],
+    "interpretation_rule": "A conta verdadeira não apaga a afirmação 1/4 da mesma probabilidade; b.conclusion bloqueado.",
+    "expected_score": 0,
+    "expected_obligations": [],
+    "active_claims": 2,
+    "superseded_claims": 0,
+    "context_rejections": 0,
+    "conflicts": [
+      "b.second_white_probability"
+    ],
+    "guard": "regular_refutation"
+  },
+  {
+    "case_id": "p3_safe_s2_05",
+    "construction_reference": [
+      "examples/pautas/tme2_problem3.v1.json",
+      "app/confia_lean_auditor/lean/student_claim_checkers/tme2_p3.py",
+      "app/confia_lean_auditor/experimental/tme_p3_checker_first/components.py"
+    ],
+    "interpretation_rule": "Estratégias incompatíveis no mesmo estado; a estratégia verdadeira não pode ganhar a mesma parcela diante da outra adotada.",
+    "expected_score": 0,
+    "expected_obligations": [],
+    "active_claims": 2,
+    "superseded_claims": 0,
+    "context_rejections": 0,
+    "conflicts": [
+      "c.strategy_case_2"
+    ],
+    "guard": "regular_refutation"
+  },
+  {
+    "case_id": "p3_safe_s2_06",
+    "construction_reference": [
+      "examples/pautas/tme2_problem3.v1.json",
+      "app/confia_lean_auditor/lean/student_claim_checkers/tme2_p3.py",
+      "app/confia_lean_auditor/experimental/tme_p3_checker_first/components.py"
+    ],
+    "interpretation_rule": "A relação dos diferentes é correta e independente. A afirmação falsa de repetição deve vetar b.conclusion por source_consistency; total correto não saneia contexto de contagem falso.",
+    "expected_score": 2,
+    "expected_obligations": [
+      "b.different_favorable"
+    ],
+    "active_claims": 3,
+    "superseded_claims": 0,
+    "context_rejections": 0,
+    "conflicts": [
+      "b.second_white_probability"
+    ],
+    "guard": "atomic_if_partial_payload_otherwise_regular; negative_context_must_reach_conclusion"
+  },
+  {
+    "case_id": "p3_safe_s2_07",
+    "construction_reference": [
+      "examples/pautas/tme2_problem3.v1.json",
+      "app/confia_lean_auditor/lean/student_claim_checkers/tme2_p3.py",
+      "app/confia_lean_auditor/experimental/tme_p3_checker_first/components.py"
+    ],
+    "interpretation_rule": "Uma igualdade aritmética é falsa. A prova da outra não autoriza ignorar refutação da mesma obrigação.",
+    "expected_score": 0,
+    "expected_obligations": [],
+    "active_claims": 2,
+    "superseded_claims": 0,
+    "context_rejections": 0,
+    "conflicts": [
+      "a.first_white_probability"
+    ],
+    "guard": "regular_formal_or_deterministic_refutation"
+  },
+  {
+    "case_id": "p3_safe_s2_08",
+    "construction_reference": [
+      "examples/pautas/tme2_problem3.v1.json",
+      "app/confia_lean_auditor/lean/student_claim_checkers/tme2_p3.py",
+      "app/confia_lean_auditor/experimental/tme_p3_checker_first/components.py"
+    ],
+    "interpretation_rule": "Exaustividade {2,4} e inclusão de 1 são incompatíveis e ambas falsas no modelo. Nenhum número correto da diagonal é fornecido. Exigir retenção da incompatibilidade, não apenas zero por ausência de positivo.",
+    "expected_score": 0,
+    "expected_obligations": [],
+    "active_claims": 2,
+    "superseded_claims": 0,
+    "context_rejections": 0,
+    "conflicts": [
+      "b.same_compartment"
+    ],
+    "guard": "atomic_if_partial_payload_otherwise_regular"
+  },
+  {
+    "case_id": "p3_safe_s3_01",
+    "construction_reference": [
+      "examples/pautas/tme2_problem3.v1.json",
+      "app/confia_lean_auditor/lean/student_claim_checkers/tme2_p3.py",
+      "app/confia_lean_auditor/experimental/tme_p3_checker_first/components.py"
+    ],
+    "interpretation_rule": "Uma relação verdadeira explicitamente hipotética não constitui evidência adotada.",
+    "expected_score": 0,
+    "expected_obligations": [],
+    "active_claims": 0,
+    "superseded_claims": 0,
+    "context_rejections": 1,
+    "conflicts": [],
+    "guard": "no_guard_required"
+  },
+  {
+    "case_id": "p3_safe_s3_02",
+    "construction_reference": [
+      "examples/pautas/tme2_problem3.v1.json",
+      "app/confia_lean_auditor/lean/student_claim_checkers/tme2_p3.py",
+      "app/confia_lean_auditor/experimental/tme_p3_checker_first/components.py"
+    ],
+    "interpretation_rule": "Tentativa descartada não pontua c. Afirmação adotada de outro item permanece independente.",
+    "expected_score": 2,
+    "expected_obligations": [
+      "a.bottom_white_count"
+    ],
+    "active_claims": 1,
+    "superseded_claims": 0,
+    "context_rejections": 1,
+    "conflicts": [],
+    "guard": "no_guard_required"
+  },
+  {
+    "case_id": "p3_safe_s3_03",
+    "construction_reference": [
+      "examples/pautas/tme2_problem3.v1.json",
+      "app/confia_lean_auditor/lean/student_claim_checkers/tme2_p3.py",
+      "app/confia_lean_auditor/experimental/tme_p3_checker_first/components.py"
+    ],
+    "interpretation_rule": "Atribuição exclusiva a terceiro, sem adoção; nenhum crédito por valor verdadeiro citado.",
+    "expected_score": 0,
+    "expected_obligations": [],
+    "active_claims": 0,
+    "superseded_claims": 0,
+    "context_rejections": 1,
+    "conflicts": [],
+    "guard": "no_guard_required"
+  },
+  {
+    "case_id": "p3_safe_s3_04",
+    "construction_reference": [
+      "examples/pautas/tme2_problem3.v1.json",
+      "app/confia_lean_auditor/lean/student_claim_checkers/tme2_p3.py",
+      "app/confia_lean_auditor/experimental/tme_p3_checker_first/components.py"
+    ],
+    "interpretation_rule": "Conteúdo atribuído ao enunciado não preenche a obrigação do aluno.",
+    "expected_score": 0,
+    "expected_obligations": [],
+    "active_claims": 0,
+    "superseded_claims": 0,
+    "context_rejections": 1,
+    "conflicts": [],
+    "guard": "no_guard_required"
+  },
+  {
+    "case_id": "p3_safe_s3_05",
+    "construction_reference": [
+      "examples/pautas/tme2_problem3.v1.json",
+      "app/confia_lean_auditor/lean/student_claim_checkers/tme2_p3.py",
+      "app/confia_lean_auditor/experimental/tme_p3_checker_first/components.py"
+    ],
+    "interpretation_rule": "Pergunta não adotada não é contradição ativa; a contagem afirmada permite apenas a.count.",
+    "expected_score": 2,
+    "expected_obligations": [
+      "a.bottom_white_count"
+    ],
+    "active_claims": 1,
+    "superseded_claims": 0,
+    "context_rejections": 1,
+    "conflicts": [],
+    "guard": "no_guard_required"
+  },
+  {
+    "case_id": "p3_safe_s3_06",
+    "construction_reference": [
+      "examples/pautas/tme2_problem3.v1.json",
+      "app/confia_lean_auditor/lean/student_claim_checkers/tme2_p3.py",
+      "app/confia_lean_auditor/experimental/tme_p3_checker_first/components.py"
+    ],
+    "interpretation_rule": "Condição matemática de ramo adotada não é hipótese exploratória. Estratégia vale 2; só uma condicional não completa a parcela conjunta.",
+    "expected_score": 2,
+    "expected_obligations": [
+      "c.strategy_case_1",
+      "c.conditional_success_1"
+    ],
+    "active_claims": 2,
+    "superseded_claims": 0,
+    "context_rejections": 0,
+    "conflicts": [],
+    "guard": "no_guard_required"
+  },
+  {
+    "case_id": "p3_safe_s3_07",
+    "construction_reference": [
+      "examples/pautas/tme2_problem3.v1.json",
+      "app/confia_lean_auditor/lean/student_claim_checkers/tme2_p3.py",
+      "app/confia_lean_auditor/experimental/tme_p3_checker_first/components.py"
+    ],
+    "interpretation_rule": "Alternativa explicitamente negada não é decisão concorrente; somente a estratégia adotada é pontuável.",
+    "expected_score": 2,
+    "expected_obligations": [
+      "c.strategy_case_1"
+    ],
+    "active_claims": 1,
+    "superseded_claims": 0,
+    "context_rejections": 1,
+    "conflicts": [],
+    "guard": "no_guard_required"
+  },
+  {
+    "case_id": "p3_safe_s3_08",
+    "construction_reference": [
+      "examples/pautas/tme2_problem3.v1.json",
+      "app/confia_lean_auditor/lean/student_claim_checkers/tme2_p3.py",
+      "app/confia_lean_auditor/experimental/tme_p3_checker_first/components.py"
+    ],
+    "interpretation_rule": "Erro citado para refutação não vira afirmação ativa; relação de pares ordenados é evidência independente válida.",
+    "expected_score": 2,
+    "expected_obligations": [
+      "b.ordered_pairs"
+    ],
+    "active_claims": 1,
+    "superseded_claims": 0,
+    "context_rejections": 1,
+    "conflicts": [],
+    "guard": "no_guard_required"
+  },
+  {
+    "case_id": "p3_safe_s4_01",
+    "construction_reference": [
+      "examples/pautas/tme2_problem3.v1.json",
+      "app/confia_lean_auditor/lean/student_claim_checkers/tme2_p3.py",
+      "app/confia_lean_auditor/experimental/tme_p3_checker_first/components.py"
+    ],
+    "interpretation_rule": "Na verdade trata da probabilidade e não revoga a contagem. As duas contagens continuam adotadas; a.probability é independente.",
+    "expected_score": 2,
+    "expected_obligations": [
+      "a.first_white_probability"
+    ],
+    "active_claims": 3,
+    "superseded_claims": 0,
+    "context_rejections": 0,
+    "conflicts": [
+      "a.bottom_white_count"
+    ],
+    "guard": "preserve_unrelated_subject_conflict"
+  },
+  {
+    "case_id": "p3_safe_s4_02",
+    "construction_reference": [
+      "examples/pautas/tme2_problem3.v1.json",
+      "app/confia_lean_auditor/lean/student_claim_checkers/tme2_p3.py",
+      "app/confia_lean_auditor/experimental/tme_p3_checker_first/components.py"
+    ],
+    "interpretation_rule": "Marcador distante e alvo não identificado: não há autorização para apagar a primeira resposta. Conservar conflito e zero na obrigação.",
+    "expected_score": 0,
+    "expected_obligations": [],
+    "active_claims": 2,
+    "superseded_claims": 0,
+    "context_rejections": 0,
+    "conflicts": [
+      "a.first_white_probability"
+    ],
+    "guard": "conservative_ambiguous_retraction"
+  },
+  {
+    "case_id": "p3_safe_s4_03",
+    "construction_reference": [
+      "examples/pautas/tme2_problem3.v1.json",
+      "app/confia_lean_auditor/lean/student_claim_checkers/tme2_p3.py",
+      "app/confia_lean_auditor/experimental/tme_p3_checker_first/components.py"
+    ],
+    "interpretation_rule": "Correção em outro item não revoga a nem ganha crédito de a; em b não é a probabilidade da segunda branca.",
+    "expected_score": 0,
+    "expected_obligations": [],
+    "active_claims": 1,
+    "superseded_claims": 0,
+    "context_rejections": 1,
+    "conflicts": [],
+    "guard": "no_cross_item_retraction"
+  },
+  {
+    "case_id": "p3_safe_s4_04",
+    "construction_reference": [
+      "examples/pautas/tme2_problem3.v1.json",
+      "app/confia_lean_auditor/lean/student_claim_checkers/tme2_p3.py",
+      "app/confia_lean_auditor/experimental/tme_p3_checker_first/components.py"
+    ],
+    "interpretation_rule": "Número 3 de uma estratégia não se confunde com contagem inicial. c.strategy_case_1=2; as duas contagens de a conflitam.",
+    "expected_score": 2,
+    "expected_obligations": [
+      "c.strategy_case_1"
+    ],
+    "active_claims": 3,
+    "superseded_claims": 0,
+    "context_rejections": 0,
+    "conflicts": [
+      "a.bottom_white_count"
+    ],
+    "guard": "no_number_based_cross_subject_retraction"
+  },
+  {
+    "case_id": "p3_safe_s4_05",
+    "construction_reference": [
+      "examples/pautas/tme2_problem3.v1.json",
+      "app/confia_lean_auditor/lean/student_claim_checkers/tme2_p3.py",
+      "app/confia_lean_auditor/experimental/tme_p3_checker_first/components.py"
+    ],
+    "interpretation_rule": "Várias afirmações atuais incompatíveis; número correto entre elas não autoriza b.conclusion.",
+    "expected_score": 0,
+    "expected_obligations": [],
+    "active_claims": 3,
+    "superseded_claims": 0,
+    "context_rejections": 0,
+    "conflicts": [
+      "b.second_white_probability"
+    ],
+    "guard": "preserve_multiple_current_claims"
+  },
+  {
+    "case_id": "p3_safe_s4_06",
+    "construction_reference": [
+      "examples/pautas/tme2_problem3.v1.json",
+      "app/confia_lean_auditor/lean/student_claim_checkers/tme2_p3.py",
+      "app/confia_lean_auditor/experimental/tme_p3_checker_first/components.py"
+    ],
+    "interpretation_rule": "Valor correto está negado, valor adotado é falso; não promover o primeiro a resposta do aluno.",
+    "expected_score": 0,
+    "expected_obligations": [],
+    "active_claims": 1,
+    "superseded_claims": 0,
+    "context_rejections": 1,
+    "conflicts": [],
+    "guard": "no_award_from_negated_true_value"
+  },
+  {
+    "case_id": "p3_safe_s4_07",
+    "construction_reference": [
+      "examples/pautas/tme2_problem3.v1.json",
+      "app/confia_lean_auditor/lean/student_claim_checkers/tme2_p3.py",
+      "app/confia_lean_auditor/experimental/tme_p3_checker_first/components.py"
+    ],
+    "interpretation_rule": "Retratação tem alvo inequívoco apesar da linha interveniente: só contagem. Aceitar a.count=2, refutar a probabilidade 5/6 mantida.",
+    "expected_score": 2,
+    "expected_obligations": [
+      "a.bottom_white_count"
+    ],
+    "active_claims": 2,
+    "superseded_claims": 1,
+    "context_rejections": 0,
+    "conflicts": [],
+    "guard": "partial_retraction_only_targeted_count"
+  },
+  {
+    "case_id": "p3_safe_s4_08",
+    "construction_reference": [
+      "examples/pautas/tme2_problem3.v1.json",
+      "app/confia_lean_auditor/lean/student_claim_checkers/tme2_p3.py",
+      "app/confia_lean_auditor/experimental/tme_p3_checker_first/components.py"
+    ],
+    "interpretation_rule": "Pronome sem referente não autoriza apagar seletivamente os valores falsos. Ambas as obrigações conflitam; score zero.",
+    "expected_score": 0,
+    "expected_obligations": [],
+    "active_claims": 4,
+    "superseded_claims": 0,
+    "context_rejections": 0,
+    "conflicts": [
+      "a.bottom_white_count",
+      "a.first_white_probability"
+    ],
+    "guard": "conservative_ambiguous_referent"
+  }
+]
