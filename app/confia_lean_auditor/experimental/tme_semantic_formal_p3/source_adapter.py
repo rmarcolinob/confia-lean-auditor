@@ -25,7 +25,8 @@ def clause_view(document, e):
     start, end = document.ranges.get(e.item_id, (0, 0))
     if not start <= a < b <= end:
         raise ValueError('invalid_item_binding')
-    breaks = list(re.finditer(r'\n|(?<!\d)[.!?](?!\d)', document.text[start:end]))
+    from .segmentation import BOUNDARY
+    breaks = list(BOUNDARY.finditer(document.text[start:end]))
     left = max([start] + [start+m.end() for m in breaks if start+m.end() <= a])
     right = min([end] + [start+m.end() for m in breaks if start+m.start() >= b])
     if document.text[b-1:b] in '.!?': right = b
@@ -38,10 +39,19 @@ def clause_view(document, e):
 
 def member_atom(e):
     """A partial inclusion is not a complete set; numbers must name compartments."""
-    raw = source_view(e.source_span)
-    if re.search(r'\b(?:nao|nunca|jamais)\b',raw):return None
-    if e.item_id == 'b' and e.subject == 'repeticao_branca' and 'b.same_compartment' in e.obligation_candidates:
+    if re.search(r'\b(?:um|uma)\s+compartimento\s+(?:tambem|da|libera|produz|fornece)\b',normalized(e.asserted_content)):
+        return None  # Indefinite article is not compartment index one.
+    raw = source_view(e.asserted_content)
+    context=source_view(e.source_span)
+    if re.search(r'\b(?:nao|nunca|jamais)\b',context):return None
+    indices={n for pair in re.findall(r'compartimento\s+([1-6])\b|\b([1-6])(?:\s+compartimento)?\s+tambem',raw) for n in pair if n}
+    if len(indices)>1:return None
+    if e.item_id == 'b' and e.subject in {'repeticao_branca','unmapped'} and 'b.same_compartment' in e.obligation_candidates:
+        explicit=bool(re.search(r'repet|mesmo compartimento',context) and re.search(r'branc',context))
+        if not explicit and not e.metadata.get('membership_relation_support'):return None
         match = re.search(r'\b(?:compartimento\s+)?([1-6])(?:\s+compartimento)?\s+tambem(?:\s+(?:libera|produz|fornece)\s+(?:(?:1|uma)\s+)?(?:bola\s+)?branca)?\s*(?=[.;\n]|$)', raw)
+        if not match and re.search(r'repet|mesmo compartimento',raw):
+            match = re.search(r'\bcompartimento\s+([1-6])\s+(?:tambem\s+)?(?:da|libera|produz|fornece)\s+(?:uma\s+bola\s+)?branca\b',raw)
         if match:
             return dict(property='repeticao_branca', kind='member', members=[int(match[1])],
                         obligation_id='b.same_compartment')
@@ -59,8 +69,9 @@ def exact_members(e):
     if e.subject not in {'repeticao_branca','continuar'}:
         return None
     typed = re.search(r'\b'+e.subject+r'\s*:\s*\{(\d+(?:\s*,\s*\d+)*)\}', raw)
+    closed = re.search(r'lista fechada[^{}]*\{(\d+(?:\s*,\s*\d+)*)\}',raw)
     explicit = re.search(r'\b(?:somente|apenas|unicamente)\s+(?:n?os?\s+)?(?:compartimentos?\s+)?(\d+(?:\s*(?:,|e)\s*(?:o\s+)?\d+)*)', raw)
-    m = typed or explicit
+    m = typed or explicit or closed
     if not m: return None
     return sorted(int(n) for n in re.findall(r'\d+', m[1]))
 
@@ -93,7 +104,7 @@ def adapt_payload(document, e):
         expressions = [s.rstrip('.,') for s in matches if '=' in s]
         if len(expressions) == 1: replacement = expressions[0]
     if replacement:
-        candidate=e.model_copy(update={'normalized_claim':replacement})
+        candidate=e.model_copy(update={'normalized_claim':replacement,'metadata':dict(e.metadata,original_payload=e.normalized_claim)})
         try: representation(candidate, document)
         except ValueError: return e, receipt
         receipt.update(changed=True, rule='unique_literal_payload', normalized_payload=replacement)
@@ -110,8 +121,12 @@ def literal_property(document,e):
     try:
         value=representation(e,document).canonical_form.value
         return dict(property=e.subject,kind=e.claim_type,value=value.get('value',value.get('expression')),
-                    expression=value.get('expression') or (r.source.raw_text if r.source.raw_text.strip()==document.items[item].strip() else None))
+                    expression=value.get('expression'))
     except ValueError:
+        if e.subject=='inferiores_brancas' and _anchor(e,document):
+            raw=source_view(e.asserted_content)
+            numbers=re.findall(r'\b\d+\b',raw)
+            if len(numbers)==1:return dict(property=e.subject,kind='math',value=numbers[0])
         # Written color still identifies a replacement even if its withdrawn
         # count is outside the positive checker's grammar.
         if e.subject.startswith('estrategia_') and _anchor(e,document):

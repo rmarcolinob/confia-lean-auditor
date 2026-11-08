@@ -5,6 +5,8 @@ from .discourse import DiscourseStateResolver
 from .mapper import ObligationMapper
 from .verification import verify
 from .conflict_guard import conflict_guards
+from .segmentation import ClaimEpisode
+from .semantic_contracts import annotate_result
 from .veto_policy import VetoEligibilityPolicy,candidate,reconcile
 
 
@@ -57,6 +59,7 @@ def run_unified(document,units,config,case_id,*,use_lean,fallback=False):
                 checker_receipt=dict(error_type=type(error).__name__),
                 sufficiency_decision=dict(sufficient=False,basis='guard_cannot_award')))
     structural=structural_candidates(document,views,snapshot)
+    for row in results+native_results+atomic+structural:annotate_result(snapshot,row)
     policy=VetoEligibilityPolicy(snapshot)
     decisions=[]
     for producer,rows in [('positive_checker',results),('native_checker',native_results),('atomic_guard',atomic),('structural_guard',structural)]:
@@ -79,7 +82,15 @@ def run_unified(document,units,config,case_id,*,use_lean,fallback=False):
                 regular.append(dict(evidence_id=u.evidence_id,evidence_ids=r['evidence_ids'],obligation_id=r['obligation_id'],
                     status=r['status'],mathematical_refutation=r['mathematical_refutation'],checker_result=r,
                     guard_only=True,award_eligible=False,sufficiency_decision=dict(sufficient=False,basis='guard_cannot_award')))
-    trace=dict(native_source_inventory=inventory,discourse_ledger=ledger,discourse_decisions=[d.as_dict() for d in snapshot.decisions],
+    episodes={}
+    for d in snapshot.decisions:
+        seg=d.segment;key=seg['episode_id']
+        episodes.setdefault(key,dict(episode_id=key,item_id=d.property_key[0],subject=d.property_key[1],segment_ids=[],relations=[]))
+        episodes[key]['segment_ids'].append(seg['segment_id'])
+        episodes[key]['relations'].extend(d.as_dict()['supporting_spans'])
+    trace=dict(discourse_segments=[d.segment for d in snapshot.decisions],claim_episodes=[ClaimEpisode(v['episode_id'],v['item_id'],v['subject'],tuple(sorted(set(v['segment_ids']))),tuple(v['relations'])).as_dict() for v in episodes.values()],
+        representation_receipts=[d.representation_receipt for d in snapshot.decisions],
+        binding_receipts=[b for d in snapshot.decisions for b in d.binding_receipts],native_source_inventory=inventory,discourse_ledger=ledger,discourse_decisions=[d.as_dict() for d in snapshot.decisions],
         ledger_revision=snapshot.ledger_revision,source_adaptations=adaptations,veto_decisions=decisions,
         conflict_guard_results=atomic,structural_guard_results=structural,abandonment_decisions=abandonment,
         abandonment_guard_results=regular,native_guard_results=native_results,native_projection=native_projection,

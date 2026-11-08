@@ -39,7 +39,10 @@ def award(case_id,evidence,mapping,results,conflicts,policy):
     observations=[];awards=[]
     for oid,spec in REGISTRY.items():
         rows=[r for r in results if r['obligation_id']==oid]
-        positives=[r for r in rows if r['status'] in POSITIVE and r['route'] in spec.allowed_routes
+        automatic=[policy.automation.decide(r,blocked=oid in blocked) for r in rows]
+        authorized={a['checker_ref'] for a in automatic if a['automation_eligibility']=='AUTO_AWARD'}
+        positives=[r for r in rows if r.get('verification_id') in authorized
+            and r['status'] in POSITIVE and r['route'] in spec.allowed_routes
             and r['sufficiency_decision']['sufficient'] and r.get('verification_id')
             and r.get('original_fact') and r['evidence_ids']
             and any((i,oid,r['route']) in eligible for i in r['primary_evidence_ids'])
@@ -63,6 +66,12 @@ def award(case_id,evidence,mapping,results,conflicts,policy):
             evidence_ids=chosen['evidence_ids'] if chosen else [],verification_route=chosen['route'] if chosen else None,
             verification_status=chosen['status'] if chosen else None,verification_result=chosen,
             sufficiency_decision=chosen['sufficiency_decision'] if chosen else None,award_decision=reason,technical_uncertainty=technical,
+            automation_eligibility='AUTO_AWARD' if chosen else 'AUTO_VETO' if oid in blocked else 'REVIEW_ONLY',
+            automation_decisions=automatic,
+            obligation_support_bundle=dict(obligation_id=oid,source_sha256=policy.snapshot.source_sha256,
+                ledger_revision=policy.snapshot.ledger_revision,positive_witnesses=sorted(authorized),
+                review_refs=[a['decision_id'] for a in automatic if a['automation_eligibility']=='REVIEW_ONLY'],
+                veto_refs=[d['decision_id'] for c in conflicts if c['obligation_id']==oid for d in policy.applied(c.get('policy_decisions',[]))]),
             decision_receipt=dict(ledger_revision=policy.snapshot.ledger_revision,source_sha256=policy.snapshot.source_sha256,
                 positive_witness=chosen.get('verification_id') if chosen else None,
                 veto_decisions=[d['decision_id'] for c in conflicts if c['obligation_id']==oid for d in policy.applied(c.get('policy_decisions',[]))],
@@ -116,6 +125,7 @@ def evaluate(case_id,problem_id,text,*,mode='tme_semantic_formal',model='gpt-6.1
             document,units,config,case_id,use_lean=use_lean,fallback=fallback)
         observations,awards=award(case_id,views,mapping,results,conflicts,policy)
         output.update(trace)
+        output['automation_decisions']=[d for a in awards for d in a['automation_decisions']]+[v['automation_decision'] for v in trace['veto_decisions']]
         assessment=PautaEngine().evaluate(config,observations)
         credits=credited_rules(assessment,awards)
         if sum(c['points'] for c in credits)!=float(assessment.known_points):raise ValueError('credit_trace_does_not_close')

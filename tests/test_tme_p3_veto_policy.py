@@ -14,6 +14,8 @@ def setup_policy(prefix='',status='DETERMINISTIC_FAILED',producer='atomic_guard'
     result=dict(evidence_id=views[0].evidence_id,obligation_id='b.same_compartment',
         status=status,mathematical_refutation=status=='DETERMINISTIC_FAILED',guard_id='test-checked-receipt',
         guard_only=True,checker_receipt={'finite_model_event':[5,5]})
+    from confia_lean_auditor.experimental.tme_semantic_formal_p3.semantic_contracts import annotate_result
+    annotate_result(snap,result)
     policy=VetoEligibilityPolicy(snap)
     return policy,candidate(result,producer)
 

@@ -3,7 +3,7 @@ from copy import deepcopy
 from confia_lean_auditor.student_claims.semantic import sha
 from .registry import REGISTRY
 
-VERSION='p3-veto-v1'
+VERSION='p3-veto-v2'
 DEPENDENCIES={
  'b.ordered_pairs':('b.second_white_probability',),
  'b.different_favorable':('b.second_white_probability',),
@@ -31,6 +31,8 @@ class VetoEligibilityPolicy:
         if not snapshot.valid():raise ValueError('invalid_discourse_snapshot')
         self.snapshot=snapshot
         self._issued={}
+        from .automation import AutomationEligibilityPolicy
+        self.automation=AutomationEligibilityPolicy(snapshot)
 
     def decide(self,c):
         states=[self.snapshot.get(i) for i in c['evidence_ids']]
@@ -43,10 +45,15 @@ class VetoEligibilityPolicy:
         primary=[self.snapshot.get(i) for i in c.get('primary_evidence_ids',c['evidence_ids'])]
         compatible=bool(bound and spec and all(d.property_key[0]==spec.rubric_item for d in states)
             and any(d and d.property_key[1] in spec.subjects for d in primary))
-        eligible=bool(active and validated and compatible)
+        admission=self.automation.admission(c['evidence_ids'],c['obligation_id'],primary_ids=c.get('primary_evidence_ids'))
+        from .semantic_contracts import checker_input
+        input_valid=(c['checker_result'].get('checker_input_receipt')==checker_input(self.snapshot,c['checker_result'])
+            and c['checker_status']==c['checker_result'].get('status')
+            and c['mathematical_contradiction']==c['checker_result'].get('mathematical_refutation',False))
+        eligible=bool(active and validated and compatible and admission['admitted'] and input_valid)
         reason=('invalid_binding' if not bound else 'historical_or_nonadopted' if any(d.state in {'SUPERSEDED','NON_ADOPTED'} for d in states)
                 else 'ambiguous_review_only' if not active else 'checker_not_refutation' if not validated
-                else 'incompatible_scope' if not compatible else 'active_checked_contradiction')
+                else 'incompatible_scope' if not compatible else 'semantic_admission_failed' if not admission['admitted'] else 'checker_input_not_bound' if not input_valid else 'active_checked_contradiction')
         decision=dict(policy_version=VERSION,ledger_revision=self.snapshot.ledger_revision,
             source_sha256=self.snapshot.source_sha256,evidence_ids=c['evidence_ids'],
             canonical_ids=sorted({d.canonical_id for d in states if d}),obligation_id=c['obligation_id'],
@@ -61,13 +68,16 @@ class VetoEligibilityPolicy:
             reconciliation_status='APPLIED' if eligible else 'REJECTED_BINDING' if not bound else 'REVIEW_ONLY' if reason=='ambiguous_review_only' else 'AUDIT_ONLY' if not active else 'NOT_APPLICABLE')
         decision['decision_id']='veto:'+sha(decision)
         self._issued[decision['decision_id']]=deepcopy(decision)
+        automatic=self.automation.decide(c['checker_result'],positive=False,veto_receipt=decision,veto_authenticator=self.authentic)
+        decision['automation_decision']=automatic
+        self._issued[decision['decision_id']]=deepcopy(decision)
         return decision
 
     def authentic(self,d):
         return self.snapshot.valid() and self._issued.get(d.get('decision_id'))==d and d.get('ledger_revision')==self.snapshot.ledger_revision
 
     def applied(self,decisions):
-        return [d for d in decisions if self.authentic(d) and d['hard_veto_eligible']]
+        return [d for d in decisions if self.authentic(d) and d['hard_veto_eligible'] and d.get('automation_decision',{}).get('automation_eligibility')=='AUTO_VETO']
 
 
 def reconcile(policy,decisions):

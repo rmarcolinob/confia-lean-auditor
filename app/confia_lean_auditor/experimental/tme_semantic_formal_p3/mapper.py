@@ -46,10 +46,11 @@ def local_context(document,e):
 
 def _anchor(e,document):
     subject=e.subject; raw=source_view(e.source_span)
+    if re.search(r'\b'+re.escape(subject)+r'\s*:',raw):return True
     if subject=='inferiores_brancas': return bool(re.search('branc',raw) and re.search('inferior|embaixo|base',raw))
     if subject in {'primeira_branca','segunda_branca'}:
         index='1' if subject=='primeira_branca' else '2'
-        return bool(re.search(r'\b'+index+r'\b',raw) and 'branc' in raw) or (
+        return bool(re.search(r'\b'+index+r'\s+(?:bola|branca|retirada|extracao|escolha|acionamento|sorteio)\b',raw) and 'branc' in raw) or (
             document.items.get(e.item_id,'').strip()==e.source_span.strip() and
             legacy.notation_view(e.source_span)==legacy.notation_view(e.normalized_claim))
     if subject=='pares_ordenados': return bool(re.search(r'pares? ordenados?|espaco amostral',raw))
@@ -67,6 +68,10 @@ def _anchor(e,document):
     return False
 
 def representation(e,document):
+    # A typed assertion keeps its own lexical field even when sentence context
+    # contains a different probability/quantity. Never borrow the neighbor.
+    if e.asserted_content in e.source_span and re.search(r'\b'+re.escape(e.subject)+r'\s*:',e.asserted_content):
+        e=e.model_copy(update={'source_span':e.asserted_content})
     if e.subject not in VOCABULARY: raise ValueError('no_checker_representation')
     if e.claim_type!=VOCABULARY[e.subject]['kind']: raise ValueError('claim_type_subject_mismatch')
     if '\n' in e.normalized_claim: raise ValueError('multiline_payload_not_supported')
@@ -79,23 +84,36 @@ def representation(e,document):
                     or e.claim_type=='enum' and r.canonical_form.value.get('value')==parsed[0].canonical_form.value.get('value')) for r in native):
             raise ValueError('typed_source_payload_changed')
         return parsed[0]
-    clauses=[s.strip() for s in re.split(r';|\n|(?<!\d)\.(?!\d)',e.source_span) if s.strip()]
+    clauses=[s.strip() for s in re.split(r';|\n|(?<!\d)\.|\.(?!\d)',e.source_span) if s.strip()]
     anchored=[s for s in clauses if _anchor(e.model_copy(update={'source_span':s}),document)]
     if len(anchored)!=1: raise ValueError('subject_not_uniquely_bound_to_source_clause')
     raw=source_view(anchored[0]); expr=legacy.notation_view(e.normalized_claim)
     if e.subject in {'primeira_branca','segunda_branca'} and re.search(r'\b1\s+(?:bola|branca|retirada)',raw) and re.search(r'\b2\s+(?:bola|branca|retirada)',raw):
         raise ValueError('mixed_probability_roles')
-    if e.subject=='inferiores_brancas' and not re.search(r'(?<!\d)'+re.escape(expr)+r'\s+(?:bolas?\s+)?branc\w*\b',raw):
+    if e.subject=='inferiores_brancas' and not (re.search(r'(?<!\d)'+re.escape(expr)+r'\s+(?:bolas?\s+)?branc\w*\b',raw) or
+            re.search(r'branc\w*\s+(?:inferiores|na base|embaixo)\s+(?:e|sao|:|=)\s*'+re.escape(expr)+r'(?!\d)',raw)):
         raise ValueError('white_count_not_bound_to_written_quantity')
     if e.subject.startswith('contagem_'):
         counts=re.findall(r'\b(?:aparece|aparecem|ocorre|ocorrem)\s+(\d+)\s+vez',raw)
         if not counts or any(n!=expr for n in counts): raise ValueError('color_count_not_bound_to_written_quantity')
+    if e.subject=='inferiores_brancas' and re.search(r'\bsuperior\w*|no alto|em cima',raw):
+        # Multiple locations require their own explicit assertion, rather than
+        # associating every number with any occurrence of 'inferiores'.
+        raise ValueError('mixed_quantity_locations')
+    if e.subject.startswith(('estrategia_','contagem_','condicional_','ramo_')):
+        cases=set(re.findall(r'(?:compartimento|caso|ramo)\s*(?:numero\s*)?([1-6])\b',raw))
+        if len(cases)>1:raise ValueError('mixed_case_roles')
     if re.search(r'\b(?:pagina|exercicio|questao|ano|telefone|matricula|idade)\s*(?:numero|:)?\s*\d+',raw): raise ValueError('incidental_number_context')
     if e.claim_type=='enum':
         target=parsed[0].canonical_form.value.get('value')
         if not any(v==target and re.search(r'\b'+re.escape(k)+r'\b',raw) for k,v in VOCABULARY[e.subject]['values'].items()):
             raise ValueError('color_not_written')
     elif e.claim_type=='integer_set':
+        # Membership/examples do not assert a complete favorable set.
+        if re.search(r'por exemplo|tais como|inclui|incluem|tambem',raw):
+            raise ValueError('partial_membership_not_complete_set')
+        if e.subject=='repeticao_branca' and not re.search(r'\{|somente|apenas|unicamente|unico|lista fechada|\bso\b',raw):
+            raise ValueError('partial_membership_not_complete_set')
         # Enumeration must be explicit; no completing sets from the machine.
         members=re.fullmatch(r'\{(\d+(?:,\d+)*)\}',expr)
         if not members: raise ValueError('explicit_integer_set_required')
@@ -141,9 +159,19 @@ class ObligationMapper:
                         from .source_adapter import member_atom
                         if member_atom(e): raise ValueError('partial_membership_not_complete_set')
                     representation(e,document)
+                    contract=e.metadata.get('representation_receipt')
+                    binding=next((b for b in e.metadata.get('binding_receipts',[]) if b['obligation_id']==oid),None)
+                    if discourse:
+                        from .semantic_contracts import SAFE_FIDELITY,SAFE_BINDING
+                        if not contract or contract['representation_fidelity'] not in SAFE_FIDELITY:raise ValueError('insufficient_representation_fidelity')
+                        if not binding or binding['binding_status'] not in SAFE_BINDING:raise ValueError('binding_not_authorized')
+                    row.update(representation_receipt=contract,binding_receipt=binding,segment=e.metadata.get('discourse_segment'))
                     route=route_for_expression(oid,e.normalized_claim)
                     row.update(accepted=True,context_valid=True,reason='compatible_pending_checker',effective_route=route,
                                route_override_reason='obligation_registry' if route!=e.route_candidate else None)
                 except ValueError as error: row['reason']=str(error)
+                row.setdefault('representation_receipt',e.metadata.get('representation_receipt'))
+                row.setdefault('binding_receipt',next((b for b in e.metadata.get('binding_receipts',[]) if b['obligation_id']==oid),None))
+                row.setdefault('segment',e.metadata.get('discourse_segment'))
                 rows.append(row)
         return rows

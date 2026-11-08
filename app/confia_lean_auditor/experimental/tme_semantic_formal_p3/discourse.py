@@ -7,7 +7,7 @@ from confia_lean_auditor.student_claims.semantic import normalized, sha
 from .source_adapter import clause_view, adapt_payload, literal_property
 from .mapper import local_context, _anchor
 
-VERSION='p3-discourse-v1'
+VERSION='p3-discourse-v2'
 
 class DiscourseState(str,Enum):
     ACTIVE='ACTIVE'
@@ -29,6 +29,18 @@ class DiscourseDecision:
     supporting_spans: tuple = ()
     supersedes: tuple = ()
     superseded_by: tuple = ()
+    representation_json: str = '{}'
+    bindings_json: str = '[]'
+    segment_json: str = '{}'
+
+    @property
+    def representation_receipt(self):return json.loads(self.representation_json)
+
+    @property
+    def binding_receipts(self):return json.loads(self.bindings_json)
+
+    @property
+    def segment(self):return json.loads(self.segment_json)
 
     @property
     def positive_credit_eligible(self):return self.binding_valid and self.state=='ACTIVE'
@@ -43,7 +55,8 @@ class DiscourseDecision:
             original_model_signals=json.loads(self.model_signals_json),supporting_spans=[json.loads(s) for s in self.supporting_spans],
             supersedes=self.supersedes,superseded_by=self.superseded_by,
             positive_credit_eligibility=self.positive_credit_eligible,conflict_visible=self.conflict_visible,
-            policy_version=VERSION)
+            policy_version=VERSION,representation_receipt=self.representation_receipt,
+            binding_receipts=self.binding_receipts,discourse_segment=self.segment)
 
 @dataclass(frozen=True)
 class DiscourseSnapshot:
@@ -57,6 +70,10 @@ class DiscourseSnapshot:
 
 def _context(document,e):
     raw=normalized(e.source_span)
+    if re.fullmatch(r'\s*~~.+~~[.]?\s*',e.source_span,re.S):
+        return 'NON_ADOPTED','written_strikethrough_withdrawal'
+    if re.search(r'\b(?:colega|outra pessoa)\s+dizia\b|\btranscrevo sem concordar\b',raw):
+        return 'NON_ADOPTED','written_third_party_without_adoption'
     # These patterns describe actual source scope; model flags are not consulted.
     if re.search(r'\b(?:talvez|nao sei|possivelmente)\b',raw):return 'AMBIGUOUS','uncertain_written_assertion'
     if re.search(r'\b(?:suponha|suponhamos|supondo|hipotese|hipotetic\w*|tentativa\s+(?:explicitamente\s+)?(?:abandonada|descartada)|citacao|enunciado|fosse|seria)\b',raw):
@@ -117,13 +134,33 @@ class DiscourseStateResolver:
         for e in sorted(evidence,key=lambda e:e.evidence_id):
             signals={k:getattr(e,k) for k in ('assertion_status','polarity','scope','hypothetical','abandoned','attributed_to_student','confidence')}
             try:
-                v=clause_view(document,e);v,adaptation=adapt_payload(document,v);adaptations.append(adaptation)
+                v=clause_view(document,e)
+                # Elliptical inclusion needs a literal same-topic antecedent,
+                # not the extractor's subject label. Preserve its source receipt.
+                if v.item_id=='b' and re.search(r'tamb[eé]m',v.source_span,re.I):
+                    for neighbor in evidence:
+                        if neighbor.evidence_id==e.evidence_id or neighbor.item_id!=v.item_id:continue
+                        try:nv=clause_view(document,neighbor)
+                        except ValueError:continue
+                        raw=normalized(nv.source_span)
+                        gap=document.text[min(v.source_end,nv.source_end):max(v.source_start,nv.source_start)]
+                        if (not gap.strip(' \n\r\t.;') and not re.search(r'\n\s*\n',gap)
+                            and re.search(r'repet|mesmo compartimento',raw) and 'branc' in raw
+                            and _context(document,nv)[0]=='ACTIVE'):
+                            v=v.model_copy(update={'metadata':dict(v.metadata,membership_relation_support=dict(
+                                source_sha256=sha(document.text),source_range=[nv.source_start,nv.source_end],
+                                source_span=nv.source_span,relation='adjacent_same_repeated_white_property'))})
+                            break
+                v,adaptation=adapt_payload(document,v);adaptations.append(adaptation)
                 prop=literal_property(document,v)
                 state,reason=_context(document,v)
                 # Adoption needs a recognizable assertion/property, not just the
                 # absence of a retraction marker or a model's subject label.
                 anchored=prop is not None or _anchor(v,document) or bool(re.search(r'\b'+re.escape(v.subject)+r'\s*:',v.source_span))
-                if state=='ACTIVE' and not anchored:state,reason='AMBIGUOUS','unresolved_property_binding'
+                if state=='ACTIVE' and not anchored:
+                    if re.search(r'\b(?:afirmo|considero valida|minha resposta|minha afirmacao)\b',normalized(v.source_span)):
+                        reason='written_own_assertion_unrepresented'
+                    else:state,reason='AMBIGUOUS','adoption_not_source_validated'
                 binding=True
             except ValueError as error:
                 v=e;prop=None;state,reason='AMBIGUOUS',str(error);binding=False
@@ -137,26 +174,36 @@ class DiscourseStateResolver:
         # inherit the very same graph, not a nearby semantic flag.
         groups={}
         for eid,d in entries.items():groups.setdefault(d['canonical_id'],[]).append(eid)
-        ordered=sorted(groups,key=lambda c:(entries[groups[c][0]]['source_range'],c))
+        ordered=sorted(groups,key=lambda c:(entries[groups[c][0]]['assertion_range'],c))
         for new_id in ordered:
             nid=groups[new_id][0];new=entries[nid];nv,np=views[nid]
-            if new['state']!='ACTIVE' or not np:continue
-            prior=[cid for cid in ordered if entries[groups[cid][0]]['source_range'][0]<new['source_range'][0]
+            if new['state']!='ACTIVE':continue
+            prior=[cid for cid in ordered if entries[groups[cid][0]]['assertion_range'][0]<new['assertion_range'][0]
                    and entries[groups[cid][0]]['property_key']==new['property_key']
                    and entries[groups[cid][0]]['state']=='ACTIVE']
             if not prior:continue
             old_id=prior[-1];oid=groups[old_id][0];old=entries[oid];ov,op=views[oid]
-            between=document.text[old['source_range'][1]:new['source_range'][1]]
+            # Include a withdrawal marker embedded in an overly broad assertion.
+            old_end=old['source_range'][1]
+            tokens=list(re.finditer(re.escape(ov.normalized_claim),document.text[old['assertion_range'][0]:old['assertion_range'][1]]))
+            if len(tokens)==1:
+                payload_end=old['assertion_range'][0]+tokens[0].end()
+                embedded=document.text[payload_end:old['assertion_range'][1]]
+                if re.search(r'corrigindo|retifico|invalido|substitu\w*|retiro|(?:isso|isto) (?:esta|estava) errado',normalized(embedded)):
+                    old_end=payload_end
+            between=document.text[old_end:new['source_range'][1]]
             raw=normalized(between)
-            explicit=re.search(r'corrigindo|substitu\w*|retiro|(?:isso|isto) (?:esta|estava) errado|desconsidere\s+(?:a\s+(?:minha\s+)?afirmacao anterior|o que acabei de afirmar)|nao,\s*o correto',raw)
+            explicit=re.search(r'corrigindo|substitu\w*|retifico|invalido|retiro|apago (?:esse|este|o) (?:valor|resultado|conjunto|calculo|registro)|(?:isso|isto) (?:esta|estava) errado|desconsidere\s+(?:a\s+(?:minha\s+)?afirmacao anterior|o que acabei de afirmar)|nao,\s*o correto',raw)
+            if explicit and re.search(r'\b(?:nao|nunca|jamais)\s*$',raw[:explicit.start()]):
+                explicit=None
             implicit=re.search(r'na verdade',normalized(nv.source_span))
             immediate=document.text[old['source_range'][1]:new['source_range'][0]].strip(' \n\t\r.;')==''
             if re.search(r'\b(?:disse|afirmou|citacao|hipotese)\b',raw):continue
             if explicit:
-                explicit_range=_written_range(between,explicit,old['source_range'][1])
+                explicit_range=_written_range(between,explicit,old_end)
                 before_marker=raw[:explicit.start()].strip(' \n\r\t.;')
                 marker_tail=raw[explicit.start():].split('\n',1)[0]
-                before_marker=re.sub(r'^(?:pensando melhor|reconsiderando|apos a revisao)[,:\s]*','',before_marker)
+                before_marker=re.sub(r'^(?:pensando melhor|reconsiderando|apos a revisao|refaco a conta e|depois de conferir a particao|volto a essa contagem e)[,:\s]*','',before_marker)
                 subject=new['property_key'][1]
                 if subject.startswith(('estrategia_','contagem_')):
                     # A strategy revision can explicitly withdraw its color and
@@ -192,7 +239,7 @@ class DiscourseStateResolver:
                         and new_subject.startswith(('estrategia_','contagem_'))
                         and old_subject.rsplit('_',1)[-1]==new_subject.rsplit('_',1)[-1])
                 if any(not same_revision_family(d['property_key']) for d in intervening):explicit=None
-            valid=bool(op and (explicit or implicit and immediate and _incompatible(op,np)))
+            valid=bool((explicit and old['property_key']==new['property_key']) or (op and np and implicit and immediate and _incompatible(op,np)))
             if not valid:continue
             marker=explicit or implicit
             marker_range=explicit_range if explicit else _written_range(nv.source_span,implicit,nv.source_start)
@@ -210,6 +257,14 @@ class DiscourseStateResolver:
             if marker:
                 d.update(state='NON_ADOPTED',reason='explicit_local_withdrawal_without_replacement',
                     supporting_spans=(json.dumps(dict(marker=marker[0],after_range=d['source_range']),sort_keys=True),))
+        from .segmentation import segments
+        from .semantic_contracts import receipt,bindings
+        segment_map=segments(document,[v.model_copy(update={'subject':entries[eid]['property_key'][1]}) for eid,(v,p) in views.items()])
+        for eid,d in entries.items():
+            v=views[eid][0];r=receipt(document,v);bs=bindings(document,v,r)
+            d.update(representation_json=json.dumps(r,sort_keys=True),
+                     bindings_json=json.dumps(bs,sort_keys=True),
+                     segment_json=json.dumps(segment_map[eid],sort_keys=True))
         decisions=tuple(DiscourseDecision(**entries[eid]) for eid in sorted(entries))
         snap=DiscourseSnapshot(sha(document.text),sha([VERSION,sha(document.text),[d.as_dict() for d in decisions]]),decisions)
         # A projection is derived locally; originals (including flags) remain in
@@ -219,7 +274,8 @@ class DiscourseStateResolver:
             d=snap.get(e.evidence_id);v=views[e.evidence_id][0]
             projected.append(v.model_copy(update=dict(assertion_status='asserted',hypothetical=False,abandoned=False,
                 attributed_to_student=True,scope='main_argument',polarity='negative' if re.search(r'\b(?:nao|nunca|jamais)\s+(?:escolho|libera|produz|fornece|e|vale)',normalized(v.source_span)) else 'positive',
-                metadata=dict(v.metadata,discourse_decision=d.as_dict(),ledger_revision=snap.ledger_revision))))
+                metadata=dict(v.metadata,discourse_decision=d.as_dict(),ledger_revision=snap.ledger_revision,
+                    representation_receipt=d.representation_receipt,binding_receipts=d.binding_receipts,discourse_segment=d.segment))))
         ledger=[dict(original=e.model_dump(mode='json'),decision=snap.get(e.evidence_id).as_dict(),
                      adapted=next(v for v in projected if v.evidence_id==e.evidence_id).model_dump(mode='json')) for e in sorted(evidence,key=lambda e:e.evidence_id)]
         return snap,tuple(projected),ledger,adaptations

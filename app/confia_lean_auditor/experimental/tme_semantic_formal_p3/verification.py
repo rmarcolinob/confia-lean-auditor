@@ -27,6 +27,10 @@ class ClaimProjection:
         self.document=document
         selected={m['evidence_id'] for m in mapping if m['accepted']}
         self.evidence=[e for e in evidence if e.evidence_id in selected]
+        from .semantic_contracts import receipt
+        for e in self.evidence:
+            if e.metadata.get('representation_receipt')!=receipt(document,e):
+                raise ValueError('representation_changed_before_checker')
         self.bindings,self.events={},[]
 
     def __call__(self,problem,source,ranges,deterministic,*,observe=True):
@@ -44,7 +48,10 @@ class ClaimProjection:
             records[rid]=record;bindings[rid]=[e.evidence_id]
             events.append(dict(evidence_id=e.evidence_id,record_id=rid,source_start=e.source_start,source_end=e.source_end,
                 projected_start=a,projected_end=b,source_span=e.source_span,normalized_claim=e.normalized_claim,
-                subject=e.subject,normalized_payload=template.canonical_form.model_dump(mode='json')))
+                subject=e.subject,normalized_payload=template.canonical_form.model_dump(mode='json'),
+                representation_receipt_ref=e.metadata['representation_receipt']['receipt_id'],
+                proposition_digest=e.metadata['representation_receipt']['proposition_digest'],
+                segment_ref=e.metadata['discourse_segment']['segment_id']))
         if observe: self.bindings,self.events=bindings,events
         return tuple(records.values()),None
 
