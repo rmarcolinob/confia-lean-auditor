@@ -293,7 +293,7 @@ async def digital_submission(case_id: str, request: Request, response: Response,
 @router.post("/cases/{case_id}/scan")
 async def upload_scan(case_id: str, request: Request, response: Response, user=Depends(require_tme_evaluator)):
     case = case_for(case_id, user)
-    if case.source_mode != "IMAGE_SCAN" or case.submission_id:
+    if case.source_mode != "IMAGE_SCAN" or case.submission_id or case.exam_submission_id:
         raise HTTPException(409, "Esta correção não aceita novas fotos.")
     raw = await bounded_json(request)
     try:
@@ -399,3 +399,7 @@ def get_decision(case_id: str, response: Response, user=Depends(require_tme_eval
     response.headers["Cache-Control"] = "no-store"
     case_for(case_id, user)
     return case_store().decision(case_id, user)
+
+
+from .exam_router import router as exam_router
+router.include_router(exam_router)

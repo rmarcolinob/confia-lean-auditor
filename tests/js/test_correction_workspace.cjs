@@ -158,12 +158,12 @@ test('suggestion action distinguishes a valid zero from an undetermined score', 
 test('queue filters survive modern results navigation independently of workspace state', async () => {
   const ui = await pilot({auditRun:run()});
   const search=walk(ui.root).find(n=>n.type==='search');search.value='PROVA';search.handlers.change();await flush();
-  let selects=walk(ui.root).filter(n=>n.tag==='select');selects[0].value='ITA2025F2Q1';selects[0].handlers.change();await flush();
-  selects=walk(ui.root).filter(n=>n.tag==='select');selects[2].value='IMAGE_SCAN';selects[2].handlers.change();await flush();
+  let select=walk(ui.root).find(n=>n.dataset.filter==='question');select.value='ITA2025F2Q1';select.handlers.change();await flush();
+  select=walk(ui.root).find(n=>n.dataset.filter==='source');select.value='IMAGE_SCAN';select.handlers.change();await flush();
   await ui.click('Abrir');await ui.nav[2].click();await flush();assert.match(text(ui.root),/Distribuição atual/);
   await ui.nav[0].click();await flush();
   assert.equal(walk(ui.root).find(n=>n.type==='search').value,'PROVA');
-  assert.deepEqual(walk(ui.root).filter(n=>n.tag==='select').map(n=>n.value),['ITA2025F2Q1','','IMAGE_SCAN']);
+  assert.deepEqual(Object.fromEntries(walk(ui.root).filter(n=>n.tag==='select').map(n=>[n.dataset.filter,n.value])),{origin:'',sample:'',question:'ITA2025F2Q1',status:'',source:'IMAGE_SCAN'});
 });
 
 test('analysis drawer opens, retains decision draft and closes with Escape restoring focus', async () => {

@@ -7,7 +7,7 @@
     const code=String(value ?? "").trim(), numbered=code.match(/^prova[ _-]*(\d+)$/i);
     return numbered ? `Prova ${numbered[1]}` : code ? `Prova ${code}` : "Prova";
   };
-  const question = c => c.problem_id.match(/[QP](\d+)$/)?.[1];
+  const question = c => c.question_order || c.problem_id.match(/[QP](\d+)$/)?.[1];
   function relatedCases(c, cases) {
     const family = c.problem_id.replace(/[QP]\d+$/, "");
     const unique = new Map();

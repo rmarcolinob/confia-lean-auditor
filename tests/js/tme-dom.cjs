@@ -24,7 +24,7 @@ function walk(root) { return [root, ...root.children.flatMap(walk)]; }
 function text(root) { return walk(root).map(e => e.textContent).join(' '); }
 const json = data => ({ ok: true, json: async () => data });
 
-async function pilot({ auditRun = null, mode = 'IMAGE_SCAN', automatic = false, pendingAudit = false, initialStorage = [], pageCount = 1, startHome = false, desktop = false, homeCases = null, homeSummary = null, homeError = false, deepLink = false, catalog = null, presentationError = false, decisionError = false, initialSearch = null, listingError = false } = {}) {
+async function pilot({ auditRun = null, mode = 'IMAGE_SCAN', automatic = false, pendingAudit = false, initialStorage = [], pageCount = 1, startHome = false, desktop = false, homeCases = null, homeSummary = null, homeError = false, deepLink = false, catalog = null, presentationError = false, decisionError = false, initialSearch = null, listingError = false, fullExam = false, mockFetch = null } = {}) {
   const root = element('main'), calls = [], rendered = [], reports = [], statements = [];
   let existingDecision = null, revisionNumber = 1, editedText = 'x = 2', accepted = Boolean(auditRun) && !pendingAudit, hasAudit = Boolean(auditRun) && !pendingAudit;
   let current = { case_id: 'case_' + 'a'.repeat(32), source_mode: mode,
@@ -42,6 +42,7 @@ async function pilot({ auditRun = null, mode = 'IMAGE_SCAN', automatic = false, 
     createImageBitmap() {},
     fetch: async (url, options = {}) => {
       calls.push({ url, options });
+      const mock = await mockFetch?.(url,options); if(mock !== undefined)return mock;
       const base = `/tme/cases/${current.case_id}`;
       if (url === '/auth/me') return json({ display_name: 'Avaliador de teste' });
       if (url.endsWith('/audits')) { if (options.method === 'POST') { hasAudit = true; return json(auditRun); } return json(hasAudit ? [auditRun] : []); }
@@ -120,6 +121,7 @@ async function pilot({ auditRun = null, mode = 'IMAGE_SCAN', automatic = false, 
   history.forward=async()=>{if(historyIndex<historyEntries.length-1){historyIndex++;applyHistory(historyEntries[historyIndex]);await events.popstate?.();await flush();}};
   vm.runInNewContext(fs.readFileSync(path.join(__dirname, '../../app/confia_lean_auditor/static/audit-view.js'), 'utf8'), ctx);
   for (const file of ['workspace-controls.js', 'workspace-report.js', 'home.js', 'correction-workspace.js', 'secondary-views.js']) vm.runInNewContext(fs.readFileSync(path.join(__dirname, '../../app/confia_lean_auditor/static/tme/' + file), 'utf8'), ctx);
+  if(fullExam)vm.runInNewContext(fs.readFileSync(path.join(__dirname, '../../app/confia_lean_auditor/static/tme/full-exam.js'), 'utf8'), ctx);
   const render = ctx.window.ConfIAReport.render;
   ctx.window.ConfIAReport.render = (data, target, options) => {
     reports.push({ data, target, options }); return render(data, target, options);

@@ -6,17 +6,20 @@
   const Home = window.ConfiaTmeHome;
   const Workspace = window.ConfiaCorrectionWorkspace;
   const Views = window.ConfiaTmeViews;
+  let fullExam;
   const viewNames = {home:"home",queue:"cases",cases:"cases",new:"new",results:"results",exams:"exams"};
   let currentURL = "", returnTo = {view:"cases",params:{}};
   function locationRoute() {
     const query = new URLSearchParams(window.location.search || "");
     if(query.get("case_id")) return {view:"workspace",caseId:query.get("case_id")};
+    if(query.get("exam_submission_id")) return {view:"workspace",examId:query.get("exam_submission_id"),attemptId:query.get("question_attempt_id")};
     const params={};for(const key of ["search","question","status","source","origin","sample","exam","page"]) if(query.get(key))params[key]=query.get(key);
     return {view:viewNames[query.get("view")] || "home",params};
   }
   function writeRoute(view, params={}, caseId=null, replace=false) {
     const query=new URLSearchParams();
-    if(caseId) query.set("case_id",caseId);
+    if(params.exam_submission_id){query.set("exam_submission_id",params.exam_submission_id);if(params.question_attempt_id)query.set("question_attempt_id",params.question_attempt_id);}
+    else if(caseId) query.set("case_id",caseId);
     else { if(view!=="home")query.set("view",view==="cases"?"queue":view);for(const key of ["search","question","status","source","origin","sample","exam","page"])if(params[key]&&!(key==="page"&&String(params[key])==="1"))query.set(key,params[key]); }
     const url="/tme"+(query.toString()?`?${query}`:"");
     const changed=url!==currentURL;
@@ -27,6 +30,7 @@
   const route = id => writeRoute("workspace",{},id);
   function navigate(view, params, record=true) {
     if(state.busy)return;
+    fullExam?.cancel();
     view=viewNames[view] || "home";
     if(view==="cases"||view==="exams"){
       state.filters[view]=params ? {...params} : {...(state.filters[view]||{})};
@@ -43,6 +47,7 @@
     if(state.busy){window.history?.replaceState?.({tme:true,origin:returnTo},"",currentURL);return;}
     currentURL="/tme"+(window.location.search||"");
     returnTo=window.history?.state?.origin||{view:"cases",params:{}};
+    if(target.examId)return openExam(target.examId,target.attemptId,false);
     if(target.caseId)return openCase(target.caseId,false).catch(showError);
     return navigate(target.view,target.params,false);
   }
@@ -81,7 +86,12 @@
       headers: { ...(options.body ? { "Content-Type": "application/json" } : {}), ...(options.headers || {}) } });
     const data = await response.json().catch(() => null);
     if (!response.ok) {
-      const error = new Error(response.status === 401 ? "A sessão não está disponível. Acesse novamente para continuar." : "Não foi possível concluir esta etapa. Tente novamente.");
+      const captureError = path.startsWith("/tme/exam-submissions") && ({
+        409: "A prova ou associação mudou. Reabra a prova e confira os dados antes de tentar novamente.",
+        413: "A prova excede o limite de envio. Use até 40 MiB de originais.",
+        422: "Confira o código e os arquivos: PDF íntegro e sem senha, ou imagens válidas, até 50 páginas e 20 MiB por arquivo."
+      })[response.status];
+      const error = new Error(response.status === 401 ? "A sessão não está disponível. Acesse novamente para continuar." : captureError || "Não foi possível concluir esta etapa. Tente novamente.");
       error.code = data?.error_code; throw error;
     }
     return data;
@@ -167,11 +177,22 @@
         content.append(data.items.length?(isQueue?Views.QueueRows(data.items,id=>openCase(id).catch(showError)):Views.Exams(data.items,navigate)):Views.Empty(isQueue?"Nenhuma correção encontrada.":"Nenhuma prova disponível."));
         content.append(Views.Pagination(data,page=>navigate(view,{...values,page})));
       }else content.append(Views.Results(data,navigate));
+      if(isQueue && fullExam && !values.exam) await fullExam.list(content).catch(()=>content.prepend(note("Não foi possível carregar as provas recebidas. Atualize a fila.",true)));
     }catch(_){if(generation!==state.generation)return;content.replaceChildren(Views.ErrorState(isQueue?"Não foi possível carregar a fila.":isExams?"Não foi possível carregar o progresso das provas.":"Não foi possível carregar os resultados.",reload));}
   }
   const cases=()=>navigate("cases");
   const showError = () => show(note("Não foi possível carregar esta etapa. Tente novamente.", true), actions(btn("Correções", () => cases().catch(showError))));
   async function newCase() {
+    if(fullExam){++state.generation;state.view="new";return fullExam.newCorrection();}
+    return newSingleCase();
+  }
+  async function openExam(examId,attemptId=null,record=true){
+    if(state.busy || !fullExam)return;
+    ++state.generation;state.view="workspace";state.current=null;
+    if(record)writeRoute("workspace",{exam_submission_id:examId,question_attempt_id:attemptId});
+    window.scrollTo(0,0);return fullExam.open(examId,attemptId);
+  }
+  async function newSingleCase() {
     state.view = "new"; const generation=++state.generation;
     const box = Views.Page("Nova correção","Localize uma prova e escolha a forma de entrada da solução."); const form = node("form",undefined,"tme-new-form");
     const skeleton=Views.Loading();box.append(skeleton);show(box);
@@ -231,6 +252,7 @@
     show(loading("Carregando solução…")); window.scrollTo(0,0);
     const c = await api(`/tme/cases/${caseId}`);
     if (generation !== state.generation) return;
+    if(c.exam_submission_id && fullExam)return openExam(c.exam_submission_id,c.case_id,record);
     if (state.current?.case_id !== caseId) { for (const photo of state.photos) URL.revokeObjectURL(photo.url); state.photos = []; }
     state.current = c; state.message = ""; state.adjusting = false; state.feedback = local(c).feedback;
     await loadWorkspaceContext();
@@ -638,6 +660,7 @@
     saved.submitDecision=()=>{box.scrollIntoView({block:"center",behavior:"smooth"});return submit.click();};
     form.addEventListener("submit", event => { event.preventDefault(); submit.click(); }); form.append(use, adjust, extras, submit, error); box.appendChild(form); return box;
   }
+  fullExam=window.ConfiaFullExam?.create({node,btn,api,post,show,openExam,legacy:newSingleCase,setBusy:value=>{state.busy=value;}});
   if(document.body)document.body.dataset.tmeShell="modern";
   Home.HomeHeader();
   const bottomNav = document.querySelector("#home-bottom-nav");

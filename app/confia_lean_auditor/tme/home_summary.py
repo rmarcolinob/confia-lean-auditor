@@ -359,6 +359,8 @@ def rebuild_index():
         records = [cases.read(p.name) for p in cases.root.iterdir() if re.fullmatch(r"case_[0-9a-f]{32}", p.name)]
     entries, by_submission = {}, {}
     for case in records:
+        if case.exam_submission_id:
+            continue  # Full-exam capture has its own roster, not a guessed case group.
         e = entries[case.case_id] = case_entry(case)
         if case.submission_id:
             record = submissions.get_record(case.submission_id)

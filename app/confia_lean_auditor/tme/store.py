@@ -57,26 +57,32 @@ class CaseStore:
             raise HTTPException(403, "Correção fora do escopo autorizado.")
         return case
 
-    def create(self, body: CaseCreate, user):
+    def create(self, body: CaseCreate, user, *, exam_binding=None, case_id=None):
         if body.problem_id not in (CATALOG.keys() | PUBLIC_PROBLEMS.keys()):
             raise ValueError("Questão não disponível no catálogo.")
-        case = CorrectionCase(**body.model_dump(), case_id=f"case_{uuid4().hex}",
-            created_by_user_id=user.user_id, created_at=datetime.now(timezone.utc))
+        case = CorrectionCase(**body.model_dump(), case_id=case_id or f"case_{uuid4().hex}",
+            created_by_user_id=user.user_id, created_at=datetime.now(timezone.utc), **(exam_binding or {}))
         with self.locked():
             folder = self.root / case.case_id
+            if folder.exists() and exam_binding:
+                previous = self.for_user(case.case_id, user)
+                if previous.model_dump(exclude={"created_at"}) != case.model_dump(exclude={"created_at"}):
+                    raise ValueError("question attempt binding changed")
+                return previous
             folder.mkdir(mode=0o700)
             fd = os.open(folder / "case.json", os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
             with os.fdopen(fd, "wb") as handle:
                 handle.write(case.model_dump_json(indent=2).encode())
         from .home_summary import project_case
-        project_case(case, root=self.root)
+        if not case.exam_submission_id:
+            project_case(case, root=self.root)
         return case
 
     def list_for_user(self, user):
         with self.locked():
             cases = [self.read(path.name) for path in self.root.iterdir()
                      if path.is_dir() and re.fullmatch(r"case_[0-9a-f]{32}", path.name)]
-        return sorted((c for c in cases if c.created_by_user_id == user.user_id),
+        return sorted((c for c in cases if c.created_by_user_id == user.user_id and not c.exam_submission_id),
                       key=lambda c: c.created_at, reverse=True)
 
     def bind(self, case_id, submission_id, user):

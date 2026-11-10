@@ -2,7 +2,7 @@ from datetime import datetime
 from decimal import Decimal
 from typing import Literal, Optional
 
-from pydantic import Field, model_validator
+from pydantic import Field, model_validator, model_serializer
 
 from confia_lean_auditor.capture.schemas import Identifier, MAX_PAGES
 from confia_lean_auditor.submissions.schemas import SubmissionModel, Sha256
@@ -54,6 +54,26 @@ class CorrectionCase(CaseCreate):
     status: Literal["IDENTIFIED", "SOURCE_READY", "DECIDED"] = "IDENTIFIED"
     submission_id: Optional[str] = Field(default=None, pattern=r"^sub_[0-9a-f]{32}$")
     schema_version: Literal["1.0"] = "1.0"
+    # A full-exam QuestionAttempt IS this case, not a second scoring entity.
+    exam_submission_id: Optional[str] = Field(default=None, pattern=r"^exam_[0-9a-f]{32}$")
+    assessment_item_id: Optional[str] = Field(default=None, pattern=r"^ait_[0-9a-f]{32}$")
+    question_order: Optional[int] = Field(default=None, ge=1, le=100)
+    max_score: Optional[Decimal] = Field(default=None, gt=0, le=1000)
+
+    @model_validator(mode="after")
+    def complete_exam_binding(self):
+        binding = (self.exam_submission_id, self.assessment_item_id, self.question_order, self.max_score)
+        if any(value is not None for value in binding) and not all(value is not None for value in binding):
+            raise ValueError("incomplete exam question binding")
+        return self
+
+    @model_serializer(mode="wrap")
+    def preserve_legacy_case(self, handler):
+        data = handler(self)
+        for key in ("exam_submission_id", "assessment_item_id", "question_order", "max_score"):
+            if key not in self.model_fields_set:
+                data.pop(key, None)
+        return data
 
 
 class ScanPageUpload(SubmissionModel):

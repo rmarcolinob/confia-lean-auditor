@@ -61,6 +61,8 @@ def _teacher_classroom(user, school_id, classroom_id):
 def _teacher_document(user, assessment_id, *, write=False):
     document = assessment_store().get(assessment_id)
     assessment = document.assessment
+    if assessment.scope != "INSTITUTIONAL":
+        raise FileNotFoundError()
     _teacher_classroom(user, assessment.school_id, assessment.classroom_id)
     if write and assessment.teacher_user_id != user.user_id:
         raise InstitutionalScopeError("Somente o professor criador pode editar este exame.")
@@ -71,6 +73,8 @@ def _student_document(user, assessment_id):
     enrollment, _ = institutional_store().student_enrollment(user)
     document = assessment_store().get(assessment_id)
     assessment = document.assessment
+    if assessment.scope != "INSTITUTIONAL":
+        raise FileNotFoundError()
     if assessment.status == "DRAFT" or (assessment.school_id, assessment.classroom_id, assessment.academic_year) != \
             (enrollment.school_id, enrollment.classroom_id, enrollment.academic_year):
         raise FileNotFoundError()
@@ -120,7 +124,7 @@ def list_assessments(response: Response, school_id: Optional[str] = None, classr
     response.headers["Cache-Control"] = "no-store"
     user = _user(user)
     try:
-        documents = assessment_store().list()
+        documents = [doc for doc in assessment_store().list() if doc.assessment.scope == "INSTITUTIONAL"]
         if user.role == Role.STUDENT:
             if school_id or classroom_id:
                 raise InstitutionalScopeError("Aluno não escolhe escola ou turma.")

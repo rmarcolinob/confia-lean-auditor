@@ -390,7 +390,11 @@ test('every catalog question shows only its ID above its complete statement in t
     const file=path.join(root,id,'problem.json');
     if (!fs.existsSync(file)) return [];
     const problem=JSON.parse(fs.readFileSync(file,'utf8'));
-    return [{problem_id:id,title:problem.title,statement:problem.statement,examples:[]}];
+    // Match the API projection: TME source files store structured blocks,
+    // whereas the notebook consumes the catalog's flattened text statement.
+    const statement=problem.statement ?? problem.statement_blocks?.filter(b=>b.type==='text').map(b=>b.text).join('\n\n');
+    assert.equal(typeof statement,'string',`Missing catalog statement for ${id}`);
+    return [{problem_id:id,title:problem.title,statement,examples:[]}];
   });
   assert.ok(catalog.some(problem => problem.problem_id==='ITA2025F2Q5'));
   for (const problem of catalog) {
