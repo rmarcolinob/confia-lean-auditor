@@ -16,6 +16,9 @@ dependencies = [
     "openai>=1.0.0"
 ]
 
+[project.optional-dependencies]
+ocr = ["pillow", "pypdfium2"]
+
 [tool.setuptools]
 package-dir = {"" = "app"}
 

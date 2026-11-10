@@ -55,6 +55,7 @@ from confia_lean_auditor.institutional.router import router as institutional_rou
 from confia_lean_auditor.assessments.router import router as assessments_router
 from confia_lean_auditor.management.router import router as management_router
 from confia_lean_auditor.teacher_decisions.router import router as teacher_decisions_router
+from confia_lean_auditor.uploads.router import router as uploads_router
 
 
 app = FastAPI(title="ConfIA Lean Auditor", version=API_VERSION)
@@ -70,6 +71,7 @@ app.include_router(institutional_router)
 app.include_router(assessments_router)
 app.include_router(management_router)
 app.include_router(teacher_decisions_router)
+app.include_router(uploads_router)
 
 
 def repo_root() -> Path:
