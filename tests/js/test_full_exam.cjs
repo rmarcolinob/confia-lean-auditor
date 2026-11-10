@@ -3,25 +3,7 @@ const assert = require('node:assert/strict');
 const { File } = require('node:buffer');
 const { pilot, walk, text } = require('./tme-dom.cjs');
 const { flush } = require('./capture-dom.cjs');
-const eid = 'exam_'+'e'.repeat(32), aid='asmt_'+'a'.repeat(32);
-const reply = data => ({ok:true,json:async()=>structuredClone(data)});
-function backend({failUpload=false}={}) {
-  const detail={submission:{submission_id:eid,page_count:4,original_documents:[{asset_id:'original_0001'}],pages:Array.from({length:4},(_,i)=>({exam_page_id:'page_'+String(i).repeat(32),page_number:i+1,original_page_number:i+1,original_asset_id:'original_0001',preview_asset_id:`preview_000${i+1}`}))},
-    participant:{external_code:'PROVA-1'},assessment:{assessment:{assessment_id:aid,title:'Avaliação configurada pelo backend'}},
-    question_attempts:[1,2].map(i=>({case_id:'case_'+String(i).repeat(32),problem_id:'ITA2025F2Q'+i,question_order:i,exam_submission_id:eid,max_score:20})),mapping:{version:1,bindings:[]}};
-  let uploaded=false;
-  return {detail,mockFetch:async(url,options)=>{
-    if(url==='/tme/assessments')return reply([detail.assessment]);
-    if(url==='/tme/exam-submissions'&&options.method==='POST'){
-      if(failUpload)return {ok:false,status:422,json:async()=>({detail:'PDF inválido.'})};
-      uploaded=true;return reply(detail);
-    }
-    if(url==='/tme/exam-submissions')return reply(uploaded?[{submission_id:eid,participant_code:'PROVA-1',title:'Avaliação configurada pelo backend',page_count:4,question_count:2}]:[]);
-    if(url===`/tme/exam-submissions/${eid}`)return reply(detail);
-    if(url.endsWith('/page-mapping')){const body=JSON.parse(options.body);assert.equal(body.expected_version,detail.mapping.version);detail.mapping={version:detail.mapping.version+1,bindings:body.bindings};return reply(detail.mapping);}
-    if(url.startsWith('/tme/question-attempts/')){const id=url.split('/').pop();return reply({question_attempt:detail.question_attempts.find(c=>c.case_id===id),pages:detail.mapping.bindings.filter(b=>b.question_attempt_id===id).map(b=>detail.submission.pages.find(p=>p.exam_page_id===b.exam_page_id))});}
-  }};
-}
+const {backend,eid,aid,reply}=require('./exam-fixture.cjs');
 const field=(ui,name)=>walk(ui.root).find(n=>n.dataset.examField===name);
 async function input(ui, files){
   field(ui,'assessment').value=aid;field(ui,'assessment').handlers.change();

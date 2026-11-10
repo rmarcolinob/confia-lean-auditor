@@ -92,7 +92,7 @@ class CaseStore:
             record = submission_store().get_record(submission_id)
             if (record.tme_case_id != case_id or record.problem_id != case.problem_id
                     or record.submitted_by_user_id != user.user_id
-                    or record.source != ("tablet" if case.source_mode == "DIGITAL_INK" else "image_scan")):
+                    or record.source != ("exam_pages" if case.exam_submission_id else "tablet" if case.source_mode == "DIGITAL_INK" else "image_scan")):
                 raise ValueError("case/source binding mismatch")
             if case.submission_id is not None:
                 if case.submission_id == submission_id:

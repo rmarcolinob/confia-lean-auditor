@@ -1,0 +1,45 @@
+js-before
+✔ UI-03 text analysis states reflect actual mocked requests and never change local evaluation data (2.125834ms)
+ℹ tests 493
+ℹ suites 0
+ℹ pass 493
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1185.793916
+
+js-final
+✔ UI-03 text analysis states reflect actual mocked requests and never change local evaluation data (2.484875ms)
+ℹ tests 498
+ℹ suites 0
+ℹ pass 498
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1278.142
+
+python-regression
+tests/test_submission_audits.py:356: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_tme_accepted_integration.py::test_real_local_lean_status_certificates_preserved
+FAILED tests/test_submission_audits.py::test_real_bridge_preserves_wrong_solution_and_runs_existing_lean_pipeline
+2 failed, 457 passed in 216.23s (0:03:36)
+
+python-final
+........................................................................ [ 42%]
+........................................................................ [ 84%]
+..........................                                               [100%]
+170 passed in 12.12s
+
+python-workspace-final
+........                                                                 [100%]
+8 passed in 1.39s
+
+lean-baseline
+tests/test_submission_audits.py:356: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_tme_accepted_integration.py::test_real_local_lean_status_certificates_preserved
+FAILED tests/test_submission_audits.py::test_real_bridge_preserves_wrong_solution_and_runs_existing_lean_pipeline
+2 failed in 2.42s

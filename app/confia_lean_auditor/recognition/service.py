@@ -133,14 +133,17 @@ class RecognitionService:
                 snapshot_raw = (folder / "snapshot.json").read_bytes()
                 if sha256(snapshot_raw) != submission.snapshot.sha256:
                     raise SubmissionIntegrityConflict()
-                if submission.source == "image_scan":
+                if submission.source == "exam_pages":
+                    from confia_lean_auditor.tme.review_models import QuestionSourceSnapshot
+                    snapshot = QuestionSourceSnapshot.model_validate_json(snapshot_raw)
+                elif submission.source == "image_scan":
                     from confia_lean_auditor.tme.models import ScanSnapshot
                     snapshot = ScanSnapshot.model_validate_json(snapshot_raw)
                 else:
                     snapshot = CaptureSnapshot.model_validate_json(snapshot_raw)
                 if adapter.provider == "mathpix" and submission.source != "tablet":
                     raise ValueError("strokes require tablet source")
-                if adapter.provider == "mathpix_image" and submission.source != "image_scan":
+                if adapter.provider == "mathpix_image" and submission.source not in {"image_scan", "exam_pages"}:
                     raise ValueError("image provider requires scan source")
                 refs = input_references(submission, adapter.input_mode)
                 artifacts = tuple(RecognitionArtifact(r.filename, r.page_index, r.sha256,

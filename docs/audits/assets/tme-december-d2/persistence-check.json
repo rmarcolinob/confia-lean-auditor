@@ -1,0 +1,47 @@
+{
+  "exam_12827e65652ad4299945e08f9fbe96c8": [
+    {
+      "asset_id": "original_0001",
+      "sha256": "78ccbae99e32e851325adc530180080d809581e2a7fe347244200f0cd114e87d",
+      "manifest_match": true
+    }
+  ],
+  "exam_1895930d3620916d4b1817f53cc8f2e1": [
+    {
+      "asset_id": "original_0001",
+      "sha256": "c58e50dec7036e77f95e18a843cadbba554de45e458fb518d677244155168b5f",
+      "manifest_match": true
+    },
+    {
+      "asset_id": "original_0002",
+      "sha256": "b139d4eff9030e77079cfc0af4dff8cd543c906aca40233da4c8ec6c7116fdff",
+      "manifest_match": true
+    },
+    {
+      "asset_id": "original_0003",
+      "sha256": "c4e7fc714454111d0620703f22cbc61a567cc1e0f4bdb65a2387580c2191260e",
+      "manifest_match": true
+    },
+    {
+      "asset_id": "original_0004",
+      "sha256": "d957d4db1202d6528ff6cdb1e68717cb3791037e6bfc8c513ce1dc812663c06d",
+      "manifest_match": true
+    }
+  ],
+  "revisions": [
+    {
+      "filename": "revision_000001.json",
+      "sha256": "b6bfc83c8fea78c498ecfc9f4878b69ccefae42710a4ab9d179fa2576afcf1f4",
+      "text": [
+        "[a] 731 - 137 = 594\n[b] A diferença depende dos algarismos das centenas e unidades."
+      ]
+    },
+    {
+      "filename": "revision_000002.json",
+      "sha256": "dab274f6e810a5fcb0fdf6b4b92815d94d4d98466ab79be76c8a8c693216d987",
+      "text": [
+        "[a] 731 - 137 = 594\n[b] A diferença é 99(a - c)."
+      ]
+    }
+  ]
+}

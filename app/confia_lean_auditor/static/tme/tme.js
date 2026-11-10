@@ -114,7 +114,7 @@
     if (!state.cache.has(c.case_id)) state.cache.set(c.case_id, { page: 0, zoom: 1, rotation: 0, tab: c.data_origin === "synthetic_demo" ? "transcript" : "original", draft: {}, editors: {}, audits: null, history: null, decision: undefined, detail: null, feedback: null });
     return state.cache.get(c.case_id);
   };
-  const questionNumber = c => c.problem_id.match(/[QP](\d+)$/)?.[1];
+  const questionNumber = c => c.question_order || c.problem_id.match(/[QP](\d+)$/)?.[1];
   function renderRecentCases() {
     const recent = document.querySelector("#recent-cases"); if (!recent) return;
     recent.replaceChildren();
@@ -137,6 +137,10 @@
   };
   function caseStatus(c) {
     const saved = local(c), run = runFor(c);
+    if (c.exam_submission_id) {
+      const status=c.review_state || saved.examReview?.state || "PENDING";
+      return {PENDING:"Pendente",READY:"Pronta",REVIEW:"Revisão necessária",CONFIRMED:"Finalizada"}[status];
+    }
     if (saved.decision || c.status === "DECIDED") return "Finalizada";
     if (saved.processing === "audit") return "Analisando";
     if (saved.processing === "recognition") return "Reconhecendo";
@@ -147,6 +151,19 @@
   }
   async function loadCaseData(c, force = false) {
     const saved = local(c), base = `/tme/cases/${c.case_id}`;
+    if(c.exam_submission_id){
+      if(force || !saved.loaded){
+        const review=await api(`/tme/question-attempts/${c.case_id}/workspace`);
+        if(saved.examPages?.map(p=>p.exam_page_id).join()!==review.pages.map(p=>p.exam_page_id).join())saved.originalPages=new Map();
+        Object.assign(c,review.question_attempt);
+        Object.assign(saved,{examReview:review,examPages:review.pages,history:review.history,audits:review.audits,
+          detail:{submission:{page_images:review.pages.map((p,index)=>({page_index:index}))}},loaded:true,loadError:false});
+        for(const item of saved.fullExam?.question_attempts||[])item.review_state=review.question_states?.[item.case_id]||"PENDING";
+        const sibling=saved.fullExam?.question_attempts.find(item=>item.case_id===c.case_id);
+        if(sibling)sibling.review_state=review.state;c.review_state=review.state;
+      }
+      return saved;
+    }
     if (!c.submission_id) return saved;
     if (force || !saved.loaded) {
       const [summaries, audits, decision, detail, feedback] = await Promise.all([
@@ -236,8 +253,8 @@
     }); return list;
   }
   function context(c, active) {
-    return Workspace.CorrectionHeader({ c, cases: state.cases, status: item => item.case_id === c.case_id || local(item).loaded || item.status === "DECIDED" ? caseStatus(item) : "Disponível",
-      open: id => { if (!state.busy) openCase(id).catch(showError); }, back: () => navigate(returnTo.view,returnTo.params), steps, active, busy: state.busy });
+    return Workspace.CorrectionHeader({ c, cases: c.exam_submission_id ? local(c).fullExam.question_attempts : state.cases, status: item => c.exam_submission_id || item.case_id === c.case_id || local(item).loaded || item.status === "DECIDED" ? caseStatus(item) : "Disponível",
+      open: id => { if (!state.busy) (c.exam_submission_id ? openExam(c.exam_submission_id,id) : openCase(id)).catch(showError); }, back: () => c.exam_submission_id ? openExam(c.exam_submission_id) : navigate(returnTo.view,returnTo.params), steps, active, busy: state.busy });
   }
   async function loadWorkspaceContext() {
     if (!state.problemRequest) state.problemRequest = api("/tme/problems").catch(() => { state.problemRequest = null; return []; });
@@ -395,21 +412,25 @@
     const saved = local(c); saved.originalPages ||= new Map();
     if (saved.originalPages.has(index)) return saved.originalPages.get(index);
     const page = node("div", undefined, "page-review"); page.appendChild(node("h3", `Página ${index + 1}`));
-    const originalUrl = c.source_mode === "IMAGE_SCAN" ? `/tme/cases/${c.case_id}/originals/${index}` : `/tme/cases/${c.case_id}/pages/${index}`;
-    const img = node("img"); img.src = originalUrl; img.alt = `Manuscrito original da página ${index + 1}`;
+    const examPage=saved.examPages?.[index];
+    const examAsset=examPage && saved.fullExam.submission.original_documents.find(a=>a.asset_id===examPage.original_asset_id);
+    if(examPage)page.children[0].textContent=`Página ${examPage.page_number} da prova`;
+    const originalUrl = examPage ? `/tme/exam-submissions/${c.exam_submission_id}/assets/${examPage.original_asset_id}` : c.source_mode === "IMAGE_SCAN" ? `/tme/cases/${c.case_id}/originals/${index}` : `/tme/cases/${c.case_id}/pages/${index}`;
+    const img = node("img"); img.src = examPage && examAsset?.media_type==="application/pdf" ? `/tme/exam-submissions/${c.exam_submission_id}/assets/${examPage.preview_asset_id}` : originalUrl; img.alt = `Manuscrito original da página ${index + 1}`;
+    if(examPage)img.alt=`Página ${examPage.page_number} da prova`;
     const imageState = note("Carregando solução…"); page.appendChild(imageState);
     img.onload = () => { imageState.hidden = true; saved.updateOriginal?.(); };
     img.draggable = false;
     img.onerror = () => {
       img.onerror = () => { imageState.hidden = false; imageState.textContent = "Não foi possível carregar a solução."; };
-      if (c.source_mode === "IMAGE_SCAN") {
+      if (c.source_mode === "IMAGE_SCAN" && !examPage) {
         img.src = `/tme/cases/${c.case_id}/pages/${index}`; img.alt = `Prévia normalizada da página ${index + 1}`;
         page.appendChild(node("p", "Este navegador exibe a prévia normalizada. O original continua preservado.", "muted"));
       }
     };
     const surface=node("div",undefined,"manuscript-surface"); surface.appendChild(img); page.appendChild(surface);
     if (c.source_mode === "IMAGE_SCAN") {
-      const link = node("a", "Abrir original preservado"); link.href = originalUrl; link.target = "_blank"; link.rel = "noopener";
+      const link = node("a", "Abrir original preservado"); link.href = originalUrl + (examPage && examAsset?.media_type==="application/pdf" ? `#page=${examPage.original_page_number}` : ""); link.target = "_blank"; link.rel = "noopener";
       page.appendChild(link);
     }
     saved.originalPages.set(index, page); return page;
@@ -435,7 +456,7 @@
     const original = node("section", undefined, "original-document"), transcript = node("section", undefined, "transcript-document");
     original.setAttribute("aria-label", "Original"); transcript.setAttribute("aria-label", "Transcrição");
     if(c.data_origin === "synthetic_demo") transcript.appendChild(note("Texto sintético importado. A aceitação registra fidelidade ao texto fornecido, sem avaliação humana."));
-    else if (/^TME2026P[1-5]$/.test(c.problem_id)) transcript.appendChild(note("Identifique cada item em uma linha própria: [a], [b], [c] ou [d], conforme a questão. Confira e aceite a transcrição antes da análise."));
+    else if (!c.exam_submission_id && /^TME2026P[1-5]$/.test(c.problem_id)) transcript.appendChild(note("Identifique cada item em uma linha própria: [a], [b], [c] ou [d], conforme a questão. Confira e aceite a transcrição antes da análise."));
     const pages = [...new Set([...(saved.detail?.submission?.page_images || []).map(p => p.page_index), ...(latest?.segments || []).map(s => s.page_index)])].sort((a,b) => a-b);
     const pageNodes = pages.map(index => manuscriptPage(c, index)); original.append(...pageNodes);
     Workspace.attachPan(original,saved);
@@ -446,7 +467,7 @@
     const updatePages = () => {
       pageNodes.forEach((page, i) => { page.hidden = i !== saved.page; const img = page.querySelectorAll("img")[0]; Workspace.layoutOriginal(page,img,original,saved); });
       fit.value=Workspace.originalFitMode(saved);
-      pagination.textContent = `${Math.round(saved.zoom * 100)}% · Página ${pages.length ? saved.page + 1 : 0}/${pages.length}`;
+      pagination.textContent = `${Math.round(saved.zoom * 100)}% · Página ${pages.length ? saved.page + 1 : 0}/${pages.length}${c.exam_submission_id && pages.length ? ` · folha ${saved.examPages[saved.page].page_number} da prova` : ""}`;
     };
     saved.updateOriginal = updatePages;
     const resetFit = mode => { saved.fitMode=mode; saved.zoom=1; delete saved.customWidth; original.scrollTop=0; original.scrollLeft=0; updatePages(); };
@@ -468,23 +489,24 @@
     toolbar.classList.add("viewer-commands"); toolbar.setAttribute("aria-label", "Comandos do original"); updatePages();
     const editor = node("div", undefined, "transcription-editor"); editor.hidden = !saved.editing;
     const documentView = node("div"); documentView.hidden = Boolean(saved.editing);
-    if (latest) {
+    if (latest || c.exam_submission_id && pages.length) {
       for (const index of pages) {
-        const segments = latest.segments.filter(s => s.page_index === index).sort((a,b) => a.order-b.order);
+        const segments = (latest?.segments||[]).filter(s => s.page_index === index).sort((a,b) => a.order-b.order);
         const text = segments.map(s => s.text || s.latex || "").join("\n\n");
         const doc = node("div", undefined, "document"); doc.setAttribute("role", "document"); doc.setAttribute("aria-label", `Transcrição da página ${index + 1}`);
         for (const segment of segments) { const block = node("div"); window.ConfiaRecognitionView.renderMathText(block, segment.text || segment.latex || "", !segment.text && Boolean(segment.latex) || segment.kind === "math"); doc.appendChild(block); } documentView.appendChild(doc);
-        const area = node("textarea"); area.value = saved.editors[index] ?? text; area.addEventListener("input", () => { saved.editors[index] = area.value; });
+        const area = node("textarea"); area.value = saved.editors[index] ?? text; area.maxLength=20000;area.addEventListener("input", () => { saved.editors[index] = area.value; if(c.exam_submission_id)saved.readingDirty=true; });
         editor.appendChild(field(`Editar página ${index + 1}`, area));
       }
-      editor.append(note("Cada salvamento cria uma revisão. Preserve a matemática escrita pelo participante."), actions(btn("Salvar nova revisão", () => saveRevision(c, editor)), btn("Cancelar edição", () => { saved.editing = false; editor.hidden = true; documentView.hidden = false; }, "secondary")));
+      editor.append(note(c.exam_submission_id ? "Rascunho não salvo: fica nesta sessão ao trocar de questão. Salvar cria uma nova versão e preserva a leitura anterior." : "Cada salvamento cria uma revisão. Preserve a matemática escrita pelo participante."), actions(btn("Salvar nova revisão", () => saveRevision(c, editor)), btn("Cancelar edição", () => { saved.editing = false; if(c.exam_submission_id){saved.loaded=false;saved.editors={};saved.readingDirty=false;delete saved.editingBase;return renderCorrection();} editor.hidden = true; documentView.hidden = false; }, "secondary")));
+      if(!latest)documentView.append(note("Nenhuma transcrição registrada. Digite a leitura, importe a captura disponível ou use o reconhecimento existente."));
     } else documentView.appendChild(note(saved.processing === "recognition" ? "Reconhecendo solução…" : saved.feedback?.state === "FAILED" ? "Falha de reconhecimento. Isso não indica erro na solução do participante." : "Reconhecimento não concluído. A transcrição aparecerá após o reconhecimento automático."));
     transcript.append(documentView, editor);
     let transcriptionStatus, metadata;
     const setTab = value => {
       saved.tab = value; solution.dataset.tab=value; layout.dataset.solutionTab=value; original.dataset.layout=value==="original"?"full-page":"bounded"; original.hidden = value === "transcript"; transcript.hidden = value === "original"; toolbar.hidden = value === "transcript";
       if(transcriptionStatus) transcriptionStatus.hidden=value!=="transcript" || Boolean(latest);
-      if(metadata) metadata.hidden=value!=="transcript";
+      if(metadata) metadata.hidden=c.exam_submission_id ? value==="original" : value!=="transcript";
       views.classList.toggle("compare", value === "compare"); views.setAttribute("aria-labelledby", `tab-${value}`);
       for (const button of tabs.children) { button.setAttribute("aria-selected", String(button.dataset.tab === value)); button.tabIndex = button.dataset.tab === value ? 0 : -1; }
       updatePages();
@@ -499,22 +521,32 @@
     }
     views.append(original, transcript); setTab(saved.tab);
     const secondary = actions(); secondary.classList.add("transcript-commands");
-    if (latest) {
-      secondary.append(btn("Editar", () => { saved.editing = true; editor.hidden = false; documentView.hidden = true; setTab("transcript"); }, "secondary"));
-      if(c.data_origin !== "synthetic_demo") secondary.append(btn("Reprocessar", recognize, "secondary"));
+    if (latest || c.exam_submission_id && pages.length) {
+      secondary.append(btn(c.exam_submission_id ? latest ? "Corrigir leitura" : "Digitar transcrição" : "Editar", () => { saved.editing = true; saved.editingBase ??= latest?.revision_number || 0; editor.hidden = false; documentView.hidden = true; setTab("transcript"); }, "secondary"));
+      if(c.data_origin !== "synthetic_demo" && !c.exam_submission_id) secondary.append(btn("Reprocessar", recognize, "secondary"));
     }
+    if(c.exam_submission_id && saved.examReview.capture_candidate_available)secondary.append(btn("Importar leitura da captura",()=>importCapture(c),"secondary"));
     for (const button of secondary.children) button.disabled = state.busy;
     transcript.prepend(secondary);
     const provenance = node("details", undefined, "transcription-metadata"); provenance.appendChild(node("summary", "Originais e histórico"));
-    if(c.source_mode==="IMAGE_SCAN") for(const index of pages) {const link=node("a",`Abrir original preservado · página ${index+1}`,"desktop-original-link");link.href=`/tme/cases/${c.case_id}/originals/${index}`;link.target="_blank";link.rel="noopener";provenance.appendChild(link);}
+    if(c.source_mode==="IMAGE_SCAN" && !c.exam_submission_id) for(const index of pages) {const link=node("a",`Abrir original preservado · página ${index+1}`,"desktop-original-link");link.href=`/tme/cases/${c.case_id}/originals/${index}`;link.target="_blank";link.rel="noopener";provenance.appendChild(link);}
+    if(c.exam_submission_id){
+      provenance.append(node("p",saved.fullExam.submission.source==="PDF"?"O visualizador representa as páginas do PDF. Abra o documento original preservado nos links abaixo.":"O visualizador exibe as imagens originais preservadas.","muted"));
+      for(const page of saved.examPages){const link=node("a",`Abrir original preservado · página ${page.page_number}`,"desktop-original-link");link.href=`/tme/exam-submissions/${c.exam_submission_id}/assets/${page.original_asset_id}#page=${page.original_page_number}`;link.target="_blank";link.rel="noopener";provenance.append(link);}
+    }
     const meta = saved.history?.transcription;
-    if (meta) provenance.appendChild(node("p", `${meta.provider || meta.recognizer || "Provider não registrado"} · ${meta.recognizer_version || "Versão não registrada"} · ${meta.created_at ? new Date(meta.created_at).toLocaleString("pt-BR") : "Horário não registrado"}`));
-    if (c.source_mode === "IMAGE_SCAN") { const adjust = btn("Voltar e ajustar páginas", adjustPages, "secondary"); adjust.disabled = state.busy; provenance.appendChild(adjust); }
+    if (meta && !c.exam_submission_id) provenance.appendChild(node("p", `${meta.provider || meta.recognizer || "Provider não registrado"} · ${meta.recognizer_version || "Versão não registrada"} · ${meta.created_at ? new Date(meta.created_at).toLocaleString("pt-BR") : "Horário não registrado"}`));
+    if (c.source_mode === "IMAGE_SCAN" && !c.exam_submission_id) { const adjust = btn("Voltar e ajustar páginas", adjustPages, "secondary"); adjust.disabled = state.busy; provenance.appendChild(adjust); }
+    if(c.exam_submission_id)for(const version of saved.examReview.versions){
+      const entry=node("details"),label=node("summary",`Versão ${version.version_number} · ${readingOrigin(version.origin)}${version.current?" · corrente":" · preservada"}`);
+      entry.append(label,node("p",new Date(version.created_at).toLocaleString("pt-BR"),"muted"));
+      const content=node("div",undefined,"document");window.ConfiaRecognitionView.renderMathText(content,version.text);entry.append(content);provenance.append(entry);
+    }
     const technical = node("details", undefined, "technical-details"); technical.append(node("summary", "Detalhes técnicos da transcrição"), node("pre", JSON.stringify({ transcription: saved.history, recognition: saved.feedback }, window.ConfIAReport.publicTechnicalValue, 2))); provenance.appendChild(technical);
     transcriptionStatus = node("p", saved.processing === "recognition" ? "Reconhecendo solução…" : latest ? "Transcrição disponível" : saved.feedback?.state === "FAILED" ? "Falha de reconhecimento" : "Reconhecimento não concluído", "transcription-status"); transcriptionStatus.setAttribute("role","status");
     const provider = meta?.provider || meta?.recognizer || meta?.source;
     metadata = node("p", undefined,"transcription-caption");
-    const compactCaption=node("span",c.data_origin === "synthetic_demo" && latest ? `Transcrição importada · revisão ${latest.revision_number}${latest.status === "ACCEPTED" ? " · aceita" : ""}` : latest?`Transcrição automática${provider?` · ${/^mathpix/i.test(provider)?"Mathpix":provider}`:""} · revisão ${latest.revision_number}`:"As páginas originais permanecem preservadas.","caption-compact");
+    const compactCaption=node("span",c.exam_submission_id ? latest ? `Versão ${latest.revision_number} · ${readingOrigin(saved.examReview.current_version.origin)}${saved.editing?" · edição não salva":""}` : "Sem transcrição · originais preservados" : c.data_origin === "synthetic_demo" && latest ? `Transcrição importada · revisão ${latest.revision_number}${latest.status === "ACCEPTED" ? " · aceita" : ""}` : latest?`Transcrição automática${provider?` · ${/^mathpix/i.test(provider)?"Mathpix":provider}`:""} · revisão ${latest.revision_number}`:"As páginas originais permanecem preservadas.","caption-compact");
     metadata.append(compactCaption);
     setTab(saved.tab);
     const topline=node("div",undefined,"solution-topline");topline.append(solutionHeading,tabs);
@@ -531,7 +563,8 @@
       if (run.stale) analysisBody.appendChild(note("Análise de uma revisão anterior. Analise a revisão atual antes de vincular a decisão."));
       if (run.result) { const report = node("div"); window.ConfIAReport.render(run.result, report, { context: "evaluator", auditRun: run, workspace: true, uiState: saved }); analysisBody.appendChild(report); }
       else analysisBody.appendChild(note("Não foi possível concluir a análise. A decisão humana permanece disponível."));
-    } else if (!saved.processing) analysisBody.appendChild(note("Reconheça a solução e analise para consultar critérios, evidências e verificações."));
+    } else if (!saved.processing) analysisBody.appendChild(note(c.exam_submission_id ? "Aguardando análise. Nenhuma pontuação foi calculada para esta leitura." : "Reconheça a solução e analise para consultar critérios, evidências e verificações."));
+    if(c.exam_submission_id && saved.examReview.reanalysis_required)analysisBody.prepend(note("Reanálise necessária. A leitura foi alterada; análises anteriores permanecem no histórico."));
     const openDrawer = btn("Abrir análise", () => drawer(true), "secondary drawer-trigger"); openDrawer.setAttribute("aria-controls", "analysis-pane");
     const closeDrawer = btn("Fechar análise", () => { drawer(false); openDrawer.focus(); }, "secondary drawer-close");
     const drawer = open => { saved.drawerOpen = open; right.dataset.open = String(open); openDrawer.setAttribute("aria-expanded", String(open)); if (open) { right.scrollIntoView({block:"start",behavior:"smooth"}); closeDrawer.focus(); } };
@@ -539,17 +572,22 @@
     right.addEventListener("keydown", event => { if (event.key === "Escape") { drawer(false); openDrawer.focus(); } });
     right.append(closeDrawer, analysis);
     const divider = node("div", undefined, "pane-splitter"); layout.append(solution, divider, right); window.ConfiaWorkspaceControls.attachSplitter(layout, divider);
-    const decisionBox = decisionPanel(c, saved, run?.status === "COMPLETED" && (!run.stale || saved.decision) ? run : null);
+    const decisionBox = c.exam_submission_id ? node("div") : decisionPanel(c, saved, run?.status === "COMPLETED" && (!run.stale || saved.decision) ? run : null);if(c.exam_submission_id)decisionBox.hidden=true;
     const actionbar = node("div", undefined, "workspace-actions");
-    const progress = saved.processing === "audit" ? "Analisando matemática · executando verificações…" : saved.processing === "recognition" ? "Reconhecendo solução…" : state.message || (run?.status === "FAILED" ? "Não foi possível concluir a análise matemática." : run ? "Análise concluída." : latest ? "Transcrição automática disponível." : saved.feedback?.state === "FAILED" ? saved.feedback.message : "Aguardando reconhecimento");
+    const progress = saved.processing === "audit" ? "Analisando matemática · executando verificações…" : saved.processing === "recognition" ? "Reconhecendo solução…" : state.message || (run?.status === "FAILED" ? "Não foi possível concluir a análise matemática." : run ? "Análise concluída." : latest ? c.exam_submission_id ? "Transcrição disponível." : "Transcrição automática disponível." : saved.feedback?.state === "FAILED" ? saved.feedback.message : "Aguardando reconhecimento");
     actionbar.appendChild(note(progress));
     actionbar.dataset.quiet=String(!state.message && !saved.processing && run?.status==="COMPLETED" && !run.stale);
     let primary;
-    if (!latest) primary = btn(saved.feedback?.state === "FAILED" ? "Tentar novamente" : "Reconhecer", recognize);
-    else if (!run || run.stale || run.status === "FAILED") primary = btn("Analisar com ConfIA", audit);
+    if (!latest && (!c.exam_submission_id || pages.length)) primary = btn(saved.feedback?.state === "FAILED" ? "Tentar novamente" : "Reconhecer", recognize);
+    else if (!c.exam_submission_id && (!run || run.stale || run.status === "FAILED")) primary = btn("Analisar com ConfIA", audit);
     if (primary) { primary.disabled = state.busy; actionbar.appendChild(primary); }
     if (saved.processing === "recognition") actionbar.appendChild(loading("Reconhecendo…"));
     const heading = context(c, saved.decision ? 3 : run ? 2 : latest ? 1 : 0); heading.appendChild(openDrawer);
+    if(c.exam_submission_id){
+      const info=Array.from(heading.children).find(el=>el.className==="case-information");
+      info?.append(node("span",`${saved.fullExam.assessment.assessment.title} · Pontuação máxima: ${c.max_score}`));
+      if(!pages.length)heading.append(note("Associe páginas a esta questão antes de registrar a leitura."));
+    }
     const problem = state.problems?.find(p => (p.problem_id || p.id) === c.problem_id);
     const statement = Workspace.ProblemStatement(problem,saved,state.presentations);
     show(heading, statement, layout, actionbar, decisionBox);
@@ -558,7 +596,7 @@
     saved.resizeObserver?.disconnect();
     if (window.ResizeObserver) { saved.resizeObserver=new window.ResizeObserver(()=>{updatePages();statement.updateStatementLayout();updateClearance();});saved.resizeObserver.observe(original);saved.resizeObserver.observe(statement.richContent);saved.resizeObserver.observe(decisionBox); }
     updatePages(); statement.updateStatementLayout();
-    if (!saved.decision) {
+    if (!saved.decision && !c.exam_submission_id) {
       sticky = node("div", undefined, "correction-action-bar"); sticky.setAttribute("aria-label","Ação da correção");
       if (primary) { const action = btn(primary.textContent,()=>primary.click()); action.disabled=state.busy; sticky.append(node("span",saved.processing ? "Processando…" : latest ? "Transcrição disponível" : "Solução preservada"),action); }
       else { sticky.append(node("span",run?.result?.score == null ? "Sugestão não determinada" : `Sugestão ${String(run.result.score).replace(".",",")}`,"sticky-suggestion"),btn("Ajustar",()=>saved.adjustDecision(),"secondary"),btn("Finalizar",()=>saved.submitDecision())); }
@@ -567,8 +605,53 @@
     }
     updateClearance();
   }
+  const readingOrigin=value=>({human:"Humana",capture:"Automática · captura importada",automatic:"Automática",digital_ink:"Escrita digital"})[value]||value;
+  async function openExamQuestion(c, detail) {
+    const generation=state.generation;
+    await loadWorkspaceContext();if(generation!==state.generation)return;
+    state.current=c;state.message="";
+    const saved=local(c);saved.fullExam=detail;saved.loaded=false;
+    await renderCorrection();
+  }
+  async function importCapture(c){
+    if(state.busy)return;state.busy=true;
+    const saved=local(c);
+    try{await post(`/tme/cases/${c.case_id}/transcriptions`,{origin:"capture",expected_mapping_version:saved.examReview.mapping_version});
+      saved.loaded=false;saved.tab="transcript";state.message="Leitura importada como versão 1. Confira com o original.";
+    }catch(e){state.message=e.message;}finally{state.busy=false;}
+    if(state.current===c)await renderCorrection();
+  }
+  async function saveQuestionReading(c,editor){
+    const saved=local(c),latest=saved.history?.revisions.at(-1),base=saved.editingBase??latest?.revision_number??0;
+    const areas=Array.from(editor.querySelectorAll("textarea"));
+    const segments=[];
+    areas.forEach((area,index)=>{
+      const old=latest?.segments.filter(s=>s.page_index===index).sort((a,b)=>a.order-b.order)||[];
+      const text=area.value.trim();if(!text)return;
+      const previous=old.map(s=>s.text||s.latex||"").join("\n\n");
+      if(text===previous)segments.push(...old);
+      else segments.push({segment_id:`review-page:${index}`,page_index:index,order:0,kind:"text",text});
+    });
+    if(!segments.length){state.message="Informe a leitura de pelo menos uma página.";return renderCorrection();}
+    if(latest && base===latest.revision_number && JSON.stringify(segments)===JSON.stringify(latest.segments)){
+      saved.editing=false;saved.readingDirty=false;saved.editors={};delete saved.editingBase;state.message="A leitura não mudou. Nenhuma versão adicional foi criada.";return renderCorrection();
+    }
+    state.busy=true;for(const control of editor.querySelectorAll("button,textarea"))control.disabled=true;
+    try{
+      if(base===0)await post(`/tme/cases/${c.case_id}/transcriptions`,{origin:"manual",expected_mapping_version:saved.examReview.mapping_version,segments});
+      else await post(`/tme/cases/${c.case_id}/transcriptions/${saved.history.transcription.transcription_id}/revisions`,{based_on_revision_number:base,change_type:"reading_correction",status:"NEEDS_REVIEW",segments});
+      saved.loaded=false;saved.editing=false;saved.readingDirty=false;saved.editors={};delete saved.editingBase;
+      state.message="Nova versão salva. A leitura anterior e os originais foram preservados.";
+    }catch(e){state.message="Não foi possível salvar. Seu rascunho foi mantido; confira se outra revisão foi salva antes de tentar novamente.";}
+    finally{state.busy=false;}
+    if(state.current===c)await renderCorrection();
+  }
+  window.addEventListener("beforeunload",event=>{
+    if([...state.cache.values()].some(s=>s.readingDirty)){event.preventDefault();event.returnValue="";}
+  });
   async function saveRevision(c, editor) {
     if (state.busy) return;
+    if(c.exam_submission_id)return saveQuestionReading(c,editor);
     const saved = local(c), history = saved.history, latest = history.revisions.at(-1);
     const areas = Array.from(editor.querySelectorAll("textarea")), pages = [...new Set(latest.segments.map(s => s.page_index))].sort((a,b) => a-b);
     if (areas.some(area => !area.value.trim())) { state.message = "Todas as páginas precisam de transcrição."; return renderCorrection(); }
@@ -660,7 +743,7 @@
     saved.submitDecision=()=>{box.scrollIntoView({block:"center",behavior:"smooth"});return submit.click();};
     form.addEventListener("submit", event => { event.preventDefault(); submit.click(); }); form.append(use, adjust, extras, submit, error); box.appendChild(form); return box;
   }
-  fullExam=window.ConfiaFullExam?.create({node,btn,api,post,show,openExam,legacy:newSingleCase,setBusy:value=>{state.busy=value;}});
+  fullExam=window.ConfiaFullExam?.create({node,btn,api,post,show,openExam,openQuestion:openExamQuestion,legacy:newSingleCase,setBusy:value=>{state.busy=value;}});
   if(document.body)document.body.dataset.tmeShell="modern";
   Home.HomeHeader();
   const bottomNav = document.querySelector("#home-bottom-nav");

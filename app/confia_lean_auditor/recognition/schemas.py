@@ -9,7 +9,7 @@ from confia_lean_auditor.capture.schemas import Identifier, MAX_PAGES
 from confia_lean_auditor.recognition.errors import RecognitionErrorCode
 from confia_lean_auditor.submissions.schemas import (
     RecognitionProvenance, SegmentKind, Sha256, SubmissionId, SubmissionModel,
-    TranscriptionId, TranscriptionSourceRegion,
+    TranscriptionId, TranscriptionSourceRegion, MAX_SOURCE_PAGES,
 )
 
 RunId = Annotated[str, StringConstraints(pattern=r"^run_[0-9a-f]{32}$")]
@@ -18,7 +18,7 @@ InputMode = Literal["strokes", "image", "strokes_and_image"]
 
 
 class RecognitionSegment(SubmissionModel):
-    page_index: int = Field(ge=0, lt=MAX_PAGES)
+    page_index: int = Field(ge=0, lt=MAX_SOURCE_PAGES)
     order: int = Field(ge=0)
     kind: SegmentKind
     text: Optional[str] = Field(default=None, min_length=1, max_length=20_000)
@@ -35,7 +35,7 @@ class RecognitionSegment(SubmissionModel):
 
 
 class RecognitionPageMetadata(SubmissionModel):
-    page_index: int = Field(ge=0, lt=MAX_PAGES)
+    page_index: int = Field(ge=0, lt=MAX_SOURCE_PAGES)
     provider_version: Optional[Version] = None
     provider_request_id: Optional[str] = Field(default=None, min_length=1, max_length=120)
     is_handwritten: Optional[bool] = None
@@ -45,7 +45,7 @@ class ProviderOutput(SubmissionModel):
     provider_version: Optional[Version] = None
     provider_request_id: Optional[str] = Field(default=None, min_length=1, max_length=120)
     segments: list[RecognitionSegment] = Field(min_length=1, max_length=2_000)
-    page_metadata: list[RecognitionPageMetadata] = Field(default_factory=list, max_length=MAX_PAGES)
+    page_metadata: list[RecognitionPageMetadata] = Field(default_factory=list, max_length=MAX_SOURCE_PAGES)
     warnings: list[str] = Field(default_factory=list, max_length=100)
 
     @model_validator(mode="after")

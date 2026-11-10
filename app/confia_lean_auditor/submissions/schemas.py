@@ -9,6 +9,7 @@ from confia_lean_auditor.capture.schemas import (
     CaptureDocument, Identifier, MAX_IMPORT_BYTES, MAX_PAGES, SCHEMA_VERSION,
 )
 
+MAX_SOURCE_PAGES = 50  # Full-exam sources; legacy capture requests still use MAX_PAGES (3).
 MAX_PNG_BYTES = 8 * 1024 * 1024
 MAX_REQUEST_BYTES = 64 * 1024 * 1024
 MAX_PNG_BASE64 = ((MAX_PNG_BYTES + 2) // 3) * 4
@@ -17,7 +18,7 @@ TranscriptionId = Annotated[str, StringConstraints(pattern=r"^tr_[0-9a-f]{32}$")
 AcceptanceId = Annotated[str, StringConstraints(pattern=r"^acc_[0-9a-f]{32}$")]
 Sha256 = Annotated[str, StringConstraints(pattern=r"^[0-9a-f]{64}$")]
 ReviewerReference = Annotated[str, StringConstraints(strip_whitespace=True, min_length=1, max_length=80)]
-TranscriptionSource = Literal["manual", "automatic", "mathpix_strokes", "mathpix_image", "vision_model"]
+TranscriptionSource = Literal["manual", "automatic", "mathpix_strokes", "mathpix_image", "vision_model", "capture"]
 TranscriptionStatus = Literal["DRAFT", "NEEDS_REVIEW", "ACCEPTED"]
 EditableTranscriptionStatus = Literal["DRAFT", "NEEDS_REVIEW"]
 SegmentKind = Literal["text", "math", "mixed", "diagram", "unknown"]
@@ -46,24 +47,24 @@ class SubmissionRequest(SubmissionModel):
 
 
 class ArtifactReference(SubmissionModel):
-    filename: Annotated[str, StringConstraints(pattern=r"^(snapshot\.json|page_[123]\.png|original_[123]\.bin)$")]
+    filename: Annotated[str, StringConstraints(pattern=r"^(snapshot\.json|page_(?:[1-9]|[1-4][0-9]|50)\.png|original_[123]\.bin)$")]
     media_type: Literal["application/json", "image/png", "image/jpeg", "image/webp", "image/heic", "image/heif"]
     sha256: Sha256
     size_bytes: int = Field(gt=0)
     page_id: Optional[Identifier] = None
-    page_index: Optional[int] = Field(default=None, ge=0, lt=MAX_PAGES)
+    page_index: Optional[int] = Field(default=None, ge=0, lt=MAX_SOURCE_PAGES)
 
 
 class SubmissionRecord(SubmissionModel):
     submission_id: SubmissionId
     problem_id: Identifier
     snapshot_id: Identifier
-    source: Literal["tablet", "image_scan"] = "tablet"
-    capture_schema_version: Literal[SCHEMA_VERSION, "tme-scan-1.0"] = SCHEMA_VERSION
+    source: Literal["tablet", "image_scan", "exam_pages"] = "tablet"
+    capture_schema_version: Literal[SCHEMA_VERSION, "tme-scan-1.0", "exam-question-source.v1"] = SCHEMA_VERSION
     received_at: datetime
     status: Literal["RECEIVED"] = "RECEIVED"
     snapshot: ArtifactReference
-    page_images: list[ArtifactReference] = Field(min_length=1, max_length=MAX_PAGES)
+    page_images: list[ArtifactReference] = Field(min_length=1, max_length=MAX_SOURCE_PAGES)
     student_reference: Optional[str] = None
     student_reference_verified: Literal[False] = False
     # Absent on records created before CORE-AUTH-01; no owner is inferred.
@@ -83,6 +84,12 @@ class SubmissionRecord(SubmissionModel):
 
     @model_validator(mode="after")
     def assessment_binding_is_complete(self):
+        if self.source != "exam_pages" and len(self.page_images) > MAX_PAGES:
+            raise ValueError("legacy source supports at most three pages")
+        if (self.source == "exam_pages") != (self.capture_schema_version == "exam-question-source.v1"):
+            raise ValueError("source/schema mismatch")
+        if self.source == "exam_pages" and (not self.tme_case_id or self.scan_originals):
+            raise ValueError("exam source requires a case and references originals through its snapshot")
         values = (self.assessment_id, self.assessment_item_id, self.assessment_definition_sha256)
         if any(value is not None for value in values) and not all(value is not None for value in values):
             raise ValueError("assessment binding must be complete")
@@ -121,7 +128,7 @@ from confia_lean_auditor.tme.p2_diagram import DiagramSubmission
 
 class TranscriptionSegment(SubmissionModel):
     segment_id: Identifier
-    page_index: int = Field(ge=0, lt=MAX_PAGES)
+    page_index: int = Field(ge=0, lt=MAX_SOURCE_PAGES)
     order: int = Field(ge=0)
     kind: SegmentKind
     text: Optional[str] = Field(default=None, min_length=1, max_length=20_000)
@@ -153,7 +160,7 @@ class RecognitionProvenance(SubmissionModel):
     submission_id: SubmissionId
     # Optional for pre-Mathpix runs already persisted by CAP-03B.
     snapshot_id: Optional[Identifier] = None
-    artifacts: list[ArtifactReference] = Field(min_length=1, max_length=MAX_PAGES + 1)
+    artifacts: list[ArtifactReference] = Field(min_length=1, max_length=MAX_SOURCE_PAGES + 1)
     adapter: Identifier
     adapter_version: Annotated[str, StringConstraints(min_length=1, max_length=80)]
     provider: Identifier
@@ -162,6 +169,13 @@ class RecognitionProvenance(SubmissionModel):
     parameters: dict[str, Union[str, int, float, bool, None]] = Field(default_factory=dict)
     created_at: datetime
     input_hash: Sha256
+
+
+class CaptureImportProvenance(SubmissionModel):
+    exam_submission_id: str = Field(pattern=r"^exam_[0-9a-f]{32}$")
+    producer: str
+    producer_version: str
+    page_ids: list[str]
 
 
 class TranscriptionRecord(SubmissionModel):
@@ -175,8 +189,19 @@ class TranscriptionRecord(SubmissionModel):
     recognizer_run_id: Optional[Annotated[str, StringConstraints(pattern=r"^run_[0-9a-f]{32}$")]] = None
     provenance: Optional[RecognitionProvenance] = None
 
+    capture_origin: Optional[CaptureImportProvenance] = None
+
+    @model_serializer(mode="wrap")
+    def preserve_record_shape(self, handler):
+        data = handler(self)
+        if "capture_origin" not in self.model_fields_set:
+            data.pop("capture_origin", None)
+        return data
+
     @model_validator(mode="after")
     def automatic_provenance_required(self):
+        if (self.source == "capture") != (self.capture_origin is not None):
+            raise ValueError("capture import requires capture provenance exclusively")
         if self.source == "automatic":
             p = self.provenance
             if (p is None or self.recognizer_run_id is None or self.provider != p.provider

@@ -13,6 +13,7 @@ from confia_lean_auditor.core.problem_catalog import list_problem_catalog, list_
 from .auth import require_tme_evaluator, demo_no_auth_enabled, DEMO_EVALUATOR_ID
 from .store import case_store
 from .exam_capture import CaptureError
+from confia_lean_auditor.submissions.store import TranscriptionConflict, SubmissionConflict
 from .exam_models import (ExamCapturePackage, ExamDetail, ExamPage, PageMapping,
     QuestionAttemptView, UpdatePageMapping, TMEAssessmentCreate, MAX_CAPTURE_BODY)
 from .exam_store import exam_store, ExamConflict
@@ -29,7 +30,7 @@ def guarded(operation, *args, **kwargs):
         raise HTTPException(404, "Prova, avaliação ou questão não encontrada.") from None
     except CaptureError as exc:
         raise HTTPException(422, str(exc)) from None
-    except (ExamConflict, AssessmentConflict):
+    except (ExamConflict, AssessmentConflict, TranscriptionConflict, SubmissionConflict):
         raise HTTPException(409, "Conflito na prova ou associação. Recarregue os dados e confira o envio.") from None
     except (ValidationError, ValueError):
         raise HTTPException(422, "Dados da prova inválidos.") from None
@@ -144,3 +145,22 @@ def question(case_id: str, response: Response, user=Depends(require_tme_evaluato
     if not case.exam_submission_id:
         raise HTTPException(404, "A questão não pertence a uma prova completa.")
     return guarded(exam_store().question, case.exam_submission_id, case_id, user)
+
+
+@router.get("/question-attempts/{case_id}/workspace", response_model=dict)
+def question_workspace(case_id: str, response: Response, user=Depends(require_tme_evaluator)):
+    from .question_review import workspace
+    response.headers["Cache-Control"] = "no-store"
+    return guarded(workspace, case_id, user)
+
+
+@router.post("/cases/{case_id}/transcriptions", response_model=dict, status_code=201)
+async def create_question_transcription(case_id: str, request: Request, response: Response,
+                                       user=Depends(require_tme_evaluator)):
+    from .router import parsed_body
+    from .review_models import CreateQuestionTranscription
+    from .question_review import create
+    body = await parsed_body(request, CreateQuestionTranscription)
+    revision = await run_in_threadpool(guarded, create, case_id, body, user)
+    response.headers["Cache-Control"] = "no-store"
+    return revision.model_dump(mode="json")

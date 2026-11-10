@@ -236,6 +236,8 @@ class OperationalIndex:
 
 
 def project_case(case, updated_at=None, root=None):
+    if case.exam_submission_id:
+        return
     def update(entries):
         previous = entries.get(case.case_id)
         entry = case_entry(case)
@@ -248,7 +250,7 @@ def project_case(case, updated_at=None, root=None):
 
 
 def project_submission(submission, *, transcription=None, revision=None, accepted_at=None, recognition=None, audit=None):
-    if not submission.tme_case_id:
+    if not submission.tme_case_id or submission.source == "exam_pages":
         return
     def update(entries):
         entry = entries[submission.tme_case_id]

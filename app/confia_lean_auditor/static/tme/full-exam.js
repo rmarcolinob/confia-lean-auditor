@@ -2,7 +2,7 @@
 (function (root) {
   "use strict";
   function create(h) {
-    const { node: n, btn, api, post, show, openExam, legacy, setBusy } = h;
+    const { node: n, btn, api, post, show, openExam, openQuestion, legacy, setBusy } = h;
     const Views = root.ConfiaTmeViews, Workspace = root.ConfiaCorrectionWorkspace;
     const field = (label, input) => { const el = n("label", label); el.append(input); return el; };
     const row = (...children) => { const el = n("div", undefined, "actions"); el.append(...children); return el; };
@@ -103,21 +103,7 @@
         const originals=row();
         for(const asset of detail.submission.original_documents){const link=n("a",`Original ${originals.children.length+1}`,"tme-button secondary");link.href=assetURL(examId,asset.asset_id);link.target="_blank";link.rel="noopener";originals.append(link);}
         box.append(intro,originals);
-        if(question){
-          const c=question.question_attempt;
-          const context=n("header",undefined,"case-context");
-          context.append(n("h2",`Questão ${c.question_order} · ${c.problem_id}`),n("p",`Pontuação máxima: ${c.max_score}`,"muted"));
-          const nav=Workspace.QuestionNavigator?Workspace.QuestionNavigator(c,detail.question_attempts,()=>"Recebida",id=>openExam(examId,id),false):null;
-          if(nav)context.append(nav);
-          else{const choices=row();for(const item of detail.question_attempts){const button=btn(`Q${item.question_order}`,()=>openExam(examId,item.case_id),"secondary");button.setAttribute("aria-current",item.case_id===c.case_id?"page":"false");choices.append(button);}context.append(choices);}
-          box.append(context);
-          const catalog=await api("/tme/problems");if(ticket!==generation)return;
-          const statement=Workspace.ProblemStatement(catalog.find(p=>(p.problem_id||p.id)===c.problem_id),{},[]);box.append(statement);
-          box.append(row(btn("Voltar às páginas e associações",()=>openExam(examId),"secondary")),n("h2","Original"));
-          const grid=n("div",undefined,"scan-grid");question.pages.forEach(page=>grid.append(pageCard(examId,page)));box.append(grid);
-          if(!question.pages.length)box.append(message("Esta questão ainda não tem páginas associadas. Volte às páginas e associações para selecioná-las."));
-          show(box);statement.updateStatementLayout?.();return;
-        }
+        if(question)return await openQuestion(question.question_attempt,detail,question);
         const grid=n("div",undefined,"scan-grid");detail.submission.pages.forEach(page=>grid.append(pageCard(examId,page)));box.append(grid);
         const mapping=n("section",undefined,"tme-panel"),status=message("Uma página pode ser associada a mais de uma questão.");mapping.append(n("h2","Questões e páginas"),status);
         let dirty=false,busy=false;const checks=[];const openButtons=[];

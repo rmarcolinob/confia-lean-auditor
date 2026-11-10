@@ -45,7 +45,7 @@ def case_for(case_id, user):
         if case.submission_id:
             record = submission_store().get_record(case.submission_id)
             if (record.tme_case_id != case_id or record.problem_id != case.problem_id
-                    or record.source != ("tablet" if case.source_mode == "DIGITAL_INK" else "image_scan")
+                    or record.source != ("exam_pages" if case.exam_submission_id else "tablet" if case.source_mode == "DIGITAL_INK" else "image_scan")
                     or record.submitted_by_user_id != user.user_id):
                 raise ValueError("case/source binding mismatch")
         return case
@@ -197,6 +197,10 @@ async def revise(case_id: str, transcription_id: str, request: Request, response
     body = await parsed_body(request, CreateTranscriptionRevisionRequest, reviewer_reference=user.user_id)
     body = body.model_copy(update={"reviewer_reference": user.user_id})
     response.headers["Cache-Control"] = "no-store"
+    if case_for(case_id, user).exam_submission_id:
+        from .question_review import revise as revise_question
+        from .exam_router import guarded as review_guarded
+        return await run_in_threadpool(review_guarded, revise_question, case_id, transcription_id, body, user)
     return await run_in_threadpool(guarded, submission_store().create_transcription_revision, transcription_id, body)
 
 
@@ -336,7 +340,7 @@ def original(case_id: str, page_index: int, user=Depends(require_tme_evaluator))
 @router.post("/cases/{case_id}/recognize", response_model=RecognitionResponse)
 async def recognize(case_id: str, request: Request, response: Response, user=Depends(require_tme_evaluator)):
     case = case_for(case_id, user)
-    if not case.submission_id:
+    if not case.submission_id and not case.exam_submission_id:
         raise HTTPException(409, "Envie a solução antes do reconhecimento.")
     provider = "mathpix_image" if case.source_mode == "IMAGE_SCAN" else "mathpix"
     body = await parsed_body(request, RecognitionRequest, provider=provider)
@@ -347,8 +351,13 @@ async def recognize(case_id: str, request: Request, response: Response, user=Dep
         feedback = failure_feedback("PROVIDER_NOT_CONFIGURED")
         return JSONResponse(status_code=503, content={**feedback, "detail": feedback["message"]},
                             headers={"Cache-Control": "no-store"})
-    run, _ = await run_in_threadpool(guarded,
-        RecognitionService(submission_store(), registry).recognize, case.submission_id, body)
+    if case.exam_submission_id:
+        from .question_review import recognize as recognize_question
+        from .exam_router import guarded as review_guarded
+        run, _ = await run_in_threadpool(review_guarded, recognize_question, case_id, body, user, registry)
+    else:
+        run, _ = await run_in_threadpool(guarded,
+            RecognitionService(submission_store(), registry).recognize, case.submission_id, body)
     response.headers["Cache-Control"] = "no-store"
     return RecognitionResponse.from_run(run)
 

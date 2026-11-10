@@ -10,6 +10,7 @@ from time import perf_counter
 import httpx
 from pydantic import ValidationError
 
+from confia_lean_auditor.submissions.schemas import MAX_SOURCE_PAGES
 from confia_lean_auditor.recognition.errors import ProviderFailure
 from confia_lean_auditor.recognition.registry import RecognitionInput
 from confia_lean_auditor.recognition.schemas import ProviderOutput, RecognitionPageMetadata, RecognitionSegment
@@ -57,7 +58,7 @@ class MathpixImageProvider:
         if not app_id or not app_key:
             raise MathpixImageError("not_configured")
         pages = sorted(source.artifacts, key=lambda a: a.page_index if a.page_index is not None else -1)
-        if not pages or len(pages) > 3 or [p.page_index for p in pages] != list(range(len(pages))):
+        if not pages or len(pages) > MAX_SOURCE_PAGES or [p.page_index for p in pages] != list(range(len(pages))):
             raise MathpixImageError("invalid_input")
         started, status, completed = perf_counter(), None, 0
         segments, metadata, warnings = [], [], []

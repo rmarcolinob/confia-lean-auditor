@@ -201,6 +201,54 @@ class SubmissionStore:
                     shutil.rmtree(pending)
             return receipt, True
 
+    def receive_exam_question(self, snapshot, previews, owner):
+        """Freeze a question's page references. Originals stay in the exam store.
+
+        The caller holds the exam mapping lock. PNGs are immutable recognition
+        inputs, never replacements for the referenced original documents.
+        """
+        from confia_lean_auditor.tme.review_models import QuestionSourceSnapshot
+        snapshot = QuestionSourceSnapshot.model_validate(snapshot)
+        if len(previews) != len(snapshot.pages):
+            raise ValueError("incomplete question source")
+        refs = []
+        for page, data in zip(snapshot.pages, previews):
+            if sha256(data) != page.preview.sha256 or len(data) != page.preview.byte_size:
+                raise SubmissionIntegrityConflict()
+            validate_png(data, page.derived_width, page.derived_height)
+            refs.append(ArtifactReference(filename=f"page_{page.index + 1}.png", media_type="image/png",
+                sha256=sha256(data), size_bytes=len(data), page_id=page.page_id, page_index=page.index))
+        identifier = "sub_" + hashlib.sha256(snapshot.question_attempt_id.encode()).hexdigest()[:32]
+        with self._locked(exclusive=True):
+            if (self.root / identifier).exists():
+                record = self.assert_submission_integrity(identifier)
+                frozen = QuestionSourceSnapshot.model_validate_json((self._folder(identifier) / "snapshot.json").read_bytes())
+                if (record.submitted_by_user_id != owner.user_id or
+                        frozen.model_dump(exclude={"mapping_version"}) != snapshot.model_dump(exclude={"mapping_version"})):
+                    raise SubmissionConflict("question source already frozen differently")
+                return record
+            raw = snapshot.model_dump_json().encode()
+            record = SubmissionRecord(submission_id=identifier, problem_id=snapshot.problem_id,
+                snapshot_id=snapshot.snapshot_id, source="exam_pages", capture_schema_version=snapshot.schema_version,
+                received_at=datetime.now(timezone.utc), submitted_by_user_id=owner.user_id,
+                tme_case_id=snapshot.question_attempt_id, snapshot=ArtifactReference(filename="snapshot.json",
+                    media_type="application/json", sha256=sha256(raw), size_bytes=len(raw)), page_images=refs)
+            receipt = SubmissionReceipt(**record.model_dump())
+            pending = Path(tempfile.mkdtemp(prefix=".pending-question-", dir=self.root))
+            try:
+                self._write(pending / "snapshot.json", raw)
+                for ref, data in zip(refs, previews):
+                    self._write(pending / ref.filename, data)
+                self._write(pending / "submission.json", record.model_dump_json(indent=2).encode())
+                self._write(pending / "receipt.json", receipt.model_dump_json(indent=2).encode())
+                self._sync_directory(pending)
+                os.replace(pending, self.root / identifier)
+                self._sync_directory(self.root)
+            finally:
+                if pending.exists():
+                    shutil.rmtree(pending)
+            return record
+
     def receive_scan(self, snapshot, originals: list[bytes], derived: list[bytes], owner, case_id):
         """Publish the device originals and OCR derivations in one immutable bundle."""
         from confia_lean_auditor.tme.models import ScanSnapshot
@@ -303,7 +351,16 @@ class SubmissionStore:
                     or record.snapshot.media_type != "application/json"
                     or record.snapshot.size_bytes > MAX_IMPORT_BYTES):
                 raise SubmissionIntegrityConflict()
-            if record.source == "image_scan":
+            if record.source == "exam_pages":
+                from confia_lean_auditor.tme.review_models import QuestionSourceSnapshot
+                snapshot = QuestionSourceSnapshot.model_validate_json((folder / "snapshot.json").read_bytes())
+                if (snapshot.problem_id != record.problem_id or snapshot.snapshot_id != record.snapshot_id
+                        or snapshot.question_attempt_id != record.tme_case_id):
+                    raise SubmissionIntegrityConflict()
+                if any(ref.sha256 != page.preview.sha256 or ref.size_bytes != page.preview.byte_size
+                       for ref, page in zip(record.page_images, snapshot.pages)):
+                    raise SubmissionIntegrityConflict()
+            elif record.source == "image_scan":
                 from confia_lean_auditor.tme.models import ScanSnapshot
                 snapshot = ScanSnapshot.model_validate_json((folder / "snapshot.json").read_bytes())
                 if (snapshot.problem_id != record.problem_id or snapshot.snapshot_id != record.snapshot_id
@@ -491,7 +548,7 @@ class SubmissionStore:
         if (initial_record != transcription or revision.revision_number != 1
                 or revision.status == "ACCEPTED"):
             raise ValueError("invalid initial transcription revision")
-        if transcription.source == "manual":
+        if transcription.source in {"manual", "capture"}:
             if recognition_run is not None or any(value is not None for value in (
                     transcription.recognizer_run_id, transcription.provider, transcription.provenance,
                     transcription.recognizer, transcription.recognizer_version)):
@@ -579,6 +636,7 @@ class SubmissionStore:
             or revision.recognizer_run_id != record.recognizer_run_id
             or revision.provider != record.provider
             or revision.provenance != record.provenance
+            or revision.capture_origin != record.capture_origin
             for revision in revisions
         ):
             raise ValueError("revision is not bound to its transcription")

@@ -18,22 +18,22 @@
     const nav = n("nav", null, "question-navigator"); nav.setAttribute("aria-label", "Questões disponíveis desta prova");
     siblings.forEach(item => {
       const current = item.case_id === c.case_id, label = question(item) ? `Q${question(item)}` : item.problem_id;
-      const state = status(item), symbol = current ? "●" : state === "Finalizada" ? "✓" : state === "Inconclusiva" ? "?" : "○";
-      const control = button(`${label} ${symbol}`, () => open(item.case_id)); control.dataset.state = current ? "current" : state === "Finalizada" ? "done" : state === "Inconclusiva" ? "pending" : "available";
+      const state = status(item), symbol = current ? "●" : state === "Finalizada" ? "✓" : ["Inconclusiva","Revisão necessária"].includes(state) ? "?" : "○";
+      const control = button(`${label} ${symbol}`, () => open(item.case_id)); control.dataset.state = current ? "current" : state === "Finalizada" ? "done" : ["Inconclusiva","Revisão necessária"].includes(state) ? "pending" : "available";
       control.setAttribute("aria-label", `${label} · ${current ? "Questão atual" : state}`); control.setAttribute("aria-current", current ? "step" : "false"); control.disabled = busy;
       nav.append(control);
     }); return nav;
   }
   function CorrectionHeader({c, cases, status, open, back, steps, active, busy}) {
-    const header = n("header", null, "case-context"), siblings = relatedCases(c,cases), line = n("div",null,"case-title-line");
-    const goBack = button("←",back,"workspace-back secondary"); goBack.setAttribute("aria-label","Voltar para fila"); goBack.disabled=busy; goBack.replaceChildren(root.ConfiaTmeHome.icon("back"));
+    const header = n("header", null, "case-context"), siblings = c.exam_submission_id ? cases.filter(item=>item.exam_submission_id===c.exam_submission_id).sort((a,b)=>a.question_order-b.question_order) : relatedCases(c,cases), line = n("div",null,"case-title-line");
+    const goBack = button("←",back,"workspace-back secondary"); goBack.setAttribute("aria-label",c.exam_submission_id?"Voltar às páginas e associações":"Voltar para fila"); goBack.disabled=busy; goBack.replaceChildren(root.ConfiaTmeHome.icon("back"));
     const pill = n("span",status(c),"status"); pill.dataset.kind = status(c)==="Finalizada"?"success":status(c)==="Inconclusiva"?"pending":"info";
     line.append(goBack,n("h1",displayExamName(c.external_candidate_ref)),pill);
     if(c.data_origin==="synthetic_demo")line.append(n("small","CASO SINTÉTICO · transcrição importada"));
     if(c.demo_sample_groups?.length)line.append(n("small","AMOSTRA VISUAL · "+c.demo_sample_groups.join(", ")));
     const info = n("div",null,"case-information");
     // The catalog is not a roster: count only real, distinct CorrectionCases.
-    info.append(n("strong",`Questão ${question(c)||c.problem_id}`),n("span",`${siblings.length} ${siblings.length===1?"questão disponível":"questões disponíveis"}`,"known-questions"),n("span",c.problem_id),n("span",c.source_mode==="IMAGE_SCAN"?"Foto / scan":"Escrita digital","case-source"));
+    info.append(n("strong",`Questão ${question(c)||c.problem_id}`),n("span",`${siblings.length} ${siblings.length===1?"questão disponível":"questões disponíveis"}`,"known-questions"),n("span",c.problem_id),n("span",c.exam_submission_id?"Prova completa":c.source_mode==="IMAGE_SCAN"?"Foto / scan":"Escrita digital","case-source"));
     header.dataset.questionCount=String(siblings.length);
     header.append(line,info,QuestionNavigator(c,siblings,status,open,busy),steps(active)); return header;
   }
