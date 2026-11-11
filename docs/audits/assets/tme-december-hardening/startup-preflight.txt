@@ -1,0 +1,3 @@
+Python: /Users/LinMarcolino/Documents/confia-lean-auditor/.venv/bin/python 3.9.6
+Lean (version 4.28.0, arm64-apple-darwin24.6.0, commit 7e01a1bf5c70fc6167d49c345d3bf80596e9a79b, Release)
+Mathlib fixado + prova formal local: OK

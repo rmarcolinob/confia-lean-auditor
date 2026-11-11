@@ -1,0 +1,2 @@
+Python: /Users/LinMarcolino/Documents/confia-lean-auditor/.venv/bin/python 3.9.6
+PLANO B explícito: Lean desativado; não apresentar certificação formal.

@@ -1,0 +1,19 @@
+[a]
+inferiores_brancas: 2
+primeira_branca: 2/6=1/2
+
+[b]
+pares_ordenados: 6*6=36
+favoraveis_distintos: 2*5=10
+repeticao_branca: {6}
+segunda_branca: (10+1)/36=11/36
+
+[c]
+continuar: {1,2}
+estrategia_1: preta
+contagem_1: 3
+estrategia_2: cinza
+contagem_2: 3
+condicional_1: 3/6=1/2
+condicional_2: 3/6=1/2
+total: (1/6)(1/2)+(1/6)(1/2)=1/6

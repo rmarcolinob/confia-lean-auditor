@@ -1,0 +1,2 @@
+macOS localhost probe: active listener rejected with errno 48.
+SO_REUSEADDR: immediate rebind after connected socket shutdown passed.

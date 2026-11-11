@@ -1,0 +1,122 @@
+[
+  {
+    "step": "01-open-demo",
+    "at": "2026-11-11T04:35:47.982Z"
+  },
+  {
+    "step": "invalid-pdf",
+    "at": "2026-11-11T04:36:07.113Z",
+    "seconds": 4.199,
+    "result": "comprehensible rejection; inputs preserved"
+  },
+  {
+    "step": "05-receive-four-pages",
+    "at": "2026-11-11T04:36:16.759Z",
+    "seconds": 0.497
+  },
+  {
+    "step": "missing-page",
+    "at": "2026-11-11T04:36:22.707Z",
+    "result": "explicit association guidance; no audit action"
+  },
+  {
+    "step": "reload-after-mapping",
+    "seconds": 0.064,
+    "at": "2026-11-11T04:36:33.373Z"
+  },
+  {
+    "step": "empty-transcription",
+    "at": "2026-11-11T04:36:46.555Z",
+    "result": "Informe a leitura de pelo menos uma página."
+  },
+  {
+    "step": "12-q1-audit-request",
+    "at": "2026-11-11T04:36:50.595Z"
+  },
+  {
+    "step": "13-q1-result",
+    "at": "2026-11-11T04:38:45.276Z",
+    "seconds_upper_bound": 114.792,
+    "result": "19/20; a refuted; formal check shown"
+  },
+  {
+    "step": "incomplete-finalization",
+    "at": "2026-11-11T04:38:51.274Z",
+    "button_enabled": false
+  },
+  {
+    "step": "14-q2-audit-request",
+    "at": "2026-11-11T04:38:57.946Z"
+  },
+  {
+    "step": "14-q2-result",
+    "at": "2026-11-11T04:39:51.095Z",
+    "result": "15/20; review; formal checks visible"
+  },
+  {
+    "step": "16-stale",
+    "at": "2026-11-11T04:39:56.507Z",
+    "result": "Q1 prior 19 preserved; Q2 current 15 unaffected"
+  },
+  {
+    "step": "reload-stale",
+    "at": "2026-11-11T04:39:56.825Z"
+  },
+  {
+    "step": "18-comparison",
+    "at": "2026-11-11T04:40:30.036Z",
+    "result": "19 -> 20; versions 1 -> 2"
+  },
+  {
+    "step": "concurrent-stale-tab",
+    "at": "2026-11-11T04:40:58.071Z",
+    "result": "409 readable; Q2 final 18 preserved; one human decision"
+  },
+  {
+    "step": "q3-math-error-audit",
+    "at": "2026-11-11T04:40:59.313Z"
+  },
+  {
+    "step": "23-finalize-v1",
+    "at": "2026-11-11T04:42:05.166Z",
+    "seconds": 0.387
+  },
+  {
+    "step": "27a",
+    "at": "2026-11-11T04:43:57.294Z",
+    "result": "Q1 reaberta, ajustada para 19; Q2 e Q3 mantidas"
+  },
+  {
+    "step": "persistence-close-reopen",
+    "at": "2026-11-11T04:44:03.591Z",
+    "result": "Q1 final 19 e histórico de duas decisões recuperados"
+  },
+  {
+    "step": "27-28",
+    "at": "2026-11-11T04:44:17.181Z",
+    "result": "v2 55/60; histórico v1 56/60 preservado",
+    "observationUpperBoundSeconds": 8.282
+  },
+  {
+    "step": "failure-invalid-gold",
+    "at": "2026-11-11T04:44:31.498Z",
+    "result": "99/20 rejeitado; nenhum gold ativo"
+  },
+  {
+    "step": "29-31",
+    "at": "2026-11-11T04:44:39.139Z",
+    "result": "gold sintético v1 importado; métricas visíveis",
+    "observationUpperBoundSeconds": 7.635
+  },
+  {
+    "step": "32-33",
+    "at": "2026-11-11T04:44:54.883Z",
+    "result": "CSV e JSON baixados via controles do navegador",
+    "jsonSeconds": 5.225
+  },
+  {
+    "step": "persistence-backend-restart",
+    "at": "2026-11-11T04:46:25.137Z",
+    "result": "v2 55/60, quatro AuditRuns e gold v1 recuperados; métricas inalteradas"
+  }
+]
