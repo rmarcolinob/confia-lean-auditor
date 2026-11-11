@@ -138,6 +138,7 @@
       }
       if(current){controls.append(btn('Reabrir correção',()=>{confirmation.hidden=false;confirmation.replaceChildren(message('Reabrir permitirá alterações. Este fechamento continuará no histórico.'),btn('Confirmar reabertura',()=>act(true)),btn('Cancelar',()=>{confirmation.hidden=true;},'secondary'));},'secondary'));}
       else{const finish=btn('Finalizar correção',()=>{confirmation.hidden=false;confirmation.replaceChildren(message(`Confirme o fechamento de ${data.question_count} questões com nota final ${points(data.final_total)} / ${points(data.max_total)}.`),btn('Confirmar finalização',()=>act(false)),btn('Cancelar',()=>{confirmation.hidden=true;},'secondary'));});finish.disabled=!data.ready_to_finalize;controls.append(finish);}
+      if(data.certification_available)controls.append(btn('Certificação',()=>certification(data.assessment_id,examId),'secondary'));
       controls.append(btn('Voltar à prova',()=>openExam(examId),'secondary'));panel.append(controls,confirmation);
       const history=n('details');history.append(n('summary',`Histórico de fechamento (${data.final_corrections.length})`));
       for(const f of data.final_corrections){const entry=n('details');entry.append(n('summary',`Versão ${f.version} · Final ${points(f.final_total)} / ${points(f.max_total)} · ${new Date(f.finalized_at).toLocaleString('pt-BR')}`),n('p',`${f.participant_code} · ${f.assessment_title} · ${f.finalized_by}`),questionTable(f.questions,examId,true),n('p',`ConfIA ${points(f.suggested_total_snapshot)} · Final ${points(f.final_total)} · Ajuste ${delta(f.total_adjustment)}`));history.append(entry);}
@@ -185,6 +186,54 @@
         if(detail.correction_status==="FINALIZED"){save.disabled=true;checks.forEach(c=>c.disabled=true);status.textContent="Prova finalizada. Reabra a correção no resumo para alterar.";}
         mapping.append(row(save));box.append(mapping);show(box);
       }catch(_){if(ticket===generation)show(Views.ErrorState("Não foi possível abrir esta prova.",()=>open(examId,attemptId)));}
+    }
+    async function certification(assessmentId,examId,filters={selection:'finalized'},notice=''){
+      const ticket=++generation;show(Views.Loading());
+      const base=`/tme/assessments/${assessmentId}/certification`;
+      const query=Object.entries(filters).filter(([,v])=>v).map(([k,v])=>`${encodeURIComponent(k)}=${encodeURIComponent(v)}`).join('&');
+      let data;
+      try{data=await api(`${base}?${query}`);}catch(_){if(ticket===generation)show(Views.ErrorState('Não foi possível carregar a certificação.',()=>certification(assessmentId,examId,filters)));return;}
+      if(ticket!==generation)return;
+      const box=Views.Page('Certificação','Avaliação paralela · dados da avaliação inteira'),panel=n('section',undefined,'queue');
+      panel.append(message('SHADOW_EVALUATION · Os resultados ConfIA e o gold importado não alteram a correção oficial.'));
+      if(notice)panel.append(message(notice));
+      const m=data.manifest,counts=m.counts,stats=data.metrics,cmp=stats.confia_vs_gold;
+      const pct=v=>v===null||v===undefined?'—':`${(Number(v)*100).toFixed(1)}%`;
+      const number=v=>v===null||v===undefined?'—':Number(v).toLocaleString('pt-BR',{maximumFractionDigits:3});
+      panel.append(n('p',`Provas: ${counts.proofs} · Questões: ${counts.questions} · Registros: ${counts.records}`));
+      panel.append(n('p',m.gold?`Gold importado: ${m.gold.source_id} / ${m.gold.dataset_version} · versão ${m.gold.version} · ${counts.gold_available} de ${counts.records} registros com gold`:'Gold humano ainda não importado'));
+      panel.append(n('p',`ConfIA × HumanGold · N: ${cmp.N} · MAE: ${number(cmp.MAE)} · Concordância exata: ${pct(cmp.exact_score_agreement)}`),
+        n('p',`Revisão humana requerida: ${pct(stats.stages.audit.review_rate)} · Questões ajustadas: ${pct(stats.stages.human_adjustment.adjustment_rate)}`),
+        n('p',`ConfIA × HumanDecision · N: ${stats.confia_vs_human_decision.N} · MAE: ${number(stats.confia_vs_human_decision.MAE)}`),
+        n('p',`HumanDecision × HumanGold · N: ${stats.human_decision_vs_gold.N} · MAE: ${number(stats.human_decision_vs_gold.MAE)}`),
+        n('p','HumanDecision é a decisão feita nesta interface. HumanGold é a correção externa independente. Comparações descritivas, sem inferência causal.'));
+      const select=n('select');select.setAttribute('aria-label','Seleção das provas');
+      for(const [value,label] of [['finalized','Finalizadas'],['current','Estado atual']]){const o=n('option',label);o.value=value;select.append(o);}select.value=filters.selection;
+      select.addEventListener('change',()=>certification(assessmentId,examId,{...filters,selection:select.value}));
+      const version=n('select');version.setAttribute('aria-label','Versão do gold');const latest=n('option','Gold mais recente');latest.value='';version.append(latest);
+      for(const g of data.gold_history){const o=n('option',`${g.version} · ${g.dataset_version}`);o.value=String(g.version);version.append(o);}version.value=filters.gold_version||'';
+      version.addEventListener('change',()=>certification(assessmentId,examId,{...filters,gold_version:version.value}));
+      const mode=n('input');mode.value=filters.engine_mode||'';mode.placeholder='Todos os motores';mode.setAttribute('aria-label','Motor');mode.maxLength=80;
+      panel.append(row(field('Provas',select),field('Gold',version),field('Motor',mode),btn('Aplicar motor',()=>certification(assessmentId,examId,{...filters,engine_mode:mode.value.trim()}),'secondary')));
+      const downloads=row();for(const [extension,label] of [['csv','Exportar CSV'],['json','Exportar JSON']]){const link=n('a',label,'button secondary');link.href=`${base}/export.${extension}?${query}`;link.download=`certification.${extension}`;downloads.append(link);}panel.append(downloads);
+      const form=n('form',undefined,'card'),format=n('select');format.setAttribute('aria-label','Formato do gold');
+      for(const value of ['CSV','JSON']){const o=n('option',value);o.value=value;format.append(o);}format.value='CSV';
+      const source=n('input'),dataset=n('input'),content=n('textarea');source.required=true;dataset.required=true;content.required=true;content.rows=6;
+      source.setAttribute('aria-label','Fonte do gold');dataset.setAttribute('aria-label','Versão do dataset');content.setAttribute('aria-label','Conteúdo do gold');
+      source.pattern=dataset.pattern='[A-Za-z0-9_.:-]+';source.maxLength=100;dataset.maxLength=80;
+      content.placeholder='assessment_id,participant_code,question_id,gold_score,max_score';
+      form.append(n('h3','Importar gold externo'),n('p','Use códigos pseudônimos. Cada importação substitui o conjunto ativo e preserva o histórico. CSV: cinco colunas acima. JSON: lista de registros com essas mesmas chaves; rubric_gold é opcional.'),
+        field('Formato',format),field('Fonte do gold',source),field('Versão do dataset',dataset),field('Conteúdo do gold',content));
+      const status=message('');let busy=false;const submit=n('button','Importar gold');submit.type='submit';form.append(submit,status);
+      form.addEventListener('submit',async event=>{event.preventDefault();if(busy||ticket!==generation)return;busy=true;submit.disabled=true;setBusy(true);
+        try{const expected=data.gold_history.length;
+          if(format.value==='CSV')await api(`${base}/gold?source_id=${encodeURIComponent(source.value)}&dataset_version=${encodeURIComponent(dataset.value)}&expected_version=${expected}`,{method:'POST',headers:{'Content-Type':'text/csv'},body:content.value});
+          else await post(`${base}/gold`,{source_id:source.value,dataset_version:dataset.value,expected_version:expected,rows:JSON.parse(content.value)});
+          if(ticket===generation)return await certification(assessmentId,examId,{...filters,gold_version:''},'Gold importado. Histórico preservado.');
+        }catch(error){status.textContent=error.status===409?'O gold mudou ou esta versão já foi usada. Recarregue a certificação.':'Importação recusada. Confira formato, códigos, duplicatas e limites das notas.';}
+        finally{busy=false;submit.disabled=false;setBusy(false);}
+      });
+      panel.append(form,btn('Voltar ao resumo',()=>summary(examId),'secondary'));box.append(panel);show(box);
     }
     return {newCorrection,list,open,summary,cancel:()=>{generation++;}};
   }

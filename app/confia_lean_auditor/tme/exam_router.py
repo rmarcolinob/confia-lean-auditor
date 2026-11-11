@@ -195,6 +195,8 @@ def correction_summary(exam_id: str, response: Response, user=Depends(require_tm
     from .finalization import summary, gold_rows
     response.headers['Cache-Control'] = 'no-store'
     data = guarded(summary, exam_id, user)
+    from .certification_gold import enabled
+    data['certification_available'] = enabled()
     data['gold_rows'] = gold_rows(data['current_final_correction']) if data['current_final_correction'] else []
     return data
 
@@ -211,3 +213,7 @@ def reopen_correction(exam_id: str, body: ReopenCorrection, response: Response, 
     from .finalization import reopen
     response.headers['Cache-Control'] = 'no-store'
     return guarded(reopen, exam_id, body, user)
+
+
+from .certification_router import router as certification_router
+router.include_router(certification_router)
