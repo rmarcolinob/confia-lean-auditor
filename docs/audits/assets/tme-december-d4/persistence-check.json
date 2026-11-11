@@ -1,0 +1,137 @@
+{
+  "exam_id": "exam_688da7f7b67a951d1414e6a6c271074c",
+  "q1": "case_84c34948a83e35ca120876fee79288f8",
+  "q2": "case_3f877e9405dadbe9799429a5a8b41734",
+  "checks": {
+    "before-edit": {
+      "unchanged": true,
+      "file_hashes": {
+        "/private/tmp/confia-d4-browser/submission_audits/aud_a6539c81e9a5443fc4d05526ce7a5cddef3488ee6f30b8daac796e7c55b354ea.json": "76bcd346ada2207b414409a4f1348fac87f908a411edd150a3dda1a8ec50a207",
+        "/private/tmp/confia-d4-browser/submission_audits/aud_4e31483b1229adbb416db0f55e7504f85826707a82612c8eaf17fa577ccb4c31.json": "dc99dddc414409a83956548ce575d66ec7c9124b6cc042083c16bbb3d813949e",
+        "/private/tmp/confia-d4-browser/submissions/sub_f4b5f69f31482203c05d5feb1488f678/transcriptions/tr_4ecf11f653c64f81b65eda0e9866bdfc/revisions/revision_000001.json": "94365ce28246143d6f3254e4e2a73f22fdb5becb489817d1cc2097cd200271d0",
+        "/private/tmp/confia-d4-browser/submissions/sub_8dac1e00f03fe8f0ce5718bab5d028aa/transcriptions/tr_d3b48cde3daf4c6c8341ed416bec7494/revisions/revision_000001.json": "bf994115aa0cde578f918dd25fc02e6549135f334d366435d263e97e6bba6cc4",
+        "/private/tmp/confia-d4-browser/tme_exams/exam_688da7f7b67a951d1414e6a6c271074c/original_0001": "b73f35a93a444498e251907fd2fc9a664099249b84524c3a973c9e4f1550ff8e"
+      }
+    },
+    "before-failure": {
+      "unchanged": true,
+      "file_hashes": {
+        "/private/tmp/confia-d4-browser/submission_audits/aud_b027588101d3286f9b5b06ddb07dd2980b8d221cffda304bcd91acf33c2f28f7.json": "f6e63752a3288f2777c7ce2a483b7d098f9dcfec5b54f31fd7be431492cad232",
+        "/private/tmp/confia-d4-browser/submission_audits/aud_a6539c81e9a5443fc4d05526ce7a5cddef3488ee6f30b8daac796e7c55b354ea.json": "76bcd346ada2207b414409a4f1348fac87f908a411edd150a3dda1a8ec50a207",
+        "/private/tmp/confia-d4-browser/submission_audits/aud_4e31483b1229adbb416db0f55e7504f85826707a82612c8eaf17fa577ccb4c31.json": "dc99dddc414409a83956548ce575d66ec7c9124b6cc042083c16bbb3d813949e"
+      }
+    }
+  },
+  "failed_run_preserved": true,
+  "q1_current_version": "tr_d3b48cde3daf4c6c8341ed416bec7494:3",
+  "q1_runs": [
+    {
+      "audit_run_id": "aud_3b427937ed08da409d07a6935841c6cb7b4f79ef76feb654f16177ae1c561c5e",
+      "transcription_version_id": "tr_d3b48cde3daf4c6c8341ed416bec7494:3",
+      "status": "COMPLETED",
+      "suggested_score": 20.0,
+      "stale": false,
+      "comparison": {
+        "previous_audit_run_id": "aud_b027588101d3286f9b5b06ddb07dd2980b8d221cffda304bcd91acf33c2f28f7",
+        "previous_transcription_version_id": "tr_d3b48cde3daf4c6c8341ed416bec7494:2",
+        "previous_suggested_score": 20.0,
+        "previous_max_score": 20.0,
+        "previous_completed_at": "2026-11-11T02:48:07.099436+00:00",
+        "current_audit_run_id": "aud_3b427937ed08da409d07a6935841c6cb7b4f79ef76feb654f16177ae1c561c5e",
+        "current_transcription_version_id": "tr_d3b48cde3daf4c6c8341ed416bec7494:3",
+        "current_suggested_score": 20.0,
+        "timestamp": "2026-11-11T02:49:08.917035+00:00",
+        "score_changed": false
+      }
+    },
+    {
+      "audit_run_id": "aud_4cf61b4e5ffdedc2782f3a66fb6cf439201717777e521f88470a7248f60d5035",
+      "transcription_version_id": "tr_d3b48cde3daf4c6c8341ed416bec7494:3",
+      "status": "FAILED",
+      "suggested_score": null,
+      "stale": false,
+      "comparison": {
+        "previous_audit_run_id": "aud_b027588101d3286f9b5b06ddb07dd2980b8d221cffda304bcd91acf33c2f28f7",
+        "previous_transcription_version_id": "tr_d3b48cde3daf4c6c8341ed416bec7494:2",
+        "previous_suggested_score": 20.0,
+        "previous_max_score": 20.0,
+        "previous_completed_at": "2026-11-11T02:48:07.099436+00:00",
+        "current_audit_run_id": "aud_4cf61b4e5ffdedc2782f3a66fb6cf439201717777e521f88470a7248f60d5035",
+        "current_transcription_version_id": "tr_d3b48cde3daf4c6c8341ed416bec7494:3",
+        "current_suggested_score": null,
+        "timestamp": "2026-11-11T02:48:58.545756+00:00",
+        "score_changed": false
+      }
+    },
+    {
+      "audit_run_id": "aud_b027588101d3286f9b5b06ddb07dd2980b8d221cffda304bcd91acf33c2f28f7",
+      "transcription_version_id": "tr_d3b48cde3daf4c6c8341ed416bec7494:2",
+      "status": "COMPLETED",
+      "suggested_score": 20.0,
+      "stale": true,
+      "comparison": {
+        "previous_audit_run_id": "aud_4e31483b1229adbb416db0f55e7504f85826707a82612c8eaf17fa577ccb4c31",
+        "previous_transcription_version_id": "tr_d3b48cde3daf4c6c8341ed416bec7494:1",
+        "previous_suggested_score": 15.0,
+        "previous_max_score": 20.0,
+        "previous_completed_at": "2026-11-11T02:46:59.901392+00:00",
+        "current_audit_run_id": "aud_b027588101d3286f9b5b06ddb07dd2980b8d221cffda304bcd91acf33c2f28f7",
+        "current_transcription_version_id": "tr_d3b48cde3daf4c6c8341ed416bec7494:2",
+        "current_suggested_score": 20.0,
+        "timestamp": "2026-11-11T02:48:07.099436+00:00",
+        "score_changed": true
+      }
+    },
+    {
+      "audit_run_id": "aud_4e31483b1229adbb416db0f55e7504f85826707a82612c8eaf17fa577ccb4c31",
+      "transcription_version_id": "tr_d3b48cde3daf4c6c8341ed416bec7494:1",
+      "status": "COMPLETED",
+      "suggested_score": 15.0,
+      "stale": true,
+      "comparison": null
+    }
+  ],
+  "q2_current_audit": "aud_a6539c81e9a5443fc4d05526ce7a5cddef3488ee6f30b8daac796e7c55b354ea",
+  "q2_suggested_score": 20.0,
+  "q2_run_count": 1,
+  "partial_suggestion": {
+    "suggested_score": 40.0,
+    "max_score": 100.0,
+    "analyzed_questions": 2,
+    "total_questions": 5,
+    "awaiting_reanalysis": 0,
+    "complete": false
+  },
+  "score_change_events": [
+    {
+      "assessment_id": "asmt_dec20260000000000000000000000001",
+      "participant_id": "part_87331d647bb7205838f5243e929e1c73",
+      "submission_id": "exam_688da7f7b67a951d1414e6a6c271074c",
+      "question_attempt_id": "case_84c34948a83e35ca120876fee79288f8",
+      "transcription_version_id": "tr_d3b48cde3daf4c6c8341ed416bec7494:2",
+      "audit_run_id": "aud_b027588101d3286f9b5b06ddb07dd2980b8d221cffda304bcd91acf33c2f28f7",
+      "engine_version": "tme-integration.v1:115c4b6265db0d1925786abbc55ed1fafe81c01fd30fa864c69a460139229441",
+      "previous_audit_run_id": "aud_4e31483b1229adbb416db0f55e7504f85826707a82612c8eaf17fa577ccb4c31",
+      "event_id": "aud_b027588101d3286f9b5b06ddb07dd2980b8d221cffda304bcd91acf33c2f28f7:suggested_score_changed:",
+      "event_type": "suggested_score_changed",
+      "timestamp": "2026-11-11T02:48:07.099436+00:00",
+      "old_score": 15.0,
+      "new_score": 20.0
+    }
+  ],
+  "event_types": [
+    "audit_completed",
+    "audit_failed",
+    "audit_marked_stale",
+    "audit_started",
+    "checker_result_recorded",
+    "question_reanalysis_requested",
+    "review_required",
+    "rubric_item_decided",
+    "suggested_score_changed",
+    "transcription_activated",
+    "transcription_created",
+    "transcription_human_corrected"
+  ],
+  "console_errors": []
+}

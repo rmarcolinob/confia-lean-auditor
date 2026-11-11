@@ -40,7 +40,7 @@ test('capture import then human correction appends a version, preserves history 
   const {ui,server,q1}=await open();
   await ui.click('Importar leitura da captura');assert.match(text(ui.root),/Versão 1 · Automática · captura importada/);
   await ui.click('Corrigir leitura');assert.equal(areas(ui)[0].value,'x = 1');edit(areas(ui)[0],'x = 2');
-  await ui.click('Salvar nova revisão');assert.match(text(ui.root),/Versão 2 · Humana/);assert.match(text(ui.root),/Reanálise necessária/);
+  await ui.click('Salvar nova revisão');assert.match(text(ui.root),/Versão 2 · Humana/);assert.match(text(ui.root),/reanálise necessária/i);
   assert.equal(server.histories.get(q1.case_id).revisions[0].segments[0].text,'x = 1');
   assert.equal(server.histories.get(q1.case_id).revisions[1].segments[0].text,'x = 2');
   assert.match(text(ui.root),/Versão 1 .*preservada/);

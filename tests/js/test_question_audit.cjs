@@ -52,7 +52,7 @@ test('Q1 Q2 preserve separate audit runs, new explicit analysis preserves histor
   assert.ok(server.audits.get(q1.case_id).some(r=>r.audit_run_id===old));
   await ui.click('Corrigir leitura');const area=walk(ui.root).find(n=>n.tag==='textarea');area.value='texto corrigido';area.handlers.input();
   assert.ok(buttons(ui).find(n=>n.textContent==='Executar nova análise').disabled);
-  await ui.click('Salvar nova revisão');assert.match(text(ui.root),/Reanálise necessária/);
+  await ui.click('Salvar nova revisão');assert.match(text(ui.root),/reanálise necessária/i);
   assert.match(text(ui.root),/Sugestão ConfIA anterior/);assert.match(text(ui.root),/Histórico de análises \(2\)/);
   assert.match(text(ui.root),/Aguardando análise/);assert.equal(postAudits(ui).length,3);
 });

@@ -160,7 +160,7 @@
     const summary=n("section",null,"review-outcome");summary.setAttribute("aria-label","Resultado sugerido");
     summary.append(n("span",data.stale?"Sugestão ConfIA anterior":"Sugestão ConfIA","quiet-label"),
       n("p",data.suggested_score==null?"Pontuação não determinada":`${fmt(data.suggested_score)} / ${fmt(data.max_score)}`,"review-score"),
-      n("p",data.stale?"Análise anterior — reanálise necessária":data.review_required?"Revisar":"Pronta","review-verdict"),
+      n("p",data.stale?options.historical?"Histórico · leitura anterior":"Análise anterior — reanálise necessária":data.review_required?"Revisar":"Pronta","review-verdict"),
       n("p","Sugestão de análise; a nota final depende da decisão do avaliador."));
     report.append(summary);
     for(const reason of [...new Set([...(data.review_reasons||[]),...(data.warnings||[])])])report.append(n("p",reason,"formal-warning"));
@@ -196,6 +196,7 @@
     const details=n("details",null,"technical-details");details.append(n("summary","Detalhes da análise"),
       n("p",`Análise: ${data.audit_run_id}`),n("p",`Transcrição: versão ${data.revision_number} · ${data.transcription_version_id}`),
       n("p",`Motor: ${data.engine_mode} · ${data.engine_version}`),
+      n("p",`Início: ${data.started_at?new Date(data.started_at).toLocaleString("pt-BR"):"não registrado"} · conclusão: ${data.completed_at?new Date(data.completed_at).toLocaleString("pt-BR"):"não registrada"}`),
       n("p",data.engine_config?.use_lean===false?"Execução configurada com verificações determinísticas, sem Lean.":"Execução com verificações determinísticas e Lean quando aplicável."),
       n("pre",JSON.stringify(data,root.ConfIAReport.publicTechnicalValue,2)));
     report.append(details);host.replaceChildren(report);

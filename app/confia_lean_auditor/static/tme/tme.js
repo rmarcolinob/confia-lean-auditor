@@ -563,16 +563,26 @@
     if(c.exam_submission_id){
       const onOriginal=e=>{const index=saved.examPages.findIndex(p=>p.exam_page_id===e.exam_page_id);if(index<0)return;saved.page=index;setTab("original");drawer(false);solution.scrollIntoView({block:"start",behavior:"smooth"});};
       if(run){const report=node("div");window.ConfiaWorkspaceReport.renderQuestion(run,report,{onOriginal});analysisBody.append(report);}
-      else if(!saved.processing)analysisBody.append(note("Aguardando análise. Nenhuma pontuação foi calculada para esta leitura."));
+      const comparison=saved.examReview.audit_comparison;
+      const previousAudit=saved.examReview.previous_audit || (saved.audits||[]).find(r=>r.stale);
+      const scoreText=(value,max)=>value==null?"não determinada":`${String(value).replace(".",",")} / ${max}`;
+      if(comparison){
+        const update=node("details");update.append(node("summary",run.status==="FAILED"?"Tentativa após correção da leitura":"Atualizado após correção da leitura"),
+          node("p",`Sugestão anterior: ${scoreText(comparison.previous_suggested_score,comparison.previous_max_score)}`),
+          node("p",`Sugestão atual: ${scoreText(comparison.current_suggested_score,run.max_score)}`),
+          node("p",`Leitura anterior: ${comparison.previous_transcription_version_id} · leitura atual: ${comparison.current_transcription_version_id}`,"muted"));analysisBody.prepend(update);
+      }else if(previousAudit && !run)analysisBody.append(note(`Sugestão anterior: ${scoreText(previousAudit.suggested_score,previousAudit.max_score)} · preservada no histórico.`));
+      if(run?.status==="FAILED" && saved.examReview.reanalysis_required)analysisBody.prepend(note("Não foi possível concluir a reanálise. A leitura atual e as análises anteriores foram preservadas."));
+      if(!run && !saved.processing)analysisBody.append(note("Aguardando análise. Nenhuma pontuação foi calculada para esta leitura."));
       const previous=(saved.audits||[]).filter(r=>r!==run);
       if(previous.length){const history=node("details");history.append(node("summary",`Histórico de análises (${previous.length})`));
-        for(const old of previous){const entry=node("details"),content=node("div");entry.append(node("summary",`Análise anterior · versão ${old.revision_number} · ${old.audit_run_id}`));window.ConfiaWorkspaceReport.renderQuestion(old,content,{onOriginal});entry.append(content);history.append(entry);}analysisBody.append(history);}
+        for(const old of previous){const entry=node("details"),content=node("div");entry.append(node("summary",`Análise anterior · versão ${old.revision_number} · ${scoreText(old.suggested_score,old.max_score)} · ${old.status==="FAILED"?"Falha técnica":old.review_required?"Revisar":"Concluída"}${old.completed_at?` · ${new Date(old.completed_at).toLocaleString("pt-BR")}`:""}`));window.ConfiaWorkspaceReport.renderQuestion(old,content,{onOriginal,historical:true});entry.append(content);history.append(entry);}analysisBody.append(history);}
     } else if (run) {
       if (run.stale) analysisBody.appendChild(note("Análise de uma revisão anterior. Analise a revisão atual antes de vincular a decisão."));
       if (run.result) { const report = node("div"); window.ConfIAReport.render(run.result, report, { context: "evaluator", auditRun: run, workspace: true, uiState: saved }); analysisBody.appendChild(report); }
       else analysisBody.appendChild(note("Não foi possível concluir a análise. A decisão humana permanece disponível."));
     } else if (!saved.processing) analysisBody.appendChild(note(c.exam_submission_id ? "Aguardando análise. Nenhuma pontuação foi calculada para esta leitura." : "Reconheça a solução e analise para consultar critérios, evidências e verificações."));
-    if(c.exam_submission_id && saved.examReview.reanalysis_required)analysisBody.prepend(note("Reanálise necessária. A leitura foi alterada; análises anteriores permanecem no histórico."));
+    if(c.exam_submission_id && saved.examReview.reanalysis_required)analysisBody.prepend(note("Leitura alterada — reanálise necessária. A leitura foi corrigida. Reanalise esta questão para atualizar a sugestão. Análises anteriores permanecem no histórico."));
     const openDrawer = btn("Abrir análise", () => drawer(true), "secondary drawer-trigger"); openDrawer.setAttribute("aria-controls", "analysis-pane");
     const closeDrawer = btn("Fechar análise", () => { drawer(false); openDrawer.focus(); }, "secondary drawer-close");
     const drawer = open => { saved.drawerOpen = open; right.dataset.open = String(open); openDrawer.setAttribute("aria-expanded", String(open)); if (open) { right.scrollIntoView({block:"start",behavior:"smooth"}); closeDrawer.focus(); } };
@@ -587,7 +597,7 @@
     actionbar.dataset.quiet=String(!c.exam_submission_id && !state.message && !saved.processing && run?.status==="COMPLETED" && !run.stale);
     let primary;
     if (!latest && (!c.exam_submission_id || pages.length)) primary = btn(saved.feedback?.state === "FAILED" ? "Tentar novamente" : "Reconhecer", recognize);
-    else if(c.exam_submission_id && latest) primary=btn(run?"Executar nova análise":"Analisar com ConfIA",audit);
+    else if(c.exam_submission_id && latest) primary=btn(run?.status==="FAILED"?"Tentar novamente":saved.examReview.reanalysis_required?"Reanalisar questão":run?"Executar nova análise":"Analisar com ConfIA",audit);
     else if (!c.exam_submission_id && (!run || run.stale || run.status === "FAILED")) primary = btn("Analisar com ConfIA", audit);
     if (primary) { primary.disabled = state.busy || Boolean(c.exam_submission_id && saved.editing); actionbar.appendChild(primary); }
     if (saved.processing === "recognition") actionbar.appendChild(loading("Reconhecendo…"));
@@ -595,6 +605,8 @@
     if(c.exam_submission_id){
       const info=Array.from(heading.children).find(el=>el.className==="case-information");
       info?.append(node("span",`${saved.fullExam.assessment.assessment.title} · Pontuação máxima: ${c.max_score}`));
+      const partial=saved.examReview.partial_suggestion;
+      if(partial)info?.append(node("span",`Sugestão ConfIA${partial.complete?"":" parcial"}: ${String(partial.suggested_score).replace(".",",")} / ${partial.max_score} · ${partial.analyzed_questions}/${partial.total_questions} questões${partial.awaiting_reanalysis?` · ${partial.awaiting_reanalysis} aguardando reanálise`:""}`));
       if(!pages.length)heading.append(note("Associe páginas a esta questão antes de registrar a leitura."));
     }
     const problem = state.problems?.find(p => (p.problem_id || p.id) === c.problem_id);
@@ -678,6 +690,7 @@
     if (state.busy) return;
     const c = state.current, saved = local(c), history = saved.history, latest = history?.revisions.at(-1);
     if (!latest || c.exam_submission_id && saved.editing) return;
+    const reanalysis=Boolean(c.exam_submission_id && saved.examReview.reanalysis_required);
     state.busy = true; saved.processing = "audit"; await renderCorrection();
     try {
       const accepted = await ensureAcceptance(c, history, latest);
@@ -689,8 +702,8 @@
       }
       const run = await post(`/tme/cases/${c.case_id}/audits`, request);
       if(c.exam_submission_id){delete saved.auditRequestKey;saved.loaded=false;}
-      saved.audits = [run, ...(saved.audits || []).filter(r => r.audit_run_id !== run.audit_run_id)]; state.message = run.status === "COMPLETED" ? "Análise concluída." : "Não foi possível concluir a análise matemática.";
-    } catch (_) { state.message = "Não foi possível concluir a análise matemática. A solução permanece preservada; tente novamente."; }
+      saved.audits = [run, ...(saved.audits || []).filter(r => r.audit_run_id !== run.audit_run_id)]; state.message = run.stale ? "A leitura mudou durante a análise. O resultado foi preservado no histórico; reanalise a versão atual." : run.status === "COMPLETED" ? "Análise concluída." : reanalysis ? "Não foi possível concluir a reanálise." : "Não foi possível concluir a análise matemática.";
+    } catch (_) { if(c.exam_submission_id)saved.loaded=false;state.message = reanalysis ? "Não foi possível concluir a reanálise. Confira a versão atual e tente novamente." : "Não foi possível concluir a análise matemática. A solução permanece preservada; tente novamente."; }
     finally { state.busy = false; saved.processing = null; }
     if (state.current === c && state.view === "workspace") await renderCorrection();
   }

@@ -1,0 +1,31 @@
+D4 — verificações finais
+SHA inicial: ac52c97e9ed9ca14a1a8c36c48faa1cbb7d508ec
+
+Python ampliado (24 arquivos, comando no relatório):
+=========================== short test summary info ============================
+FAILED tests/test_tme_accepted_integration.py::test_real_local_lean_status_certificates_preserved
+FAILED tests/test_submission_audits.py::test_real_bridge_preserves_wrong_solution_and_runs_existing_lean_pipeline
+2 failed, 831 passed, 1 skipped in 242.51s (0:04:02)
+
+Python focado (D4+D3+D2; contagem sobreposta à ampliada):
+.....................                                                    [100%]
+21 passed in 10.65s
+
+JavaScript completo:
+ℹ tests 505
+ℹ suites 0
+ℹ pass 505
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1648.549917
+
+Baseline D3 JavaScript: 502 PASS / 0 FAIL em 1,64 s.
+Baseline Lean no SHA inicial: 2 FAIL em 2,50 s.
+Diagnóstico dos artifacts Lean finais:
+info: mathlib: cloning https://github.com/leanprover-community/mathlib4
+error: external command 'git' exited with code 128
+
+
+Navegador: Q1 v1 15/20; v2 20/20; v3 FAILED/null; retry v3 20/20. Q2 único run, 20/20, inalterado. Parcial final 40/100, 2/5 questões. Históricos e originais com hashes preservados. Console sem erros/warnings. Modo determinístico explícito, falha controlada apenas no launcher temporário; servidor encerrado.

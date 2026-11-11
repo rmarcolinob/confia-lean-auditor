@@ -69,16 +69,20 @@ class CorrectionEngine:
             if not request.execution_key:
                 raise ValueError("explicit execution key required for question analysis")
             context = context_for(case, detail)
-        workspace(case_id, user)  # also verifies frozen source against the mapping
+        snapshot = workspace(case_id, user)  # also verifies frozen source against the mapping
+        version = f"{request.transcription_id}:{request.revision_number}"
+        if not snapshot["current_version"] or snapshot["current_version"]["version_id"] != version:
+            raise ExamConflict("reading changed before analysis")
+        previous = next((r for r in snapshot["audits"] if r["transcription_version_id"] != version), None)
         service = audit_service()
         # Explicit deployment configuration; never silently disable Lean on error.
         service.tme_use_lean = os.environ.get("CONFIA_TME_QUESTION_USE_LEAN", "1") != "0"
         run = service.execute(case.submission_id, request, question_context=context,
-            question_event_builder=lambda run: project_audit(run, case, detail)["events"])
+            question_event_builder=lambda run: project_audit(run, case, detail, previous=previous)["events"])
         return project_audit(run, case, detail)
 
 
-def project_audit(run, case, detail):
+def project_audit(run, case, detail, *, previous=None):
     result = run.result
     context = run.question_context or context_for(case, detail)
     if context.question_attempt_id != case.case_id or context.exam_submission_id != case.exam_submission_id or run.submission_id != case.submission_id:
@@ -106,6 +110,25 @@ def project_audit(run, case, detail):
             reasons.append("Uma ou mais verificações não puderam concluir por erro técnico.")
         base["review_required"] = bool(reasons)
         base["analysis_status"] = "COMPLETED_WITH_REVIEW" if reasons else "COMPLETED"
+    # The predecessor snapshot is persisted in the reanalysis event. Re-reading a
+    # run must never select a different predecessor after later runs are added.
+    prior = next((e for e in run.question_events or [] if e["event_type"] == "question_reanalysis_requested"), None)
+    comparison = None
+    if previous is not None:
+        comparison = dict(previous_audit_run_id=previous["audit_run_id"],
+            previous_transcription_version_id=previous["transcription_version_id"],
+            previous_suggested_score=previous["suggested_score"], previous_max_score=previous["max_score"],
+            previous_completed_at=previous["completed_at"])
+    elif prior:
+        comparison = {k: prior[k] for k in ("previous_audit_run_id", "previous_transcription_version_id",
+            "previous_suggested_score", "previous_max_score", "previous_completed_at")}
+    if comparison:
+        comparison.update(current_audit_run_id=run.audit_run_id,
+            current_transcription_version_id=base["transcription_version_id"],
+            current_suggested_score=base["suggested_score"], timestamp=base["completed_at"],
+            score_changed=base["suggested_score"] is not None and comparison["previous_suggested_score"] is not None
+                and base["suggested_score"] != comparison["previous_suggested_score"])
+    base["comparison"] = comparison
     base["events"] = run.question_events if run.question_events is not None else audit_events(base)
     return public_projection(base)
 
@@ -187,9 +210,15 @@ def audit_events(data):
     events = []
     def add(kind, suffix="", **fields):
         events.append(dict(**common, event_id=f'{data["audit_run_id"]}:{kind}:{suffix}', event_type=kind,
-            timestamp=data["started_at"] if kind == "audit_started" else data["completed_at"], **fields))
+            timestamp=data["started_at"] if kind in {"audit_started", "question_reanalysis_requested"} else data["completed_at"], **fields))
+    comparison = data.get("comparison")
+    if comparison:
+        common["previous_audit_run_id"] = comparison["previous_audit_run_id"]
+        add("question_reanalysis_requested", **{k: v for k, v in comparison.items() if k.startswith("previous_") and k != "previous_audit_run_id"})
     add("audit_started")
-    add("audit_completed", status=data["status"])
+    add("audit_failed" if data["status"] == "FAILED" else "audit_completed", status=data["status"])
+    if comparison and comparison["score_changed"] and data["status"] == "COMPLETED":
+        add("suggested_score_changed", old_score=comparison["previous_suggested_score"], new_score=data["suggested_score"])
     def item_events(item):
         add("rubric_item_decided", item["rubric_item_id"], rubric_item_id=item["rubric_item_id"],
             status=item["status"], suggested_points=item["suggested_points"])

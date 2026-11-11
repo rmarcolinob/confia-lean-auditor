@@ -20,10 +20,13 @@ function backend({failUpload=false,auditResponder=null}={}) {
       const id=url.split('/')[3],history=histories.get(id)||null,latest=history?.revisions.at(-1);
       const versions=(history?.revisions||[]).map(r=>({version_id:`${r.transcription_id}:${r.revision_number}`,version_number:r.revision_number,origin:r.revision_number>1?'human':history.transcription.source==='capture'?'capture':'human',current:r===latest,text:r.segments.map(s=>s.text).join('\n'),created_at:'2026-11-10T12:00:00Z'}));
       const runs=(audits.get(id)||[]).map(r=>({...r,stale:r.revision_number!==latest?.revision_number}));
-      const current=runs.find(r=>!r.stale), state=!history?'PENDING':current&&!current.review_required?'READY':'REVIEW';
+      const current=runs.find(r=>!r.stale), state=!history?'PENDING':current&&current.status==='COMPLETED'&&!current.review_required?'READY':'REVIEW';
+      const currents=detail.question_attempts.map(c=>(audits.get(c.case_id)||[]).find(r=>r.revision_number===histories.get(c.case_id)?.revisions.at(-1).revision_number));
+      const scored=currents.filter(r=>r?.status==='COMPLETED'&&r.suggested_score!=null);
+      const partial_suggestion={suggested_score:scored.reduce((s,r)=>s+r.suggested_score,0),max_score:40,analyzed_questions:scored.length,total_questions:2,complete:scored.length===2,awaiting_reanalysis:currents.filter((r,i)=>(!r||r.status==='FAILED')&&(audits.get(detail.question_attempts[i].case_id)||[]).length).length};
       return reply({question_attempt:detail.question_attempts.find(c=>c.case_id===id),pages:pagesFor(id),mapping_version:detail.mapping.version,
-        history,versions,current_version:versions.at(-1)||null,state,audits:runs,current_audit:current||null,audit_stale:runs.some(r=>r.stale)&&!current,
-        reanalysis_required:!current&&(latest?.revision_number||0)>1,capture_candidate_available:!history,question_states:Object.fromEntries(detail.question_attempts.map(c=>[c.case_id,!histories.has(c.case_id)?'PENDING':(audits.get(c.case_id)||[]).some(r=>r.revision_number===histories.get(c.case_id).revisions.at(-1).revision_number&&!r.review_required)?'READY':'REVIEW']))});
+        history,versions,partial_suggestion,previous_audit:runs.find(r=>r.stale)||null,audit_comparison:current?.comparison||null,current_version:versions.at(-1)||null,state,audits:runs,current_audit:current||null,audit_stale:runs.some(r=>r.stale)&&!current,
+        reanalysis_required:(!current||current.status==='FAILED')&&(latest?.revision_number||0)>1,capture_candidate_available:!history,question_states:Object.fromEntries(detail.question_attempts.map(c=>[c.case_id,!histories.has(c.case_id)?'PENDING':(audits.get(c.case_id)||[]).some(r=>r.revision_number===histories.get(c.case_id).revisions.at(-1).revision_number&&!r.review_required)?'READY':'REVIEW']))});
     }
     if(url.startsWith('/tme/cases/')&&url.endsWith('/accept')){
       const id=url.split('/')[3],body=JSON.parse(options.body),acceptance={revision_number:body.revision_number,acceptance_id:'acc_'+id.slice(5)};
@@ -34,6 +37,8 @@ function backend({failUpload=false,auditResponder=null}={}) {
       assert.ok(auditResponder,'test must explicitly provide an audit result');
       const result=await auditResponder(body,id);
       if(result?.httpError)return {ok:false,status:503,json:async()=>({})};
+      const previous=(audits.get(id)||[]).find(r=>r.revision_number!==body.revision_number);
+      if(previous)result.comparison={previous_audit_run_id:previous.audit_run_id,previous_suggested_score:previous.suggested_score,previous_max_score:previous.max_score,previous_transcription_version_id:previous.transcription_version_id,current_transcription_version_id:result.transcription_version_id,current_suggested_score:result.suggested_score,score_changed:previous.suggested_score!==result.suggested_score};
       audits.set(id,[result,...(audits.get(id)||[]).filter(r=>r.audit_run_id!==result.audit_run_id)]);return reply(result);
     }
     if(url.startsWith('/tme/cases/')&&url.endsWith('/transcriptions')&&options.method==='POST'){
