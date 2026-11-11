@@ -168,7 +168,7 @@ class AuditService:
             finally:
                 fcntl.flock(handle.fileno(), fcntl.LOCK_UN)
 
-    def execute(self, submission_id, request):
+    def execute(self, submission_id, request, *, question_context=None, question_event_builder=None):
         with self.submissions._locked():
             source = self._source(submission_id, request)
         run_id = self._identity(source, request.execution_key)
@@ -178,7 +178,10 @@ class AuditService:
                 if self._source(submission_id, request) != source:
                     raise SourceIntegrityError()
             if self._path(run_id).exists() or self._path(run_id).is_symlink():
-                return self.view(self._read(run_id))
+                existing = self._read(run_id)
+                if question_context is not None and existing.question_context != question_context:
+                    raise SourceIntegrityError()
+                return self.view(existing)
             created_at = datetime.now(timezone.utc)
             try:
                 if source.tme_context is not None:
@@ -204,7 +207,8 @@ class AuditService:
                 manifest, manifest_hash = [], None
             metadata = result.reproducibility if result else None
             record = metadata.record if metadata else None
-            run = AuditRun(audit_run_id=run_id, source=source, created_at=created_at,
+            product_fields = {"question_context": question_context, "completed_at": datetime.now(timezone.utc)} if question_context else {}
+            run = AuditRun(**product_fields, audit_run_id=run_id, source=source, created_at=created_at,
                 **{field: getattr(source, field) for field in ("submission_id", "problem_id",
                     "transcription_id", "revision_number", "acceptance_id", "source_hash")},
                 status=status, result=result, artifact_dir=result.artifact_dir if result else None,
@@ -216,6 +220,10 @@ class AuditService:
                 reproducibility_manifest_sha256=record.manifest_sha256 if record else None,
                 execution_key=request.execution_key, error_code=error_code,
                 auditor_version=source.tme_context.auditor_version if source.tme_context else None)
+            if question_event_builder is not None:
+                events = question_event_builder(self.view(run))
+                run = AuditRun.model_validate({**run.model_dump(), "question_events": events,
+                    "question_events_sha256": canonical_sha256(events)})
             # A newer revision leaves this accepted source valid. Changed
             # originals/acceptance block publication even after engine execution.
             with self.submissions._locked():

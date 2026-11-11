@@ -88,6 +88,16 @@ class RequiredArtifact(SubmissionModel):
     byte_size: int = Field(ge=0)
 
 
+class QuestionAuditContext(SubmissionModel):
+    assessment_id: str
+    participant_id: str
+    exam_submission_id: str
+    question_attempt_id: str
+    engine_mode: Literal["TME_CURRENT"] = "TME_CURRENT"
+    adapter_version: Literal["question-audit.v1"] = "question-audit.v1"
+    max_score: float = Field(gt=0)
+
+
 class AuditRun(SubmissionModel):
     audit_run_id: AuditRunId
     submission_id: SubmissionId
@@ -105,6 +115,19 @@ class AuditRun(SubmissionModel):
     artifact_manifest_sha256: Optional[Sha256] = None
     artifact_dir: Optional[str] = None
     auditor_version: Optional[str] = None
+    question_context: Optional[QuestionAuditContext] = None
+    completed_at: Optional[datetime] = None
+    question_events: Optional[list[dict]] = None
+    question_events_sha256: Optional[Sha256] = None
+
+    @model_serializer(mode="wrap")
+    def preserve_pre_question_shape(self, handler):
+        data = handler(self)
+        for field in ("question_context", "completed_at", "question_events", "question_events_sha256"):
+            if field not in self.model_fields_set:
+                data.pop(field, None)
+        return data
+
     execution_key: Optional[str] = None
     error_code: Optional[Literal["AUDITOR_FAILED", "METADATA_INTEGRITY_FAILED"]] = None
     reproducibility_status: Literal["recorded", "unavailable", "legacy_unversioned"] = "legacy_unversioned"
@@ -113,6 +136,19 @@ class AuditRun(SubmissionModel):
 
     @model_validator(mode="after")
     def coherent(self):
+        if self.question_events is not None:
+            if (not self.question_context or self.question_events_sha256 != canonical_sha256(self.question_events)
+                    or any(event.get("audit_run_id") != self.audit_run_id
+                        or event.get("question_attempt_id") != self.question_context.question_attempt_id
+                        or event.get("transcription_version_id") != f"{self.transcription_id}:{self.revision_number}"
+                        for event in self.question_events)):
+                raise ValueError("invalid question events")
+        elif self.question_events_sha256 is not None:
+            raise ValueError("event digest without events")
+        if self.completed_at and self.completed_at < self.created_at:
+            raise ValueError("completion precedes start")
+        if self.question_context and (not self.completed_at or not self.source.tme_context):
+            raise ValueError("question audit requires completion and engine context")
         metadata = self.result.reproducibility if self.result else None
         record = metadata.record if metadata else None
         expected_statuses = {metadata.status} if metadata else (

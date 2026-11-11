@@ -193,7 +193,7 @@ def test_question_states_respect_existing_audit_review_requirements():
     from types import SimpleNamespace as NS
     from confia_lean_auditor.tme.question_review import question_state
     case = NS(status="RECEIVED")
-    run = NS(stale=False, status="COMPLETED", result=NS(needs_review=True))
+    run = NS(stale=False, status="COMPLETED", result=NS(needs_review=True, score=20))
     assert question_state(case, False, []) == "PENDING"
     assert question_state(case, True, []) == "REVIEW"
     assert question_state(case, True, [run]) == "REVIEW"

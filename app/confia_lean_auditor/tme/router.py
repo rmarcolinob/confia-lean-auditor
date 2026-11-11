@@ -220,12 +220,20 @@ async def execute_analysis(case_id: str, request: Request, response: Response, u
     body = await parsed_body(request, AuditRequest)
     transcription_for(case_id, body.transcription_id, user)
     response.headers["Cache-Control"] = "no-store"
+    if case_for(case_id, user).exam_submission_id:
+        from .correction_engine import CorrectionEngine
+        from .exam_router import guarded as review_guarded
+        return await run_in_threadpool(review_guarded, CorrectionEngine().audit_question, case_id, body, user)
     return await run_in_threadpool(public_operation, audit_service().execute, submission_id, body)
 
 
 @router.get("/cases/{case_id}/audits", response_model=list[dict])
 def analyses(case_id: str, response: Response, user=Depends(require_tme_evaluator)):
     response.headers["Cache-Control"] = "no-store"
+    if case_for(case_id, user).exam_submission_id:
+        from .question_review import workspace
+        from .exam_router import guarded as review_guarded
+        return review_guarded(workspace, case_id, user)["audits"]
     return public_operation(audit_service().list, source_for(case_id, user))
 
 

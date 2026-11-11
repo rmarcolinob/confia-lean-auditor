@@ -13,7 +13,7 @@ from confia_lean_auditor.submissions.schemas import (
 )
 from confia_lean_auditor.submissions.store import TranscriptionConflict
 from confia_lean_auditor.submission_audits.router import service as audit_service
-from confia_lean_auditor.core.public_audit import public_audit_data
+from .correction_engine import project_audit, review_reasons
 from .exam_store import exam_store, ExamConflict
 from .store import case_store
 from .review_models import QuestionSourceSnapshot, QuestionSourcePage
@@ -161,8 +161,8 @@ def question_state(case, has_reading, runs):
         return "CONFIRMED"
     if not has_reading:
         return "PENDING"
-    current = next((r for r in runs if not r.stale and r.status == "COMPLETED"), None)
-    if current and current.result and not current.result.needs_review:
+    current = next((r for r in runs if not r.stale), None)
+    if current and current.status == "COMPLETED" and current.result and not review_reasons(current):
         return "READY"
     return "REVIEW"
 
@@ -183,10 +183,11 @@ def workspace(case_id, user):
             if source.model_dump(exclude={"mapping_version"}) != expected.model_dump(exclude={"mapping_version"}):
                 raise ExamConflict("frozen source does not match question")
         runs = audit_service().list(case.submission_id) if case.submission_id else []
-        current_run = next((r for r in runs if not r.stale and r.status == "COMPLETED"), None)
+        current_run = next((r for r in runs if not r.stale), None)
+        completed_current = current_run and current_run.status == "COMPLETED"
         audit_stale = bool(not current_run and any(r.stale for r in runs))
         human = bool(history and any(r.revision_number > 1 for r in history.revisions))
-        reanalysis = bool(not current_run and (human or audit_stale))
+        reanalysis = bool(not completed_current and (human or audit_stale))
         state = question_state(case, bool(history), runs)
         versions, events = [], []
         for summary in reversed(summaries):
@@ -218,9 +219,11 @@ def workspace(case_id, user):
             sibling_runs = audit_service().list(sibling.submission_id) if sibling.submission_id and readings else []
             question_states[sibling.case_id] = question_state(sibling, bool(readings), sibling_runs)
         segments, _ = capture_segments(detail, case)
+        audits = [project_audit(run, case, detail) for run in runs]
         return dict(question_attempt=case, pages=pages, mapping_version=detail.mapping.version,
             history=history, versions=versions, question_states=question_states, current_version=next((v for v in versions if v["current"]), None),
             state=state, human_reviewed=human, audit_stale=audit_stale, reanalysis_required=reanalysis,
-            analysis_state="REANALYSIS_REQUIRED" if reanalysis else "AVAILABLE" if current_run else "AWAITING_ANALYSIS",
+            analysis_state="REANALYSIS_REQUIRED" if reanalysis else "FAILED" if current_run and current_run.status == "FAILED" else "AVAILABLE" if current_run else "AWAITING_ANALYSIS",
             capture_candidate_available=bool(segments) and history is None,
-            audits=[public_audit_data(run) for run in runs], events=events)
+            audits=audits, current_audit=next((r for r in audits if not r["stale"]), None),
+            events=events + [event for run in audits for event in run["events"]])

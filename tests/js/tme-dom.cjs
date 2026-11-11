@@ -107,7 +107,7 @@ async function pilot({ auditRun = null, mode = 'IMAGE_SCAN', automatic = false, 
     },
   };
   const storage = new Map(initialStorage);
-  ctx.window = { localStorage: { getItem: key => storage.get(key), setItem: (key, value) => storage.set(key, value) }, ConfiaTMEScan: { ...Scan, derive: async () => ({ derived_png_base64: 'ZGVyaXZlZA==', derived_width: 10, derived_height: 20 }) },
+  ctx.window = { crypto:require('node:crypto').webcrypto, localStorage: { getItem: key => storage.get(key), setItem: (key, value) => storage.set(key, value) }, ConfiaTMEScan: { ...Scan, derive: async () => ({ derived_png_base64: 'ZGVyaXZlZA==', derived_width: 10, derived_height: 20 }) },
     ConfiaRecognitionView: { renderMathText(node, content) { node.textContent = content; rendered.push(content); } },
     ConfiaProblemMath: { renderContent(node,source,options) { node.textContent=source;statements.push({source,options}); } },
     matchMedia: () => ({ matches: desktop }),

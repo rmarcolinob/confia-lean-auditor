@@ -16,6 +16,7 @@ from .exam_capture import CaptureError
 from confia_lean_auditor.submissions.store import TranscriptionConflict, SubmissionConflict
 from .exam_models import (ExamCapturePackage, ExamDetail, ExamPage, PageMapping,
     QuestionAttemptView, UpdatePageMapping, TMEAssessmentCreate, MAX_CAPTURE_BODY)
+from confia_lean_auditor.submission_audits.errors import AuditConflict
 from .exam_store import exam_store, ExamConflict
 
 router = APIRouter()
@@ -28,6 +29,8 @@ def guarded(operation, *args, **kwargs):
         raise
     except FileNotFoundError:
         raise HTTPException(404, "Prova, avaliação ou questão não encontrada.") from None
+    except AuditConflict as exc:
+        raise HTTPException(409, exc.message) from None
     except CaptureError as exc:
         raise HTTPException(422, str(exc)) from None
     except (ExamConflict, AssessmentConflict, TranscriptionConflict, SubmissionConflict):

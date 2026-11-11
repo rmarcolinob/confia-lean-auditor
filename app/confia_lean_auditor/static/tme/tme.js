@@ -132,6 +132,7 @@
   const origin = c => c.source_mode === "IMAGE_SCAN" ? "Foto / scan" : "Escrita digital";
   const runFor = c => {
     const saved = local(c);
+    if(c.exam_submission_id)return saved.audits?.find(r=>!r.stale);
     if (saved.decision?.audit_run_id) return saved.audits?.find(r => r.audit_run_id === saved.decision.audit_run_id);
     return saved.audits?.find(r => !r.stale && r.status === "COMPLETED") || saved.audits?.[0];
   };
@@ -522,7 +523,7 @@
     views.append(original, transcript); setTab(saved.tab);
     const secondary = actions(); secondary.classList.add("transcript-commands");
     if (latest || c.exam_submission_id && pages.length) {
-      secondary.append(btn(c.exam_submission_id ? latest ? "Corrigir leitura" : "Digitar transcrição" : "Editar", () => { saved.editing = true; saved.editingBase ??= latest?.revision_number || 0; editor.hidden = false; documentView.hidden = true; setTab("transcript"); }, "secondary"));
+      secondary.append(btn(c.exam_submission_id ? latest ? "Corrigir leitura" : "Digitar transcrição" : "Editar", () => { saved.editing = true; if(c.exam_submission_id && primary)primary.disabled=true; saved.editingBase ??= latest?.revision_number || 0; editor.hidden = false; documentView.hidden = true; setTab("transcript"); }, "secondary"));
       if(c.data_origin !== "synthetic_demo" && !c.exam_submission_id) secondary.append(btn("Reprocessar", recognize, "secondary"));
     }
     if(c.exam_submission_id && saved.examReview.capture_candidate_available)secondary.append(btn("Importar leitura da captura",()=>importCapture(c),"secondary"));
@@ -559,7 +560,14 @@
     }, "secondary"); collapse.setAttribute("aria-controls", "analysis-content"); collapse.setAttribute("aria-expanded", String(!saved.analysisCollapsed));
     analysisHeading.appendChild(collapse); analysis.append(analysisHeading, analysisBody);
     if (saved.processing === "audit") analysisBody.appendChild(loading("Analisando matemática · executando verificações…"));
-    if (run) {
+    if(c.exam_submission_id){
+      const onOriginal=e=>{const index=saved.examPages.findIndex(p=>p.exam_page_id===e.exam_page_id);if(index<0)return;saved.page=index;setTab("original");drawer(false);solution.scrollIntoView({block:"start",behavior:"smooth"});};
+      if(run){const report=node("div");window.ConfiaWorkspaceReport.renderQuestion(run,report,{onOriginal});analysisBody.append(report);}
+      else if(!saved.processing)analysisBody.append(note("Aguardando análise. Nenhuma pontuação foi calculada para esta leitura."));
+      const previous=(saved.audits||[]).filter(r=>r!==run);
+      if(previous.length){const history=node("details");history.append(node("summary",`Histórico de análises (${previous.length})`));
+        for(const old of previous){const entry=node("details"),content=node("div");entry.append(node("summary",`Análise anterior · versão ${old.revision_number} · ${old.audit_run_id}`));window.ConfiaWorkspaceReport.renderQuestion(old,content,{onOriginal});entry.append(content);history.append(entry);}analysisBody.append(history);}
+    } else if (run) {
       if (run.stale) analysisBody.appendChild(note("Análise de uma revisão anterior. Analise a revisão atual antes de vincular a decisão."));
       if (run.result) { const report = node("div"); window.ConfIAReport.render(run.result, report, { context: "evaluator", auditRun: run, workspace: true, uiState: saved }); analysisBody.appendChild(report); }
       else analysisBody.appendChild(note("Não foi possível concluir a análise. A decisão humana permanece disponível."));
@@ -576,11 +584,12 @@
     const actionbar = node("div", undefined, "workspace-actions");
     const progress = saved.processing === "audit" ? "Analisando matemática · executando verificações…" : saved.processing === "recognition" ? "Reconhecendo solução…" : state.message || (run?.status === "FAILED" ? "Não foi possível concluir a análise matemática." : run ? "Análise concluída." : latest ? c.exam_submission_id ? "Transcrição disponível." : "Transcrição automática disponível." : saved.feedback?.state === "FAILED" ? saved.feedback.message : "Aguardando reconhecimento");
     actionbar.appendChild(note(progress));
-    actionbar.dataset.quiet=String(!state.message && !saved.processing && run?.status==="COMPLETED" && !run.stale);
+    actionbar.dataset.quiet=String(!c.exam_submission_id && !state.message && !saved.processing && run?.status==="COMPLETED" && !run.stale);
     let primary;
     if (!latest && (!c.exam_submission_id || pages.length)) primary = btn(saved.feedback?.state === "FAILED" ? "Tentar novamente" : "Reconhecer", recognize);
+    else if(c.exam_submission_id && latest) primary=btn(run?"Executar nova análise":"Analisar com ConfIA",audit);
     else if (!c.exam_submission_id && (!run || run.stale || run.status === "FAILED")) primary = btn("Analisar com ConfIA", audit);
-    if (primary) { primary.disabled = state.busy; actionbar.appendChild(primary); }
+    if (primary) { primary.disabled = state.busy || Boolean(c.exam_submission_id && saved.editing); actionbar.appendChild(primary); }
     if (saved.processing === "recognition") actionbar.appendChild(loading("Reconhecendo…"));
     const heading = context(c, saved.decision ? 3 : run ? 2 : latest ? 1 : 0); heading.appendChild(openDrawer);
     if(c.exam_submission_id){
@@ -668,11 +677,18 @@
   async function audit() {
     if (state.busy) return;
     const c = state.current, saved = local(c), history = saved.history, latest = history?.revisions.at(-1);
-    if (!latest) return;
+    if (!latest || c.exam_submission_id && saved.editing) return;
     state.busy = true; saved.processing = "audit"; await renderCorrection();
     try {
       const accepted = await ensureAcceptance(c, history, latest);
-      const run = await post(`/tme/cases/${c.case_id}/audits`, { transcription_id: history.transcription.transcription_id, revision_number: latest.revision_number, acceptance_id: accepted.acceptance_id });
+      const request={transcription_id:history.transcription.transcription_id,revision_number:latest.revision_number,acceptance_id:accepted.acceptance_id};
+      if(c.exam_submission_id){
+        const version=`${history.transcription.transcription_id}:${latest.revision_number}`;
+        if(saved.auditRequestVersion!==version){delete saved.auditRequestKey;saved.auditRequestVersion=version;}
+        saved.auditRequestKey ||= window.crypto.randomUUID();request.execution_key=saved.auditRequestKey;
+      }
+      const run = await post(`/tme/cases/${c.case_id}/audits`, request);
+      if(c.exam_submission_id){delete saved.auditRequestKey;saved.loaded=false;}
       saved.audits = [run, ...(saved.audits || []).filter(r => r.audit_run_id !== run.audit_run_id)]; state.message = run.status === "COMPLETED" ? "Análise concluída." : "Não foi possível concluir a análise matemática.";
     } catch (_) { state.message = "Não foi possível concluir a análise matemática. A solução permanece preservada; tente novamente."; }
     finally { state.busy = false; saved.processing = null; }

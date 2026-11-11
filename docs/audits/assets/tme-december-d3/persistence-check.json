@@ -1,0 +1,23 @@
+{
+  "exam_id": "exam_fef848d805cd6343de196b2bb4672eea",
+  "q1_version": "tr_bf4b492638914b55b80429ddbe07f84b:2",
+  "q1_current_audit": null,
+  "q1_stale_runs": [
+    "aud_7237c50d717708ee527161212df8e4fcee977143eafe7ab551e0f88dc7e8dc71",
+    "aud_e604befb5138689985f802635b585d2bf38b6fbe25a16c82edc62266bf3bc7db"
+  ],
+  "q2_current_audit": "aud_18180ee00b36be3649c1770ba828c9195271c6ce8fcefd904f805e4a01344c35",
+  "q2_suggested_score": 20,
+  "runs_unchanged_after_edit": true,
+  "audit_file_hashes": {
+    "aud_7237c50d717708ee527161212df8e4fcee977143eafe7ab551e0f88dc7e8dc71.json": "6f203d51b3e49520c476974d0d1ede0e6984f4d20d0143469276de52827da17b",
+    "aud_18180ee00b36be3649c1770ba828c9195271c6ce8fcefd904f805e4a01344c35.json": "10b90815eb255d1b4329e30332f53d9c4b53e42f7669589a63ea3b4f1768865f",
+    "aud_e604befb5138689985f802635b585d2bf38b6fbe25a16c82edc62266bf3bc7db.json": "6c1203ab3d2abcf946ddae7d6d6a1863fb4a4c06acd7333828cadecab5daa0d8"
+  },
+  "originals": [
+    {
+      "asset": "original_0001",
+      "sha256": "672c5f55ebcd7ff5038c64c0101027ec4332f956b4121c038acf8e5a07419f95"
+    }
+  ]
+}

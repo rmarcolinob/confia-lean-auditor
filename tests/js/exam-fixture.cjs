@@ -1,13 +1,13 @@
 const assert=require('node:assert/strict');
 const eid = 'exam_'+'e'.repeat(32), aid='asmt_'+'a'.repeat(32);
 const reply = data => ({ok:true,json:async()=>structuredClone(data)});
-function backend({failUpload=false}={}) {
+function backend({failUpload=false,auditResponder=null}={}) {
   const detail={submission:{submission_id:eid,page_count:4,original_documents:[{asset_id:'original_0001',media_type:'application/pdf'}],pages:Array.from({length:4},(_,i)=>({exam_page_id:'page_'+String(i).repeat(32),page_number:i+1,original_page_number:i+1,original_asset_id:'original_0001',preview_asset_id:`preview_000${i+1}`}))},
     participant:{external_code:'PROVA-1'},assessment:{assessment:{assessment_id:aid,title:'Avaliação configurada pelo backend'}},
     question_attempts:[1,2].map(i=>({case_id:'case_'+String(i).repeat(32),problem_id:'ITA2025F2Q'+i,question_order:i,exam_submission_id:eid,max_score:20,source_mode:'IMAGE_SCAN',external_candidate_ref:'PROVA-1'})),mapping:{version:1,bindings:[]}};
-  let uploaded=false;const histories=new Map();
+  let uploaded=false;const histories=new Map(),audits=new Map();
   const pagesFor=id=>detail.mapping.bindings.filter(b=>b.question_attempt_id===id).map(b=>detail.submission.pages.find(p=>p.exam_page_id===b.exam_page_id));
-  return {detail,histories,mockFetch:async(url,options)=>{
+  return {detail,histories,audits,mockFetch:async(url,options)=>{
     if(url==='/tme/assessments')return reply([detail.assessment]);
     if(url==='/tme/exam-submissions'&&options.method==='POST'){
       if(failUpload)return {ok:false,status:422,json:async()=>({detail:'PDF inválido.'})};
@@ -19,9 +19,22 @@ function backend({failUpload=false}={}) {
     if(url.endsWith('/workspace')){
       const id=url.split('/')[3],history=histories.get(id)||null,latest=history?.revisions.at(-1);
       const versions=(history?.revisions||[]).map(r=>({version_id:`${r.transcription_id}:${r.revision_number}`,version_number:r.revision_number,origin:r.revision_number>1?'human':history.transcription.source==='capture'?'capture':'human',current:r===latest,text:r.segments.map(s=>s.text).join('\n'),created_at:'2026-11-10T12:00:00Z'}));
+      const runs=(audits.get(id)||[]).map(r=>({...r,stale:r.revision_number!==latest?.revision_number}));
+      const current=runs.find(r=>!r.stale), state=!history?'PENDING':current&&!current.review_required?'READY':'REVIEW';
       return reply({question_attempt:detail.question_attempts.find(c=>c.case_id===id),pages:pagesFor(id),mapping_version:detail.mapping.version,
-        history,versions,current_version:versions.at(-1)||null,state:history?'REVIEW':'PENDING',audits:[],audit_stale:false,
-        reanalysis_required:(latest?.revision_number||0)>1,capture_candidate_available:!history,question_states:Object.fromEntries(detail.question_attempts.map(c=>[c.case_id,histories.has(c.case_id)?'REVIEW':'PENDING']))});
+        history,versions,current_version:versions.at(-1)||null,state,audits:runs,current_audit:current||null,audit_stale:runs.some(r=>r.stale)&&!current,
+        reanalysis_required:!current&&(latest?.revision_number||0)>1,capture_candidate_available:!history,question_states:Object.fromEntries(detail.question_attempts.map(c=>[c.case_id,!histories.has(c.case_id)?'PENDING':(audits.get(c.case_id)||[]).some(r=>r.revision_number===histories.get(c.case_id).revisions.at(-1).revision_number&&!r.review_required)?'READY':'REVIEW']))});
+    }
+    if(url.startsWith('/tme/cases/')&&url.endsWith('/accept')){
+      const id=url.split('/')[3],body=JSON.parse(options.body),acceptance={revision_number:body.revision_number,acceptance_id:'acc_'+id.slice(5)};
+      histories.get(id).acceptances.push(acceptance);return reply({acceptance});
+    }
+    if(url.startsWith('/tme/cases/')&&url.endsWith('/audits')&&options.method==='POST'){
+      const id=url.split('/')[3],body=JSON.parse(options.body);
+      assert.ok(auditResponder,'test must explicitly provide an audit result');
+      const result=await auditResponder(body,id);
+      if(result?.httpError)return {ok:false,status:503,json:async()=>({})};
+      audits.set(id,[result,...(audits.get(id)||[]).filter(r=>r.audit_run_id!==result.audit_run_id)]);return reply(result);
     }
     if(url.startsWith('/tme/cases/')&&url.endsWith('/transcriptions')&&options.method==='POST'){
       const id=url.split('/')[3],body=JSON.parse(options.body);
