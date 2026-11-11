@@ -85,6 +85,8 @@ def create(case_id, request, user):
     case, exams = owned_case(case_id, user), exam_store()
     with exams._locked():
         detail = exams._detail(case.exam_submission_id, user)
+        from .finalization import assert_editable
+        assert_editable(case.exam_submission_id)
         case = next(c for c in detail.question_attempts if c.case_id == case_id)
         if request.expected_mapping_version != detail.mapping.version:
             raise ExamConflict("mapping changed before import")
@@ -118,6 +120,8 @@ def revise(case_id, transcription_id, request, user):
     case, exams = owned_case(case_id, user), exam_store()
     with exams._locked():
         detail = exams._detail(case.exam_submission_id, user)
+        from .finalization import assert_editable
+        assert_editable(case.exam_submission_id)
         case = next(c for c in detail.question_attempts if c.case_id == case_id)
         histories = submission_store().list_transcriptions(case.submission_id)
         if case.status == "DECIDED" or not histories or histories[0].transcription.transcription_id != transcription_id:
@@ -133,6 +137,8 @@ def recognize(case_id, request, user, registry):
     case, exams = owned_case(case_id, user), exam_store()
     with exams._locked():
         detail = exams._detail(case.exam_submission_id, user)
+        from .finalization import assert_editable
+        assert_editable(case.exam_submission_id)
         case = next(c for c in detail.question_attempts if c.case_id == case_id)
         if case.status == "DECIDED":
             raise ExamConflict("confirmed question")
@@ -259,7 +265,9 @@ def workspace(case_id, user):
             max_score=str(sum((Decimal(d["max_points"]) for d in confirmed), Decimal(0))),
             exam_max_score=partial["max_score"], confirmed_questions=len(confirmed),
             total_questions=len(detail.question_attempts), remaining_questions=len(detail.question_attempts)-len(confirmed))
-        return dict(**human_data, confirmed_total=confirmed_total, question_decisions=human_current,
+        from .finalization import lifecycle
+        closure = lifecycle(case.exam_submission_id)
+        return dict(exam_finalized=bool(closure['current_final_correction']), **human_data, confirmed_total=confirmed_total, question_decisions=human_current,
             question_attempt=case, pages=pages, mapping_version=detail.mapping.version,
             history=history, versions=versions, question_states=question_states, current_version=next((v for v in versions if v["current"]), None),
             state=state, human_reviewed=human, audit_stale=audit_stale, reanalysis_required=reanalysis,

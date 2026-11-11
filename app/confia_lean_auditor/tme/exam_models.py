@@ -121,6 +121,8 @@ class ExamSubmission(SubmissionModel):
 
 
 class ExamDetail(SubmissionModel):
+    correction_status: Literal["IN_PROGRESS", "FINALIZED", "REOPENED"] = "IN_PROGRESS"
+    current_final_correction_id: Optional[str] = None
     submission: ExamSubmission
     assessment: AssessmentDocument
     participant: AssessmentParticipant

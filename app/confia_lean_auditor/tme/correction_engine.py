@@ -65,6 +65,8 @@ class CorrectionEngine:
             from .question_review import owned_case
             case = owned_case(case_id, user)
             detail = exams._detail(case.exam_submission_id, user)
+            from .finalization import assert_editable
+            assert_editable(case.exam_submission_id)
             case = next(c for c in detail.question_attempts if c.case_id == case_id)
             if case.status == "DECIDED" or not case.submission_id:
                 raise ExamConflict("question is not available for analysis")

@@ -516,6 +516,12 @@ class SubmissionStore:
         if any(segment.page_index not in page_indices for segment in segments):
             raise ValueError("transcription segment references an unknown page")
 
+    def assert_tme_editable(self, submission_id):
+        # Caller holds the submissions lock; closure uses that same lock.
+        from confia_lean_auditor.tme.finalization import submission_editable
+        record, _ = self._read(submission_id)
+        submission_editable(record)
+
     def create_transcription(self, submission_id: str, request: CreateTranscriptionRequest):
         with self._locked(exclusive=True):
             submission = self.assert_submission_integrity(submission_id)
@@ -540,6 +546,7 @@ class SubmissionStore:
         Caller holds the exclusive lock. An automatic result and its first
         revision are published together, so a retry never finds a partial run.
         """
+        self.assert_tme_editable(transcription.submission_id)
         # Revalidate even model_copy/model_construct values supplied by internal callers.
         transcription = TranscriptionRecord.model_validate(transcription.model_dump())
         revision = TranscriptionRevision.model_validate(revision.model_dump())
@@ -670,6 +677,7 @@ class SubmissionStore:
             folder = self._transcription_folder(transcription_id)
             record = self._read_transcription_record(folder)
             submission = self.assert_submission_integrity(record.submission_id)
+            self.assert_tme_editable(record.submission_id)
             self._validate_segment_pages(request.segments, submission)
             revisions = self._read_revisions(folder)
             if request.based_on_revision_number != revisions[-1].revision_number:
@@ -695,6 +703,7 @@ class SubmissionStore:
         with self._locked(exclusive=True):
             folder = self._transcription_folder(transcription_id)
             submission = self.assert_submission_integrity(folder.parent.parent.name)
+            self.assert_tme_editable(submission.submission_id)
             history = self._transcription_history(transcription_id)
             revision = next((item for item in history.revisions if item.revision_number == request.revision_number), None)
             if revision is None:

@@ -120,7 +120,12 @@ class ExamStore(AssessmentStore):
                     or attempt.problem_id != item.problem_id or attempt.question_order != item.order
                     or attempt.max_score != Decimal(str(item.points))):
                 raise ExamConflict("Questão não corresponde à definição da prova.")
-        return ExamDetail(submission=submission, assessment=assessment, participant=participant,
+        from .finalization import lifecycle
+        life = lifecycle(identifier)
+        current = life["current_final_correction"]
+        return ExamDetail(correction_status="FINALIZED" if current else "REOPENED" if life["reopened"] else "IN_PROGRESS",
+                          current_final_correction_id=current["final_correction_id"] if current else None,
+                          submission=submission, assessment=assessment, participant=participant,
                           question_attempts=attempts, mapping=self._mapping(identifier, submission))
 
     def detail(self, identifier, user):
@@ -137,7 +142,13 @@ class ExamStore(AssessmentStore):
                     if exc.status_code == 403:
                         continue
                     raise
-                result.append(dict(submission_id=submission.submission_id, title=assessment.assessment.title,
+                from .finalization import lifecycle
+                closure = lifecycle(submission.submission_id)
+                current = closure['current_final_correction']
+                result.append(dict(status='FINALIZED' if current else 'REOPENED' if closure['reopened'] else 'IN_PROGRESS',
+                    final_total=current['final_total'] if current else None,
+                    adjusted_question_count=current['adjusted_question_count'] if current else None,
+                    finalized_at=current['finalized_at'] if current else None, submission_id=submission.submission_id, title=assessment.assessment.title,
                     participant_code=participant.external_code, page_count=submission.page_count,
                     question_count=len(submission.question_attempt_ids), created_at=submission.created_at))
             return sorted(result, key=lambda r: r["created_at"], reverse=True)
@@ -206,6 +217,8 @@ class ExamStore(AssessmentStore):
     def update_mapping(self, identifier, request, user):
         with self._locked():
             detail = self._detail(identifier, user)
+            from .finalization import assert_editable
+            assert_editable(identifier)
             if request.expected_version != detail.mapping.version:
                 raise ExamConflict("A associação mudou. Recarregue a prova antes de salvar.")
             self.validate_bindings(detail.submission, request.bindings)

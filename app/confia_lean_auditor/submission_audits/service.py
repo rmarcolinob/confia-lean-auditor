@@ -171,12 +171,14 @@ class AuditService:
     def execute(self, submission_id, request, *, question_context=None, question_event_builder=None):
         with self.submissions._locked():
             source = self._source(submission_id, request)
+            self.submissions.assert_tme_editable(submission_id)
         run_id = self._identity(source, request.execution_key)
         with self._request_lock(run_id):
             # Recheck after waiting. Never replay a now-invalid source.
             with self.submissions._locked():
                 if self._source(submission_id, request) != source:
                     raise SourceIntegrityError()
+                self.submissions.assert_tme_editable(submission_id)
             if self._path(run_id).exists() or self._path(run_id).is_symlink():
                 existing = self._read(run_id)
                 if question_context is not None and existing.question_context != question_context:
@@ -229,6 +231,7 @@ class AuditService:
             with self.submissions._locked():
                 if self._source(submission_id, request) != source:
                     raise SourceIntegrityError()
+                self.submissions.assert_tme_editable(submission_id)
                 SubmissionStore._write_atomic_new(self._path(run_id), run.model_dump_json(indent=2).encode())
                 from confia_lean_auditor.tme.home_summary import project_submission
                 submission, _ = self.submissions._read(submission_id)

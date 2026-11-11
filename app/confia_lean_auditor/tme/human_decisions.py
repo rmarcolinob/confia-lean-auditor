@@ -207,6 +207,8 @@ def decide(case_id, body, user):
         snapshot=workspace(case_id,user)
         with exam_store()._locked():
             case=owned_case(case_id,user)
+            from .finalization import assert_editable
+            assert_editable(case.exam_submission_id)
             chain=records(case)
             replay=next((r for r in chain if r['execution_key']==body.execution_key), None)
             if replay:
@@ -244,7 +246,10 @@ def reopen(case_id, body, user):
     with question_lock(case_id,user):
         snapshot=workspace(case_id,user)
         with exam_store()._locked():
-            case=owned_case(case_id,user); chain=records(case)
+            case=owned_case(case_id,user)
+            from .finalization import assert_editable
+            assert_editable(case.exam_submission_id)
+            chain=records(case)
             replay=next((r for r in chain if r['execution_key']==body.execution_key),None)
             if replay:
                 if replay['kind']!='reopen' or replay['request_sha256']!=canonical_sha256(body.model_dump(mode='json')):raise ExamConflict('request key already used')

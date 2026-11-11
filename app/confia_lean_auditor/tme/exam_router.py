@@ -185,3 +185,29 @@ def reopen_question(case_id: str, body: ReopenQuestion, response: Response, user
     from .human_decisions import reopen
     response.headers["Cache-Control"] = "no-store"
     return guarded(reopen, case_id, body, user)
+
+
+from .finalization import FinalizeRequest, ReopenCorrection, FinalCorrection
+
+
+@router.get('/exam-submissions/{exam_id}/correction', response_model=dict)
+def correction_summary(exam_id: str, response: Response, user=Depends(require_tme_evaluator)):
+    from .finalization import summary, gold_rows
+    response.headers['Cache-Control'] = 'no-store'
+    data = guarded(summary, exam_id, user)
+    data['gold_rows'] = gold_rows(data['current_final_correction']) if data['current_final_correction'] else []
+    return data
+
+
+@router.post('/exam-submissions/{exam_id}/correction/finalize', response_model=FinalCorrection, status_code=201)
+def finalize_correction(exam_id: str, body: FinalizeRequest, response: Response, user=Depends(require_tme_evaluator)):
+    from .finalization import finalize
+    response.headers['Cache-Control'] = 'no-store'
+    return guarded(finalize, exam_id, body, user)
+
+
+@router.post('/exam-submissions/{exam_id}/correction/reopen', response_model=dict)
+def reopen_correction(exam_id: str, body: ReopenCorrection, response: Response, user=Depends(require_tme_evaluator)):
+    from .finalization import reopen
+    response.headers['Cache-Control'] = 'no-store'
+    return guarded(reopen, exam_id, body, user)

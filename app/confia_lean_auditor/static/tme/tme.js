@@ -63,7 +63,7 @@
         open: id => openCase(id).catch(showError), retry: home }));
     };
     render("loading");
-    try { summary = await api(`/tme/home-summary?period=${encodeURIComponent(state.homePeriod)}`); render("success"); } catch (_) { summary = undefined; render("error"); }
+    try { summary = await api(`/tme/home-summary?period=${encodeURIComponent(state.homePeriod)}`); render("success"); if(fullExam&&generation===state.generation)await fullExam.list(root,()=>generation===state.generation).catch(()=>{}); } catch (_) { summary = undefined; render("error"); }
   }
   const Scan = window.ConfiaTMEScan;
   const maxPages = Scan.maxPages;
@@ -528,7 +528,7 @@
       if(c.data_origin !== "synthetic_demo" && !c.exam_submission_id) secondary.append(btn("Reprocessar", recognize, "secondary"));
     }
     if(c.exam_submission_id && saved.examReview.capture_candidate_available)secondary.append(btn("Importar leitura da captura",()=>importCapture(c),"secondary"));
-    for (const button of secondary.children) button.disabled = state.busy;
+    for (const button of secondary.children) button.disabled = state.busy || Boolean(saved.examReview?.exam_finalized);
     transcript.prepend(secondary);
     const provenance = node("details", undefined, "transcription-metadata"); provenance.appendChild(node("summary", "Originais e histórico"));
     if(c.source_mode==="IMAGE_SCAN" && !c.exam_submission_id) for(const index of pages) {const link=node("a",`Abrir original preservado · página ${index+1}`,"desktop-original-link");link.href=`/tme/cases/${c.case_id}/originals/${index}`;link.target="_blank";link.rel="noopener";provenance.appendChild(link);}
@@ -604,7 +604,7 @@
     if (!latest && (!c.exam_submission_id || pages.length)) primary = btn(saved.feedback?.state === "FAILED" ? "Tentar novamente" : "Reconhecer", recognize);
     else if(c.exam_submission_id && latest) primary=btn(run?.status==="FAILED"?"Tentar novamente":saved.examReview.reanalysis_required?"Reanalisar questão":run?"Executar nova análise":"Analisar com ConfIA",audit);
     else if (!c.exam_submission_id && (!run || run.stale || run.status === "FAILED")) primary = btn("Analisar com ConfIA", audit);
-    if (primary) { primary.disabled = state.busy || Boolean(c.exam_submission_id && saved.editing); actionbar.appendChild(primary); }
+    if (primary) { primary.disabled = state.busy || Boolean(c.exam_submission_id && saved.editing) || Boolean(saved.examReview?.exam_finalized); actionbar.appendChild(primary); }
     if (saved.processing === "recognition") actionbar.appendChild(loading("Reconhecendo…"));
     const heading = context(c, saved.decision || saved.examReview?.current_human_decision ? 3 : run ? 2 : latest ? 1 : 0); heading.appendChild(openDrawer);
     if(c.exam_submission_id){
@@ -614,6 +614,9 @@
       if(partial)info?.append(node("span",`Sugestão ConfIA${partial.complete?"":" parcial"}: ${String(partial.suggested_score).replace(".",",")} / ${partial.max_score} · ${partial.analyzed_questions}/${partial.total_questions} questões${partial.awaiting_reanalysis?` · ${partial.awaiting_reanalysis} aguardando reanálise`:""}`));
       const confirmed=saved.examReview.confirmed_total;
       if(confirmed)info?.append(node("span",`Confirmado: ${humanPoints(confirmed.final_score)} / ${humanPoints(confirmed.max_score)} · ${confirmed.confirmed_questions}/${confirmed.total_questions} questões · ${confirmed.remaining_questions} ainda não homologadas`));
+      actionbar.append(btn(saved.examReview.exam_finalized?"Ver correção finalizada":"Resumo da correção",()=>{if(state.busy)return;state.current=null;return fullExam.summary(c.exam_submission_id);},"secondary"));
+      const examActions=actions(...Array.from(actionbar.children).filter(el=>el.tagName==="BUTTON"));actionbar.append(examActions);for(const button of examActions.children)button.disabled=button.disabled||state.busy;
+      if(saved.examReview.exam_finalized)heading.append(note("Prova finalizada. Reabra a correção no resumo para fazer alterações."));
       if(!pages.length)heading.append(note("Associe páginas a esta questão antes de registrar a leitura."));
     }
     const problem = state.problems?.find(p => (p.problem_id || p.id) === c.problem_id);
@@ -740,11 +743,12 @@
   function humanDecisionPanel(c,saved,run){
     const box=node("section");box.setAttribute("aria-label","Homologação da questão");
     const current=saved.examReview.current_human_decision;
+    const finalized=saved.examReview.exam_finalized;
     if(current){
       const delta=Number(current.adjustment_delta),success=note("✓ Confirmada");success.classList.add("decision-success");
       box.append(success,node("strong",`Nota final: ${humanPoints(current.final_points)} / ${humanPoints(current.max_points)}`),node("p",delta?`Ajuste: ${delta>0?"+":""}${humanPoints(current.adjustment_delta)}`:"Sugestão aceita"));
       const detail=node("details");detail.append(node("summary","Ver decisão"),humanDecisionDetails(current));box.append(detail);
-      box.append(btn("Reabrir questão",()=>humanAction(c,{human_decision_id:current.human_decision_id},true),"secondary"));
+      if(!finalized)box.append(btn("Reabrir questão",()=>humanAction(c,{human_decision_id:current.human_decision_id},true),"secondary"));
     }else if(!run || run.stale || run.status!=="COMPLETED" || run.suggested_score==null){
       box.append(note("Uma análise atual com pontuação disponível é necessária antes da homologação."));
     }else{
@@ -768,11 +772,11 @@
       }
     }
     if(saved.processing==="decision")box.append(note("Registrando decisão…"));
-    for(const control of box.querySelectorAll("button,input,textarea"))control.disabled=state.busy||Boolean(saved.editing);
+    for(const control of box.querySelectorAll("button,input,textarea"))control.disabled=state.busy||Boolean(saved.editing)||Boolean(finalized);
     return box;
   }
   async function humanAction(c,body,reopen=false){
-    const saved=local(c);if(state.busy||saved.editing)return;
+    const saved=local(c);if(state.busy||saved.editing||saved.examReview?.exam_finalized)return;
     const serialized=JSON.stringify({body,reopen});
     if(saved.humanRequestBody!==serialized){saved.humanRequestBody=serialized;saved.humanRequestKey=window.crypto.randomUUID();}
     state.busy=true;saved.processing="decision";await renderCorrection();

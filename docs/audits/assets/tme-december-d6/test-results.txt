@@ -1,0 +1,76 @@
+D6 — testes e evidências
+SHA inicial: df6e20ebf51c89649ee24793c030949e3c27da60
+
+JS baseline
+✔ mismatched response is rejected and cannot be presented as the requested question (1.621875ms)
+✔ teacher retry failure keeps the earlier report and announces unavailable analysis (2.116667ms)
+✔ student response compares current field values even if an external edit emits no input event (1.926959ms)
+✔ UI-03 text analysis states reflect actual mocked requests and never change local evaluation data (2.307833ms)
+ℹ tests 510
+ℹ suites 0
+ℹ pass 510
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1271.637333
+
+JS final
+✔ mismatched response is rejected and cannot be presented as the requested question (2.033292ms)
+✔ teacher retry failure keeps the earlier report and announces unavailable analysis (2.32875ms)
+✔ student response compares current field values even if an external edit emits no input event (2.058958ms)
+✔ UI-03 text analysis states reflect actual mocked requests and never change local evaluation data (2.6455ms)
+ℹ tests 515
+ℹ suites 0
+ℹ pass 515
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1583.728416
+
+Foco D1–D6
+...................................................................      [100%]
+67 passed in 42.63s
+
+Transcrição e D6 após correção
+........................................................................ [ 81%]
+................                                                         [100%]
+88 passed in 26.94s
+
+Auditorias e D6 após correção
+        assert run["status"] == "COMPLETED", run
+        internal = persisted_run(run)
+        assert Path(internal["artifact_dir"], "solution.txt").read_text() == solution
+        assert run["result"]["student_claim_checks"]
+>       assert any(item["status"] == "refuted" for item in run["result"]["student_claim_checks"])
+E       assert False
+E        +  where False = any(<generator object test_real_bridge_preserves_wrong_solution_and_runs_existing_lean_pipeline.<locals>.<genexpr> at 0x10a011510>)
+
+tests/test_submission_audits.py:356: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_submission_audits.py::test_real_bridge_preserves_wrong_solution_and_runs_existing_lean_pipeline
+1 failed, 39 passed in 24.06s
+
+Lean no SHA inicial
+        internal = persisted_run(run)
+        assert Path(internal["artifact_dir"], "solution.txt").read_text() == solution
+        assert run["result"]["student_claim_checks"]
+>       assert any(item["status"] == "refuted" for item in run["result"]["student_claim_checks"])
+E       assert False
+E        +  where False = any(<generator object test_real_bridge_preserves_wrong_solution_and_runs_existing_lean_pipeline.<locals>.<genexpr> at 0x10aa94120>)
+
+tests/test_submission_audits.py:356: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_tme_accepted_integration.py::test_real_local_lean_status_certificates_preserved
+FAILED tests/test_submission_audits.py::test_real_bridge_preserves_wrong_solution_and_runs_existing_lean_pipeline
+2 failed in 2.32s
+
+Persistência final: PASS — 11 hashes preservados; versões 1=57 e 2=56; Q2/Q3 idênticas; eventos e gold rows coerentes.
+
+Python regressão final (26 arquivos):
+tests/test_submission_audits.py:356: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_tme_accepted_integration.py::test_real_local_lean_status_certificates_preserved
+FAILED tests/test_submission_audits.py::test_real_bridge_preserves_wrong_solution_and_runs_existing_lean_pipeline
+2 failed, 863 passed, 1 skipped in 272.36s (0:04:32)

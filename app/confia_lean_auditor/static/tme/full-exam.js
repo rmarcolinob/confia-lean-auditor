@@ -75,12 +75,73 @@
       content.append(form,row(btn("Corrigir questão avulsa / escrita digital",()=>{if(!busy)return legacy();},"secondary")));
     }
 
-    async function list(host) {
+    async function list(host,isCurrent=()=>true) {
+      const ticket=generation;
       const records=await api("/tme/exam-submissions");
-      if(!records.length)return;
+      if(!records.length||ticket!==generation||!isCurrent())return;
       const section=n("section",undefined,"tme-panel");section.append(n("h2","Provas recebidas"));
-      for(const record of records){const item=btn(`${record.participant_code} · ${record.title} · ${record.page_count} páginas · ${record.question_count} questões`,()=>openExam(record.submission_id),"tme-button secondary");section.append(row(item));}
+      for(const record of records){const item=btn(`${record.participant_code} · ${record.title} · ${record.page_count} páginas · ${record.question_count} questões${record.status==='FINALIZED'?` · Finalizada · Final ${points(record.final_total)} · ${record.adjusted_question_count} ajustes · ${new Date(record.finalized_at).toLocaleDateString('pt-BR')}`:record.status==='REOPENED'?' · Reaberta':''}`,()=>record.status==='FINALIZED'?summary(record.submission_id):openExam(record.submission_id),"tme-button secondary");section.append(row(item));}
       host.prepend(section);
+    }
+
+    const points=value=>value==null?'—':Number(value).toLocaleString('pt-BR',{maximumFractionDigits:2});
+    const delta=value=>value==null?'—':Number(value)===0?'—':`${Number(value)>0?'+':''}${points(value)}`;
+    const requests=new Map();
+    function questionTable(questions,examId,historical=false){
+      const wrapper=n('div'),table=n('table');wrapper.style.overflowX='auto';
+      table.append(n('caption','Sugestão ConfIA e decisão humana por questão'));
+      const head=n('thead'),headers=n('tr');
+      for(const label of ['Questão','ConfIA','Final','Ajuste','Status'])headers.append(n('th',label));head.append(headers);table.append(head);
+      const body=n('tbody');
+      for(const q of questions){const tr=n('tr'),question=n('td');
+        question.append(historical?n('span',`Q${q.question_order}`):btn(`Q${q.question_order}`,()=>openExam(examId,q.question_attempt_id),'secondary'));
+        tr.append(question,n('td',q.suggested_score==null?'—':`${points(q.suggested_score)} / ${points(q.max_score)}`),n('td',q.final_score==null?'—':`${points(q.final_score)} / ${points(q.max_score)}`),n('td',delta(q.adjustment)),n('td',q.status==='CONFIRMED'||historical?q.review_required?'Confirmada após revisão':'Confirmada':q.blocker||'Pendente'));
+        body.append(tr);
+      }table.append(body);wrapper.append(table);return wrapper;
+    }
+    async function summary(examId,notice=''){
+      const ticket=++generation;show(Views.Loading());
+      let data;
+      try{data=await api(`/tme/exam-submissions/${examId}/correction`);}
+      catch(_){if(ticket===generation)show(Views.ErrorState('Não foi possível carregar o resumo da correção.',()=>summary(examId)));return;}
+      if(ticket!==generation)return;
+      const current=data.current_final_correction;
+      const box=Views.Page(current?'Correção finalizada':'Resumo da correção',`${data.participant_code} · ${data.assessment_title}`);
+      const panel=n('section',undefined,'queue');
+      panel.append(n('h2',current?'Finalizada':data.status==='REOPENED'?'Correção reaberta':'Confira antes de finalizar'));
+      if(notice)panel.append(message(notice));
+      panel.append(questionTable(data.questions,examId));
+      const totals=n('div',undefined,'card');
+      totals.append(n('p',`ConfIA${data.suggested_total_complete?'':' parcial — incompleto'}: ${points(data.suggested_total)} / ${points(data.max_total)}`),
+        n('p',`${data.final_total_complete?'Final humano':'Confirmado parcial'}: ${points(data.final_total)} / ${points(data.max_total)}`),
+        n('p',`Ajuste total: ${delta(data.total_adjustment)}`),n('p',`${data.adjusted_question_count} de ${data.question_count} questões tiveram ajuste humano`),
+        n('p',`${data.confirmed_question_count} confirmadas · ${data.pending_question_count} pendentes · ${data.unconfirmed_review_question_count} em revisão · ${data.review_question_count} com alerta ConfIA`));
+      panel.append(totals);
+      if(current)panel.append(message(`Finalizada em ${new Date(current.finalized_at).toLocaleString('pt-BR')} por ${current.finalized_by} · versão ${current.version}. Reabra explicitamente antes de alterar a prova.`));
+      if(data.blockers.length){const pending=n('section',undefined,'card');pending.append(n('h3','Não é possível finalizar.'));
+        for(const q of data.blockers)pending.append(n('p',`Q${q.question_order}: ${q.reason}`),btn(`Abrir Q${q.question_order} pendente`,()=>openExam(examId,q.question_attempt_id),'secondary'));
+        panel.append(pending);
+      }
+      let busy=false;
+      const controls=row(),confirmation=n('section',undefined,'card');confirmation.hidden=true;
+      async function act(reopen){
+        if(busy)return;busy=true;setBusy(true);
+        for(const b of panel.querySelectorAll('button'))b.disabled=true;
+        const body=reopen?{final_correction_id:current.final_correction_id}:{expected_snapshot_sha256:data.snapshot_sha256};
+        const signature=JSON.stringify({examId,reopen,body});if(!requests.has(signature))requests.set(signature,key());
+        let feedback;
+        try{await post(`/tme/exam-submissions/${examId}/correction/${reopen?'reopen':'finalize'}`,{...body,execution_key:requests.get(signature)});
+          requests.delete(signature);feedback=reopen?'Correção reaberta. O fechamento anterior foi preservado.':'Correção finalizada. Snapshot e totais preservados.';
+        }catch(error){feedback=error.status===409?'A prova mudou ou possui pendências. Confira o resumo atualizado antes de confirmar.':'Não foi possível registrar o fechamento. Confira o estado atual e tente novamente.';if(error.status===409)requests.delete(signature);}
+        finally{busy=false;setBusy(false);}
+        return summary(examId,feedback);
+      }
+      if(current){controls.append(btn('Reabrir correção',()=>{confirmation.hidden=false;confirmation.replaceChildren(message('Reabrir permitirá alterações. Este fechamento continuará no histórico.'),btn('Confirmar reabertura',()=>act(true)),btn('Cancelar',()=>{confirmation.hidden=true;},'secondary'));},'secondary'));}
+      else{const finish=btn('Finalizar correção',()=>{confirmation.hidden=false;confirmation.replaceChildren(message(`Confirme o fechamento de ${data.question_count} questões com nota final ${points(data.final_total)} / ${points(data.max_total)}.`),btn('Confirmar finalização',()=>act(false)),btn('Cancelar',()=>{confirmation.hidden=true;},'secondary'));});finish.disabled=!data.ready_to_finalize;controls.append(finish);}
+      controls.append(btn('Voltar à prova',()=>openExam(examId),'secondary'));panel.append(controls,confirmation);
+      const history=n('details');history.append(n('summary',`Histórico de fechamento (${data.final_corrections.length})`));
+      for(const f of data.final_corrections){const entry=n('details');entry.append(n('summary',`Versão ${f.version} · Final ${points(f.final_total)} / ${points(f.max_total)} · ${new Date(f.finalized_at).toLocaleString('pt-BR')}`),n('p',`${f.participant_code} · ${f.assessment_title} · ${f.finalized_by}`),questionTable(f.questions,examId,true),n('p',`ConfIA ${points(f.suggested_total_snapshot)} · Final ${points(f.final_total)} · Ajuste ${delta(f.total_adjustment)}`));history.append(entry);}
+      panel.append(history);box.append(panel);show(box);
     }
 
     function pageCard(examId, page){
@@ -102,7 +163,7 @@
         const intro=message(`${detail.submission.page_count} páginas preservadas · ${detail.question_attempts.length} questões esperadas`);
         const originals=row();
         for(const asset of detail.submission.original_documents){const link=n("a",`Original ${originals.children.length+1}`,"tme-button secondary");link.href=assetURL(examId,asset.asset_id);link.target="_blank";link.rel="noopener";originals.append(link);}
-        box.append(intro,originals);
+        box.append(intro,originals,row(btn("Resumo da correção",()=>summary(examId),"secondary")));
         if(question)return await openQuestion(question.question_attempt,detail,question);
         const grid=n("div",undefined,"scan-grid");detail.submission.pages.forEach(page=>grid.append(pageCard(examId,page)));box.append(grid);
         const mapping=n("section",undefined,"tme-panel"),status=message("Uma página pode ser associada a mais de uma questão.");mapping.append(n("h2","Questões e páginas"),status);
@@ -120,10 +181,12 @@
           try{detail.mapping=await api(`/tme/exam-submissions/${examId}/page-mapping`,{method:"PUT",body:JSON.stringify({expected_version:detail.mapping.version,bindings})});dirty=false;status.textContent="Associações salvas. Abra uma questão para conferir suas páginas.";}
           catch(e){status.textContent=e.message;}
           finally{busy=false;setBusy(false);save.disabled=false;checks.forEach(c=>c.disabled=false);openButtons.forEach(c=>c.disabled=false);}
-        });mapping.append(row(save));box.append(mapping);show(box);
+        });
+        if(detail.correction_status==="FINALIZED"){save.disabled=true;checks.forEach(c=>c.disabled=true);status.textContent="Prova finalizada. Reabra a correção no resumo para alterar.";}
+        mapping.append(row(save));box.append(mapping);show(box);
       }catch(_){if(ticket===generation)show(Views.ErrorState("Não foi possível abrir esta prova.",()=>open(examId,attemptId)));}
     }
-    return {newCorrection,list,open,cancel:()=>{generation++;}};
+    return {newCorrection,list,open,summary,cancel:()=>{generation++;}};
   }
   root.ConfiaFullExam={create};
 })(window);
