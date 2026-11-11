@@ -52,6 +52,11 @@ def context_for(case, detail):
 class CorrectionEngine:
     """TME_CURRENT today. Future modes must implement the same product projection."""
     def audit_question(self, case_id, request: AuditRequest, user):
+        from .human_decisions import question_lock
+        with question_lock(case_id, user):
+            return self._audit_question(case_id, request, user)
+
+    def _audit_question(self, case_id, request: AuditRequest, user):
         from .question_review import workspace
         # Validates ownership, frozen page mapping and source integrity. No engine
         # call occurs until the exact current version has been checked.

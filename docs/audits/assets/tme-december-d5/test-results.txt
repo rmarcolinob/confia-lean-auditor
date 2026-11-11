@@ -1,0 +1,102 @@
+D5 — evidências de testes
+SHA inicial: 0a48c6c410bfdc3a397055d1cd05902113b363bc
+
+JavaScript baseline
+✔ mismatched response is rejected and cannot be presented as the requested question (1.967542ms)
+✔ teacher retry failure keeps the earlier report and announces unavailable analysis (2.393917ms)
+✔ student response compares current field values even if an external edit emits no input event (2.235333ms)
+✔ UI-03 text analysis states reflect actual mocked requests and never change local evaluation data (2.1775ms)
+ℹ tests 505
+ℹ suites 0
+ℹ pass 505
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1537.463334
+
+JavaScript final
+✔ mismatched response is rejected and cannot be presented as the requested question (1.588459ms)
+✔ teacher retry failure keeps the earlier report and announces unavailable analysis (1.754417ms)
+✔ student response compares current field values even if an external edit emits no input event (2.1025ms)
+✔ UI-03 text analysis states reflect actual mocked requests and never change local evaluation data (1.901667ms)
+ℹ tests 510
+ℹ suites 0
+ℹ pass 510
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1554.441
+
+Python D2–D5 final
+............................................                             [100%]
+44 passed in 22.08s
+
+Lean no SHA inicial
+FF                                                                       [100%]
+=================================== FAILURES ===================================
+______________ test_real_local_lean_status_certificates_preserved ______________
+
+offline = (<starlette.testclient.TestClient object at 0x108e2d3d0>, [], PosixPath('/private/var/folders/4h/mld1ypt95nq1z3nm58k0k64m0000gn/T/pytest-of-LinMarcolino/pytest-34/test_real_local_lean_status_ce0'))
+
+    def test_real_local_lean_status_certificates_preserved(offline):
+        client,_,_=offline
+        base,_,_,req=prepare(client,2,{'c':'pair_permutations: 4!=24\npair_orientations: 2^4=8'})
+        service=audits.service();service.tme_use_lean=True
+        sid=service.submissions.transcription_history(req['transcription_id']).transcription.submission_id
+        run=service.execute(sid,AuditRequest(**req))
+        assert run.status=='COMPLETED'
+        checks=[f.student_check for f in run.result.bridge.auditor.facts if f.student_check]
+>       assert {c['status'] for c in checks}=={'verified','refuted'}
+E       AssertionError: assert {'technical_error'} == {'refuted', 'verified'}
+E         
+E         Extra items in the left set:
+E         'technical_error'
+E         Extra items in the right set:
+E         'verified'
+E         'refuted'
+E         Use -v to get more diff
+
+tests/test_tme_accepted_integration.py:193: AssertionError
+__ test_real_bridge_preserves_wrong_solution_and_runs_existing_lean_pipeline ___
+
+tmp_path = PosixPath('/private/var/folders/4h/mld1ypt95nq1z3nm58k0k64m0000gn/T/pytest-of-LinMarcolino/pytest-34/test_real_bridge_preserves_wro0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x108d39c10>
+
+    def test_real_bridge_preserves_wrong_solution_and_runs_existing_lean_pipeline(tmp_path, monkeypatch):
+        monkeypatch.setenv("CONFIA_SUBMISSIONS_DIR", str(tmp_path / "submissions"))
+        monkeypatch.setenv("CONFIA_SUBMISSION_AUDITS_DIR", str(tmp_path / "audits"))
+        client = TestClient(main.app)
+        solution = "x^57=1; x^14=1-x; x^7=-x. Logo a=1 e b=1.\n2 + 2 = 5"
+        request_payload = payload()
+        sid, rev = source(client, values=[{"segment_id": "wrong", "page_index": 0, "order": 0,
+                                         "kind": "mixed", "text": solution}], request_payload=request_payload)
+        request = accept(client, sid, rev)
+        folder = submissions.store().root / sid
+        before = persisted_files(folder)
+        response = execute(client, sid, request)
+        assert response.status_code == 200, response.text
+        run = response.json()
+        assert run["status"] == "COMPLETED", run
+        internal = persisted_run(run)
+        assert Path(internal["artifact_dir"], "solution.txt").read_text() == solution
+        assert run["result"]["student_claim_checks"]
+>       assert any(item["status"] == "refuted" for item in run["result"]["student_claim_checks"])
+E       assert False
+E        +  where False = any(<generator object test_real_bridge_preserves_wrong_solution_and_runs_existing_lean_pipeline.<locals>.<genexpr> at 0x108de2120>)
+
+tests/test_submission_audits.py:356: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_tme_accepted_integration.py::test_real_local_lean_status_certificates_preserved
+FAILED tests/test_submission_audits.py::test_real_bridge_preserves_wrong_solution_and_runs_existing_lean_pipeline
+2 failed in 2.43s
+
+Persistência após hardening final: PASS. Hashes do original, leituras, auditorias e decisões preservados; Q1 invalidada, Q2 confirmada 20, históricos e totais coerentes.
+
+Python regressão final (25 arquivos):
+tests/test_submission_audits.py:356: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_tme_accepted_integration.py::test_real_local_lean_status_certificates_preserved
+FAILED tests/test_submission_audits.py::test_real_bridge_preserves_wrong_solution_and_runs_existing_lean_pipeline
+2 failed, 854 passed, 1 skipped in 247.89s (0:04:07)

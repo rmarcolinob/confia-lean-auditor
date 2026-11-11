@@ -2,7 +2,7 @@
 import base64
 import binascii
 import json
-from typing import Optional, Literal
+from typing import Optional, Literal, Union
 from datetime import datetime, timezone
 from decimal import Decimal
 from uuid import uuid4
@@ -31,6 +31,7 @@ from confia_lean_auditor.submission_audits.schemas import AuditRequest
 from confia_lean_auditor.teacher_decisions.service import audit_snapshot
 from .models import (CaseCreate, CorrectionCase, EvaluatorDecision, EvaluatorDecisionRequest,
                      ScanPage, ScanSnapshot, ScanUpload)
+from .human_decisions import HumanDecision, HumanDecisionRequest
 from .store import case_store
 from .auth import require_tme_evaluator
 from .home_summary import HomeSummary, OperationalIndex, Period
@@ -370,9 +371,16 @@ async def recognize(case_id: str, request: Request, response: Response, user=Dep
     return RecognitionResponse.from_run(run)
 
 
-@router.post("/cases/{case_id}/decision", response_model=EvaluatorDecision, status_code=201)
-def decide(case_id: str, body: EvaluatorDecisionRequest, response: Response, user=Depends(require_tme_evaluator)):
+@router.post("/cases/{case_id}/decision", response_model=Union[HumanDecision, EvaluatorDecision], status_code=201)
+def decide(case_id: str, body: Union[HumanDecisionRequest, EvaluatorDecisionRequest], response: Response, user=Depends(require_tme_evaluator)):
     case = case_for(case_id, user)
+    if case.exam_submission_id:
+        if not isinstance(body, HumanDecisionRequest): raise HTTPException(422, "Informe a análise, versão e ação de homologação.")
+        from .human_decisions import decide as decide_question
+        from .exam_router import guarded as review_guarded
+        response.headers["Cache-Control"] = "no-store"
+        return review_guarded(decide_question, case_id, body, user)
+    if not isinstance(body, EvaluatorDecisionRequest): raise HTTPException(422, "Contrato de decisão inválido.")
     if not case.submission_id or body.final_points > body.max_points:
         raise HTTPException(422, "Pontuação ou fonte inválida.")
     try:
@@ -411,10 +419,15 @@ def decide(case_id: str, body: EvaluatorDecisionRequest, response: Response, use
     return decision
 
 
-@router.get("/cases/{case_id}/decision", response_model=Optional[EvaluatorDecision])
+@router.get("/cases/{case_id}/decision", response_model=Optional[Union[HumanDecision, EvaluatorDecision]])
 def get_decision(case_id: str, response: Response, user=Depends(require_tme_evaluator)):
     response.headers["Cache-Control"] = "no-store"
-    case_for(case_id, user)
+    case = case_for(case_id, user)
+    if case.exam_submission_id:
+        from .question_review import workspace
+        from .exam_router import guarded as review_guarded
+        current = review_guarded(workspace, case_id, user)["current_human_decision"]
+        return HumanDecision.model_validate({k:v for k,v in current.items() if k in HumanDecision.model_fields}) if current else None
     return case_store().decision(case_id, user)
 
 

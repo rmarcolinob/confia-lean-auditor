@@ -219,6 +219,10 @@ def workspace(case_id, user):
                 participant_id=detail.submission.participant_id, submission_id=case.exam_submission_id,
                 timestamp=event["created_at"], engine_version=getattr(linked, "auditor_version", None),
                 previous_audit_run_id=linked.audit_run_id if linked else None)
+        from .human_decisions import project as project_human
+        human_data = project_human(case, runs, versions)
+        if human_data["current_human_decision"]: state = "CONFIRMED"
+        human_current = {case_id: human_data["current_human_decision"]}
         question_states = {}
         all_runs = {case_id: runs}
         for sibling in detail.question_attempts:
@@ -229,6 +233,14 @@ def workspace(case_id, user):
             sibling_runs = audit_service().list(sibling.submission_id) if sibling.submission_id and readings else []
             question_states[sibling.case_id] = question_state(sibling, bool(readings), sibling_runs)
             all_runs[sibling.case_id] = sibling_runs
+            sibling_versions = []
+            for summary in readings:
+                for revision in store.transcription_history(summary.transcription.transcription_id).revisions:
+                    sibling_versions.append(dict(version_id=f'{revision.transcription_id}:{revision.revision_number}',
+                        created_at=revision.created_at,current=summary==readings[0] and revision.revision_number==summary.latest_revision.revision_number))
+            sibling_human = project_human(sibling, sibling_runs, sibling_versions)
+            human_current[sibling.case_id] = sibling_human["current_human_decision"]
+            if sibling_human["current_human_decision"]: question_states[sibling.case_id] = "CONFIRMED"
         segments, _ = capture_segments(detail, case)
         audits = [project_audit(run, case, detail) for run in runs]
         current_audit = next((r for r in audits if not r["stale"]), None)
@@ -242,11 +254,17 @@ def workspace(case_id, user):
             awaiting_reanalysis=sum((not current or current.status == "FAILED") and any(r.stale for r in all_runs[c.case_id])
                 for c, current in zip(detail.question_attempts, current_runs)),
             complete=len(scored) == len(detail.question_attempts))
-        return dict(question_attempt=case, pages=pages, mapping_version=detail.mapping.version,
+        confirmed = [d for d in human_current.values() if d]
+        confirmed_total = dict(final_score=str(sum((Decimal(d["final_points"]) for d in confirmed), Decimal(0))),
+            max_score=str(sum((Decimal(d["max_points"]) for d in confirmed), Decimal(0))),
+            exam_max_score=partial["max_score"], confirmed_questions=len(confirmed),
+            total_questions=len(detail.question_attempts), remaining_questions=len(detail.question_attempts)-len(confirmed))
+        return dict(**human_data, confirmed_total=confirmed_total, question_decisions=human_current,
+            question_attempt=case, pages=pages, mapping_version=detail.mapping.version,
             history=history, versions=versions, question_states=question_states, current_version=next((v for v in versions if v["current"]), None),
             state=state, human_reviewed=human, audit_stale=audit_stale, reanalysis_required=reanalysis,
             analysis_state="FAILED" if current_run and current_run.status == "FAILED" else "REANALYSIS_REQUIRED" if reanalysis else "AVAILABLE" if current_run else "AWAITING_ANALYSIS",
             capture_candidate_available=bool(segments) and history is None,
             audits=audits, current_audit=current_audit, previous_audit=previous_audit,
             audit_comparison=current_audit.get("comparison") if current_audit else None, partial_suggestion=partial,
-            events=events + [event for run in audits for event in run["events"]])
+            events=events + [event for run in audits for event in run["events"]] + human_data["human_decision_events"])

@@ -18,16 +18,17 @@
     const nav = n("nav", null, "question-navigator"); nav.setAttribute("aria-label", "Questões disponíveis desta prova");
     siblings.forEach(item => {
       const current = item.case_id === c.case_id, label = question(item) ? `Q${question(item)}` : item.problem_id;
-      const state = status(item), symbol = current ? "●" : state === "Finalizada" ? "✓" : ["Inconclusiva","Revisão necessária"].includes(state) ? "?" : "○";
-      const control = button(`${label} ${symbol}`, () => open(item.case_id)); control.dataset.state = current ? "current" : state === "Finalizada" ? "done" : ["Inconclusiva","Revisão necessária"].includes(state) ? "pending" : "available";
-      control.setAttribute("aria-label", `${label} · ${current ? "Questão atual" : state}`); control.setAttribute("aria-current", current ? "step" : "false"); control.disabled = busy;
+      const state = status(item), symbol = current ? "●" : ["Finalizada","Confirmada"].includes(state) ? "✓" : ["Inconclusiva","Revisão necessária"].includes(state) ? "?" : "○";
+      const final=item.human_decision;
+      const control = button(`${label} ${final?"✓":symbol}${final?` · ${Number(final.final_points).toLocaleString("pt-BR")}`:""}`, () => open(item.case_id)); control.dataset.state = current ? "current" : ["Finalizada","Confirmada"].includes(state) ? "done" : ["Inconclusiva","Revisão necessária"].includes(state) ? "pending" : "available";
+      control.setAttribute("aria-label", `${label} · ${current ? "Questão atual" : state}${final?` · Final: ${Number(final.final_points).toLocaleString("pt-BR")}/${Number(final.max_points).toLocaleString("pt-BR")}`:""}`); control.setAttribute("aria-current", current ? "step" : "false"); control.disabled = busy;
       nav.append(control);
     }); return nav;
   }
   function CorrectionHeader({c, cases, status, open, back, steps, active, busy}) {
     const header = n("header", null, "case-context"), siblings = c.exam_submission_id ? cases.filter(item=>item.exam_submission_id===c.exam_submission_id).sort((a,b)=>a.question_order-b.question_order) : relatedCases(c,cases), line = n("div",null,"case-title-line");
     const goBack = button("←",back,"workspace-back secondary"); goBack.setAttribute("aria-label",c.exam_submission_id?"Voltar às páginas e associações":"Voltar para fila"); goBack.disabled=busy; goBack.replaceChildren(root.ConfiaTmeHome.icon("back"));
-    const pill = n("span",status(c),"status"); pill.dataset.kind = status(c)==="Finalizada"?"success":status(c)==="Inconclusiva"?"pending":"info";
+    const pill = n("span",status(c),"status"); pill.dataset.kind = ["Finalizada","Confirmada"].includes(status(c))?"success":status(c)==="Inconclusiva"?"pending":"info";
     line.append(goBack,n("h1",displayExamName(c.external_candidate_ref)),pill);
     if(c.data_origin==="synthetic_demo")line.append(n("small","CASO SINTÉTICO · transcrição importada"));
     if(c.demo_sample_groups?.length)line.append(n("small","AMOSTRA VISUAL · "+c.demo_sample_groups.join(", ")));

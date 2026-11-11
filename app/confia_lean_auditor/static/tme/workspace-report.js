@@ -163,6 +163,7 @@
       n("p",data.stale?options.historical?"Histórico · leitura anterior":"Análise anterior — reanálise necessária":data.review_required?"Revisar":"Pronta","review-verdict"),
       n("p","Sugestão de análise; a nota final depende da decisão do avaliador."));
     report.append(summary);
+    if(options.decisionPanel)report.append(options.decisionPanel);
     for(const reason of [...new Set([...(data.review_reasons||[]),...(data.warnings||[])])])report.append(n("p",reason,"formal-warning"));
     const evidence=Object.fromEntries((data.evidences||[]).map(e=>[e.evidence_id,e]));
     const checks=Object.fromEntries((data.checker_summary||[]).map(c=>[c.checker_id,c]));

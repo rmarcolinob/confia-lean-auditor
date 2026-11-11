@@ -167,3 +167,21 @@ async def create_question_transcription(case_id: str, request: Request, response
     revision = await run_in_threadpool(guarded, create, case_id, body, user)
     response.headers["Cache-Control"] = "no-store"
     return revision.model_dump(mode="json")
+
+
+@router.get("/cases/{case_id}/decisions", response_model=dict)
+def human_history(case_id: str, response: Response, user=Depends(require_tme_evaluator)):
+    from .question_review import workspace
+    response.headers["Cache-Control"] = "no-store"
+    data = guarded(workspace, case_id, user)
+    return {key:data[key] for key in ("current_human_decision", "human_decisions", "last_human_decision_id", "human_decision_events")}
+
+
+from .human_decisions import ReopenQuestion
+
+
+@router.post("/cases/{case_id}/reopen", response_model=dict)
+def reopen_question(case_id: str, body: ReopenQuestion, response: Response, user=Depends(require_tme_evaluator)):
+    from .human_decisions import reopen
+    response.headers["Cache-Control"] = "no-store"
+    return guarded(reopen, case_id, body, user)

@@ -92,7 +92,7 @@
         422: "Confira o código e os arquivos: PDF íntegro e sem senha, ou imagens válidas, até 50 páginas e 20 MiB por arquivo."
       })[response.status];
       const error = new Error(response.status === 401 ? "A sessão não está disponível. Acesse novamente para continuar." : captureError || "Não foi possível concluir esta etapa. Tente novamente.");
-      error.code = data?.error_code; throw error;
+      error.code = data?.error_code; error.status=response.status; throw error;
     }
     return data;
   }
@@ -140,7 +140,7 @@
     const saved = local(c), run = runFor(c);
     if (c.exam_submission_id) {
       const status=c.review_state || saved.examReview?.state || "PENDING";
-      return {PENDING:"Pendente",READY:"Pronta",REVIEW:"Revisão necessária",CONFIRMED:"Finalizada"}[status];
+      return {PENDING:"Pendente",READY:"Pronta",REVIEW:"Revisão necessária",CONFIRMED:"Confirmada"}[status];
     }
     if (saved.decision || c.status === "DECIDED") return "Finalizada";
     if (saved.processing === "audit") return "Analisando";
@@ -159,7 +159,8 @@
         Object.assign(c,review.question_attempt);
         Object.assign(saved,{examReview:review,examPages:review.pages,history:review.history,audits:review.audits,
           detail:{submission:{page_images:review.pages.map((p,index)=>({page_index:index}))}},loaded:true,loadError:false});
-        for(const item of saved.fullExam?.question_attempts||[])item.review_state=review.question_states?.[item.case_id]||"PENDING";
+        for(const item of saved.fullExam?.question_attempts||[]){item.review_state=review.question_states?.[item.case_id]||"PENDING";item.human_decision=review.question_decisions?.[item.case_id]||null;}
+        c.human_decision=review.current_human_decision||null;
         const sibling=saved.fullExam?.question_attempts.find(item=>item.case_id===c.case_id);
         if(sibling)sibling.review_state=review.state;c.review_state=review.state;
       }
@@ -562,7 +563,7 @@
     if (saved.processing === "audit") analysisBody.appendChild(loading("Analisando matemática · executando verificações…"));
     if(c.exam_submission_id){
       const onOriginal=e=>{const index=saved.examPages.findIndex(p=>p.exam_page_id===e.exam_page_id);if(index<0)return;saved.page=index;setTab("original");drawer(false);solution.scrollIntoView({block:"start",behavior:"smooth"});};
-      if(run){const report=node("div");window.ConfiaWorkspaceReport.renderQuestion(run,report,{onOriginal});analysisBody.append(report);}
+      if(run){const report=node("div");window.ConfiaWorkspaceReport.renderQuestion(run,report,{onOriginal,decisionPanel:humanDecisionPanel(c,saved,run)});analysisBody.append(report);}
       const comparison=saved.examReview.audit_comparison;
       const previousAudit=saved.examReview.previous_audit || (saved.audits||[]).find(r=>r.stale);
       const scoreText=(value,max)=>value==null?"não determinada":`${String(value).replace(".",",")} / ${max}`;
@@ -574,6 +575,10 @@
       }else if(previousAudit && !run)analysisBody.append(note(`Sugestão anterior: ${scoreText(previousAudit.suggested_score,previousAudit.max_score)} · preservada no histórico.`));
       if(run?.status==="FAILED" && saved.examReview.reanalysis_required)analysisBody.prepend(note("Não foi possível concluir a reanálise. A leitura atual e as análises anteriores foram preservadas."));
       if(!run && !saved.processing)analysisBody.append(note("Aguardando análise. Nenhuma pontuação foi calculada para esta leitura."));
+      if(!run)analysisBody.append(humanDecisionPanel(c,saved,null));
+      const decisions=saved.examReview.human_decisions||[];
+      if(decisions.length){const history=node("details");history.append(node("summary",`Histórico de decisões humanas (${decisions.length})`));
+        for(const decision of decisions){const entry=node("details");entry.append(node("summary",`${decision.current?"Confirmação corrente":"Decisão histórica"} · Final: ${humanPoints(decision.final_points)} / ${humanPoints(decision.max_points)}`),humanDecisionDetails(decision));history.append(entry);}analysisBody.append(history);}
       const previous=(saved.audits||[]).filter(r=>r!==run);
       if(previous.length){const history=node("details");history.append(node("summary",`Histórico de análises (${previous.length})`));
         for(const old of previous){const entry=node("details"),content=node("div");entry.append(node("summary",`Análise anterior · versão ${old.revision_number} · ${scoreText(old.suggested_score,old.max_score)} · ${old.status==="FAILED"?"Falha técnica":old.review_required?"Revisar":"Concluída"}${old.completed_at?` · ${new Date(old.completed_at).toLocaleString("pt-BR")}`:""}`));window.ConfiaWorkspaceReport.renderQuestion(old,content,{onOriginal,historical:true});entry.append(content);history.append(entry);}analysisBody.append(history);}
@@ -601,12 +606,14 @@
     else if (!c.exam_submission_id && (!run || run.stale || run.status === "FAILED")) primary = btn("Analisar com ConfIA", audit);
     if (primary) { primary.disabled = state.busy || Boolean(c.exam_submission_id && saved.editing); actionbar.appendChild(primary); }
     if (saved.processing === "recognition") actionbar.appendChild(loading("Reconhecendo…"));
-    const heading = context(c, saved.decision ? 3 : run ? 2 : latest ? 1 : 0); heading.appendChild(openDrawer);
+    const heading = context(c, saved.decision || saved.examReview?.current_human_decision ? 3 : run ? 2 : latest ? 1 : 0); heading.appendChild(openDrawer);
     if(c.exam_submission_id){
       const info=Array.from(heading.children).find(el=>el.className==="case-information");
       info?.append(node("span",`${saved.fullExam.assessment.assessment.title} · Pontuação máxima: ${c.max_score}`));
       const partial=saved.examReview.partial_suggestion;
       if(partial)info?.append(node("span",`Sugestão ConfIA${partial.complete?"":" parcial"}: ${String(partial.suggested_score).replace(".",",")} / ${partial.max_score} · ${partial.analyzed_questions}/${partial.total_questions} questões${partial.awaiting_reanalysis?` · ${partial.awaiting_reanalysis} aguardando reanálise`:""}`));
+      const confirmed=saved.examReview.confirmed_total;
+      if(confirmed)info?.append(node("span",`Confirmado: ${humanPoints(confirmed.final_score)} / ${humanPoints(confirmed.max_score)} · ${confirmed.confirmed_questions}/${confirmed.total_questions} questões · ${confirmed.remaining_questions} ainda não homologadas`));
       if(!pages.length)heading.append(note("Associe páginas a esta questão antes de registrar a leitura."));
     }
     const problem = state.problems?.find(p => (p.problem_id || p.id) === c.problem_id);
@@ -720,6 +727,64 @@
     const next = summary.priority_cases.find(item => item.case_id !== c.case_id);
     if (next) return openCase(next.case_id);
     await cases(); root.prepend(note("Não há outra correção pendente na fila."));
+  }
+  const humanPoints=v=>Number(v).toLocaleString("pt-BR",{maximumFractionDigits:2});
+  function humanDecisionDetails(d){
+    const box=node("div"),delta=Number(d.adjustment_delta),fmt=humanPoints;
+    box.append(node("p",`ConfIA: ${fmt(d.suggested_points)} / ${fmt(d.max_points)}`),node("p",`Nota final: ${fmt(d.final_points)} / ${fmt(d.max_points)}`),
+      node("p",delta?`Ajuste: ${delta>0?"+":""}${fmt(d.adjustment_delta)}`:"Sugestão aceita"),node("p",d.override_reason||"Sem ajuste de pontuação."),
+      node("p",`Confirmada por ${d.decided_by_user_id} · ${new Date(d.decided_at).toLocaleString("pt-BR")}`));
+    if(d.review_required_snapshot)box.append(note("Homologação realizada com alertas de revisão do ConfIA."));
+    const technical=node("details");technical.append(node("summary","Vínculos da decisão"),node("pre",JSON.stringify(d,window.ConfIAReport.publicTechnicalValue,2)));box.append(technical);return box;
+  }
+  function humanDecisionPanel(c,saved,run){
+    const box=node("section");box.setAttribute("aria-label","Homologação da questão");
+    const current=saved.examReview.current_human_decision;
+    if(current){
+      const delta=Number(current.adjustment_delta),success=note("✓ Confirmada");success.classList.add("decision-success");
+      box.append(success,node("strong",`Nota final: ${humanPoints(current.final_points)} / ${humanPoints(current.max_points)}`),node("p",delta?`Ajuste: ${delta>0?"+":""}${humanPoints(current.adjustment_delta)}`:"Sugestão aceita"));
+      const detail=node("details");detail.append(node("summary","Ver decisão"),humanDecisionDetails(current));box.append(detail);
+      box.append(btn("Reabrir questão",()=>humanAction(c,{human_decision_id:current.human_decision_id},true),"secondary"));
+    }else if(!run || run.stale || run.status!=="COMPLETED" || run.suggested_score==null){
+      box.append(note("Uma análise atual com pontuação disponível é necessária antes da homologação."));
+    }else{
+      if(saved.humanDraftRun!==run.audit_run_id){saved.humanDraftRun=run.audit_run_id;saved.humanDraft={};saved.humanAdjust=false;}
+      saved.humanDraft ||= {};
+      if(run.review_required)box.append(note("O ConfIA pede revisão. Confira os alertas antes de homologar conscientemente."));
+      const selection={audit_run_id:run.audit_run_id,transcription_version_id:run.transcription_version_id,expected_last_decision_id:saved.examReview.last_human_decision_id||null};
+      box.append(actions(btn("Aceitar sugestão",()=>humanAction(c,{...selection,decision_type:"ACCEPT_SUGGESTION"})),
+        btn("Ajustar nota",()=>{saved.humanAdjust=true;renderCorrection();},"secondary")));
+      if(saved.humanAdjust){
+        const form=node("div"),score=node("input"),reason=node("textarea"),error=note("");
+        score.type="number";score.min="0";score.max=String(c.max_score);score.step="0.01";score.value=saved.humanDraft.score??String(run.suggested_score);
+        reason.maxLength=2000;reason.value=saved.humanDraft.reason||"";
+        score.addEventListener("input",()=>{saved.humanDraft.score=score.value;});reason.addEventListener("input",()=>{saved.humanDraft.reason=reason.value;});
+        form.append(field("Nota final da questão",score),field("Motivo do ajuste",reason),error,actions(btn("Confirmar ajuste",()=>{
+          const value=Number(score.value);
+          if(score.value.trim()===""||!Number.isFinite(value)||value<0||value>Number(c.max_score)||Math.abs(value*100-Math.round(value*100))>1e-7){error.textContent=`Informe uma nota entre 0 e ${c.max_score}, com até duas casas decimais.`;return;}
+          if(value!==Number(run.suggested_score)&&!reason.value.trim()){error.textContent="Informe o motivo do ajuste.";return;}
+          return humanAction(c,{...selection,decision_type:"ADJUST_SCORE",final_points:score.value,override_reason:reason.value.trim()||null});
+        }),btn("Cancelar ajuste",()=>{saved.humanAdjust=false;renderCorrection();},"secondary")));box.append(form);
+      }
+    }
+    if(saved.processing==="decision")box.append(note("Registrando decisão…"));
+    for(const control of box.querySelectorAll("button,input,textarea"))control.disabled=state.busy||Boolean(saved.editing);
+    return box;
+  }
+  async function humanAction(c,body,reopen=false){
+    const saved=local(c);if(state.busy||saved.editing)return;
+    const serialized=JSON.stringify({body,reopen});
+    if(saved.humanRequestBody!==serialized){saved.humanRequestBody=serialized;saved.humanRequestKey=window.crypto.randomUUID();}
+    state.busy=true;saved.processing="decision";await renderCorrection();
+    try{
+      await post(`/tme/cases/${c.case_id}/${reopen?"reopen":"decision"}`,{...body,execution_key:saved.humanRequestKey});
+      delete saved.humanRequestKey;delete saved.humanRequestBody;saved.humanAdjust=false;saved.humanDraft={};
+      state.message=reopen?"Questão reaberta. A decisão anterior permanece no histórico.":"Questão confirmada. Sugestão ConfIA e decisão humana preservadas.";
+    }catch(error){
+      state.message=error.status===409?"A análise, leitura ou decisão mudou. Confira os dados atuais antes de homologar.":"Não foi possível registrar a decisão. Confira os valores e tente novamente.";
+      if(error.status===409){delete saved.humanRequestBody;delete saved.humanRequestKey;saved.humanAdjust=false;}
+    }finally{state.busy=false;saved.processing=null;saved.loaded=false;}
+    if(state.current===c&&state.view==="workspace")await renderCorrection();
   }
   function decisionPanel(c, saved, run) {
     const box = node("section", undefined, "decision-bar"); box.setAttribute("aria-label", "Decisão do avaliador"); box.id="evaluator-decision";
