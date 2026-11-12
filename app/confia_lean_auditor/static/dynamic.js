@@ -15,7 +15,7 @@
     TEACHER:"Professor", TECHNICAL_DEMO:"Demonstração técnica", EXPLICIT:"explícita", INFERRED:"inferida"
   };
   const readable = value => String(value || "").replace(/\b[A-Z][A-Z_]+\b/g, code => labels[code] || code);
-  function create({host:panel,onSelect=()=>{},setBusy=()=>{},onOpenAttempt=()=>{}}) {
+  function create({host:panel,onSelect=()=>{},setBusy=()=>{},onOpenAttempt=()=>{},assessmentOnly=false}) {
   let disposed=false, creation, selectionGeneration=0;
 
   let detail, list, message, busy = false, loadGeneration = 0;
@@ -216,7 +216,7 @@
     detail.appendChild(history);
     for(const [title,target] of [["Questão",question],["Preparação",preparationSection],["Rubrica",section],["Histórico",history]])
       context.appendChild(button(title,()=>{target.scrollIntoView({behavior:"smooth",block:"start"});target.tabIndex=-1;target.focus();}));
-    if(doc.current_configuration) {
+    if(doc.current_configuration && !assessmentOnly) {
       const next=n("section",null,"tme-panel dynamic-next");
       append(next,n("h3","Preparação salva no ConfIA"),n("p","A configuração aprovada está registrada. Receba uma resolução textual e abra o workspace Original / Transcrição / Comparar, com o painel ConfIA e decisão humana."),
         n("p","A aprovação da rubrica não elimina avisos ou incertezas e não substitui a decisão final do professor."));

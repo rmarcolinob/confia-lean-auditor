@@ -97,7 +97,7 @@ class QuestionAuditContext(SubmissionModel):
     participant_id: str
     exam_submission_id: str
     question_attempt_id: str
-    engine_mode: Literal["TME_CURRENT"] = "TME_CURRENT"
+    engine_mode: Literal["TME_CURRENT", "DYNAMIC"] = "TME_CURRENT"
     adapter_version: Literal["question-audit.v1"] = "question-audit.v1"
     max_score: float = Field(gt=0)
 
@@ -156,7 +156,9 @@ class AuditRun(SubmissionModel):
             raise ValueError("event digest without events")
         if self.completed_at and self.completed_at < self.created_at:
             raise ValueError("completion precedes start")
-        if self.question_context and (not self.completed_at or not self.source.tme_context):
+        if self.question_context and (not self.completed_at or not (self.source.tme_context or self.source.dynamic_context)):
+            raise ValueError("question audit requires completion and engine context")
+        if self.question_context and self.question_context.engine_mode != ("DYNAMIC" if self.source.dynamic_context else "TME_CURRENT"):
             raise ValueError("question audit requires completion and engine context")
         metadata = self.result.reproducibility if self.result else None
         record = metadata.record if metadata else None

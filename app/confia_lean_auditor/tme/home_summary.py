@@ -255,6 +255,9 @@ def project_case(case, updated_at=None, root=None):
 def project_submission(submission, *, transcription=None, revision=None, accepted_at=None, recognition=None, audit=None):
     if not submission.tme_case_id or submission.source == "exam_pages":
         return
+    from .store import case_store
+    if case_store().read(submission.tme_case_id).exam_submission_id:
+        return
     def update(entries):
         entry = entries[submission.tme_case_id]
         if (entry["submission_id"] != submission.submission_id or entry["owner"] != submission.submitted_by_user_id
@@ -352,9 +355,13 @@ def rebuild_index():
     from confia_lean_auditor.recognition.service import RecognitionService
     from confia_lean_auditor.recognition.registry import RecognizerRegistry
 
+    def file_signature(path):
+        if not path.exists(): return None
+        stat=path.stat()
+        return stat.st_ino,stat.st_size,stat.st_mtime_ns
     index, cases, submissions, audits = OperationalIndex(), case_store(), store(), service()
     with index.locked():
-        signature = index.path.stat() if index.path.exists() else None
+        signature = file_signature(index.path)
         try:
             generation = index.read()["generation"]
         except (ValueError, KeyError):
@@ -404,7 +411,7 @@ def rebuild_index():
     # without rewriting the grader run or using Home as a grading authority.
     from confia_lean_auditor.dynamic.reconciliation_service import ReconciliationService
     for case in records:
-        if not case.dynamic_context or not case.submission_id: continue
+        if not case.dynamic_context or not case.submission_id or case.exam_submission_id: continue
         entry=entries[case.case_id]
         entry["decided"]=cases.decision(case.case_id,SimpleNamespace(user_id=case.created_by_user_id)) is not None
         service=ReconciliationService(audits); run=service.current_run(case)
@@ -414,7 +421,7 @@ def rebuild_index():
             entry["audit"]["score"]=float(reconciliation["reconciled_suggested_score"])
             entry["audit"]["inconclusive"]=reconciliation["review_required"]
     with index.locked():
-        if (index.path.stat() if index.path.exists() else None) != signature:
+        if file_signature(index.path) != signature:
             raise ConcurrentProjectionUpdate("concurrent operational update; retry reconstruction")
         index.write(dict(version=1, generation=generation + 1, complete=True, cases=entries))
         index.dirty.unlink(missing_ok=True)

@@ -197,6 +197,8 @@ class TranscriptionRecord(SubmissionModel):
     @model_serializer(mode="wrap")
     def preserve_record_shape(self, handler):
         data = handler(self)
+        if "input_issues" not in self.model_fields_set:
+            data.pop("input_issues", None)
         if "capture_origin" not in self.model_fields_set:
             data.pop("capture_origin", None)
         return data
@@ -214,9 +216,17 @@ class TranscriptionRecord(SubmissionModel):
         return self
 
 
+class CaptureInputIssue(SubmissionModel):
+    code: Literal["UNREADABLE_SPAN", "AMBIGUOUS_SYMBOL", "INCOMPLETE_TEXT", "MISSING_PAGE", "UNCERTAIN_ASSOCIATION", "PARTIALLY_REVIEWED"]
+    message: str = Field(min_length=1,max_length=500)
+    segment_id: Optional[Identifier] = None
+    requires_review: bool = True
+
+
 class TranscriptionRevision(TranscriptionRecord):
     """ACCEPTED means faithful transcription only, never mathematical validity."""
 
+    input_issues: list[CaptureInputIssue] = Field(default_factory=list,max_length=100)
     revision_number: int = Field(ge=1)
     based_on_revision_number: Optional[int] = Field(default=None, ge=1)
     reviewer_reference: ReviewerReference
@@ -243,6 +253,7 @@ class TranscriptionRevision(TranscriptionRecord):
 
 
 class CreateTranscriptionRequest(SubmissionModel):
+    input_issues: list[CaptureInputIssue] = Field(default_factory=list,max_length=100)
     source: Literal["manual"] = "manual"
     recognizer: None = None
     recognizer_version: None = None
@@ -253,6 +264,7 @@ class CreateTranscriptionRequest(SubmissionModel):
 
 
 class CreateTranscriptionRevisionRequest(SubmissionModel):
+    input_issues: list[CaptureInputIssue] = Field(default_factory=list,max_length=100)
     based_on_revision_number: int = Field(ge=1)
     reviewer_reference: ReviewerReference
     reviewer_identity_verified: Literal[False] = False

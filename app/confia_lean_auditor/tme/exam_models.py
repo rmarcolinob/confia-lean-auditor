@@ -109,8 +109,8 @@ class ExamSubmission(SubmissionModel):
     created_by_user_id: str
     created_at: datetime
     status: Literal["RECEIVED"] = "RECEIVED"
-    source: Literal["PDF", "IMAGES"]
-    page_count: int = Field(ge=1, le=MAX_EXAM_PAGES)
+    source: Literal["PDF", "IMAGES", "TEXT"]
+    page_count: int = Field(ge=0, le=MAX_EXAM_PAGES)
     capture_metadata: CaptureMetadata
     capture_pages: list[CapturePageHint]
     original_documents: list[ExamAsset]
@@ -118,6 +118,30 @@ class ExamSubmission(SubmissionModel):
     pages: list[ExamPage]
     question_attempt_ids: list[str]
     request_sha256: Sha256
+
+
+    @model_validator(mode="after")
+    def coherent_source(self):
+        if self.page_count != len(self.pages):
+            raise ValueError("page count mismatch")
+        if self.source != "TEXT" and not self.pages:
+            raise ValueError("image/PDF submission requires pages")
+        if self.source == "TEXT" and (self.pages or self.original_documents or self.previews):
+            raise ValueError("text originals belong to question sources")
+        return self
+
+
+class TextExamInput(SubmissionModel):
+    assessment_identifier: str = Field(pattern=r"^asmt_[0-9a-f]{32}$")
+    external_participant_code: str = Field(min_length=1,max_length=80,pattern=r"^[A-Za-z0-9._:/-]+$")
+    idempotency_key: str = Field(min_length=1,max_length=100,pattern=r"^[A-Za-z0-9._:-]+$")
+    solutions: list[str] = Field(min_length=1,max_length=100)
+
+    @model_validator(mode="after")
+    def nonempty(self):
+        if any(not text.strip() or len(text)>20000 for text in self.solutions):
+            raise ValueError("each solution requires 1–20000 characters")
+        return self
 
 
 class ExamDetail(SubmissionModel):

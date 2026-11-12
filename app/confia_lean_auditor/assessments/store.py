@@ -36,6 +36,8 @@ def definition_hash(document: AssessmentDocument) -> str:
         definition["scope"] = "TME"
     if assessment.dynamic_policy_profile is not None:
         definition.update(dynamic_policy_profile=assessment.dynamic_policy_profile, dynamic_policy_version=assessment.dynamic_policy_version)
+    if assessment.correction_mode == "DYNAMIC":
+        definition.update(correction_mode=assessment.correction_mode, feedback_policy=assessment.feedback_policy, supersedes_assessment_id=assessment.supersedes_assessment_id)
     definition["items"] = [item.model_dump(mode="json") for item in sorted(document.items, key=lambda x: x.order)]
     return hashlib.sha256(json.dumps(definition, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8")).hexdigest()
 
@@ -161,6 +163,8 @@ class AssessmentStore:
             document = self._read(assessment_id)
             if document.assessment.status != "DRAFT":
                 raise AssessmentConflict("published assessment is immutable")
+            if document.assessment.correction_mode == "DYNAMIC":
+                raise AssessmentConflict("use the versioned Dynamic assessment workflow")
             changed = operation(document)
             self._write(changed)
             return changed
@@ -215,6 +219,7 @@ class AssessmentStore:
             if document.assessment.status != "PUBLISHED":
                 raise AssessmentConflict("draft cannot be closed")
             changed = AssessmentDocument(assessment=document.assessment.model_copy(update={
-                "status": "CLOSED", "closed_at": datetime.now(timezone.utc)}), items=document.items)
+                "status": "CLOSED", "closed_at": datetime.now(timezone.utc)}), items=document.items,
+                dynamic_revision=document.dynamic_revision,dynamic_events=document.dynamic_events)
             self._write(changed)
             return changed

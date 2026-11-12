@@ -30,7 +30,7 @@ def review_reasons(run):
     elif run.result:
         if run.result.score is None:
             reasons.append("O motor não determinou uma pontuação para esta leitura.")
-        if run.result.needs_review:
+        if getattr(run.result,"needs_review",getattr(run.result,"review_required",False)):
             reasons.append("A pauta registra evidência insuficiente, conflito ou verificação pendente.")
     facts = getattr(getattr(getattr(run.result, "bridge", None), "auditor", None), "facts", [])
     if any(f.verification.status == "technical_error" for f in facts):
@@ -44,7 +44,7 @@ def review_reasons(run):
 
 
 def context_for(case, detail):
-    return QuestionAuditContext(assessment_id=detail.submission.assessment_id,
+    return QuestionAuditContext(**({"engine_mode":"DYNAMIC"} if case.dynamic_context else {}), assessment_id=detail.submission.assessment_id,
         participant_id=detail.submission.participant_id, exam_submission_id=case.exam_submission_id,
         question_attempt_id=case.case_id, max_score=float(case.max_score))
 
@@ -112,7 +112,12 @@ def project_audit(run, case, detail, *, previous=None):
         started_at=run.created_at.isoformat(), completed_at=run.completed_at.isoformat() if run.completed_at else None,
         rubric_items=[], evidences=[], checker_summary=[], error_code=run.error_code)
     if result:
-        base.update(project_result(result, run, case))
+        if run.source.dynamic_context:
+            from confia_lean_auditor.dynamic.product_adapter import project
+            base.update(project(result,run,case))
+            reasons=base['review_reasons']
+        else:
+            base.update(project_result(result, run, case))
         if base["technical_uncertainty"] and not any("técnic" in r for r in reasons):
             reasons.append("Uma ou mais verificações não puderam concluir por erro técnico.")
         base["review_required"] = bool(reasons)
@@ -136,7 +141,16 @@ def project_audit(run, case, detail, *, previous=None):
             score_changed=base["suggested_score"] is not None and comparison["previous_suggested_score"] is not None
                 and base["suggested_score"] != comparison["previous_suggested_score"])
     base["comparison"] = comparison
-    base["events"] = run.question_events if run.question_events is not None else audit_events(base)
+    base["events"] = list(run.question_events) if run.question_events is not None else audit_events(base)
+    if run.source.dynamic_context:
+        common={k:base[k] for k in ('assessment_id','participant_id','submission_id','question_attempt_id','transcription_version_id','audit_run_id','engine_version')}
+        def dynamic_event(kind,timestamp,**fields):
+            event_id=f"{run.audit_run_id}:{kind}:{fields.get('reconciliation_id',fields.get('independent_review_id',''))}"
+            if not any(e['event_id']==event_id for e in base['events']):
+                base['events'].append(dict(**common,event_id=event_id,event_type=kind,timestamp=timestamp,**fields))
+        if run.status=='COMPLETED': dynamic_event('dynamic_attempt_graded',base['completed_at'])
+        if base.get('independent_review'): dynamic_event('review_completed',base['independent_review']['completed_at'],independent_review_id=base['independent_review']['review_id'])
+        if base.get('reconciliation'): dynamic_event('reconciliation_completed',base['reconciliation']['completed_at'],reconciliation_id=base['reconciliation_id'])
     return public_projection(base)
 
 

@@ -161,13 +161,13 @@
         if(ticket!==generation)return;
         if(question&&question.question_attempt.exam_submission_id!==examId)throw new Error("Questão fora desta prova.");
         const box=Views.Page(Workspace.displayExamName(detail.participant.external_code),detail.assessment.assessment.title);
-        const intro=message(`${detail.submission.page_count} páginas preservadas · ${detail.question_attempts.length} questões esperadas`);
+        const intro=message(`${detail.submission.source==="TEXT"?"Originais textuais preservados":`${detail.submission.page_count} páginas preservadas`} · ${detail.question_attempts.length} questões esperadas`);
         const originals=row();
         for(const asset of detail.submission.original_documents){const link=n("a",`Original ${originals.children.length+1}`,"tme-button secondary");link.href=assetURL(examId,asset.asset_id);link.target="_blank";link.rel="noopener";originals.append(link);}
         box.append(intro,originals,row(btn("Resumo da correção",()=>summary(examId),"secondary")));
         if(question)return await openQuestion(question.question_attempt,detail,question);
         const grid=n("div",undefined,"scan-grid");detail.submission.pages.forEach(page=>grid.append(pageCard(examId,page)));box.append(grid);
-        const mapping=n("section",undefined,"tme-panel"),status=message("Uma página pode ser associada a mais de uma questão.");mapping.append(n("h2","Questões e páginas"),status);
+        const mapping=n("section",undefined,"tme-panel"),status=message(detail.submission.pages.length?"Uma página pode ser associada a mais de uma questão.":"Soluções textuais preservadas por questão.");mapping.append(n("h2",detail.submission.pages.length?"Questões e páginas":"Questões"),status);
         let dirty=false,busy=false;const checks=[];const openButtons=[];
         for(const attempt of detail.question_attempts){
           const group=n("fieldset",undefined,"card");group.append(n("legend",`Q${attempt.question_order} · ${attempt.problem_id} · máximo ${attempt.max_score}`));
@@ -184,7 +184,7 @@
           finally{busy=false;setBusy(false);save.disabled=false;checks.forEach(c=>c.disabled=false);openButtons.forEach(c=>c.disabled=false);}
         });
         if(detail.correction_status==="FINALIZED"){save.disabled=true;checks.forEach(c=>c.disabled=true);status.textContent="Prova finalizada. Reabra a correção no resumo para alterar.";}
-        mapping.append(row(save));box.append(mapping);show(box);
+        if(detail.submission.pages.length)mapping.append(row(save));box.append(mapping);show(box);
       }catch(_){if(ticket===generation)show(Views.ErrorState("Não foi possível abrir esta prova.",()=>open(examId,attemptId)));}
     }
     async function certification(assessmentId,examId,filters={selection:'finalized'},notice=''){

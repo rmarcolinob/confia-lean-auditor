@@ -79,6 +79,8 @@ class AuditService:
             case=case_store().read(submission.tme_case_id)
             if case.dynamic_context:
                 from confia_lean_auditor.dynamic.grading_context import case_context
+                from confia_lean_auditor.dynamic.solution_input import require_usable
+                require_usable(source,case)
                 context=case_context(case)[0]
                 source=source.model_copy(update={"dynamic_context":context})
                 source=source.model_copy(update={"source_hash":source_digest(source)})

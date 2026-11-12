@@ -38,6 +38,9 @@ def sealed_read(root, path):
 
 
 def activity(case):
+    if case.exam_submission_id:
+        from .assessment_service import pinned_activity
+        return pinned_activity(case)
     from confia_lean_auditor.tme.store import case_store
     from confia_lean_auditor.assessments.store import assessment_store
 
@@ -340,6 +343,7 @@ class ReconciliationService:
 
     def assert_source_current_unlocked(self, case, run):
         store = self.audits.submissions
+        store.assert_tme_editable(case.submission_id)
         folder = store._transcriptions_folder(case.submission_id)
         histories = [
             store._history_from_folder(p)

@@ -185,6 +185,7 @@ def decide(case, body, user):
 
 def project_current(case, reconciliation=None, confirmed=False):
     """Disposable Home projection only; no authorization or scoring reads it."""
+    if case.exam_submission_id: return
     from confia_lean_auditor.tme.home_summary import _publish
 
     def update(entries):

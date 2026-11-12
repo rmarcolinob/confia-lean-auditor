@@ -158,8 +158,8 @@ def version_view(revision, pages, *, current):
         predecessor_version_id=f"{tid}:{number-1}" if number > 1 else None,
         origin=origin, created_at=revision.created_at, created_by=revision.reviewer_reference,
         current=current, text="\n\n".join(s.text or s.latex or "" for s in sorted(revision.segments, key=lambda s:(s.page_index,s.order))),
-        segments=[dict(segment=s.model_dump(mode="json"), exam_page_id=pages[s.page_index].exam_page_id,
-                       page_number=pages[s.page_index].page_number) for s in revision.segments])
+        segments=[dict(segment=s.model_dump(mode="json"), exam_page_id=pages[s.page_index].exam_page_id if pages else None,
+                       page_number=pages[s.page_index].page_number if pages else None) for s in revision.segments])
 
 
 def question_state(case, has_reading, runs):
@@ -168,6 +168,10 @@ def question_state(case, has_reading, runs):
     if not has_reading:
         return "PENDING"
     current = next((r for r in runs if not r.stale), None)
+    if getattr(case,"dynamic_context",None):
+        from confia_lean_auditor.dynamic.product_adapter import current_reconciliation
+        rec=current_reconciliation(case,current)
+        return "READY" if rec and not rec["review_required"] else "REVIEW"
     if current and current.status == "COMPLETED" and current.result and not review_reasons(current):
         return "READY"
     return "REVIEW"
@@ -184,10 +188,11 @@ def workspace(case_id, user):
         history = store.transcription_history(summaries[0].transcription.transcription_id) if summaries else None
         if case.submission_id:
             record = store.assert_submission_integrity(case.submission_id)
-            source = QuestionSourceSnapshot.model_validate_json((store._folder(record.submission_id) / "snapshot.json").read_bytes())
-            expected = snapshot_for(detail, case)
-            if source.model_dump(exclude={"mapping_version"}) != expected.model_dump(exclude={"mapping_version"}):
-                raise ExamConflict("frozen source does not match question")
+            if record.source != 'text':
+                source = QuestionSourceSnapshot.model_validate_json((store._folder(record.submission_id) / "snapshot.json").read_bytes())
+                expected = snapshot_for(detail, case)
+                if source.model_dump(exclude={"mapping_version"}) != expected.model_dump(exclude={"mapping_version"}):
+                    raise ExamConflict("frozen source does not match question")
         runs = audit_service().list(case.submission_id) if case.submission_id else []
         current_run = next((r for r in runs if not r.stale), None)
         completed_current = current_run and current_run.status == "COMPLETED"
@@ -207,6 +212,17 @@ def workspace(case_id, user):
                     events.append(dict(event_id=f'{version["version_id"]}:{event_type}', event_type=event_type,
                         question_attempt_id=case_id, transcription_version_id=version["version_id"],
                         created_at=revision.created_at, created_by=revision.reviewer_reference))
+        if case.dynamic_context:
+            for i,version in enumerate(versions):
+                for kind in (['transcription_revised'] if version['version_number']>1 else []) + (['transcription_superseded'] if not version['current'] else []):
+                    events.append(dict(event_id=f"{version['version_id']}:{kind}",event_type=kind,question_attempt_id=case_id,transcription_version_id=version['version_id'],created_at=versions[i+1]['created_at'] if not version['current'] and i+1<len(versions) else version['created_at'],created_by=version['created_by']))
+            for summary in summaries:
+                chain=store.transcription_history(summary.transcription.transcription_id)
+                for accepted in chain.acceptances:
+                    events.append(dict(event_id=accepted.acceptance_id,event_type='transcription_accepted',question_attempt_id=case_id,transcription_version_id=f'{accepted.transcription_id}:{accepted.revision_number}',created_at=accepted.accepted_at,created_by=accepted.reviewer_reference))
+                for revision in chain.revisions:
+                    if revision.input_issues:
+                        events.append(dict(event_id=f'{revision.transcription_id}:{revision.revision_number}:input',event_type='transcription_requires_review',question_attempt_id=case_id,transcription_version_id=f'{revision.transcription_id}:{revision.revision_number}',created_at=revision.created_at,issues=[i.model_dump() for i in revision.input_issues]))
         for run in runs:
             if run.stale and versions:
                 # First later activation that superseded this source, stable across subsequent edits.
@@ -251,10 +267,17 @@ def workspace(case_id, user):
         audits = [project_audit(run, case, detail) for run in runs]
         current_audit = next((r for r in audits if not r["stale"]), None)
         previous_audit = next((r for r in audits if r["stale"]), None)
+        feedback=None
+        if case.dynamic_context and current_audit:
+            from confia_lean_auditor.dynamic.feedback import question_feedback
+            feedback=question_feedback(current_audit,human_data['current_human_decision'],detail.assessment.assessment.feedback_policy)
         from decimal import Decimal
         current_runs = [next((r for r in all_runs[c.case_id] if not r.stale), None) for c in detail.question_attempts]
         scored = [r for r in current_runs if r and r.status == "COMPLETED" and r.result and r.result.score is not None]
-        partial = dict(suggested_score=float(sum((Decimal(str(r.result.score)) for r in scored), Decimal(0))),
+        def suggested_value(r):
+            c=next(c for c in detail.question_attempts if c.submission_id==r.submission_id)
+            return project_audit(r,c,detail)['suggested_score']
+        partial = dict(suggested_score=float(sum((Decimal(str(suggested_value(r))) for r in scored), Decimal(0))),
             max_score=float(sum(c.max_score for c in detail.question_attempts)),
             analyzed_questions=len(scored), total_questions=len(detail.question_attempts),
             awaiting_reanalysis=sum((not current or current.status == "FAILED") and any(r.stale for r in all_runs[c.case_id])
@@ -267,7 +290,7 @@ def workspace(case_id, user):
             total_questions=len(detail.question_attempts), remaining_questions=len(detail.question_attempts)-len(confirmed))
         from .finalization import lifecycle
         closure = lifecycle(case.exam_submission_id)
-        return dict(exam_finalized=bool(closure['current_final_correction']), **human_data, confirmed_total=confirmed_total, question_decisions=human_current,
+        return dict(student_feedback=feedback,exam_finalized=bool(closure['current_final_correction']), **human_data, confirmed_total=confirmed_total, question_decisions=human_current,
             question_attempt=case, pages=pages, mapping_version=detail.mapping.version,
             history=history, versions=versions, question_states=question_states, current_version=next((v for v in versions if v["current"]), None),
             state=state, human_reviewed=human, audit_stale=audit_stale, reanalysis_required=reanalysis,

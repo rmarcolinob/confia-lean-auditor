@@ -12,7 +12,7 @@ import os
 from uuid import uuid4
 from typing import Literal, Optional
 
-from pydantic import Field, model_validator
+from pydantic import Field, model_validator, model_serializer
 from confia_lean_auditor.submissions.schemas import SubmissionModel
 from confia_lean_auditor.submissions.integrity import canonical_sha256
 from confia_lean_auditor.submissions.store import SubmissionStore
@@ -23,6 +23,13 @@ from .exam_store import exam_store, ExamConflict
 
 
 class HumanDecisionRequest(SubmissionModel):
+    reconciliation_id: Optional[str] = Field(default=None,pattern=r"^drec_[0-9a-f]{64}$")
+    @model_serializer(mode='wrap')
+    def legacy_request(self,handler):
+        data=handler(self)
+        if self.reconciliation_id is None: data.pop('reconciliation_id',None)
+        return data
+
     audit_run_id: str = Field(pattern=r"^aud_[0-9a-f]{64}$")
     transcription_version_id: str = Field(pattern=r"^tr_[0-9a-f]{32}:[1-9][0-9]*$")
     decision_type: Literal['ACCEPT_SUGGESTION', 'ADJUST_SCORE']
@@ -169,6 +176,7 @@ def project(case, runs, versions):
         events.append(event(decision, 'score_adjusted' if delta else 'suggestion_accepted', timestamp))
         if delta: events.append(event(decision, 'adjustment_reason_recorded', timestamp, reason=decision['override_reason']))
         events.append(event(decision, 'question_confirmed', timestamp))
+        if case.dynamic_context: events.append(event(decision,'question_human_confirmed',timestamp))
         transitions = []
         for record in chain:
             if record['kind']=='reopen' and record['decision']['human_decision_id']==did:
@@ -188,6 +196,22 @@ def project(case, runs, versions):
         if index+1 < len(decisions):
             successor=decisions[index+1]
             events.append(event(decision,'human_decision_superseded',successor['decided_at'],successor['human_decision_id'],superseded_by=successor['human_decision_id']))
+        if case.dynamic_context and current_run and current_run.audit_run_id==decision['audit_run_id'] and current_version==decision['transcription_version_id']:
+            from confia_lean_auditor.dynamic.product_adapter import current_reconciliation
+            rec=current_reconciliation(case,current_run)
+            if not rec or rec['reconciliation_id']!=decision.get('reconciliation_id') or canonical_sha256(rec)!=decision.get('reconciliation_sha256'):
+                from confia_lean_auditor.dynamic.review_service import DynamicReviewService
+                from confia_lean_auditor.submission_audits.router import service
+                reviews=DynamicReviewService(service())
+                later=[]
+                for path in reviews.root.glob('drev_*.json'):
+                    _,review=reviews.load_record(path)
+                    if review.question_attempt_id==case.case_id and review.audit_run_id==decision['audit_run_id'] and review.completed_at>datetime.fromisoformat(timestamp.replace('Z','+00:00')):
+                        later.append(review)
+                first=min(later,key=lambda r:r.completed_at) if later else None
+                changed_at=first.completed_at.isoformat() if first else timestamp
+                transitions.append((changed_at,'INVALIDATED_BY_RECONCILIATION'))
+                events.append(event(decision,'confirmation_invalidated_by_reconciliation_change',changed_at,first.review_id if first else '',independent_review_id=first.review_id if first else None))
         active = index == len(decisions)-1 and not transitions and current_run is not None and current_run.audit_run_id==decision['audit_run_id'] and current_version==decision['transcription_version_id']
         state = 'CONFIRMED' if active else 'SUPERSEDED' if index+1 < len(decisions) else min(transitions)[1] if transitions else 'INVALIDATED'
         row = dict(**decision, current=active, effective_status=state,
@@ -225,12 +249,14 @@ def decide(case_id, body, user):
                 raise ExamConflict('audit no longer current or scorable')
             if snapshot['current_human_decision'] or snapshot['last_human_decision_id'] != body.expected_last_decision_id:
                 raise ExamConflict('human decision changed; reopen before confirming')
+            from confia_lean_auditor.dynamic.product_adapter import decision_reference
+            raw=audit_service().get(body.audit_run_id)
+            reference=decision_reference(audit,body,case,raw)
             suggested=Decimal(str(audit['suggested_score']))
             final=suggested if body.decision_type=='ACCEPT_SUGGESTION' else body.final_points
             if final is None or (body.decision_type=='ACCEPT_SUGGESTION' and body.final_points is not None and body.final_points!=suggested):
                 raise ValueError('invalid final score')
-            raw=audit_service().get(body.audit_run_id)
-            decision=HumanDecision(human_decision_id='hdec_'+uuid4().hex,case_id=case_id,question_attempt_id=case_id,
+            decision=HumanDecision(**reference,human_decision_id='hdec_'+uuid4().hex,case_id=case_id,question_attempt_id=case_id,
                 assessment_id=audit['assessment_id'],participant_id=audit['participant_id'],submission_id=case.exam_submission_id,
                 transcription_version_id=version,audit_run_id=raw.audit_run_id,audit_source_sha256=raw.source_hash,audit_result_sha256=raw.result_sha256,
                 max_points=case.max_score,suggested_points=suggested,final_points=final,adjustment_delta=final-suggested,

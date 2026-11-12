@@ -13,14 +13,14 @@
     const query = new URLSearchParams(window.location.search || "");
     if(query.get("case_id")) return {view:"workspace",caseId:query.get("case_id")};
     if(query.get("exam_submission_id")) return {view:"workspace",examId:query.get("exam_submission_id"),attemptId:query.get("question_attempt_id")};
-    const params={};for(const key of ["search","question","status","source","origin","sample","exam","page","mode","problem_id"]) if(query.get(key))params[key]=query.get(key);
+    const params={};for(const key of ["search","question","status","source","origin","sample","exam","page","mode","problem_id","assessment_id"]) if(query.get(key))params[key]=query.get(key);
     return {view:viewNames[query.get("view")] || "home",params};
   }
   function writeRoute(view, params={}, caseId=null, replace=false) {
     const query=new URLSearchParams();
     if(params.exam_submission_id){query.set("exam_submission_id",params.exam_submission_id);if(params.question_attempt_id)query.set("question_attempt_id",params.question_attempt_id);}
     else if(caseId) query.set("case_id",caseId);
-    else { if(view!=="home")query.set("view",view==="cases"?"queue":view);for(const key of ["search","question","status","source","origin","sample","exam","page","mode","problem_id"])if(params[key]&&!(key==="page"&&String(params[key])==="1"))query.set(key,params[key]); }
+    else { if(view!=="home")query.set("view",view==="cases"?"queue":view);for(const key of ["search","question","status","source","origin","sample","exam","page","mode","problem_id","assessment_id"])if(params[key]&&!(key==="page"&&String(params[key])==="1"))query.set(key,params[key]); }
     const url="/tme"+(query.toString()?`?${query}`:"");
     const changed=url!==currentURL;
     if(changed || replace)window.history?.[replace?"replaceState":"pushState"]?.({tme:true,origin:returnTo},"",url);
@@ -34,7 +34,7 @@
     if(view==="cases"||view==="exams"){
       state.filters[view]=params ? {...params} : {...(state.filters[view]||{})};
       params=state.filters[view];
-    }else params=view==="new" ? {mode:params?.mode,problem_id:params?.problem_id} : {};
+    }else params=view==="new" ? {mode:params?.mode,problem_id:params?.problem_id,assessment_id:params?.assessment_id} : {};
     if(record && !writeRoute(view,params) && state.view===view && state.navigationPending)return state.navigationPending;
     fullExam?.cancel(); preparation?.cancel(); preparation=null;
     window.scrollTo(0,0);document.querySelector("#main")?.scrollTo?.(0,0);
@@ -159,8 +159,9 @@
         if(saved.examPages?.map(p=>p.exam_page_id).join()!==review.pages.map(p=>p.exam_page_id).join())saved.originalPages=new Map();
         Object.assign(c,review.question_attempt);
         Object.assign(saved,{examReview:review,examPages:review.pages,history:review.history,audits:review.audits,
-          detail:{submission:{page_images:review.pages.map((p,index)=>({page_index:index}))}},loaded:true,loadError:false});
+          detail:{submission:{page_images:c.source_mode==="TEXT"?[{page_index:0}]:review.pages.map((p,index)=>({page_index:index}))}},loaded:true,loadError:false});
         for(const item of saved.fullExam?.question_attempts||[]){item.review_state=review.question_states?.[item.case_id]||"PENDING";item.human_decision=review.question_decisions?.[item.case_id]||null;}
+        if(c.source_mode==="TEXT")saved.originalText=await api(`${base}/original-text`);
         c.human_decision=review.current_human_decision||null;
         const sibling=saved.fullExam?.question_attempts.find(item=>item.case_id===c.case_id);
         if(sibling)sibling.review_state=review.state;c.review_state=review.state;
@@ -226,6 +227,10 @@
       const page=Views.Page("Nova atividade ou prova","Crie questões inéditas e prepare rubricas com o ConfIA.");
       page.heading.append(btn("Voltar às opções",()=>navigate("new"),"tme-button secondary"));
       const host=node("div");host.id="confia-preparation";page.append(host);show(page);
+      if(!params.problem_id && window.ConfIADynamicAssessment){
+        preparation=window.ConfIADynamicAssessment.create({host,setBusy:value=>{state.busy=value;},onSelect:id=>writeRoute("new",{mode:"dynamic",assessment_id:id}),onOpenExam:id=>openExam(id).catch(showError)});
+        return preparation.load(params.assessment_id);
+      }
       preparation=window.ConfIADynamic.create({host,setBusy:value=>{state.busy=value;},
         onSelect:id=>writeRoute("new",{mode:"dynamic",problem_id:id}),onOpenAttempt:id=>openCase(id).catch(showError)});
       return preparation.load(params.problem_id);
@@ -539,7 +544,7 @@
     const updatePages = () => {
       pageNodes.forEach((page, i) => { page.hidden = i !== saved.page; const img = page.querySelectorAll("img")[0]; if(img)Workspace.layoutOriginal(page,img,original,saved); });
       fit.value=Workspace.originalFitMode(saved);
-      pagination.textContent = `${Math.round(saved.zoom * 100)}% · Página ${pages.length ? saved.page + 1 : 0}/${pages.length}${c.exam_submission_id && pages.length ? ` · folha ${saved.examPages[saved.page].page_number} da prova` : ""}`;
+      pagination.textContent = `${Math.round(saved.zoom * 100)}% · Página ${pages.length ? saved.page + 1 : 0}/${pages.length}${c.exam_submission_id && saved.examPages?.[saved.page] ? ` · folha ${saved.examPages[saved.page].page_number} da prova` : ""}`;
     };
     saved.updateOriginal = updatePages;
     const resetFit = mode => { saved.fitMode=mode; saved.zoom=1; delete saved.customWidth; original.scrollTop=0; original.scrollLeft=0; updatePages(); };
@@ -634,7 +639,7 @@
     if (saved.processing === "audit") analysisBody.appendChild(loading("Analisando matemática · executando verificações…"));
     if(c.exam_submission_id){
       const onOriginal=e=>{const index=saved.examPages.findIndex(p=>p.exam_page_id===e.exam_page_id);if(index<0)return;saved.page=index;setTab("original");drawer(false);solution.scrollIntoView({block:"start",behavior:"smooth"});};
-      if(run){const report=node("div");window.ConfiaWorkspaceReport.renderQuestion(run,report,{onOriginal,decisionPanel:humanDecisionPanel(c,saved,run)});analysisBody.append(report);}
+      if(run){const report=node("div");window.ConfiaWorkspaceReport.renderQuestion(run,report,{onOriginal,decisionPanel:humanDecisionPanel(c,saved,run),workflowDisabled:state.busy||saved.examReview.exam_finalized,onWorkflow:async action=>{if(state.busy)return;state.busy=true;try{await post("/"+action.route.map(encodeURIComponent).join("/"),action.body||{execution_key:window.crypto.randomUUID()});saved.loaded=false;}catch(e){state.message=e.message;}finally{state.busy=false;}await renderCorrection();}});analysisBody.append(report);}
       const comparison=saved.examReview.audit_comparison;
       const previousAudit=saved.examReview.previous_audit || (saved.audits||[]).find(r=>r.stale);
       const scoreText=(value,max)=>value==null?"não determinada":`${String(value).replace(".",",")} / ${max}`;
@@ -711,8 +716,9 @@
   const readingOrigin=value=>({human:"Humana",capture:"Automática · captura importada",automatic:"Automática",digital_ink:"Escrita digital"})[value]||value;
   async function openExamQuestion(c, detail) {
     const generation=state.generation;
+    state.current=c;
     await loadWorkspaceContext();if(generation!==state.generation)return;
-    state.current=c;state.message="";
+    state.message="";
     const saved=local(c);saved.fullExam=detail;saved.loaded=false;
     await renderCorrection();
   }
@@ -821,13 +827,13 @@
       box.append(success,node("strong",`Nota final: ${humanPoints(current.final_points)} / ${humanPoints(current.max_points)}`),node("p",delta?`Ajuste: ${delta>0?"+":""}${humanPoints(current.adjustment_delta)}`:"Sugestão aceita"));
       const detail=node("details");detail.append(node("summary","Ver decisão"),humanDecisionDetails(current));box.append(detail);
       if(!finalized)box.append(btn("Reabrir questão",()=>humanAction(c,{human_decision_id:current.human_decision_id},true),"secondary"));
-    }else if(!run || run.stale || run.status!=="COMPLETED" || run.suggested_score==null){
+    }else if(!run || run.stale || run.status!=="COMPLETED" || run.suggested_score==null || run.suggestion_ready===false){
       box.append(note("Uma análise atual com pontuação disponível é necessária antes da homologação."));
     }else{
       if(saved.humanDraftRun!==run.audit_run_id){saved.humanDraftRun=run.audit_run_id;saved.humanDraft={};saved.humanAdjust=false;}
       saved.humanDraft ||= {};
       if(run.review_required)box.append(note("O ConfIA pede revisão. Confira os alertas antes de homologar conscientemente."));
-      const selection={audit_run_id:run.audit_run_id,transcription_version_id:run.transcription_version_id,expected_last_decision_id:saved.examReview.last_human_decision_id||null};
+      const selection={...(run.reconciliation_id?{reconciliation_id:run.reconciliation_id}:{}),audit_run_id:run.audit_run_id,transcription_version_id:run.transcription_version_id,expected_last_decision_id:saved.examReview.last_human_decision_id||null};
       box.append(actions(btn("Aceitar sugestão",()=>humanAction(c,{...selection,decision_type:"ACCEPT_SUGGESTION"})),
         btn("Ajustar nota",()=>{saved.humanAdjust=true;renderCorrection();},"secondary")));
       if(saved.humanAdjust){

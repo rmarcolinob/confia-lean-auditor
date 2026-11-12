@@ -111,6 +111,8 @@ class DynamicReviewService:
         ]
 
     def execute(self, case, run_id, key):
+        with self.audits.submissions._locked():
+            self.audits.submissions.assert_tme_editable(case.submission_id)
         run = self.audit_for(case, run_id, current=True)
         context, statement, rubric, preparation = case_context(case)
         review_id = self.identity(case, run, key)
@@ -243,15 +245,19 @@ class DynamicReviewService:
                 raise DynamicConflict(
                     "Contexto mudou durante a revisão; resultado não publicado."
                 )
-            SubmissionStore._write_atomic_new(
-                path,
-                json.dumps(
-                    dict(
-                        record=record.model_dump(mode="json"),
-                        sha256=model_sha256(record),
-                    ),
-                    ensure_ascii=False,
-                    indent=2,
-                ).encode(),
-            )
+            with self.audits.submissions._locked(exclusive=True):
+                self.audits.submissions.assert_tme_editable(case.submission_id)
+                from .reconciliation_service import ReconciliationService
+                ReconciliationService(self.audits).assert_source_current_unlocked(case,run)
+                SubmissionStore._write_atomic_new(
+                    path,
+                    json.dumps(
+                        dict(
+                            record=record.model_dump(mode="json"),
+                            sha256=model_sha256(record),
+                        ),
+                        ensure_ascii=False,
+                        indent=2,
+                    ).encode(),
+                )
             return self.envelope(record, run)

@@ -542,6 +542,7 @@ class SubmissionStore:
                 reviewer_reference=request.reviewer_reference,
                 reviewer_identity_verified=request.reviewer_identity_verified,
                 change_type="initial_transcription", segments=request.segments, status=request.status,
+                **({"input_issues":request.input_issues} if "input_issues" in request.model_fields_set else {}),
             )
             return self._publish_transcription(transcription, revision)
 
@@ -575,6 +576,12 @@ class SubmissionStore:
         if transcription.source == "automatic":
             from confia_lean_auditor.recognition.validation import validate_automatic_pair
             recognition_run = validate_automatic_pair(transcription, revision, recognition_run, submission)
+        if transcription.source != "manual" and submission.tme_case_id:
+            from confia_lean_auditor.tme.store import case_store
+            if case_store().read(submission.tme_case_id).exam_submission_id:
+                folder=self._transcriptions_folder(submission.submission_id)
+                if folder is not None and any(folder.glob("tr_*")):
+                    raise TranscriptionConflict("preserve current question reading; publish an explicit revision")
         existing = self._folder(transcription.submission_id) / "transcriptions" / transcription.transcription_id
         if existing.exists() or existing.is_symlink():
             raise TranscriptionConflict("initial transcription already published")
@@ -695,6 +702,7 @@ class SubmissionStore:
                 reviewer_identity_verified=request.reviewer_identity_verified,
                 change_type=request.change_type, change_reason=request.change_reason,
                 segments=request.segments, status=request.status,
+                **({"input_issues":request.input_issues} if "input_issues" in request.model_fields_set else {}),
             )
             self._write_atomic_new(
                 self._revision_path(folder, revision_number),

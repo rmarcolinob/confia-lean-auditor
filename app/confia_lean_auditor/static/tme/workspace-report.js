@@ -229,6 +229,10 @@
       n("p","Sugestão de análise; a nota final depende da decisão do avaliador."));
     report.append(summary);
     if(options.decisionPanel)report.append(options.decisionPanel);
+    if(data.reconciliation)report.append(n("p",`Primeira análise: ${fmt(data.grader_suggested_score)} · Sugestão reconciliada: ${fmt(data.suggested_score)} · Perfil: ${data.policy_profile}`));
+    if(!data.stale && !options.historical)for(const action of data.workflow_actions||[]){
+      const button=n("button",action.label,"secondary");button.type="button";button.disabled=Boolean(options.workflowDisabled);button.addEventListener("click",()=>options.onWorkflow?.(action));report.append(button);
+    }
     for(const reason of [...new Set([...(data.review_reasons||[]),...(data.warnings||[])])])report.append(n("p",reason,"formal-warning"));
     const evidence=Object.fromEntries((data.evidences||[]).map(e=>[e.evidence_id,e]));
     const checks=Object.fromEntries((data.checker_summary||[]).map(c=>[c.checker_id,c]));
@@ -238,7 +242,8 @@
       const heading=n("summary");heading.append(statusIcon(item.display_status),n("span",item.label,"criterion-label"),
         n("strong",`${fmt(item.suggested_points)} / ${fmt(item.max_points)}`,"criterion-score"));
       row.append(heading,n("p",item.status_label,"criterion-verification"));
-      if(item.review_required)row.append(n("p",`Revisão necessária. Pontos confirmados: ${fmt(item.known_points)}; possíveis: ${fmt(item.possible_points)}.`));
+      if(item.reason)row.append(n("p",item.reason));
+      if(item.review_required)row.append(n("p",item.known_points==null?"Revisão necessária. Confira as evidências e o motivo antes de homologar.":`Revisão necessária. Pontos confirmados: ${fmt(item.known_points)}; possíveis: ${fmt(item.possible_points)}.`));
       if(item.carry_forward_applied)row.append(n("p","Crédito pela continuidade coerente do raciocínio anterior."));
       for(const id of item.evidence_ids||[]){
         const e=evidence[id];if(!e)continue;

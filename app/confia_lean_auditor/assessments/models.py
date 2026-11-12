@@ -16,6 +16,10 @@ class AssessmentModel(BaseModel):
 
 
 class Assessment(AssessmentModel):
+    correction_mode: Literal["SPECIALIZED", "DYNAMIC"] = "SPECIALIZED"
+    feedback_policy: Literal["WITHHOLD", "AFTER_CONFIRMATION"] = "WITHHOLD"
+    supersedes_assessment_id: Optional[str] = None
+    superseded_by: Optional[str] = None
     dynamic_policy_profile: Optional[Literal["FORMATIVE_LIST", "SCHOOL_EXAM"]] = None
     dynamic_policy_version: Optional[Literal["dynamic-safe-automation.v1"]] = None
     assessment_id: str = Field(pattern=r"^asmt_[0-9a-f]{32}$")
@@ -39,8 +43,10 @@ class Assessment(AssessmentModel):
     @model_serializer(mode="wrap")
     def legacy_shape(self, handler):
         data = handler(self)
-        for key in ("dynamic_policy_profile", "dynamic_policy_version"):
+        for key in ("dynamic_policy_profile", "dynamic_policy_version", "supersedes_assessment_id", "superseded_by"):
             if getattr(self, key) is None: data.pop(key, None)
+        for key in ("correction_mode", "feedback_policy"):
+            if key not in self.model_fields_set: data.pop(key, None)
         if self.scope == "INSTITUTIONAL" and "scope" not in self.model_fields_set:
             data.pop("scope", None)
         return data
@@ -58,6 +64,8 @@ class Assessment(AssessmentModel):
     def coherent(self):
         if (self.dynamic_policy_profile is None) != (self.dynamic_policy_version is None):
             raise ValueError("complete policy configuration required")
+        if self.correction_mode == "DYNAMIC" and (not self.dynamic_policy_profile or self.scope != "TME"):
+            raise ValueError("Dynamic requires explicit activity policy")
         institutions = (self.network_id, self.school_id, self.classroom_id)
         if self.scope == "INSTITUTIONAL" and not all(institutions):
             raise ValueError("institutional assessment requires network, school and classroom")
@@ -74,7 +82,18 @@ class Assessment(AssessmentModel):
         return self
 
 
+from confia_lean_auditor.dynamic.grading_models import DynamicGradingContext
+
+
 class AssessmentItem(AssessmentModel):
+    dynamic_context: Optional[DynamicGradingContext] = None
+
+    @model_serializer(mode="wrap")
+    def legacy_item(self, handler):
+        data = handler(self)
+        if self.dynamic_context is None: data.pop("dynamic_context", None)
+        return data
+
     assessment_item_id: str = Field(pattern=r"^ait_[0-9a-f]{32}$")
     assessment_id: str = Field(pattern=r"^asmt_[0-9a-f]{32}$")
     problem_id: str = Field(min_length=1, max_length=80)
@@ -106,11 +125,25 @@ class AssessmentParticipant(AssessmentModel):
 
 
 class AssessmentDocument(AssessmentModel):
+    dynamic_revision: int = Field(default=0, ge=0)
+    dynamic_events: list[dict] = Field(default_factory=list)
+
+    @model_serializer(mode="wrap")
+    def legacy_document(self, handler):
+        data = handler(self)
+        if not self.dynamic_revision: data.pop("dynamic_revision", None)
+        if not self.dynamic_events: data.pop("dynamic_events", None)
+        return data
+
     assessment: Assessment
     items: list[AssessmentItem] = Field(default_factory=list, max_length=100)
 
     @model_validator(mode="after")
     def coherent(self):
+        if self.assessment.correction_mode == "DYNAMIC" and self.assessment.status != "DRAFT" and (not self.items or any(i.dynamic_context is None for i in self.items)):
+            raise ValueError("published Dynamic assessment requires pinned questions")
+        if any(item.dynamic_context and item.dynamic_context.problem_id != item.problem_id for item in self.items):
+            raise ValueError("question context mismatch")
         if any(item.assessment_id != self.assessment.assessment_id for item in self.items):
             raise ValueError("item belongs to another assessment")
         if len({item.assessment_item_id for item in self.items}) != len(self.items):

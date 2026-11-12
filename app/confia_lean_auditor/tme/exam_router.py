@@ -30,7 +30,7 @@ def guarded(operation, *args, **kwargs):
     except FileNotFoundError:
         raise HTTPException(404, "Prova, avaliação ou questão não encontrada.") from None
     except AuditConflict as exc:
-        raise HTTPException(409, exc.message) from None
+        raise HTTPException(409, dict(code=exc.code,message=exc.message)) from None
     except CaptureError as exc:
         raise HTTPException(422, str(exc)) from None
     except (ExamConflict, AssessmentConflict, TranscriptionConflict, SubmissionConflict):
@@ -217,3 +217,13 @@ def reopen_correction(exam_id: str, body: ReopenCorrection, response: Response, 
 
 from .certification_router import router as certification_router
 router.include_router(certification_router)
+
+
+from .exam_models import TextExamInput
+
+@router.post('/exam-submissions/text', response_model=ExamDetail)
+def receive_text_exam(body: TextExamInput,response: Response,user=Depends(require_tme_evaluator)):
+    detail,created=guarded(exam_store().receive_text,body,user)
+    response.status_code=201 if created else 200
+    response.headers['Cache-Control']='no-store'
+    return detail

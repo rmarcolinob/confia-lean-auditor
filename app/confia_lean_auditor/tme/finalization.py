@@ -164,9 +164,11 @@ def _summary(detail, submissions, audits):
         histories = []
         if case.submission_id:
             submissions.assert_submission_integrity(case.submission_id)
-            source = QuestionSourceSnapshot.model_validate_json((submissions._folder(case.submission_id)/'snapshot.json').read_bytes())
-            if source.model_dump(exclude={'mapping_version'}) != snapshot_for(detail, case).model_dump(exclude={'mapping_version'}):
-                raise ExamConflict('frozen source does not match question')
+            record=submissions._read(case.submission_id)[0]
+            if record.source != 'text':
+                source = QuestionSourceSnapshot.model_validate_json((submissions._folder(case.submission_id)/'snapshot.json').read_bytes())
+                if source.model_dump(exclude={'mapping_version'}) != snapshot_for(detail, case).model_dump(exclude={'mapping_version'}):
+                    raise ExamConflict('frozen source does not match question')
             folder = submissions._transcriptions_folder(case.submission_id)
             if folder:
                 histories = sorted((submissions._history_from_folder(p) for p in folder.iterdir()
@@ -186,6 +188,7 @@ def _summary(detail, submissions, audits):
         elif not run: reason = 'Análise anterior desatualizada; reanálise necessária.' if runs else 'Análise pendente.'
         elif run.status == 'FAILED': reason = 'A análise corrente falhou; reanálise necessária.'
         elif audit['suggested_score'] is None: reason = 'Análise sem pontuação disponível.'
+        elif audit.get('suggestion_ready') is False: reason = 'Revisão e reconciliação correntes pendentes.'
         elif not human: reason = 'Questão ainda não confirmada; homologue a análise corrente.'
         suggested = Decimal(str(audit['suggested_score'])) if audit and run.status == 'COMPLETED' and audit['suggested_score'] is not None else None
         d = HumanDecision.model_validate({k:v for k,v in human.items() if k in HumanDecision.model_fields}) if human else None
@@ -288,6 +291,7 @@ def finalize(exam_id, body, user):
                 **{k:snapshot[k] for k in ('final_correction_id','question_count','final_total','total_adjustment','adjusted_question_count','review_question_count')},
                 suggested_total=snapshot['suggested_total_snapshot'], human_decision_ids=[q.human_decision_id for q in final.questions],
                 engines=[dict(engine_mode=m,engine_version=v) for m,v in sorted({(q.engine_mode,q.engine_version) for q in final.questions})]))
+            if detail.assessment.assessment.correction_mode=='DYNAMIC': events.append(_event('assessment_finalized',data,now,body.execution_key,final_correction_id=final.final_correction_id))
             if previous: events.append(_event('final_correction_superseded', data, now, body.execution_key,
                 final_correction_id=previous['final_correction_id'], superseded_by=final.final_correction_id))
             _append(exam_id, chain, 'finalize', body, user, events, snapshot)

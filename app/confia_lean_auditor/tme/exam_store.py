@@ -118,7 +118,7 @@ class ExamStore(AssessmentStore):
         for attempt, item in zip(attempts, assessment.items):
             if (attempt.exam_submission_id != identifier or attempt.assessment_item_id != item.assessment_item_id
                     or attempt.problem_id != item.problem_id or attempt.question_order != item.order
-                    or attempt.max_score != Decimal(str(item.points))):
+                    or attempt.max_score != Decimal(str(item.points)) or attempt.dynamic_context != item.dynamic_context):
                 raise ExamConflict("Questão não corresponde à definição da prova.")
         from .finalization import lifecycle
         life = lifecycle(identifier)
@@ -145,7 +145,7 @@ class ExamStore(AssessmentStore):
                 from .finalization import lifecycle
                 closure = lifecycle(submission.submission_id)
                 current = closure['current_final_correction']
-                result.append(dict(status='FINALIZED' if current else 'REOPENED' if closure['reopened'] else 'IN_PROGRESS',
+                result.append(dict(assessment_id=submission.assessment_id, correction_mode=assessment.assessment.correction_mode, policy_profile=assessment.assessment.dynamic_policy_profile, status='FINALIZED' if current else 'REOPENED' if closure['reopened'] else 'IN_PROGRESS',
                     final_total=current['final_total'] if current else None,
                     adjusted_question_count=current['adjusted_question_count'] if current else None,
                     finalized_at=current['finalized_at'] if current else None, submission_id=submission.submission_id, title=assessment.assessment.title,
@@ -204,7 +204,7 @@ class ExamStore(AssessmentStore):
                 for case_id, item in zip(cases, assessment.items):
                     case_store().create(CaseCreate(problem_id=item.problem_id,
                         external_candidate_ref=package.external_participant_code, source_mode="IMAGE_SCAN"), user,
-                        case_id=case_id, exam_binding=dict(exam_submission_id=identifier,
+                        case_id=case_id, dynamic_context=item.dynamic_context, exam_binding=dict(exam_submission_id=identifier,
                             assessment_item_id=item.assessment_item_id, question_order=item.order, max_score=item.points))
                 SubmissionStore._sync_directory(pending)
                 os.replace(pending, self.root / identifier)
@@ -213,6 +213,54 @@ class ExamStore(AssessmentStore):
                 if pending.exists():
                     shutil.rmtree(pending)
             return self._detail(identifier, user), True
+
+    def receive_text(self, request, user):
+        """Minimal upstream adapter: native text originals, existing transcription store.
+
+        No rendered pages, OCR or page segmentation. Retry resumes missing child
+        sources; the same immutable ExamSubmission and QuestionAttempts are reused.
+        """
+        from .exam_models import CaptureMetadata
+        from confia_lean_auditor.submissions.router import store as submissions
+        from confia_lean_auditor.submissions.text_source import receive_text
+        from confia_lean_auditor.submissions.schemas import CreateTranscriptionRequest
+        identifier='exam_'+hashlib.sha256(f"{user.user_id}:{request.idempotency_key}".encode()).hexdigest()[:32]
+        request_hash=canonical_sha256(request.model_dump(mode='json'))
+        with self._locked():
+            created=not (self.root/identifier).exists()
+            if created:
+                assessment=tme_assessment(request.assessment_identifier,user)
+                if assessment.assessment.correction_mode!='DYNAMIC' or len(request.solutions)!=len(assessment.items):
+                    raise ExamConflict('Envie uma solução textual por questão Dynamic, na ordem publicada.')
+                participant=participant_store().get_or_create(request.assessment_identifier,'EXTERNAL_PSEUDONYM',external_namespace='dynamic',external_code=request.external_participant_code)
+                now=datetime.now(timezone.utc)
+                ids=['case_'+hashlib.sha256(f"{identifier}:{i.assessment_item_id}".encode()).hexdigest()[:32] for i in assessment.items]
+                submission=ExamSubmission(submission_id=identifier,assessment_id=request.assessment_identifier,
+                    assessment_definition_sha256=assessment.assessment.definition_sha256,participant_id=participant.participant_id,
+                    created_by_user_id=user.user_id,created_at=now,source='TEXT',page_count=0,
+                    capture_metadata=CaptureMetadata(producer='confia-text-input'),capture_pages=[],original_documents=[],previews=[],pages=[],question_attempt_ids=ids,request_sha256=request_hash)
+                pending=Path(tempfile.mkdtemp(prefix='.pending-',dir=self.root))
+                try:
+                    manifest=dict(submission=submission.model_dump(mode='json'),assessment=assessment.model_dump(mode='json'),participant=participant.model_dump(mode='json'))
+                    SubmissionStore._write(pending/'exam.json',json.dumps(sealed(manifest)).encode())
+                    mapping=PageMapping(version=1,updated_at=now,updated_by=user.user_id)
+                    SubmissionStore._write(pending/'mapping_000001.json',json.dumps(sealed(mapping.model_dump(mode='json'))).encode())
+                    for cid,item in zip(ids,assessment.items):
+                        case_store().create(CaseCreate(problem_id=item.problem_id,external_candidate_ref=request.external_participant_code,source_mode='TEXT'),user,
+                            case_id=cid,dynamic_context=item.dynamic_context,exam_binding=dict(exam_submission_id=identifier,assessment_item_id=item.assessment_item_id,question_order=item.order,max_score=item.points))
+                    SubmissionStore._sync_directory(pending);os.replace(pending,self.root/identifier);SubmissionStore._sync_directory(self.root)
+                finally:
+                    if pending.exists(): shutil.rmtree(pending)
+            detail=self._detail(identifier,user)
+            if detail.submission.request_sha256!=request_hash: raise ExamConflict('Chave de envio já utilizada com outro conteúdo.')
+            for case,text in zip(detail.question_attempts,request.solutions):
+                if not case.submission_id:
+                    receipt=receive_text(submissions(),case,user,text)
+                    case=case_store().bind(case.case_id,receipt.submission_id,user)
+                if not submissions().list_transcriptions(case.submission_id):
+                    submissions().create_transcription(case.submission_id,CreateTranscriptionRequest(reviewer_reference=user.user_id,
+                        segments=[dict(segment_id='text:0',page_index=0,order=0,kind='text',text=text)]))
+            return self._detail(identifier,user),created
 
     def update_mapping(self, identifier, request, user):
         with self._locked():

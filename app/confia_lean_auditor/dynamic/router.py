@@ -1,3 +1,4 @@
+from confia_lean_auditor.submissions.store import TranscriptionConflict, SubmissionConflict
 """Teacher API for preparation only. Does not route to any correction engine."""
 import os
 from typing import Optional, Literal
@@ -25,13 +26,14 @@ def teacher_actor(response: Response, user=Depends(require_role(Role.TEACHER))):
 
 
 def guarded(operation, *args, **kwargs):
+    from confia_lean_auditor.tme.exam_store import ExamConflict
     try:
         return operation(*args, **kwargs)
     except ProviderFailure as exc:
         raise HTTPException(503, dict(code=exc.code, message="Sugestão indisponível ou inválida. Recarregue para consultar o histórico e tente novamente.")) from None
     except FileNotFoundError:
         raise HTTPException(404, "Problema ou versão não encontrado.") from None
-    except (DynamicConflict, AssessmentIntegrityConflict) as exc:
+    except (DynamicConflict, AssessmentIntegrityConflict, TranscriptionConflict, SubmissionConflict, ExamConflict) as exc:
         message = str(exc) if isinstance(exc, DynamicConflict) else "Integridade do histórico inválida."
         raise HTTPException(409, message) from None
     except (ValidationError, ValueError):
@@ -263,3 +265,7 @@ def dynamic_decisions(case_id: str,response: Response,user=Depends(require_tme_e
     from .human_decisions import history
     response.headers['Cache-Control']='no-store'
     return guarded(history,reconciliation_case(case_id,user))
+
+
+from .assessment_router import router as assessment_router
+router.include_router(assessment_router)

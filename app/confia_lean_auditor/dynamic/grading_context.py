@@ -83,6 +83,25 @@ def resolve(problem_id, actor, allow_review=False, expected=None):
         return context, statement, rubric, prep
 
 
+def resolve_pinned(problem_id, actor, expected):
+    """Published Assessment selects immutable history, never the mutable current pointer."""
+    store = dynamic_store()
+    with store._locked():
+        doc, _ = store._owned(problem_id, actor)
+        package = next((p for p in doc.packages if p.package_id == expected.package_id), None)
+        statement = next((s for s in doc.statements if s.version_number == expected.statement_version), None)
+        rubric = next((r for r in doc.rubrics if r.rubric_id == expected.rubric_id), None)
+        preparation = next((p for p in reversed(doc.preparations) if p.preparation_id == expected.preparation_id), None)
+        if not all((package, statement, rubric, preparation)) or not any(a.package_id == expected.package_id for a in doc.approvals):
+            raise DynamicConflict("Configuração histórica não aprovada.")
+        if (model_sha256(package) != expected.package_sha256 or model_sha256(statement) != expected.statement_sha256
+                or model_sha256(rubric) != expected.rubric_sha256 or model_sha256(preparation) != expected.preparation_sha256
+                or package.rubric_id != rubric.rubric_id or package.statement_version != statement.version_number
+                or not package.preparation_reference or package.preparation_reference.preparation_id != preparation.preparation_id):
+            raise DynamicConflict("Integridade da configuração histórica inválida.")
+        return expected, statement, rubric, preparation
+
+
 def case_context(case):
     from confia_lean_auditor.tme.auth import TMEEvaluator
 
@@ -101,6 +120,10 @@ def case_context(case):
         actor = Actor(
             actor_id=case.created_by_user_id, kind="TEACHER", tenant_id=owner.tenant_id
         )
+    if case.exam_submission_id:
+        from .assessment_service import pinned_activity
+        pinned_activity(case)
+        return resolve_pinned(case.problem_id, actor, case.dynamic_context)
     return resolve(
         case.problem_id,
         actor,
