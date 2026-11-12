@@ -74,6 +74,15 @@ class AuditService:
                          if item.revision_number == revision.revision_number)
         receipt = self.submissions.assert_acceptance_integrity(folder, persisted, acceptance)
         source = build_source(submission, persisted, acceptance, receipt)
+        if submission.tme_case_id:
+            from confia_lean_auditor.tme.store import case_store
+            case=case_store().read(submission.tme_case_id)
+            if case.dynamic_context:
+                from confia_lean_auditor.dynamic.grading_context import case_context
+                context=case_context(case)[0]
+                source=source.model_copy(update={"dynamic_context":context})
+                source=source.model_copy(update={"source_hash":source_digest(source)})
+        if source.problem_id.startswith("dyn_") and not source.dynamic_context: raise SourceIntegrityError()
         if source.problem_id.startswith("TME"):
             from confia_lean_auditor.tme.accepted_audit import audit_context
             source = source.model_copy(update={"tme_context": audit_context(source.problem_id, self.tme_use_lean)})
@@ -186,7 +195,11 @@ class AuditService:
                 return self.view(existing)
             created_at = datetime.now(timezone.utc)
             try:
-                if source.tme_context is not None:
+                if source.dynamic_context is not None:
+                    from confia_lean_auditor.dynamic.grading_context import audit_dynamic
+                    from uuid import uuid4
+                    result=audit_dynamic(source,self.root / "artifacts" / (run_id+"-"+uuid4().hex))
+                elif source.tme_context is not None:
                     from confia_lean_auditor.tme.accepted_audit import audit_accepted_tme_transcription
                     from uuid import uuid4
                     result = audit_accepted_tme_transcription(source, self.root / "artifacts" / (run_id + "-" + uuid4().hex))
@@ -210,6 +223,7 @@ class AuditService:
             metadata = result.reproducibility if result else None
             record = metadata.record if metadata else None
             product_fields = {"question_context": question_context, "completed_at": datetime.now(timezone.utc)} if question_context else {}
+            if source.dynamic_context:product_fields["engine_mode"]="DYNAMIC"
             run = AuditRun(**product_fields, audit_run_id=run_id, source=source, created_at=created_at,
                 **{field: getattr(source, field) for field in ("submission_id", "problem_id",
                     "transcription_id", "revision_number", "acceptance_id", "source_hash")},
@@ -221,7 +235,7 @@ class AuditService:
                 reproducibility_manifest_filename=record.filename if record else None,
                 reproducibility_manifest_sha256=record.manifest_sha256 if record else None,
                 execution_key=request.execution_key, error_code=error_code,
-                auditor_version=source.tme_context.auditor_version if source.tme_context else None)
+                auditor_version=source.dynamic_context.grader_version if source.dynamic_context else source.tme_context.auditor_version if source.tme_context else None)
             if question_event_builder is not None:
                 events = question_event_builder(self.view(run))
                 run = AuditRun.model_validate({**run.model_dump(), "question_events": events,
@@ -247,6 +261,13 @@ class AuditService:
                 if other.is_dir() and not other.is_symlink() and re.fullmatch(r"tr_[0-9a-f]{32}", other.name):
                     record = self.submissions._read_transcription_record(other)
                     stale = stale or record.created_at > history.transcription.created_at
+        if run.source.dynamic_context:
+            try:
+                from confia_lean_auditor.dynamic.grading_context import case_context
+                from confia_lean_auditor.tme.store import case_store
+                record=self.submissions.get_record(run.submission_id)
+                stale=stale or case_context(case_store().read(record.tme_case_id))[0]!=run.source.dynamic_context
+            except (ValueError,FileNotFoundError):stale=True
         return AuditRunView(**run.model_dump(), stale=stale)
 
     def get(self, run_id):

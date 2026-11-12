@@ -287,5 +287,5 @@ class DynamicStore(AssessmentStore):
                 **{key: getattr(active, key) for key in PackageReference.model_fields if key != "package_sha256"},
                 package_sha256=model_sha256(active))).model_dump(mode="json")
         return dict(**data, current_configuration=configuration,
-            automatic_suggestion_available=provider_available(), correction_available=False,
+            automatic_suggestion_available=provider_available(), correction_available=bool(active and latest and active.preparation_reference and active.preparation_reference.preparation_id==latest.preparation_id and latest.status in {"READY_FOR_REVIEW","REVIEW_REQUIRED"} and document.rubrics[-1].rubric_id==active.rubric_id),
             actor_notice="Identidade técnica de demonstração; não representa uma pessoa." if document.problem.created_by.kind == "TECHNICAL_DEMO" else None)

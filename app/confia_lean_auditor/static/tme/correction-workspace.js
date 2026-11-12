@@ -7,7 +7,7 @@
     const code=String(value ?? "").trim(), numbered=code.match(/^prova[ _-]*(\d+)$/i);
     return numbered ? `Prova ${numbered[1]}` : code ? `Prova ${code}` : "Prova";
   };
-  const question = c => c.question_order || c.problem_id.match(/[QP](\d+)$/)?.[1];
+  const question = c => c.dynamic_context ? 1 : c.question_order || c.problem_id.match(/[QP](\d+)$/)?.[1];
   function relatedCases(c, cases) {
     const family = c.problem_id.replace(/[QP]\d+$/, "");
     const unique = new Map();
@@ -34,7 +34,7 @@
     if(c.demo_sample_groups?.length)line.append(n("small","AMOSTRA VISUAL · "+c.demo_sample_groups.join(", ")));
     const info = n("div",null,"case-information");
     // The catalog is not a roster: count only real, distinct CorrectionCases.
-    info.append(n("strong",`Questão ${question(c)||c.problem_id}`),n("span",`${siblings.length} ${siblings.length===1?"questão disponível":"questões disponíveis"}`,"known-questions"),n("span",c.problem_id),n("span",c.exam_submission_id?"Prova completa":c.source_mode==="IMAGE_SCAN"?"Foto / scan":"Escrita digital","case-source"));
+    info.append(n("strong",`Questão ${question(c)||c.problem_id}`),n("span",`${siblings.length} ${siblings.length===1?"questão disponível":"questões disponíveis"}`,"known-questions"),n("span",c.dynamic_context?(c.display_title||"Questão inédita"):c.problem_id),n("span",c.exam_submission_id?"Prova completa":c.source_mode==="TEXT"?"Resolução textual":c.source_mode==="IMAGE_SCAN"?"Foto / scan":"Escrita digital","case-source"));
     header.dataset.questionCount=String(siblings.length);
     header.append(line,info,QuestionNavigator(c,siblings,status,open,busy),steps(active)); return header;
   }

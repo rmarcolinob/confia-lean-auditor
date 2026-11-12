@@ -46,7 +46,7 @@ def case_for(case_id, user):
         if case.submission_id:
             record = submission_store().get_record(case.submission_id)
             if (record.tme_case_id != case_id or record.problem_id != case.problem_id
-                    or record.source != ("exam_pages" if case.exam_submission_id else "tablet" if case.source_mode == "DIGITAL_INK" else "image_scan")
+                    or record.source != ("text" if case.source_mode == "TEXT" else "exam_pages" if case.exam_submission_id else "tablet" if case.source_mode == "DIGITAL_INK" else "image_scan")
                     or record.submitted_by_user_id != user.user_id):
                 raise ValueError("case/source binding mismatch")
         return case
@@ -160,6 +160,7 @@ def recognition(case_id: str, recognizer_run_id: str, response: Response, user=D
 @router.get("/cases/{case_id}/recognition-status")
 def recognition_status(case_id: str, response: Response, user=Depends(require_tme_evaluator)):
     case = case_for(case_id, user)
+    if case.source_mode=="TEXT": return {"state":"RECOGNIZED","message":"Fonte textual preservada; confira a transcrição."}
     registry = configured_registry()
     provider = "mathpix_image" if case.source_mode == "IMAGE_SCAN" else "mathpix"
     runs = guarded(RecognitionService(submission_store(), registry).list, case.submission_id) if case.submission_id else []
@@ -259,7 +260,7 @@ def list_cases(response: Response, user=Depends(require_tme_evaluator),
                page: int = Query(1, ge=1), size: int = Query(50, ge=1, le=100),
                search: str = Query("", max_length=80), question: str = Query("", max_length=100),
                status: Literal["", "pending", "in_progress", "inconclusive", "finalized"] = "",
-               source: Literal["", "IMAGE_SCAN", "DIGITAL_INK"] = "",
+               source: Literal["", "IMAGE_SCAN", "DIGITAL_INK", "TEXT"] = "",
                origin: Literal["", "real", "synthetic_demo"] = "",
                sample: Literal["", "selected"] = "",
                exam: str = Query("", max_length=80)):
@@ -433,3 +434,12 @@ def get_decision(case_id: str, response: Response, user=Depends(require_tme_eval
 
 from .exam_router import router as exam_router
 router.include_router(exam_router)
+
+
+@router.get('/cases/{case_id}/original-text')
+def original_text(case_id: str,user=Depends(require_tme_evaluator)):
+    case=case_for(case_id,user)
+    if case.source_mode!='TEXT' or not case.submission_id:raise HTTPException(404,'Fonte textual não encontrada.')
+    from confia_lean_auditor.submissions.text_source import TextSnapshot
+    path,_=guarded(submission_store().artifact,case.submission_id)
+    return TextSnapshot.model_validate_json(path.read_bytes())

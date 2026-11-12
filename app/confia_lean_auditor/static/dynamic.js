@@ -15,7 +15,7 @@
     TEACHER:"Professor", TECHNICAL_DEMO:"Demonstração técnica", EXPLICIT:"explícita", INFERRED:"inferida"
   };
   const readable = value => String(value || "").replace(/\b[A-Z][A-Z_]+\b/g, code => labels[code] || code);
-  function create({host:panel,onSelect=()=>{},setBusy=()=>{}}) {
+  function create({host:panel,onSelect=()=>{},setBusy=()=>{},onOpenAttempt=()=>{}}) {
   let disposed=false, creation, selectionGeneration=0;
 
   let detail, list, message, busy = false, loadGeneration = 0;
@@ -115,7 +115,7 @@
     append(detail, context, question);
     if (doc.actor_notice) question.appendChild(n("p", doc.actor_notice, "prototype-note"));
     question.appendChild(n("p", statement.statement, "dynamic-statement"));
-    detail.appendChild(n("p", "Soluções candidatas precisam de revisão docente. Correção de alunos disponível em etapa futura."));
+    detail.appendChild(n("p", "Soluções candidatas precisam de revisão docente. A sugestão de pontuação exige uma rubrica aprovada e continua sujeita à decisão docente."));
     const preparationSection=renderPreparation(doc);
     const editStatement = n("details"); append(editStatement, n("summary", "Criar nova versão do enunciado"), statementForm(doc)); question.appendChild(editStatement);
     const section = n("section", null, "tme-panel dynamic-rubric"), rows = n("div"), total = n("p"), heading = n("h3", rubric?.generation ? "Rubrica sugerida pela IA · revisão docente" : "Rubrica fornecida pelo professor");
@@ -218,8 +218,18 @@
       context.appendChild(button(title,()=>{target.scrollIntoView({behavior:"smooth",block:"start"});target.tabIndex=-1;target.focus();}));
     if(doc.current_configuration) {
       const next=n("section",null,"tme-panel dynamic-next");
-      append(next,n("h3","Preparação salva no ConfIA"),n("p","A configuração aprovada está registrada. A correção de respostas será integrada ao workspace Original / Transcrição / Comparar, com o painel ConfIA e decisão humana, em uma próxima etapa."),
-        n("p","A aprovação da rubrica não elimina avisos ou incertezas e ainda não habilita correção de alunos."));
+      append(next,n("h3","Preparação salva no ConfIA"),n("p","A configuração aprovada está registrada. Receba uma resolução textual e abra o workspace Original / Transcrição / Comparar, com o painel ConfIA e decisão humana."),
+        n("p","A aprovação da rubrica não elimina avisos ou incertezas e não substitui a decisão final do professor."));
+      if(doc.correction_available) {
+        const form=n("form",null,"dynamic-form"),code=input("Código da resolução"),solution=input("Resolução do aluno","","textarea"),allow=input("Permitir análise provisória com preparação em revisão","","checkbox");
+        code.required=true;code.maxLength=80;code.pattern="[A-Za-z0-9._:/-]+";solution.required=true;solution.maxLength=20000;solution.rows=8;
+        append(form,label("Código pseudônimo da resolução",code),label("Resolução do aluno",solution),label("Permitir análise provisória com preparação em revisão",allow));
+        const submit=n("button","Receber resolução e abrir correção","tme-button");submit.type="submit";form.appendChild(submit);
+        form.addEventListener("submit",async event=>{event.preventDefault();let attempt;
+          await perform(async()=>{attempt=await request(`/dynamic/problems/${pid}/attempts`,{external_candidate_ref:code.value,solution:solution.value,allow_preparation_review:allow.checked});},"Recebendo resolução…");
+          if(attempt && !disposed)onOpenAttempt(attempt.case_id);
+        });next.appendChild(form);
+      }
       detail.appendChild(next);
     }
   }

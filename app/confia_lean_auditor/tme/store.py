@@ -57,11 +57,15 @@ class CaseStore:
             raise HTTPException(403, "Correção fora do escopo autorizado.")
         return case
 
-    def create(self, body: CaseCreate, user, *, exam_binding=None, case_id=None):
-        if body.problem_id not in (CATALOG.keys() | PUBLIC_PROBLEMS.keys()):
+    def create(self, body: CaseCreate, user, *, exam_binding=None, case_id=None, dynamic_context=None):
+        if dynamic_context is not None:
+            from confia_lean_auditor.dynamic.grading_context import resolve, evaluator_actor
+            resolve(body.problem_id,evaluator_actor(user),dynamic_context.allow_preparation_review,dynamic_context)
+            if body.source_mode != "TEXT" or exam_binding: raise ValueError("invalid dynamic source")
+        elif body.source_mode == "TEXT" or body.problem_id not in (CATALOG.keys() | PUBLIC_PROBLEMS.keys()):
             raise ValueError("Questão não disponível no catálogo.")
         case = CorrectionCase(**body.model_dump(), case_id=case_id or f"case_{uuid4().hex}",
-            created_by_user_id=user.user_id, created_at=datetime.now(timezone.utc), **(exam_binding or {}))
+            created_by_user_id=user.user_id, created_at=datetime.now(timezone.utc), **(exam_binding or {}), **({"dynamic_context":dynamic_context} if dynamic_context else {}))
         with self.locked():
             folder = self.root / case.case_id
             if folder.exists() and exam_binding:
@@ -92,7 +96,7 @@ class CaseStore:
             record = submission_store().get_record(submission_id)
             if (record.tme_case_id != case_id or record.problem_id != case.problem_id
                     or record.submitted_by_user_id != user.user_id
-                    or record.source != ("exam_pages" if case.exam_submission_id else "tablet" if case.source_mode == "DIGITAL_INK" else "image_scan")):
+                    or record.source != ("text" if case.source_mode == "TEXT" else "exam_pages" if case.exam_submission_id else "tablet" if case.source_mode == "DIGITAL_INK" else "image_scan")):
                 raise ValueError("case/source binding mismatch")
             if case.submission_id is not None:
                 if case.submission_id == submission_id:

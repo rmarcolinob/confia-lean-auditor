@@ -64,7 +64,8 @@ def audit_snapshot(record, run_id, points):
     if any(value is not None and not value.is_finite() for value in (score, maximum)):
         raise DecisionIntegrityError("non-finite audit score")
     from confia_lean_auditor.tme.audit_models import TMEAuditResult
-    technical_error = (result.assessment.score is None
+    from confia_lean_auditor.dynamic.grading_models import DynamicAuditResult
+    technical_error = False if isinstance(result,DynamicAuditResult) else (result.assessment.score is None
         if isinstance(result, TMEAuditResult) else result is not None and (
         result.rubric_assessment.assessment_status == "indeterminate"
         or any(item.verification_status == "technical_error" for item in result.rubric_assessment.items)

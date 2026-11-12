@@ -204,7 +204,7 @@ def test_api_crud_lifecycle_and_unavailable_services(api):
     assert client.get(prefix).headers["cache-control"] == "no-store"
     assert len(client.get("/dynamic/problems").json()) == 1
     assert client.post(prefix + "/rubric-suggestion").status_code == 503  # DY2: real provider requires configuration.
-    assert client.post(prefix + "/corrections").status_code == 501
+    assert client.post(prefix + "/corrections").json()["detail"]["code"] == "ACCEPTED_TRANSCRIPTION_REQUIRED"
     assert client.get(prefix).json() == doc
     response = client.post(prefix + "/statements", json=dict(expected_revision=doc["revision"], statement="Resolva em R a equação.", max_score=10))
     assert response.status_code == 201

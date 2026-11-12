@@ -72,7 +72,7 @@ def current(problem_id: str, actor=Depends(teacher_actor)):
     return dict(current_configuration=data["current_configuration"],
         rubric=next((r for r in data["rubrics"] if r["is_current"]), None),
         preparation=preparation, preparation_status=active['preparation_status'] if active else 'NOT_PREPARED',
-        latest_preparation=data['current_preparation'], correction_available=False)
+        latest_preparation=data['current_preparation'], correction_available=data["correction_available"])
 
 
 @router.post("/problems/{problem_id}/statements", status_code=201)
@@ -126,5 +126,37 @@ def suggest(problem_id: str, body: Optional[SuggestionRequest] = None, actor=Dep
 @router.post("/problems/{problem_id}/corrections")
 def correction(problem_id: str, actor=Depends(teacher_actor)):
     guarded(dynamic_store().get, problem_id, actor)
-    raise HTTPException(501, dict(code="DYNAMIC_ENGINE_NOT_IMPLEMENTED",
-        message="dynamic correction engine not yet implemented"))
+    raise HTTPException(409, dict(code="ACCEPTED_TRANSCRIPTION_REQUIRED",
+        message="Receba a resolução em /attempts e analise sua transcrição aceita no workspace compartilhado."))
+
+
+from pydantic import BaseModel, ConfigDict, Field, field_validator
+from confia_lean_auditor.tme.auth import require_tme_evaluator
+
+class DynamicAttemptRequest(BaseModel):
+    model_config=ConfigDict(extra='forbid')
+    external_candidate_ref: str = Field(min_length=1,max_length=80,pattern=r'^[A-Za-z0-9._:/-]+$')
+    solution: str = Field(min_length=1,max_length=20000)
+    allow_preparation_review: bool = False
+
+    @field_validator('solution')
+    @classmethod
+    def nonblank(cls, text):
+        if not text.strip(): raise ValueError('empty solution')
+        return text
+
+@router.post('/problems/{problem_id}/attempts',status_code=201)
+def create_attempt(problem_id: str, body: DynamicAttemptRequest, user=Depends(require_tme_evaluator)):
+    from .grading_context import resolve,evaluator_actor
+    from confia_lean_auditor.tme.store import case_store
+    from confia_lean_auditor.tme.models import CaseCreate
+    from confia_lean_auditor.submissions.router import store
+    from confia_lean_auditor.submissions.text_source import receive_text
+    from confia_lean_auditor.submissions.schemas import CreateTranscriptionRequest
+    actor=guarded(evaluator_actor,user)
+    context=guarded(resolve,problem_id,actor,body.allow_preparation_review)[0]
+    case=guarded(case_store().create,CaseCreate(problem_id=problem_id,external_candidate_ref=body.external_candidate_ref,source_mode='TEXT'),user,dynamic_context=context)
+    receipt=guarded(receive_text,store(),case,user,body.solution)
+    case=guarded(case_store().bind,case.case_id,receipt.submission_id,user)
+    guarded(store().create_transcription,receipt.submission_id,CreateTranscriptionRequest(reviewer_reference=user.user_id,segments=[dict(segment_id='text:0',page_index=0,order=0,kind='text',text=body.solution)]))
+    return case

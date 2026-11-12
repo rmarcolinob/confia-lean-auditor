@@ -91,7 +91,7 @@
     const items = p.rubricItems(data), decided = items.filter(p.isDecided), checks = data.student_claim_checks || [];
     const formalStatus = check => p.formalStatus(check) === "verified" && (!check.compiled || !check.lean_file) ? "unverified" : p.formalStatus(check);
     const report = n("div", null, "workspace-report");
-    const globalState = options.auditRun?.status === "FAILED" ? "Falha técnica" : data.rubric_assessment?.assessment_status === "partial" ? "Parcialmente decidida" : !finite(data.score) ? "Inconclusiva" : "Análise concluída";
+    const globalState = data.engine_mode==="DYNAMIC" ? (data.review_required?"Revisão necessária":"Análise concluída") : options.auditRun?.status === "FAILED" ? "Falha técnica" : data.rubric_assessment?.assessment_status === "partial" ? "Parcialmente decidida" : !finite(data.score) ? "Inconclusiva" : "Análise concluída";
     const summary = n("section", null, "review-outcome"); summary.setAttribute("aria-label", "Resultado sugerido");
     summary.append(n("span", "Sugestão ConfIA", "quiet-label"), n("p", finite(data.score) ? `${number(data.score)} / ${number(data.max_score)}` : "Pontuação não determinada", "review-score"), n("p", globalState, "review-verdict"));
     const coverage = n("section", null, "coverage"); coverage.setAttribute("aria-label", "Cobertura da análise");
@@ -101,6 +101,15 @@
     const verified = checks.filter(check => formalStatus(check) === "verified").length;
     coverage.append(bar, n("p", `${items.length} critérios · ${decided.length} decididos · ${counted(verified, "claim formalmente verificado", "claims formalmente verificados")} · ${counted(items.length - decided.length, "indeterminado", "indeterminados")}`, "coverage-stats"));
     report.append(summary, coverage);
+    if(data.engine_mode==="DYNAMIC") {
+      summary.append(n("p",data.review_required?"Revisão necessária · sugestão provisória":"Sugestão provisória · decisão do professor","formal-warning"));
+      summary.append(n("p","Modo: Correção dinâmica","quiet-label"));
+      for(const warning of data.uncertainty||[])summary.append(n("p",warning,"formal-warning"));
+      const evidence=n("details");evidence.append(n("summary","Evidências e verificações da resolução"));
+      const labels={VERIFIED:"Verificado no escopo",REFUTED:"Refutado",ERROR:"Falha de verificação",REVIEW_ONLY:"Revisão necessária",INCOMPLETE:"Incompleto",NOT_ATTEMPTED:"Não verificado"};
+      for(const claim of data.analysis?.claims||[])evidence.append(n("p",`${claim.text} — ${labels[claim.verification_status]||claim.verification_status}. ${claim.verification_detail}`));
+      report.append(evidence);
+    }
     const section = n("section", null, "dense-criteria"); section.appendChild(n("h3", "Critérios de correção"));
     saved.criteriaOpen ||= {};
     items.forEach((item, i) => {
@@ -114,30 +123,30 @@
       if (item.assessment_note) row.appendChild(math("p", item.assessment_note, "criterion-note"));
       const claim = [...(data.extracted_claims?.claims || []), ...(data.student_claims || [])].find(claim => claim.id === item.claim_id);
       if (claim) row.appendChild(math("p", `Passo relacionado: ${claim.text || claim.normalized_text || claim.raw_text || claim.id}`, "criterion-note"));
-      row.appendChild(n("p", `Verificação: ${item.verification_status === "technical_error" ? "⚠ Verificação formal não concluída" : ({ available: "Disponível", not_available: "Não disponível", verified: "Verificado formalmente", not_verified: "Não verificado" }[item.verification_status] || item.verification_status || "Não registrada")}`, "criterion-verification"));
+      row.appendChild(n("p", `Verificação: ${item.verification_status === "technical_error" ? "⚠ Verificação formal não concluída" : ({ verified_in_scope: "Verificado no escopo exato", review_only: "Revisão necessária", refuted_exact: "Refutado por verificação exata", not_attempted: "Verificação formal não executada", available: "Disponível", not_available: "Não disponível", verified: "Verificado formalmente", not_verified: "Não verificado" }[item.verification_status] || item.verification_status || "Não registrada")}`, "criterion-verification"));
       for (const note of item.adjustment_notes || []) row.appendChild(math("p", note));
       section.appendChild(row);
     });
     if (!items.length) section.appendChild(n("p", "Critérios não disponíveis nesta execução.", "muted"));
     report.appendChild(section);
     const map = n("section", null, "solution-map"); map.appendChild(n("h3", "Passos identificados"));
-    const entries = p.claimEntries(data), list = n("div", null, "claim-list"), detail = n("section", null, "claim-detail"); detail.setAttribute("aria-live", "polite");
+    const entries = data.engine_mode==="DYNAMIC"?(data.analysis?.claims||[]).map(c=>({claim:{...c,id:c.claim_id,evidence:c.text},check:null})):p.claimEntries(data), list = n("div", null, "claim-list"), detail = n("section", null, "claim-detail"); detail.setAttribute("aria-live", "polite");
     const buttons = [];
     const select = index => {
       saved.selectedClaim = entries[index].claim.id;
       buttons.forEach((button, i) => button.setAttribute("aria-pressed", String(i === index)));
       const {claim, check} = entries[index]; detail.replaceChildren();
-      detail.append(math("p", claim.evidence || claim.raw_text || "Evidência textual não localizada.", "evidence-quote"), n("p", p.formalLabels[formalStatus(check)], "formal-status"));
+      detail.append(math("p", claim.evidence || claim.raw_text || "Evidência textual não localizada.", "evidence-quote"), n("p", data.engine_mode==="DYNAMIC"?({VERIFIED:"Verificado no escopo",REFUTED:"Refutado",ERROR:"Falha de verificação",REVIEW_ONLY:"Revisão necessária"}[claim.verification_status]||"Verificação inconclusiva"):p.formalLabels[formalStatus(check)], "formal-status"));
       if (check?.lean_statement) { const d = n("details"); d.append(n("summary", "Formalização do passo"), n("code", check.lean_statement)); detail.appendChild(d); }
       // Hook for future source mapping. The current API has no verified offsets;
       // never infer document highlights from string similarity.
       if (options.onEvidenceSelection) options.onEvidenceSelection({ claimId: claim.id, mapping: null });
-      detail.appendChild(n("p", "Sem vínculo preciso com um trecho da transcrição.", "mapping-note"));
+      detail.appendChild(n("p", data.engine_mode==="DYNAMIC"?`Trecho preservado: caracteres ${claim.start}–${claim.end} da transcrição aceita.`:"Sem vínculo preciso com um trecho da transcrição.", "mapping-note"));
     };
     entries.forEach(({claim, check, kind}, i) => {
       const button = n("button", null, "audit-claim"); button.type = "button"; button.dataset.claimId = claim.id; button.dataset.claimKind = kind; button.dataset.formalStatus = formalStatus(check);
-      button.append(n("span", String(i + 1).padStart(2, "0"), "step-number"), math("span", claim.text || claim.normalized_text || claim.raw_text || claim.id, "step-label"), statusIcon(formalStatus(check)));
-      button.setAttribute("aria-label", `Passo ${i + 1}: ${claim.text || claim.normalized_text || claim.raw_text || claim.id}. ${p.formalLabels[formalStatus(check)]}`); button.setAttribute("aria-pressed", "false");
+      button.append(n("span", String(i + 1).padStart(2, "0"), "step-number"), math("span", claim.text || claim.normalized_text || claim.raw_text || claim.id, "step-label"), statusIcon(data.engine_mode==="DYNAMIC"?({VERIFIED:"supported",REFUTED:"refuted",ERROR:"technical_error"}[claim.verification_status]||"indeterminate"):formalStatus(check)));
+      button.setAttribute("aria-label", `Passo ${i + 1}: ${claim.text || claim.normalized_text || claim.raw_text || claim.id}. ${data.engine_mode==="DYNAMIC"?({VERIFIED:"Verificado no escopo",REFUTED:"Refutado",ERROR:"Falha de verificação"}[claim.verification_status]||"Revisão necessária"):p.formalLabels[formalStatus(check)]}`); button.setAttribute("aria-pressed", "false");
       button.addEventListener("click", () => select(i)); buttons.push(button); list.appendChild(button);
     });
     if (!entries.length) list.appendChild(n("p", "Nenhum passo matemático estruturado foi identificado nesta análise.", "muted"));

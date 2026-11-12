@@ -59,12 +59,12 @@ class SubmissionRecord(SubmissionModel):
     submission_id: SubmissionId
     problem_id: Identifier
     snapshot_id: Identifier
-    source: Literal["tablet", "image_scan", "exam_pages"] = "tablet"
-    capture_schema_version: Literal[SCHEMA_VERSION, "tme-scan-1.0", "exam-question-source.v1"] = SCHEMA_VERSION
+    source: Literal["tablet", "image_scan", "exam_pages", "text"] = "tablet"
+    capture_schema_version: Literal[SCHEMA_VERSION, "tme-scan-1.0", "exam-question-source.v1", "text-source.v1"] = SCHEMA_VERSION
     received_at: datetime
     status: Literal["RECEIVED"] = "RECEIVED"
     snapshot: ArtifactReference
-    page_images: list[ArtifactReference] = Field(min_length=1, max_length=MAX_SOURCE_PAGES)
+    page_images: list[ArtifactReference] = Field(min_length=0, max_length=MAX_SOURCE_PAGES)
     student_reference: Optional[str] = None
     student_reference_verified: Literal[False] = False
     # Absent on records created before CORE-AUTH-01; no owner is inferred.
@@ -84,6 +84,9 @@ class SubmissionRecord(SubmissionModel):
 
     @model_validator(mode="after")
     def assessment_binding_is_complete(self):
+        if self.source == "text":
+            if self.capture_schema_version != "text-source.v1" or self.page_images or not self.tme_case_id or self.scan_originals: raise ValueError("invalid text source")
+        elif not self.page_images or self.capture_schema_version == "text-source.v1": raise ValueError("missing source pages")
         if self.source != "exam_pages" and len(self.page_images) > MAX_PAGES:
             raise ValueError("legacy source supports at most three pages")
         if (self.source == "exam_pages") != (self.capture_schema_version == "exam-question-source.v1"):

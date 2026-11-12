@@ -11,6 +11,7 @@ from confia_lean_auditor.submissions.schemas import (
 )
 
 from confia_lean_auditor.tme.audit_models import TMEAuditContext, TMEAuditResult
+from confia_lean_auditor.dynamic.grading_models import DynamicGradingContext, DynamicAuditResult
 
 AuditRunId = Annotated[str, Field(pattern=r"^aud_[0-9a-f]{64}$")]
 
@@ -52,16 +53,19 @@ class AuditSource(SubmissionModel):
     warnings: list[ConversionWarning] = Field(default_factory=list)
 
     tme_context: Optional[TMEAuditContext] = None
+    dynamic_context: Optional[DynamicGradingContext] = None
 
     @model_serializer(mode="wrap")
     def preserve_legacy_shape(self, handler):
         data = handler(self)
         if "tme_context" not in self.model_fields_set:
             data.pop("tme_context", None)
+        if "dynamic_context" not in self.model_fields_set: data.pop("dynamic_context",None)
         return data
 
     @model_validator(mode="after")
     def accepted_binding(self):
+        if self.dynamic_context and (self.tme_context or self.dynamic_context.problem_id!=self.problem_id): raise ValueError("invalid engine context")
         revision, acceptance = self.provenance.revision, self.provenance.acceptance
         receipt = self.provenance.acceptance_receipt
         for field in ("submission_id", "transcription_id", "revision_number"):
@@ -99,6 +103,7 @@ class QuestionAuditContext(SubmissionModel):
 
 
 class AuditRun(SubmissionModel):
+    engine_mode: Optional[Literal["SPECIALIZED","DYNAMIC"]] = None
     audit_run_id: AuditRunId
     submission_id: SubmissionId
     problem_id: str
@@ -109,7 +114,7 @@ class AuditRun(SubmissionModel):
     source: AuditSource
     created_at: datetime
     status: Literal["COMPLETED", "FAILED"]
-    result: Optional[Union[TMEAuditResult, AuditResponse]] = None
+    result: Optional[Union[DynamicAuditResult, TMEAuditResult, AuditResponse]] = None
     result_sha256: Optional[Sha256] = None
     required_artifacts: list[RequiredArtifact] = Field(default_factory=list)
     artifact_manifest_sha256: Optional[Sha256] = None
@@ -123,7 +128,7 @@ class AuditRun(SubmissionModel):
     @model_serializer(mode="wrap")
     def preserve_pre_question_shape(self, handler):
         data = handler(self)
-        for field in ("question_context", "completed_at", "question_events", "question_events_sha256"):
+        for field in ("engine_mode", "question_context", "completed_at", "question_events", "question_events_sha256"):
             if field not in self.model_fields_set:
                 data.pop(field, None)
         return data
@@ -136,6 +141,10 @@ class AuditRun(SubmissionModel):
 
     @model_validator(mode="after")
     def coherent(self):
+        if (self.engine_mode=="DYNAMIC") != bool(self.source.dynamic_context): raise ValueError("engine/source mismatch")
+        if self.result is not None and bool(self.source.dynamic_context)!=isinstance(self.result,DynamicAuditResult): raise ValueError("dynamic result/engine mismatch")
+        if isinstance(self.result,DynamicAuditResult):
+            if self.source.dynamic_context!=self.result.context or self.result.analysis.source_sha256!=self.source_hash or self.result.analysis.transcription_version!=f"{self.transcription_id}:{self.revision_number}": raise ValueError("dynamic source/context mismatch")
         if self.question_events is not None:
             if (not self.question_context or self.question_events_sha256 != canonical_sha256(self.question_events)
                     or any(event.get("audit_run_id") != self.audit_run_id

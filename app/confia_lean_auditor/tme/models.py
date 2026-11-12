@@ -39,10 +39,14 @@ class ScanSnapshot(SubmissionModel):
 class CaseCreate(SubmissionModel):
     problem_id: Identifier
     external_candidate_ref: str = Field(min_length=1, max_length=80, pattern=r"^[A-Za-z0-9._:/-]+$")
-    source_mode: Literal["DIGITAL_INK", "IMAGE_SCAN"]
+    source_mode: Literal["DIGITAL_INK", "IMAGE_SCAN", "TEXT"]
+
+
+from confia_lean_auditor.dynamic.grading_models import DynamicGradingContext
 
 
 class CorrectionCase(CaseCreate):
+    dynamic_context: Optional[DynamicGradingContext] = None
     # Operational provenance only; never forwarded to the mathematical auditor.
     data_origin: Literal["real", "synthetic_demo"] = "real"
     demo_seed: Optional[Literal["seed_tme_synthetic_demo.v1"]] = None
@@ -70,7 +74,7 @@ class CorrectionCase(CaseCreate):
     @model_serializer(mode="wrap")
     def preserve_legacy_case(self, handler):
         data = handler(self)
-        for key in ("exam_submission_id", "assessment_item_id", "question_order", "max_score"):
+        for key in ("dynamic_context", "exam_submission_id", "assessment_item_id", "question_order", "max_score"):
             if key not in self.model_fields_set:
                 data.pop(key, None)
         return data

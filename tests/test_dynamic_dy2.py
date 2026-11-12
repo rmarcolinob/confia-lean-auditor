@@ -264,7 +264,7 @@ def test_api_authorization_preparation_and_ai_draft(api,monkeypatch):
     assert response.status_code==200,response.text
     doc=response.json();assert doc['rubrics'][-1]['status']=='DRAFT_AI'
     assert not doc['approvals'] and not doc['correction_available']
-    assert client.post(prefix+'/corrections').status_code==501
+    assert client.post(prefix+'/corrections').json()['detail']['code']=='ACCEPTED_TRANSCRIPTION_REQUIRED'
 
 
 def test_replace_ai_with_teacher_rubric_keeps_lineage_without_ai_authorship(store):

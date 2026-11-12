@@ -129,7 +129,7 @@
     }
     for (const link of document.querySelectorAll("nav [data-view]")) link.setAttribute("aria-current", link.dataset.view === (state.view === "exams" ? "results" : state.view === "workspace" ? "cases" : state.view) ? "page" : "false");
   }
-  const origin = c => c.source_mode === "IMAGE_SCAN" ? "Foto / scan" : "Escrita digital";
+  const origin = c => c.source_mode === "TEXT" ? "Resolução textual" : c.source_mode === "IMAGE_SCAN" ? "Foto / scan" : "Escrita digital";
   const runFor = c => {
     const saved = local(c);
     if(c.exam_submission_id)return saved.audits?.find(r=>!r.stale);
@@ -173,6 +173,7 @@
         saved.detail ? Promise.resolve(saved.detail) : api(`${base}/submission`), c.data_origin === "synthetic_demo" ? Promise.resolve(null) : api(`${base}/recognition-status`),
       ]);
       saved.history = summaries.length ? await api(`${base}/transcriptions/${summaries[0].transcription.transcription_id}`) : null;
+      if(c.source_mode==="TEXT")saved.originalText=await api(`/tme/cases/${c.case_id}/original-text`);
       Object.assign(saved, { audits, decision, detail, feedback, loaded: true, loadError: false });
     }
     return saved;
@@ -212,7 +213,7 @@
       page.heading.append(btn("Voltar às opções",()=>navigate("new"),"tme-button secondary"));
       const host=node("div");host.id="confia-preparation";page.append(host);show(page);
       preparation=window.ConfIADynamic.create({host,setBusy:value=>{state.busy=value;},
-        onSelect:id=>writeRoute("new",{mode:"dynamic",problem_id:id})});
+        onSelect:id=>writeRoute("new",{mode:"dynamic",problem_id:id}),onOpenAttempt:id=>openCase(id).catch(showError)});
       return preparation.load(params.problem_id);
     }
     const page=Views.Page("Nova correção","Escolha como começar. A preparação e a correção fazem parte do mesmo ConfIA.");
@@ -284,7 +285,13 @@
     if (!state.problemRequest) state.problemRequest = api("/tme/problems").catch(() => { state.problemRequest = null; return []; });
     if (!state.presentationRequest) state.presentationRequest = api("/static/problem-presentations/registry.json").catch(() => { state.presentationRequest = null; return []; });
     const [problems, presentations] = await Promise.all([state.problemRequest, state.presentationRequest, state.casesLoaded ? Promise.resolve() : refreshCases().catch(() => {})]);
-    state.problems = problems; state.presentations = Array.isArray(presentations) ? presentations : [];
+    state.problems = problems;
+    if(state.current?.dynamic_context) {
+      const doc=await api(`/dynamic/problems/${state.current.problem_id}`),version=doc.statements.find(s=>s.version_number===state.current.dynamic_context.statement_version);
+      if(version)state.current.display_title=version.title;
+      if(version)state.problems=[...problems,{problem_id:state.current.problem_id,title:version.title,statement:version.statement,max_score:Number(version.max_score)}];
+    }
+    state.presentations = Array.isArray(presentations) ? presentations : [];
   }
   async function openCase(caseId, record=true) {
     if (state.busy) return;
@@ -437,6 +444,7 @@
     const saved = local(c); saved.originalPages ||= new Map();
     if (saved.originalPages.has(index)) return saved.originalPages.get(index);
     const page = node("div", undefined, "page-review"); page.appendChild(node("h3", `Página ${index + 1}`));
+    if(c.source_mode==="TEXT") {const source=node("pre",saved.originalText?.text || "Fonte indisponível.","document");source.style.whiteSpace="pre-wrap";page.appendChild(source);saved.originalPages.set(index,page);return page;}
     const examPage=saved.examPages?.[index];
     const examAsset=examPage && saved.fullExam.submission.original_documents.find(a=>a.asset_id===examPage.original_asset_id);
     if(examPage)page.children[0].textContent=`Página ${examPage.page_number} da prova`;
@@ -484,13 +492,13 @@
     else if (!c.exam_submission_id && /^TME2026P[1-5]$/.test(c.problem_id)) transcript.appendChild(note("Identifique cada item em uma linha própria: [a], [b], [c] ou [d], conforme a questão. Confira e aceite a transcrição antes da análise."));
     const pages = [...new Set([...(saved.detail?.submission?.page_images || []).map(p => p.page_index), ...(latest?.segments || []).map(s => s.page_index)])].sort((a,b) => a-b);
     const pageNodes = pages.map(index => manuscriptPage(c, index)); original.append(...pageNodes);
-    Workspace.attachPan(original,saved);
+    if(c.source_mode!=="TEXT")Workspace.attachPan(original,saved);
     if(c.data_origin === "synthetic_demo") original.prepend(note("CASO SINTÉTICO — fonte textual importada. Consulte a transcrição aceita."));
     if (!pages.length) original.appendChild(note("Nenhuma página original disponível."));
     saved.page = Math.min(saved.page, Math.max(0, pages.length - 1));
     const pagination = node("span", "", "page-position");
     const updatePages = () => {
-      pageNodes.forEach((page, i) => { page.hidden = i !== saved.page; const img = page.querySelectorAll("img")[0]; Workspace.layoutOriginal(page,img,original,saved); });
+      pageNodes.forEach((page, i) => { page.hidden = i !== saved.page; const img = page.querySelectorAll("img")[0]; if(img)Workspace.layoutOriginal(page,img,original,saved); });
       fit.value=Workspace.originalFitMode(saved);
       pagination.textContent = `${Math.round(saved.zoom * 100)}% · Página ${pages.length ? saved.page + 1 : 0}/${pages.length}${c.exam_submission_id && pages.length ? ` · folha ${saved.examPages[saved.page].page_number} da prova` : ""}`;
     };
@@ -511,6 +519,7 @@
     fit.value=Workspace.originalFitMode(saved);
     fit.addEventListener("change",()=>{if(fit.value!=="custom") resetFit(fit.value);});
     toolbar.appendChild(fit);
+    if(c.source_mode==="TEXT")toolbar.hidden=true;
     toolbar.classList.add("viewer-commands"); toolbar.setAttribute("aria-label", "Comandos do original"); updatePages();
     const editor = node("div", undefined, "transcription-editor"); editor.hidden = !saved.editing;
     const documentView = node("div"); documentView.hidden = Boolean(saved.editing);
@@ -529,7 +538,7 @@
     transcript.append(documentView, editor);
     let transcriptionStatus, metadata;
     const setTab = value => {
-      saved.tab = value; solution.dataset.tab=value; layout.dataset.solutionTab=value; original.dataset.layout=value==="original"?"full-page":"bounded"; original.hidden = value === "transcript"; transcript.hidden = value === "original"; toolbar.hidden = value === "transcript";
+      saved.tab = value; solution.dataset.tab=value; layout.dataset.solutionTab=value; original.dataset.layout=value==="original"?"full-page":"bounded"; original.hidden = value === "transcript"; transcript.hidden = value === "original"; toolbar.hidden = c.source_mode==="TEXT" || value === "transcript";
       if(transcriptionStatus) transcriptionStatus.hidden=value!=="transcript" || Boolean(latest);
       if(metadata) metadata.hidden=c.exam_submission_id ? value==="original" : value!=="transcript";
       views.classList.toggle("compare", value === "compare"); views.setAttribute("aria-labelledby", `tab-${value}`);
@@ -548,7 +557,7 @@
     const secondary = actions(); secondary.classList.add("transcript-commands");
     if (latest || c.exam_submission_id && pages.length) {
       secondary.append(btn(c.exam_submission_id ? latest ? "Corrigir leitura" : "Digitar transcrição" : "Editar", () => { saved.editing = true; if(c.exam_submission_id && primary)primary.disabled=true; saved.editingBase ??= latest?.revision_number || 0; editor.hidden = false; documentView.hidden = true; setTab("transcript"); }, "secondary"));
-      if(c.data_origin !== "synthetic_demo" && !c.exam_submission_id) secondary.append(btn("Reprocessar", recognize, "secondary"));
+      if(c.source_mode!=="TEXT" && c.data_origin !== "synthetic_demo" && !c.exam_submission_id) secondary.append(btn("Reprocessar", recognize, "secondary"));
     }
     if(c.exam_submission_id && saved.examReview.capture_candidate_available)secondary.append(btn("Importar leitura da captura",()=>importCapture(c),"secondary"));
     for (const button of secondary.children) button.disabled = state.busy || Boolean(saved.examReview?.exam_finalized);
@@ -571,7 +580,7 @@
     transcriptionStatus = node("p", saved.processing === "recognition" ? "Reconhecendo solução…" : latest ? "Transcrição disponível" : saved.feedback?.state === "FAILED" ? "Falha de reconhecimento" : "Reconhecimento não concluído", "transcription-status"); transcriptionStatus.setAttribute("role","status");
     const provider = meta?.provider || meta?.recognizer || meta?.source;
     metadata = node("p", undefined,"transcription-caption");
-    const compactCaption=node("span",c.exam_submission_id ? latest ? `Versão ${latest.revision_number} · ${readingOrigin(saved.examReview.current_version.origin)}${saved.editing?" · edição não salva":""}` : "Sem transcrição · originais preservados" : c.data_origin === "synthetic_demo" && latest ? `Transcrição importada · revisão ${latest.revision_number}${latest.status === "ACCEPTED" ? " · aceita" : ""}` : latest?`Transcrição automática${provider?` · ${/^mathpix/i.test(provider)?"Mathpix":provider}`:""} · revisão ${latest.revision_number}`:"As páginas originais permanecem preservadas.","caption-compact");
+    const compactCaption=node("span",c.exam_submission_id ? latest ? `Versão ${latest.revision_number} · ${readingOrigin(saved.examReview.current_version.origin)}${saved.editing?" · edição não salva":""}` : "Sem transcrição · originais preservados" : c.data_origin === "synthetic_demo" && latest ? `Transcrição importada · revisão ${latest.revision_number}${latest.status === "ACCEPTED" ? " · aceita" : ""}` : latest?`Transcrição ${c.source_mode==="TEXT"?"textual":"automática"}${provider?` · ${/^mathpix/i.test(provider)?"Mathpix":provider}`:""} · revisão ${latest.revision_number}`:"As páginas originais permanecem preservadas.","caption-compact");
     metadata.append(compactCaption);
     setTab(saved.tab);
     const topline=node("div",undefined,"solution-topline");topline.append(solutionHeading,tabs);
@@ -609,7 +618,7 @@
       if (run.stale) analysisBody.appendChild(note("Análise de uma revisão anterior. Analise a revisão atual antes de vincular a decisão."));
       if (run.result) { const report = node("div"); window.ConfIAReport.render(run.result, report, { context: "evaluator", auditRun: run, workspace: true, uiState: saved }); analysisBody.appendChild(report); }
       else analysisBody.appendChild(note("Não foi possível concluir a análise. A decisão humana permanece disponível."));
-    } else if (!saved.processing) analysisBody.appendChild(note(c.exam_submission_id ? "Aguardando análise. Nenhuma pontuação foi calculada para esta leitura." : "Reconheça a solução e analise para consultar critérios, evidências e verificações."));
+    } else if (!saved.processing) analysisBody.appendChild(note((c.exam_submission_id || c.source_mode==="TEXT") ? "Aguardando análise. Nenhuma pontuação foi calculada para esta leitura." : "Reconheça a solução e analise para consultar critérios, evidências e verificações."));
     if(c.exam_submission_id && saved.examReview.reanalysis_required)analysisBody.prepend(note("Leitura alterada — reanálise necessária. A leitura foi corrigida. Reanalise esta questão para atualizar a sugestão. Análises anteriores permanecem no histórico."));
     const openDrawer = btn("Abrir análise", () => drawer(true), "secondary drawer-trigger"); openDrawer.setAttribute("aria-controls", "analysis-pane");
     const closeDrawer = btn("Fechar análise", () => { drawer(false); openDrawer.focus(); }, "secondary drawer-close");
@@ -620,7 +629,7 @@
     const divider = node("div", undefined, "pane-splitter"); layout.append(solution, divider, right); window.ConfiaWorkspaceControls.attachSplitter(layout, divider);
     const decisionBox = c.exam_submission_id ? node("div") : decisionPanel(c, saved, run?.status === "COMPLETED" && (!run.stale || saved.decision) ? run : null);if(c.exam_submission_id)decisionBox.hidden=true;
     const actionbar = node("div", undefined, "workspace-actions");
-    const progress = saved.processing === "audit" ? "Analisando matemática · executando verificações…" : saved.processing === "recognition" ? "Reconhecendo solução…" : state.message || (run?.status === "FAILED" ? "Não foi possível concluir a análise matemática." : run ? "Análise concluída." : latest ? c.exam_submission_id ? "Transcrição disponível." : "Transcrição automática disponível." : saved.feedback?.state === "FAILED" ? saved.feedback.message : "Aguardando reconhecimento");
+    const progress = saved.processing === "audit" ? "Analisando matemática · executando verificações…" : saved.processing === "recognition" ? "Reconhecendo solução…" : state.message || (run?.status === "FAILED" ? "Não foi possível concluir a análise matemática." : run ? "Análise concluída." : latest ? (c.exam_submission_id || c.source_mode==="TEXT") ? "Transcrição disponível." : "Transcrição automática disponível." : saved.feedback?.state === "FAILED" ? saved.feedback.message : "Aguardando reconhecimento");
     actionbar.appendChild(note(progress));
     actionbar.dataset.quiet=String(!c.exam_submission_id && !state.message && !saved.processing && run?.status==="COMPLETED" && !run.stale);
     let primary;

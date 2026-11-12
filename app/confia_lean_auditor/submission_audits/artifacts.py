@@ -7,6 +7,10 @@ from confia_lean_auditor.reproducibility.service import verify
 
 
 def required_references(result):
+    from confia_lean_auditor.dynamic.grading_models import DynamicAuditResult
+    if isinstance(result,DynamicAuditResult):
+        root=Path(result.artifact_dir)
+        return root,[("export",name,str(root/name)) for name in ("audit.json","solution.txt","analysis.json","context.json")]
     from confia_lean_auditor.tme.audit_models import TMEAuditResult
     if isinstance(result, TMEAuditResult):
         from confia_lean_auditor.tme.audit_artifacts import required_references as tme_references

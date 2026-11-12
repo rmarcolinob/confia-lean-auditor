@@ -39,7 +39,7 @@ class PriorityCase(SubmissionModel):
     exam_code: str
     problem_id: str
     question_label: str
-    source_mode: Literal["DIGITAL_INK", "IMAGE_SCAN"]
+    source_mode: Literal["DIGITAL_INK", "IMAGE_SCAN", "TEXT"]
     operational_status: Status
     updated_at: datetime
 
@@ -368,7 +368,7 @@ def rebuild_index():
             record = submissions.get_record(case.submission_id)
             if (record.tme_case_id != case.case_id or record.submitted_by_user_id != case.created_by_user_id
                     or record.problem_id != case.problem_id
-                    or record.source != ("tablet" if case.source_mode == "DIGITAL_INK" else "image_scan")):
+                    or record.source != ("text" if case.source_mode == "TEXT" else "tablet" if case.source_mode == "DIGITAL_INK" else "image_scan")):
                 raise ValueError("invalid operational binding")
             by_submission[case.submission_id] = e
             touch(e, record.received_at)
