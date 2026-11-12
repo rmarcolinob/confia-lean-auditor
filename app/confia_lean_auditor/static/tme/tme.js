@@ -133,6 +133,7 @@
   const runFor = c => {
     const saved = local(c);
     if(c.exam_submission_id)return saved.audits?.find(r=>!r.stale);
+    if(c.dynamic_context)return saved.audits?.[0];
     if (saved.decision?.audit_run_id) return saved.audits?.find(r => r.audit_run_id === saved.decision.audit_run_id);
     return saved.audits?.find(r => !r.stale && r.status === "COMPLETED") || saved.audits?.[0];
   };
@@ -142,7 +143,7 @@
       const status=c.review_state || saved.examReview?.state || "PENDING";
       return {PENDING:"Pendente",READY:"Pronta",REVIEW:"Revisão necessária",CONFIRMED:"Confirmada"}[status];
     }
-    if (saved.decision || c.status === "DECIDED") return "Finalizada";
+    if (saved.decision || !c.dynamic_context && c.status === "DECIDED") return "Finalizada";
     if (saved.processing === "audit") return "Analisando";
     if (saved.processing === "recognition") return "Reconhecendo";
     if (run?.status === "FAILED" || saved.feedback?.state === "FAILED") return "Falha técnica";
@@ -177,9 +178,16 @@
       Object.assign(saved, { audits, decision, detail, feedback, loaded: true, loadError: false });
       if(c.dynamic_context) {
         saved.independentReviews ||= {};
-        const current=audits.find(a=>a.status==="COMPLETED" && !a.stale);
+        const current=audits[0]?.status==="COMPLETED" && !audits[0].stale?audits[0]:null;
         if(current)try {saved.independentReviews[current.audit_run_id]=await api(`/dynamic/attempts/${c.case_id}/audits/${current.audit_run_id}/independent-reviews`);saved.reviewError="";}
         catch(error){saved.reviewError="Não foi possível consultar a revisão independente. A sugestão original permanece preservada.";}
+        saved.reconciliation=null;
+        try {
+          const [policy,rows,history]=await Promise.all([api(`/dynamic/attempts/${c.case_id}/policy`),current?api(`/dynamic/attempts/${c.case_id}/audits/${current.audit_run_id}/reconciliations`):Promise.resolve([]),api(`/dynamic/attempts/${c.case_id}/human-decisions`)]);
+          saved.dynamicPolicy=policy;saved.reconciliation=Array.isArray(rows)?rows.find(r=>!r.stale)?.reconciliation:null;
+          saved.dynamicDecisionHistory=Array.isArray(history)?history:[];saved.reconciliationError="";
+        }catch(error){saved.reconciliationError="Não foi possível consultar a reconciliação. Recarregue antes de homologar.";}
+
       }
     }
     return saved;
@@ -323,8 +331,22 @@
     try {
       const result=await post(`/dynamic/attempts/${c.case_id}/audits/${run.audit_run_id}/independent-reviews`,{execution_key:window.crypto.randomUUID()});
       saved.independentReviews ||= {};saved.independentReviews[run.audit_run_id]=[result,...(saved.independentReviews[run.audit_run_id]||[])];
+      saved.reconciliation=null;saved.decision=null;saved.loaded=false;
     } catch(error){saved.reviewError=error.message || "Revisão independente indisponível.";}
     finally{state.busy=false;saved.reviewPending=false;}
+    if(state.current?.case_id===c.case_id && state.view==="workspace")await renderCorrection();
+  }
+  async function reconcileDynamic(c,run,profile) {
+    if(state.busy || run.stale)return;
+    const saved=local(c),review=saved.independentReviews?.[run.audit_run_id]?.[0]?.review;
+    if(!review)return;
+    state.busy=true;saved.reconciliationPending=true;saved.reconciliationError="";await renderCorrection();
+    try {
+      if(!saved.dynamicPolicy)saved.dynamicPolicy=await post(`/dynamic/attempts/${c.case_id}/policy`,{policy_profile:profile});
+      const view=await post(`/dynamic/attempts/${c.case_id}/audits/${run.audit_run_id}/reconciliations`,{independent_review_id:review.review_id});
+      saved.reconciliation=view.reconciliation;saved.loaded=false;saved.draft={};
+    }catch(error){saved.reconciliationError=error.message||"Reconciliação indisponível.";}
+    finally{state.busy=false;saved.reconciliationPending=false;}
     if(state.current?.case_id===c.case_id && state.view==="workspace")await renderCorrection();
   }
   function renderInk() {
@@ -633,7 +655,7 @@
         for(const old of previous){const entry=node("details"),content=node("div");entry.append(node("summary",`Análise anterior · versão ${old.revision_number} · ${scoreText(old.suggested_score,old.max_score)} · ${old.status==="FAILED"?"Falha técnica":old.review_required?"Revisar":"Concluída"}${old.completed_at?` · ${new Date(old.completed_at).toLocaleString("pt-BR")}`:""}`));window.ConfiaWorkspaceReport.renderQuestion(old,content,{onOriginal,historical:true});entry.append(content);history.append(entry);}analysisBody.append(history);}
     } else if (run) {
       if (run.stale) analysisBody.appendChild(note("Análise de uma revisão anterior. Analise a revisão atual antes de vincular a decisão."));
-      if (run.result) { const report = node("div"); window.ConfIAReport.render(run.result, report, { context: "evaluator", auditRun: run, workspace: true, uiState: saved, independentReview:saved.independentReviews?.[run.audit_run_id]?.[0], reviewError:saved.reviewError, reviewBusy:state.busy, onIndependentReview:()=>reviewDynamic(c,run) }); analysisBody.appendChild(report); }
+      if (run.result) { const report = node("div"); window.ConfIAReport.render(run.result, report, { context: "evaluator", auditRun: run, workspace: true, uiState: saved, independentReview:saved.independentReviews?.[run.audit_run_id]?.[0], reviewError:saved.reviewError, reviewBusy:state.busy, onIndependentReview:()=>reviewDynamic(c,run), reconciliation:saved.reconciliation, dynamicPolicy:saved.dynamicPolicy, reconciliationError:saved.reconciliationError, onReconcile:profile=>reconcileDynamic(c,run,profile) }); analysisBody.appendChild(report); }
       else analysisBody.appendChild(note("Não foi possível concluir a análise. A decisão humana permanece disponível."));
     } else if (!saved.processing) analysisBody.appendChild(note((c.exam_submission_id || c.source_mode==="TEXT") ? "Aguardando análise. Nenhuma pontuação foi calculada para esta leitura." : "Reconheça a solução e analise para consultar critérios, evidências e verificações."));
     if(c.exam_submission_id && saved.examReview.reanalysis_required)analysisBody.prepend(note("Leitura alterada — reanálise necessária. A leitura foi corrigida. Reanalise esta questão para atualizar a sugestão. Análises anteriores permanecem no histórico."));
@@ -644,6 +666,7 @@
     right.addEventListener("keydown", event => { if (event.key === "Escape") { drawer(false); openDrawer.focus(); } });
     right.append(closeDrawer, analysis);
     const divider = node("div", undefined, "pane-splitter"); layout.append(solution, divider, right); window.ConfiaWorkspaceControls.attachSplitter(layout, divider);
+    if(c.dynamic_context && saved.dynamicDecisionHistory?.length){const history=node("details");history.append(node("summary","Histórico de confirmações"));for(const row of saved.dynamicDecisionHistory){const d=row.decision;history.append(node("p",`${row.current?"Confirmação corrente":"Confirmação anterior invalidada"} · Primeira análise: ${d.grader_suggested_points} · Sugestão reconciliada: ${d.suggested_points} · Nota final: ${d.final_points}`));}analysisBody.append(history);}
     const decisionBox = c.exam_submission_id ? node("div") : decisionPanel(c, saved, run?.status === "COMPLETED" && (!run.stale || saved.decision) ? run : null);if(c.exam_submission_id)decisionBox.hidden=true;
     const actionbar = node("div", undefined, "workspace-actions");
     const progress = saved.processing === "audit" ? "Analisando matemática · executando verificações…" : saved.processing === "recognition" ? "Reconhecendo solução…" : state.message || (run?.status === "FAILED" ? "Não foi possível concluir a análise matemática." : run ? "Análise concluída." : latest ? (c.exam_submission_id || c.source_mode==="TEXT") ? "Transcrição disponível." : "Transcrição automática disponível." : saved.feedback?.state === "FAILED" ? saved.feedback.message : "Aguardando reconhecimento");
@@ -840,6 +863,9 @@
     if(state.current===c&&state.view==="workspace")await renderCorrection();
   }
   function decisionPanel(c, saved, run) {
+    const reconciliation=c.dynamic_context?saved.reconciliation:null;
+    if(reconciliation && run)run={...run,result:{...run.result,score:Number(reconciliation.reconciled_suggested_score),max_score:Number(reconciliation.max_score)}};
+
     const box = node("section", undefined, "decision-bar"); box.setAttribute("aria-label", "Decisão do avaliador"); box.id="evaluator-decision";
     box.appendChild(node("h2","Decisão do avaliador"));
     const suggestion = node("div", undefined, "decision-suggestion"); suggestion.append(node("span", "Sugestão ConfIA", "quiet-label"), node("strong", run?.result?.score == null ? "Não determinada" : `${String(run.result.score).replace(".", ",")} / ${run.result.max_score}`)); box.appendChild(suggestion);
@@ -847,6 +873,9 @@
       const success=note("Correção registrada");success.classList.add("decision-success");
       box.append(success,node("strong", `Pontuação final do avaliador: ${saved.decision.final_points} / ${saved.decision.max_points}`), node("span", "Finalizada", "status"));
       const detail = node("details"); detail.append(node("summary", "Observação registrada"), node("p", saved.decision.feedback || "Sem comentário.")); box.append(detail,actions(btn("Corrigir próxima",()=>nextCorrection(c).catch(showError)),btn("Voltar para fila",()=>navigate("cases"),"secondary")));return box;
+    }
+    if(c.dynamic_context && (!reconciliation || saved.reconciliationError || run?.stale)){
+      box.append(note("Conclua a revisão independente e a reconciliação corrente antes de homologar a sugestão."));return box;
     }
     const form = node("form"), controls = {}, extras = node("details", undefined, "decision-observation"); extras.open = Boolean(saved.observationOpen);
     const observationFields = node("div", undefined, "observation-fields");
@@ -866,6 +895,7 @@
       input.addEventListener("input", () => { saved.draft[name] = input.value; validateReason(); });
       (name === "final" ? form : observationFields).appendChild(field(label, input));
     }
+    if(reconciliation){controls.max.readOnly=true;controls.max.value=String(reconciliation.max_score);}
     validateReason();
     const use = btn("Usar sugestão", () => { if (expected() != null) { controls.final.value = String(expected()); saved.draft.final = controls.final.value; validateReason(); controls.final.focus(); } }, "secondary"); use.disabled = state.busy || run?.result?.score == null;
     const adjust = btn("Ajustar", () => { reveal(); controls.final.focus(); box.scrollIntoView({block:"center",behavior:"smooth"}); }, "secondary ghost"); saved.adjustDecision=()=>adjust.click();
@@ -881,8 +911,8 @@
       state.busy = true; submit.disabled = true; use.disabled = true; adjust.disabled=true;
       try {
         await ensureAcceptance(c,saved.history,saved.history.revisions.at(-1));
-        saved.decision = await post(`/tme/cases/${c.case_id}/decision`, { audit_run_id: run?.audit_run_id || null, max_points: Number(controls.max.value), final_points: Number(controls.final.value), feedback: controls.feedback.value, override_reason: controls.reason.value.trim() || null });
-        saved.draft = {}; state.message = "Correção registrada."; c.status="DECIDED";
+        saved.decision = await post(`/tme/cases/${c.case_id}/decision`, { audit_run_id: run?.audit_run_id || null, ...(reconciliation?{reconciliation_id:reconciliation.reconciliation_id}:{}), max_points: Number(controls.max.value), final_points: Number(controls.final.value), feedback: controls.feedback.value, override_reason: controls.reason.value.trim() || null });
+        saved.draft = {}; state.message = "Correção registrada."; if(!c.dynamic_context)c.status="DECIDED";else saved.loaded=false;
       } catch (_) { reveal(); error.textContent = "Não foi possível registrar a decisão. Confira a justificativa e tente novamente."; }
       finally { state.busy = false; submit.disabled = false; use.disabled = run?.result?.score == null; adjust.disabled=false; }
       if (saved.decision && state.current === c && state.view === "workspace") await renderCorrection();

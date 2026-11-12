@@ -1,0 +1,10 @@
+Browser tab: 6, Title: "ConfIA — Confiabilidade e Explicabilidade", URL: "http://127.0.0.1:8770/tme?case_id=case_3c7d5e2807c44b788caccfc9fde6f45d".
+The following is a diff from the previous accessibility tree with ~ and + representing changed and added elements, respectively. Removed elements are summarized by ID range.
+~					36 tab (selectable, settable, boolean) Original, Value: 0, ID: tab-original
+~					38 tab (selected, settable, boolean) Comparar, Value: 1, ID: tab-compare
+~				39 container Description: Comparar, ID: solution-views
++					140 container Transcrição
++						141 button Editar
++						142 container Transcrição da página 1
++							143 text 3z=-6; z=-2; S={-2}; 3*(-2)+6=0
+The focused UI element is 38 tab (selected, settable, boolean) Comparar, Value: 1, ID: tab-compare

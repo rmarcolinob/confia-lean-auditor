@@ -1,0 +1,937 @@
+{
+  "record": {
+    "schema_version": "dynamic-independent-review.v1",
+    "review_id": "drev_867e2dd6846cf0446f25360484469fa943f2863bac1260062010290076d4ef35",
+    "audit_run_id": "aud_8bb87cafb5f34a58f098957d9d41c144c2c51009f6d6185869940930cb480263",
+    "audit_run_sha256": "c67fef0b711938231b0c237b9a07dc9057f34c15055d5201bed9abbaafebacaf",
+    "audit_result_sha256": "3483e85f3921a796de1d7a4df7c43e79a2918d3dce288d9aa64246ddebdf2abc",
+    "source_sha256": "ec7e49b1c1f4bcef5d48dc03f33bb01850186a161511280f0c64739cd906d8e2",
+    "question_attempt_id": "case_b9e5f6ea473043be8b60f33dfdaa19e8",
+    "transcription_version_id": "tr_7972a8538b924c4da6aca49f0c1a0094:1",
+    "context": {
+      "engine_mode": "DYNAMIC",
+      "problem_id": "dyn_be4b3d0fd83041e3a7bd9dba710103a1",
+      "package_id": "dpkg_6d12dae6affb469992a632a7f1600bfe",
+      "package_version": 3,
+      "package_sha256": "1e089c63b5f0ae99021f5767627eadbff6a16a52c6289f116c759c94cf74833f",
+      "statement_version": 1,
+      "statement_sha256": "6236f1ccfaf7a944709567326b92432ba420d4399488c44a3ed241472153e0bd",
+      "preparation_id": "dprep_32ac176b146d494491f13e7435ad93a5",
+      "preparation_version": 1,
+      "preparation_sha256": "79edac55cc6b9675d7ae813937b1a501d66bece8c4cd48216ac44048bfd784b1",
+      "rubric_id": "drub_3842b787bc864770877bdd4c14015731",
+      "rubric_version": 1,
+      "rubric_sha256": "15808c83e6bdfc08fc1200b1272c879e092a677adbadc99f54dfd6defa365d23",
+      "allow_preparation_review": true,
+      "grader_version": "dynamic-grader.v1"
+    },
+    "reviewer_version": "dynamic-reviewer.v1",
+    "execution_key": "browser-fixture",
+    "started_at": "2026-11-12T03:41:19.851766Z",
+    "completed_at": "2026-11-12T03:41:19.853804Z",
+    "status": "COMPLETED",
+    "phase_a": {
+      "criterion_reviews": [
+        {
+          "criterion_id": "method",
+          "max_points": "4",
+          "proposed_points": null,
+          "provider_proposed_points": "4",
+          "assessment": "REVIEW_REQUIRED",
+          "sufficiency": "INSUFFICIENT",
+          "claim_ids": [],
+          "evidence": [],
+          "checker_references": [],
+          "explanation": "Obrigação confrontada com os trechos e verificações independentes.",
+          "uncertainty": [
+            "Resposta final não supre justificativa ausente.",
+            "Proposta do reviewer não sustentada pelas verificações; revisão humana necessária."
+          ],
+          "review_required": true
+        },
+        {
+          "criterion_id": "roots",
+          "max_points": "3",
+          "proposed_points": "3",
+          "provider_proposed_points": "3",
+          "assessment": "SATISFIED",
+          "sufficiency": "COMPLETE",
+          "claim_ids": [
+            "review_claim_1"
+          ],
+          "evidence": [
+            "S={3,4}"
+          ],
+          "checker_references": [
+            {
+              "claim_id": "review_claim_1",
+              "status": "VERIFIED",
+              "components": [
+                {
+                  "kind": "root_membership",
+                  "value": "3",
+                  "status": "VERIFIED"
+                },
+                {
+                  "kind": "root_membership",
+                  "value": "4",
+                  "status": "VERIFIED"
+                },
+                {
+                  "kind": "claim",
+                  "status": "VERIFIED",
+                  "verifier": "dynamic-exact-polynomial.v1"
+                }
+              ],
+              "start": 0,
+              "end": 7
+            }
+          ],
+          "explanation": "Obrigação confrontada com os trechos e verificações independentes.",
+          "uncertainty": [],
+          "review_required": false
+        },
+        {
+          "criterion_id": "check",
+          "max_points": "3",
+          "proposed_points": "0",
+          "provider_proposed_points": "0",
+          "assessment": "REVIEW_REQUIRED",
+          "sufficiency": "INSUFFICIENT",
+          "claim_ids": [],
+          "evidence": [],
+          "checker_references": [],
+          "explanation": "Obrigação confrontada com os trechos e verificações independentes.",
+          "uncertainty": [],
+          "review_required": true
+        }
+      ],
+      "claims": [
+        {
+          "claim_id": "review_claim_1",
+          "start": 0,
+          "end": 7,
+          "text": "S={3,4}",
+          "normalized": "S={3,4}",
+          "claim_type": "ROOTS",
+          "subject": "y",
+          "dependencies": [],
+          "polarity": "POSITIVE",
+          "adoption": "ADOPTED",
+          "fidelity": "FAITHFUL",
+          "strategy_context": "UNKNOWN_STRATEGY",
+          "verification_status": "VERIFIED",
+          "verification_detail": "Checagem exata e vínculo com a equação original; sem certificado Lean.",
+          "verifier": "dynamic-exact-polynomial.v1",
+          "components": [
+            {
+              "kind": "root_membership",
+              "value": "3",
+              "status": "VERIFIED"
+            },
+            {
+              "kind": "root_membership",
+              "value": "4",
+              "status": "VERIFIED"
+            },
+            {
+              "kind": "claim",
+              "status": "VERIFIED",
+              "verifier": "dynamic-exact-polynomial.v1"
+            }
+          ],
+          "values": [
+            "3",
+            "4"
+          ],
+          "verified_values": [
+            "3",
+            "4"
+          ]
+        }
+      ],
+      "additional_claims": [],
+      "rejected_claims": [],
+      "detected_strategy": "Álgebra exata",
+      "alternative_strategy": false,
+      "warnings": [],
+      "review_required": true,
+      "proposal": {
+        "detected_strategy": "Álgebra exata",
+        "alternative_strategy": false,
+        "additional_claims": [],
+        "criterion_reviews": [
+          {
+            "criterion_id": "method",
+            "assessment": "COMPLETE",
+            "proposed_points": "4",
+            "claim_ids": [],
+            "explanation": "Obrigação confrontada com os trechos e verificações independentes.",
+            "uncertainty": []
+          },
+          {
+            "criterion_id": "roots",
+            "assessment": "COMPLETE",
+            "proposed_points": "3",
+            "claim_ids": [
+              "review_claim_1"
+            ],
+            "explanation": "Obrigação confrontada com os trechos e verificações independentes.",
+            "uncertainty": []
+          },
+          {
+            "criterion_id": "check",
+            "assessment": "INSUFFICIENT",
+            "proposed_points": "0",
+            "claim_ids": [],
+            "explanation": "Obrigação confrontada com os trechos e verificações independentes.",
+            "uncertainty": []
+          }
+        ],
+        "warnings": []
+      },
+      "provenance": {
+        "provider": "controlled-dy4",
+        "requested_model": "independent-fixture",
+        "returned_model": "independent-fixture-v1",
+        "reasoning_effort": null,
+        "prompt_version": "dynamic-dy4-blind.v1",
+        "schema_version": "BlindReviewProposal.v1",
+        "input_sha256": "7cb18f8028f8a0cc825236614bc5ecab9646c7cf4ba8bf30ecb0f27a2c6611db",
+        "output_sha256": "0fee14bd3cfe119dc87d3f344326ca59b1505015a82b9498ea2ce0b71db8a43c",
+        "response_id": null,
+        "created_at": "2026-11-12T03:41:19.853226Z",
+        "code_sha": null,
+        "code_content_sha256": null,
+        "max_output_tokens": 10000,
+        "raw_output": "{\"detected_strategy\": \"\\u00c1lgebra exata\", \"alternative_strategy\": false, \"additional_claims\": [], \"criterion_reviews\": [{\"criterion_id\": \"method\", \"assessment\": \"COMPLETE\", \"proposed_points\": \"4\", \"claim_ids\": [], \"explanation\": \"Obriga\\u00e7\\u00e3o confrontada com os trechos e verifica\\u00e7\\u00f5es independentes.\", \"uncertainty\": []}, {\"criterion_id\": \"roots\", \"assessment\": \"COMPLETE\", \"proposed_points\": \"3\", \"claim_ids\": [\"review_claim_1\"], \"explanation\": \"Obriga\\u00e7\\u00e3o confrontada com os trechos e verifica\\u00e7\\u00f5es independentes.\", \"uncertainty\": []}, {\"criterion_id\": \"check\", \"assessment\": \"INSUFFICIENT\", \"proposed_points\": \"0\", \"claim_ids\": [], \"explanation\": \"Obriga\\u00e7\\u00e3o confrontada com os trechos e verifica\\u00e7\\u00f5es independentes.\", \"uncertainty\": []}], \"warnings\": []}"
+      },
+      "input_sha256": "7cb18f8028f8a0cc825236614bc5ecab9646c7cf4ba8bf30ecb0f27a2c6611db",
+      "completed_at": "2026-11-12T03:41:19.853678Z"
+    },
+    "comparison": {
+      "criteria": [
+        {
+          "criterion_id": "method",
+          "grader_points": "4",
+          "reviewer_points": null,
+          "grader_status": "COMPLETE",
+          "reviewer_status": "REVIEW_REQUIRED",
+          "agreement": "DISAGREEMENT",
+          "difference": null,
+          "disagreement_types": [
+            "BINDING_DISAGREEMENT"
+          ],
+          "evidence_overlap": [],
+          "reason": "Evidência do grader não corresponde à obrigação deste critério.",
+          "review_required": true
+        },
+        {
+          "criterion_id": "roots",
+          "grader_points": "3",
+          "reviewer_points": "3",
+          "grader_status": "COMPLETE",
+          "reviewer_status": "SATISFIED",
+          "agreement": "AGREEMENT",
+          "difference": 0.0,
+          "disagreement_types": [],
+          "evidence_overlap": [
+            "S={3,4}"
+          ],
+          "reason": "Mesma pontuação e suficiência verificável; concordância não constitui prova matemática.",
+          "review_required": false
+        },
+        {
+          "criterion_id": "check",
+          "grader_points": "0",
+          "reviewer_points": "0",
+          "grader_status": "INSUFFICIENT",
+          "reviewer_status": "REVIEW_REQUIRED",
+          "agreement": "UNRESOLVED",
+          "difference": 0.0,
+          "disagreement_types": [],
+          "evidence_overlap": [],
+          "reason": "Há incerteza não resolvida; igualdade numérica não é concordância suficiente.",
+          "review_required": true
+        }
+      ],
+      "exact_agreement": false,
+      "agreement_count": 1,
+      "total_point_difference": null,
+      "conflicting_criteria": [
+        "method"
+      ],
+      "review_required": true,
+      "status": "DISAGREEMENT"
+    },
+    "phase_a_input": {
+      "statement": {
+        "problem_id": "dyn_be4b3d0fd83041e3a7bd9dba710103a1",
+        "version_number": 1,
+        "title": "",
+        "statement": "Resolva no conjunto dos reais: 2y² - 14y + 24 = 0.",
+        "max_score": "10",
+        "created_at": "2026-11-12T03:41:19.676906Z",
+        "created_by": {
+          "actor_id": "technical-demo:dynamic",
+          "kind": "TECHNICAL_DEMO",
+          "tenant_id": null
+        },
+        "provenance": {
+          "origin": "TECHNICAL_DEMO",
+          "schema_version": "dynamic-provenance.v1",
+          "model_provenance": null
+        }
+      },
+      "approved_rubric": {
+        "max_score": "10",
+        "criteria": [
+          {
+            "criterion_id": "method",
+            "title": "Método",
+            "description": "Justificar a resolução por transformações equivalentes.",
+            "max_points": "4",
+            "order": 1,
+            "dependencies": [],
+            "notes": "",
+            "teacher_guidance": "",
+            "evidence": null
+          },
+          {
+            "criterion_id": "roots",
+            "title": "Raízes",
+            "description": "Obter todas as raízes reais. Crédito parcial proporcional às raízes corretas.",
+            "max_points": "3",
+            "order": 2,
+            "dependencies": [],
+            "notes": "",
+            "teacher_guidance": "",
+            "evidence": null
+          },
+          {
+            "criterion_id": "check",
+            "title": "Verificação",
+            "description": "Verificar as raízes por substituição. Crédito parcial proporcional às raízes corretas.",
+            "max_points": "3",
+            "order": 3,
+            "dependencies": [],
+            "notes": "",
+            "teacher_guidance": "",
+            "evidence": null
+          }
+        ],
+        "rubric_id": "drub_3842b787bc864770877bdd4c14015731",
+        "problem_id": "dyn_be4b3d0fd83041e3a7bd9dba710103a1",
+        "statement_version": 1,
+        "statement_sha256": "6236f1ccfaf7a944709567326b92432ba420d4399488c44a3ed241472153e0bd",
+        "version_number": 1,
+        "draft_status": "DRAFT_TEACHER",
+        "preparation_reference": {
+          "preparation_id": "dprep_32ac176b146d494491f13e7435ad93a5",
+          "preparation_version": 1,
+          "preparation_sha256": "79edac55cc6b9675d7ae813937b1a501d66bece8c4cd48216ac44048bfd784b1"
+        },
+        "generation": null,
+        "supersedes_id": null,
+        "created_at": "2026-11-12T03:41:19.686525Z",
+        "created_by": {
+          "actor_id": "technical-demo:dynamic",
+          "kind": "TECHNICAL_DEMO",
+          "tenant_id": null
+        },
+        "provenance": {
+          "origin": "TECHNICAL_DEMO",
+          "schema_version": "dynamic-provenance.v1",
+          "model_provenance": null
+        }
+      },
+      "preparation": {
+        "preparation_id": "dprep_32ac176b146d494491f13e7435ad93a5",
+        "preparation_version": 1,
+        "problem_id": "dyn_be4b3d0fd83041e3a7bd9dba710103a1",
+        "source_package_id": "dpkg_066b89d473c949ffa5ff5a11d0ff019c",
+        "statement_version": 1,
+        "statement_sha256": "6236f1ccfaf7a944709567326b92432ba420d4399488c44a3ed241472153e0bd",
+        "status": "READY_FOR_REVIEW",
+        "created_at": "2026-11-12T03:41:19.678571Z",
+        "completed_at": "2026-11-12T03:41:19.682541Z",
+        "requested_by": "technical-demo:dynamic",
+        "reason": null,
+        "proposal": {
+          "mathematical_domain": "Álgebra real",
+          "normalized_problem": "Resolver a equação em R.",
+          "data": [
+            "x² - 5x + 6 = 0"
+          ],
+          "assumptions": [],
+          "objects": [
+            {
+              "name": "x",
+              "domain": "R",
+              "constraints": []
+            }
+          ],
+          "target": "Conjunto completo de raízes.",
+          "expects_unique_result": false,
+          "candidate_reference_solutions": [
+            {
+              "solution_id": "s1",
+              "strategy_id": "factor",
+              "strategy_label": "Fatoração",
+              "claims": [
+                {
+                  "claim_id": "factorization",
+                  "text": "x² - 5x + 6 = (x-2)(x-3)",
+                  "normalized_form": "x^2-5*x+6=(x-2)*(x-3)",
+                  "claim_type": "identity",
+                  "dependencies": [],
+                  "mathematical_objects": [
+                    "x"
+                  ],
+                  "proposed_verifier": "SYMBOLIC_ALGEBRA",
+                  "verifier_reason": "Identidade polinomial",
+                  "formalizability_candidate": true,
+                  "check": {
+                    "kind": "EQUALITY",
+                    "left": "x^2-5*x+6",
+                    "right": "(x-2)*(x-3)",
+                    "variable": "x",
+                    "values": []
+                  }
+                },
+                {
+                  "claim_id": "roots",
+                  "text": "As raízes são 2 e 3.",
+                  "normalized_form": "S={2,3}",
+                  "claim_type": "root_set",
+                  "dependencies": [
+                    "factorization"
+                  ],
+                  "mathematical_objects": [
+                    "x"
+                  ],
+                  "proposed_verifier": "DETERMINISTIC",
+                  "verifier_reason": "Divisão exata comprova todas as raízes",
+                  "formalizability_candidate": true,
+                  "check": {
+                    "kind": "ROOT_SET",
+                    "left": "x^2-5*x+6",
+                    "right": "0",
+                    "variable": "x",
+                    "values": [
+                      "2",
+                      "3"
+                    ]
+                  }
+                }
+              ],
+              "final_result": {
+                "kind": "ROOT_SET",
+                "text": "{2,3}",
+                "values": [
+                  "2",
+                  "3"
+                ],
+                "supporting_claim_ids": [
+                  "roots"
+                ]
+              },
+              "uncertainties": []
+            }
+          ],
+          "alternative_strategies": [
+            {
+              "strategy_id": "factor",
+              "description": "Fatoração ou produto nulo",
+              "expected_key_claim_ids": [
+                "factorization",
+                "roots"
+              ]
+            },
+            {
+              "strategy_id": "formula",
+              "description": "Fórmula quadrática também é legítima.",
+              "expected_key_claim_ids": [
+                "roots"
+              ]
+            }
+          ],
+          "warnings": [],
+          "uncertainties": []
+        },
+        "analysis": {
+          "verifier_plan": [
+            {
+              "claim_id": "factorization",
+              "capability": "SYMBOLIC_ALGEBRA",
+              "reason": "Identidade polinomial",
+              "available": true,
+              "requires_additional_input": false,
+              "status": "VERIFIED_WITHIN_SCOPE",
+              "detail": "Checagem exata executada: igualdade/conjunto completo confirmado.",
+              "scope": "Apenas expressão declarada, polinômio univariado racional; não certifica interpretação, hipóteses ou solução inteira.",
+              "verifier_version": "dynamic-exact-polynomial.v1",
+              "formal_status": "FORMAL_NOT_ATTEMPTED"
+            },
+            {
+              "claim_id": "roots",
+              "capability": "DETERMINISTIC",
+              "reason": "Divisão exata comprova todas as raízes",
+              "available": true,
+              "requires_additional_input": false,
+              "status": "VERIFIED_WITHIN_SCOPE",
+              "detail": "Checagem exata executada: igualdade/conjunto completo confirmado.",
+              "scope": "Apenas expressão declarada, polinômio univariado racional; não certifica interpretação, hipóteses ou solução inteira.",
+              "verifier_version": "dynamic-exact-polynomial.v1",
+              "formal_status": "FORMAL_NOT_ATTEMPTED"
+            }
+          ],
+          "candidate_checks": [
+            {
+              "solution_id": "s1",
+              "status": "VERIFIED_WITHIN_SCOPE",
+              "final_result_verified": true
+            }
+          ],
+          "strategy_checks": [
+            {
+              "strategy_id": "factor",
+              "status": "VERIFIED_WITHIN_SCOPE",
+              "limitation": "Somente claims declarados; legitimidade pedagógica e interpretação requerem revisão."
+            },
+            {
+              "strategy_id": "formula",
+              "status": "VERIFIED_WITHIN_SCOPE",
+              "limitation": "Somente claims declarados; legitimidade pedagógica e interpretação requerem revisão."
+            }
+          ],
+          "warnings": [
+            {
+              "code": "SCOPE_LIMIT",
+              "message": "Apenas expressão declarada, polinômio univariado racional; não certifica interpretação, hipóteses ou solução inteira. Lean: FORMAL_NOT_ATTEMPTED.",
+              "requires_review": false
+            }
+          ],
+          "trust_state": "CHECKED_WITHIN_SCOPE",
+          "automatic_correction_allowed": false
+        },
+        "provenance": {
+          "provider": "controlled-test",
+          "requested_model": "fixture",
+          "returned_model": "fixture-v1",
+          "reasoning_effort": null,
+          "prompt_version": "test:prepare",
+          "schema_version": "PreparationProposal.v1",
+          "input_sha256": "da07991f9dfe20cfa02afcddaea9b6d625366cb0aa1cf35a53bc09378511773a",
+          "output_sha256": "a791aaac47cd10865dea527fd95b1626e811b05069503ea59dd246017d8f723c",
+          "response_id": null,
+          "created_at": "2026-11-12T03:41:19.681242Z",
+          "code_sha": null,
+          "code_content_sha256": null,
+          "max_output_tokens": 10000,
+          "raw_output": "{\"mathematical_domain\": \"\\u00c1lgebra real\", \"normalized_problem\": \"Resolver a equa\\u00e7\\u00e3o em R.\", \"data\": [\"x\\u00b2 - 5x + 6 = 0\"], \"assumptions\": [], \"objects\": [{\"name\": \"x\", \"domain\": \"R\", \"constraints\": []}], \"target\": \"Conjunto completo de ra\\u00edzes.\", \"expects_unique_result\": false, \"candidate_reference_solutions\": [{\"solution_id\": \"s1\", \"strategy_id\": \"factor\", \"strategy_label\": \"Fatora\\u00e7\\u00e3o\", \"claims\": [{\"claim_id\": \"factorization\", \"text\": \"x\\u00b2 - 5x + 6 = (x-2)(x-3)\", \"normalized_form\": \"x^2-5*x+6=(x-2)*(x-3)\", \"claim_type\": \"identity\", \"dependencies\": [], \"mathematical_objects\": [\"x\"], \"proposed_verifier\": \"SYMBOLIC_ALGEBRA\", \"verifier_reason\": \"Identidade polinomial\", \"formalizability_candidate\": true, \"check\": {\"kind\": \"EQUALITY\", \"left\": \"x^2-5*x+6\", \"right\": \"(x-2)*(x-3)\", \"variable\": \"x\", \"values\": []}}, {\"claim_id\": \"roots\", \"text\": \"As ra\\u00edzes s\\u00e3o 2 e 3.\", \"normalized_form\": \"S={2,3}\", \"claim_type\": \"root_set\", \"dependencies\": [\"factorization\"], \"mathematical_objects\": [\"x\"], \"proposed_verifier\": \"DETERMINISTIC\", \"verifier_reason\": \"Divis\\u00e3o exata comprova todas as ra\\u00edzes\", \"formalizability_candidate\": true, \"check\": {\"kind\": \"ROOT_SET\", \"left\": \"x^2-5*x+6\", \"right\": \"0\", \"variable\": \"x\", \"values\": [\"2\", \"3\"]}}], \"final_result\": {\"kind\": \"ROOT_SET\", \"text\": \"{2,3}\", \"values\": [\"2\", \"3\"], \"supporting_claim_ids\": [\"roots\"]}, \"uncertainties\": []}], \"alternative_strategies\": [{\"strategy_id\": \"factor\", \"description\": \"Fatora\\u00e7\\u00e3o ou produto nulo\", \"expected_key_claim_ids\": [\"factorization\", \"roots\"]}, {\"strategy_id\": \"formula\", \"description\": \"F\\u00f3rmula quadr\\u00e1tica tamb\\u00e9m \\u00e9 leg\\u00edtima.\", \"expected_key_claim_ids\": [\"roots\"]}], \"warnings\": [], \"uncertainties\": []}"
+        },
+        "failure_code": null
+      },
+      "solution": "S={3,4}",
+      "transcription_version_id": "tr_7972a8538b924c4da6aca49f0c1a0094:1",
+      "source_sha256": "ec7e49b1c1f4bcef5d48dc03f33bb01850186a161511280f0c64739cd906d8e2",
+      "context": {
+        "engine_mode": "DYNAMIC",
+        "problem_id": "dyn_be4b3d0fd83041e3a7bd9dba710103a1",
+        "package_id": "dpkg_6d12dae6affb469992a632a7f1600bfe",
+        "package_version": 3,
+        "package_sha256": "1e089c63b5f0ae99021f5767627eadbff6a16a52c6289f116c759c94cf74833f",
+        "statement_version": 1,
+        "statement_sha256": "6236f1ccfaf7a944709567326b92432ba420d4399488c44a3ed241472153e0bd",
+        "preparation_id": "dprep_32ac176b146d494491f13e7435ad93a5",
+        "preparation_version": 1,
+        "preparation_sha256": "79edac55cc6b9675d7ae813937b1a501d66bece8c4cd48216ac44048bfd784b1",
+        "rubric_id": "drub_3842b787bc864770877bdd4c14015731",
+        "rubric_version": 1,
+        "rubric_sha256": "15808c83e6bdfc08fc1200b1272c879e092a677adbadc99f54dfd6defa365d23",
+        "allow_preparation_review": true
+      },
+      "mathematical_evidence": [
+        {
+          "claim_id": "review_claim_1",
+          "start": 0,
+          "end": 7,
+          "text": "S={3,4}",
+          "normalized": "S={3,4}",
+          "claim_type": "ROOTS",
+          "subject": "y",
+          "dependencies": [],
+          "polarity": "POSITIVE",
+          "adoption": "ADOPTED",
+          "fidelity": "FAITHFUL",
+          "strategy_context": "UNKNOWN_STRATEGY",
+          "verification_status": "VERIFIED",
+          "verification_detail": "Checagem exata e vínculo com a equação original; sem certificado Lean.",
+          "verifier": "dynamic-exact-polynomial.v1",
+          "components": [
+            {
+              "kind": "root_membership",
+              "value": "3",
+              "status": "VERIFIED"
+            },
+            {
+              "kind": "root_membership",
+              "value": "4",
+              "status": "VERIFIED"
+            },
+            {
+              "kind": "claim",
+              "status": "VERIFIED",
+              "verifier": "dynamic-exact-polynomial.v1"
+            }
+          ],
+          "values": [
+            "3",
+            "4"
+          ],
+          "verified_values": [
+            "3",
+            "4"
+          ]
+        }
+      ],
+      "verification_policy": {
+        "version": "dynamic-review-evidence.v1",
+        "reuse": "Fresh exact checks from the accepted source. DY3 does not provide a separate proposition-bound verification receipt; grader fidelity flags are not trusted as proof. Checks are executed once per claim and reused across criteria; no Lean rerun.",
+        "pedagogical_scope": "Use only approved obligations. Do not invent extra explanations or percentage deductions. Unsupported sufficiency is uncertainty, not a safe point proposal."
+      },
+      "warnings": []
+    },
+    "context_snapshot": {
+      "phase_a_input_sha256": "7cb18f8028f8a0cc825236614bc5ecab9646c7cf4ba8bf30ecb0f27a2c6611db",
+      "provider_adapter": "ReviewerProvider",
+      "failed_generation": null,
+      "statement": {
+        "problem_id": "dyn_be4b3d0fd83041e3a7bd9dba710103a1",
+        "version_number": 1,
+        "title": "",
+        "statement": "Resolva no conjunto dos reais: 2y² - 14y + 24 = 0.",
+        "max_score": "10",
+        "created_at": "2026-11-12T03:41:19.676906Z",
+        "created_by": {
+          "actor_id": "technical-demo:dynamic",
+          "kind": "TECHNICAL_DEMO",
+          "tenant_id": null
+        },
+        "provenance": {
+          "origin": "TECHNICAL_DEMO",
+          "schema_version": "dynamic-provenance.v1",
+          "model_provenance": null
+        }
+      },
+      "rubric": {
+        "max_score": "10",
+        "criteria": [
+          {
+            "criterion_id": "method",
+            "title": "Método",
+            "description": "Justificar a resolução por transformações equivalentes.",
+            "max_points": "4",
+            "order": 1,
+            "dependencies": [],
+            "notes": "",
+            "teacher_guidance": "",
+            "evidence": null
+          },
+          {
+            "criterion_id": "roots",
+            "title": "Raízes",
+            "description": "Obter todas as raízes reais. Crédito parcial proporcional às raízes corretas.",
+            "max_points": "3",
+            "order": 2,
+            "dependencies": [],
+            "notes": "",
+            "teacher_guidance": "",
+            "evidence": null
+          },
+          {
+            "criterion_id": "check",
+            "title": "Verificação",
+            "description": "Verificar as raízes por substituição. Crédito parcial proporcional às raízes corretas.",
+            "max_points": "3",
+            "order": 3,
+            "dependencies": [],
+            "notes": "",
+            "teacher_guidance": "",
+            "evidence": null
+          }
+        ],
+        "rubric_id": "drub_3842b787bc864770877bdd4c14015731",
+        "problem_id": "dyn_be4b3d0fd83041e3a7bd9dba710103a1",
+        "statement_version": 1,
+        "statement_sha256": "6236f1ccfaf7a944709567326b92432ba420d4399488c44a3ed241472153e0bd",
+        "version_number": 1,
+        "draft_status": "DRAFT_TEACHER",
+        "preparation_reference": {
+          "preparation_id": "dprep_32ac176b146d494491f13e7435ad93a5",
+          "preparation_version": 1,
+          "preparation_sha256": "79edac55cc6b9675d7ae813937b1a501d66bece8c4cd48216ac44048bfd784b1"
+        },
+        "generation": null,
+        "supersedes_id": null,
+        "created_at": "2026-11-12T03:41:19.686525Z",
+        "created_by": {
+          "actor_id": "technical-demo:dynamic",
+          "kind": "TECHNICAL_DEMO",
+          "tenant_id": null
+        },
+        "provenance": {
+          "origin": "TECHNICAL_DEMO",
+          "schema_version": "dynamic-provenance.v1",
+          "model_provenance": null
+        }
+      },
+      "preparation": {
+        "preparation_id": "dprep_32ac176b146d494491f13e7435ad93a5",
+        "preparation_version": 1,
+        "problem_id": "dyn_be4b3d0fd83041e3a7bd9dba710103a1",
+        "source_package_id": "dpkg_066b89d473c949ffa5ff5a11d0ff019c",
+        "statement_version": 1,
+        "statement_sha256": "6236f1ccfaf7a944709567326b92432ba420d4399488c44a3ed241472153e0bd",
+        "status": "READY_FOR_REVIEW",
+        "created_at": "2026-11-12T03:41:19.678571Z",
+        "completed_at": "2026-11-12T03:41:19.682541Z",
+        "requested_by": "technical-demo:dynamic",
+        "reason": null,
+        "proposal": {
+          "mathematical_domain": "Álgebra real",
+          "normalized_problem": "Resolver a equação em R.",
+          "data": [
+            "x² - 5x + 6 = 0"
+          ],
+          "assumptions": [],
+          "objects": [
+            {
+              "name": "x",
+              "domain": "R",
+              "constraints": []
+            }
+          ],
+          "target": "Conjunto completo de raízes.",
+          "expects_unique_result": false,
+          "candidate_reference_solutions": [
+            {
+              "solution_id": "s1",
+              "strategy_id": "factor",
+              "strategy_label": "Fatoração",
+              "claims": [
+                {
+                  "claim_id": "factorization",
+                  "text": "x² - 5x + 6 = (x-2)(x-3)",
+                  "normalized_form": "x^2-5*x+6=(x-2)*(x-3)",
+                  "claim_type": "identity",
+                  "dependencies": [],
+                  "mathematical_objects": [
+                    "x"
+                  ],
+                  "proposed_verifier": "SYMBOLIC_ALGEBRA",
+                  "verifier_reason": "Identidade polinomial",
+                  "formalizability_candidate": true,
+                  "check": {
+                    "kind": "EQUALITY",
+                    "left": "x^2-5*x+6",
+                    "right": "(x-2)*(x-3)",
+                    "variable": "x",
+                    "values": []
+                  }
+                },
+                {
+                  "claim_id": "roots",
+                  "text": "As raízes são 2 e 3.",
+                  "normalized_form": "S={2,3}",
+                  "claim_type": "root_set",
+                  "dependencies": [
+                    "factorization"
+                  ],
+                  "mathematical_objects": [
+                    "x"
+                  ],
+                  "proposed_verifier": "DETERMINISTIC",
+                  "verifier_reason": "Divisão exata comprova todas as raízes",
+                  "formalizability_candidate": true,
+                  "check": {
+                    "kind": "ROOT_SET",
+                    "left": "x^2-5*x+6",
+                    "right": "0",
+                    "variable": "x",
+                    "values": [
+                      "2",
+                      "3"
+                    ]
+                  }
+                }
+              ],
+              "final_result": {
+                "kind": "ROOT_SET",
+                "text": "{2,3}",
+                "values": [
+                  "2",
+                  "3"
+                ],
+                "supporting_claim_ids": [
+                  "roots"
+                ]
+              },
+              "uncertainties": []
+            }
+          ],
+          "alternative_strategies": [
+            {
+              "strategy_id": "factor",
+              "description": "Fatoração ou produto nulo",
+              "expected_key_claim_ids": [
+                "factorization",
+                "roots"
+              ]
+            },
+            {
+              "strategy_id": "formula",
+              "description": "Fórmula quadrática também é legítima.",
+              "expected_key_claim_ids": [
+                "roots"
+              ]
+            }
+          ],
+          "warnings": [],
+          "uncertainties": []
+        },
+        "analysis": {
+          "verifier_plan": [
+            {
+              "claim_id": "factorization",
+              "capability": "SYMBOLIC_ALGEBRA",
+              "reason": "Identidade polinomial",
+              "available": true,
+              "requires_additional_input": false,
+              "status": "VERIFIED_WITHIN_SCOPE",
+              "detail": "Checagem exata executada: igualdade/conjunto completo confirmado.",
+              "scope": "Apenas expressão declarada, polinômio univariado racional; não certifica interpretação, hipóteses ou solução inteira.",
+              "verifier_version": "dynamic-exact-polynomial.v1",
+              "formal_status": "FORMAL_NOT_ATTEMPTED"
+            },
+            {
+              "claim_id": "roots",
+              "capability": "DETERMINISTIC",
+              "reason": "Divisão exata comprova todas as raízes",
+              "available": true,
+              "requires_additional_input": false,
+              "status": "VERIFIED_WITHIN_SCOPE",
+              "detail": "Checagem exata executada: igualdade/conjunto completo confirmado.",
+              "scope": "Apenas expressão declarada, polinômio univariado racional; não certifica interpretação, hipóteses ou solução inteira.",
+              "verifier_version": "dynamic-exact-polynomial.v1",
+              "formal_status": "FORMAL_NOT_ATTEMPTED"
+            }
+          ],
+          "candidate_checks": [
+            {
+              "solution_id": "s1",
+              "status": "VERIFIED_WITHIN_SCOPE",
+              "final_result_verified": true
+            }
+          ],
+          "strategy_checks": [
+            {
+              "strategy_id": "factor",
+              "status": "VERIFIED_WITHIN_SCOPE",
+              "limitation": "Somente claims declarados; legitimidade pedagógica e interpretação requerem revisão."
+            },
+            {
+              "strategy_id": "formula",
+              "status": "VERIFIED_WITHIN_SCOPE",
+              "limitation": "Somente claims declarados; legitimidade pedagógica e interpretação requerem revisão."
+            }
+          ],
+          "warnings": [
+            {
+              "code": "SCOPE_LIMIT",
+              "message": "Apenas expressão declarada, polinômio univariado racional; não certifica interpretação, hipóteses ou solução inteira. Lean: FORMAL_NOT_ATTEMPTED.",
+              "requires_review": false
+            }
+          ],
+          "trust_state": "CHECKED_WITHIN_SCOPE",
+          "automatic_correction_allowed": false
+        },
+        "provenance": {
+          "provider": "controlled-test",
+          "requested_model": "fixture",
+          "returned_model": "fixture-v1",
+          "reasoning_effort": null,
+          "prompt_version": "test:prepare",
+          "schema_version": "PreparationProposal.v1",
+          "input_sha256": "da07991f9dfe20cfa02afcddaea9b6d625366cb0aa1cf35a53bc09378511773a",
+          "output_sha256": "a791aaac47cd10865dea527fd95b1626e811b05069503ea59dd246017d8f723c",
+          "response_id": null,
+          "created_at": "2026-11-12T03:41:19.681242Z",
+          "code_sha": null,
+          "code_content_sha256": null,
+          "max_output_tokens": 10000,
+          "raw_output": "{\"mathematical_domain\": \"\\u00c1lgebra real\", \"normalized_problem\": \"Resolver a equa\\u00e7\\u00e3o em R.\", \"data\": [\"x\\u00b2 - 5x + 6 = 0\"], \"assumptions\": [], \"objects\": [{\"name\": \"x\", \"domain\": \"R\", \"constraints\": []}], \"target\": \"Conjunto completo de ra\\u00edzes.\", \"expects_unique_result\": false, \"candidate_reference_solutions\": [{\"solution_id\": \"s1\", \"strategy_id\": \"factor\", \"strategy_label\": \"Fatora\\u00e7\\u00e3o\", \"claims\": [{\"claim_id\": \"factorization\", \"text\": \"x\\u00b2 - 5x + 6 = (x-2)(x-3)\", \"normalized_form\": \"x^2-5*x+6=(x-2)*(x-3)\", \"claim_type\": \"identity\", \"dependencies\": [], \"mathematical_objects\": [\"x\"], \"proposed_verifier\": \"SYMBOLIC_ALGEBRA\", \"verifier_reason\": \"Identidade polinomial\", \"formalizability_candidate\": true, \"check\": {\"kind\": \"EQUALITY\", \"left\": \"x^2-5*x+6\", \"right\": \"(x-2)*(x-3)\", \"variable\": \"x\", \"values\": []}}, {\"claim_id\": \"roots\", \"text\": \"As ra\\u00edzes s\\u00e3o 2 e 3.\", \"normalized_form\": \"S={2,3}\", \"claim_type\": \"root_set\", \"dependencies\": [\"factorization\"], \"mathematical_objects\": [\"x\"], \"proposed_verifier\": \"DETERMINISTIC\", \"verifier_reason\": \"Divis\\u00e3o exata comprova todas as ra\\u00edzes\", \"formalizability_candidate\": true, \"check\": {\"kind\": \"ROOT_SET\", \"left\": \"x^2-5*x+6\", \"right\": \"0\", \"variable\": \"x\", \"values\": [\"2\", \"3\"]}}], \"final_result\": {\"kind\": \"ROOT_SET\", \"text\": \"{2,3}\", \"values\": [\"2\", \"3\"], \"supporting_claim_ids\": [\"roots\"]}, \"uncertainties\": []}], \"alternative_strategies\": [{\"strategy_id\": \"factor\", \"description\": \"Fatora\\u00e7\\u00e3o ou produto nulo\", \"expected_key_claim_ids\": [\"factorization\", \"roots\"]}, {\"strategy_id\": \"formula\", \"description\": \"F\\u00f3rmula quadr\\u00e1tica tamb\\u00e9m \\u00e9 leg\\u00edtima.\", \"expected_key_claim_ids\": [\"roots\"]}], \"warnings\": [], \"uncertainties\": []}"
+        },
+        "failure_code": null
+      }
+    },
+    "review_required": true,
+    "error_code": null,
+    "events": [
+      {
+        "event_type": "independent_review_started",
+        "timestamp": "2026-11-12T03:41:19.851766+00:00",
+        "event_id": "41b4f056e24cf66eeeac8301a7745eff52b9cd4dfc5846fc767327fd31622cac",
+        "review_id": "drev_867e2dd6846cf0446f25360484469fa943f2863bac1260062010290076d4ef35",
+        "audit_run_id": "aud_8bb87cafb5f34a58f098957d9d41c144c2c51009f6d6185869940930cb480263",
+        "question_attempt_id": "case_b9e5f6ea473043be8b60f33dfdaa19e8",
+        "transcription_version_id": "tr_7972a8538b924c4da6aca49f0c1a0094:1"
+      },
+      {
+        "event_type": "grader_reviewer_disagreement",
+        "criterion_id": "method",
+        "agreement": "DISAGREEMENT",
+        "event_id": "306d37dd59bbb8029721bc7398cd53209bae357c2967b7754684c2cec4a20d49",
+        "review_id": "drev_867e2dd6846cf0446f25360484469fa943f2863bac1260062010290076d4ef35",
+        "audit_run_id": "aud_8bb87cafb5f34a58f098957d9d41c144c2c51009f6d6185869940930cb480263",
+        "question_attempt_id": "case_b9e5f6ea473043be8b60f33dfdaa19e8",
+        "transcription_version_id": "tr_7972a8538b924c4da6aca49f0c1a0094:1",
+        "timestamp": "2026-11-12T03:41:19.853804+00:00"
+      },
+      {
+        "event_type": "grader_reviewer_agreement",
+        "criterion_id": "roots",
+        "agreement": "AGREEMENT",
+        "event_id": "7ccf20b31a5e5fdee820f11c13c7d58d6c47112e28c7783cb89cb7046a956ed3",
+        "review_id": "drev_867e2dd6846cf0446f25360484469fa943f2863bac1260062010290076d4ef35",
+        "audit_run_id": "aud_8bb87cafb5f34a58f098957d9d41c144c2c51009f6d6185869940930cb480263",
+        "question_attempt_id": "case_b9e5f6ea473043be8b60f33dfdaa19e8",
+        "transcription_version_id": "tr_7972a8538b924c4da6aca49f0c1a0094:1",
+        "timestamp": "2026-11-12T03:41:19.853804+00:00"
+      },
+      {
+        "event_type": "independent_review_uncertain",
+        "criterion_id": "check",
+        "agreement": "UNRESOLVED",
+        "event_id": "7c8d270986da586982df399759432f795b0f29d4079789ece8637db828fb50aa",
+        "review_id": "drev_867e2dd6846cf0446f25360484469fa943f2863bac1260062010290076d4ef35",
+        "audit_run_id": "aud_8bb87cafb5f34a58f098957d9d41c144c2c51009f6d6185869940930cb480263",
+        "question_attempt_id": "case_b9e5f6ea473043be8b60f33dfdaa19e8",
+        "transcription_version_id": "tr_7972a8538b924c4da6aca49f0c1a0094:1",
+        "timestamp": "2026-11-12T03:41:19.853804+00:00"
+      },
+      {
+        "event_type": "independent_review_completed",
+        "status": "COMPLETED",
+        "event_id": "b61acd759327c34c9ecad382c6a8a579aefd62f436469981d9bba6591c1d4678",
+        "review_id": "drev_867e2dd6846cf0446f25360484469fa943f2863bac1260062010290076d4ef35",
+        "audit_run_id": "aud_8bb87cafb5f34a58f098957d9d41c144c2c51009f6d6185869940930cb480263",
+        "question_attempt_id": "case_b9e5f6ea473043be8b60f33dfdaa19e8",
+        "transcription_version_id": "tr_7972a8538b924c4da6aca49f0c1a0094:1",
+        "timestamp": "2026-11-12T03:41:19.853804+00:00"
+      }
+    ]
+  },
+  "sha256": "fcb2cc8d0df40be5f21fa5840f79025227fd5c5658d52e963f17e17f85861707"
+}

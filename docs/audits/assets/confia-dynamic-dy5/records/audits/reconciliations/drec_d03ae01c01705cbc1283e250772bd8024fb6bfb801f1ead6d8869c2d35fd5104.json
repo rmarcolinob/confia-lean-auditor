@@ -1,0 +1,234 @@
+{
+  "data": {
+    "schema_version": "dynamic-reconciliation.v1",
+    "reconciliation_id": "drec_d03ae01c01705cbc1283e250772bd8024fb6bfb801f1ead6d8869c2d35fd5104",
+    "grader_audit_run_id": "aud_8bb87cafb5f34a58f098957d9d41c144c2c51009f6d6185869940930cb480263",
+    "independent_review_id": "drev_867e2dd6846cf0446f25360484469fa943f2863bac1260062010290076d4ef35",
+    "question_attempt_id": "case_b9e5f6ea473043be8b60f33dfdaa19e8",
+    "transcription_version_id": "tr_7972a8538b924c4da6aca49f0c1a0094:1",
+    "context": {
+      "engine_mode": "DYNAMIC",
+      "problem_id": "dyn_be4b3d0fd83041e3a7bd9dba710103a1",
+      "package_id": "dpkg_6d12dae6affb469992a632a7f1600bfe",
+      "package_version": 3,
+      "package_sha256": "1e089c63b5f0ae99021f5767627eadbff6a16a52c6289f116c759c94cf74833f",
+      "statement_version": 1,
+      "statement_sha256": "6236f1ccfaf7a944709567326b92432ba420d4399488c44a3ed241472153e0bd",
+      "preparation_id": "dprep_32ac176b146d494491f13e7435ad93a5",
+      "preparation_version": 1,
+      "preparation_sha256": "79edac55cc6b9675d7ae813937b1a501d66bece8c4cd48216ac44048bfd784b1",
+      "rubric_id": "drub_3842b787bc864770877bdd4c14015731",
+      "rubric_version": 1,
+      "rubric_sha256": "15808c83e6bdfc08fc1200b1272c879e092a677adbadc99f54dfd6defa365d23",
+      "allow_preparation_review": true,
+      "grader_version": "dynamic-grader.v1"
+    },
+    "assessment_id": "asmt_d16762eb00fb44e783317cba1877a877",
+    "assessment_definition_sha256": "c0b05fa3e743f708be8cf1be567695e8a75ba218ac5a89864ed9c296d80729e9",
+    "policy_profile": "FORMATIVE_LIST",
+    "policy_version": "dynamic-safe-automation.v1",
+    "grader_score_snapshot": "7.0",
+    "reviewer_score_snapshot": null,
+    "reconciled_suggested_score": "7",
+    "max_score": "10",
+    "criteria": [
+      {
+        "criterion_id": "method",
+        "max_points": "4",
+        "grader_points": "4",
+        "reviewer_points": null,
+        "grader_evidence": [
+          "S={3,4}"
+        ],
+        "reviewer_evidence": [],
+        "mathematical_verification": [],
+        "fidelity_binding_state": "SUPPORTED",
+        "sufficiency": "INSUFFICIENT",
+        "status": "SUFFICIENCY_DISAGREEMENT",
+        "reconciled_points": "4",
+        "automation": "REVIEW_ONLY",
+        "reason": "Resultado verdadeiro não substitui a justificativa exigida; nenhuma mudança automática.",
+        "review_required": true,
+        "technical_uncertainty": false,
+        "recovered_credit": "0",
+        "points_removed": "0"
+      },
+      {
+        "criterion_id": "roots",
+        "max_points": "3",
+        "grader_points": "3",
+        "reviewer_points": "3",
+        "grader_evidence": [
+          "S={3,4}"
+        ],
+        "reviewer_evidence": [
+          "S={3,4}"
+        ],
+        "mathematical_verification": [
+          {
+            "claim_id": "review_claim_1",
+            "start": 0,
+            "end": 7,
+            "text": "S={3,4}",
+            "normalized": "S={3,4}",
+            "claim_type": "ROOTS",
+            "subject": "y",
+            "dependencies": [],
+            "polarity": "POSITIVE",
+            "adoption": "ADOPTED",
+            "fidelity": "FAITHFUL",
+            "strategy_context": "UNKNOWN_STRATEGY",
+            "verification_status": "VERIFIED",
+            "verification_detail": "Checagem exata e vínculo com a equação original; sem certificado Lean.",
+            "verifier": "dynamic-exact-polynomial.v1",
+            "components": [
+              {
+                "kind": "root_membership",
+                "value": "3",
+                "status": "VERIFIED"
+              },
+              {
+                "kind": "root_membership",
+                "value": "4",
+                "status": "VERIFIED"
+              },
+              {
+                "kind": "claim",
+                "status": "VERIFIED",
+                "verifier": "dynamic-exact-polynomial.v1"
+              }
+            ],
+            "values": [
+              "3",
+              "4"
+            ],
+            "verified_values": [
+              "3",
+              "4"
+            ]
+          }
+        ],
+        "fidelity_binding_state": "SUPPORTED",
+        "sufficiency": "COMPLETE",
+        "status": "AGREEMENT_SUPPORTED",
+        "reconciled_points": "3",
+        "automation": "AUTO_ACCEPT",
+        "reason": "Concordância sustentada por fonte fiel, verificação local e obrigação aprovada.",
+        "review_required": false,
+        "technical_uncertainty": false,
+        "recovered_credit": "0",
+        "points_removed": "0"
+      },
+      {
+        "criterion_id": "check",
+        "max_points": "3",
+        "grader_points": "0",
+        "reviewer_points": "0",
+        "grader_evidence": [],
+        "reviewer_evidence": [],
+        "mathematical_verification": [],
+        "fidelity_binding_state": "SUPPORTED",
+        "sufficiency": "INSUFFICIENT",
+        "status": "AGREEMENT_UNVERIFIED",
+        "reconciled_points": "0",
+        "automation": "REVIEW_ONLY",
+        "reason": "Igualdade de pontos sem todas as condições de verificação/suficiência; revisão necessária.",
+        "review_required": true,
+        "technical_uncertainty": false,
+        "recovered_credit": "0",
+        "points_removed": "0"
+      }
+    ],
+    "review_required": true,
+    "review_reasons": [
+      "method: Resultado verdadeiro não substitui a justificativa exigida; nenhuma mudança automática.",
+      "check: Igualdade de pontos sem todas as condições de verificação/suficiência; revisão necessária."
+    ],
+    "technical_uncertainty": false,
+    "provenance": {
+      "audit_sha256": "c67fef0b711938231b0c237b9a07dc9057f34c15055d5201bed9abbaafebacaf",
+      "review_sha256": "fcb2cc8d0df40be5f21fa5840f79025227fd5c5658d52e963f17e17f85861707",
+      "source_sha256": "ec7e49b1c1f4bcef5d48dc03f33bb01850186a161511280f0c64739cd906d8e2",
+      "rubric_sha256": "c8a4ff85918fc7827d70ce1f736192e656a4a58fbf1773b613288651bec3b4a2",
+      "statement_sha256": "9ccc8b70b888357a32b8404c12648d940d3b7bfdefedd2db05f86a274ea39fa9",
+      "preparation_sha256": "48c4bc4994253cfb47826c96f352be2641c0d85c3cc192ff2a1881ccd4ad0c9b",
+      "authority": "source spans + exact local checks + approved obligations; never opinion consensus",
+      "code_content_sha256": "fa9b34631b4ca0ac3cd7afcb1b034f2cd38ae5d726ac738652b3229391f324ea"
+    },
+    "started_at": "2026-11-12T03:41:19.932003Z",
+    "completed_at": "2026-11-12T03:41:19.932706Z",
+    "events": [
+      {
+        "event_type": "dynamic_reconciliation_started",
+        "timestamp": "2026-11-12T03:41:19.932003+00:00",
+        "event_id": "c3b4e97724a6690dd8364aba8d672f243a50862c65ab473651221edfd212d8fd",
+        "reconciliation_id": "drec_d03ae01c01705cbc1283e250772bd8024fb6bfb801f1ead6d8869c2d35fd5104",
+        "grader_audit_run_id": "aud_8bb87cafb5f34a58f098957d9d41c144c2c51009f6d6185869940930cb480263",
+        "independent_review_id": "drev_867e2dd6846cf0446f25360484469fa943f2863bac1260062010290076d4ef35",
+        "question_attempt_id": "case_b9e5f6ea473043be8b60f33dfdaa19e8"
+      },
+      {
+        "event_type": "criterion_review_only",
+        "criterion_id": "method",
+        "old_points": "4",
+        "new_points": "4",
+        "reason": "Resultado verdadeiro não substitui a justificativa exigida; nenhuma mudança automática.",
+        "event_id": "e7d395df529fb5f6375570a1857d32e7d67170a6ddaefc4af81a0f14363d6380",
+        "reconciliation_id": "drec_d03ae01c01705cbc1283e250772bd8024fb6bfb801f1ead6d8869c2d35fd5104",
+        "grader_audit_run_id": "aud_8bb87cafb5f34a58f098957d9d41c144c2c51009f6d6185869940930cb480263",
+        "independent_review_id": "drev_867e2dd6846cf0446f25360484469fa943f2863bac1260062010290076d4ef35",
+        "question_attempt_id": "case_b9e5f6ea473043be8b60f33dfdaa19e8",
+        "timestamp": "2026-11-12T03:41:19.932706+00:00"
+      },
+      {
+        "event_type": "criterion_auto_accepted",
+        "criterion_id": "roots",
+        "old_points": "3",
+        "new_points": "3",
+        "reason": "Concordância sustentada por fonte fiel, verificação local e obrigação aprovada.",
+        "event_id": "1c8c234700276cf378870b46e826af30428d9e3cf1a65be30893e754cbf5bb9e",
+        "reconciliation_id": "drec_d03ae01c01705cbc1283e250772bd8024fb6bfb801f1ead6d8869c2d35fd5104",
+        "grader_audit_run_id": "aud_8bb87cafb5f34a58f098957d9d41c144c2c51009f6d6185869940930cb480263",
+        "independent_review_id": "drev_867e2dd6846cf0446f25360484469fa943f2863bac1260062010290076d4ef35",
+        "question_attempt_id": "case_b9e5f6ea473043be8b60f33dfdaa19e8",
+        "timestamp": "2026-11-12T03:41:19.932706+00:00"
+      },
+      {
+        "event_type": "criterion_review_only",
+        "criterion_id": "check",
+        "old_points": "0",
+        "new_points": "0",
+        "reason": "Igualdade de pontos sem todas as condições de verificação/suficiência; revisão necessária.",
+        "event_id": "58537cc98004f6bb46ac28f50fd3c8d3c54d7f7b089d3864929b972cf5967105",
+        "reconciliation_id": "drec_d03ae01c01705cbc1283e250772bd8024fb6bfb801f1ead6d8869c2d35fd5104",
+        "grader_audit_run_id": "aud_8bb87cafb5f34a58f098957d9d41c144c2c51009f6d6185869940930cb480263",
+        "independent_review_id": "drev_867e2dd6846cf0446f25360484469fa943f2863bac1260062010290076d4ef35",
+        "question_attempt_id": "case_b9e5f6ea473043be8b60f33dfdaa19e8",
+        "timestamp": "2026-11-12T03:41:19.932706+00:00"
+      },
+      {
+        "event_type": "reconciliation_review_required",
+        "reasons": [
+          "method: Resultado verdadeiro não substitui a justificativa exigida; nenhuma mudança automática.",
+          "check: Igualdade de pontos sem todas as condições de verificação/suficiência; revisão necessária."
+        ],
+        "event_id": "38f223580d765d80c68f880b4e12108bd5ff0f95874e1e8c9d209a5f5b010f57",
+        "reconciliation_id": "drec_d03ae01c01705cbc1283e250772bd8024fb6bfb801f1ead6d8869c2d35fd5104",
+        "grader_audit_run_id": "aud_8bb87cafb5f34a58f098957d9d41c144c2c51009f6d6185869940930cb480263",
+        "independent_review_id": "drev_867e2dd6846cf0446f25360484469fa943f2863bac1260062010290076d4ef35",
+        "question_attempt_id": "case_b9e5f6ea473043be8b60f33dfdaa19e8",
+        "timestamp": "2026-11-12T03:41:19.932706+00:00"
+      },
+      {
+        "event_type": "dynamic_reconciliation_completed",
+        "event_id": "3923769fe9ad67c2bcf5802ab187277021d5f94e3d372890ec8227460a804e28",
+        "reconciliation_id": "drec_d03ae01c01705cbc1283e250772bd8024fb6bfb801f1ead6d8869c2d35fd5104",
+        "grader_audit_run_id": "aud_8bb87cafb5f34a58f098957d9d41c144c2c51009f6d6185869940930cb480263",
+        "independent_review_id": "drev_867e2dd6846cf0446f25360484469fa943f2863bac1260062010290076d4ef35",
+        "question_attempt_id": "case_b9e5f6ea473043be8b60f33dfdaa19e8",
+        "timestamp": "2026-11-12T03:41:19.932706+00:00"
+      }
+    ]
+  },
+  "sha256": "97edb988b3345424fb7d521a27c6159d27d587240434093e7eb0f4280f764684"
+}

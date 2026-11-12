@@ -1,0 +1,8 @@
+Browser tab: 6, Title: "ConfIA — Confiabilidade e Explicabilidade", URL: "http://127.0.0.1:8770/tme?case_id=case_b9e7b902a0b0484cb6c35ffd19c55814".
+The following is a diff from the previous accessibility tree with ~ and + representing changed and added elements, respectively. Removed elements are summarized by ID range.
+Removed element IDs: 265-266
++						275 container
++							276 button (expanded) Histórico de confirmações, Secondary Actions: Collapse
++								277 text Histórico de confirmações
++							278 text Confirmação anterior invalidada · Primeira análise: 6.0 · Sugestão reconciliada: 10 · Nota final: 10
+The focused UI element is 276 button (expanded) Histórico de confirmações, Secondary Actions: Collapse

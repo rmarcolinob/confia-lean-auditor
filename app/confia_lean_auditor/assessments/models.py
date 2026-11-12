@@ -16,6 +16,8 @@ class AssessmentModel(BaseModel):
 
 
 class Assessment(AssessmentModel):
+    dynamic_policy_profile: Optional[Literal["FORMATIVE_LIST", "SCHOOL_EXAM"]] = None
+    dynamic_policy_version: Optional[Literal["dynamic-safe-automation.v1"]] = None
     assessment_id: str = Field(pattern=r"^asmt_[0-9a-f]{32}$")
     title: str = Field(min_length=1, max_length=160)
     instructions: str = Field(default="", max_length=10000)
@@ -37,6 +39,8 @@ class Assessment(AssessmentModel):
     @model_serializer(mode="wrap")
     def legacy_shape(self, handler):
         data = handler(self)
+        for key in ("dynamic_policy_profile", "dynamic_policy_version"):
+            if getattr(self, key) is None: data.pop(key, None)
         if self.scope == "INSTITUTIONAL" and "scope" not in self.model_fields_set:
             data.pop("scope", None)
         return data
@@ -52,6 +56,8 @@ class Assessment(AssessmentModel):
 
     @model_validator(mode="after")
     def coherent(self):
+        if (self.dynamic_policy_profile is None) != (self.dynamic_policy_version is None):
+            raise ValueError("complete policy configuration required")
         institutions = (self.network_id, self.school_id, self.classroom_id)
         if self.scope == "INSTITUTIONAL" and not all(institutions):
             raise ValueError("institutional assessment requires network, school and classroom")

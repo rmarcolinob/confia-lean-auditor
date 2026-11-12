@@ -78,7 +78,7 @@ def case_entry(case):
                 exam_code=case.external_candidate_ref, problem_id=case.problem_id,
                 source_mode=case.source_mode, submission_id=case.submission_id,
                 created_at=stamp(case.created_at), updated_at=stamp(case.created_at),
-                decided=case.status == "DECIDED", transcription=None,
+                dynamic=bool(case.dynamic_context), decided=case.status == "DECIDED", transcription=None,
                 recognition=None, audit=None)
 
 
@@ -90,6 +90,8 @@ def apply_transcription(entry, record, revision, accepted_at=None):
     if current and (candidate["created_at"], candidate["id"], candidate["revision"]) < (
             current["created_at"], current["id"], current["revision"]):
         return
+    if entry.get("dynamic") and current and candidate != current:
+        entry["decided"] = False
     entry["transcription"] = candidate
     audit = entry["audit"]
     if audit and (audit["transcription_id"], audit["revision"]) != (candidate["id"], candidate["revision"]):
@@ -120,8 +122,9 @@ def apply_audit(entry, run):
     # Match the existing workspace runFor: prefer the newest current COMPLETED
     # run; a technical retry failure does not invalidate an earlier valid result.
     def rank(audit):
-        return (audit["status"] == "COMPLETED", audit["created_at"], audit["id"])
+        return (True if entry.get("dynamic") else audit["status"] == "COMPLETED", audit["created_at"], audit["id"])
     if not previous or rank(candidate) > rank(previous):
+        if entry.get("dynamic") and previous and previous["id"] != candidate["id"]: entry["decided"] = False
         entry["audit"] = candidate
     touch(entry, run.created_at)
 
@@ -397,6 +400,19 @@ def rebuild_index():
         entry = by_submission.get(raw.get("submission_id"))
         if entry:
             apply_audit(entry, audits._read(path.stem))
+    # Rebuild the disposable Dynamic suggestion from its associated artifact,
+    # without rewriting the grader run or using Home as a grading authority.
+    from confia_lean_auditor.dynamic.reconciliation_service import ReconciliationService
+    for case in records:
+        if not case.dynamic_context or not case.submission_id: continue
+        entry=entries[case.case_id]
+        entry["decided"]=cases.decision(case.case_id,SimpleNamespace(user_id=case.created_by_user_id)) is not None
+        service=ReconciliationService(audits); run=service.current_run(case)
+        reconciliation=service.current(case,run.audit_run_id) if run and run.status=="COMPLETED" else None
+        if reconciliation and entry["audit"]:
+            entry["audit"]["grader_score"]=entry["audit"]["score"]
+            entry["audit"]["score"]=float(reconciliation["reconciled_suggested_score"])
+            entry["audit"]["inconclusive"]=reconciliation["review_required"]
     with index.locked():
         if (index.path.stat() if index.path.exists() else None) != signature:
             raise ConcurrentProjectionUpdate("concurrent operational update; retry reconstruction")

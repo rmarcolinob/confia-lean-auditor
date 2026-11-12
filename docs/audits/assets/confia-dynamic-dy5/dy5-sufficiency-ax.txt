@@ -1,0 +1,126 @@
+Browser tab: 6, Title: "ConfIA — Confiabilidade e Explicabilidade", URL: "http://127.0.0.1:8770/tme?case_id=case_b9e5f6ea473043be8b60f33dfdaa19e8".
+1 AXWebArea ConfIA — Confiabilidade e Explicabilidade, URL: 127.0.0.1:8770/tme?case_id=case_b9e5f6ea473043be8b60f33dfdaa19e8
+	2 link Description: Ir para conteúdo, Value: 127.0.0.1:8770/tme?case_id=case_b9e5f6ea473043be8b60f33dfdaa19e8#main
+	3 container
+		4 text ConfIA Plataforma de
+		5 text correção assistida
+		6 button (collapsed) Description: Perfil do avaliador, ID: evaluator-avatar, Secondary Actions: Expand
+	7 container app
+		8 container
+			9 button Voltar para fila
+			10 heading Prova DY5-SUFICIENCIA, Value: 1
+				11 text Prova DY5-SUFICIENCIA
+			12 text Aguardando decisão Questão 1 · 1 questão disponível · Questão inédita · Resolução textual
+			13 container Questões disponíveis desta prova
+				14 button Q1 · Questão atual
+			15 content list Progresso da correção
+				16 text Entrada
+				17 text Transcrição
+				18 text Análise
+				19 text Decisão
+		20 container
+			21 heading Enunciado, Value: 2
+				22 text Enunciado
+			23 button (collapsed) Ver enunciado completo, Secondary Actions: Expand
+			24 text Resolva no conjunto dos reais: 2y² - 14y + 24 = 0.
+		25 container
+			26 container solution-pane
+				27 container
+					28 heading Solução do participante, Value: 2
+						29 text Solução do participante
+					30 button (collapsed) Description: Expandir solução, Secondary Actions: Expand
+				31 tab group Visualização da solução
+					32 tab (selected, settable, boolean) Original, Value: 1, ID: tab-original
+					33 tab (selectable, settable, boolean) Transcrição, Value: 0, ID: tab-transcript
+					34 tab (selectable, settable, boolean) Comparar, Value: 0, ID: tab-compare
+				35 container Description: Original, ID: solution-views
+					36 container Original
+						37 text S={3,4}
+				38 button (collapsed) Originais e histórico, Secondary Actions: Expand
+					39 text Originais e histórico
+			40 splitter Description: Redimensionar solução e análise, Help: Arraste ou use as setas. Home: 45%; End: 70%; duplo clique: 60%., Value: 60
+			41 container Description: Análise ConfIA, ID: analysis-pane
+				42 container
+					43 heading ANÁLISE CONFIA, Value: 2
+						44 text ANÁLISE CONFIA
+					45 button (expanded) Recolher análise, Secondary Actions: Collapse
+					46 container analysis-content
+						47 container Resultado sugerido
+							48 text Sugestão ConfIA
+							49 text 7 / 10
+							50 text Revisão Necessária
+							51 text Sugestão reconciliada · Primeira análise preservada: 7 / 10
+							52 text Revisão necessária · sugestão provisória
+							53 text Modo: Correção dinâmica
+						54 container Cobertura da análise
+							55 heading Cobertura da análise, Value: 3
+								56 text Cobertura da análise
+							57 text 1/3 critérios decididos
+							58 text 3 critérios · 1 decididos · 0 claims formalmente verificados · 2 indeterminados
+						59 container Revisão independente
+							60 button (collapsed) Revisão independente · 2 critérios requerem revisão, Secondary Actions: Expand
+								61 text Revisão independente · 2 critérios requerem revisão
+							62 button Solicitar nova revisão independente
+						63 container Reconciliação da sugestão
+							64 button (collapsed) Reconciliação · 2 critérios requerem revisão, Secondary Actions: Expand
+								65 text Reconciliação · 2 critérios requerem revisão
+						66 button (collapsed) Evidências e verificações da resolução, Secondary Actions: Expand
+							67 text Evidências e verificações da resolução
+						68 container
+							69 heading Critérios da primeira análise, Value: 3
+								70 text Critérios da primeira análise
+							71 button (collapsed) Indeterminado Critério 1 Indeterminado Justificar a resolução por transformações equivalentes., Secondary Actions: Expand
+								72 image Indeterminado
+								73 text Critério 1
+								74 text Indeterminado
+								75 text Justificar a resolução por transformações equivalentes.
+							76 button (collapsed) Secondary Actions: Expand, Sustentado Critério 2 3 / 3 Obter todas as raízes reais. Crédito parcial proporcional às raízes corretas.
+								77 image Sustentado
+								78 text Critério 2
+								79 text 3 / 3
+								80 text Obter todas as raízes reais. Crédito parcial proporcional às raízes corretas.
+							81 button (collapsed) Secondary Actions: Expand, Indeterminado Critério 3 Indeterminado Verificar as raízes por substituição. Crédito parcial proporcional às raízes corretas.
+								82 image Indeterminado
+								83 text Critério 3
+								84 text Indeterminado
+								85 text Verificar as raízes por substituição. Crédito parcial proporcional às raízes corretas.
+						86 container
+							87 heading Passos identificados, Value: 3
+								88 text Passos identificados
+							89 checkbox Description: Passo 1: S={3,4}. Verificado no escopo, Value: 1
+								90 text 01
+								91 text S={3,4}
+								92 image Sustentado
+							93 text S={3,4}
+							94 text Verificado no escopo
+							95 text Trecho preservado: caracteres 0–7 da transcrição aceita.
+						96 container
+							97 heading Verificação matemática, Value: 3
+								98 text Verificação matemática
+							99 text 0 claims verificados formalmente 1 não formalizado 0 falhas técnicas
+							100 button (collapsed) Detalhes da verificação, Secondary Actions: Expand
+								101 text Detalhes da verificação
+						102 button (collapsed) Resumo e evidências da análise, Secondary Actions: Expand
+							103 text Resumo e evidências da análise
+						104 button (collapsed) Detalhes técnicos, Secondary Actions: Expand
+							105 text Detalhes técnicos
+		106 container Description: Decisão do avaliador, ID: evaluator-decision
+			107 heading Decisão do avaliador, Value: 2
+				108 text Decisão do avaliador
+			109 text Sugestão ConfIA
+			110 text 7 / 10
+			111 container
+				112 text Pontuação final
+				113 stepper (settable) Pontuação final
+				114 button Usar sugestão
+				115 button Ajustar
+				116 button (collapsed) Adicionar observação, Secondary Actions: Expand
+					117 text Adicionar observação
+				118 button Finalizar correção
+	119 container Description: Navegação principal, ID: home-bottom-nav
+		120 button Início
+		121 button Fila
+		122 button Nova
+		123 button Resultados
+
+The focused UI element is 1 AXWebArea ConfIA — Confiabilidade e Explicabilidade, URL: 127.0.0.1:8770/tme?case_id=case_b9e5f6ea473043be8b60f33dfdaa19e8

@@ -1,6 +1,6 @@
 """Teacher API for preparation only. Does not route to any correction engine."""
 import os
-from typing import Optional
+from typing import Optional, Literal
 from fastapi import APIRouter, Depends, HTTPException, Response
 from pydantic import ValidationError
 from confia_lean_auditor.auth.dependencies import auth_enabled, require_role
@@ -138,6 +138,7 @@ class DynamicAttemptRequest(BaseModel):
     external_candidate_ref: str = Field(min_length=1,max_length=80,pattern=r'^[A-Za-z0-9._:/-]+$')
     solution: str = Field(min_length=1,max_length=20000)
     allow_preparation_review: bool = False
+    policy_profile: Optional[Literal["FORMATIVE_LIST", "SCHOOL_EXAM"]] = None
 
     @field_validator('solution')
     @classmethod
@@ -159,6 +160,9 @@ def create_attempt(problem_id: str, body: DynamicAttemptRequest, user=Depends(re
     receipt=guarded(receive_text,store(),case,user,body.solution)
     case=guarded(case_store().bind,case.case_id,receipt.submission_id,user)
     guarded(store().create_transcription,receipt.submission_id,CreateTranscriptionRequest(reviewer_reference=user.user_id,segments=[dict(segment_id='text:0',page_index=0,order=0,kind='text',text=body.solution)]))
+    if body.policy_profile is not None:
+        from .reconciliation_service import configure_activity
+        guarded(configure_activity,case,body.policy_profile)
     return case
 
 
@@ -193,4 +197,69 @@ def independent_review(case_id: str,run_id: str,body: IndependentReviewRequest,r
     response.headers['Cache-Control']='no-store'
     guarded(evaluator_actor_for_review,user)
     case=case_for(case_id,user)
-    return guarded(independent_review_service().execute,case,run_id,body.execution_key)
+    from confia_lean_auditor.tme.human_decisions import question_lock
+    with question_lock(case_id,user):
+        result=guarded(independent_review_service().execute,case,run_id,body.execution_key)
+        from .human_decisions import project_current, current
+        reconciled=reconciliation_service().current(case,run_id)
+        project_current(case,reconciled,confirmed=current(case) is not None)
+        return result
+
+
+from .reconciliation_models import PolicyProfile
+
+class ConfigurePolicy(BaseModel):
+    model_config=ConfigDict(extra='forbid')
+    policy_profile: PolicyProfile
+
+class ReconcileRequest(BaseModel):
+    model_config=ConfigDict(extra='forbid')
+    independent_review_id: str = Field(pattern=r'^drev_[0-9a-f]{64}$')
+
+
+def reconciliation_service():
+    from .reconciliation_service import ReconciliationService
+    from confia_lean_auditor.submission_audits.router import service
+    return ReconciliationService(service())
+
+
+def reconciliation_case(case_id,user):
+    from confia_lean_auditor.tme.router import case_for
+    guarded(evaluator_actor_for_review,user)
+    case=case_for(case_id,user)
+    if not case.dynamic_context: raise HTTPException(409,'Reconciliação exige tentativa Dynamic.')
+    return case
+
+@router.get('/attempts/{case_id}/policy')
+def get_policy(case_id: str,response: Response,user=Depends(require_tme_evaluator)):
+    from .reconciliation_service import activity
+    response.headers['Cache-Control']='no-store'
+    return guarded(activity,reconciliation_case(case_id,user))
+
+@router.post('/attempts/{case_id}/policy',status_code=201)
+def configure_policy(case_id: str,body: ConfigurePolicy,response: Response,user=Depends(require_tme_evaluator)):
+    from .reconciliation_service import configure_activity
+    from confia_lean_auditor.tme.human_decisions import question_lock
+    case=reconciliation_case(case_id,user); response.headers['Cache-Control']='no-store'
+    with question_lock(case_id,user): return guarded(configure_activity,case,body.policy_profile)
+
+@router.get('/attempts/{case_id}/audits/{run_id}/reconciliations')
+def reconciliations(case_id: str,run_id: str,response: Response,user=Depends(require_tme_evaluator)):
+    response.headers['Cache-Control']='no-store'
+    return guarded(reconciliation_service().list,reconciliation_case(case_id,user),run_id)
+
+@router.post('/attempts/{case_id}/audits/{run_id}/reconciliations',status_code=201)
+def reconcile(case_id: str,run_id: str,body: ReconcileRequest,response: Response,user=Depends(require_tme_evaluator)):
+    from confia_lean_auditor.tme.human_decisions import question_lock
+    case=reconciliation_case(case_id,user); response.headers['Cache-Control']='no-store'
+    with question_lock(case_id,user):
+        result=guarded(reconciliation_service().execute,case,run_id,body.independent_review_id)
+        from .human_decisions import project_current, current
+        project_current(case,result["reconciliation"],confirmed=current(case) is not None)
+        return result
+
+@router.get('/attempts/{case_id}/human-decisions')
+def dynamic_decisions(case_id: str,response: Response,user=Depends(require_tme_evaluator)):
+    from .human_decisions import history
+    response.headers['Cache-Control']='no-store'
+    return guarded(history,reconciliation_case(case_id,user))

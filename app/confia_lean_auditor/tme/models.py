@@ -95,6 +95,14 @@ class ScanUpload(SubmissionModel):
 
 
 class EvaluatorDecisionRequest(SubmissionModel):
+    reconciliation_id: Optional[str] = Field(default=None, pattern=r"^drec_[0-9a-f]{64}$")
+    @model_serializer(mode="wrap")
+    def preserve_decision_shape(self, handler):
+        data=handler(self)
+        for key in ("reconciliation_id", "reconciliation_sha256", "grader_suggested_points", "independent_review_id", "transcription_version_id", "review_required_snapshot", "review_reasons_snapshot", "human_decision_id"):
+            if key not in self.model_fields_set: data.pop(key,None)
+        return data
+
     audit_run_id: Optional[str] = Field(default=None, pattern=r"^aud_[0-9a-f]{64}$")
     max_points: Decimal = Field(gt=0, le=1000, decimal_places=2)
     final_points: Points
@@ -103,6 +111,13 @@ class EvaluatorDecisionRequest(SubmissionModel):
 
 
 class EvaluatorDecision(EvaluatorDecisionRequest):
+    reconciliation_sha256: Optional[Sha256] = None
+    grader_suggested_points: Optional[Points] = None
+    independent_review_id: Optional[str] = None
+    transcription_version_id: Optional[str] = None
+    review_required_snapshot: Optional[bool] = None
+    review_reasons_snapshot: list[str] = Field(default_factory=list)
+    human_decision_id: Optional[str] = None
     case_id: str
     decided_by_user_id: str
     decided_at: datetime

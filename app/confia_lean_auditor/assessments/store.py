@@ -34,6 +34,8 @@ def definition_hash(document: AssessmentDocument) -> str:
     definition = {field: raw[field] for field in fields}
     if assessment.scope == "TME":
         definition["scope"] = "TME"
+    if assessment.dynamic_policy_profile is not None:
+        definition.update(dynamic_policy_profile=assessment.dynamic_policy_profile, dynamic_policy_version=assessment.dynamic_policy_version)
     definition["items"] = [item.model_dump(mode="json") for item in sorted(document.items, key=lambda x: x.order)]
     return hashlib.sha256(json.dumps(definition, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8")).hexdigest()
 
@@ -104,7 +106,7 @@ class AssessmentStore:
             return self._read(assessment_id)
 
     def create_tme(self, *, title, instructions, teacher_user_id, academic_year,
-                   opens_at, closes_at, items, assessment_id=None):
+                   opens_at, closes_at, items, assessment_id=None, dynamic_policy_profile=None, dynamic_policy_version=None):
         """Publish a complete roster atomically; no school/user is fabricated."""
         assessment_id = assessment_id or f"asmt_{uuid4().hex}"
         now = datetime.now(timezone.utc)
@@ -112,7 +114,7 @@ class AssessmentStore:
             assessment_id=assessment_id, title=title, instructions=instructions,
             teacher_user_id=teacher_user_id, academic_year=academic_year,
             opens_at=opens_at, closes_at=closes_at, created_at=now,
-            scope="TME", schema_version="2.0"), items=[
+            scope="TME", schema_version="2.0", dynamic_policy_profile=dynamic_policy_profile, dynamic_policy_version=dynamic_policy_version), items=[
                 AssessmentItem(assessment_id=assessment_id, assessment_item_id=f"ait_{uuid4().hex}",
                     problem_id=item.problem_id, points=item.points, order=index)
                 for index, item in enumerate(items, 1)])

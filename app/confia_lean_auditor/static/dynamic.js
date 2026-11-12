@@ -222,11 +222,13 @@
         n("p","A aprovação da rubrica não elimina avisos ou incertezas e não substitui a decisão final do professor."));
       if(doc.correction_available) {
         const form=n("form",null,"dynamic-form"),code=input("Código da resolução"),solution=input("Resolução do aluno","","textarea"),allow=input("Permitir análise provisória com preparação em revisão","","checkbox");
+        const policy=n("select");policy.setAttribute("aria-label","Perfil da atividade");
+        for(const [value,title] of [["SCHOOL_EXAM","Prova escolar"],["FORMATIVE_LIST","Lista formativa"]]){const option=n("option",title);option.value=value;policy.append(option);}policy.value="SCHOOL_EXAM";
         code.required=true;code.maxLength=80;code.pattern="[A-Za-z0-9._:/-]+";solution.required=true;solution.maxLength=20000;solution.rows=8;
-        append(form,label("Código pseudônimo da resolução",code),label("Resolução do aluno",solution),label("Permitir análise provisória com preparação em revisão",allow));
+        append(form,label("Código pseudônimo da resolução",code),label("Resolução do aluno",solution),label("Perfil da atividade",policy),label("Permitir análise provisória com preparação em revisão",allow));
         const submit=n("button","Receber resolução e abrir correção","tme-button");submit.type="submit";form.appendChild(submit);
         form.addEventListener("submit",async event=>{event.preventDefault();let attempt;
-          await perform(async()=>{attempt=await request(`/dynamic/problems/${pid}/attempts`,{external_candidate_ref:code.value,solution:solution.value,allow_preparation_review:allow.checked});},"Recebendo resolução…");
+          await perform(async()=>{attempt=await request(`/dynamic/problems/${pid}/attempts`,{external_candidate_ref:code.value,solution:solution.value,allow_preparation_review:allow.checked,policy_profile:policy.value});},"Recebendo resolução…");
           if(attempt && !disposed)onOpenAttempt(attempt.case_id);
         });next.appendChild(form);
       }

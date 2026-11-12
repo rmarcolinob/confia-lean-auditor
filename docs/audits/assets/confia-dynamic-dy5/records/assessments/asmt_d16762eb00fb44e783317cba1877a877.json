@@ -1,0 +1,32 @@
+{
+  "assessment": {
+    "dynamic_policy_profile": "FORMATIVE_LIST",
+    "dynamic_policy_version": "dynamic-safe-automation.v1",
+    "assessment_id": "asmt_d16762eb00fb44e783317cba1877a877",
+    "title": "Atividade Dynamic",
+    "instructions": "",
+    "teacher_user_id": "tme-demo-evaluator",
+    "scope": "TME",
+    "network_id": null,
+    "school_id": null,
+    "classroom_id": null,
+    "academic_year": 2026,
+    "status": "PUBLISHED",
+    "opens_at": "2026-11-12T03:41:19.720168Z",
+    "closes_at": "2027-11-12T03:41:19.720168Z",
+    "created_at": "2026-11-12T03:41:19.720241Z",
+    "published_at": "2026-11-12T03:41:19.720241Z",
+    "closed_at": null,
+    "definition_sha256": "c0b05fa3e743f708be8cf1be567695e8a75ba218ac5a89864ed9c296d80729e9",
+    "schema_version": "2.0"
+  },
+  "items": [
+    {
+      "assessment_item_id": "ait_c7b03d1759b34fe1a43dd66d691732b7",
+      "assessment_id": "asmt_d16762eb00fb44e783317cba1877a877",
+      "problem_id": "dyn_be4b3d0fd83041e3a7bd9dba710103a1",
+      "order": 1,
+      "points": 10.0
+    }
+  ]
+}

@@ -137,6 +137,10 @@ class CaseStore:
 
     def decision(self, case_id, user):
         self.for_user(case_id, user)
+        case = self.read(case_id)
+        if case.dynamic_context:
+            from confia_lean_auditor.dynamic.human_decisions import current
+            return current(case)
         path = self.folder(case_id) / "decision.json"
         if not path.exists():
             return None

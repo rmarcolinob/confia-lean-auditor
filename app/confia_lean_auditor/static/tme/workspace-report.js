@@ -87,13 +87,14 @@
   function render(data, host, options) {
     if (data.schema_version === "tme-audit-result.v1") return renderTME(data, host, options);
     const p = root.ConfIAReport.presentation, saved = options.uiState || {};
+    const reconciliation=data.engine_mode==="DYNAMIC"?options.reconciliation:null, shownScore=reconciliation?Number(reconciliation.reconciled_suggested_score):data.score;
     const math = (tag, value, cls) => { const el = n(tag, null, cls); root.ConfiaRecognitionView.renderMathText(el, String(value || "")); return el; };
     const items = p.rubricItems(data), decided = items.filter(p.isDecided), checks = data.student_claim_checks || [];
     const formalStatus = check => p.formalStatus(check) === "verified" && (!check.compiled || !check.lean_file) ? "unverified" : p.formalStatus(check);
     const report = n("div", null, "workspace-report");
-    const globalState = data.engine_mode==="DYNAMIC" ? (data.review_required?"Revisão necessária":"Análise concluída") : options.auditRun?.status === "FAILED" ? "Falha técnica" : data.rubric_assessment?.assessment_status === "partial" ? "Parcialmente decidida" : !finite(data.score) ? "Inconclusiva" : "Análise concluída";
+    const globalState = data.engine_mode==="DYNAMIC" ? ((reconciliation?reconciliation.review_required:data.review_required)?"Revisão necessária":"Análise concluída") : options.auditRun?.status === "FAILED" ? "Falha técnica" : data.rubric_assessment?.assessment_status === "partial" ? "Parcialmente decidida" : !finite(data.score) ? "Inconclusiva" : "Análise concluída";
     const summary = n("section", null, "review-outcome"); summary.setAttribute("aria-label", "Resultado sugerido");
-    summary.append(n("span", "Sugestão ConfIA", "quiet-label"), n("p", finite(data.score) ? `${number(data.score)} / ${number(data.max_score)}` : "Pontuação não determinada", "review-score"), n("p", globalState, "review-verdict"));
+    summary.append(n("span", "Sugestão ConfIA", "quiet-label"), n("p", finite(shownScore) ? `${number(shownScore)} / ${number(data.max_score)}` : "Pontuação não determinada", "review-score"), n("p", globalState, "review-verdict"));
     const coverage = n("section", null, "coverage"); coverage.setAttribute("aria-label", "Cobertura da análise");
     coverage.append(n("h3", "Cobertura da análise"), n("p", `${decided.length}/${items.length} critérios decididos`, "coverage-headline"));
     const bar = n("div", null, "coverage-track"); bar.setAttribute("aria-hidden", "true");
@@ -101,9 +102,12 @@
     const verified = checks.filter(check => formalStatus(check) === "verified").length;
     coverage.append(bar, n("p", `${items.length} critérios · ${decided.length} decididos · ${counted(verified, "claim formalmente verificado", "claims formalmente verificados")} · ${counted(items.length - decided.length, "indeterminado", "indeterminados")}`, "coverage-stats"));
     report.append(summary, coverage);
-    if(data.engine_mode==="DYNAMIC")report.append(independentReviewPanel(data,options));
+    if(data.engine_mode==="DYNAMIC"){
+      report.append(independentReviewPanel(data,options),reconciliationPanel(data,options));
+      if(reconciliation)summary.append(n("p",`Sugestão reconciliada · Primeira análise preservada: ${number(data.score)} / ${number(data.max_score)}`));
+    }
     if(data.engine_mode==="DYNAMIC") {
-      summary.append(n("p",data.review_required?"Revisão necessária · sugestão provisória":"Sugestão provisória · decisão do professor","formal-warning"));
+      summary.append(n("p",(reconciliation?reconciliation.review_required:data.review_required)?"Revisão necessária · sugestão provisória":"Sugestão provisória · decisão do professor","formal-warning"));
       summary.append(n("p","Modo: Correção dinâmica","quiet-label"));
       for(const warning of data.uncertainty||[])summary.append(n("p",warning,"formal-warning"));
       const evidence=n("details");evidence.append(n("summary","Evidências e verificações da resolução"));
@@ -111,7 +115,7 @@
       for(const claim of data.analysis?.claims||[])evidence.append(n("p",`${claim.text} — ${labels[claim.verification_status]||claim.verification_status}. ${claim.verification_detail}`));
       report.append(evidence);
     }
-    const section = n("section", null, "dense-criteria"); section.appendChild(n("h3", "Critérios de correção"));
+    const section = n("section", null, "dense-criteria"); section.appendChild(n("h3", reconciliation?"Critérios da primeira análise":"Critérios de correção"));
     saved.criteriaOpen ||= {};
     items.forEach((item, i) => {
       const row = n("details", null, "audit-criterion"); row.dataset.criterionId = item.id; row.dataset.mathematicalStatus = item.mathematical_status || "indeterminate"; row.dataset.verificationStatus=item.verification_status||"not_available";
@@ -168,12 +172,15 @@
   function independentReviewPanel(data,options) {
     const panel=n("section",null,"independent-review"), view=options.independentReview, record=view?.review, comparison=record?.comparison;
     panel.setAttribute("aria-label","Revisão independente");
-    const details=n("details"), title=record?.status==="FAILED"?"Revisão não concluída":!comparison?"Ainda não solicitada":comparison.conflicting_criteria.length?`${comparison.conflicting_criteria.length} divergência${comparison.conflicting_criteria.length===1?" requer":"s requerem"} atenção`:`Concordância: ${comparison.agreement_count}/${comparison.criteria.length} critérios`;
+    const details=n("details");let title=record?.status==="FAILED"?"Revisão não concluída":!comparison?"Ainda não solicitada":comparison.conflicting_criteria.length?`${comparison.conflicting_criteria.length} divergência${comparison.conflicting_criteria.length===1?" requer":"s requerem"} atenção`:`Concordância: ${comparison.agreement_count}/${comparison.criteria.length} critérios`;
+    const reconciled=options.reconciliation,adjusted=reconciled?.criteria.filter(c=>c.automation.startsWith("AUTO_ADJUST")).length||0,pending=reconciled?.criteria.filter(c=>c.automation==="REVIEW_ONLY").length||0;
+    if(reconciled && (adjusted||pending))title=[adjusted?`${adjusted} divergência${adjusted===1?" resolvida":"s resolvidas"}`:"",pending?`${pending} critério${pending===1?" requer":"s requerem"} revisão`:""].filter(Boolean).join(" · ");
     details.append(n("summary",`Revisão independente · ${title}`));
+    if(reconciled)details.append(n("p","Comparação inicial preservada; consulte a decisão por critério na reconciliação."));
     details.append(n("p","A revisão não altera a sugestão original nem a decisão do professor."));
     if(view?.stale)details.append(n("p","Revisão de uma versão anterior; não representa a transcrição atual.","formal-warning"));
     if(record?.status==="FAILED")details.append(n("p","Não foi possível concluir a revisão. Tente novamente; nenhum acordo ou nova nota foi presumido.","formal-warning"));
-    if(view?.review_required)details.append(n("p","Revisão necessária. Divergências e incertezas permanecem pendentes.","formal-warning"));
+    if(view?.review_required && !reconciled)details.append(n("p","Revisão necessária. Divergências e incertezas permanecem pendentes.","formal-warning"));
     const fmt=value=>value==null?"Indeterminado":String(value).replace(".",",");
     for(const item of comparison?.criteria||[]) {
       const row=n("details"), rubric=data.decisions?.find(c=>c.criterion_id===item.criterion_id), opinion=record.phase_a?.criterion_reviews.find(c=>c.criterion_id===item.criterion_id);
@@ -187,6 +194,31 @@
     if(options.reviewError)panel.append(n("p",options.reviewError,"formal-warning"));
     const action=n("button",options.uiState?.reviewPending?"Revisando independentemente…":record?"Solicitar nova revisão independente":"Solicitar revisão independente","secondary");action.type="button";action.disabled=Boolean(options.reviewBusy || options.auditRun?.stale);action.addEventListener("click",()=>options.onIndependentReview?.());
     panel.append(details,action);return panel;
+  }
+  function reconciliationPanel(data,options){
+    const panel=n("section",null,"dynamic-reconciliation"),r=options.reconciliation,details=n("details"),fmt=v=>v==null?"Indeterminado":String(v).replace(".",",");
+    panel.setAttribute("aria-label","Reconciliação da sugestão");
+    const pending=r?.criteria.filter(c=>c.automation==="REVIEW_ONLY").length||0,changed=r?.criteria.filter(c=>c.automation.startsWith("AUTO_ADJUST")).length||0;
+    details.append(n("summary",r?`Reconciliação · ${pending?`${pending} critério${pending===1?" requer":"s requerem"} revisão`:changed?`${changed} divergência${changed===1?" resolvida":"s resolvidas"}`:"Evidência compatível"}`:"Reconciliação · Pendente"));
+    details.append(n("p","A sugestão reconciliada usa evidência e rubrica. Concordância entre agentes não é prova. A nota final depende da confirmação do professor."));
+    if(r){
+      details.append(n("p",`Perfil: ${r.policy_profile==="FORMATIVE_LIST"?"Lista formativa":"Prova escolar"}`),n("p",`Primeira análise: ${fmt(r.grader_score_snapshot)} · Sugestão reconciliada: ${fmt(r.reconciled_suggested_score)}`));
+      for(const c of r.criteria){const row=n("details"),label=data.decisions?.find(d=>d.criterion_id===c.criterion_id)?.description||c.criterion_id;row.append(n("summary",`${label} · Reconciliação: ${fmt(c.reconciled_points)} / ${fmt(c.max_points)}`),n("p",`Primeira análise: ${fmt(c.grader_points)} · Revisão: ${fmt(c.reviewer_points)} · Reconciliação: ${fmt(c.reconciled_points)}`),n("p",c.reason),n("p",c.automation==="REVIEW_ONLY"?"Pontos provisórios preservados · revisão docente necessária":"Decisão sustentada no escopo verificável"));details.append(row);}
+      for(const reason of r.review_reasons||[])details.append(n("p",reason,"formal-warning"));
+    }
+    panel.append(details);
+    if(options.reconciliationError)panel.append(n("p",options.reconciliationError,"formal-warning"));
+    if(!r){
+      const select=n("select");select.setAttribute("aria-label","Perfil da atividade");
+      for(const [value,label] of [["SCHOOL_EXAM","Prova escolar — divergências exigem revisão"],["FORMATIVE_LIST","Lista formativa — ajustes verificáveis permitidos"]]){const option=n("option",label);option.value=value;select.append(option);}
+      select.value=options.dynamicPolicy?.policy_profile||options.uiState?.policyDraft||"SCHOOL_EXAM";select.disabled=Boolean(options.dynamicPolicy||options.reviewBusy);
+      select.addEventListener("change",()=>{if(options.uiState)options.uiState.policyDraft=select.value;});
+      const label=n("label","Perfil da atividade");label.append(select);panel.append(label,n("p",options.dynamicPolicy?"Perfil registrado na atividade; permanece fixo nesta tentativa.":"O perfil será registrado na atividade e não poderá ser trocado nesta tentativa.","muted"));
+      const action=n("button",options.uiState?.reconciliationPending?"Reconciliando…":"Reconciliar sugestão","secondary");action.type="button";
+      action.disabled=Boolean(options.reviewBusy||options.auditRun?.stale||!options.independentReview?.review);
+      action.addEventListener("click",()=>options.onReconcile?.(select.value));panel.append(action);
+    }
+    return panel;
   }
   function renderQuestion(data, host, options={}) {
     const report=n("div",null,"workspace-report"), fmt=v=>v==null?"Não determinada":String(v).replace(".",",");

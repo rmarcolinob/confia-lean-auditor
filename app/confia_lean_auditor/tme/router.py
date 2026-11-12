@@ -382,6 +382,12 @@ def decide(case_id: str, body: Union[HumanDecisionRequest, EvaluatorDecisionRequ
         response.headers["Cache-Control"] = "no-store"
         return review_guarded(decide_question, case_id, body, user)
     if not isinstance(body, EvaluatorDecisionRequest): raise HTTPException(422, "Contrato de decisão inválido.")
+    from confia_lean_auditor.dynamic.reconciliation_service import activity
+    if case.dynamic_context and (body.reconciliation_id or activity(case)):
+        from confia_lean_auditor.dynamic.human_decisions import decide as decide_dynamic
+        from confia_lean_auditor.dynamic.router import guarded as dynamic_guarded
+        return dynamic_guarded(decide_dynamic, case, body, user)
+    if body.reconciliation_id: raise HTTPException(422, "Reconciliação disponível somente para Dynamic.")
     if not case.submission_id or body.final_points > body.max_points:
         raise HTTPException(422, "Pontuação ou fonte inválida.")
     try:

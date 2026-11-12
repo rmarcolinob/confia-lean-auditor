@@ -28,6 +28,6 @@ test('receiving a Dynamic solution opens the existing workspace and preserves ex
  const ui=await pilot({automatic:true,initialSearch:`?view=new&mode=dynamic&problem_id=${pid}`,mockFetch:mock});
  const fields=walk(ui.root);fields.find(e=>e.name==='Código da resolução').value='DY3-S1';fields.find(e=>e.name==='Resolução do aluno').value='S={3,4}';fields.find(e=>e.name==='Permitir análise provisória com preparação em revisão').checked=true;
  await fields.find(e=>e.tag==='form'&&walk(e).some(c=>c.textContent==='Receber resolução e abrir correção')).handlers.submit({preventDefault(){}});await flush();
- const call=ui.calls.find(c=>c.url.endsWith('/attempts'));assert.deepEqual(JSON.parse(call.options.body),{external_candidate_ref:'DY3-S1',solution:'S={3,4}',allow_preparation_review:true});
+ const call=ui.calls.find(c=>c.url.endsWith('/attempts'));assert.deepEqual(JSON.parse(call.options.body),{external_candidate_ref:'DY3-S1',solution:'S={3,4}',allow_preparation_review:true,policy_profile:'SCHOOL_EXAM'});
  assert.equal(ui.window.history.url,`/tme?case_id=${cid}`);assert.equal(ui.root.dataset.view,'workspace');assert.match(text(ui.root),/Resolução textual/);
 });

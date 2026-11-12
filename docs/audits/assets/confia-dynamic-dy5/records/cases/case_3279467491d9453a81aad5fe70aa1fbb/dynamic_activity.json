@@ -1,0 +1,11 @@
+{
+  "data": {
+    "case_id": "case_3279467491d9453a81aad5fe70aa1fbb",
+    "assessment_id": "asmt_29050725320c4d4984ae4d8951437c7d",
+    "assessment_definition_sha256": "88f47b7e207980be6bf6cd896012ff63db3560c1178a3f605cec3b346cd1ed00",
+    "policy_profile": "SCHOOL_EXAM",
+    "policy_version": "dynamic-safe-automation.v1",
+    "configured_at": "2026-11-12T03:41:19.078130+00:00"
+  },
+  "sha256": "c4bf1b5f5a2a39205cb3e0b8270a58a80668aceea7c02ab44f0dd92b8a656fd2"
+}
