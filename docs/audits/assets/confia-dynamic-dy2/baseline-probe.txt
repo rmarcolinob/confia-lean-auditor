@@ -1,0 +1,20 @@
+"""Run the two formal cases with HEAD's composition root excluding Dynamic only.
+All Specialized modules are the unchanged files in this worktree. No checkout.
+"""
+from pathlib import Path
+import importlib
+import subprocess
+import sys
+import types
+import pytest
+root=Path.cwd()
+source=subprocess.check_output(['git','show','HEAD:app/confia_lean_auditor/main.py'],text=True)
+source='\n'.join(line for line in source.splitlines() if 'from confia_lean_auditor.dynamic.router' not in line and 'app.include_router(dynamic_router)' not in line)
+name='confia_lean_auditor.main';package=importlib.import_module('confia_lean_auditor')
+module=types.ModuleType(name);module.__file__=str(root/'app/confia_lean_auditor/main.py');module.__package__='confia_lean_auditor'
+sys.modules[name]=module;setattr(package,'main',module)
+exec(compile(source,module.__file__,'exec'),module.__dict__)
+assert not any(getattr(route,'path','').startswith('/dynamic') for route in module.app.routes)
+print('HEAD composition root in memory, only Dynamic import/include excluded; Specialized unchanged.',flush=True)
+sys.exit(pytest.main(['-q','tests/test_submission_audits.py::test_real_bridge_preserves_wrong_solution_and_runs_existing_lean_pipeline',
+ 'tests/test_tme_accepted_integration.py::test_real_local_lean_status_certificates_preserved']))

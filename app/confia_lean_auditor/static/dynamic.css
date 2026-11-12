@@ -1,13 +1,30 @@
-#teacher-dynamic .dynamic-form, #teacher-dynamic .dynamic-criterion { display: grid; gap: .75rem; }
-#teacher-dynamic label { display: grid; gap: .35rem; }
-#teacher-dynamic input, #teacher-dynamic textarea { width: 100%; box-sizing: border-box; }
-#teacher-dynamic .dynamic-criterion { margin: 1rem 0; border: 1px solid #cbd5e1; border-radius: .5rem; padding: 1rem; }
-#teacher-dynamic .dynamic-rubric, #teacher-dynamic .dynamic-history { margin-top: 1.5rem; }
-#teacher-dynamic .dynamic-problem-list { display: flex; flex-wrap: wrap; gap: .5rem; margin-bottom: 1.5rem; }
-#teacher-dynamic details { padding: .75rem 0; }
-#teacher-dynamic summary { cursor: pointer; font-weight: 600; }
-#teacher-dynamic button { margin: .25rem .25rem .25rem 0; }
-#teacher-dynamic [role="status"] { white-space: pre-wrap; }
-#teacher-dynamic .dynamic-history p { white-space: pre-wrap; overflow-wrap: anywhere; }
-
-#teacher-dynamic textarea { min-height: 6rem; resize: vertical; }
+/* Preparation lives in the existing /tme page and shares its design tokens. */
+.confia-creation-choices { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:20px; margin-top:24px; }
+.confia-creation-choice { display:flex; flex-direction:column; align-items:flex-start; text-align:left; gap:12px; padding:28px; color:var(--confia-text); cursor:pointer; font:inherit; }
+.confia-creation-choice h2,.confia-creation-choice p { margin:0; }
+.confia-creation-choice p { color:var(--confia-muted); line-height:1.6; }
+.confia-creation-choice:hover { border-color:var(--confia-blue); }
+.confia-choice-action { color:var(--confia-blue); font-weight:600; margin-top:auto; padding-top:16px; }
+#confia-preparation { display:grid; gap:16px; }
+#confia-preparation > button { justify-self:start; }
+#confia-preparation .tme-panel { padding:24px; margin-bottom:20px; }
+#confia-preparation .dynamic-form,#confia-preparation .dynamic-criterion { display:grid; gap:14px; }
+#confia-preparation label { display:grid; gap:6px; font-size:14px; font-weight:600; }
+#confia-preparation input,#confia-preparation textarea { width:100%; box-sizing:border-box; border:1px solid var(--confia-border); border-radius:var(--confia-radius-sm); padding:12px; background:var(--confia-surface); color:var(--confia-text); font:inherit; }
+#confia-preparation textarea { min-height:96px; resize:vertical; }
+#confia-preparation input[type=number] { max-width:180px; }
+#confia-preparation input[type=checkbox] { width:20px; height:20px; }
+#confia-preparation .dynamic-criterion { border:1px solid var(--confia-border); border-radius:var(--confia-radius-sm); margin:20px 0; padding:20px; min-width:0; }
+#confia-preparation .dynamic-context,#confia-preparation .dynamic-problem-list { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:16px; }
+#confia-preparation details { padding:12px 0; }
+#confia-preparation details.dynamic-resume { padding:16px 24px; margin:0; }
+#confia-preparation summary { cursor:pointer; font-weight:600; line-height:1.6; }
+#confia-preparation button { margin:4px 8px 4px 0; }
+#confia-preparation p { line-height:1.6; overflow-wrap:anywhere; }
+#confia-preparation [role=status]:empty { display:none; }
+#confia-preparation [role=status],#confia-preparation .dynamic-statement { white-space:pre-wrap; }
+#confia-preparation .dynamic-statement { font-weight:600; }
+#confia-preparation .dynamic-warning,#confia-preparation .dynamic-warnings p { border-left:3px solid var(--confia-yellow); padding:12px 16px; background:var(--confia-yellow-light); border-radius:4px; }
+#confia-preparation .dynamic-next { border-left:3px solid var(--confia-blue); }
+#confia-preparation section { scroll-margin-top:24px; }
+@media(max-width:640px) { .confia-creation-choices { grid-template-columns:1fr; } #confia-preparation .tme-panel { padding:18px; } #confia-preparation .dynamic-criterion { padding:12px; } }

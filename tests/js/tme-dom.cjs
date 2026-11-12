@@ -9,6 +9,7 @@ function element(tag) {
   return { tag, children: [], style: { setProperty(name, value) { this[name] = value; } }, dataset: {}, attributes: {}, handlers: {}, textContent: '', className: '', value: '',
     prepend(...items) { this.children.unshift(...items); },
     append(...items) { this.children.push(...items); }, appendChild(item) { this.append(item); return item; },
+    removeChild(item) { this.children.splice(this.children.indexOf(item),1); },
     replaceChildren(...items) { this.children = items; },
     addEventListener(event, handler) { this.handlers[event] = handler; },
     setAttribute(name, value) { this.attributes[name] = value; },
@@ -121,6 +122,7 @@ async function pilot({ auditRun = null, mode = 'IMAGE_SCAN', automatic = false, 
   history.forward=async()=>{if(historyIndex<historyEntries.length-1){historyIndex++;applyHistory(historyEntries[historyIndex]);await events.popstate?.();await flush();}};
   vm.runInNewContext(fs.readFileSync(path.join(__dirname, '../../app/confia_lean_auditor/static/audit-view.js'), 'utf8'), ctx);
   for (const file of ['workspace-controls.js', 'workspace-report.js', 'home.js', 'correction-workspace.js', 'secondary-views.js']) vm.runInNewContext(fs.readFileSync(path.join(__dirname, '../../app/confia_lean_auditor/static/tme/' + file), 'utf8'), ctx);
+  vm.runInNewContext(fs.readFileSync(path.join(__dirname, '../../app/confia_lean_auditor/static/dynamic.js'), 'utf8'), ctx);
   if(fullExam)vm.runInNewContext(fs.readFileSync(path.join(__dirname, '../../app/confia_lean_auditor/static/tme/full-exam.js'), 'utf8'), ctx);
   const render = ctx.window.ConfIAReport.render;
   ctx.window.ConfIAReport.render = (data, target, options) => {

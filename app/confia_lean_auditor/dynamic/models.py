@@ -4,7 +4,12 @@ from typing import Annotated, Literal, Optional
 
 from pydantic import ConfigDict, Field, StringConstraints, field_validator, model_validator
 from confia_lean_auditor.submissions.schemas import SubmissionModel, Sha256
-from confia_lean_auditor.submissions.integrity import model_sha256
+from confia_lean_auditor.submissions.integrity import model_sha256 as _model_sha256
+from .preparation_models import (PreparationRecord, PreparationReference, CriterionEvidence, GenerationProvenance, SemanticReview, Warning)
+
+def model_sha256(model):
+    # Preserve DY1 hashes when optional DY2 fields were absent in stored bytes.
+    return _model_sha256(model, exclude_unset=True)
 from confia_lean_auditor.teacher_decisions.models import Points
 from confia_lean_auditor.core.correction_mode import CorrectionMode
 
@@ -54,6 +59,7 @@ class RubricCriterion(Immutable):
     dependencies: tuple[CriterionId, ...] = ()
     notes: str = Field(default="", max_length=2000)
     teacher_guidance: str = Field(default="", max_length=2000)
+    evidence: Optional[CriterionEvidence] = None
     # Deliberately no checker/claim_type requirement. Future bindings are a
     # versioned addition, not opaque, executable instructions in teacher text.
 
@@ -124,10 +130,22 @@ class RubricVersion(RubricContent):
     statement_sha256: Sha256
     version_number: int = Field(ge=1)
     draft_status: Literal["DRAFT_AI", "DRAFT_TEACHER", "TEACHER_EDITED"]
+    preparation_reference: Optional[PreparationReference] = None
+    generation: Optional["RubricGeneration"] = None
     supersedes_id: Optional[RubricId] = None
     created_at: datetime
     created_by: Actor
     provenance: Provenance
+
+
+class RubricGeneration(Immutable):
+    preparation: PreparationReference
+    generation: GenerationProvenance
+    semantic_review: SemanticReview
+    review_provenance: GenerationProvenance
+    warnings: tuple[Warning, ...]
+    previous_rubric_id: Optional[RubricId] = None
+    reason: Optional[str] = None
 
 
 class FuturePreparation(Immutable):
@@ -151,7 +169,8 @@ class DynamicProblemPackage(Immutable):
     rubric_id: Optional[RubricId] = None
     rubric_version: Optional[int] = Field(default=None, ge=1)
     rubric_sha256: Optional[Sha256] = None
-    preparation_status: Literal["NOT_PREPARED"] = "NOT_PREPARED"
+    preparation_status: Literal["NOT_PREPARED", "READY_FOR_REVIEW", "REVIEW_REQUIRED"] = "NOT_PREPARED"
+    preparation_reference: Optional[PreparationReference] = None
     preparation: FuturePreparation = Field(default_factory=FuturePreparation)
     created_at: datetime
     created_by: Actor
@@ -172,13 +191,15 @@ class Approval(Immutable):
     approved_by: Actor
     package_sha256: Sha256
     rubric_sha256: Sha256
+    acknowledged_warnings: bool = False
 
 
 class DynamicEvent(Immutable):
     event_id: str
     event_type: Literal["dynamic_problem_created", "problem_statement_version_created",
         "rubric_draft_created", "rubric_edited", "rubric_approved", "rubric_superseded",
-        "dynamic_problem_package_activated"]
+        "dynamic_problem_package_activated", "preparation_pending", "preparation_running",
+        "preparation_completed", "preparation_failed", "preparation_superseded", "rubric_suggestion_failed"]
     problem_id: ProblemId
     timestamp: datetime
     actor: Actor
@@ -188,6 +209,8 @@ class DynamicEvent(Immutable):
     rubric_id: Optional[RubricId] = None
     rubric_version: Optional[int] = None
     reason: Optional[str] = None
+    preparation_id: Optional[str] = None
+    generation_provenance: Optional[GenerationProvenance] = None
 
 
 class DynamicDocument(Immutable):
@@ -200,6 +223,7 @@ class DynamicDocument(Immutable):
     approvals: tuple[Approval, ...] = ()
     events: tuple[DynamicEvent, ...]
     current_package_id: Optional[PackageId] = None
+    preparations: tuple[PreparationRecord, ...] = ()
 
     @model_validator(mode="after")
     def bindings(self):
@@ -257,6 +281,42 @@ class DynamicDocument(Immutable):
                     e.statement_version, e.package_version, e.rubric_id, e.rubric_version) != (
                     p.statement_version, p.package_version, p.rubric_id, p.rubric_version):
                 raise ValueError("invalid event binding")
+        prep_by_id = {}
+        version = 0
+        for preparation in self.preparations:
+            source = packages.get(preparation.source_package_id)
+            if not source or preparation.problem_id != pid or preparation.statement_version != source.statement_version or preparation.statement_sha256 != source.statement_sha256 or preparation.requested_by != self.problem.created_by.actor_id:
+                raise ValueError('invalid preparation binding')
+            old = prep_by_id.get(preparation.preparation_id)
+            if old is None:
+                version += 1
+                if preparation.status != 'PENDING' or preparation.preparation_version != version:
+                    raise ValueError('preparation must begin pending with contiguous version')
+            else:
+                allowed = {'PENDING': {'RUNNING', 'FAILED'}, 'RUNNING': {'READY_FOR_REVIEW', 'REVIEW_REQUIRED', 'FAILED'}}
+                if preparation.status not in allowed.get(old.status, set()):
+                    raise ValueError('invalid preparation transition')
+                for key in ('preparation_version', 'statement_version', 'statement_sha256', 'source_package_id', 'created_at', 'requested_by', 'reason'):
+                    if getattr(old, key) != getattr(preparation, key): raise ValueError('preparation identity changed')
+            prep_by_id[preparation.preparation_id] = preparation
+        def validate_preparation(reference, statement_version):
+            if reference is None: return
+            prep = prep_by_id.get(reference.preparation_id)
+            if not prep or prep.status not in {'READY_FOR_REVIEW', 'REVIEW_REQUIRED'} or (prep.preparation_version, model_sha256(prep), prep.statement_version) != (reference.preparation_version, reference.preparation_sha256, statement_version):
+                raise ValueError('invalid preparation reference')
+        for e in self.events:
+            if e.preparation_id and e.preparation_id not in prep_by_id:
+                raise ValueError('event refers to unknown preparation')
+        for r in self.rubrics:
+            validate_preparation(r.preparation_reference, r.statement_version)
+            if r.generation and r.generation.preparation != r.preparation_reference:
+                raise ValueError('rubric generation binding mismatch')
+        for p in self.packages:
+            validate_preparation(p.preparation_reference, p.statement_version)
+            if p.rubric_id and rubrics[p.rubric_id].preparation_reference != p.preparation_reference:
+                raise ValueError('package preparation/rubric mismatch')
+            if p.preparation_reference and p.preparation_status != prep_by_id[p.preparation_reference.preparation_id].status:
+                raise ValueError('package preparation status mismatch')
         return self
 
 
@@ -280,3 +340,23 @@ class CreateStatement(ExpectedRevision):
 
 class SaveRubric(ExpectedRevision, RubricContent):
     statement_version: int = Field(ge=1)
+    replace_with_teacher: bool = False
+
+
+class PreparationRequest(ExpectedRevision):
+    reason: Optional[str] = Field(default=None, max_length=1000)
+
+
+class SuggestionRequest(PreparationRequest):
+    preparation_id: str = Field(pattern=r'^dprep_[0-9a-f]{32}$')
+
+
+class ApproveRubric(ExpectedRevision):
+    acknowledge_warnings: bool = False
+
+
+class SuggestedRubric(RubricContent):
+    warnings: tuple[Warning, ...]
+
+
+RubricVersion.model_rebuild()

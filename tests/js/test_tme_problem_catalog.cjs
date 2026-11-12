@@ -10,7 +10,7 @@ const catalog = [1,2,3,4,5].map(n => {
 
 test('existing TME selector lists all five official problems', async () => {
   const ui = await pilot({catalog});
-  await ui.nav.find(n => n.dataset.view === 'new').click();
+  await ui.nav.find(n => n.dataset.view === 'new').click();await ui.click('Avaliação preparada');
   const options = walk(ui.root).filter(e=>e.tag==='option' && e.value);
   assert.deepEqual(options.map(e=>e.value), catalog.map(p=>p.problem_id));
   assert.deepEqual(options.map(e=>e.textContent),[1,2,3,4,5].map(n=>`Problema ${n}`));

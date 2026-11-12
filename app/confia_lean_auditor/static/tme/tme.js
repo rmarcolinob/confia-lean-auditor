@@ -6,21 +6,21 @@
   const Home = window.ConfiaTmeHome;
   const Workspace = window.ConfiaCorrectionWorkspace;
   const Views = window.ConfiaTmeViews;
-  let fullExam;
+  let fullExam, preparation;
   const viewNames = {home:"home",queue:"cases",cases:"cases",new:"new",results:"results",exams:"exams"};
   let currentURL = "", returnTo = {view:"cases",params:{}};
   function locationRoute() {
     const query = new URLSearchParams(window.location.search || "");
     if(query.get("case_id")) return {view:"workspace",caseId:query.get("case_id")};
     if(query.get("exam_submission_id")) return {view:"workspace",examId:query.get("exam_submission_id"),attemptId:query.get("question_attempt_id")};
-    const params={};for(const key of ["search","question","status","source","origin","sample","exam","page"]) if(query.get(key))params[key]=query.get(key);
+    const params={};for(const key of ["search","question","status","source","origin","sample","exam","page","mode","problem_id"]) if(query.get(key))params[key]=query.get(key);
     return {view:viewNames[query.get("view")] || "home",params};
   }
   function writeRoute(view, params={}, caseId=null, replace=false) {
     const query=new URLSearchParams();
     if(params.exam_submission_id){query.set("exam_submission_id",params.exam_submission_id);if(params.question_attempt_id)query.set("question_attempt_id",params.question_attempt_id);}
     else if(caseId) query.set("case_id",caseId);
-    else { if(view!=="home")query.set("view",view==="cases"?"queue":view);for(const key of ["search","question","status","source","origin","sample","exam","page"])if(params[key]&&!(key==="page"&&String(params[key])==="1"))query.set(key,params[key]); }
+    else { if(view!=="home")query.set("view",view==="cases"?"queue":view);for(const key of ["search","question","status","source","origin","sample","exam","page","mode","problem_id"])if(params[key]&&!(key==="page"&&String(params[key])==="1"))query.set(key,params[key]); }
     const url="/tme"+(query.toString()?`?${query}`:"");
     const changed=url!==currentURL;
     if(changed || replace)window.history?.[replace?"replaceState":"pushState"]?.({tme:true,origin:returnTo},"",url);
@@ -30,15 +30,15 @@
   const route = id => writeRoute("workspace",{},id);
   function navigate(view, params, record=true) {
     if(state.busy)return;
-    fullExam?.cancel();
     view=viewNames[view] || "home";
     if(view==="cases"||view==="exams"){
       state.filters[view]=params ? {...params} : {...(state.filters[view]||{})};
       params=state.filters[view];
-    }else params={};
+    }else params=view==="new" ? {mode:params?.mode,problem_id:params?.problem_id} : {};
     if(record && !writeRoute(view,params) && state.view===view && state.navigationPending)return state.navigationPending;
+    fullExam?.cancel(); preparation?.cancel(); preparation=null;
     window.scrollTo(0,0);document.querySelector("#main")?.scrollTo?.(0,0);
-    const pending=Promise.resolve(view==="home"?home():view==="new"?newCase():listing(view)).catch(showError)
+    const pending=Promise.resolve(view==="home"?home():view==="new"?newCase(params):listing(view)).catch(showError)
       .finally(()=>{if(state.navigationPending===pending)state.navigationPending=null;});
     state.navigationPending=pending;return pending;
   }
@@ -201,12 +201,34 @@
   }
   const cases=()=>navigate("cases");
   const showError = () => show(note("Não foi possível carregar esta etapa. Tente novamente.", true), actions(btn("Correções", () => cases().catch(showError))));
-  async function newCase() {
-    if(fullExam){++state.generation;state.view="new";return fullExam.newCorrection();}
-    return newSingleCase();
+  async function newCase(params={}) {
+    ++state.generation;state.view="new";
+    if(params.mode==="specialized") {
+      if(fullExam)return fullExam.newCorrection();
+      return newSingleCase();
+    }
+    if(params.mode==="dynamic") {
+      const page=Views.Page("Nova atividade ou prova","Crie questões inéditas e prepare rubricas com o ConfIA.");
+      page.heading.append(btn("Voltar às opções",()=>navigate("new"),"tme-button secondary"));
+      const host=node("div");host.id="confia-preparation";page.append(host);show(page);
+      preparation=window.ConfIADynamic.create({host,setBusy:value=>{state.busy=value;},
+        onSelect:id=>writeRoute("new",{mode:"dynamic",problem_id:id})});
+      return preparation.load(params.problem_id);
+    }
+    const page=Views.Page("Nova correção","Escolha como começar. A preparação e a correção fazem parte do mesmo ConfIA.");
+    const choices=node("div",undefined,"confia-creation-choices");
+    for(const [mode,title,description] of [
+      ["specialized","Avaliação preparada","Para TME, olimpíadas, vestibulares e avaliações previamente configuradas."],
+      ["dynamic","Nova atividade ou prova","Crie questões inéditas e prepare rubricas com o ConfIA."]]) {
+      const choice=btn("",()=>navigate("new",{mode}),"tme-panel confia-creation-choice");
+      choice.setAttribute("aria-label",title);
+      choice.append(node("h2",title),node("p",description),node("span","Continuar →","confia-choice-action"));choices.append(choice);
+    }
+    page.append(choices);show(page);
   }
   async function openExam(examId,attemptId=null,record=true){
     if(state.busy || !fullExam)return;
+    preparation?.cancel(); preparation=null;
     ++state.generation;state.view="workspace";state.current=null;
     if(record)writeRoute("workspace",{exam_submission_id:examId,question_attempt_id:attemptId});
     window.scrollTo(0,0);return fullExam.open(examId,attemptId);
@@ -266,6 +288,7 @@
   }
   async function openCase(caseId, record=true) {
     if (state.busy) return;
+    preparation?.cancel(); preparation=null;
     if(record){if(state.view!=="workspace")returnTo={view:state.view==="new"?"cases":state.view,params:{...(state.filters[state.view]||{})}};route(caseId);}
     state.view = "workspace"; const generation = ++state.generation;
     show(loading("Carregando solução…")); window.scrollTo(0,0);

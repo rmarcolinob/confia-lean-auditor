@@ -1,0 +1,84 @@
+INFO:     Started server process [15329]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8767 (Press CTRL+C to quit)
+INFO:     127.0.0.1:51870 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51875 - "GET /static/audit-view.css?v=audit-01 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51870 - "GET /static/design-system.css?v=ux-pro-01 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51871 - "GET /static/styles.css?v=ux-pro-01 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51873 - "GET /static/dynamic.css?v=dy2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51872 - "GET /static/submissions/teacher.css?v=ux-pro-01 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51874 - "GET /static/capture/vendor/katex-0.18.9/katex.min.css HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51873 - "GET /static/tutoria-chat.css?v=tutoria-contextual-final-01 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51875 - "GET /static/tutoria.css?v=tutoria-contextual-final-01 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51870 - "GET /static/tutoria-assistant.css?v=tutoria-contextual-final-01 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51872 - "GET /static/audit-view.js?v=audit-01 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51871 - "GET /static/recognition-view.js?v=teacher-transcription-02 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51874 - "GET /static/app.js?v=audit-01 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51875 - "GET /static/submissions/decisions.js?v=ux-pro-01 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51870 - "GET /static/assessments.js?v=ux-pro-01 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51871 - "GET /static/submissions/teacher.js?v=audit-01 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51873 - "GET /static/resolution-workspace.js?v=tutoria-contextual-final-01 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51872 - "GET /static/dynamic.js?v=dy2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51874 - "GET /static/management.js?v=p2-dec-01 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51870 - "GET /static/capture/vendor/katex-0.18.9/katex.min.js HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51872 - "GET /static/capture/problem-math.js?v=p2-ui-01 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51875 - "GET /static/demo/tutoria-demo-data.js?v=tutoria-contextual-final-01 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51874 - "GET /static/tutoria-chat.js?v=tutoria-contextual-final-01 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51873 - "GET /static/demo/tutoria-chat-demo.js?v=tutoria-contextual-final-01 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51871 - "GET /static/tutoria.js?v=tutoria-contextual-final-01 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51873 - "GET /static/shell.js?v=tutoria-contextual-final-01 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51872 - "GET /static/tutoria-assistant.js?v=tutoria-contextual-final-01 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51871 - "GET /static/capture/vendor/katex-0.18.9/contrib/auto-render.min.js HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51870 - "GET /static/problem-presentations/registry.json HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51871 - "GET /problems HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51870 - "GET /dynamic/problems HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51870 - "GET /favicon.ico HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:51870 - "POST /dynamic/problems HTTP/1.1" 201 Created
+INFO:     127.0.0.1:51870 - "GET /dynamic/problems HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51870 - "POST /dynamic/problems/dyn_cc0c2dd4e3ce47cabe195b6b8258174f/preparations HTTP/1.1" 201 Created
+INFO:     127.0.0.1:51870 - "GET /dynamic/problems HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51909 - "POST /dynamic/problems/dyn_cc0c2dd4e3ce47cabe195b6b8258174f/rubric-suggestion HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51909 - "GET /dynamic/problems HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51929 - "PATCH /dynamic/problems/dyn_cc0c2dd4e3ce47cabe195b6b8258174f/rubrics/drub_93f6f325a87647448418dfeb19b15c4e HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51929 - "GET /dynamic/problems HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51929 - "POST /dynamic/problems/dyn_cc0c2dd4e3ce47cabe195b6b8258174f/rubrics/drub_7d91346e057f48a9b0bbe36ee9924509/approve HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51929 - "GET /dynamic/problems HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51946 - "POST /dynamic/problems HTTP/1.1" 201 Created
+INFO:     127.0.0.1:51946 - "GET /dynamic/problems HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51946 - "POST /dynamic/problems/dyn_4c518d0094c646c9ad0798dde309c39c/preparations HTTP/1.1" 201 Created
+INFO:     127.0.0.1:51946 - "GET /dynamic/problems HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51985 - "POST /dynamic/problems/dyn_4c518d0094c646c9ad0798dde309c39c/rubric-suggestion HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51985 - "GET /dynamic/problems HTTP/1.1" 200 OK
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [15329]
+INFO:     Started server process [15761]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8767 (Press CTRL+C to quit)
+INFO:     127.0.0.1:52023 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52023 - "GET /static/dynamic.css?v=dy2 HTTP/1.1" 304 Not Modified
+INFO:     127.0.0.1:52024 - "GET /static/dynamic.js?v=dy2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52024 - "GET /problems HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52023 - "GET /dynamic/problems HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52023 - "POST /dynamic/problems HTTP/1.1" 201 Created
+INFO:     127.0.0.1:52023 - "GET /dynamic/problems HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52023 - "POST /dynamic/problems/dyn_27084e174e434ebd9438696e755ae3a6/preparations HTTP/1.1" 201 Created
+INFO:     127.0.0.1:52023 - "GET /dynamic/problems HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52063 - "POST /dynamic/problems/dyn_27084e174e434ebd9438696e755ae3a6/rubric-suggestion HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52063 - "GET /dynamic/problems HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52109 - "GET /dynamic/problems/dyn_cc0c2dd4e3ce47cabe195b6b8258174f HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52119 - "POST /dynamic/problems/dyn_cc0c2dd4e3ce47cabe195b6b8258174f/statements HTTP/1.1" 201 Created
+INFO:     127.0.0.1:52119 - "GET /dynamic/problems HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52119 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52119 - "GET /static/dynamic.css?v=dy2 HTTP/1.1" 304 Not Modified
+INFO:     127.0.0.1:52125 - "GET /static/dynamic.js?v=dy2 HTTP/1.1" 304 Not Modified
+INFO:     127.0.0.1:52125 - "GET /problems HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52119 - "GET /dynamic/problems HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52119 - "GET /dynamic/problems/dyn_cc0c2dd4e3ce47cabe195b6b8258174f HTTP/1.1" 200 OK
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [15761]

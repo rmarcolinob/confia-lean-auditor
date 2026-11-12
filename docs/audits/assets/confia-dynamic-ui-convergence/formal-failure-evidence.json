@@ -1,0 +1,14 @@
+[
+  {
+    "test_directory": "test_real_bridge_preserves_wro0",
+    "messages": [
+      "info: mathlib: checking out revision '8f9d9cff6bd728b17a24e163c9402775d9e6a365'\nerror: external command 'git' exited with code 1\n"
+    ]
+  },
+  {
+    "test_directory": "test_real_local_lean_status_ce0",
+    "messages": [
+      "info: mathlib: checking out revision '8f9d9cff6bd728b17a24e163c9402775d9e6a365'\nerror: external command 'git' exited with code 1\n"
+    ]
+  }
+]

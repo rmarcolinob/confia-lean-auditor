@@ -1,0 +1,16 @@
+All commands run from /Users/LinMarcolino/Documents/confia-lean-auditor-dynamic with its own .venv.
+
+CONFIA_ENABLE_LLM_FORMAL_STEPS=0 PYTHONPATH=app .venv/bin/python -m pytest -q tests/test_dynamic_dy1.py tests/test_dynamic_dy2.py
+
+CONFIA_ENABLE_LLM_FORMAL_STEPS=0 PYTHONPATH=app .venv/bin/python -m pytest -q tests/test_assessments.py tests/test_submissions.py tests/test_transcriptions.py tests/test_submission_audits.py tests/test_tme_accepted_integration.py tests/test_tme_full_exam.py tests/test_tme_review_workspace.py tests/test_tme_question_audit.py tests/test_tme_reanalysis.py tests/test_tme_human_confirmation.py tests/test_tme_finalization.py tests/test_tme_certification.py tests/test_tme_demo_auth.py tests/test_demo_december_operations.py tests/test_core_auth.py tests/test_pauta_engine.py
+
+CONFIA_ENABLE_LLM_FORMAL_STEPS=0 PYTHONPATH=app .venv/bin/python -m pytest -q tests/test_math_canonical.py tests/test_generic_student_math.py tests/test_claim_alignment_obligations.py tests/test_problem_assets_validation.py tests/test_problem_assets_contracts.py tests/test_tme_problem_catalog.py tests/test_public_audit_boundary.py
+
+node --test tests/js/test_*.cjs
+node --test tests/js/test_dynamic_dy1.cjs tests/js/test_dynamic_dy2.cjs
+
+CONFIA_ENABLE_LLM_FORMAL_STEPS=0 PYTHONPATH=app .venv/bin/python work/dy2/baseline_probe.py
+lake build
+
+Baseline script is preserved as baseline-probe.txt in this evidence directory; scratch files were removed after copying evidence.
+Real API calls are NOT part of the unit suite. They were exercised through the local browser server with CONFIA_DYNAMIC_LLM_ENABLED=1, OPENAI_API_KEY supplied only by the environment, and isolated runtime/dy2-browser/dynamic.

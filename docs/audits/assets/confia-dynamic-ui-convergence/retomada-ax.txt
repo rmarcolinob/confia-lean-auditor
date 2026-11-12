@@ -1,0 +1,157 @@
+Browser tab: 3, Title: "ConfIA — Confiabilidade e Explicabilidade", URL: "http://127.0.0.1:8768/tme?view=new&mode=dynamic&problem_id=dyn_a6b75db34857448da1d9797268b87fbb".
+1 AXWebArea ConfIA — Confiabilidade e Explicabilidade, URL: 127.0.0.1:8768/tme?view=new&mode=dynamic&problem_id=dyn_a6b75db34857448da1d9797268b87fbb
+	2 link Description: Ir para conteúdo, Value: 127.0.0.1:8768/tme?view=new&mode=dynamic&problem_id=dyn_a6b75db34857448da1d9797268b87fbb#main
+	3 container
+		4 text ConfIA Plataforma de
+		5 text correção assistida
+		6 button (collapsed) Description: Perfil do avaliador, ID: evaluator-avatar, Secondary Actions: Expand
+	152 container
+		153 heading Nova atividade ou prova, Value: 1
+			154 text Nova atividade ou prova
+		155 text Crie questões inéditas e prepare rubricas com o ConfIA.
+		156 button Voltar às opções
+		157 container confia-preparation
+			158 button Nova questão
+			175 container
+				176 button (expanded) Retomar preparação, Secondary Actions: Collapse
+					177 text Retomar preparação
+				178 button Equação quadrática — preparação unificada · Enunciado V1
+			179 text Questão carregada.
+			180 container Etapas da preparação
+				181 button Questão
+				182 button Preparação
+				183 button Rubrica
+				184 button Histórico
+			185 container
+				186 heading Equação quadrática — preparação unificada, Value: 2
+					187 text Equação quadrática — preparação unificada
+				188 text Enunciado V1 · 10 pontos Identidade técnica de demonstração; não representa uma pessoa. Determine todas as soluções reais da equação x² - 5x + 6 = 0. Justifique o método e verifique as soluções.
+				189 button (collapsed) Criar nova versão do enunciado, Secondary Actions: Expand
+					190 text Criar nova versão do enunciado
+			191 text Soluções candidatas precisam de revisão docente. Correção de alunos disponível em etapa futura.
+			192 container
+				193 heading Preparação, Value: 3
+					194 text Preparação
+				195 text Preparação V1 · 
+				196 text Revisão necessária
+				197 button Gerar nova preparação
+				198 text Motivo da nova preparação (opcional)
+				199 text field (settable) Motivo da nova preparação (opcional)
+				200 button Atualizar preparação
+				201 heading Domínio: Álgebra — Equações quadráticas, Value: 4
+					202 text Domínio: Álgebra — Equações quadráticas
+				203 text Encontre todas as soluções reais da equação quadrática x^2 - 5x + 6 = 0, justificando o método e verificando as soluções obtidas. Objetivo: Todos os valores reais de x que satisfazem x^2 - 5x + 6 = 0. Hipótese inferida: Está implícito que buscamos apenas soluções no conjunto dos números reais.
+				204 button (collapsed) Solução de referência candidata · Fatoração do trinômio · Verificação parcial, Secondary Actions: Expand
+					205 text Solução de referência candidata · Fatoração do trinômio · Verificação parcial
+				206 button (collapsed) Solução de referência candidata · Fórmula de Bhaskara (fórmula quadrática) · Verificação parcial, Secondary Actions: Expand
+					207 text Solução de referência candidata · Fórmula de Bhaskara (fórmula quadrática) · Verificação parcial
+				208 heading Métodos alternativos, Value: 4
+					209 text Métodos alternativos
+				210 text Fatoração do trinômio para obter as raízes. Aplicação direta da fórmula quadrática (Bhaskara) usando os coeficientes identificados.
+				211 heading Avisos e incertezas, Value: 4
+					212 text Avisos e incertezas
+				213 text Revisão necessária: Foi considerada uma busca por soluções reais, pois não foi explicitado no enunciado. Revisão necessária: Há hipótese inferida; confirme ou reformule o enunciado. Revisão necessária: Resultado final não corroborado pelos argumentos verificados: Fatoração do trinômio Revisão necessária: Resultado final não corroborado pelos argumentos verificados: Fórmula de Bhaskara (fórmula quadrática) Limite: Apenas expressão declarada, polinômio univariado racional; não certifica interpretação, hipóteses ou solução inteira. Lean: Verificação formal não executada.
+				214 button (collapsed) Verificações e limites, Secondary Actions: Expand
+					215 text Verificações e limites
+				216 button (collapsed) Detalhes técnicos e proveniência, Secondary Actions: Expand
+					217 text Detalhes técnicos e proveniência
+			218 container
+				219 heading Rubrica sugerida pela IA · revisão docente, Value: 3
+					220 text Rubrica sugerida pela IA · revisão docente
+				221 text Rubrica V2 · 
+				222 text Aprovada
+				223 button Rejeitar e gerar nova sugestão
+				224 text Motivo da nova sugestão (opcional)
+				225 text field (settable) Motivo da nova sugestão (opcional)
+				226 text A sugestão não ativa a rubrica. A aprovação continua sendo sua decisão. Revisão necessária: Foi considerada uma busca por soluções reais, pois não foi explicitado no enunciado. Revisão necessária: Há hipótese inferida; confirme ou reformule o enunciado. Revisão necessária: Resultado final não corroborado pelos argumentos verificados: Fatoração do trinômio Revisão necessária: Resultado final não corroborado pelos argumentos verificados: Fórmula de Bhaskara (fórmula quadrática) Limite da verificação: Apenas expressão declarada, polinômio univariado racional; não certifica interpretação, hipóteses ou solução inteira. Lean: Verificação formal não executada. Revisão necessária: O enunciado não explicita que as soluções devem ser reais; tratou-se como domínio dos reais por inferência. Recomenda-se explicitar no enunciado para evitar ambiguidade. Revisão necessária: Há uma hipótese inferida sobre o domínio das soluções. Isso pode gerar dúvida se o candidato fornecer uma solução complexa. Oriente-se por clareza no enunciado ou ajuste o critério. Revisão necessária: O resultado final ({2,3}) não foi formalmente verificado quanto ao conjunto completo das soluções; a verificação foi feita apenas nos passos individuais, não garantindo ausência de valores omitidos ou espúrios. Revisão necessária: Critério depende de objetivo/argumento não verificado: Justificativa e escolha do método Revisão necessária: Justificativa e escolha do método: Muitos estudantes omitem a justificativa; aceite justificativas sucintas porém corretas. Revisão necessária: Critério depende de objetivo/argumento não verificado: Aplicação correta da estratégia Revisão necessária: Aplicação correta da estratégia: Propriedade do produto nulo (clm2_zeroprod) permanece não-verificada formalmente. Revisão necessária: Identificação das soluções reais: Resultados finais não plenamente verificados em ambas abordagens; revisão humana sugerida. Revisão necessária: Possível sobreposição de pontuação.
+				227 button (collapsed) Detalhes técnicos dos avisos, Secondary Actions: Expand
+					228 text Detalhes técnicos dos avisos
+				229 button (collapsed) Revisão semântica da sugestão original, Secondary Actions: Expand
+					230 text Revisão semântica da sugestão original
+				231 text Li os avisos e assumo a revisão docente
+				232 checkbox (settable, integer) Description: Li os avisos e assumo a revisão docente, Value: 0
+				233 button Fornecer minha própria rubrica
+				234 container Critério 1
+					235 text Critério 1
+					236 container
+						237 text Título
+						238 text field (settable) Description: Critério c1_metodo_justificativa: título, Value: Justificativa e escolha do método
+					239 container
+						240 text Descrição / justificativa
+						241 text entry area (settable) Description: Critério c1_metodo_justificativa: descrição, Value: Atribuir até 2 pontos à escolha e justificativa de um método matemático válido, incluindo fatoração, fórmula quadrática ou equivalente. A execução dos cálculos é pontuada separadamente no critério seguinte. O enunciado já explicita o domínio real.
+					242 container
+						243 text Pontos
+						244 stepper (settable, integer) Description: Critério c1_metodo_justificativa: pontos, Value: 2
+					245 button Remover critério
+					246 button (collapsed) Vínculos da sugestão original, Secondary Actions: Expand
+						247 text Vínculos da sugestão original
+				248 container Critério 2
+					249 text Critério 2
+					250 container
+						251 text Título
+						252 text field (settable) Description: Critério c2_aplicacao_estrategia: título, Value: Aplicação correta da estratégia
+					253 container
+						254 text Descrição / justificativa
+						255 text entry area (settable) Description: Critério c2_aplicacao_estrategia: descrição, Value: O estudante realiza corretamente o processo de fatoração OU resolve corretamente usando a fórmula quadrática, exibindo etapas matemáticas essenciais.
+					256 container
+						257 text Pontos
+						258 stepper (settable, integer) Description: Critério c2_aplicacao_estrategia: pontos, Value: 4
+					259 button Remover critério
+					260 button (collapsed) Vínculos da sugestão original, Secondary Actions: Expand
+						261 text Vínculos da sugestão original
+				262 container Critério 3
+					263 text Critério 3
+					264 container
+						265 text Título
+						266 text field (settable) Description: Critério c3_identificacao_solucao: título, Value: Identificação das soluções reais
+					267 container
+						268 text Descrição / justificativa
+						269 text entry area (settable) Description: Critério c3_identificacao_solucao: descrição, Value: O estudante apresenta explicitamente todas as soluções reais da equação, sem omitir ou adicionar valores incorretos.
+					270 container
+						271 text Pontos
+						272 stepper (settable, integer) Description: Critério c3_identificacao_solucao: pontos, Value: 2
+					273 button Remover critério
+					274 button (collapsed) Vínculos da sugestão original, Secondary Actions: Expand
+						275 text Vínculos da sugestão original
+				276 container Critério 4
+					277 text Critério 4
+					278 container
+						279 text Título
+						280 text field (settable) Description: Critério c4_verificacao_solucao: título, Value: Verificação das soluções
+					281 container
+						282 text Descrição / justificativa
+						283 text entry area (settable) Description: Critério c4_verificacao_solucao: descrição, Value: O estudante verifica aritmeticamente as soluções encontradas, mostrando que satisfazem a equação original.
+					284 container
+						285 text Pontos
+						286 stepper (settable, integer) Description: Critério c4_verificacao_solucao: pontos, Value: 2
+					287 button Remover critério
+					288 button (collapsed) Vínculos da sugestão original, Secondary Actions: Expand
+						289 text Vínculos da sugestão original
+				290 button Adicionar critério
+				291 text Total dos critérios: 10 / 10 pontos
+				292 button Salvar como nova versão da rubrica
+				293 button (disabled) Aprovar rubrica
+				294 text A versão aprovada é imutável. Alterações serão salvas em uma nova versão de rascunho; a versão ativa só muda após aprovação.
+			295 container Histórico de versões
+				296 heading Histórico de versões, Value: 3
+					297 text Histórico de versões
+				298 text Configuração aprovada V4 · Enunciado V1 · Rubrica V2
+				299 button (collapsed) Enunciado V1, Secondary Actions: Expand
+					300 text Enunciado V1
+				301 button (collapsed) Preparação V1 · Revisão necessária · Enunciado V1, Secondary Actions: Expand
+					302 text Preparação V1 · Revisão necessária · Enunciado V1
+				303 button (collapsed) Rubrica V1 · Sugestão da IA · Enunciado V1, Secondary Actions: Expand
+					304 text Rubrica V1 · Sugestão da IA · Enunciado V1
+				305 button (collapsed) Rubrica V2 · Aprovada · Enunciado V1, Secondary Actions: Expand
+					306 text Rubrica V2 · Aprovada · Enunciado V1
+			307 container
+				308 heading Preparação salva no ConfIA, Value: 3
+					309 text Preparação salva no ConfIA
+				310 text A configuração aprovada está registrada. A correção de respostas será integrada ao workspace Original / Transcrição / Comparar, com o painel ConfIA e decisão humana, em uma próxima etapa. A aprovação da rubrica não elimina avisos ou incertezas e ainda não habilita correção de alunos.
+	147 container Description: Navegação principal, ID: home-bottom-nav
+		148 button Início
+		149 button Fila
+		150 button Nova
+		151 button Resultados
+
+The focused UI element is 1 AXWebArea ConfIA — Confiabilidade e Explicabilidade, URL: 127.0.0.1:8768/tme?view=new&mode=dynamic&problem_id=dyn_a6b75db34857448da1d9797268b87fbb

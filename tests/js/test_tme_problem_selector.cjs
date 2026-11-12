@@ -17,7 +17,7 @@ const expected=[
 for(const desktop of [true,false]) test(`native grouped selector preserves all 15 IDs and short labels (desktop=${desktop})`,async()=>{
   const before=JSON.stringify(catalog);
   const ui=await pilot({catalog:[...catalog].reverse(),desktop});
-  await ui.nav.find(n=>n.dataset.view==='new').click();
+  await ui.nav.find(n=>n.dataset.view==='new').click();await ui.click('Avaliação preparada');
   const select=walk(ui.root).find(e=>e.tag==='select');
   assert.equal(select.required,true);
   assert.deepEqual(select.children.filter(e=>e.tag==='optgroup').map(g=>[g.label,g.children.map(o=>[o.value,o.textContent])]),expected);
@@ -28,7 +28,7 @@ for(const desktop of [true,false]) test(`native grouped selector preserves all 1
 
 for(const p of catalog) test(`${p.problem_id}: selection submits original ID and preserves its statement/figures`,async()=>{
   const ui=await pilot({catalog});
-  await ui.nav.find(n=>n.dataset.view==='new').click();
+  await ui.nav.find(n=>n.dataset.view==='new').click();await ui.click('Avaliação preparada');
   const select=walk(ui.root).find(e=>e.tag==='select');select.value=p.problem_id;
   walk(ui.root).find(e=>e.tag==='input').value='SELECTOR-CONTROL';
   await ui.click('Escrever no tablet');await ui.click('Continuar');

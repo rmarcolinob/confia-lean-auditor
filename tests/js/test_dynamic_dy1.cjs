@@ -25,7 +25,7 @@ async function page(initial, mutation) {
     return {ok:true,json:async () => result};
   };
   vm.runInNewContext(source, {window,document,fetch,Set,Number,String,Error,Math});
-  await window.ConfIADynamic.load();
+  await window.ConfIADynamic.create({host:panel}).load();
   const nodes = () => descendants(panel);
   const button = label => nodes().find(n => n.tag === 'button' && n.textContent === label);
   if (initial) await nodes().find(n => n.tag === 'button' && n.textContent.includes('Enunciado V1')).click();
@@ -41,10 +41,10 @@ test('create an explicit Dynamic problem; AI suggestion cannot send a request', 
   const sent = ui.calls.find(c => c.options?.method);
   assert.equal(sent.body.correction_mode,'DYNAMIC');
   assert.equal(sent.body.max_score,'10');
-  assert.equal(ui.button('Sugerir rubrica por IA').disabled,true);
-  await ui.button('Sugerir rubrica por IA').click();
+  assert.equal(ui.button('Gerar rubrica sugerida').disabled,true);
+  await ui.button('Gerar rubrica sugerida').click();
   assert(!ui.calls.some(c => c.url.includes('suggestion')));
-  assert.match(ui.panel.textContent,/Disponível no próximo estágio/);
+  assert.match(ui.panel.textContent,/Preparação com IA indisponível/);
 });
 
 test('manual criteria total, editing, stable IDs and approval only after saved draft', async () => {
@@ -63,9 +63,9 @@ test('manual criteria total, editing, stable IDs and approval only after saved d
     const points = fields.find(n => n.name.includes('pontos')); points.value = String([3,3,4][i]);
     await points.emit('input');
   }
-  assert.equal(ui.button('Salvar rubrica draft').disabled,false);
+  assert.equal(ui.button('Salvar rascunho da rubrica').disabled,false);
   assert.equal(ui.button('Aprovar rubrica').disabled,true);
-  await ui.button('Salvar rubrica draft').click();
+  await ui.button('Salvar rascunho da rubrica').click();
   assert.equal(ui.button('Aprovar rubrica').disabled,false);
   const description = ui.nodes().find(n => n.name?.includes('descrição')); description.value='Nova descrição';
   await description.emit('input');
@@ -84,14 +84,14 @@ test('approval uses saved revision; history remains visible after statement chan
     return changed;
   });
   await ui.button('Aprovar rubrica').click();
-  assert.equal(approvals,1); assert.match(ui.panel.textContent,/Rubrica V1 · APPROVED/);
-  assert.match(ui.panel.textContent,/Pacote ativo V2/);
+  assert.equal(approvals,1); assert.match(ui.panel.textContent,/Rubrica V1 · Aprovada/);
+  assert.match(ui.panel.textContent,/Configuração aprovada V2/);
   const form = ui.nodes().filter(n => n.tag === 'form').at(-1);
   descendants(form).find(n => n.name === 'Enunciado').value='Resolva em R: x² - 5x + 6 = 0';
   await form.emit('submit',{preventDefault(){}});
   assert.match(ui.panel.textContent,/Enunciado V2/);
-  assert.match(ui.panel.textContent,/Rubrica V1 · SUPERSEDED · Enunciado V1/);
-  assert.match(ui.panel.textContent,/Sem pacote ativo/);
+  assert.match(ui.panel.textContent,/Rubrica V1 · Versão anterior · Enunciado V1/);
+  assert.match(ui.panel.textContent,/Sem configuração aprovada/);
   assert.equal(ui.button('Aprovar rubrica').disabled,true);
 });
 

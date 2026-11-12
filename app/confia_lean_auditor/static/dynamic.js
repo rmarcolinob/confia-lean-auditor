@@ -1,14 +1,29 @@
 /* Teacher preparation only. The server owns versions, approval and exact points. */
 (function (root) {
   "use strict";
-  const panel = document.querySelector("#teacher-dynamic");
-  if (!panel) return;
-  let detail, list, message, current = null, busy = false, loadGeneration = 0;
+  const labels = {
+    DRAFT_AI:"Sugestão da IA", DRAFT_TEACHER:"Rascunho do professor", TEACHER_EDITED:"Revisada pelo professor",
+    APPROVED:"Aprovada", SUPERSEDED:"Versão anterior", PENDING:"Aguardando preparação", RUNNING:"Preparando",
+    READY_FOR_REVIEW:"Pronta para revisão", REVIEW_REQUIRED:"Revisão necessária", FAILED:"Preparação não concluída",
+    VERIFIED_WITHIN_SCOPE:"Verificada no escopo disponível", PARTIALLY_VERIFIED:"Verificação parcial",
+    CONTRADICTED:"Inconsistência identificada", UNRESOLVED:"Verificação pendente", UNVERIFIED:"Não verificada",
+    FORMAL_NOT_ATTEMPTED:"Verificação formal não executada", CHECKED_WITHIN_SCOPE:"Verificações limitadas concluídas",
+    HUMAN_REVIEW_REQUIRED:"Revisão docente necessária", UNAVAILABLE:"Verificação indisponível",
+    DETERMINISTIC:"Verificação determinística", SYMBOLIC:"Verificação simbólica", NUMERIC:"Verificação numérica",
+    EXACT_ARITHMETIC:"Aritmética exata", SYMBOLIC_ALGEBRA:"Álgebra simbólica", NUMERICAL:"Verificação numérica",
+    FINITE_ENUMERATION:"Enumeração finita", LEAN_CANDIDATE:"Candidata à verificação formal", SEMANTIC_RESIDUAL:"Revisão de interpretação", REVIEW_ONLY:"Revisão docente",
+    TEACHER:"Professor", TECHNICAL_DEMO:"Demonstração técnica", EXPLICIT:"explícita", INFERRED:"inferida"
+  };
+  const readable = value => String(value || "").replace(/\b[A-Z][A-Z_]+\b/g, code => labels[code] || code);
+  function create({host:panel,onSelect=()=>{},setBusy=()=>{}}) {
+  let disposed=false, creation, selectionGeneration=0;
+
+  let detail, list, message, busy = false, loadGeneration = 0;
   const n = (tag, text, cls) => { const el = document.createElement(tag); if (text != null) el.textContent = text; if (cls) el.className = cls; return el; };
   const append = (el, ...children) => { children.forEach(child => el.appendChild(child)); return el; };
   const label = (text, input) => append(n("label", text), input);
   const input = (name, value = "", type = "text") => { const el = n(type === "textarea" ? "textarea" : "input"); el.name = name; el.value = String(value); if (type !== "textarea") el.type = type; el.setAttribute("aria-label", name); return el; };
-  const button = (text, handler, cls = "button button-secondary") => { const el = n("button", text, cls); el.type = "button"; el.addEventListener("click", handler); return el; };
+  const button = (text, handler, cls = "tme-button secondary") => { const el = n("button", text, cls); el.type = "button"; el.addEventListener("click", handler); return el; };
   const cents = value => /^\d+(?:\.\d{1,2})?$/.test(String(value)) ? Math.round(Number(value) * 100) : null;
   const money = value => Number(value).toLocaleString("pt-BR", {maximumFractionDigits: 2});
 
@@ -22,26 +37,44 @@
     }
     return data;
   }
-  async function perform(operation) {
-    if (busy) return;
-    busy = true;
+  async function perform(operation, progress = "Salvando…") {
+    if (busy || disposed) return;
+    busy = true; setBusy(true);
     const controls = [...panel.querySelectorAll("button,input,textarea")].map(el => [el, el.disabled]);
     controls.forEach(([el]) => { el.disabled = true; });
-    message.textContent = "Salvando…";
+    message.textContent = progress;
     try { await operation(); }
     catch (error) { message.textContent = error.message; }
-    finally { busy = false; controls.forEach(([el, disabled]) => { el.disabled = disabled; }); }
+    finally { busy = false; if(!disposed)setBusy(false); controls.forEach(([el, disabled]) => { el.disabled = disabled; }); }
+  }
+  async function selectProblem(problemId) {
+    const generation=++selectionGeneration;
+    const doc=await request(`/dynamic/problems/${encodeURIComponent(problemId)}`);
+    if(!disposed && generation===selectionGeneration)renderDocument(doc);
+  }
+  function warningText(value,prep,criteria=[]) {
+    let result=readable(value).replace(/\bclaims?\b/gi, match=>match.toLowerCase()==="claims"?"argumentos":"argumento");
+    for(const candidate of prep?.proposal?.candidate_reference_solutions || [])
+      result=result.split(candidate.solution_id).join(candidate.strategy_label);
+    for(const criterion of criteria)result=result.split(criterion.criterion_id).join(criterion.title);
+    return result;
+  }
+  function statusBadge(status) {
+    const badge=n("span",readable(status),"home-status");
+    badge.dataset.status=status==="APPROVED"?"finalized":["REVIEW_REQUIRED","PARTIALLY_VERIFIED","CONTRADICTED","FAILED"].includes(status)?"inconclusive":"pending";
+    return badge;
   }
   async function refreshList() {
     const documents = await request("/dynamic/problems");
+    if(disposed)return;
     list.replaceChildren();
     for (const doc of documents) {
       const statement = doc.statements[doc.statements.length - 1];
       list.appendChild(button(`${statement.title || "Questão sem título"} · Enunciado V${statement.version_number}`, () => perform(async () => {
-        renderDocument(await request(`/dynamic/problems/${doc.problem.problem_id}`)); message.textContent = "Problema carregado.";
+        await selectProblem(doc.problem.problem_id); message.textContent = "Questão carregada.";
       })));
     }
-    if (!documents.length) list.appendChild(n("p", "Nenhum problema Dynamic cadastrado."));
+    if (!documents.length) list.appendChild(n("p", "Nenhuma questão cadastrada."));
   }
   async function saved(url, body, method, notice) {
     renderDocument(await request(url, body, method));
@@ -54,7 +87,7 @@
       statement = input("Enunciado", latest?.statement || "", "textarea"), total = input("Valor total", latest?.max_score || "10", "number");
     title.maxLength = 160; statement.maxLength = 20000; statement.required = true;
     statement.rows = 3; total.min = "0.01"; total.max = "1000"; total.step = "0.01"; total.required = true;
-    const submit = n("button", latest ? "Salvar nova versão do enunciado" : "Criar problema", "button button-primary"); submit.type = "submit";
+    const submit = n("button", latest ? "Salvar nova versão do enunciado" : "Criar problema", "tme-button"); submit.type = "submit";
     append(form, label("Título (opcional)", title), label("Enunciado", statement), label("Valor total", total));
     if (latest) form.appendChild(n("p", "Salvar uma nova versão exige nova rubrica e aprovação. O pacote anterior permanece no histórico."));
     form.appendChild(submit);
@@ -65,35 +98,63 @@
         const body = {title: title.value, statement: statement.value, max_score: total.value};
         if (doc) body.expected_revision = doc.revision; else body.correction_mode = "DYNAMIC";
         await saved(doc ? `/dynamic/problems/${doc.problem.problem_id}/statements` : "/dynamic/problems", body, "POST",
-          doc ? "Nova versão criada. A rubrica anterior está no histórico; crie e aprove uma nova rubrica." : "Problema criado. Forneça a rubrica do professor.");
+          doc ? "Nova versão criada. A rubrica anterior está no histórico; crie e aprove uma nova rubrica." : "Questão criada. Prepare com ConfIA ou forneça sua rubrica.");
         if (!doc) { title.value = ""; statement.value = ""; }
       });
     });
     return form;
   }
   function renderDocument(doc) {
-    current = doc; detail.replaceChildren();
+    if(disposed)return;
+    creation.hidden=true; detail.replaceChildren(); onSelect(doc.problem.problem_id);
     const statement = doc.statements[doc.statements.length - 1], pid = doc.problem.problem_id;
     const rubric = doc.rubrics.filter(r => r.statement_version === statement.version_number).slice(-1)[0];
-    append(detail, n("h2", statement.title || "Problema Dynamic"), n("p", `Enunciado V${statement.version_number} · ${money(statement.max_score)} pontos`));
-    if (doc.actor_notice) detail.appendChild(n("p", doc.actor_notice, "prototype-note"));
-    detail.appendChild(n("p", "Preparação matemática automática ainda não realizada. Correção de soluções disponível em etapa futura."));
-    const editStatement = n("details"); append(editStatement, n("summary", "Criar nova versão do enunciado"), statementForm(doc)); detail.appendChild(editStatement);
-    const section = n("section", null, "dynamic-rubric"), rows = n("div"), total = n("p"), heading = n("h3", "Rubrica fornecida pelo professor");
-    const state = n("p", rubric ? `Rubrica V${rubric.version_number} · ${rubric.status}` : "Sem rubrica para este enunciado.");
-    const ai = button("Sugerir rubrica por IA", () => {}); ai.disabled = true;
-    const unavailable = n("p", "Disponível no próximo estágio de preparação automática.");
-    let dirty = !rubric, nextId = 1; const editors = [];
+    const context = n("nav", null, "dynamic-context"); context.setAttribute("aria-label", "Etapas da preparação");
+    const question = n("section", null, "tme-panel dynamic-question");
+    append(question, n("h2", statement.title || "Questão sem título"), n("p", `Enunciado V${statement.version_number} · ${money(statement.max_score)} pontos`));
+    append(detail, context, question);
+    if (doc.actor_notice) question.appendChild(n("p", doc.actor_notice, "prototype-note"));
+    question.appendChild(n("p", statement.statement, "dynamic-statement"));
+    detail.appendChild(n("p", "Soluções candidatas precisam de revisão docente. Correção de alunos disponível em etapa futura."));
+    const preparationSection=renderPreparation(doc);
+    const editStatement = n("details"); append(editStatement, n("summary", "Criar nova versão do enunciado"), statementForm(doc)); question.appendChild(editStatement);
+    const section = n("section", null, "tme-panel dynamic-rubric"), rows = n("div"), total = n("p"), heading = n("h3", rubric?.generation ? "Rubrica sugerida pela IA · revisão docente" : "Rubrica fornecida pelo professor");
+    const state = n("p", rubric ? `Rubrica V${rubric.version_number} · ` : "Sem rubrica para este enunciado.");
+    if(rubric)state.appendChild(statusBadge(rubric.status));
+    const prep = doc.current_preparation;
+    const reason = input("Motivo da nova sugestão (opcional)"); reason.maxLength = 1000;
+    const ai = button(rubric?.generation ? "Rejeitar e gerar nova sugestão" : "Gerar rubrica sugerida", () => perform(() => saved(`/dynamic/problems/${pid}/rubric-suggestion`,
+      {expected_revision: doc.revision, preparation_id: prep.preparation_id, reason: reason.value || null}, "POST",
+      "Sugestão da IA salva. Leia os avisos, edite se necessário e aprove explicitamente."), "Gerando e revisando a rubrica…"));
+    ai.disabled = !doc.automatic_suggestion_available || !prep || !["READY_FOR_REVIEW", "REVIEW_REQUIRED"].includes(prep.status);
+    const unavailable = n("p", !doc.automatic_suggestion_available ? "Preparação com IA indisponível nesta instalação. A rubrica manual continua disponível."
+      : !prep ? "Prepare o enunciado atual para gerar uma sugestão." : "A sugestão não ativa a rubrica. A aprovação continua sendo sua decisão.");
+    const warnings = rubric?.review_warnings || [];
+    const acknowledgement = input("Li os avisos e assumo a revisão docente", "", "checkbox");
+    const requiresAcknowledgement = warnings.some(w => w.requires_review);
+    const warningsBox = n("div", null, "dynamic-warnings");
+    const uniqueWarnings = warnings.filter((w,i) => warnings.findIndex(other => other.message === w.message && other.requires_review === w.requires_review) === i);
+    uniqueWarnings.forEach(w => warningsBox.appendChild(n("p", `${w.requires_review ? "Revisão necessária" : "Limite da verificação"}: ${warningText(w.message,prep,rubric?.criteria)}`)));
+    if(warnings.length) {
+      const raw=n("details");append(raw,n("summary","Detalhes técnicos dos avisos"));
+      warnings.forEach(w=>raw.appendChild(n("p",`${w.code || "Aviso"}: ${w.message}`)));warningsBox.appendChild(raw);
+    }
+    if (rubric?.generation?.semantic_review) {
+      const review = n("details"); append(review, n("summary", "Revisão semântica da sugestão original"), n("p", rubric.generation.semantic_review.rationale)); warningsBox.appendChild(review);
+    }
+    if (requiresAcknowledgement) warningsBox.appendChild(label("Li os avisos e assumo a revisão docente", acknowledgement));
+    acknowledgement.addEventListener("change", () => update());
+    let dirty = !rubric, nextId = 1, replaceWithTeacher = false; const editors = [];
     const usedIds = new Set(doc.rubrics.flatMap(version => version.criteria.map(c => c.criterion_id)));
-    const save = button(rubric ? "Salvar como nova versão da rubrica" : "Salvar rubrica draft", () => {
+    const save = button(rubric ? "Salvar como nova versão da rubrica" : "Salvar rascunho da rubrica", () => {
       const payload = read();
       if (!valid()) { message.textContent = "A soma dos critérios deve ser igual ao valor total. Confira também os textos."; return; }
       return perform(() => saved(`/dynamic/problems/${pid}/rubrics${rubric ? `/${rubric.rubric_id}` : ""}`,
-        {expected_revision: doc.revision, statement_version: statement.version_number, max_score: statement.max_score, criteria: payload},
-        rubric ? "PATCH" : "POST", "Rubrica salva como nova versão draft. Revise antes de aprovar."));
-    }, "button button-primary");
+        {expected_revision: doc.revision, statement_version: statement.version_number, max_score: statement.max_score, criteria: payload, ...(replaceWithTeacher ? {replace_with_teacher: true} : {})},
+        rubric ? "PATCH" : "POST", "Rubrica salva como nova versão de rascunho. Revise antes de aprovar."));
+    }, "tme-button");
     const approve = button("Aprovar rubrica", () => perform(() => saved(`/dynamic/problems/${pid}/rubrics/${rubric.rubric_id}/approve`,
-      {expected_revision: doc.revision}, "POST", "Rubrica aprovada. Versão exata registrada no pacote ativo.")), "button button-primary");
+      {expected_revision: doc.revision, ...(requiresAcknowledgement ? {acknowledge_warnings: acknowledgement.checked} : {})}, "POST", "Rubrica aprovada. Versão exata registrada na configuração aprovada.")), "tme-button");
     function read() { return editors.map((row, i) => ({...row.original, criterion_id: row.id, title: row.title.value,
       description: row.description.value, max_points: row.points.value, order: i + 1})); }
     function valid() { return editors.every(row => row.title.value.trim() && row.description.value.trim() && cents(row.points.value) !== null)
@@ -102,7 +163,7 @@
       const values = editors.map(row => cents(row.points.value));
       total.textContent = `Total dos critérios: ${values.some(v => v === null) ? "inválido" : money(values.reduce((a,b) => a+b,0)/100)} / ${money(statement.max_score)} pontos`;
       save.disabled = !valid();
-      approve.disabled = !rubric || dirty || !rubric.criteria.length || ["APPROVED", "SUPERSEDED"].includes(rubric.status);
+      approve.disabled = !rubric || dirty || !rubric.criteria.length || ["APPROVED", "SUPERSEDED"].includes(rubric.status) || (requiresAcknowledgement && !acknowledgement.checked);
     }
     function addCriterion(data) {
       let id = data?.criterion_id;
@@ -113,38 +174,118 @@
       title.maxLength = 160; description.maxLength = 20000; description.rows = 2; points.min = "0"; points.max = "1000"; points.step = "0.01";
       const row = {id, title, description, points, original: data || {}, box}; editors.push(row);
       [title, description, points].forEach(el => el.addEventListener("input", () => { dirty = true; update(); }));
-      append(box, n("legend", `Critério · ${id}`), label("Título", title), label("Descrição / justificativa", description), label("Pontos", points), button("Remover critério", () => {
-        editors.splice(editors.indexOf(row), 1); rows.removeChild(box); dirty = true; update();
-      })); rows.appendChild(box); update();
+      append(box, n("legend", `Critério ${editors.length}`), label("Título", title), label("Descrição / justificativa", description), label("Pontos", points), button("Remover critério", () => {
+        editors.splice(editors.indexOf(row), 1);
+        editors.forEach(other => { if (other.original.dependencies) other.original = {...other.original, dependencies: other.original.dependencies.filter(id => id !== row.id)}; });
+        rows.removeChild(box); dirty = true; update();
+      }));
+      if (data?.evidence) {
+        const info = n("details"); append(info, n("summary", "Vínculos da sugestão original"),
+          n("p", `Objetivo: ${data.evidence.mathematical_objective}`),
+          n("p", `Etapas relacionadas: ${data.evidence.related_reference_claims.join(", ") || "não definidos"}`),
+          n("p", `Métodos aceitos: ${data.evidence.accepted_alternative_strategies.join(", ") || "revisar"}`));
+        box.appendChild(info);
+      }
+      rows.appendChild(box); update();
     }
     (rubric?.criteria || []).forEach(addCriterion);
-    append(section, heading, state, ai, unavailable, rows, button("Adicionar critério", () => { dirty = true; addCriterion(); }), total, save, approve);
-    if (rubric?.status === "APPROVED") section.appendChild(n("p", "A versão aprovada é imutável. Alterações serão salvas em uma nova versão draft; a versão ativa só muda após aprovação."));
+    const manual = button("Fornecer minha própria rubrica", () => {
+      editors.splice(0); rows.replaceChildren(); dirty = true; replaceWithTeacher = true; update();
+      message.textContent = "Insira seus critérios e salve como nova versão docente. O histórico será preservado.";
+    });
+    append(section, heading, state, ai, label("Motivo da nova sugestão (opcional)", reason), unavailable, warningsBox, manual, rows, button("Adicionar critério", () => { dirty = true; addCriterion(); }), total, save, approve);
+    if (rubric?.status === "APPROVED") section.appendChild(n("p", "A versão aprovada é imutável. Alterações serão salvas em uma nova versão de rascunho; a versão ativa só muda após aprovação."));
     detail.appendChild(section); update();
-    const history = n("section", null, "dynamic-history"); history.setAttribute("aria-label", "Histórico de versões");
+    const history = n("section", null, "tme-panel dynamic-history"); history.setAttribute("aria-label", "Histórico de versões");
     append(history, n("h3", "Histórico de versões"), n("p", doc.current_configuration
-      ? `Pacote ativo V${doc.current_configuration.package.package_version} · Enunciado V${doc.current_configuration.package.statement_version} · Rubrica V${doc.current_configuration.package.rubric_version}`
-      : "Sem pacote ativo. Uma nova rubrica aprovada é necessária."));
+      ? `Configuração aprovada V${doc.current_configuration.package.package_version} · Enunciado V${doc.current_configuration.package.statement_version} · Rubrica V${doc.current_configuration.package.rubric_version}`
+      : "Sem configuração aprovada. Uma nova rubrica aprovada é necessária."));
     for (const item of doc.statements) {
       const block = n("details"); append(block, n("summary", `Enunciado V${item.version_number}`), n("p", item.statement)); history.appendChild(block);
     }
+    for (const prep of doc.preparation_history || []) {
+      const block = n("details"); append(block, n("summary", `Preparação V${prep.preparation_version} · ${readable(prep.effective_status)} · Enunciado V${prep.statement_version}`));
+      appendPreparationEvidence(block, prep); history.appendChild(block);
+    }
     for (const item of doc.rubrics) {
-      const block = n("details"); append(block, n("summary", `Rubrica V${item.version_number} · ${item.status} · Enunciado V${item.statement_version}`));
+      const block = n("details"); append(block, n("summary", `Rubrica V${item.version_number} · ${readable(item.status)} · Enunciado V${item.statement_version}`));
       item.criteria.forEach(c => block.appendChild(n("p", `${c.title} — ${money(c.max_points)} pontos. ${c.description}`)));
-      if (item.approved_at) block.appendChild(n("p", `Aprovação: ${item.approved_by.kind} · ${item.approved_by.actor_id} · ${item.approved_at}`));
+      if (item.approved_at) block.appendChild(n("p", `Aprovação: ${readable(item.approved_by.kind)} · ${item.approved_by.actor_id} · ${item.approved_at}`));
       history.appendChild(block);
     }
     detail.appendChild(history);
+    for(const [title,target] of [["Questão",question],["Preparação",preparationSection],["Rubrica",section],["Histórico",history]])
+      context.appendChild(button(title,()=>{target.scrollIntoView({behavior:"smooth",block:"start"});target.tabIndex=-1;target.focus();}));
+    if(doc.current_configuration) {
+      const next=n("section",null,"tme-panel dynamic-next");
+      append(next,n("h3","Preparação salva no ConfIA"),n("p","A configuração aprovada está registrada. A correção de respostas será integrada ao workspace Original / Transcrição / Comparar, com o painel ConfIA e decisão humana, em uma próxima etapa."),
+        n("p","A aprovação da rubrica não elimina avisos ou incertezas e ainda não habilita correção de alunos."));
+      detail.appendChild(next);
+    }
   }
-  async function load() {
+  function appendPreparationEvidence(section, prep) {
+    if (prep.failure_code) {
+      section.appendChild(n("p", "Não foi possível concluir a preparação. Tente novamente ou forneça sua rubrica; nenhuma solução de referência foi criada.", "dynamic-warning"));
+      const failure=n("details");append(failure,n("summary","Detalhes técnicos da falha"),n("p",prep.failure_code));section.appendChild(failure);
+    }
+    const proposal = prep.proposal;
+    if (!proposal) return;
+    append(section, n("h4", `Domínio: ${proposal.mathematical_domain}`), n("p", proposal.normalized_problem), n("p", `Objetivo: ${proposal.target}`));
+    (proposal.assumptions || []).forEach(a => section.appendChild(n("p", `Hipótese ${readable(a.source)}: ${a.text}`)));
+    for (const candidate of proposal.candidate_reference_solutions || []) {
+      const evidence = (prep.analysis?.candidate_checks || []).find(c => c.solution_id === candidate.solution_id);
+      const block = n("details"); append(block, n("summary", `Solução de referência candidata · ${candidate.strategy_label} · ${readable(evidence?.status || "UNRESOLVED")}`));
+      candidate.claims.forEach(c => block.appendChild(n("p", c.text)));
+      block.appendChild(n("p", `Resultado candidato: ${candidate.final_result.text}`)); section.appendChild(block);
+    }
+    section.appendChild(n("h4", "Métodos alternativos"));
+    (proposal.alternative_strategies || []).forEach(s => section.appendChild(n("p", s.description)));
+    section.appendChild(n("h4", "Avisos e incertezas"));
+    (prep.analysis?.warnings || []).forEach(w => section.appendChild(n("p", `${w.requires_review ? "Revisão necessária" : "Limite"}: ${warningText(w.message,prep)}`, "dynamic-warning")));
+    (proposal.uncertainties || []).forEach(u => section.appendChild(n("p", u)));
+    const plan = n("details"); plan.appendChild(n("summary", "Verificações e limites"));
+    (prep.analysis?.verifier_plan || []).forEach(c => plan.appendChild(n("p", `${c.claim_id} · ${readable(c.capability)} · ${readable(c.status)} · ${readable(c.formal_status)}. ${readable(c.detail)} ${c.scope}`)));
+    section.appendChild(plan);
+    const technical=n("details");technical.appendChild(n("summary","Detalhes técnicos e proveniência"));
+    technical.appendChild(n("p",`Estado registrado: ${prep.status}. Confiança: ${prep.analysis?.trust_state}.`));
+    if (prep.provenance) technical.appendChild(n("p", `Origem: ${prep.provenance.provider} · ${prep.provenance.returned_model} · ${prep.provenance.prompt_version}. Estado de confiança: ${prep.analysis?.trust_state}.`));
+    (prep.analysis?.warnings || []).forEach(w=>technical.appendChild(n("p",`${w.code || "Aviso"}: ${w.message}`)));
+    section.appendChild(technical);
+  }
+  function renderPreparation(doc) {
+    const section = n("section", null, "tme-panel dynamic-preparation"), prep = doc.current_preparation;
+    const reason = input("Motivo da nova preparação (opcional)"); reason.maxLength = 1000;
+    const prepare = button(prep ? "Gerar nova preparação" : "Preparar com ConfIA", () => perform(() => saved(`/dynamic/problems/${doc.problem.problem_id}/preparations`,
+      {expected_revision:doc.revision, reason:reason.value || null}, "POST", "Preparação registrada. Confira o estado e as evidências antes de gerar uma rubrica."), "Preparando com ConfIA… Aguarde as checagens matemáticas."));
+    prepare.disabled = !doc.automatic_suggestion_available;
+    append(section, n("h3", "Preparação"), prep ? append(n("p", `Preparação V${prep.preparation_version} · `),statusBadge(prep.status)) : n("p","Ainda não preparada."), prepare,
+      label("Motivo da nova preparação (opcional)",reason));
+    section.appendChild(button("Atualizar preparação", () => perform(async () => renderDocument(await request(`/dynamic/problems/${doc.problem.problem_id}`)))));
+    if (prep && ["PENDING","RUNNING"].includes(prep.status)) {
+      section.appendChild(n("p", "Preparação em andamento. Após interrupção, uma nova tentativa pode ser feita em 3 minutos."));
+    }
+    if (prep) appendPreparationEvidence(section, prep);
+    detail.appendChild(section);return section;
+  }
+  function newQuestion() {
+    if(busy || disposed)return;
+    ++loadGeneration;++selectionGeneration;detail.replaceChildren();creation.hidden=false;message.textContent="";onSelect(null);
+  }
+  async function load(problemId) {
     const generation = ++loadGeneration;
     panel.replaceChildren();
     message = n("p"); message.setAttribute("role", "status"); message.setAttribute("aria-live", "polite");
-    list = n("div", null, "dynamic-problem-list"); detail = n("section");
-    append(panel, n("h2", "ConfIA Dynamic · Problemas e rubricas"), n("p", "Cadastre um problema e aprove a rubrica que será usada nas próximas etapas."), message,
-      n("h3", "Criar problema"), statementForm(), n("h3", "Meus problemas"), list, detail);
-    try { await refreshList(); if (generation === loadGeneration && current) renderDocument(await request(`/dynamic/problems/${current.problem.problem_id}`)); }
-    catch (error) { if (generation === loadGeneration) message.textContent = error.message; }
+    list = n("div", null, "dynamic-problem-list"); detail = n("div");
+    creation=n("section",null,"tme-panel dynamic-creation");
+    append(creation,n("h2","Dados da atividade"),n("p","Nesta etapa, prepare uma questão por vez, com título, enunciado e pontos. Tipos de atividade (lista, atividade ou prova) e agrupamento de questões serão integrados futuramente."),statementForm());
+    const resume=n("details",null,"tme-panel dynamic-resume");append(resume,n("summary","Retomar preparação"),list);
+    append(panel,button("Nova questão",newQuestion),resume,message,creation,detail);
+    try {
+      await refreshList();
+      if(generation===loadGeneration && !disposed && problemId)await selectProblem(problemId);
+    } catch(error) {if(generation===loadGeneration && !disposed)message.textContent=error.message;}
   }
-  root.ConfIADynamic = {load};
+  return {load,cancel(){disposed=true;++loadGeneration;}};
+  }
+  root.ConfIADynamic = {create};
 })(window);
