@@ -6,7 +6,7 @@ import io
 import json
 import os
 from typing import Optional, Literal
-from pydantic import Field, model_validator
+from pydantic import Field, model_validator, model_serializer
 from fastapi import HTTPException
 
 from confia_lean_auditor.assessments.store import assessment_store
@@ -19,14 +19,27 @@ from confia_lean_auditor.teacher_decisions.models import Points
 from .exam_store import exam_store, ExamConflict, sealed, read_sealed
 
 
+from .certification_models import GoldBinding, GoldEvaluation
+
+
 class GoldRubric(SubmissionModel):
     rubric_item_id: str = Field(min_length=1, max_length=100, pattern=r'^[A-Za-z0-9_.:-]+$')
     gold_points: Points
     max_points: Points
 
+    comment: Optional[str] = Field(default=None,max_length=1000)
+    adjudication_status: Optional[Literal['SINGLE_RATER','ADJUDICATED','UNRESOLVED']] = None
+
+    @model_serializer(mode='wrap')
+    def compatible(self,handler):
+        data=handler(self)
+        for key in ('comment','adjudication_status'):
+            if getattr(self,key) is None:data.pop(key,None)
+        return data
+
     @model_validator(mode='after')
     def bounds(self):
-        if self.max_points <= 0 or self.gold_points > self.max_points: raise ValueError('invalid rubric score')
+        if self.max_points < 0 or self.gold_points > self.max_points: raise ValueError('invalid rubric score')
         return self
 
 
@@ -38,6 +51,16 @@ class GoldRow(SubmissionModel):
     max_score: Points
     rubric_gold: list[GoldRubric] = Field(default_factory=list, max_length=100)
     scorer_reference: Optional[str] = Field(default=None, min_length=1, max_length=80, pattern=r'^[A-Za-z0-9_.:-]+$')
+
+    binding: Optional[GoldBinding] = None
+    evaluation: Optional[GoldEvaluation] = None
+
+    @model_serializer(mode='wrap')
+    def compatible(self,handler):
+        data=handler(self)
+        for key in ('binding','evaluation'):
+            if getattr(self,key) is None:data.pop(key,None)
+        return data
 
     @model_validator(mode='after')
     def bounds(self):
@@ -150,7 +173,32 @@ def import_gold(aid, request, user):
             if key in seen: raise ValueError('duplicate participant/question')
             seen.add(key)
             # Rubric IDs/limits validated against a persisted audit, never a guessed rubric.
-            if row.rubric_gold:
+            if item.dynamic_context:
+                if not row.binding or not row.evaluation:raise ValueError('Dynamic gold requires explicit version binding and evaluator metadata')
+                from .store import case_store
+                from confia_lean_auditor.dynamic.grading_context import case_context
+                case=case_store().read(row.binding.question_attempt_id)
+                submission=exam_store()._detail(case.exam_submission_id,user).submission
+                if submission.assessment_id!=aid or submission.participant_id!=key[0] or case.assessment_item_id!=key[1]:
+                    raise ValueError('gold attempt association mismatch')
+                from confia_lean_auditor.submissions.router import store as submissions
+                tid,rev=row.binding.transcription_version_id.split(':')
+                history_=submissions().transcription_history(tid)
+                if history_.transcription.submission_id!=case.submission_id or not any(r.revision_number==int(rev) for r in history_.revisions):
+                    raise ValueError('unknown gold transcription')
+                # Resolve the approved rubric without exposing agent predictions to the gold author.
+                _,_,rubric,_=case_context(case)
+                catalog={c.criterion_id:c.max_points for c in rubric.criteria}
+                if row.rubric_gold:
+                    if {r.rubric_item_id for r in row.rubric_gold}!=set(catalog):raise ValueError('criterion gold must cover the complete rubric')
+                    if sum(r.gold_points for r in row.rubric_gold)!=row.gold_score:raise ValueError('criterion gold total mismatch')
+                for rating in row.evaluation.ratings:
+                    if rating.score>row.max_score:raise ValueError('rater score exceeds maximum')
+                    if rating.criterion_points and (set(rating.criterion_points)!=set(catalog) or sum(rating.criterion_points.values())!=rating.score or any(v>catalog[k] for k,v in rating.criterion_points.items())):
+                        raise ValueError('invalid rater criterion scores')
+                for r in row.rubric_gold:
+                    if r.rubric_item_id not in catalog or Decimal(str(catalog[r.rubric_item_id]))!=r.max_points:raise ValueError('gold criterion mismatch')
+            elif row.rubric_gold:
                 from .certification import rubric_catalog
                 catalog = rubric_catalog(aid,item.assessment_item_id,user)
                 if not catalog: raise ValueError('rubric gold requires an observed rubric')

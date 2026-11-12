@@ -1,0 +1,32 @@
+{
+  "schema_version": "dy7-formal-validation.v1",
+  "status": "ENVIRONMENT_PENDING",
+  "tests": [
+    {
+      "nodeid": "tests/test_submission_audits.py::test_real_bridge_preserves_wrong_solution_and_runs_existing_lean_pipeline",
+      "classification": "environment_failure",
+      "observed": "technical_error instead of verified/refuted"
+    },
+    {
+      "nodeid": "tests/test_tme_accepted_integration.py::test_real_local_lean_status_certificates_preserved",
+      "classification": "environment_failure",
+      "observed": "technical_error instead of verified/refuted"
+    },
+    {
+      "nodeid": "tests/test_tme_hybrid_grader.py::test_wrong_reasoning_correct_final_is_refuted_by_real_lean",
+      "classification": "environment_failure",
+      "observed": "technical_error instead of verified/refuted"
+    },
+    {
+      "nodeid": "tests/test_tme_hybrid_grader.py::test_real_formal_verified_is_preserved_and_not_semantic",
+      "classification": "environment_failure",
+      "observed": "technical_error instead of verified/refuted"
+    }
+  ],
+  "requested_revision": "8f9d9cff6bd728b17a24e163c9402775d9e6a365",
+  "checkout_head": "ab19bac90981b27f5380941f4b36617e738358c9",
+  "staged_deletions": 9490,
+  "untracked_entries": 18,
+  "action": "No checkout/reset, no dependency migration, no Specialized expectations changed",
+  "evidence": "DY7 regression repeats the four DY6 failures. Detailed checkout stderr retained from DY6. Formal mathematical regression remains unassessed until the environment works."
+}

@@ -207,6 +207,35 @@
         n('p',`ConfIA × HumanDecision · N: ${stats.confia_vs_human_decision.N} · MAE: ${number(stats.confia_vs_human_decision.MAE)}`),
         n('p',`HumanDecision × HumanGold · N: ${stats.human_decision_vs_gold.N} · MAE: ${number(stats.human_decision_vs_gold.MAE)}`),
         n('p','HumanDecision é a decisão feita nesta interface. HumanGold é a correção externa independente. Comparações descritivas, sem inferência causal.'));
+      function dynamicMetrics(metrics,verdict='Projeção atual · dataset ainda não selecionado'){
+        const section=n('section',undefined,'card');section.append(n('h3','Dynamic · avaliação experimental'),message(verdict));
+        for(const stratum of metrics.strata||[]){
+          const m=stratum.metrics;section.append(n('h4',`${stratum.profile} · ${stratum.split} · ${stratum.source_kind} · N: ${m.N}`));
+          for(const [stage,v] of Object.entries(m.stages))section.append(n('p',`${stage} · N: ${v.score.N} · MAE: ${number(v.score.MAE)} · Exata: ${pct(v.score.exact_score_agreement)} · Falso crédito: ${pct(v.criterion.false_credit_rate)} · Crédito perdido: ${pct(v.criterion.missed_credit_rate)}`));
+          const g=m.stages.G2;section.append(n('p',`Revisão: ${pct(g.review_rate)} · Cobertura de automação: ${pct(g.automation_coverage)} · Risco entre automatizados: ${pct(g.unsafe_automation_rate)}`),
+            n('p',`Override humano: ${pct(m.human_override.rate)} · Falhas técnicas: ${m.technical_failure_cases} · Exclusões: ${Object.entries(m.exclusions).map(([k,v])=>`${k}: ${v}`).join(', ')||'0'}`));
+        }
+        section.append(n('p','G0: grader; G1: reviewer verificado; G2: reconciliação; G3: decisão humana. Amostra sintética não demonstra eficácia em alunos reais.'));
+        return section;
+      }
+      if(data.dynamic_metrics?.N){
+        panel.append(dynamicMetrics(data.dynamic_metrics));
+        const history=n('section',undefined,'card');
+        history.append(btn('Execuções experimentais',async()=>{
+          try{
+            const items=await api(`${base}/runs`);history.replaceChildren(n('h3','Execuções imutáveis · SHADOW_EVALUATION'));
+            if(!items.length)history.append(message('Nenhum benchmark congelado. Registre o protocolo e o dataset antes da execução.'));
+            for(const item of items){
+              const entry=n('section',undefined,'card');entry.append(n('p',item.verdict.status));
+              entry.append(btn('Ver métricas da execução',async()=>{try{const value=await api(`${base}/runs/${item.id}`);entry.append(dynamicMetrics(value.metrics,value.verdict.status));}catch(_){entry.append(message('Não foi possível carregar a execução.'));}},'secondary'));
+              for(const [suffix,label] of [['export.json','JSON da execução'],['export.csv','CSV por estágio'],['report.md','Relatório Markdown']]){
+                const link=n('a',label,'button secondary');link.href=`${base}/runs/${item.id}/${suffix}`;link.download=suffix;entry.append(link);
+              }
+              history.append(entry);
+            }
+          }catch(_){history.append(message('Não foi possível carregar o histórico experimental.'));}
+        },'secondary'));panel.append(history);
+      }
       const select=n('select');select.setAttribute('aria-label','Seleção das provas');
       for(const [value,label] of [['finalized','Finalizadas'],['current','Estado atual']]){const o=n('option',label);o.value=value;select.append(o);}select.value=filters.selection;
       select.addEventListener('change',()=>certification(assessmentId,examId,{...filters,selection:select.value}));
@@ -221,7 +250,8 @@
       const source=n('input'),dataset=n('input'),content=n('textarea');source.required=true;dataset.required=true;content.required=true;content.rows=6;
       source.setAttribute('aria-label','Fonte do gold');dataset.setAttribute('aria-label','Versão do dataset');content.setAttribute('aria-label','Conteúdo do gold');
       source.pattern=dataset.pattern='[A-Za-z0-9_.:-]+';source.maxLength=100;dataset.maxLength=80;
-      content.placeholder='assessment_id,participant_code,question_id,gold_score,max_score';
+      content.placeholder=data.dynamic_metrics?.N?'JSON: inclua binding de versões e evaluation com avaliador/cegamento.':'assessment_id,participant_code,question_id,gold_score,max_score';
+      if(data.dynamic_metrics?.N){format.value='JSON';form.append(n('p','Dynamic exige JSON com binding, evaluation e versões explícitas. O gold pode ser importado antes de executar o grader pela API compartilhada.'));}
       form.append(n('h3','Importar gold externo'),n('p','Use códigos pseudônimos. Cada importação substitui o conjunto ativo e preserva o histórico. CSV: cinco colunas acima. JSON: lista de registros com essas mesmas chaves; rubric_gold é opcional.'),
         field('Formato',format),field('Fonte do gold',source),field('Versão do dataset',dataset),field('Conteúdo do gold',content));
       const status=message('');let busy=false;const submit=n('button','Importar gold');submit.type='submit';form.append(submit,status);

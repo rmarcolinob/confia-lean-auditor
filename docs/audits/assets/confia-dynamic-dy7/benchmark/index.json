@@ -1,0 +1,25 @@
+{
+  "spec_sha256": "6800e3d9b268a2a075efa68fcfcfb80c96df0ac9515192397515fa6719342aa7",
+  "harness_sha256": "fa44df4abfe508a353b879a7d54a9c187afb825ef29c378aa67d67712f8638a2",
+  "frozen_at": "2026-11-12T21:04:01.840057+00:00",
+  "live": false,
+  "dataset_version": "dy7-pilot-01",
+  "runs": [
+    {
+      "id": "run_e0ed0913d8d7532b8431337b99e5635217695b18c3a8f56be854685a744dbe0a",
+      "assessment_id": "asmt_1aae5a9124904da6a93252b902f07a4e",
+      "verdict": {
+        "status": "PILOT_METRICS_AVAILABLE",
+        "configured": false
+      }
+    },
+    {
+      "id": "run_ef21bfce69c02f052e635453d3991c88dfe40aa110ac591b7f0e6d1d3ea149df",
+      "assessment_id": "asmt_d30b7fc009a64d4e9f3ce63ce2c7559c",
+      "verdict": {
+        "status": "PILOT_METRICS_AVAILABLE",
+        "configured": false
+      }
+    }
+  ]
+}

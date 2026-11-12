@@ -205,7 +205,14 @@ def build(aid,user,selection='finalized',engine_mode=None,gold_version=None):
                         rubric_gold=g['rubric_gold'] if g else [],timestamps=dict(captured_at=detail.submission.created_at.isoformat(),
                             audit_started_at=audit['started_at'] if audit else None,audit_completed_at=audit['completed_at'] if audit else None,
                             human_decided_at=d['decided_at'] if d else None,finalized_at=final['finalized_at'] if final else None))
-                    rows.append(record.model_dump(mode='json'))
+                    row=record.model_dump(mode='json')
+                    if case.dynamic_context:
+                        from .certification_dynamic import project as dynamic_projection
+                        row['dynamic_evaluation']=dynamic_projection(case,run,d,g,current,doc.assessment.dynamic_policy_profile,doc.assessment.feedback_policy)
+                        if row['dynamic_evaluation']['exclusions']:
+                            row['dynamic_evaluation']['reference_gold_score']=row['human_gold_score']
+                            row.update(human_gold_score=None,rubric_gold=[],absolute_error_vs_gold=None,signed_error_vs_gold=None)
+                    rows.append(row)
             if included:
                 events.extend(exam_events)
                 finals.extend({k:f[k] for k in ('final_correction_id','submission_id','version','previous_final_correction_id','snapshot_sha256','finalized_at')} for f in summary['final_corrections'])
@@ -221,7 +228,8 @@ def build(aid,user,selection='finalized',engine_mode=None,gold_version=None):
             filters=dict(selection=selection,engine_mode=engine_mode,gold_version=gold_version),counts=counts,
             engine_versions=[dict(engine_mode=m,engine_version=v) for m,v in sorted({(r['engine_mode'],r['engine_version']) for r in rows if r['engine_mode']})],
             gold=gold_metadata(selected),records_sha256=canonical_sha256(rows),events_sha256=canonical_sha256(events),**code_version())
-        return dict(manifest=manifest,records=rows,events=events,event_coverage=coverage(),gold_history=[gold_metadata(v) for v in versions],
+        from .certification_experiment_metrics import report as dynamic_metrics
+        return dict(dynamic_metrics=dynamic_metrics(rows),manifest=manifest,records=rows,events=events,event_coverage=coverage(),gold_history=[gold_metadata(v) for v in versions],
             metrics=metrics(rows,audits_history,questions_history),audit_history=audits_history,question_history=questions_history,finalization_history=finals)
 
 
