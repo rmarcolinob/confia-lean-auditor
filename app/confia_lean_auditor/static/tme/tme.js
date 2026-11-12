@@ -175,6 +175,12 @@
       saved.history = summaries.length ? await api(`${base}/transcriptions/${summaries[0].transcription.transcription_id}`) : null;
       if(c.source_mode==="TEXT")saved.originalText=await api(`/tme/cases/${c.case_id}/original-text`);
       Object.assign(saved, { audits, decision, detail, feedback, loaded: true, loadError: false });
+      if(c.dynamic_context) {
+        saved.independentReviews ||= {};
+        const current=audits.find(a=>a.status==="COMPLETED" && !a.stale);
+        if(current)try {saved.independentReviews[current.audit_run_id]=await api(`/dynamic/attempts/${c.case_id}/audits/${current.audit_run_id}/independent-reviews`);saved.reviewError="";}
+        catch(error){saved.reviewError="Não foi possível consultar a revisão independente. A sugestão original permanece preservada.";}
+      }
     }
     return saved;
   }
@@ -309,6 +315,17 @@
     if (!c.submission_id) return c.source_mode === "IMAGE_SCAN" ? renderScan() : renderInk();
     try { await loadCaseData(c); if (generation === state.generation) await renderCorrection(); }
     catch (_) { if (generation === state.generation) show(context(c,0),note("Não foi possível carregar a solução. Seus dados permanecem preservados."),actions(btn("Tentar novamente",()=>openCase(caseId).catch(showError)))); }
+  }
+  async function reviewDynamic(c,run) {
+    if(state.busy || run.stale || !c.dynamic_context)return;
+    const saved=local(c);state.busy=true;saved.reviewError="";saved.reviewPending=true;
+    await renderCorrection();
+    try {
+      const result=await post(`/dynamic/attempts/${c.case_id}/audits/${run.audit_run_id}/independent-reviews`,{execution_key:window.crypto.randomUUID()});
+      saved.independentReviews ||= {};saved.independentReviews[run.audit_run_id]=[result,...(saved.independentReviews[run.audit_run_id]||[])];
+    } catch(error){saved.reviewError=error.message || "Revisão independente indisponível.";}
+    finally{state.busy=false;saved.reviewPending=false;}
+    if(state.current?.case_id===c.case_id && state.view==="workspace")await renderCorrection();
   }
   function renderInk() {
     const c = state.current, box = card("Escrever no tablet");
@@ -616,7 +633,7 @@
         for(const old of previous){const entry=node("details"),content=node("div");entry.append(node("summary",`Análise anterior · versão ${old.revision_number} · ${scoreText(old.suggested_score,old.max_score)} · ${old.status==="FAILED"?"Falha técnica":old.review_required?"Revisar":"Concluída"}${old.completed_at?` · ${new Date(old.completed_at).toLocaleString("pt-BR")}`:""}`));window.ConfiaWorkspaceReport.renderQuestion(old,content,{onOriginal,historical:true});entry.append(content);history.append(entry);}analysisBody.append(history);}
     } else if (run) {
       if (run.stale) analysisBody.appendChild(note("Análise de uma revisão anterior. Analise a revisão atual antes de vincular a decisão."));
-      if (run.result) { const report = node("div"); window.ConfIAReport.render(run.result, report, { context: "evaluator", auditRun: run, workspace: true, uiState: saved }); analysisBody.appendChild(report); }
+      if (run.result) { const report = node("div"); window.ConfIAReport.render(run.result, report, { context: "evaluator", auditRun: run, workspace: true, uiState: saved, independentReview:saved.independentReviews?.[run.audit_run_id]?.[0], reviewError:saved.reviewError, reviewBusy:state.busy, onIndependentReview:()=>reviewDynamic(c,run) }); analysisBody.appendChild(report); }
       else analysisBody.appendChild(note("Não foi possível concluir a análise. A decisão humana permanece disponível."));
     } else if (!saved.processing) analysisBody.appendChild(note((c.exam_submission_id || c.source_mode==="TEXT") ? "Aguardando análise. Nenhuma pontuação foi calculada para esta leitura." : "Reconheça a solução e analise para consultar critérios, evidências e verificações."));
     if(c.exam_submission_id && saved.examReview.reanalysis_required)analysisBody.prepend(note("Leitura alterada — reanálise necessária. A leitura foi corrigida. Reanalise esta questão para atualizar a sugestão. Análises anteriores permanecem no histórico."));

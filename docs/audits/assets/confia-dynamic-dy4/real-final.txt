@@ -1,0 +1,7 @@
+DY3-LINEAR COMPLETED None AGREEMENT 3 [('method', '4'), ('roots', '3'), ('check', '3')]
+DY3-REVIEW COMPLETED None DISAGREEMENT 0 [('method', None), ('roots', None), ('check', None)]
+DY3-S4 COMPLETED None INCONCLUSIVE 1 [('method', None), ('roots', '0'), ('check', None)]
+DY3-S3 COMPLETED None DISAGREEMENT 0 [('method', None), ('roots', '1.5'), ('check', '0')]
+DY3-S2 COMPLETED None AGREEMENT 3 [('method', '4'), ('roots', '3'), ('check', '3')]
+DY3-S1 COMPLETED None AGREEMENT 3 [('method', '4'), ('roots', '3'), ('check', '3')]
+All original AuditRun bytes unchanged

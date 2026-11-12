@@ -101,6 +101,7 @@
     const verified = checks.filter(check => formalStatus(check) === "verified").length;
     coverage.append(bar, n("p", `${items.length} critérios · ${decided.length} decididos · ${counted(verified, "claim formalmente verificado", "claims formalmente verificados")} · ${counted(items.length - decided.length, "indeterminado", "indeterminados")}`, "coverage-stats"));
     report.append(summary, coverage);
+    if(data.engine_mode==="DYNAMIC")report.append(independentReviewPanel(data,options));
     if(data.engine_mode==="DYNAMIC") {
       summary.append(n("p",data.review_required?"Revisão necessária · sugestão provisória":"Sugestão provisória · decisão do professor","formal-warning"));
       summary.append(n("p","Modo: Correção dinâmica","quiet-label"));
@@ -163,6 +164,29 @@
     const technical = p.renderTechnicalDetails(options.auditRun || data); technical.appendChild(p.renderEnvironment(data));
     if (saved.history || saved.feedback) { const source=n("pre",JSON.stringify({transcription:saved.history,recognition:saved.feedback},root.ConfIAReport.publicTechnicalValue,2));technical.appendChild(source); } report.appendChild(technical);
     host.replaceChildren(report);
+  }
+  function independentReviewPanel(data,options) {
+    const panel=n("section",null,"independent-review"), view=options.independentReview, record=view?.review, comparison=record?.comparison;
+    panel.setAttribute("aria-label","Revisão independente");
+    const details=n("details"), title=record?.status==="FAILED"?"Revisão não concluída":!comparison?"Ainda não solicitada":comparison.conflicting_criteria.length?`${comparison.conflicting_criteria.length} divergência${comparison.conflicting_criteria.length===1?" requer":"s requerem"} atenção`:`Concordância: ${comparison.agreement_count}/${comparison.criteria.length} critérios`;
+    details.append(n("summary",`Revisão independente · ${title}`));
+    details.append(n("p","A revisão não altera a sugestão original nem a decisão do professor."));
+    if(view?.stale)details.append(n("p","Revisão de uma versão anterior; não representa a transcrição atual.","formal-warning"));
+    if(record?.status==="FAILED")details.append(n("p","Não foi possível concluir a revisão. Tente novamente; nenhum acordo ou nova nota foi presumido.","formal-warning"));
+    if(view?.review_required)details.append(n("p","Revisão necessária. Divergências e incertezas permanecem pendentes.","formal-warning"));
+    const fmt=value=>value==null?"Indeterminado":String(value).replace(".",",");
+    for(const item of comparison?.criteria||[]) {
+      const row=n("details"), rubric=data.decisions?.find(c=>c.criterion_id===item.criterion_id), opinion=record.phase_a?.criterion_reviews.find(c=>c.criterion_id===item.criterion_id);
+      row.append(n("summary",`${rubric?.description||item.criterion_id} · Grader: ${fmt(item.grader_points)} · Reviewer: ${fmt(item.reviewer_points)}`),n("p",item.reason),n("p",opinion?.explanation||""));
+      for(const evidence of opinion?.evidence||[])row.append(n("blockquote",evidence));
+      for(const warning of opinion?.uncertainty||[])row.append(n("p",warning,"formal-warning"));
+      details.append(row);
+    }
+    for(const warning of record?.phase_a?.warnings||[])details.append(n("p",warning,"formal-warning"));
+    if(comparison?.exact_agreement)details.append(n("p","Concordância não é prova matemática nem certificação."));
+    if(options.reviewError)panel.append(n("p",options.reviewError,"formal-warning"));
+    const action=n("button",options.uiState?.reviewPending?"Revisando independentemente…":record?"Solicitar nova revisão independente":"Solicitar revisão independente","secondary");action.type="button";action.disabled=Boolean(options.reviewBusy || options.auditRun?.stale);action.addEventListener("click",()=>options.onIndependentReview?.());
+    panel.append(details,action);return panel;
   }
   function renderQuestion(data, host, options={}) {
     const report=n("div",null,"workspace-report"), fmt=v=>v==null?"Não determinada":String(v).replace(".",",");

@@ -160,3 +160,37 @@ def create_attempt(problem_id: str, body: DynamicAttemptRequest, user=Depends(re
     case=guarded(case_store().bind,case.case_id,receipt.submission_id,user)
     guarded(store().create_transcription,receipt.submission_id,CreateTranscriptionRequest(reviewer_reference=user.user_id,segments=[dict(segment_id='text:0',page_index=0,order=0,kind='text',text=body.solution)]))
     return case
+
+
+class IndependentReviewRequest(BaseModel):
+    model_config=ConfigDict(extra='forbid')
+    execution_key: str = Field(min_length=1,max_length=80,pattern=r'^[A-Za-z0-9_-]+$')
+
+
+def independent_review_service():
+    from .review_service import DynamicReviewService
+    from confia_lean_auditor.submission_audits.router import service
+    return DynamicReviewService(service())
+
+
+@router.get('/attempts/{case_id}/audits/{run_id}/independent-reviews')
+def independent_reviews(case_id: str,run_id: str,response: Response,user=Depends(require_tme_evaluator)):
+    from confia_lean_auditor.tme.router import case_for
+    response.headers['Cache-Control']='no-store'
+    guarded(evaluator_actor_for_review,user)
+    case=case_for(case_id,user)
+    return guarded(independent_review_service().list,case,run_id)
+
+
+def evaluator_actor_for_review(user):
+    from .grading_context import evaluator_actor
+    return evaluator_actor(user)
+
+
+@router.post('/attempts/{case_id}/audits/{run_id}/independent-reviews',status_code=201)
+def independent_review(case_id: str,run_id: str,body: IndependentReviewRequest,response: Response,user=Depends(require_tme_evaluator)):
+    from confia_lean_auditor.tme.router import case_for
+    response.headers['Cache-Control']='no-store'
+    guarded(evaluator_actor_for_review,user)
+    case=case_for(case_id,user)
+    return guarded(independent_review_service().execute,case,run_id,body.execution_key)
