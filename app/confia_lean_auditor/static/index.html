@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="/static/design-system.css?v=ux-pro-01">
     <link rel="stylesheet" href="/static/styles.css?v=ux-pro-01">
     <link rel="stylesheet" href="/static/submissions/teacher.css?v=ux-pro-01">
+    <link rel="stylesheet" href="/static/dynamic.css?v=dy1">
     <link rel="stylesheet" href="/static/audit-view.css?v=audit-01">
     <link rel="stylesheet" href="/static/tutoria.css?v=tutoria-contextual-final-01">
     <link rel="stylesheet" href="/static/tutoria-chat.css?v=tutoria-contextual-final-01">
@@ -56,6 +57,7 @@
             <a href="#teacher/home" data-shell-link>Início</a>
             <a href="#teacher/students" data-shell-link>Alunos</a>
             <a href="#teacher/exams" data-shell-link>Exames</a>
+            <a href="#teacher/dynamic" data-shell-link>Dynamic · Problemas e rubricas</a>
             <a href="#teacher/submissions" data-shell-link>Soluções recebidas</a>
             <a href="#teacher/transcriptions" data-shell-link>Transcrições</a>
             <a href="#teacher/analysis" data-shell-link>Correção / Análise ConfIA</a>
@@ -313,6 +315,7 @@
           <div id="teacher-exam-list" class="submission-list"></div>
           <section id="teacher-exam-progress" hidden></section>
         </section>
+        <section id="teacher-dynamic" class="card" aria-label="Preparação Dynamic" hidden></section>
         <div class="teacher-submission-modes" aria-label="Origem das soluções">
           <button id="show-manuscripts" class="secondary-action" type="button" aria-pressed="true">Soluções recebidas</button>
           <button id="show-text-prototype" class="secondary-action" type="button" aria-pressed="false">Demonstração textual local</button>
@@ -463,6 +466,7 @@
     <script src="/static/submissions/decisions.js?v=ux-pro-01"></script>
     <script src="/static/submissions/teacher.js?v=audit-01"></script>
     <script src="/static/assessments.js?v=ux-pro-01"></script>
+    <script src="/static/dynamic.js?v=dy1"></script>
     <script src="/static/management.js?v=p2-dec-01"></script>
     <script src="/static/demo/tutoria-demo-data.js?v=tutoria-contextual-final-01"></script>
     <script src="/static/demo/tutoria-chat-demo.js?v=tutoria-contextual-final-01"></script>

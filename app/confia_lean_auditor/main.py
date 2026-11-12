@@ -58,6 +58,7 @@ from confia_lean_auditor.assessments.router import router as assessments_router
 from confia_lean_auditor.management.router import router as management_router
 from confia_lean_auditor.teacher_decisions.router import router as teacher_decisions_router
 from confia_lean_auditor.tme.router import router as tme_router
+from confia_lean_auditor.dynamic.router import router as dynamic_router
 from confia_lean_auditor.tme.auth import demo_no_auth_enabled
 
 
@@ -84,6 +85,7 @@ app.include_router(assessments_router)
 app.include_router(management_router)
 app.include_router(teacher_decisions_router)
 app.include_router(tme_router)
+app.include_router(dynamic_router)
 
 
 def repo_root() -> Path:

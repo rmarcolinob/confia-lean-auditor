@@ -1,0 +1,484 @@
+{
+  "url": "http://127.0.0.1:8766/#teacher/dynamic",
+  "identity": "technical-demo:dynamic",
+  "observed_workflow": [
+    "create_statement_v1",
+    "save_teacher_rubric_v1",
+    "edit_rubric_v2",
+    "approve_rubric_v2",
+    "create_statement_v2",
+    "reload_and_open_history"
+  ],
+  "console_errors_after_reload": [],
+  "persisted_revision": 5,
+  "chain_tip_sha256": "d30d3849b5460b41134a15c14c98bdbadd516bc411473685757f083b558076a6",
+  "current_configuration": null,
+  "document": {
+    "schema_version": "dynamic-document.v1",
+    "revision": 5,
+    "problem": {
+      "problem_id": "dyn_d17b37f2917344338e20a9571168d9c3",
+      "correction_mode": "DYNAMIC",
+      "created_at": "2026-11-11T17:56:57.205409Z",
+      "created_by": {
+        "actor_id": "technical-demo:dynamic",
+        "kind": "TECHNICAL_DEMO",
+        "tenant_id": null
+      },
+      "assessment_reference": null
+    },
+    "statements": [
+      {
+        "problem_id": "dyn_d17b37f2917344338e20a9571168d9c3",
+        "version_number": 1,
+        "title": "DY1 · Equação quadrática",
+        "statement": "Resolva x² - 5x + 6 = 0",
+        "max_score": "10",
+        "created_at": "2026-11-11T17:56:57.205409Z",
+        "created_by": {
+          "actor_id": "technical-demo:dynamic",
+          "kind": "TECHNICAL_DEMO",
+          "tenant_id": null
+        },
+        "provenance": {
+          "origin": "TECHNICAL_DEMO",
+          "schema_version": "dynamic-provenance.v1",
+          "model_provenance": null
+        }
+      },
+      {
+        "problem_id": "dyn_d17b37f2917344338e20a9571168d9c3",
+        "version_number": 2,
+        "title": "DY1 · Equação quadrática",
+        "statement": "Resolva, no conjunto dos números reais, x² - 5x + 6 = 0 e justifique sua resposta.",
+        "max_score": "10",
+        "created_at": "2026-11-11T17:57:52.943631Z",
+        "created_by": {
+          "actor_id": "technical-demo:dynamic",
+          "kind": "TECHNICAL_DEMO",
+          "tenant_id": null
+        },
+        "provenance": {
+          "origin": "TECHNICAL_DEMO",
+          "schema_version": "dynamic-provenance.v1",
+          "model_provenance": null
+        }
+      }
+    ],
+    "rubrics": [
+      {
+        "max_score": "10",
+        "criteria": [
+          {
+            "criterion_id": "criterion_1",
+            "title": "Fatoração/estrutura",
+            "description": "Apresenta a fatoração ou uma estrutura algébrica equivalente.",
+            "max_points": "3",
+            "order": 1,
+            "dependencies": [],
+            "notes": "",
+            "teacher_guidance": ""
+          },
+          {
+            "criterion_id": "criterion_2",
+            "title": "Raízes",
+            "description": "Identifica as duas raízes da equação.",
+            "max_points": "3",
+            "order": 2,
+            "dependencies": [],
+            "notes": "",
+            "teacher_guidance": ""
+          },
+          {
+            "criterion_id": "criterion_3",
+            "title": "Conclusão/justificativa",
+            "description": "Justifica os passos e apresenta o conjunto solução.",
+            "max_points": "4",
+            "order": 3,
+            "dependencies": [],
+            "notes": "",
+            "teacher_guidance": ""
+          }
+        ],
+        "rubric_id": "drub_443c0a376cc942cf9b55fe86db08d8cb",
+        "problem_id": "dyn_d17b37f2917344338e20a9571168d9c3",
+        "statement_version": 1,
+        "statement_sha256": "94cf3bb6f7227c92b2ae9adc6f0499d364bf8a7752ee89a735b0a4183383226b",
+        "version_number": 1,
+        "draft_status": "DRAFT_TEACHER",
+        "supersedes_id": null,
+        "created_at": "2026-11-11T17:57:12.056116Z",
+        "created_by": {
+          "actor_id": "technical-demo:dynamic",
+          "kind": "TECHNICAL_DEMO",
+          "tenant_id": null
+        },
+        "provenance": {
+          "origin": "TECHNICAL_DEMO",
+          "schema_version": "dynamic-provenance.v1",
+          "model_provenance": null
+        },
+        "status": "DRAFT_TEACHER",
+        "is_current": false,
+        "approved_at": null,
+        "approved_by": null
+      },
+      {
+        "max_score": "10",
+        "criteria": [
+          {
+            "criterion_id": "criterion_1",
+            "title": "Fatoração/estrutura",
+            "description": "Apresenta a fatoração ou estrutura equivalente, explicitando os fatores.",
+            "max_points": "3",
+            "order": 1,
+            "dependencies": [],
+            "notes": "",
+            "teacher_guidance": ""
+          },
+          {
+            "criterion_id": "criterion_2",
+            "title": "Raízes",
+            "description": "Identifica as duas raízes da equação.",
+            "max_points": "3",
+            "order": 2,
+            "dependencies": [],
+            "notes": "",
+            "teacher_guidance": ""
+          },
+          {
+            "criterion_id": "criterion_3",
+            "title": "Conclusão/justificativa",
+            "description": "Justifica os passos e apresenta o conjunto solução.",
+            "max_points": "4",
+            "order": 3,
+            "dependencies": [],
+            "notes": "",
+            "teacher_guidance": ""
+          }
+        ],
+        "rubric_id": "drub_0c807fc36fac44ea87d87605ff9c262b",
+        "problem_id": "dyn_d17b37f2917344338e20a9571168d9c3",
+        "statement_version": 1,
+        "statement_sha256": "94cf3bb6f7227c92b2ae9adc6f0499d364bf8a7752ee89a735b0a4183383226b",
+        "version_number": 2,
+        "draft_status": "TEACHER_EDITED",
+        "supersedes_id": "drub_443c0a376cc942cf9b55fe86db08d8cb",
+        "created_at": "2026-11-11T17:57:40.557087Z",
+        "created_by": {
+          "actor_id": "technical-demo:dynamic",
+          "kind": "TECHNICAL_DEMO",
+          "tenant_id": null
+        },
+        "provenance": {
+          "origin": "TECHNICAL_DEMO",
+          "schema_version": "dynamic-provenance.v1",
+          "model_provenance": null
+        },
+        "status": "SUPERSEDED",
+        "is_current": false,
+        "approved_at": "2026-11-11T17:57:44.722364+00:00",
+        "approved_by": {
+          "actor_id": "technical-demo:dynamic",
+          "kind": "TECHNICAL_DEMO",
+          "tenant_id": null
+        }
+      }
+    ],
+    "packages": [
+      {
+        "package_id": "dpkg_7e7ce4ac5da449db8cf06ca53c77b1e4",
+        "problem_id": "dyn_d17b37f2917344338e20a9571168d9c3",
+        "assessment_reference": null,
+        "package_version": 1,
+        "statement_version": 1,
+        "statement_sha256": "94cf3bb6f7227c92b2ae9adc6f0499d364bf8a7752ee89a735b0a4183383226b",
+        "rubric_id": null,
+        "rubric_version": null,
+        "rubric_sha256": null,
+        "preparation_status": "NOT_PREPARED",
+        "preparation": {
+          "normalized_interpretation": null,
+          "assumptions_domain": null,
+          "candidate_reference_solutions": null,
+          "alternative_strategies": null,
+          "verifier_plan": null,
+          "warnings": [],
+          "model_provenance": null
+        },
+        "created_at": "2026-11-11T17:56:57.205409Z",
+        "created_by": {
+          "actor_id": "technical-demo:dynamic",
+          "kind": "TECHNICAL_DEMO",
+          "tenant_id": null
+        },
+        "provenance": {
+          "origin": "TECHNICAL_DEMO",
+          "schema_version": "dynamic-provenance.v1",
+          "model_provenance": null
+        },
+        "status": "DRAFT",
+        "is_current": false
+      },
+      {
+        "package_id": "dpkg_6635cb328fa3468eb6db0abf88c62010",
+        "problem_id": "dyn_d17b37f2917344338e20a9571168d9c3",
+        "assessment_reference": null,
+        "package_version": 2,
+        "statement_version": 1,
+        "statement_sha256": "94cf3bb6f7227c92b2ae9adc6f0499d364bf8a7752ee89a735b0a4183383226b",
+        "rubric_id": "drub_443c0a376cc942cf9b55fe86db08d8cb",
+        "rubric_version": 1,
+        "rubric_sha256": "e7e6d19adf6176e318a75583e9f85e2be76cb8ab4a325062305392d1c7af88df",
+        "preparation_status": "NOT_PREPARED",
+        "preparation": {
+          "normalized_interpretation": null,
+          "assumptions_domain": null,
+          "candidate_reference_solutions": null,
+          "alternative_strategies": null,
+          "verifier_plan": null,
+          "warnings": [],
+          "model_provenance": null
+        },
+        "created_at": "2026-11-11T17:57:12.056116Z",
+        "created_by": {
+          "actor_id": "technical-demo:dynamic",
+          "kind": "TECHNICAL_DEMO",
+          "tenant_id": null
+        },
+        "provenance": {
+          "origin": "TECHNICAL_DEMO",
+          "schema_version": "dynamic-provenance.v1",
+          "model_provenance": null
+        },
+        "status": "DRAFT",
+        "is_current": false
+      },
+      {
+        "package_id": "dpkg_ece7433c8d2e4de9b6cc03d5e3981839",
+        "problem_id": "dyn_d17b37f2917344338e20a9571168d9c3",
+        "assessment_reference": null,
+        "package_version": 3,
+        "statement_version": 1,
+        "statement_sha256": "94cf3bb6f7227c92b2ae9adc6f0499d364bf8a7752ee89a735b0a4183383226b",
+        "rubric_id": "drub_0c807fc36fac44ea87d87605ff9c262b",
+        "rubric_version": 2,
+        "rubric_sha256": "a4ca1c80e02127a7cd306bb877abd6278ab290bad5b42f2810cf4b08284d7528",
+        "preparation_status": "NOT_PREPARED",
+        "preparation": {
+          "normalized_interpretation": null,
+          "assumptions_domain": null,
+          "candidate_reference_solutions": null,
+          "alternative_strategies": null,
+          "verifier_plan": null,
+          "warnings": [],
+          "model_provenance": null
+        },
+        "created_at": "2026-11-11T17:57:40.557087Z",
+        "created_by": {
+          "actor_id": "technical-demo:dynamic",
+          "kind": "TECHNICAL_DEMO",
+          "tenant_id": null
+        },
+        "provenance": {
+          "origin": "TECHNICAL_DEMO",
+          "schema_version": "dynamic-provenance.v1",
+          "model_provenance": null
+        },
+        "status": "APPROVED",
+        "is_current": false
+      },
+      {
+        "package_id": "dpkg_9562a5a71812418183cc339456e916ca",
+        "problem_id": "dyn_d17b37f2917344338e20a9571168d9c3",
+        "assessment_reference": null,
+        "package_version": 4,
+        "statement_version": 2,
+        "statement_sha256": "3fced4bbb5618e373f61074b2a8c91ca3022adb03b865c93dfece0e77e1aa747",
+        "rubric_id": null,
+        "rubric_version": null,
+        "rubric_sha256": null,
+        "preparation_status": "NOT_PREPARED",
+        "preparation": {
+          "normalized_interpretation": null,
+          "assumptions_domain": null,
+          "candidate_reference_solutions": null,
+          "alternative_strategies": null,
+          "verifier_plan": null,
+          "warnings": [],
+          "model_provenance": null
+        },
+        "created_at": "2026-11-11T17:57:52.943631Z",
+        "created_by": {
+          "actor_id": "technical-demo:dynamic",
+          "kind": "TECHNICAL_DEMO",
+          "tenant_id": null
+        },
+        "provenance": {
+          "origin": "TECHNICAL_DEMO",
+          "schema_version": "dynamic-provenance.v1",
+          "model_provenance": null
+        },
+        "status": "DRAFT",
+        "is_current": false
+      }
+    ],
+    "approvals": [
+      {
+        "package_id": "dpkg_ece7433c8d2e4de9b6cc03d5e3981839",
+        "rubric_id": "drub_0c807fc36fac44ea87d87605ff9c262b",
+        "approved_at": "2026-11-11T17:57:44.722364Z",
+        "approved_by": {
+          "actor_id": "technical-demo:dynamic",
+          "kind": "TECHNICAL_DEMO",
+          "tenant_id": null
+        },
+        "package_sha256": "13b264063deebcf9505289dbe7ef0913b2113f96afbdc63f2bb3217e909cba5d",
+        "rubric_sha256": "a4ca1c80e02127a7cd306bb877abd6278ab290bad5b42f2810cf4b08284d7528"
+      }
+    ],
+    "events": [
+      {
+        "event_id": "devt_5b259d96aac54c45abaec9e7341b6ea8",
+        "event_type": "dynamic_problem_created",
+        "problem_id": "dyn_d17b37f2917344338e20a9571168d9c3",
+        "timestamp": "2026-11-11T17:56:57.205409Z",
+        "actor": {
+          "actor_id": "technical-demo:dynamic",
+          "kind": "TECHNICAL_DEMO",
+          "tenant_id": null
+        },
+        "statement_version": 1,
+        "package_id": "dpkg_7e7ce4ac5da449db8cf06ca53c77b1e4",
+        "package_version": 1,
+        "rubric_id": null,
+        "rubric_version": null,
+        "reason": null
+      },
+      {
+        "event_id": "devt_691e3a5a8b5f4d2fa72fc84e2c778436",
+        "event_type": "problem_statement_version_created",
+        "problem_id": "dyn_d17b37f2917344338e20a9571168d9c3",
+        "timestamp": "2026-11-11T17:56:57.205409Z",
+        "actor": {
+          "actor_id": "technical-demo:dynamic",
+          "kind": "TECHNICAL_DEMO",
+          "tenant_id": null
+        },
+        "statement_version": 1,
+        "package_id": "dpkg_7e7ce4ac5da449db8cf06ca53c77b1e4",
+        "package_version": 1,
+        "rubric_id": null,
+        "rubric_version": null,
+        "reason": null
+      },
+      {
+        "event_id": "devt_3a1ed79b9c5f4dec9239038f481313f0",
+        "event_type": "rubric_draft_created",
+        "problem_id": "dyn_d17b37f2917344338e20a9571168d9c3",
+        "timestamp": "2026-11-11T17:57:12.056116Z",
+        "actor": {
+          "actor_id": "technical-demo:dynamic",
+          "kind": "TECHNICAL_DEMO",
+          "tenant_id": null
+        },
+        "statement_version": 1,
+        "package_id": "dpkg_6635cb328fa3468eb6db0abf88c62010",
+        "package_version": 2,
+        "rubric_id": "drub_443c0a376cc942cf9b55fe86db08d8cb",
+        "rubric_version": 1,
+        "reason": null
+      },
+      {
+        "event_id": "devt_863b1e34427b48409dc2ecfd6542a405",
+        "event_type": "rubric_edited",
+        "problem_id": "dyn_d17b37f2917344338e20a9571168d9c3",
+        "timestamp": "2026-11-11T17:57:40.557087Z",
+        "actor": {
+          "actor_id": "technical-demo:dynamic",
+          "kind": "TECHNICAL_DEMO",
+          "tenant_id": null
+        },
+        "statement_version": 1,
+        "package_id": "dpkg_ece7433c8d2e4de9b6cc03d5e3981839",
+        "package_version": 3,
+        "rubric_id": "drub_0c807fc36fac44ea87d87605ff9c262b",
+        "rubric_version": 2,
+        "reason": null
+      },
+      {
+        "event_id": "devt_8647da8d44894876adf77236642134e8",
+        "event_type": "rubric_approved",
+        "problem_id": "dyn_d17b37f2917344338e20a9571168d9c3",
+        "timestamp": "2026-11-11T17:57:44.722364Z",
+        "actor": {
+          "actor_id": "technical-demo:dynamic",
+          "kind": "TECHNICAL_DEMO",
+          "tenant_id": null
+        },
+        "statement_version": 1,
+        "package_id": "dpkg_ece7433c8d2e4de9b6cc03d5e3981839",
+        "package_version": 3,
+        "rubric_id": "drub_0c807fc36fac44ea87d87605ff9c262b",
+        "rubric_version": 2,
+        "reason": null
+      },
+      {
+        "event_id": "devt_66b5b39312ad43eb8c1cb92c533d631b",
+        "event_type": "dynamic_problem_package_activated",
+        "problem_id": "dyn_d17b37f2917344338e20a9571168d9c3",
+        "timestamp": "2026-11-11T17:57:44.722364Z",
+        "actor": {
+          "actor_id": "technical-demo:dynamic",
+          "kind": "TECHNICAL_DEMO",
+          "tenant_id": null
+        },
+        "statement_version": 1,
+        "package_id": "dpkg_ece7433c8d2e4de9b6cc03d5e3981839",
+        "package_version": 3,
+        "rubric_id": "drub_0c807fc36fac44ea87d87605ff9c262b",
+        "rubric_version": 2,
+        "reason": null
+      },
+      {
+        "event_id": "devt_a90f9101a9484411ad87289a36c766a0",
+        "event_type": "rubric_superseded",
+        "problem_id": "dyn_d17b37f2917344338e20a9571168d9c3",
+        "timestamp": "2026-11-11T17:57:52.943631Z",
+        "actor": {
+          "actor_id": "technical-demo:dynamic",
+          "kind": "TECHNICAL_DEMO",
+          "tenant_id": null
+        },
+        "statement_version": 1,
+        "package_id": "dpkg_ece7433c8d2e4de9b6cc03d5e3981839",
+        "package_version": 3,
+        "rubric_id": "drub_0c807fc36fac44ea87d87605ff9c262b",
+        "rubric_version": 2,
+        "reason": "STATEMENT_CHANGED"
+      },
+      {
+        "event_id": "devt_21a7a4a9fd2d41f2b79584d7812dd35f",
+        "event_type": "problem_statement_version_created",
+        "problem_id": "dyn_d17b37f2917344338e20a9571168d9c3",
+        "timestamp": "2026-11-11T17:57:52.943631Z",
+        "actor": {
+          "actor_id": "technical-demo:dynamic",
+          "kind": "TECHNICAL_DEMO",
+          "tenant_id": null
+        },
+        "statement_version": 2,
+        "package_id": "dpkg_9562a5a71812418183cc339456e916ca",
+        "package_version": 4,
+        "rubric_id": null,
+        "rubric_version": null,
+        "reason": null
+      }
+    ],
+    "current_package_id": null,
+    "current_configuration": null,
+    "automatic_suggestion_available": false,
+    "correction_available": false,
+    "actor_notice": "Identidade técnica de demonstração; não representa uma pessoa."
+  }
+}

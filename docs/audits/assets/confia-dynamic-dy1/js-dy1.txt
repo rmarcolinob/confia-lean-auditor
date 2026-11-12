@@ -1,0 +1,13 @@
+✔ create an explicit Dynamic problem; AI suggestion cannot send a request (16.479666ms)
+✔ manual criteria total, editing, stable IDs and approval only after saved draft (3.567125ms)
+✔ approval uses saved revision; history remains visible after statement change (2.352209ms)
+✔ invalid total blocks save, removal updates total, texts render without HTML injection (1.373041ms)
+✔ removed criterion IDs are not reused for a different criterion in later edits (1.318791ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 5
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 89.027917

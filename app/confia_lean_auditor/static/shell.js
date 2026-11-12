@@ -21,6 +21,7 @@
       home: ["Início", "Acompanhe cada solução: recebimento, transcrição, Análise ConfIA e avaliação docente."],
       students: ["Alunos", "Alunos matriculados na turma selecionada."],
       exams: ["Exames", "Crie avaliações e acompanhe as entregas da turma."],
+      dynamic: ["Dynamic · Problemas e rubricas", "Prepare questões inéditas e aprove suas rubricas."],
       submissions: ["Soluções recebidas", "Manuscritos recebidos pelo ConfIA. Abra uma solução para visualizar o original."],
       transcriptions: ["Transcrições", "Selecione uma solução recebida para comparar a transcrição com o manuscrito original."],
       analysis: ["Correção / Análise ConfIA", "Consulte a Análise ConfIA e registre a decisão sobre cada solução recebida."],
@@ -76,8 +77,11 @@
     visible("teacher-home", profile === "teacher" && view === "home");
     visible("teacher-exams", profile === "teacher" && view === "exams");
     if (profile === "teacher" && view === "exams") window.ConfIAAssessments?.load();
-    document.querySelector(".teacher-submission-modes").hidden = profile !== "teacher" || view === "home" || view === "exams";
-    if (profile === "teacher" && view !== "home" && view !== "exams") {
+    const dynamicPanel = document.querySelector("#teacher-dynamic");
+    if (dynamicPanel) dynamicPanel.hidden = profile !== "teacher" || view !== "dynamic";
+    if (profile === "teacher" && view === "dynamic") window.ConfIADynamic?.load();
+    document.querySelector(".teacher-submission-modes").hidden = profile !== "teacher" || view === "home" || view === "exams" || view === "dynamic";
+    if (profile === "teacher" && view !== "home" && view !== "exams" && view !== "dynamic") {
       if (view === "text") window.ConfIATeacher.showText();
       else window.ConfIATeacher.showView(view);
     } else {

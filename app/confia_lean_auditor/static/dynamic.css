@@ -1,0 +1,13 @@
+#teacher-dynamic .dynamic-form, #teacher-dynamic .dynamic-criterion { display: grid; gap: .75rem; }
+#teacher-dynamic label { display: grid; gap: .35rem; }
+#teacher-dynamic input, #teacher-dynamic textarea { width: 100%; box-sizing: border-box; }
+#teacher-dynamic .dynamic-criterion { margin: 1rem 0; border: 1px solid #cbd5e1; border-radius: .5rem; padding: 1rem; }
+#teacher-dynamic .dynamic-rubric, #teacher-dynamic .dynamic-history { margin-top: 1.5rem; }
+#teacher-dynamic .dynamic-problem-list { display: flex; flex-wrap: wrap; gap: .5rem; margin-bottom: 1.5rem; }
+#teacher-dynamic details { padding: .75rem 0; }
+#teacher-dynamic summary { cursor: pointer; font-weight: 600; }
+#teacher-dynamic button { margin: .25rem .25rem .25rem 0; }
+#teacher-dynamic [role="status"] { white-space: pre-wrap; }
+#teacher-dynamic .dynamic-history p { white-space: pre-wrap; overflow-wrap: anywhere; }
+
+#teacher-dynamic textarea { min-height: 6rem; resize: vertical; }
