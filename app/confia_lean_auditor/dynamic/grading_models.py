@@ -1,8 +1,9 @@
 """DY3 evidence contracts. No model-supplied score or implicit approval."""
 
-from typing import Literal
+from typing import Literal, Optional
 from decimal import Decimal
-from pydantic import Field, model_validator
+from pydantic import Field, model_validator, model_serializer
+from .versions import GRADER_VERSION
 from confia_lean_auditor.submissions.schemas import SubmissionModel, Sha256
 
 
@@ -21,10 +22,12 @@ class DynamicGradingContext(SubmissionModel):
     rubric_version: int
     rubric_sha256: Sha256
     allow_preparation_review: bool = False
-    grader_version: Literal["dynamic-grader.v1"] = "dynamic-grader.v1"
+    grader_version: Literal["dynamic-grader.v1", "dynamic-grader.r1-substitution", "dynamic-grader.r1"] = GRADER_VERSION
 
 
 class StudentClaim(SubmissionModel):
+    schema_version: Literal["student-claim.v1", "student-claim.r1"] = "student-claim.v1"
+    substitution: Optional[dict] = None
     claim_id: str
     start: int = Field(ge=0)
     end: int = Field(gt=0)
@@ -47,6 +50,18 @@ class StudentClaim(SubmissionModel):
     components: list[dict] = Field(default_factory=list)
     values: list[str] = Field(default_factory=list)
     verified_values: list[str] = Field(default_factory=list)
+
+
+    @model_serializer(mode="wrap")
+    def preserve_legacy_wire_shape(self, handler):
+        # Historical audit/review receipts hash their serialized models. Merely
+        # reading v1 evidence must not add new default keys to those receipts.
+        result = handler(self)
+        if self.schema_version == "student-claim.v1":
+            result.pop("schema_version", None)
+            if self.substitution is None:
+                result.pop("substitution", None)
+        return result
 
 
 class RubricBinding(SubmissionModel):

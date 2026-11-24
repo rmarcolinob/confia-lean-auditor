@@ -1,0 +1,69 @@
+FFF                                                                      [100%]
+=================================== FAILURES ===================================
+__________ test_loader_schema_artificial_samples_and_optional_strokes __________
+
+    def test_loader_schema_artificial_samples_and_optional_strokes():
+        samples = load_samples(MANIFEST)
+        assert len(samples) == 5 and all(s.artificial for s in samples)
+        assert [s.sample_id for s in samples] == ["A-preservation", "B-sign", "C-exponent", "D-subscript", "E-missing"]
+        optional = samples[0].model_dump()
+        optional["input_strokes"] = None
+        assert RecognitionSample.model_validate(optional).input_strokes is None
+>       assert json.loads((ROOT / "sample.schema.json").read_text()) == RecognitionSample.model_json_schema()
+E       AssertionError: assert {'$defs': {'R...iption'], ...} == {'$defs': {'R...iption'], ...}
+E         
+E         Omitting 5 identical items, use -vv to show
+E         Differing items:
+E         {'$defs': {'RecognitionSegment': {'additionalProperties': False, 'properties': {'confidence': {'anyOf': [{...}, {...}]...'number'}, 'x': {'minimum': 0, 'title': 'X', 'type': 'number'}, ...}, 'required': ['x', 'y', 'width', 'height'], ...}}} != {'$defs': {'RecognitionSegment': {'additionalProperties': False, 'properties': {'confidence': {'anyOf': [{...}, {...}]...'number'}, 'x': {'minimum': 0, 'title': 'X', 'type': 'number'}, ...}, 'required': ['x', 'y', 'width', 'height'], ...}}}
+E         Use -v to get more diff
+
+tests/test_handwriting_recognition_benchmark.py:32: AssertionError
+____ test_central_product_vocabulary_is_preserved_without_contract_renames _____
+
+    def test_central_product_vocabulary_is_preserved_without_contract_renames():
+        source = '\n'.join((STATIC / path).read_text() for path in ('app.js', 'submissions/teacher.js', 'capture/tablet.js'))
+        for phrase in ('Análise ConfIA', 'Solução enviada', 'Transcrição', 'Transcrição conferida', 'Recebida pelo ConfIA',
+                       'Verificação formal com Lean', 'Critérios de avaliação', 'Número do envio'):
+>           assert phrase in source
+E           assert 'Verificação formal com Lean' in 'const problemSelect = document.querySelector("#problem-select");\nconst exampleSelect = document.querySelector("#exam...globalThis.addEventListener("orientationchange", () => requestAnimationFrame(renderCanvas));\n  initialize();\n})();\n'
+
+tests/test_ui_01_shell.py:151: AssertionError
+_ test_parent_statement_is_compact_and_sticky_through_notebook_and_submission __
+
+    def test_parent_statement_is_compact_and_sticky_through_notebook_and_submission():
+        html = CLIENT.get('/').text
+        page = Page(html)
+        assert page.ids['notebook-problem-context'][0] == 'section'
+        assert 'hidden' in page.ids['notebook-problem-context'][1]
+        toggle = page.ids['toggle-notebook-problem'][1]
+        assert toggle['type'] == 'button'
+        assert toggle['aria-expanded'] == 'true'
+        assert toggle['aria-controls'] == 'notebook-problem-body'
+        assert page.ids['notebook-math-message'][1]['role'] == 'status'
+        assert 'notebook-problem-title' not in page.ids
+        assert re.search(r'<p class="eyebrow">Questão <span id="notebook-problem-code"></span></p>', html)
+        assert html.index('id="resolution-title"') < html.index('id="notebook-problem-context"') < html.index('id="resolution-notebook"') < html.index('id="prepare-analysis"')
+        assert html.index('id="resolution-notebook"') < html.index('class="notebook-end"') < html.index('id="workspace-draft-persistence"') < html.index('id="workspace-submission-actions"') < html.index('id="workspace-recognition-actions"')
+        css = (STATIC / 'styles.css').read_text()
+        sticky = re.search(r'body\[data-resolution-active="true"\] #notebook-problem-context\s*\{([^}]*)\}', css)
+        assert sticky and 'position: sticky;' in sticky.group(1) and 'top: 0;' in sticky.group(1)
+        assert 'body[data-handwriting-focus="true"] #notebook-problem-context' not in css
+        assert '#notebook-problem-body { max-height:' in css
+>       assert 'position: sticky' not in (STATIC / 'capture/tablet.css').read_text().split('/* Embedded mode')[1]
+E       AssertionError: assert 'position: sticky' not in ' removes re...w: 1; }\n}\n'
+E         
+E         'position: sticky' is contained here:
+E           trols {
+E             position: sticky;
+E             top: calc(var(--pilot-dock-height, 0px) + 8px);
+E             z-index: calc(var(--z-sticky) - 1);
+E             background: var(--color-surface);...
+E         
+E         ...Full output truncated (26 lines hidden), use '-vv' to show
+
+tests/test_ui_02_workspace.py:108: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_handwriting_recognition_benchmark.py::test_loader_schema_artificial_samples_and_optional_strokes
+FAILED tests/test_ui_01_shell.py::test_central_product_vocabulary_is_preserved_without_contract_renames
+FAILED tests/test_ui_02_workspace.py::test_parent_statement_is_compact_and_sticky_through_notebook_and_submission
+3 failed in 1.16s

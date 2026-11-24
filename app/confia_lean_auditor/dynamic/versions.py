@@ -1,0 +1,5 @@
+"""Execution versions; immutable historical contexts keep their recorded version."""
+GRADER_VERSION = "dynamic-grader.r1"
+EXTRACTOR_VERSION = "source-grammar.r1"
+NORMALIZATION_VERSION = "source-structure.r1"
+SUFFICIENCY_VERSION = "exact-rubric-language.r1"

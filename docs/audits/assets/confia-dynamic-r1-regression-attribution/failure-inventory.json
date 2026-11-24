@@ -1,0 +1,2628 @@
+{
+  "schema": "r1-failure-inventory.v1",
+  "count": 105,
+  "failures": [
+    {
+      "nodeid": "tests/test_common_claim_pipeline.py::test_common_catalog_preserves_real_pipeline_credit_and_attribution[True]",
+      "original_status": "FAIL",
+      "family": "FORMAL_LEAN",
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "original_assertion_excerpt": "E           AssertionError: assert (None == 10)\nE            +  where None = AuditResponse(problem_id='ITA2025F2Q1', score=None, max_score=10.0, verdict='inconclusivo', extracted_claims=ClaimExtr...ted_max_score=2.0, coverage=0.2, estimated_points=None, needs_review=True, unscorable_reason='ADJUDICATOR_UNAVAILABLE').score",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_common_claim_pipeline.py",
+        "line": 34
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_common_claim_pipeline.py",
+        "line": 34
+      },
+      "evidence": [
+        "original-inventory.json",
+        "baseline-results.json",
+        "r1-results.json",
+        "baseline-lean.jsonl",
+        "r1-lean.jsonl"
+      ]
+    },
+    {
+      "nodeid": "tests/test_common_claim_pipeline.py::test_common_catalog_preserves_real_pipeline_credit_and_attribution[False]",
+      "original_status": "FAIL",
+      "family": "FORMAL_LEAN",
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "original_assertion_excerpt": "E           AssertionError: assert (None == 0)\nE            +  where None = RubricItemResult(id='final_answer', description='Conclui corretamente a=-1 e b=3.', detected=False, points=None, max_p...t content differs from the reference; retain both origins', 'conflict': True}, 'needs_review': True, 'conflict': True}).points",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_common_claim_pipeline.py",
+        "line": 41
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_common_claim_pipeline.py",
+        "line": 41
+      },
+      "evidence": [
+        "original-inventory.json",
+        "baseline-results.json",
+        "r1-results.json",
+        "baseline-lean.jsonl",
+        "r1-lean.jsonl"
+      ]
+    },
+    {
+      "nodeid": "tests/test_evidence_id_semantic.py::test_written_method_reaches_real_lean[2*((6-x)+x)-verified]",
+      "original_status": "FAIL",
+      "family": "FORMAL_LEAN",
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "original_assertion_excerpt": "E       AssertionError: assert ('technical_error' == 'verified'\nE         \nE         - verified\nE         + technical_error)",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_evidence_id_semantic.py",
+        "line": 144
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_evidence_id_semantic.py",
+        "line": 144
+      },
+      "evidence": [
+        "original-inventory.json",
+        "baseline-results.json",
+        "r1-results.json",
+        "baseline-lean.jsonl",
+        "r1-lean.jsonl"
+      ]
+    },
+    {
+      "nodeid": "tests/test_evidence_id_semantic.py::test_written_method_reaches_real_lean[2*((6-x)+x)+1-refuted]",
+      "original_status": "FAIL",
+      "family": "FORMAL_LEAN",
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "original_assertion_excerpt": "E       AssertionError: assert ('technical_error' == 'refuted'\nE         \nE         - refuted\nE         + technical_error)",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_evidence_id_semantic.py",
+        "line": 144
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_evidence_id_semantic.py",
+        "line": 144
+      },
+      "evidence": [
+        "original-inventory.json",
+        "baseline-results.json",
+        "r1-results.json",
+        "baseline-lean.jsonl",
+        "r1-lean.jsonl"
+      ]
+    },
+    {
+      "nodeid": "tests/test_f2_strong_lean_suite.py::test_f2_correct_solution_has_full_operational_strong_lean_contract[ITA2025F2Q1]",
+      "original_status": "FAIL",
+      "family": "FORMAL_LEAN",
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "original_assertion_excerpt": "E       assert None == 10.0",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_f2_strong_lean_suite.py",
+        "line": 51
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_f2_strong_lean_suite.py",
+        "line": 51
+      },
+      "evidence": [
+        "original-inventory.json",
+        "baseline-results.json",
+        "r1-results.json",
+        "baseline-lean.jsonl",
+        "r1-lean.jsonl"
+      ]
+    },
+    {
+      "nodeid": "tests/test_f2_strong_lean_suite.py::test_f2_correct_solution_has_full_operational_strong_lean_contract[ITA2025F2Q3]",
+      "original_status": "FAIL",
+      "family": "FORMAL_LEAN",
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "original_assertion_excerpt": "E       assert None == 10.0",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_f2_strong_lean_suite.py",
+        "line": 51
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_f2_strong_lean_suite.py",
+        "line": 51
+      },
+      "evidence": [
+        "original-inventory.json",
+        "baseline-results.json",
+        "r1-results.json",
+        "baseline-lean.jsonl",
+        "r1-lean.jsonl"
+      ]
+    },
+    {
+      "nodeid": "tests/test_f2_strong_lean_suite.py::test_f2_correct_solution_has_full_operational_strong_lean_contract[ITA2025F2Q5]",
+      "original_status": "FAIL",
+      "family": "FORMAL_LEAN",
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "original_assertion_excerpt": "E       assert None == 10.0",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_f2_strong_lean_suite.py",
+        "line": 51
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_f2_strong_lean_suite.py",
+        "line": 51
+      },
+      "evidence": [
+        "original-inventory.json",
+        "baseline-results.json",
+        "r1-results.json",
+        "baseline-lean.jsonl",
+        "r1-lean.jsonl"
+      ]
+    },
+    {
+      "nodeid": "tests/test_f2_strong_lean_suite.py::test_f2_correct_solution_has_full_operational_strong_lean_contract[ITA2025F2Q6]",
+      "original_status": "FAIL",
+      "family": "FORMAL_LEAN",
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "original_assertion_excerpt": "E       assert None == 10.0",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_f2_strong_lean_suite.py",
+        "line": 51
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_f2_strong_lean_suite.py",
+        "line": 51
+      },
+      "evidence": [
+        "original-inventory.json",
+        "baseline-results.json",
+        "r1-results.json",
+        "baseline-lean.jsonl",
+        "r1-lean.jsonl"
+      ]
+    },
+    {
+      "nodeid": "tests/test_f2_strong_lean_suite.py::test_f2_correct_solution_has_full_operational_strong_lean_contract[ITA2025F2Q8]",
+      "original_status": "FAIL",
+      "family": "FORMAL_LEAN",
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "original_assertion_excerpt": "E       assert None == 10.0",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_f2_strong_lean_suite.py",
+        "line": 51
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_f2_strong_lean_suite.py",
+        "line": 51
+      },
+      "evidence": [
+        "original-inventory.json",
+        "baseline-results.json",
+        "r1-results.json",
+        "baseline-lean.jsonl",
+        "r1-lean.jsonl"
+      ]
+    },
+    {
+      "nodeid": "tests/test_f2_strong_lean_suite.py::test_f2_wrong_answer_stays_below_full_score[ITA2025F2Q1]",
+      "original_status": "FAIL",
+      "family": "FORMAL_LEAN",
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "original_assertion_excerpt": "E       AssertionError",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/audit_contract.py",
+        "line": 60
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/audit_contract.py",
+        "line": 60
+      },
+      "evidence": [
+        "original-inventory.json",
+        "baseline-results.json",
+        "r1-results.json",
+        "baseline-lean.jsonl",
+        "r1-lean.jsonl"
+      ]
+    },
+    {
+      "nodeid": "tests/test_f2_strong_lean_suite.py::test_f2_wrong_answer_stays_below_full_score[ITA2025F2Q3]",
+      "original_status": "FAIL",
+      "family": "FORMAL_LEAN",
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "original_assertion_excerpt": "E       AssertionError",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/audit_contract.py",
+        "line": 60
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/audit_contract.py",
+        "line": 60
+      },
+      "evidence": [
+        "original-inventory.json",
+        "baseline-results.json",
+        "r1-results.json",
+        "baseline-lean.jsonl",
+        "r1-lean.jsonl"
+      ]
+    },
+    {
+      "nodeid": "tests/test_f2_strong_lean_suite.py::test_f2_wrong_answer_stays_below_full_score[ITA2025F2Q5]",
+      "original_status": "FAIL",
+      "family": "FORMAL_LEAN",
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "original_assertion_excerpt": "E       AssertionError",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/audit_contract.py",
+        "line": 60
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/audit_contract.py",
+        "line": 60
+      },
+      "evidence": [
+        "original-inventory.json",
+        "baseline-results.json",
+        "r1-results.json",
+        "baseline-lean.jsonl",
+        "r1-lean.jsonl"
+      ]
+    },
+    {
+      "nodeid": "tests/test_f2_strong_lean_suite.py::test_f2_wrong_answer_stays_below_full_score[ITA2025F2Q6]",
+      "original_status": "FAIL",
+      "family": "FORMAL_LEAN",
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "original_assertion_excerpt": "E       AssertionError",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/audit_contract.py",
+        "line": 60
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/audit_contract.py",
+        "line": 60
+      },
+      "evidence": [
+        "original-inventory.json",
+        "baseline-results.json",
+        "r1-results.json",
+        "baseline-lean.jsonl",
+        "r1-lean.jsonl"
+      ]
+    },
+    {
+      "nodeid": "tests/test_f2q1_strong_certificate.py::test_f2q1_correct_solution_includes_strong_certificate",
+      "original_status": "FAIL",
+      "family": "FORMAL_LEAN",
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "original_assertion_excerpt": "E       assert None == 10.0",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_f2q1_strong_certificate.py",
+        "line": 27
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_f2q1_strong_certificate.py",
+        "line": 27
+      },
+      "evidence": [
+        "original-inventory.json",
+        "baseline-results.json",
+        "r1-results.json",
+        "baseline-lean.jsonl",
+        "r1-lean.jsonl"
+      ]
+    },
+    {
+      "nodeid": "tests/test_f2q1_strong_certificate.py::test_f2q1_wrong_solution_does_not_get_strong_certificate",
+      "original_status": "FAIL",
+      "family": "FORMAL_LEAN",
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "original_assertion_excerpt": "E       assert None == 0.0",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_f2q1_strong_certificate.py",
+        "line": 48
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_f2q1_strong_certificate.py",
+        "line": 48
+      },
+      "evidence": [
+        "original-inventory.json",
+        "baseline-results.json",
+        "r1-results.json",
+        "baseline-lean.jsonl",
+        "r1-lean.jsonl"
+      ]
+    },
+    {
+      "nodeid": "tests/test_f2q1_student_claim_checks.py::test_f2q1_correct_solution_claims_are_verified",
+      "original_status": "FAIL",
+      "family": "FORMAL_LEAN",
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "original_assertion_excerpt": "E       assert False\nE        +  where False = all(<generator object test_f2q1_correct_solution_claims_are_verified.<locals>.<genexpr> at 0x10bd33d60>)",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_f2q1_student_claim_checks.py",
+        "line": 33
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_f2q1_student_claim_checks.py",
+        "line": 33
+      },
+      "evidence": [
+        "original-inventory.json",
+        "baseline-results.json",
+        "r1-results.json",
+        "baseline-lean.jsonl",
+        "r1-lean.jsonl"
+      ]
+    },
+    {
+      "nodeid": "tests/test_f2q1_student_claim_checks.py::test_f2q1_wrong_final_answer_is_rejected",
+      "original_status": "FAIL",
+      "family": "FORMAL_LEAN",
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "original_assertion_excerpt": "E       AssertionError: assert 'technical_error' == 'refuted'\nE         \nE         - refuted\nE         + technical_error",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_f2q1_student_claim_checks.py",
+        "line": 48
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_f2q1_student_claim_checks.py",
+        "line": 48
+      },
+      "evidence": [
+        "original-inventory.json",
+        "baseline-results.json",
+        "r1-results.json",
+        "baseline-lean.jsonl",
+        "r1-lean.jsonl"
+      ]
+    },
+    {
+      "nodeid": "tests/test_f2q1_student_claim_checks.py::test_f2q1_wrong_power_reduction_is_rejected",
+      "original_status": "FAIL",
+      "family": "FORMAL_LEAN",
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "original_assertion_excerpt": "E       assert False\nE        +  where False = any(<generator object test_f2q1_wrong_power_reduction_is_rejected.<locals>.<genexpr> at 0x10b8a4e40>)",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_f2q1_student_claim_checks.py",
+        "line": 60
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_f2q1_student_claim_checks.py",
+        "line": 60
+      },
+      "evidence": [
+        "original-inventory.json",
+        "baseline-results.json",
+        "r1-results.json",
+        "baseline-lean.jsonl",
+        "r1-lean.jsonl"
+      ]
+    },
+    {
+      "nodeid": "tests/test_f2q1_student_claim_checks.py::test_f2q1_wrong_reduced_form_is_rejected",
+      "original_status": "FAIL",
+      "family": "FORMAL_LEAN",
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "original_assertion_excerpt": "E       AssertionError: assert 'technical_error' == 'refuted'\nE         \nE         - refuted\nE         + technical_error",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_f2q1_student_claim_checks.py",
+        "line": 71
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_f2q1_student_claim_checks.py",
+        "line": 71
+      },
+      "evidence": [
+        "original-inventory.json",
+        "baseline-results.json",
+        "r1-results.json",
+        "baseline-lean.jsonl",
+        "r1-lean.jsonl"
+      ]
+    },
+    {
+      "nodeid": "tests/test_f2q1_student_claim_checks.py::test_f2q1_wrong_coefficient_system_is_rejected",
+      "original_status": "FAIL",
+      "family": "FORMAL_LEAN",
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "original_assertion_excerpt": "E       AssertionError: assert 'technical_error' == 'refuted'\nE         \nE         - refuted\nE         + technical_error",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_f2q1_student_claim_checks.py",
+        "line": 83
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_f2q1_student_claim_checks.py",
+        "line": 83
+      },
+      "evidence": [
+        "original-inventory.json",
+        "baseline-results.json",
+        "r1-results.json",
+        "baseline-lean.jsonl",
+        "r1-lean.jsonl"
+      ]
+    },
+    {
+      "nodeid": "tests/test_f2q3_strong_certificate.py::test_f2q3_correct_solution_includes_strong_certificate",
+      "original_status": "FAIL",
+      "family": "FORMAL_LEAN",
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "original_assertion_excerpt": "E       assert None == 10.0",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_f2q3_strong_certificate.py",
+        "line": 30
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_f2q3_strong_certificate.py",
+        "line": 30
+      },
+      "evidence": [
+        "original-inventory.json",
+        "baseline-results.json",
+        "r1-results.json",
+        "baseline-lean.jsonl",
+        "r1-lean.jsonl"
+      ]
+    },
+    {
+      "nodeid": "tests/test_f2q3_strong_certificate.py::test_f2q3_wrong_solution_does_not_include_strong_certificate",
+      "original_status": "FAIL",
+      "family": "FORMAL_LEAN",
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "original_assertion_excerpt": "E       assert False\nE        +  where False = any(<generator object test_f2q3_wrong_solution_does_not_include_strong_certificate.<locals>.<genexpr> at 0x10bd336d0>)",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_f2q3_strong_certificate.py",
+        "line": 77
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_f2q3_strong_certificate.py",
+        "line": 77
+      },
+      "evidence": [
+        "original-inventory.json",
+        "baseline-results.json",
+        "r1-results.json",
+        "baseline-lean.jsonl",
+        "r1-lean.jsonl"
+      ]
+    },
+    {
+      "nodeid": "tests/test_f2q3_student_claim_checks.py::test_f2q3_correct_solution_claims_are_verified",
+      "original_status": "FAIL",
+      "family": "FORMAL_LEAN",
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "original_assertion_excerpt": "E       AssertionError: assert 'technical_error' == 'verified'\nE         \nE         - verified\nE         + technical_error",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_f2q3_student_claim_checks.py",
+        "line": 34
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_f2q3_student_claim_checks.py",
+        "line": 34
+      },
+      "evidence": [
+        "original-inventory.json",
+        "baseline-results.json",
+        "r1-results.json",
+        "baseline-lean.jsonl",
+        "r1-lean.jsonl"
+      ]
+    },
+    {
+      "nodeid": "tests/test_f2q3_student_claim_checks.py::test_f2q3_wrong_beta_difference_is_rejected",
+      "original_status": "FAIL",
+      "family": "FORMAL_LEAN",
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "original_assertion_excerpt": "E       AssertionError: assert 'technical_error' == 'refuted'\nE         \nE         - refuted\nE         + technical_error",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_f2q3_student_claim_checks.py",
+        "line": 51
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_f2q3_student_claim_checks.py",
+        "line": 51
+      },
+      "evidence": [
+        "original-inventory.json",
+        "baseline-results.json",
+        "r1-results.json",
+        "baseline-lean.jsonl",
+        "r1-lean.jsonl"
+      ]
+    },
+    {
+      "nodeid": "tests/test_f2q3_student_claim_checks.py::test_f2q3_wrong_candidate_signs_are_rejected",
+      "original_status": "FAIL",
+      "family": "FORMAL_LEAN",
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "original_assertion_excerpt": "E       assert False\nE        +  where False = all(<generator object test_f2q3_wrong_candidate_signs_are_rejected.<locals>.<genexpr> at 0x10b7ae3c0>)",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_f2q3_student_claim_checks.py",
+        "line": 64
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_f2q3_student_claim_checks.py",
+        "line": 64
+      },
+      "evidence": [
+        "original-inventory.json",
+        "baseline-results.json",
+        "r1-results.json",
+        "baseline-lean.jsonl",
+        "r1-lean.jsonl"
+      ]
+    },
+    {
+      "nodeid": "tests/test_f2q3_student_claim_checks.py::test_f2q3_wrong_final_sin_sum_is_rejected",
+      "original_status": "FAIL",
+      "family": "FORMAL_LEAN",
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "original_assertion_excerpt": "E       AssertionError: assert 'technical_error' == 'refuted'\nE         \nE         - refuted\nE         + technical_error",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_f2q3_student_claim_checks.py",
+        "line": 79
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_f2q3_student_claim_checks.py",
+        "line": 79
+      },
+      "evidence": [
+        "original-inventory.json",
+        "baseline-results.json",
+        "r1-results.json",
+        "baseline-lean.jsonl",
+        "r1-lean.jsonl"
+      ]
+    },
+    {
+      "nodeid": "tests/test_f2q3_student_claim_checks.py::test_f2q3_correct_final_answer_alone_is_verified",
+      "original_status": "FAIL",
+      "family": "FORMAL_LEAN",
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "original_assertion_excerpt": "E       AssertionError: assert 'technical_error' == 'verified'\nE         \nE         - verified\nE         + technical_error",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_f2q3_student_claim_checks.py",
+        "line": 88
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_f2q3_student_claim_checks.py",
+        "line": 88
+      },
+      "evidence": [
+        "original-inventory.json",
+        "baseline-results.json",
+        "r1-results.json",
+        "baseline-lean.jsonl",
+        "r1-lean.jsonl"
+      ]
+    },
+    {
+      "nodeid": "tests/test_f2q5_strong_certificate.py::test_f2q5_correct_solution_includes_strong_certificate",
+      "original_status": "FAIL",
+      "family": "FORMAL_LEAN",
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "original_assertion_excerpt": "E       assert None == 10.0",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_f2q5_strong_certificate.py",
+        "line": 28
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_f2q5_strong_certificate.py",
+        "line": 28
+      },
+      "evidence": [
+        "original-inventory.json",
+        "baseline-results.json",
+        "r1-results.json",
+        "baseline-lean.jsonl",
+        "r1-lean.jsonl"
+      ]
+    },
+    {
+      "nodeid": "tests/test_f2q5_strong_certificate.py::test_f2q5_wrong_final_digit_does_not_include_strong_certificate",
+      "original_status": "FAIL",
+      "family": "FORMAL_LEAN",
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "original_assertion_excerpt": "E       assert False\nE        +  where False = any(<generator object test_f2q5_wrong_final_digit_does_not_include_strong_certificate.<locals>.<genexpr> at 0x10bbb3f20>)",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_f2q5_strong_certificate.py",
+        "line": 78
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_f2q5_strong_certificate.py",
+        "line": 78
+      },
+      "evidence": [
+        "original-inventory.json",
+        "baseline-results.json",
+        "r1-results.json",
+        "baseline-lean.jsonl",
+        "r1-lean.jsonl"
+      ]
+    },
+    {
+      "nodeid": "tests/test_f2q5_student_claim_checks.py::test_f2q5_correct_solution_claims_are_verified",
+      "original_status": "FAIL",
+      "family": "FORMAL_LEAN",
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "original_assertion_excerpt": "E       AssertionError: assert 'technical_error' == 'verified'\nE         \nE         - verified\nE         + technical_error",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_f2q5_student_claim_checks.py",
+        "line": 33
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_f2q5_student_claim_checks.py",
+        "line": 33
+      },
+      "evidence": [
+        "original-inventory.json",
+        "baseline-results.json",
+        "r1-results.json",
+        "baseline-lean.jsonl",
+        "r1-lean.jsonl"
+      ]
+    },
+    {
+      "nodeid": "tests/test_f2q5_student_claim_checks.py::test_f2q5_wrong_log_power_decomposition_is_rejected",
+      "original_status": "FAIL",
+      "family": "FORMAL_LEAN",
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "original_assertion_excerpt": "E       AssertionError: assert 'technical_error' == 'refuted'\nE         \nE         - refuted\nE         + technical_error",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_f2q5_student_claim_checks.py",
+        "line": 49
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_f2q5_student_claim_checks.py",
+        "line": 49
+      },
+      "evidence": [
+        "original-inventory.json",
+        "baseline-results.json",
+        "r1-results.json",
+        "baseline-lean.jsonl",
+        "r1-lean.jsonl"
+      ]
+    },
+    {
+      "nodeid": "tests/test_f2q5_student_claim_checks.py::test_f2q5_wrong_digit_log_bounds_are_rejected",
+      "original_status": "FAIL",
+      "family": "FORMAL_LEAN",
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "original_assertion_excerpt": "E       AssertionError: assert 'technical_error' == 'refuted'\nE         \nE         - refuted\nE         + technical_error",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_f2q5_student_claim_checks.py",
+        "line": 64
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_f2q5_student_claim_checks.py",
+        "line": 64
+      },
+      "evidence": [
+        "original-inventory.json",
+        "baseline-results.json",
+        "r1-results.json",
+        "baseline-lean.jsonl",
+        "r1-lean.jsonl"
+      ]
+    },
+    {
+      "nodeid": "tests/test_f2q5_student_claim_checks.py::test_f2q5_wrong_between_bounds_are_rejected",
+      "original_status": "FAIL",
+      "family": "FORMAL_LEAN",
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "original_assertion_excerpt": "E       AssertionError: assert 'technical_error' == 'refuted'\nE         \nE         - refuted\nE         + technical_error",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_f2q5_student_claim_checks.py",
+        "line": 76
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_f2q5_student_claim_checks.py",
+        "line": 76
+      },
+      "evidence": [
+        "original-inventory.json",
+        "baseline-results.json",
+        "r1-results.json",
+        "baseline-lean.jsonl",
+        "r1-lean.jsonl"
+      ]
+    },
+    {
+      "nodeid": "tests/test_f2q5_student_claim_checks.py::test_f2q5_wrong_final_digit_is_rejected",
+      "original_status": "FAIL",
+      "family": "FORMAL_LEAN",
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "original_assertion_excerpt": "E       AssertionError: assert 'technical_error' == 'refuted'\nE         \nE         - refuted\nE         + technical_error",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_f2q5_student_claim_checks.py",
+        "line": 88
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_f2q5_student_claim_checks.py",
+        "line": 88
+      },
+      "evidence": [
+        "original-inventory.json",
+        "baseline-results.json",
+        "r1-results.json",
+        "baseline-lean.jsonl",
+        "r1-lean.jsonl"
+      ]
+    },
+    {
+      "nodeid": "tests/test_f2q6_strong_certificate.py::test_f2q6_correct_solution_includes_strong_certificate",
+      "original_status": "FAIL",
+      "family": "FORMAL_LEAN",
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "original_assertion_excerpt": "E           assert 2.0 == 8",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_f2q6_strong_certificate.py",
+        "line": 35
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_f2q6_strong_certificate.py",
+        "line": 35
+      },
+      "evidence": [
+        "original-inventory.json",
+        "baseline-results.json",
+        "r1-results.json",
+        "baseline-lean.jsonl",
+        "r1-lean.jsonl"
+      ]
+    },
+    {
+      "nodeid": "tests/test_f2q6_strong_certificate.py::test_f2q6_wrong_solution_does_not_get_strong_certificate",
+      "original_status": "FAIL",
+      "family": "FORMAL_LEAN",
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "original_assertion_excerpt": "E       assert False\nE        +  where False = any(<generator object test_f2q6_wrong_solution_does_not_get_strong_certificate.<locals>.<genexpr> at 0x10bfab430>)",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_f2q6_strong_certificate.py",
+        "line": 63
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_f2q6_strong_certificate.py",
+        "line": 63
+      },
+      "evidence": [
+        "original-inventory.json",
+        "baseline-results.json",
+        "r1-results.json",
+        "baseline-lean.jsonl",
+        "r1-lean.jsonl"
+      ]
+    },
+    {
+      "nodeid": "tests/test_f2q6_student_claim_checks.py::test_f2q6_correct_solution_claims_are_verified",
+      "original_status": "FAIL",
+      "family": "FORMAL_LEAN",
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "original_assertion_excerpt": "E       AssertionError: assert 'technical_error' == 'verified'\nE         \nE         - verified\nE         + technical_error",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_f2q6_student_claim_checks.py",
+        "line": 33
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_f2q6_student_claim_checks.py",
+        "line": 33
+      },
+      "evidence": [
+        "original-inventory.json",
+        "baseline-results.json",
+        "r1-results.json",
+        "baseline-lean.jsonl",
+        "r1-lean.jsonl"
+      ]
+    },
+    {
+      "nodeid": "tests/test_f2q6_student_claim_checks.py::test_f2q6_wrong_probability_formula_is_rejected",
+      "original_status": "FAIL",
+      "family": "FORMAL_LEAN",
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "original_assertion_excerpt": "E       AssertionError: assert 'technical_error' == 'refuted'\nE         \nE         - refuted\nE         + technical_error",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_f2q6_student_claim_checks.py",
+        "line": 46
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_f2q6_student_claim_checks.py",
+        "line": 46
+      },
+      "evidence": [
+        "original-inventory.json",
+        "baseline-results.json",
+        "r1-results.json",
+        "baseline-lean.jsonl",
+        "r1-lean.jsonl"
+      ]
+    },
+    {
+      "nodeid": "tests/test_f2q6_student_claim_checks.py::test_f2q6_wrong_ratio_formula_is_rejected",
+      "original_status": "FAIL",
+      "family": "FORMAL_LEAN",
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "original_assertion_excerpt": "E       AssertionError: assert 'technical_error' == 'verified'\nE         \nE         - verified\nE         + technical_error",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_f2q6_student_claim_checks.py",
+        "line": 59
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_f2q6_student_claim_checks.py",
+        "line": 59
+      },
+      "evidence": [
+        "original-inventory.json",
+        "baseline-results.json",
+        "r1-results.json",
+        "baseline-lean.jsonl",
+        "r1-lean.jsonl"
+      ]
+    },
+    {
+      "nodeid": "tests/test_f2q6_student_claim_checks.py::test_f2q6_wrong_final_answer_is_rejected",
+      "original_status": "FAIL",
+      "family": "FORMAL_LEAN",
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "original_assertion_excerpt": "E       AssertionError: assert 'technical_error' == 'verified'\nE         \nE         - verified\nE         + technical_error",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_f2q6_student_claim_checks.py",
+        "line": 72
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_f2q6_student_claim_checks.py",
+        "line": 72
+      },
+      "evidence": [
+        "original-inventory.json",
+        "baseline-results.json",
+        "r1-results.json",
+        "baseline-lean.jsonl",
+        "r1-lean.jsonl"
+      ]
+    },
+    {
+      "nodeid": "tests/test_f2q6_student_claim_checks.py::test_f2q6_single_maximizer_answer_is_rejected",
+      "original_status": "FAIL",
+      "family": "FORMAL_LEAN",
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "original_assertion_excerpt": "E       AssertionError: assert 'technical_error' == 'refuted'\nE         \nE         - refuted\nE         + technical_error",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_f2q6_student_claim_checks.py",
+        "line": 85
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_f2q6_student_claim_checks.py",
+        "line": 85
+      },
+      "evidence": [
+        "original-inventory.json",
+        "baseline-results.json",
+        "r1-results.json",
+        "baseline-lean.jsonl",
+        "r1-lean.jsonl"
+      ]
+    },
+    {
+      "nodeid": "tests/test_f2q8_strong_certificate.py::test_f2q8_correct_solution_includes_strong_certificate",
+      "original_status": "FAIL",
+      "family": "FORMAL_LEAN",
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "original_assertion_excerpt": "E       assert None == 10.0",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_f2q8_strong_certificate.py",
+        "line": 32
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_f2q8_strong_certificate.py",
+        "line": 32
+      },
+      "evidence": [
+        "original-inventory.json",
+        "baseline-results.json",
+        "r1-results.json",
+        "baseline-lean.jsonl",
+        "r1-lean.jsonl"
+      ]
+    },
+    {
+      "nodeid": "tests/test_f2q8_student_claim_checks.py::test_f2q8_correct_final_answer_and_pair_reduction",
+      "original_status": "FAIL",
+      "family": "FORMAL_LEAN",
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "original_assertion_excerpt": "E       AssertionError: assert 'technical_error' == 'verified'\nE         \nE         - verified\nE         + technical_error",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_f2q8_student_claim_checks.py",
+        "line": 23
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_f2q8_student_claim_checks.py",
+        "line": 23
+      },
+      "evidence": [
+        "original-inventory.json",
+        "baseline-results.json",
+        "r1-results.json",
+        "baseline-lean.jsonl",
+        "r1-lean.jsonl"
+      ]
+    },
+    {
+      "nodeid": "tests/test_f2q8_student_claim_checks.py::test_f2q8_wrong_final_answer_and_pair_reduction",
+      "original_status": "FAIL",
+      "family": "FORMAL_LEAN",
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "original_assertion_excerpt": "E       AssertionError: assert 'technical_error' == 'refuted'\nE         \nE         - refuted\nE         + technical_error",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_f2q8_student_claim_checks.py",
+        "line": 41
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_f2q8_student_claim_checks.py",
+        "line": 41
+      },
+      "evidence": [
+        "original-inventory.json",
+        "baseline-results.json",
+        "r1-results.json",
+        "baseline-lean.jsonl",
+        "r1-lean.jsonl"
+      ]
+    },
+    {
+      "nodeid": "tests/test_f2q8_student_claim_checks.py::test_f2q8_generic_arithmetic_equality_still_works",
+      "original_status": "FAIL",
+      "family": "FORMAL_LEAN",
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "original_assertion_excerpt": "E       AssertionError: assert 'technical_error' == 'verified'\nE         \nE         - verified\nE         + technical_error",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_f2q8_student_claim_checks.py",
+        "line": 54
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_f2q8_student_claim_checks.py",
+        "line": 54
+      },
+      "evidence": [
+        "original-inventory.json",
+        "baseline-results.json",
+        "r1-results.json",
+        "baseline-lean.jsonl",
+        "r1-lean.jsonl"
+      ]
+    },
+    {
+      "nodeid": "tests/test_f2q8_student_claim_checks.py::test_f2q8_generic_wrong_arithmetic_equality_still_fails",
+      "original_status": "FAIL",
+      "family": "FORMAL_LEAN",
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "original_assertion_excerpt": "E       AssertionError: assert 'technical_error' == 'refuted'\nE         \nE         - refuted\nE         + technical_error",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_f2q8_student_claim_checks.py",
+        "line": 64
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_f2q8_student_claim_checks.py",
+        "line": 64
+      },
+      "evidence": [
+        "original-inventory.json",
+        "baseline-results.json",
+        "r1-results.json",
+        "baseline-lean.jsonl",
+        "r1-lean.jsonl"
+      ]
+    },
+    {
+      "nodeid": "tests/test_f2q8_student_claim_checks.py::test_f2q8_wrong_formula_is_rejected",
+      "original_status": "FAIL",
+      "family": "FORMAL_LEAN",
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "original_assertion_excerpt": "E       AssertionError: assert 'technical_error' == 'refuted'\nE         \nE         - refuted\nE         + technical_error",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_f2q8_student_claim_checks.py",
+        "line": 75
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_f2q8_student_claim_checks.py",
+        "line": 75
+      },
+      "evidence": [
+        "original-inventory.json",
+        "baseline-results.json",
+        "r1-results.json",
+        "baseline-lean.jsonl",
+        "r1-lean.jsonl"
+      ]
+    },
+    {
+      "nodeid": "tests/test_f2q8_student_claim_checks.py::test_f2q8_correct_formula_is_verified",
+      "original_status": "FAIL",
+      "family": "FORMAL_LEAN",
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "original_assertion_excerpt": "E       AssertionError: assert 'technical_error' == 'verified'\nE         \nE         - verified\nE         + technical_error",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_f2q8_student_claim_checks.py",
+        "line": 86
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_f2q8_student_claim_checks.py",
+        "line": 86
+      },
+      "evidence": [
+        "original-inventory.json",
+        "baseline-results.json",
+        "r1-results.json",
+        "baseline-lean.jsonl",
+        "r1-lean.jsonl"
+      ]
+    },
+    {
+      "nodeid": "tests/test_f2q8_student_claim_checks.py::test_f2q8_correct_pair_count_but_wrong_rhs",
+      "original_status": "FAIL",
+      "family": "FORMAL_LEAN",
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "original_assertion_excerpt": "E       AssertionError: assert 'technical_error' == 'verified'\nE         \nE         - verified\nE         + technical_error",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_f2q8_student_claim_checks.py",
+        "line": 98
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_f2q8_student_claim_checks.py",
+        "line": 98
+      },
+      "evidence": [
+        "original-inventory.json",
+        "baseline-results.json",
+        "r1-results.json",
+        "baseline-lean.jsonl",
+        "r1-lean.jsonl"
+      ]
+    },
+    {
+      "nodeid": "tests/test_f2q8_student_claim_checks.py::test_f2q8_wrong_pair_count_true_local_subtraction",
+      "original_status": "FAIL",
+      "family": "FORMAL_LEAN",
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "original_assertion_excerpt": "E       AssertionError: assert 'technical_error' == 'refuted'\nE         \nE         - refuted\nE         + technical_error",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_f2q8_student_claim_checks.py",
+        "line": 112
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_f2q8_student_claim_checks.py",
+        "line": 112
+      },
+      "evidence": [
+        "original-inventory.json",
+        "baseline-results.json",
+        "r1-results.json",
+        "baseline-lean.jsonl",
+        "r1-lean.jsonl"
+      ]
+    },
+    {
+      "nodeid": "tests/test_handwriting_recognition_benchmark.py::test_loader_schema_artificial_samples_and_optional_strokes",
+      "original_status": "FAIL",
+      "family": "CAPTURE_SCHEMA",
+      "cause": "PREEXISTING_SCHEMA_PAGE_LIMIT_3_VS_50",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "original_assertion_excerpt": "E       AssertionError: assert {'$defs': {'R...iption'], ...} == {'$defs': {'R...iption'], ...}\nE         \nE         Omitting 5 identical items, use -vv to show\nE         Differing items:\nE         {'$defs': {'RecognitionSegment': {'additionalProperties': False, 'properties': {'confidence': {'anyOf': [{...}, {...}]...'number'}, 'x': {'minimum': 0, 'title': 'X', 'type': 'number'}, ...}, 'required': ['x', 'y', 'width', 'height'], ...}}} != {'$defs': {'RecognitionSegment': {'additionalProperties': False, 'properties': {'confidence': {'anyOf': [{...}, {...}]...'number'}, 'x': {'minimum': 0, 'title': 'X', 'type': 'number'}, ...}, 'required': ['x', 'y', 'width', 'height'], ...}}}\nE         Use -v to get more diff",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_handwriting_recognition_benchmark.py",
+        "line": 32
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_handwriting_recognition_benchmark.py",
+        "line": 32
+      },
+      "evidence": [
+        "original-inventory.json",
+        "baseline-results.json",
+        "r1-results.json",
+        "nonformal-evidence.json"
+      ]
+    },
+    {
+      "nodeid": "tests/test_ita2025f2q1_level1.py::test_f2q1_correct_solution_scores_10_and_verifies_lean",
+      "original_status": "FAIL",
+      "family": "FORMAL_LEAN",
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "original_assertion_excerpt": "E       assert None == 10.0",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_ita2025f2q1_level1.py",
+        "line": 47
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_ita2025f2q1_level1.py",
+        "line": 47
+      },
+      "evidence": [
+        "original-inventory.json",
+        "baseline-results.json",
+        "r1-results.json",
+        "baseline-lean.jsonl",
+        "r1-lean.jsonl"
+      ]
+    },
+    {
+      "nodeid": "tests/test_ita2025f2q1_level1.py::test_f2q1_missing_reduced_form_scores_partial",
+      "original_status": "FAIL",
+      "family": "FORMAL_LEAN",
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "original_assertion_excerpt": "E       assert None == 3.0",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_ita2025f2q1_level1.py",
+        "line": 82
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_ita2025f2q1_level1.py",
+        "line": 82
+      },
+      "evidence": [
+        "original-inventory.json",
+        "baseline-results.json",
+        "r1-results.json",
+        "baseline-lean.jsonl",
+        "r1-lean.jsonl"
+      ]
+    },
+    {
+      "nodeid": "tests/test_ita2025f2q1_level1.py::test_f2q1_wrong_answer_keeps_undecided_criteria_and_decided_subtotal",
+      "original_status": "FAIL",
+      "family": "FORMAL_LEAN",
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "original_assertion_excerpt": "E       AssertionError",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/audit_contract.py",
+        "line": 60
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/audit_contract.py",
+        "line": 60
+      },
+      "evidence": [
+        "original-inventory.json",
+        "baseline-results.json",
+        "r1-results.json",
+        "baseline-lean.jsonl",
+        "r1-lean.jsonl"
+      ]
+    },
+    {
+      "nodeid": "tests/test_ita2025f2q3_level1.py::test_f2q3_correct_solution_scores_10_and_verifies_lean",
+      "original_status": "FAIL",
+      "family": "FORMAL_LEAN",
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "original_assertion_excerpt": "E       assert None == 10.0",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_ita2025f2q3_level1.py",
+        "line": 47
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_ita2025f2q3_level1.py",
+        "line": 47
+      },
+      "evidence": [
+        "original-inventory.json",
+        "baseline-results.json",
+        "r1-results.json",
+        "baseline-lean.jsonl",
+        "r1-lean.jsonl"
+      ]
+    },
+    {
+      "nodeid": "tests/test_ita2025f2q3_level1.py::test_f2q3_answer_only_scores_final_points_only",
+      "original_status": "FAIL",
+      "family": "FORMAL_LEAN",
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "original_assertion_excerpt": "E       AssertionError",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/audit_contract.py",
+        "line": 59
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/audit_contract.py",
+        "line": 59
+      },
+      "evidence": [
+        "original-inventory.json",
+        "baseline-results.json",
+        "r1-results.json",
+        "baseline-lean.jsonl",
+        "r1-lean.jsonl"
+      ]
+    },
+    {
+      "nodeid": "tests/test_ita2025f2q3_level1.py::test_f2q3_partial_beta_difference_scores_partial",
+      "original_status": "FAIL",
+      "family": "FORMAL_LEAN",
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "original_assertion_excerpt": "E       AssertionError",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/audit_contract.py",
+        "line": 59
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/audit_contract.py",
+        "line": 59
+      },
+      "evidence": [
+        "original-inventory.json",
+        "baseline-results.json",
+        "r1-results.json",
+        "baseline-lean.jsonl",
+        "r1-lean.jsonl"
+      ]
+    },
+    {
+      "nodeid": "tests/test_ita2025f2q3_level1.py::test_f2q3_wrong_answer_keeps_undecided_criteria_and_decided_subtotal",
+      "original_status": "FAIL",
+      "family": "FORMAL_LEAN",
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "original_assertion_excerpt": "E       AssertionError",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/audit_contract.py",
+        "line": 60
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/audit_contract.py",
+        "line": 60
+      },
+      "evidence": [
+        "original-inventory.json",
+        "baseline-results.json",
+        "r1-results.json",
+        "baseline-lean.jsonl",
+        "r1-lean.jsonl"
+      ]
+    },
+    {
+      "nodeid": "tests/test_ita2025f2q5_level1.py::test_f2q5_correct_solution_scores_10_and_verifies_lean",
+      "original_status": "FAIL",
+      "family": "FORMAL_LEAN",
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "original_assertion_excerpt": "E       assert None == 10.0",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_ita2025f2q5_level1.py",
+        "line": 47
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_ita2025f2q5_level1.py",
+        "line": 47
+      },
+      "evidence": [
+        "original-inventory.json",
+        "baseline-results.json",
+        "r1-results.json",
+        "baseline-lean.jsonl",
+        "r1-lean.jsonl"
+      ]
+    },
+    {
+      "nodeid": "tests/test_ita2025f2q5_level1.py::test_f2q5_missing_bounds_scores_partial",
+      "original_status": "FAIL",
+      "family": "FORMAL_LEAN",
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "original_assertion_excerpt": "E       assert None == 2.0",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_ita2025f2q5_level1.py",
+        "line": 81
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_ita2025f2q5_level1.py",
+        "line": 81
+      },
+      "evidence": [
+        "original-inventory.json",
+        "baseline-results.json",
+        "r1-results.json",
+        "baseline-lean.jsonl",
+        "r1-lean.jsonl"
+      ]
+    },
+    {
+      "nodeid": "tests/test_ita2025f2q5_level1.py::test_f2q5_wrong_digit_keeps_undecided_criteria_and_decided_subtotal",
+      "original_status": "FAIL",
+      "family": "FORMAL_LEAN",
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "original_assertion_excerpt": "E       AssertionError",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/audit_contract.py",
+        "line": 60
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/audit_contract.py",
+        "line": 60
+      },
+      "evidence": [
+        "original-inventory.json",
+        "baseline-results.json",
+        "r1-results.json",
+        "baseline-lean.jsonl",
+        "r1-lean.jsonl"
+      ]
+    },
+    {
+      "nodeid": "tests/test_ita2025f2q6_level1.py::test_f2q6_correct_solution_scores_10_and_verifies_lean",
+      "original_status": "FAIL",
+      "family": "FORMAL_LEAN",
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "original_assertion_excerpt": "E       assert None == 10.0",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_ita2025f2q6_level1.py",
+        "line": 47
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_ita2025f2q6_level1.py",
+        "line": 47
+      },
+      "evidence": [
+        "original-inventory.json",
+        "baseline-results.json",
+        "r1-results.json",
+        "baseline-lean.jsonl",
+        "r1-lean.jsonl"
+      ]
+    },
+    {
+      "nodeid": "tests/test_ita2025f2q6_level1.py::test_f2q6_missing_ratio_scores_partial",
+      "original_status": "FAIL",
+      "family": "FORMAL_LEAN",
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "original_assertion_excerpt": "E       assert None == 3.0",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_ita2025f2q6_level1.py",
+        "line": 81
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_ita2025f2q6_level1.py",
+        "line": 81
+      },
+      "evidence": [
+        "original-inventory.json",
+        "baseline-results.json",
+        "r1-results.json",
+        "baseline-lean.jsonl",
+        "r1-lean.jsonl"
+      ]
+    },
+    {
+      "nodeid": "tests/test_ita2025f2q6_level1.py::test_f2q6_wrong_answer_keeps_undecided_criteria_and_decided_subtotal",
+      "original_status": "FAIL",
+      "family": "FORMAL_LEAN",
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "original_assertion_excerpt": "E       AssertionError",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/audit_contract.py",
+        "line": 60
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/audit_contract.py",
+        "line": 60
+      },
+      "evidence": [
+        "original-inventory.json",
+        "baseline-results.json",
+        "r1-results.json",
+        "baseline-lean.jsonl",
+        "r1-lean.jsonl"
+      ]
+    },
+    {
+      "nodeid": "tests/test_ita2025f2q8_level1.py::test_f2q8_correct_solution_scores_10_and_verifies_lean",
+      "original_status": "FAIL",
+      "family": "FORMAL_LEAN",
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "original_assertion_excerpt": "E       assert None == 10.0",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_ita2025f2q8_level1.py",
+        "line": 47
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_ita2025f2q8_level1.py",
+        "line": 47
+      },
+      "evidence": [
+        "original-inventory.json",
+        "baseline-results.json",
+        "r1-results.json",
+        "baseline-lean.jsonl",
+        "r1-lean.jsonl"
+      ]
+    },
+    {
+      "nodeid": "tests/test_ita2025f2q8_level1.py::test_f2q8_answer_only_scores_final_points_only",
+      "original_status": "FAIL",
+      "family": "FORMAL_LEAN",
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "original_assertion_excerpt": "E       AssertionError",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/audit_contract.py",
+        "line": 59
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/audit_contract.py",
+        "line": 59
+      },
+      "evidence": [
+        "original-inventory.json",
+        "baseline-results.json",
+        "r1-results.json",
+        "baseline-lean.jsonl",
+        "r1-lean.jsonl"
+      ]
+    },
+    {
+      "nodeid": "tests/test_ita2025f2q8_level1.py::test_f2q8_missing_determinant_formula_scores_partial",
+      "original_status": "FAIL",
+      "family": "FORMAL_LEAN",
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "original_assertion_excerpt": "E       assert None == 2.0",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_ita2025f2q8_level1.py",
+        "line": 87
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_ita2025f2q8_level1.py",
+        "line": 87
+      },
+      "evidence": [
+        "original-inventory.json",
+        "baseline-results.json",
+        "r1-results.json",
+        "baseline-lean.jsonl",
+        "r1-lean.jsonl"
+      ]
+    },
+    {
+      "nodeid": "tests/test_ita2025q1_level2.py::test_q1_correct_solution_scores_10_and_verifies_formal_step",
+      "original_status": "FAIL",
+      "family": "FORMAL_LEAN",
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "original_assertion_excerpt": "E       assert None == 10.0",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_ita2025q1_level2.py",
+        "line": 52
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_ita2025q1_level2.py",
+        "line": 52
+      },
+      "evidence": [
+        "original-inventory.json",
+        "baseline-results.json",
+        "r1-results.json",
+        "baseline-lean.jsonl",
+        "r1-lean.jsonl"
+      ]
+    },
+    {
+      "nodeid": "tests/test_ita2025q1_level2.py::test_q1_wrong_determinant_step_blocks_area_and_dependencies",
+      "original_status": "FAIL",
+      "family": "FORMAL_LEAN",
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "original_assertion_excerpt": "E       AssertionError",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/audit_contract.py",
+        "line": 59
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/audit_contract.py",
+        "line": 59
+      },
+      "evidence": [
+        "original-inventory.json",
+        "baseline-results.json",
+        "r1-results.json",
+        "baseline-lean.jsonl",
+        "r1-lean.jsonl"
+      ]
+    },
+    {
+      "nodeid": "tests/test_ita2025q1_level2.py::test_q1_answer_only_preserves_subtotal_without_global_score",
+      "original_status": "FAIL",
+      "family": "FORMAL_LEAN",
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "original_assertion_excerpt": "E       AssertionError",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/audit_contract.py",
+        "line": 59
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/audit_contract.py",
+        "line": 59
+      },
+      "evidence": [
+        "original-inventory.json",
+        "baseline-results.json",
+        "r1-results.json",
+        "baseline-lean.jsonl",
+        "r1-lean.jsonl"
+      ]
+    },
+    {
+      "nodeid": "tests/test_ita2025q3_level1.py::test_q3_correct_solution_scores_10_and_verifies_formal_step",
+      "original_status": "FAIL",
+      "family": "FORMAL_LEAN",
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "original_assertion_excerpt": "E       assert None == 10.0",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_ita2025q3_level1.py",
+        "line": 47
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_ita2025q3_level1.py",
+        "line": 47
+      },
+      "evidence": [
+        "original-inventory.json",
+        "baseline-results.json",
+        "r1-results.json",
+        "baseline-lean.jsonl",
+        "r1-lean.jsonl"
+      ]
+    },
+    {
+      "nodeid": "tests/test_ita2025q3_level1.py::test_q3_missing_parity_blocks_formal_chain",
+      "original_status": "FAIL",
+      "family": "FORMAL_LEAN",
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "original_assertion_excerpt": "E       assert None == 2.0",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_ita2025q3_level1.py",
+        "line": 93
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_ita2025q3_level1.py",
+        "line": 93
+      },
+      "evidence": [
+        "original-inventory.json",
+        "baseline-results.json",
+        "r1-results.json",
+        "baseline-lean.jsonl",
+        "r1-lean.jsonl"
+      ]
+    },
+    {
+      "nodeid": "tests/test_ita2025q4_level1.py::test_q4_correct_solution_scores_10_and_verifies_lean",
+      "original_status": "FAIL",
+      "family": "FORMAL_LEAN",
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "original_assertion_excerpt": "E       assert None == 10.0",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_ita2025q4_level1.py",
+        "line": 47
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_ita2025q4_level1.py",
+        "line": 47
+      },
+      "evidence": [
+        "original-inventory.json",
+        "baseline-results.json",
+        "r1-results.json",
+        "baseline-lean.jsonl",
+        "r1-lean.jsonl"
+      ]
+    },
+    {
+      "nodeid": "tests/test_ita2025q5_level1.py::test_q5_correct_solution_scores_10_and_verifies_lean",
+      "original_status": "FAIL",
+      "family": "FORMAL_LEAN",
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "original_assertion_excerpt": "E       assert None == 10.0",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_ita2025q5_level1.py",
+        "line": 47
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_ita2025q5_level1.py",
+        "line": 47
+      },
+      "evidence": [
+        "original-inventory.json",
+        "baseline-results.json",
+        "r1-results.json",
+        "baseline-lean.jsonl",
+        "r1-lean.jsonl"
+      ]
+    },
+    {
+      "nodeid": "tests/test_ita2025q5_level1.py::test_q5_missing_difference_blocks_factorization_dependency",
+      "original_status": "FAIL",
+      "family": "FORMAL_LEAN",
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "original_assertion_excerpt": "E       assert None == 2.0",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_ita2025q5_level1.py",
+        "line": 83
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_ita2025q5_level1.py",
+        "line": 83
+      },
+      "evidence": [
+        "original-inventory.json",
+        "baseline-results.json",
+        "r1-results.json",
+        "baseline-lean.jsonl",
+        "r1-lean.jsonl"
+      ]
+    },
+    {
+      "nodeid": "tests/test_ita2025q5_level1.py::test_q5_missing_factorization_blocks_formal_step",
+      "original_status": "FAIL",
+      "family": "FORMAL_LEAN",
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "original_assertion_excerpt": "E       assert None == 3.0",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_ita2025q5_level1.py",
+        "line": 97
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_ita2025q5_level1.py",
+        "line": 97
+      },
+      "evidence": [
+        "original-inventory.json",
+        "baseline-results.json",
+        "r1-results.json",
+        "baseline-lean.jsonl",
+        "r1-lean.jsonl"
+      ]
+    },
+    {
+      "nodeid": "tests/test_ita2025q8_level1.py::test_q8_correct_solution_scores_10_and_verifies_lean",
+      "original_status": "FAIL",
+      "family": "FORMAL_LEAN",
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "original_assertion_excerpt": "E       assert None == 10.0",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_ita2025q8_level1.py",
+        "line": 47
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_ita2025q8_level1.py",
+        "line": 47
+      },
+      "evidence": [
+        "original-inventory.json",
+        "baseline-results.json",
+        "r1-results.json",
+        "baseline-lean.jsonl",
+        "r1-lean.jsonl"
+      ]
+    },
+    {
+      "nodeid": "tests/test_ita2025q8_level1.py::test_q8_answer_only_scores_interval_and_sum_only",
+      "original_status": "FAIL",
+      "family": "FORMAL_LEAN",
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "original_assertion_excerpt": "E       AssertionError",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/audit_contract.py",
+        "line": 59
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/audit_contract.py",
+        "line": 59
+      },
+      "evidence": [
+        "original-inventory.json",
+        "baseline-results.json",
+        "r1-results.json",
+        "baseline-lean.jsonl",
+        "r1-lean.jsonl"
+      ]
+    },
+    {
+      "nodeid": "tests/test_ita2025q8_level1.py::test_q8_missing_sign_analysis_loses_sign_points",
+      "original_status": "FAIL",
+      "family": "FORMAL_LEAN",
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "original_assertion_excerpt": "E       assert None == 2.5",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_ita2025q8_level1.py",
+        "line": 81
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_ita2025q8_level1.py",
+        "line": 81
+      },
+      "evidence": [
+        "original-inventory.json",
+        "baseline-results.json",
+        "r1-results.json",
+        "baseline-lean.jsonl",
+        "r1-lean.jsonl"
+      ]
+    },
+    {
+      "nodeid": "tests/test_math_canonical_pipeline.py::test_shifted_f2q3_equation_keeps_full_credit_and_formal_checks",
+      "original_status": "FAIL",
+      "family": "FORMAL_LEAN",
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "original_assertion_excerpt": "E       AssertionError: assert (None == 10)\nE        +  where None = AuditResponse(problem_id='ITA2025F2Q3', score=None, max_score=10.0, verdict='inconclusivo', extracted_claims=ClaimExtr...ted_max_score=0.0, coverage=0.0, estimated_points=None, needs_review=True, unscorable_reason='ADJUDICATOR_UNAVAILABLE').score",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_math_canonical_pipeline.py",
+        "line": 15
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_math_canonical_pipeline.py",
+        "line": 15
+      },
+      "evidence": [
+        "original-inventory.json",
+        "baseline-results.json",
+        "r1-results.json",
+        "baseline-lean.jsonl",
+        "r1-lean.jsonl"
+      ]
+    },
+    {
+      "nodeid": "tests/test_mvp_ita_10_questions.py::test_mvp_correct_solutions_for_all_10_questions[ITA2025Q1]",
+      "original_status": "FAIL",
+      "family": "FORMAL_LEAN",
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "original_assertion_excerpt": "E       assert None == 10.0",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_mvp_ita_10_questions.py",
+        "line": 111
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_mvp_ita_10_questions.py",
+        "line": 111
+      },
+      "evidence": [
+        "original-inventory.json",
+        "baseline-results.json",
+        "r1-results.json",
+        "baseline-lean.jsonl",
+        "r1-lean.jsonl"
+      ]
+    },
+    {
+      "nodeid": "tests/test_mvp_ita_10_questions.py::test_mvp_correct_solutions_for_all_10_questions[ITA2025Q3]",
+      "original_status": "FAIL",
+      "family": "FORMAL_LEAN",
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "original_assertion_excerpt": "E       assert None == 10.0",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_mvp_ita_10_questions.py",
+        "line": 111
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_mvp_ita_10_questions.py",
+        "line": 111
+      },
+      "evidence": [
+        "original-inventory.json",
+        "baseline-results.json",
+        "r1-results.json",
+        "baseline-lean.jsonl",
+        "r1-lean.jsonl"
+      ]
+    },
+    {
+      "nodeid": "tests/test_mvp_ita_10_questions.py::test_mvp_correct_solutions_for_all_10_questions[ITA2025Q4]",
+      "original_status": "FAIL",
+      "family": "FORMAL_LEAN",
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "original_assertion_excerpt": "E       assert None == 10.0",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_mvp_ita_10_questions.py",
+        "line": 111
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_mvp_ita_10_questions.py",
+        "line": 111
+      },
+      "evidence": [
+        "original-inventory.json",
+        "baseline-results.json",
+        "r1-results.json",
+        "baseline-lean.jsonl",
+        "r1-lean.jsonl"
+      ]
+    },
+    {
+      "nodeid": "tests/test_mvp_ita_10_questions.py::test_mvp_correct_solutions_for_all_10_questions[ITA2025Q5]",
+      "original_status": "FAIL",
+      "family": "FORMAL_LEAN",
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "original_assertion_excerpt": "E       assert None == 10.0",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_mvp_ita_10_questions.py",
+        "line": 111
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_mvp_ita_10_questions.py",
+        "line": 111
+      },
+      "evidence": [
+        "original-inventory.json",
+        "baseline-results.json",
+        "r1-results.json",
+        "baseline-lean.jsonl",
+        "r1-lean.jsonl"
+      ]
+    },
+    {
+      "nodeid": "tests/test_mvp_ita_10_questions.py::test_mvp_correct_solutions_for_all_10_questions[ITA2025Q8]",
+      "original_status": "FAIL",
+      "family": "FORMAL_LEAN",
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "original_assertion_excerpt": "E       assert None == 10.0",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_mvp_ita_10_questions.py",
+        "line": 111
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_mvp_ita_10_questions.py",
+        "line": 111
+      },
+      "evidence": [
+        "original-inventory.json",
+        "baseline-results.json",
+        "r1-results.json",
+        "baseline-lean.jsonl",
+        "r1-lean.jsonl"
+      ]
+    },
+    {
+      "nodeid": "tests/test_mvp_ita_10_questions.py::test_mvp_correct_solutions_for_all_10_questions[ITA2025F2Q1]",
+      "original_status": "FAIL",
+      "family": "FORMAL_LEAN",
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "original_assertion_excerpt": "E       assert None == 10.0",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_mvp_ita_10_questions.py",
+        "line": 111
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_mvp_ita_10_questions.py",
+        "line": 111
+      },
+      "evidence": [
+        "original-inventory.json",
+        "baseline-results.json",
+        "r1-results.json",
+        "baseline-lean.jsonl",
+        "r1-lean.jsonl"
+      ]
+    },
+    {
+      "nodeid": "tests/test_mvp_ita_10_questions.py::test_mvp_correct_solutions_for_all_10_questions[ITA2025F2Q3]",
+      "original_status": "FAIL",
+      "family": "FORMAL_LEAN",
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "original_assertion_excerpt": "E       assert None == 10.0",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_mvp_ita_10_questions.py",
+        "line": 111
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_mvp_ita_10_questions.py",
+        "line": 111
+      },
+      "evidence": [
+        "original-inventory.json",
+        "baseline-results.json",
+        "r1-results.json",
+        "baseline-lean.jsonl",
+        "r1-lean.jsonl"
+      ]
+    },
+    {
+      "nodeid": "tests/test_mvp_ita_10_questions.py::test_mvp_correct_solutions_for_all_10_questions[ITA2025F2Q5]",
+      "original_status": "FAIL",
+      "family": "FORMAL_LEAN",
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "original_assertion_excerpt": "E       assert None == 10.0",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_mvp_ita_10_questions.py",
+        "line": 111
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_mvp_ita_10_questions.py",
+        "line": 111
+      },
+      "evidence": [
+        "original-inventory.json",
+        "baseline-results.json",
+        "r1-results.json",
+        "baseline-lean.jsonl",
+        "r1-lean.jsonl"
+      ]
+    },
+    {
+      "nodeid": "tests/test_mvp_ita_10_questions.py::test_mvp_correct_solutions_for_all_10_questions[ITA2025F2Q6]",
+      "original_status": "FAIL",
+      "family": "FORMAL_LEAN",
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "original_assertion_excerpt": "E       assert None == 10.0",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_mvp_ita_10_questions.py",
+        "line": 111
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_mvp_ita_10_questions.py",
+        "line": 111
+      },
+      "evidence": [
+        "original-inventory.json",
+        "baseline-results.json",
+        "r1-results.json",
+        "baseline-lean.jsonl",
+        "r1-lean.jsonl"
+      ]
+    },
+    {
+      "nodeid": "tests/test_mvp_ita_10_questions.py::test_mvp_correct_solutions_for_all_10_questions[ITA2025F2Q8]",
+      "original_status": "FAIL",
+      "family": "FORMAL_LEAN",
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "original_assertion_excerpt": "E       assert None == 10.0",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_mvp_ita_10_questions.py",
+        "line": 111
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_mvp_ita_10_questions.py",
+        "line": 111
+      },
+      "evidence": [
+        "original-inventory.json",
+        "baseline-results.json",
+        "r1-results.json",
+        "baseline-lean.jsonl",
+        "r1-lean.jsonl"
+      ]
+    },
+    {
+      "nodeid": "tests/test_obligation_semantic.py::test_existing_lean_checks_exact_written_proposition[2*((6-x)+x)-verified]",
+      "original_status": "FAIL",
+      "family": "FORMAL_LEAN",
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "original_assertion_excerpt": "E       AssertionError: assert ('technical_error' == 'verified'\nE         \nE         - verified\nE         + technical_error)",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_obligation_semantic.py",
+        "line": 198
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_obligation_semantic.py",
+        "line": 198
+      },
+      "evidence": [
+        "original-inventory.json",
+        "baseline-results.json",
+        "r1-results.json",
+        "baseline-lean.jsonl",
+        "r1-lean.jsonl"
+      ]
+    },
+    {
+      "nodeid": "tests/test_obligation_semantic.py::test_existing_lean_checks_exact_written_proposition[2*((6-x)+x)+1-refuted]",
+      "original_status": "FAIL",
+      "family": "FORMAL_LEAN",
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "original_assertion_excerpt": "E       AssertionError: assert ('technical_error' == 'refuted'\nE         \nE         - refuted\nE         + technical_error)",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_obligation_semantic.py",
+        "line": 198
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_obligation_semantic.py",
+        "line": 198
+      },
+      "evidence": [
+        "original-inventory.json",
+        "baseline-results.json",
+        "r1-results.json",
+        "baseline-lean.jsonl",
+        "r1-lean.jsonl"
+      ]
+    },
+    {
+      "nodeid": "tests/test_pedagogical_report.py::test_f2q1_correct_solution_has_pedagogical_report",
+      "original_status": "FAIL",
+      "family": "FORMAL_LEAN",
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "original_assertion_excerpt": "E       assert None == 10.0",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_pedagogical_report.py",
+        "line": 50
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_pedagogical_report.py",
+        "line": 50
+      },
+      "evidence": [
+        "original-inventory.json",
+        "baseline-results.json",
+        "r1-results.json",
+        "baseline-lean.jsonl",
+        "r1-lean.jsonl"
+      ]
+    },
+    {
+      "nodeid": "tests/test_pedagogical_report.py::test_f2q1_wrong_solution_reports_incorrect_student_statements",
+      "original_status": "FAIL",
+      "family": "FORMAL_LEAN",
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "original_assertion_excerpt": "E       assert 'incorreta' in '{\"summary\": \"a avaliação é inconclusiva; não há evidência suficiente para uma nota global. parte das verificações for...-02\", \"coverage\": 0.0, \"estimated_points\": null, \"needs_review\": true, \"unscorable_reason\": \"adjudicator_unavailable\"}'",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_pedagogical_report.py",
+        "line": 73
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_pedagogical_report.py",
+        "line": 73
+      },
+      "evidence": [
+        "original-inventory.json",
+        "baseline-results.json",
+        "r1-results.json",
+        "baseline-lean.jsonl",
+        "r1-lean.jsonl"
+      ]
+    },
+    {
+      "nodeid": "tests/test_positive_credit_evidence.py::test_f2q3_explicit_answer_label_keeps_only_final_credit_with_real_engine",
+      "original_status": "FAIL",
+      "family": "FORMAL_LEAN",
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "original_assertion_excerpt": "E       AssertionError: assert [('beta_diffe...nswer', None)] == [('beta_diffe...l_answer', 2)]\nE         \nE         At index 3 diff: ('final_answer', None) != ('final_answer', 2)\nE         Use -v to get more diff",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_positive_credit_evidence.py",
+        "line": 339
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_positive_credit_evidence.py",
+        "line": 339
+      },
+      "evidence": [
+        "original-inventory.json",
+        "baseline-results.json",
+        "r1-results.json",
+        "baseline-lean.jsonl",
+        "r1-lean.jsonl"
+      ]
+    },
+    {
+      "nodeid": "tests/test_rubric_bridge_pipeline.py::test_unsupported_legacy_wording_reaches_rubric_through_verified_student",
+      "original_status": "FAIL",
+      "family": "FORMAL_LEAN",
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "original_assertion_excerpt": "E       AssertionError: assert 'deterministic_expected_value' == 'formal_lean_verified'\nE         \nE         - formal_lean_verified\nE         + deterministic_expected_value",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_rubric_bridge_pipeline.py",
+        "line": 15
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_rubric_bridge_pipeline.py",
+        "line": 15
+      },
+      "evidence": [
+        "original-inventory.json",
+        "baseline-results.json",
+        "r1-results.json",
+        "baseline-lean.jsonl",
+        "r1-lean.jsonl"
+      ]
+    },
+    {
+      "nodeid": "tests/test_semantic_claims.py::test_semantic_math_is_checked_by_real_lean[2*((6-x)+x)-12-verified-6-student_lean]",
+      "original_status": "FAIL",
+      "family": "FORMAL_LEAN",
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "original_assertion_excerpt": "E       AssertionError: assert None == 6\nE        +  where None = PautaDecision(item_id='b', scoring_strategy='max_of', max_points=Decimal('6'), points_awarded=None, known_points=Decim...4-1f3c7eec1c1243469d25f90370a831a1/real_check_1.lean'), conditional_on=None, reason='UPSTREAM_STATUS')), children=()))).points_awarded",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_semantic_claims.py",
+        "line": 216
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_semantic_claims.py",
+        "line": 216
+      },
+      "evidence": [
+        "original-inventory.json",
+        "baseline-results.json",
+        "r1-results.json",
+        "baseline-lean.jsonl",
+        "r1-lean.jsonl"
+      ]
+    },
+    {
+      "nodeid": "tests/test_semantic_claims.py::test_semantic_math_is_checked_by_real_lean[2*((6-x)+x)+1-12-refuted-0-student_lean]",
+      "original_status": "FAIL",
+      "family": "FORMAL_LEAN",
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "original_assertion_excerpt": "E       AssertionError: assert None == 0\nE        +  where None = PautaDecision(item_id='b', scoring_strategy='max_of', max_points=Decimal('6'), points_awarded=None, known_points=Decim...4-ee219624e5bc4bff8a4f7ce1c854e66d/real_check_1.lean'), conditional_on=None, reason='UPSTREAM_STATUS')), children=()))).points_awarded",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_semantic_claims.py",
+        "line": 216
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_semantic_claims.py",
+        "line": 216
+      },
+      "evidence": [
+        "original-inventory.json",
+        "baseline-results.json",
+        "r1-results.json",
+        "baseline-lean.jsonl",
+        "r1-lean.jsonl"
+      ]
+    },
+    {
+      "nodeid": "tests/test_student_proof_semantics.py::test_real_arithmetic_negation_and_verified_claim",
+      "original_status": "FAIL",
+      "family": "FORMAL_LEAN",
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "original_assertion_excerpt": "E           AssertionError: StudentClaimCheck(id='student_claim_0', problem_id='ITA2025F2Q8', claim_type='arithmetic_equality', raw_text='2+2=5', ...rce_end': 5, 'payload_sha256': '67fdf0ae3c0fdf8df63779548939565157d3ed2f375f7967f1088c864c3e2837'}, formal_status=None)\nE           assert 'technical_error' == 'refuted'\nE             \nE             - refuted\nE             + technical_error",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_student_proof_semantics.py",
+        "line": 143
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_student_proof_semantics.py",
+        "line": 143
+      },
+      "evidence": [
+        "original-inventory.json",
+        "baseline-results.json",
+        "r1-results.json",
+        "baseline-lean.jsonl",
+        "r1-lean.jsonl"
+      ]
+    },
+    {
+      "nodeid": "tests/test_submission_audits.py::test_real_bridge_preserves_wrong_solution_and_runs_existing_lean_pipeline",
+      "original_status": "FAIL",
+      "family": "FORMAL_LEAN",
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "original_assertion_excerpt": "E       assert False\nE        +  where False = any(<generator object test_real_bridge_preserves_wrong_solution_and_runs_existing_lean_pipeline.<locals>.<genexpr> at 0x10dc13200>)",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_submission_audits.py",
+        "line": 356
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_submission_audits.py",
+        "line": 356
+      },
+      "evidence": [
+        "original-inventory.json",
+        "baseline-results.json",
+        "r1-results.json",
+        "baseline-lean.jsonl",
+        "r1-lean.jsonl"
+      ]
+    },
+    {
+      "nodeid": "tests/test_tme_accepted_integration.py::test_real_local_lean_status_certificates_preserved",
+      "original_status": "FAIL",
+      "family": "FORMAL_LEAN",
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "original_assertion_excerpt": "E       AssertionError: assert {'technical_error'} == {'refuted', 'verified'}\nE         \nE         Extra items in the left set:\nE         'technical_error'\nE         Extra items in the right set:\nE         'verified'\nE         'refuted'\nE         Use -v to get more diff",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_tme_accepted_integration.py",
+        "line": 193
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_tme_accepted_integration.py",
+        "line": 193
+      },
+      "evidence": [
+        "original-inventory.json",
+        "baseline-results.json",
+        "r1-results.json",
+        "baseline-lean.jsonl",
+        "r1-lean.jsonl"
+      ]
+    },
+    {
+      "nodeid": "tests/test_tme_hybrid_grader.py::test_wrong_reasoning_correct_final_is_refuted_by_real_lean",
+      "original_status": "FAIL",
+      "family": "FORMAL_LEAN",
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "original_assertion_excerpt": "E       AssertionError: assert ('technical_error' == 'refuted'\nE         \nE         - refuted\nE         + technical_error)",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_tme_hybrid_grader.py",
+        "line": 132
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_tme_hybrid_grader.py",
+        "line": 132
+      },
+      "evidence": [
+        "original-inventory.json",
+        "baseline-results.json",
+        "r1-results.json",
+        "baseline-lean.jsonl",
+        "r1-lean.jsonl"
+      ]
+    },
+    {
+      "nodeid": "tests/test_tme_hybrid_grader.py::test_real_formal_verified_is_preserved_and_not_semantic",
+      "original_status": "FAIL",
+      "family": "FORMAL_LEAN",
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "original_assertion_excerpt": "E       AssertionError: assert ('technical_error' == 'supported'\nE         \nE         - supported\nE         + technical_error)",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_tme_hybrid_grader.py",
+        "line": 143
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_tme_hybrid_grader.py",
+        "line": 143
+      },
+      "evidence": [
+        "original-inventory.json",
+        "baseline-results.json",
+        "r1-results.json",
+        "baseline-lean.jsonl",
+        "r1-lean.jsonl"
+      ]
+    },
+    {
+      "nodeid": "tests/test_ui_01_shell.py::test_central_product_vocabulary_is_preserved_without_contract_renames",
+      "original_status": "FAIL",
+      "family": "UI_CONTRACT",
+      "cause": "PREEXISTING_UI_LABEL_EXPECTATION",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "original_assertion_excerpt": "E           assert 'Verificação formal com Lean' in 'const problemSelect = document.querySelector(\"#problem-select\");\\nconst exampleSelect = document.querySelector(\"#exam...globalThis.addEventListener(\"orientationchange\", () => requestAnimationFrame(renderCanvas));\\n  initialize();\\n})();\\n'",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_ui_01_shell.py",
+        "line": 151
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_ui_01_shell.py",
+        "line": 151
+      },
+      "evidence": [
+        "original-inventory.json",
+        "baseline-results.json",
+        "r1-results.json",
+        "nonformal-evidence.json"
+      ]
+    },
+    {
+      "nodeid": "tests/test_ui_02_workspace.py::test_parent_statement_is_compact_and_sticky_through_notebook_and_submission",
+      "original_status": "FAIL",
+      "family": "UI_CONTRACT",
+      "cause": "PREEXISTING_UI_STICKY_EXPECTATION",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "original_assertion_excerpt": "E       AssertionError: assert 'position: sticky' not in ' removes re...w: 1; }\\n}\\n'\nE         \nE         'position: sticky' is contained here:\nE           trols {\nE             position: sticky;\nE             top: calc(var(--pilot-dock-height, 0px) + 8px);\nE             z-index: calc(var(--z-sticky) - 1);\nE             background: var(--color-surface);...\nE         \nE         ...Full output truncated (26 lines hidden), use '-vv' to show",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_ui_02_workspace.py",
+        "line": 108
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_ui_02_workspace.py",
+        "line": 108
+      },
+      "evidence": [
+        "original-inventory.json",
+        "baseline-results.json",
+        "r1-results.json",
+        "nonformal-evidence.json"
+      ]
+    }
+  ]
+}

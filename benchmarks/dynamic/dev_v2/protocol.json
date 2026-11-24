@@ -1,0 +1,33 @@
+{
+  "schema_version": "dynamic-r1-preregistration.v1",
+  "forensic_sha": "5aa7344e5904305a414688741f83aafc7d610200",
+  "baseline_sha": "e0975898bb2449c05595c5b75236a9690c51b8b1",
+  "dataset_sha256": "c623f5f7dd659a92823448f6544c42d12a47c161bb06716c012ee906db9d546a",
+  "implementation_unchanged_at_freeze": true,
+  "primary_cases": 72,
+  "coverage_boundary_cases": 4,
+  "adjudication_cases": 4,
+  "primary_unit": "one target rubric criterion per new textual attempt; paired profiles are repeated observations",
+  "reviewer_fixture": "rubric-scoped-max.v1 (maximal score, select claims by criterion policy, no gold or grader input)",
+  "real_provider_runs": [],
+  "metrics": {
+    "criterion_precision": "TP/(TP+FP), positive credit vs gold>0; null counts as no validated positive",
+    "criterion_recall": "TP/(TP+FN), null counts as missed positive",
+    "false_credit": "score>gold, all eligible; null separately reported",
+    "missed_credit": "score<gold, all eligible; null separately reported",
+    "point_MAE": "mean abs(score-gold) per criterion, scores on /4; G1 defined-only with availability",
+    "over_under_credit": "sums of positive score-gold / gold-score",
+    "review_rate": "review required / cases",
+    "automation": "G2 not REVIEW_ONLY / cases",
+    "unsafe_automation": "automated G2 with any score error or benchmark requires-review / automated; null if none",
+    "material_error": ">=1 point on /4",
+    "comparison": "paired absolute error: better/worse/tie; report raw signed shifts, recovery and new false credit"
+  },
+  "gate": {
+    "substitution": "under-credit decreases and no new false credit vs baseline; do not advance otherwise",
+    "method": "under-credit decreases and no new false credit vs substitution-only",
+    "final": ">=25% fewer missed criteria in primary G0 and G2; no increase in false-credit count or over-credit points; zero new material unsafe automation"
+  },
+  "exclusions": "Only predeclared BENCHMARK_ADJUDICATION_REQUIRED excluded from numeric metrics; coverage boundaries reported separately and in all-unambiguous totals",
+  "anti_leakage": "Do not execute or modify HOLDOUT_V1. New cases never claim independent post-fix validation. No HOLDOUT_V2 cases authored here."
+}

@@ -1,0 +1,955 @@
+{
+  "schema": "r1-original-failures.v1",
+  "original_counts": {
+    "passed": 3009,
+    "skipped": 47,
+    "failed": 105
+  },
+  "failures": [
+    {
+      "nodeid": "tests/test_common_claim_pipeline.py::test_common_catalog_preserves_real_pipeline_credit_and_attribution[True]",
+      "original_status": "FAIL",
+      "original_traceback": "correct = True\n\n    @pytest.mark.parametrize('correct',[True,False])\n    def test_common_catalog_preserves_real_pipeline_credit_and_attribution(correct):\n        solution=Path('problems/ITA2025F2Q1/examples/correct_solution.txt').read_text() if correct else 'Portanto a=3 e b=2.'\n        response=execute_audit(AuditRequest(problem_id='ITA2025F2Q1',solution=solution))\n        directory=Path(response.artifact_dir)\n        catalog=MathClaimCatalog.model_validate_json((directory/'math_claims.json').read_text())\n        public=response.model_dump(mode='json')\n        assert 'math_claims' not in public and 'common_claims' not in public\n        assert json.loads((directory/'audit.json').read_text())==public\n        # Every pointer resolves to an actual existing legacy result; no proof output\n        # or score is reconstructed inside the common artifact.\n        for record in catalog.records:\n            for verification in record.verification_results:\n                node=public\n                for part in verification.artifact_ref.split('#/',1)[1].split('/'):\n                    node=node[int(part)] if isinstance(node,list) else node[part]\n                assert node is not None\n        final=next(i for i in response.rubric_assessment.items if i.id=='final_answer')\n        student=next(r for r in catalog.records if r.claim_type=='f2q1_student_final_answer')\n        assert student.provenance.origin==Origin.STUDENT_EXPLICIT\n        if correct:\n>           assert response.score==10 and response.verdict=='correto'\nE           AssertionError: assert (None == 10)\nE            +  where None = AuditResponse(problem_id='ITA2025F2Q1', score=None, max_score=10.0, verdict='inconclusivo', extracted_claims=ClaimExtr...ted_max_score=2.0, coverage=0.2, estimated_points=None, needs_review=True, unscorable_reason='ADJUDICATOR_UNAVAILABLE').score\n\ntests/test_common_claim_pipeline.py:34: AssertionError",
+      "original_traceback_sha256": "40be19ebb734ae4925dfc8cbb3320115f4122b587c5b6b475de51fd4147f8042",
+      "assertion_excerpt": "E           AssertionError: assert (None == 10)\nE            +  where None = AuditResponse(problem_id='ITA2025F2Q1', score=None, max_score=10.0, verdict='inconclusivo', extracted_claims=ClaimExtr...ted_max_score=2.0, coverage=0.2, estimated_points=None, needs_review=True, unscorable_reason='ADJUDICATOR_UNAVAILABLE').score",
+      "source_file": "tests/test_common_claim_pipeline.py",
+      "preliminary_family": "FORMAL_LEAN"
+    },
+    {
+      "nodeid": "tests/test_common_claim_pipeline.py::test_common_catalog_preserves_real_pipeline_credit_and_attribution[False]",
+      "original_status": "FAIL",
+      "original_traceback": "correct = False\n\n    @pytest.mark.parametrize('correct',[True,False])\n    def test_common_catalog_preserves_real_pipeline_credit_and_attribution(correct):\n        solution=Path('problems/ITA2025F2Q1/examples/correct_solution.txt').read_text() if correct else 'Portanto a=3 e b=2.'\n        response=execute_audit(AuditRequest(problem_id='ITA2025F2Q1',solution=solution))\n        directory=Path(response.artifact_dir)\n        catalog=MathClaimCatalog.model_validate_json((directory/'math_claims.json').read_text())\n        public=response.model_dump(mode='json')\n        assert 'math_claims' not in public and 'common_claims' not in public\n        assert json.loads((directory/'audit.json').read_text())==public\n        # Every pointer resolves to an actual existing legacy result; no proof output\n        # or score is reconstructed inside the common artifact.\n        for record in catalog.records:\n            for verification in record.verification_results:\n                node=public\n                for part in verification.artifact_ref.split('#/',1)[1].split('/'):\n                    node=node[int(part)] if isinstance(node,list) else node[part]\n                assert node is not None\n        final=next(i for i in response.rubric_assessment.items if i.id=='final_answer')\n        student=next(r for r in catalog.records if r.claim_type=='f2q1_student_final_answer')\n        assert student.provenance.origin==Origin.STUDENT_EXPLICIT\n        if correct:\n            assert response.score==10 and response.verdict=='correto'\n            assert final.points==2\n            aligned=[a for a in catalog.alignments if a.status=='aligned']\n            assert any(student.record_id in a.preferred_attribution_ids for a in aligned)\n            assert any(v.status=='verified' and v.attributed_to_student for v in student.verification_results)\n        else:\n            assert response.score is None and response.verdict=='inconclusivo'\n>           assert final.points==0 and final.mathematical_status=='refuted'\nE           AssertionError: assert (None == 0)\nE            +  where None = RubricItemResult(id='final_answer', description='Conclui corretamente a=-1 e b=3.', detected=False, points=None, max_p...t content differs from the reference; retain both origins', 'conflict': True}, 'needs_review': True, 'conflict': True}).points\n\ntests/test_common_claim_pipeline.py:41: AssertionError",
+      "original_traceback_sha256": "8639b8685ce02b71d7f7df26bea089ba5dfd7c33d2df0e0ba51b63892516ea87",
+      "assertion_excerpt": "E           AssertionError: assert (None == 0)\nE            +  where None = RubricItemResult(id='final_answer', description='Conclui corretamente a=-1 e b=3.', detected=False, points=None, max_p...t content differs from the reference; retain both origins', 'conflict': True}, 'needs_review': True, 'conflict': True}).points",
+      "source_file": "tests/test_common_claim_pipeline.py",
+      "preliminary_family": "FORMAL_LEAN"
+    },
+    {
+      "nodeid": "tests/test_evidence_id_semantic.py::test_written_method_reaches_real_lean[2*((6-x)+x)-verified]",
+      "original_status": "FAIL",
+      "original_traceback": "lhs = '2*((6-x)+x)', status = 'verified'\n\n    @pytest.mark.parametrize('lhs,status',[('2*((6-x)+x)','verified'),('2*((6-x)+x)+1','refuted')])\n    def test_written_method_reaches_real_lean(lhs,status):\n        text=f'APQR é um paralelogramo.\\nSeu perímetro APQR é {lhs}=12.'\n        cs=[selection(),selection(('E002',),'b.perimeter_apqr','perimeter_apqr',lhs+'=12','math')]\n        result=run_shadow('TME2026P4',{'b':text},text,solution_id='lean',provider=provider(cs),use_lean=True)\n        fact=next(f for f in result.potential_bridge.auditor.facts if f.fact_id=='b.perimeter_apqr')\n>       assert fact.verification.status==status and fact.verification_source=='student_lean'\nE       AssertionError: assert ('technical_error' == 'verified'\nE         \nE         - verified\nE         + technical_error)\n\ntests/test_evidence_id_semantic.py:144: AssertionError",
+      "original_traceback_sha256": "8baa9c3a8f1bd5b568fa08cea28cc5814050269f76a8829d6fa665c402f2355f",
+      "assertion_excerpt": "E       AssertionError: assert ('technical_error' == 'verified'\nE         \nE         - verified\nE         + technical_error)",
+      "source_file": "tests/test_evidence_id_semantic.py",
+      "preliminary_family": "FORMAL_LEAN"
+    },
+    {
+      "nodeid": "tests/test_evidence_id_semantic.py::test_written_method_reaches_real_lean[2*((6-x)+x)+1-refuted]",
+      "original_status": "FAIL",
+      "original_traceback": "lhs = '2*((6-x)+x)+1', status = 'refuted'\n\n    @pytest.mark.parametrize('lhs,status',[('2*((6-x)+x)','verified'),('2*((6-x)+x)+1','refuted')])\n    def test_written_method_reaches_real_lean(lhs,status):\n        text=f'APQR é um paralelogramo.\\nSeu perímetro APQR é {lhs}=12.'\n        cs=[selection(),selection(('E002',),'b.perimeter_apqr','perimeter_apqr',lhs+'=12','math')]\n        result=run_shadow('TME2026P4',{'b':text},text,solution_id='lean',provider=provider(cs),use_lean=True)\n        fact=next(f for f in result.potential_bridge.auditor.facts if f.fact_id=='b.perimeter_apqr')\n>       assert fact.verification.status==status and fact.verification_source=='student_lean'\nE       AssertionError: assert ('technical_error' == 'refuted'\nE         \nE         - refuted\nE         + technical_error)\n\ntests/test_evidence_id_semantic.py:144: AssertionError",
+      "original_traceback_sha256": "b6ee8faaf5b2f7349e3343ce7ea3f576282f267991f4dcd458170f6eb0faac72",
+      "assertion_excerpt": "E       AssertionError: assert ('technical_error' == 'refuted'\nE         \nE         - refuted\nE         + technical_error)",
+      "source_file": "tests/test_evidence_id_semantic.py",
+      "preliminary_family": "FORMAL_LEAN"
+    },
+    {
+      "nodeid": "tests/test_f2_strong_lean_suite.py::test_f2_correct_solution_has_full_operational_strong_lean_contract[ITA2025F2Q1]",
+      "original_status": "FAIL",
+      "original_traceback": "problem_id = 'ITA2025F2Q1'\n\n    @pytest.mark.parametrize(\"problem_id\", F2_PROBLEMS)\n    def test_f2_correct_solution_has_full_operational_strong_lean_contract(problem_id: str):\n        data = audit_solution(problem_id, read_example(problem_id, \"correct_solution.txt\"))\n    \n>       assert data[\"score\"] == data[\"max_score\"]\nE       assert None == 10.0\n\ntests/test_f2_strong_lean_suite.py:51: AssertionError",
+      "original_traceback_sha256": "8c7ff60beece5bc542cb4660b70772461d885510f1e02bfda77aea0fa01b1a7a",
+      "assertion_excerpt": "E       assert None == 10.0",
+      "source_file": "tests/test_f2_strong_lean_suite.py",
+      "preliminary_family": "FORMAL_LEAN"
+    },
+    {
+      "nodeid": "tests/test_f2_strong_lean_suite.py::test_f2_correct_solution_has_full_operational_strong_lean_contract[ITA2025F2Q3]",
+      "original_status": "FAIL",
+      "original_traceback": "problem_id = 'ITA2025F2Q3'\n\n    @pytest.mark.parametrize(\"problem_id\", F2_PROBLEMS)\n    def test_f2_correct_solution_has_full_operational_strong_lean_contract(problem_id: str):\n        data = audit_solution(problem_id, read_example(problem_id, \"correct_solution.txt\"))\n    \n>       assert data[\"score\"] == data[\"max_score\"]\nE       assert None == 10.0\n\ntests/test_f2_strong_lean_suite.py:51: AssertionError",
+      "original_traceback_sha256": "cd9904ff733b36aac594cb215e25c1b4bfa2730af1057cb121fa827cae77db5d",
+      "assertion_excerpt": "E       assert None == 10.0",
+      "source_file": "tests/test_f2_strong_lean_suite.py",
+      "preliminary_family": "FORMAL_LEAN"
+    },
+    {
+      "nodeid": "tests/test_f2_strong_lean_suite.py::test_f2_correct_solution_has_full_operational_strong_lean_contract[ITA2025F2Q5]",
+      "original_status": "FAIL",
+      "original_traceback": "problem_id = 'ITA2025F2Q5'\n\n    @pytest.mark.parametrize(\"problem_id\", F2_PROBLEMS)\n    def test_f2_correct_solution_has_full_operational_strong_lean_contract(problem_id: str):\n        data = audit_solution(problem_id, read_example(problem_id, \"correct_solution.txt\"))\n    \n>       assert data[\"score\"] == data[\"max_score\"]\nE       assert None == 10.0\n\ntests/test_f2_strong_lean_suite.py:51: AssertionError",
+      "original_traceback_sha256": "2b08abf2f3fe1c5a61b7182acf611cddaabc207930d5f929fee0f6c433c2819c",
+      "assertion_excerpt": "E       assert None == 10.0",
+      "source_file": "tests/test_f2_strong_lean_suite.py",
+      "preliminary_family": "FORMAL_LEAN"
+    },
+    {
+      "nodeid": "tests/test_f2_strong_lean_suite.py::test_f2_correct_solution_has_full_operational_strong_lean_contract[ITA2025F2Q6]",
+      "original_status": "FAIL",
+      "original_traceback": "problem_id = 'ITA2025F2Q6'\n\n    @pytest.mark.parametrize(\"problem_id\", F2_PROBLEMS)\n    def test_f2_correct_solution_has_full_operational_strong_lean_contract(problem_id: str):\n        data = audit_solution(problem_id, read_example(problem_id, \"correct_solution.txt\"))\n    \n>       assert data[\"score\"] == data[\"max_score\"]\nE       assert None == 10.0\n\ntests/test_f2_strong_lean_suite.py:51: AssertionError",
+      "original_traceback_sha256": "33fe760bb68594f48f24d6dc30dc6286c8b340cf38684019274e5a8fe4ab6317",
+      "assertion_excerpt": "E       assert None == 10.0",
+      "source_file": "tests/test_f2_strong_lean_suite.py",
+      "preliminary_family": "FORMAL_LEAN"
+    },
+    {
+      "nodeid": "tests/test_f2_strong_lean_suite.py::test_f2_correct_solution_has_full_operational_strong_lean_contract[ITA2025F2Q8]",
+      "original_status": "FAIL",
+      "original_traceback": "problem_id = 'ITA2025F2Q8'\n\n    @pytest.mark.parametrize(\"problem_id\", F2_PROBLEMS)\n    def test_f2_correct_solution_has_full_operational_strong_lean_contract(problem_id: str):\n        data = audit_solution(problem_id, read_example(problem_id, \"correct_solution.txt\"))\n    \n>       assert data[\"score\"] == data[\"max_score\"]\nE       assert None == 10.0\n\ntests/test_f2_strong_lean_suite.py:51: AssertionError",
+      "original_traceback_sha256": "9dad00f17afac9e5af48d08d4c59496ccdc2f7ed3269e07aa8f13c5416b7d7ef",
+      "assertion_excerpt": "E       assert None == 10.0",
+      "source_file": "tests/test_f2_strong_lean_suite.py",
+      "preliminary_family": "FORMAL_LEAN"
+    },
+    {
+      "nodeid": "tests/test_f2_strong_lean_suite.py::test_f2_wrong_answer_stays_below_full_score[ITA2025F2Q1]",
+      "original_status": "FAIL",
+      "original_traceback": "problem_id = 'ITA2025F2Q1'\n\n    @pytest.mark.parametrize(\"problem_id\", F2_PROBLEMS)\n    def test_f2_wrong_answer_stays_below_full_score(problem_id: str):\n        data = audit_solution(problem_id, read_example(problem_id, WRONG_EXAMPLES[problem_id]))\n    \n        decided_max = {\"ITA2025F2Q1\": 2, \"ITA2025F2Q3\": 5, \"ITA2025F2Q5\": 2,\n                       \"ITA2025F2Q6\": 2, \"ITA2025F2Q8\": 0}[problem_id]\n>       assert_incomplete(data, 0, decided_max)\n\ntests/test_f2_strong_lean_suite.py:67: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\ndata = {'artifact_dir': None, 'artifact_ref': None, 'coverage': 0.0, 'estimated_points': None, ...}\nsubtotal = 0, decided_max = 2\n\n    def assert_incomplete(data, subtotal, decided_max):\n        assert_score_contract(data)\n        assert data[\"score\"] is None\n        assert data[\"verdict\"] == \"inconclusivo\"\n        assert any(item[\"points\"] is None for item in data[\"rubric_assessment\"][\"items\"])\n        assert data[\"rubric_assessment\"][\"evaluated_score\"] == pytest.approx(subtotal)\n>       assert data[\"rubric_assessment\"][\"evaluated_max_score\"] == pytest.approx(decided_max)\nE       AssertionError\n\ntests/audit_contract.py:60: AssertionError",
+      "original_traceback_sha256": "34248a78c0210ecc990f1520ea90968903da19a3a10072c92d859475209e6014",
+      "assertion_excerpt": "E       AssertionError",
+      "source_file": "tests/test_f2_strong_lean_suite.py",
+      "preliminary_family": "FORMAL_LEAN"
+    },
+    {
+      "nodeid": "tests/test_f2_strong_lean_suite.py::test_f2_wrong_answer_stays_below_full_score[ITA2025F2Q3]",
+      "original_status": "FAIL",
+      "original_traceback": "problem_id = 'ITA2025F2Q3'\n\n    @pytest.mark.parametrize(\"problem_id\", F2_PROBLEMS)\n    def test_f2_wrong_answer_stays_below_full_score(problem_id: str):\n        data = audit_solution(problem_id, read_example(problem_id, WRONG_EXAMPLES[problem_id]))\n    \n        decided_max = {\"ITA2025F2Q1\": 2, \"ITA2025F2Q3\": 5, \"ITA2025F2Q5\": 2,\n                       \"ITA2025F2Q6\": 2, \"ITA2025F2Q8\": 0}[problem_id]\n>       assert_incomplete(data, 0, decided_max)\n\ntests/test_f2_strong_lean_suite.py:67: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\ndata = {'artifact_dir': None, 'artifact_ref': None, 'coverage': 0.0, 'estimated_points': None, ...}\nsubtotal = 0, decided_max = 5\n\n    def assert_incomplete(data, subtotal, decided_max):\n        assert_score_contract(data)\n        assert data[\"score\"] is None\n        assert data[\"verdict\"] == \"inconclusivo\"\n        assert any(item[\"points\"] is None for item in data[\"rubric_assessment\"][\"items\"])\n        assert data[\"rubric_assessment\"][\"evaluated_score\"] == pytest.approx(subtotal)\n>       assert data[\"rubric_assessment\"][\"evaluated_max_score\"] == pytest.approx(decided_max)\nE       AssertionError\n\ntests/audit_contract.py:60: AssertionError",
+      "original_traceback_sha256": "211eefb5895e29a477a1d5e68a74078edcd3f48a58d015c5d2bf8e90765bd468",
+      "assertion_excerpt": "E       AssertionError",
+      "source_file": "tests/test_f2_strong_lean_suite.py",
+      "preliminary_family": "FORMAL_LEAN"
+    },
+    {
+      "nodeid": "tests/test_f2_strong_lean_suite.py::test_f2_wrong_answer_stays_below_full_score[ITA2025F2Q5]",
+      "original_status": "FAIL",
+      "original_traceback": "problem_id = 'ITA2025F2Q5'\n\n    @pytest.mark.parametrize(\"problem_id\", F2_PROBLEMS)\n    def test_f2_wrong_answer_stays_below_full_score(problem_id: str):\n        data = audit_solution(problem_id, read_example(problem_id, WRONG_EXAMPLES[problem_id]))\n    \n        decided_max = {\"ITA2025F2Q1\": 2, \"ITA2025F2Q3\": 5, \"ITA2025F2Q5\": 2,\n                       \"ITA2025F2Q6\": 2, \"ITA2025F2Q8\": 0}[problem_id]\n>       assert_incomplete(data, 0, decided_max)\n\ntests/test_f2_strong_lean_suite.py:67: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\ndata = {'artifact_dir': None, 'artifact_ref': None, 'coverage': 0.0, 'estimated_points': None, ...}\nsubtotal = 0, decided_max = 2\n\n    def assert_incomplete(data, subtotal, decided_max):\n        assert_score_contract(data)\n        assert data[\"score\"] is None\n        assert data[\"verdict\"] == \"inconclusivo\"\n        assert any(item[\"points\"] is None for item in data[\"rubric_assessment\"][\"items\"])\n        assert data[\"rubric_assessment\"][\"evaluated_score\"] == pytest.approx(subtotal)\n>       assert data[\"rubric_assessment\"][\"evaluated_max_score\"] == pytest.approx(decided_max)\nE       AssertionError\n\ntests/audit_contract.py:60: AssertionError",
+      "original_traceback_sha256": "4fd2da916c62caa6266d77cd1df24282968056ce81b76327488ab8b37b85a32e",
+      "assertion_excerpt": "E       AssertionError",
+      "source_file": "tests/test_f2_strong_lean_suite.py",
+      "preliminary_family": "FORMAL_LEAN"
+    },
+    {
+      "nodeid": "tests/test_f2_strong_lean_suite.py::test_f2_wrong_answer_stays_below_full_score[ITA2025F2Q6]",
+      "original_status": "FAIL",
+      "original_traceback": "problem_id = 'ITA2025F2Q6'\n\n    @pytest.mark.parametrize(\"problem_id\", F2_PROBLEMS)\n    def test_f2_wrong_answer_stays_below_full_score(problem_id: str):\n        data = audit_solution(problem_id, read_example(problem_id, WRONG_EXAMPLES[problem_id]))\n    \n        decided_max = {\"ITA2025F2Q1\": 2, \"ITA2025F2Q3\": 5, \"ITA2025F2Q5\": 2,\n                       \"ITA2025F2Q6\": 2, \"ITA2025F2Q8\": 0}[problem_id]\n>       assert_incomplete(data, 0, decided_max)\n\ntests/test_f2_strong_lean_suite.py:67: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\ndata = {'artifact_dir': None, 'artifact_ref': None, 'coverage': 0.0, 'estimated_points': None, ...}\nsubtotal = 0, decided_max = 2\n\n    def assert_incomplete(data, subtotal, decided_max):\n        assert_score_contract(data)\n        assert data[\"score\"] is None\n        assert data[\"verdict\"] == \"inconclusivo\"\n        assert any(item[\"points\"] is None for item in data[\"rubric_assessment\"][\"items\"])\n        assert data[\"rubric_assessment\"][\"evaluated_score\"] == pytest.approx(subtotal)\n>       assert data[\"rubric_assessment\"][\"evaluated_max_score\"] == pytest.approx(decided_max)\nE       AssertionError\n\ntests/audit_contract.py:60: AssertionError",
+      "original_traceback_sha256": "de6af3196823c59f022eba7b09e9ad311967e6031d480b34a6d10ab60487e928",
+      "assertion_excerpt": "E       AssertionError",
+      "source_file": "tests/test_f2_strong_lean_suite.py",
+      "preliminary_family": "FORMAL_LEAN"
+    },
+    {
+      "nodeid": "tests/test_f2q1_strong_certificate.py::test_f2q1_correct_solution_includes_strong_certificate",
+      "original_status": "FAIL",
+      "original_traceback": "def test_f2q1_correct_solution_includes_strong_certificate():\n        response = client.post(\n            \"/audit\",\n            json={\n                \"problem_id\": \"ITA2025F2Q1\",\n                \"solution\": (\n                    \"Como x^3=-1 e x^6=1, temos x^57=-1, x^14=x-1 e x^7=x. \"\n                    \"Logo o resto é (a+b)x-a. Comparando com 2x+1, obtemos \"\n                    \"a+b=2 e -a=1. Portanto, a=-1 e b=3.\"\n                ),\n            },\n        )\n    \n        assert response.status_code == 200\n        data = response.json()\n    \n>       assert data[\"score\"] == 10.0\nE       assert None == 10.0\n\ntests/test_f2q1_strong_certificate.py:27: AssertionError",
+      "original_traceback_sha256": "710ba9b328b7357499d8bd9f14bc16fbe0081ad4fa84cd3ab9123fdc11a7b926",
+      "assertion_excerpt": "E       assert None == 10.0",
+      "source_file": "tests/test_f2q1_strong_certificate.py",
+      "preliminary_family": "FORMAL_LEAN"
+    },
+    {
+      "nodeid": "tests/test_f2q1_strong_certificate.py::test_f2q1_wrong_solution_does_not_get_strong_certificate",
+      "original_status": "FAIL",
+      "original_traceback": "def test_f2q1_wrong_solution_does_not_get_strong_certificate():\n        response = client.post(\n            \"/audit\",\n            json={\n                \"problem_id\": \"ITA2025F2Q1\",\n                \"solution\": (\n                    \"Como x^6=1, temos x^57=-1, x^14=1-x e x^7=x. \"\n                    \"Logo o resto é (a-b)x-a. Comparando com 2x+1, obtemos \"\n                    \"a+b=2 e a=1. Portanto, a=1 e b=1.\"\n                ),\n            },\n        )\n    \n        assert response.status_code == 200\n        data = response.json()\n    \n>       assert data[\"score\"] == 0.0\nE       assert None == 0.0\n\ntests/test_f2q1_strong_certificate.py:48: AssertionError",
+      "original_traceback_sha256": "7c92542e1701dbc3250c6ab3288e59d777ec119f68dbbf1fa116c257e18ce5fb",
+      "assertion_excerpt": "E       assert None == 0.0",
+      "source_file": "tests/test_f2q1_strong_certificate.py",
+      "preliminary_family": "FORMAL_LEAN"
+    },
+    {
+      "nodeid": "tests/test_f2q1_student_claim_checks.py::test_f2q1_correct_solution_claims_are_verified",
+      "original_status": "FAIL",
+      "original_traceback": "def test_f2q1_correct_solution_claims_are_verified():\n        solution = (\n            \"Como x^3=-1 e x^6=1, temos x^57=-1, x^14=x-1 e x^7=x. \"\n            \"Logo o resto é (a+b)x-a. Comparando com 2x+1, obtemos \"\n            \"a+b=2 e -a=1. Portanto, a=-1 e b=3.\"\n        )\n    \n        by_type = _checks_by_type(solution)\n    \n        assert len(by_type[\"f2q1_student_power_reduction\"]) == 3\n>       assert all(c.status == \"verified\" for c in by_type[\"f2q1_student_power_reduction\"])\nE       assert False\nE        +  where False = all(<generator object test_f2q1_correct_solution_claims_are_verified.<locals>.<genexpr> at 0x10bd33d60>)\n\ntests/test_f2q1_student_claim_checks.py:33: AssertionError",
+      "original_traceback_sha256": "c3c16eb9c9d10ab2cef949a818fd080b989f9d9a345ee89596d3a210b0ce537e",
+      "assertion_excerpt": "E       assert False\nE        +  where False = all(<generator object test_f2q1_correct_solution_claims_are_verified.<locals>.<genexpr> at 0x10bd33d60>)",
+      "source_file": "tests/test_f2q1_student_claim_checks.py",
+      "preliminary_family": "FORMAL_LEAN"
+    },
+    {
+      "nodeid": "tests/test_f2q1_student_claim_checks.py::test_f2q1_wrong_final_answer_is_rejected",
+      "original_status": "FAIL",
+      "original_traceback": "def test_f2q1_wrong_final_answer_is_rejected():\n        solution = (\n            \"Como x^3=-1 e x^6=1, temos x^57=-1, x^14=x-1 e x^7=x. \"\n            \"Logo o resto é (a+b)x-a. Comparando com 2x+1, obtemos \"\n            \"a+b=2 e -a=1. Portanto, a=1 e b=1.\"\n        )\n    \n        by_type = _checks_by_type(solution)\n    \n>       assert by_type[\"f2q1_student_final_answer\"][0].status == \"refuted\"\nE       AssertionError: assert 'technical_error' == 'refuted'\nE         \nE         - refuted\nE         + technical_error\n\ntests/test_f2q1_student_claim_checks.py:48: AssertionError",
+      "original_traceback_sha256": "aa565b8c0132411c9b0471df7542802bd0884abc323d90b705a36fb2f80eb336",
+      "assertion_excerpt": "E       AssertionError: assert 'technical_error' == 'refuted'\nE         \nE         - refuted\nE         + technical_error",
+      "source_file": "tests/test_f2q1_student_claim_checks.py",
+      "preliminary_family": "FORMAL_LEAN"
+    },
+    {
+      "nodeid": "tests/test_f2q1_student_claim_checks.py::test_f2q1_wrong_power_reduction_is_rejected",
+      "original_status": "FAIL",
+      "original_traceback": "def test_f2q1_wrong_power_reduction_is_rejected():\n        solution = (\n            \"Como x^6=1, temos x^57=-1, x^14=1-x e x^7=x. \"\n            \"Logo o resto é (a+b)x-a. Portanto, a=-1 e b=3.\"\n        )\n    \n        by_type = _checks_by_type(solution)\n    \n        power_checks = by_type[\"f2q1_student_power_reduction\"]\n>       assert any(c.raw_text == \"x^14=1-x\" and c.status == \"refuted\" for c in power_checks)\nE       assert False\nE        +  where False = any(<generator object test_f2q1_wrong_power_reduction_is_rejected.<locals>.<genexpr> at 0x10b8a4e40>)\n\ntests/test_f2q1_student_claim_checks.py:60: AssertionError",
+      "original_traceback_sha256": "d3c1fd5928fd0057a2ac390a6e5166cf2977ef1fb07357481065fcb83e20bf09",
+      "assertion_excerpt": "E       assert False\nE        +  where False = any(<generator object test_f2q1_wrong_power_reduction_is_rejected.<locals>.<genexpr> at 0x10b8a4e40>)",
+      "source_file": "tests/test_f2q1_student_claim_checks.py",
+      "preliminary_family": "FORMAL_LEAN"
+    },
+    {
+      "nodeid": "tests/test_f2q1_student_claim_checks.py::test_f2q1_wrong_reduced_form_is_rejected",
+      "original_status": "FAIL",
+      "original_traceback": "def test_f2q1_wrong_reduced_form_is_rejected():\n        solution = (\n            \"Como x^3=-1 e x^6=1, temos x^57=-1, x^14=x-1 e x^7=x. \"\n            \"Logo o resto é (a-b)x-a. Portanto, a=-1 e b=3.\"\n        )\n    \n        by_type = _checks_by_type(solution)\n    \n>       assert by_type[\"f2q1_student_reduced_form\"][0].status == \"refuted\"\nE       AssertionError: assert 'technical_error' == 'refuted'\nE         \nE         - refuted\nE         + technical_error\n\ntests/test_f2q1_student_claim_checks.py:71: AssertionError",
+      "original_traceback_sha256": "b908686b86a665ab2a3e32a84450085a6673c5d99673564657853e1b4639d219",
+      "assertion_excerpt": "E       AssertionError: assert 'technical_error' == 'refuted'\nE         \nE         - refuted\nE         + technical_error",
+      "source_file": "tests/test_f2q1_student_claim_checks.py",
+      "preliminary_family": "FORMAL_LEAN"
+    },
+    {
+      "nodeid": "tests/test_f2q1_student_claim_checks.py::test_f2q1_wrong_coefficient_system_is_rejected",
+      "original_status": "FAIL",
+      "original_traceback": "def test_f2q1_wrong_coefficient_system_is_rejected():\n        solution = (\n            \"Como x^3=-1 e x^6=1, temos x^57=-1, x^14=x-1 e x^7=x. \"\n            \"Logo o resto é (a+b)x-a. Comparando com 2x+1, obtemos \"\n            \"a+b=2 e a=1. Portanto, a=1 e b=1.\"\n        )\n    \n        by_type = _checks_by_type(solution)\n    \n>       assert by_type[\"f2q1_student_coefficient_system\"][0].status == \"refuted\"\nE       AssertionError: assert 'technical_error' == 'refuted'\nE         \nE         - refuted\nE         + technical_error\n\ntests/test_f2q1_student_claim_checks.py:83: AssertionError",
+      "original_traceback_sha256": "071468e3a2bd85e07877e24f3afb8def8c94bcee28ce32e8ebbaa9f89196049b",
+      "assertion_excerpt": "E       AssertionError: assert 'technical_error' == 'refuted'\nE         \nE         - refuted\nE         + technical_error",
+      "source_file": "tests/test_f2q1_student_claim_checks.py",
+      "preliminary_family": "FORMAL_LEAN"
+    },
+    {
+      "nodeid": "tests/test_f2q3_strong_certificate.py::test_f2q3_correct_solution_includes_strong_certificate",
+      "original_status": "FAIL",
+      "original_traceback": "def test_f2q3_correct_solution_includes_strong_certificate():\n        response = client.post(\n            \"/audit\",\n            json={\n                \"problem_id\": \"ITA2025F2Q3\",\n                \"solution\": (\n                    \"Das equações, obtemos cos beta - sin beta = 1/2. \"\n                    \"Logo sin beta = -(sqrt(7)+1)/4, cos beta = (1-sqrt(7))/4, \"\n                    \"sin alpha = -sqrt(7)/4 e cos alpha = -3/4. \"\n                    \"Esses valores satisfazem sen^2+cos^2=1. \"\n                    \"Assim, sin(alpha+beta)=sin alpha cos beta + cos alpha sin beta = \"\n                    \"(5+sqrt(7))/8. Portanto, resposta = (5+sqrt(7))/8.\"\n                ),\n            },\n        )\n    \n        assert response.status_code == 200\n        data = response.json()\n    \n>       assert data[\"score\"] == 10.0\nE       assert None == 10.0\n\ntests/test_f2q3_strong_certificate.py:30: AssertionError",
+      "original_traceback_sha256": "8fceefa00921d3e1d7730c4c0d300ef079505c749ef8e7b3ed85c653b2440624",
+      "assertion_excerpt": "E       assert None == 10.0",
+      "source_file": "tests/test_f2q3_strong_certificate.py",
+      "preliminary_family": "FORMAL_LEAN"
+    },
+    {
+      "nodeid": "tests/test_f2q3_strong_certificate.py::test_f2q3_wrong_solution_does_not_include_strong_certificate",
+      "original_status": "FAIL",
+      "original_traceback": "def test_f2q3_wrong_solution_does_not_include_strong_certificate():\n        response = client.post(\n            \"/audit\",\n            json={\n                \"problem_id\": \"ITA2025F2Q3\",\n                \"solution\": (\n                    \"Das equações, obtemos cos beta - sin beta = -1/2. \"\n                    \"Temos sin beta = (sqrt(7)+1)/4, cos beta = (sqrt(7)-1)/4, \"\n                    \"sin alpha = sqrt(7)/4 e cos alpha = 3/4. \"\n                    \"Assim, sin(alpha+beta)=1/2. Portanto, resposta = 1/2.\"\n                ),\n            },\n        )\n    \n        assert response.status_code == 200\n        data = response.json()\n    \n        assert (\n            \"generated_strong_f2q3_claim\"\n            not in data[\"lean_certificate\"][\"generated_theorems\"]\n        )\n>       assert any(\n            item[\"student_check_adjusted\"] is True\n            for item in data[\"rubric_assessment\"][\"items\"]\n        )\nE       assert False\nE        +  where False = any(<generator object test_f2q3_wrong_solution_does_not_include_strong_certificate.<locals>.<genexpr> at 0x10bd336d0>)\n\ntests/test_f2q3_strong_certificate.py:77: AssertionError",
+      "original_traceback_sha256": "b199e895e877878111efdfcadb92563b2d29fc573614e7ea7fb36a3cb00b1b71",
+      "assertion_excerpt": "E       assert False\nE        +  where False = any(<generator object test_f2q3_wrong_solution_does_not_include_strong_certificate.<locals>.<genexpr> at 0x10bd336d0>)",
+      "source_file": "tests/test_f2q3_strong_certificate.py",
+      "preliminary_family": "FORMAL_LEAN"
+    },
+    {
+      "nodeid": "tests/test_f2q3_student_claim_checks.py::test_f2q3_correct_solution_claims_are_verified",
+      "original_status": "FAIL",
+      "original_traceback": "def test_f2q3_correct_solution_claims_are_verified():\n        solution = (\n            \"Das equações, obtemos cos beta - sin beta = 1/2. \"\n            \"Logo sin beta = -(sqrt(7)+1)/4, cos beta = (1-sqrt(7))/4, \"\n            \"sin alpha = -sqrt(7)/4 e cos alpha = -3/4. \"\n            \"Assim, sin(alpha+beta)=sin alpha cos beta + cos alpha sin beta = \"\n            \"(5+sqrt(7))/8. Portanto, resposta = (5+sqrt(7))/8.\"\n        )\n    \n        by_type = _checks_by_type(solution)\n    \n>       assert by_type[\"f2q3_student_beta_difference\"][0].status == \"verified\"\nE       AssertionError: assert 'technical_error' == 'verified'\nE         \nE         - verified\nE         + technical_error\n\ntests/test_f2q3_student_claim_checks.py:34: AssertionError",
+      "original_traceback_sha256": "1148463afe9609c22481b65916636507e72ff325029976d312e5c903eb449bb8",
+      "assertion_excerpt": "E       AssertionError: assert 'technical_error' == 'verified'\nE         \nE         - verified\nE         + technical_error",
+      "source_file": "tests/test_f2q3_student_claim_checks.py",
+      "preliminary_family": "FORMAL_LEAN"
+    },
+    {
+      "nodeid": "tests/test_f2q3_student_claim_checks.py::test_f2q3_wrong_beta_difference_is_rejected",
+      "original_status": "FAIL",
+      "original_traceback": "def test_f2q3_wrong_beta_difference_is_rejected():\n        solution = (\n            \"Das equações, obtemos cos beta - sin beta = -1/2. \"\n            \"Portanto, resposta = (5+sqrt(7))/8.\"\n        )\n    \n        by_type = _checks_by_type(solution)\n    \n>       assert by_type[\"f2q3_student_beta_difference\"][0].status == \"refuted\"\nE       AssertionError: assert 'technical_error' == 'refuted'\nE         \nE         - refuted\nE         + technical_error\n\ntests/test_f2q3_student_claim_checks.py:51: AssertionError",
+      "original_traceback_sha256": "415307081f51b55cf1252f4d1e18a8f6c950a603105c2739e259a66d479829cb",
+      "assertion_excerpt": "E       AssertionError: assert 'technical_error' == 'refuted'\nE         \nE         - refuted\nE         + technical_error",
+      "source_file": "tests/test_f2q3_student_claim_checks.py",
+      "preliminary_family": "FORMAL_LEAN"
+    },
+    {
+      "nodeid": "tests/test_f2q3_student_claim_checks.py::test_f2q3_wrong_candidate_signs_are_rejected",
+      "original_status": "FAIL",
+      "original_traceback": "def test_f2q3_wrong_candidate_signs_are_rejected():\n        solution = (\n            \"Temos sin beta = (sqrt(7)+1)/4, cos beta = (sqrt(7)-1)/4, \"\n            \"sin alpha = sqrt(7)/4 e cos alpha = 3/4. \"\n            \"Portanto, resposta = (5+sqrt(7))/8.\"\n        )\n    \n        by_type = _checks_by_type(solution)\n    \n>       assert all(\n            check.status == \"refuted\"\n            for check in by_type[\"f2q3_student_candidate_value\"]\n        )\nE       assert False\nE        +  where False = all(<generator object test_f2q3_wrong_candidate_signs_are_rejected.<locals>.<genexpr> at 0x10b7ae3c0>)\n\ntests/test_f2q3_student_claim_checks.py:64: AssertionError",
+      "original_traceback_sha256": "e43e15a97e0191601b2d9fc14d8d83b155c7955368c13f686284eb2274735a8c",
+      "assertion_excerpt": "E       assert False\nE        +  where False = all(<generator object test_f2q3_wrong_candidate_signs_are_rejected.<locals>.<genexpr> at 0x10b7ae3c0>)",
+      "source_file": "tests/test_f2q3_student_claim_checks.py",
+      "preliminary_family": "FORMAL_LEAN"
+    },
+    {
+      "nodeid": "tests/test_f2q3_student_claim_checks.py::test_f2q3_wrong_final_sin_sum_is_rejected",
+      "original_status": "FAIL",
+      "original_traceback": "def test_f2q3_wrong_final_sin_sum_is_rejected():\n        solution = (\n            \"Com a fórmula de adição, sin(alpha+beta)=1/2. \"\n            \"Portanto, resposta = 1/2.\"\n        )\n    \n        by_type = _checks_by_type(solution)\n    \n>       assert by_type[\"f2q3_student_final_sin_sum\"][0].status == \"refuted\"\nE       AssertionError: assert 'technical_error' == 'refuted'\nE         \nE         - refuted\nE         + technical_error\n\ntests/test_f2q3_student_claim_checks.py:79: AssertionError",
+      "original_traceback_sha256": "63eff386088a7b299023b5fda3b5bc80b3f9ac8c9bad7c1c664b16cedd0f31f4",
+      "assertion_excerpt": "E       AssertionError: assert 'technical_error' == 'refuted'\nE         \nE         - refuted\nE         + technical_error",
+      "source_file": "tests/test_f2q3_student_claim_checks.py",
+      "preliminary_family": "FORMAL_LEAN"
+    },
+    {
+      "nodeid": "tests/test_f2q3_student_claim_checks.py::test_f2q3_correct_final_answer_alone_is_verified",
+      "original_status": "FAIL",
+      "original_traceback": "def test_f2q3_correct_final_answer_alone_is_verified():\n        solution = \"Portanto, resposta = (5+sqrt(7))/8.\"\n    \n        by_type = _checks_by_type(solution)\n    \n>       assert by_type[\"f2q3_student_final_answer\"][0].status == \"verified\"\nE       AssertionError: assert 'technical_error' == 'verified'\nE         \nE         - verified\nE         + technical_error\n\ntests/test_f2q3_student_claim_checks.py:88: AssertionError",
+      "original_traceback_sha256": "d5bec8af78ab846e011df5f443de899a4340ce9a70ae74f3c1a20a0848ec5aee",
+      "assertion_excerpt": "E       AssertionError: assert 'technical_error' == 'verified'\nE         \nE         - verified\nE         + technical_error",
+      "source_file": "tests/test_f2q3_student_claim_checks.py",
+      "preliminary_family": "FORMAL_LEAN"
+    },
+    {
+      "nodeid": "tests/test_f2q5_strong_certificate.py::test_f2q5_correct_solution_includes_strong_certificate",
+      "original_status": "FAIL",
+      "original_traceback": "def test_f2q5_correct_solution_includes_strong_certificate():\n        response = client.post(\n            \"/audit\",\n            json={\n                \"problem_id\": \"ITA2025F2Q5\",\n                \"solution\": (\n                    \"Temos log10(3^100)=100log10(3)=100*0,4771=47,7100. \"\n                    \"A mantissa é 0,7100. Além disso, log10(5)=0,6990 e \"\n                    \"log10(6)=0,7781, logo 0,6990<0,7100<0,7781. \"\n                    \"Portanto, o primeiro algarismo é 5.\"\n                ),\n            },\n        )\n    \n        assert response.status_code == 200\n        data = response.json()\n    \n>       assert data[\"score\"] == 10.0\nE       assert None == 10.0\n\ntests/test_f2q5_strong_certificate.py:28: AssertionError",
+      "original_traceback_sha256": "6deaffab103c5907d5fdaaec489ff95db0d8784a170d44be176bc797cc08ac5b",
+      "assertion_excerpt": "E       assert None == 10.0",
+      "source_file": "tests/test_f2q5_strong_certificate.py",
+      "preliminary_family": "FORMAL_LEAN"
+    },
+    {
+      "nodeid": "tests/test_f2q5_strong_certificate.py::test_f2q5_wrong_final_digit_does_not_include_strong_certificate",
+      "original_status": "FAIL",
+      "original_traceback": "def test_f2q5_wrong_final_digit_does_not_include_strong_certificate():\n        response = client.post(\n            \"/audit\",\n            json={\n                \"problem_id\": \"ITA2025F2Q5\",\n                \"solution\": (\n                    \"Temos log10(3^100)=100log10(3)=100*0,4771=47,7100. \"\n                    \"A mantissa é 0,7100. Além disso, log10(5)=0,6990 e \"\n                    \"log10(6)=0,7781, logo 0,6990<0,7100<0,7781. \"\n                    \"Portanto, o primeiro algarismo é 6.\"\n                ),\n            },\n        )\n    \n        assert response.status_code == 200\n        data = response.json()\n    \n        assert (\n            \"generated_strong_f2q5_claim\"\n            not in data[\"lean_certificate\"][\"generated_theorems\"]\n        )\n>       assert any(\n            item[\"student_check_adjusted\"] is True\n            for item in data[\"rubric_assessment\"][\"items\"]\n        )\nE       assert False\nE        +  where False = any(<generator object test_f2q5_wrong_final_digit_does_not_include_strong_certificate.<locals>.<genexpr> at 0x10bbb3f20>)\n\ntests/test_f2q5_strong_certificate.py:78: AssertionError",
+      "original_traceback_sha256": "e2099d0dd093256db88529a556a4e09254d7a05ec575cf7297e1667a998e3512",
+      "assertion_excerpt": "E       assert False\nE        +  where False = any(<generator object test_f2q5_wrong_final_digit_does_not_include_strong_certificate.<locals>.<genexpr> at 0x10bbb3f20>)",
+      "source_file": "tests/test_f2q5_strong_certificate.py",
+      "preliminary_family": "FORMAL_LEAN"
+    },
+    {
+      "nodeid": "tests/test_f2q5_student_claim_checks.py::test_f2q5_correct_solution_claims_are_verified",
+      "original_status": "FAIL",
+      "original_traceback": "def test_f2q5_correct_solution_claims_are_verified():\n        solution = (\n            \"Temos log10(3^100)=100log10(3)=100*0,4771=47,7100. \"\n            \"A mantissa é 0,7100. Além disso, log10(5)=0,6990 e \"\n            \"log10(6)=0,7781, logo 0,6990<0,7100<0,7781. \"\n            \"Portanto, o primeiro algarismo é 5.\"\n        )\n    \n        by_type = _checks_by_type(solution)\n    \n>       assert by_type[\"f2q5_student_log_power_decomposition\"][0].status == \"verified\"\nE       AssertionError: assert 'technical_error' == 'verified'\nE         \nE         - verified\nE         + technical_error\n\ntests/test_f2q5_student_claim_checks.py:33: AssertionError",
+      "original_traceback_sha256": "80ce76ccff2dceeafd2f4d64ca7f519a19a81f68045c0364610c2b24185acb77",
+      "assertion_excerpt": "E       AssertionError: assert 'technical_error' == 'verified'\nE         \nE         - verified\nE         + technical_error",
+      "source_file": "tests/test_f2q5_student_claim_checks.py",
+      "preliminary_family": "FORMAL_LEAN"
+    },
+    {
+      "nodeid": "tests/test_f2q5_student_claim_checks.py::test_f2q5_wrong_log_power_decomposition_is_rejected",
+      "original_status": "FAIL",
+      "original_traceback": "def test_f2q5_wrong_log_power_decomposition_is_rejected():\n        solution = (\n            \"Temos log10(3^100)=100*0,4771=47,7000. \"\n            \"A mantissa é 0,7000. log10(5)=0,6990 e log10(6)=0,7781. \"\n            \"Portanto, o primeiro algarismo é 5.\"\n        )\n    \n        by_type = _checks_by_type(solution)\n    \n>       assert by_type[\"f2q5_student_log_power_decomposition\"][0].status == \"refuted\"\nE       AssertionError: assert 'technical_error' == 'refuted'\nE         \nE         - refuted\nE         + technical_error\n\ntests/test_f2q5_student_claim_checks.py:49: AssertionError",
+      "original_traceback_sha256": "bab2cffc9141f430d7c69487f79d20599b57a2a8c72057c1de6f05b946034326",
+      "assertion_excerpt": "E       AssertionError: assert 'technical_error' == 'refuted'\nE         \nE         - refuted\nE         + technical_error",
+      "source_file": "tests/test_f2q5_student_claim_checks.py",
+      "preliminary_family": "FORMAL_LEAN"
+    },
+    {
+      "nodeid": "tests/test_f2q5_student_claim_checks.py::test_f2q5_wrong_digit_log_bounds_are_rejected",
+      "original_status": "FAIL",
+      "original_traceback": "def test_f2q5_wrong_digit_log_bounds_are_rejected():\n        solution = (\n            \"Temos log10(3^100)=47,7100. A mantissa é 0,7100. \"\n            \"Além disso, log10(5)=0,6900 e log10(6)=0,7781. \"\n            \"Portanto, o primeiro algarismo é 5.\"\n        )\n    \n        by_type = _checks_by_type(solution)\n    \n>       assert by_type[\"f2q5_student_digit_log_bounds\"][0].status == \"refuted\"\nE       AssertionError: assert 'technical_error' == 'refuted'\nE         \nE         - refuted\nE         + technical_error\n\ntests/test_f2q5_student_claim_checks.py:64: AssertionError",
+      "original_traceback_sha256": "8dddc0288f7e45712321b9c7b622d23a26e937879c1ef6677147ec0a16b76011",
+      "assertion_excerpt": "E       AssertionError: assert 'technical_error' == 'refuted'\nE         \nE         - refuted\nE         + technical_error",
+      "source_file": "tests/test_f2q5_student_claim_checks.py",
+      "preliminary_family": "FORMAL_LEAN"
+    },
+    {
+      "nodeid": "tests/test_f2q5_student_claim_checks.py::test_f2q5_wrong_between_bounds_are_rejected",
+      "original_status": "FAIL",
+      "original_traceback": "def test_f2q5_wrong_between_bounds_are_rejected():\n        solution = (\n            \"Temos log10(3^100)=47,7100. A mantissa é 0,7100. \"\n            \"log10(5)=0,6990 e log10(6)=0,7781, mas escrevo \"\n            \"0,7100<0,6990<0,7781. Portanto, o primeiro algarismo é 5.\"\n        )\n    \n        by_type = _checks_by_type(solution)\n    \n>       assert by_type[\"f2q5_student_between_bounds\"][0].status == \"refuted\"\nE       AssertionError: assert 'technical_error' == 'refuted'\nE         \nE         - refuted\nE         + technical_error\n\ntests/test_f2q5_student_claim_checks.py:76: AssertionError",
+      "original_traceback_sha256": "b78789a48f63c72bd6fbb13898934089920ea336fe482bcf859bf62f7fd79b1f",
+      "assertion_excerpt": "E       AssertionError: assert 'technical_error' == 'refuted'\nE         \nE         - refuted\nE         + technical_error",
+      "source_file": "tests/test_f2q5_student_claim_checks.py",
+      "preliminary_family": "FORMAL_LEAN"
+    },
+    {
+      "nodeid": "tests/test_f2q5_student_claim_checks.py::test_f2q5_wrong_final_digit_is_rejected",
+      "original_status": "FAIL",
+      "original_traceback": "def test_f2q5_wrong_final_digit_is_rejected():\n        solution = (\n            \"Temos log10(3^100)=47,7100. A mantissa é 0,7100. \"\n            \"log10(5)=0,6990 e log10(6)=0,7781, logo 0,6990<0,7100<0,7781. \"\n            \"Portanto, o primeiro algarismo é 6.\"\n        )\n    \n        by_type = _checks_by_type(solution)\n    \n>       assert by_type[\"f2q5_student_final_digit\"][0].status == \"refuted\"\nE       AssertionError: assert 'technical_error' == 'refuted'\nE         \nE         - refuted\nE         + technical_error\n\ntests/test_f2q5_student_claim_checks.py:88: AssertionError",
+      "original_traceback_sha256": "d557db4d249516438295b53aef4373d419fc7154fc63cb5ae0931e7610bd7182",
+      "assertion_excerpt": "E       AssertionError: assert 'technical_error' == 'refuted'\nE         \nE         - refuted\nE         + technical_error",
+      "source_file": "tests/test_f2q5_student_claim_checks.py",
+      "preliminary_family": "FORMAL_LEAN"
+    },
+    {
+      "nodeid": "tests/test_f2q6_strong_certificate.py::test_f2q6_correct_solution_includes_strong_certificate",
+      "original_status": "FAIL",
+      "original_traceback": "def test_f2q6_correct_solution_includes_strong_certificate():\n        response = client.post(\n            \"/audit\",\n            json={\n                \"problem_id\": \"ITA2025F2Q6\",\n                \"solution\": (\n                    \"A quarta cara no n-esimo lançamento exige 3 caras nos n-1 primeiros \"\n                    \"lançamentos e cara no último. Assim P(N=n)=C(n-1,3)/2^n. \"\n                    \"A razão P(n+1)/P(n)=n/(2n-6). Ela é maior que 1 para n<6, \"\n                    \"igual a 1 em n=6 e menor que 1 para n>6. Portanto, n=6 e n=7.\"\n                ),\n            },\n        )\n    \n        assert response.status_code == 200\n        data = response.json()\n    \n        # P2 predates CAP-04: this wording omits maximizers_identification in extraction.\n        # Fail normally for any other regression; retain the expected 10-point contract below.\n        claims = {claim[\"type\"] for claim in data[\"extracted_claims\"][\"claims\"]}\n        if \"maximizers_identification\" not in claims:\n            assert data[\"score\"] is None and data[\"verdict\"] == \"inconclusivo\"\n            rubric = data[\"rubric_assessment\"]\n>           assert rubric[\"evaluated_score\"] == rubric[\"evaluated_max_score\"] == 8\nE           assert 2.0 == 8\n\ntests/test_f2q6_strong_certificate.py:35: AssertionError",
+      "original_traceback_sha256": "106869126005046221b2858ff9c97dde96c3ba90163ec7f037f321e4d5e24426",
+      "assertion_excerpt": "E           assert 2.0 == 8",
+      "source_file": "tests/test_f2q6_strong_certificate.py",
+      "preliminary_family": "FORMAL_LEAN"
+    },
+    {
+      "nodeid": "tests/test_f2q6_strong_certificate.py::test_f2q6_wrong_solution_does_not_get_strong_certificate",
+      "original_status": "FAIL",
+      "original_traceback": "def test_f2q6_wrong_solution_does_not_get_strong_certificate():\n        response = client.post(\n            \"/audit\",\n            json={\n                \"problem_id\": \"ITA2025F2Q6\",\n                \"solution\": (\n                    \"A probabilidade é P(N=n)=C(n,3)/2^n. \"\n                    \"A razão P(n+1)/P(n)=(n-1)/(2n). Portanto, n=7 e n=8.\"\n                ),\n            },\n        )\n    \n        assert response.status_code == 200\n        data = response.json()\n    \n        assert \"generated_strong_f2q6_claim\" not in data[\"lean_certificate\"][\"generated_theorems\"]\n>       assert any(\n            item[\"student_check_adjusted\"] is True\n            for item in data[\"rubric_assessment\"][\"items\"]\n        )\nE       assert False\nE        +  where False = any(<generator object test_f2q6_wrong_solution_does_not_get_strong_certificate.<locals>.<genexpr> at 0x10bfab430>)\n\ntests/test_f2q6_strong_certificate.py:63: AssertionError",
+      "original_traceback_sha256": "54aa7efdfabcf8104b627474aa8a8733d7f44a02194991366ec533fe81787b4c",
+      "assertion_excerpt": "E       assert False\nE        +  where False = any(<generator object test_f2q6_wrong_solution_does_not_get_strong_certificate.<locals>.<genexpr> at 0x10bfab430>)",
+      "source_file": "tests/test_f2q6_strong_certificate.py",
+      "preliminary_family": "FORMAL_LEAN"
+    },
+    {
+      "nodeid": "tests/test_f2q6_student_claim_checks.py::test_f2q6_correct_solution_claims_are_verified",
+      "original_status": "FAIL",
+      "original_traceback": "def test_f2q6_correct_solution_claims_are_verified():\n        solution = (\n            \"A quarta cara no n-esimo lançamento exige 3 caras nos n-1 primeiros \"\n            \"lançamentos e cara no último. Assim P(N=n)=C(n-1,3)/2^n. \"\n            \"A razão P(n+1)/P(n)=n/(2n-6). Ela é maior que 1 para n<6, \"\n            \"igual a 1 em n=6 e menor que 1 para n>6. Portanto, n=6 e n=7.\"\n        )\n    \n        by_type = _checks_by_type(solution)\n    \n>       assert by_type[\"f2q6_student_probability_formula\"][0].status == \"verified\"\nE       AssertionError: assert 'technical_error' == 'verified'\nE         \nE         - verified\nE         + technical_error\n\ntests/test_f2q6_student_claim_checks.py:33: AssertionError",
+      "original_traceback_sha256": "4db802fb16b50a7920c610a768156ef2f9926c36d1b4c6db61bc7f468680dcfb",
+      "assertion_excerpt": "E       AssertionError: assert 'technical_error' == 'verified'\nE         \nE         - verified\nE         + technical_error",
+      "source_file": "tests/test_f2q6_student_claim_checks.py",
+      "preliminary_family": "FORMAL_LEAN"
+    },
+    {
+      "nodeid": "tests/test_f2q6_student_claim_checks.py::test_f2q6_wrong_probability_formula_is_rejected",
+      "original_status": "FAIL",
+      "original_traceback": "def test_f2q6_wrong_probability_formula_is_rejected():\n        solution = (\n            \"A probabilidade é P(N=n)=C(n,3)/2^n. \"\n            \"A razão P(n+1)/P(n)=n/(2n-6). Portanto, n=6 e n=7.\"\n        )\n    \n        by_type = _checks_by_type(solution)\n    \n>       assert by_type[\"f2q6_student_probability_formula\"][0].status == \"refuted\"\nE       AssertionError: assert 'technical_error' == 'refuted'\nE         \nE         - refuted\nE         + technical_error\n\ntests/test_f2q6_student_claim_checks.py:46: AssertionError",
+      "original_traceback_sha256": "dbbbab5d44760aa4b27a9261f413f6b2eb13a2a7a0b7e4b9c9c55d50f146dacc",
+      "assertion_excerpt": "E       AssertionError: assert 'technical_error' == 'refuted'\nE         \nE         - refuted\nE         + technical_error",
+      "source_file": "tests/test_f2q6_student_claim_checks.py",
+      "preliminary_family": "FORMAL_LEAN"
+    },
+    {
+      "nodeid": "tests/test_f2q6_student_claim_checks.py::test_f2q6_wrong_ratio_formula_is_rejected",
+      "original_status": "FAIL",
+      "original_traceback": "def test_f2q6_wrong_ratio_formula_is_rejected():\n        solution = (\n            \"Temos P(N=n)=C(n-1,3)/2^n. \"\n            \"A razão P(n+1)/P(n)=(n-1)/(2n). Portanto, n=6 e n=7.\"\n        )\n    \n        by_type = _checks_by_type(solution)\n    \n>       assert by_type[\"f2q6_student_probability_formula\"][0].status == \"verified\"\nE       AssertionError: assert 'technical_error' == 'verified'\nE         \nE         - verified\nE         + technical_error\n\ntests/test_f2q6_student_claim_checks.py:59: AssertionError",
+      "original_traceback_sha256": "7d80ea1a88924e1c6f35dbad8e8b896749b25eee4e45eb821589b60896507389",
+      "assertion_excerpt": "E       AssertionError: assert 'technical_error' == 'verified'\nE         \nE         - verified\nE         + technical_error",
+      "source_file": "tests/test_f2q6_student_claim_checks.py",
+      "preliminary_family": "FORMAL_LEAN"
+    },
+    {
+      "nodeid": "tests/test_f2q6_student_claim_checks.py::test_f2q6_wrong_final_answer_is_rejected",
+      "original_status": "FAIL",
+      "original_traceback": "def test_f2q6_wrong_final_answer_is_rejected():\n        solution = (\n            \"Temos P(N=n)=C(n-1,3)/2^n. \"\n            \"A razão P(n+1)/P(n)=n/(2n-6). Portanto, n=7 e n=8.\"\n        )\n    \n        by_type = _checks_by_type(solution)\n    \n>       assert by_type[\"f2q6_student_probability_formula\"][0].status == \"verified\"\nE       AssertionError: assert 'technical_error' == 'verified'\nE         \nE         - verified\nE         + technical_error\n\ntests/test_f2q6_student_claim_checks.py:72: AssertionError",
+      "original_traceback_sha256": "0494e864d95458084a470025972bf6e1d48394e1650b14bc4bb6e7a999991ff7",
+      "assertion_excerpt": "E       AssertionError: assert 'technical_error' == 'verified'\nE         \nE         - verified\nE         + technical_error",
+      "source_file": "tests/test_f2q6_student_claim_checks.py",
+      "preliminary_family": "FORMAL_LEAN"
+    },
+    {
+      "nodeid": "tests/test_f2q6_student_claim_checks.py::test_f2q6_single_maximizer_answer_is_rejected",
+      "original_status": "FAIL",
+      "original_traceback": "def test_f2q6_single_maximizer_answer_is_rejected():\n        solution = (\n            \"Temos P(N=n)=C(n-1,3)/2^n. \"\n            \"A razão P(n+1)/P(n)=n/(2n-6). Portanto, n=6.\"\n        )\n    \n        by_type = _checks_by_type(solution)\n    \n>       assert by_type[\"f2q6_student_final_answer\"][0].status == \"refuted\"\nE       AssertionError: assert 'technical_error' == 'refuted'\nE         \nE         - refuted\nE         + technical_error\n\ntests/test_f2q6_student_claim_checks.py:85: AssertionError",
+      "original_traceback_sha256": "81bafdc96502a1ead78b307f1f4354906f3fd85fd81ee0e4186d5e7aed8238c0",
+      "assertion_excerpt": "E       AssertionError: assert 'technical_error' == 'refuted'\nE         \nE         - refuted\nE         + technical_error",
+      "source_file": "tests/test_f2q6_student_claim_checks.py",
+      "preliminary_family": "FORMAL_LEAN"
+    },
+    {
+      "nodeid": "tests/test_f2q8_strong_certificate.py::test_f2q8_correct_solution_includes_strong_certificate",
+      "original_status": "FAIL",
+      "original_traceback": "def test_f2q8_correct_solution_includes_strong_certificate():\n        data = audit_solution(read_example(\"correct_solution.txt\"))\n    \n>       assert data[\"score\"] == data[\"max_score\"]\nE       assert None == 10.0\n\ntests/test_f2q8_strong_certificate.py:32: AssertionError",
+      "original_traceback_sha256": "2c04a6e27e73ae770aabf016ce55be49d9d0df06d7bba77846b698fac6ecf1b3",
+      "assertion_excerpt": "E       assert None == 10.0",
+      "source_file": "tests/test_f2q8_strong_certificate.py",
+      "preliminary_family": "FORMAL_LEAN"
+    },
+    {
+      "nodeid": "tests/test_f2q8_student_claim_checks.py::test_f2q8_correct_final_answer_and_pair_reduction",
+      "original_status": "FAIL",
+      "original_traceback": "def test_f2q8_correct_final_answer_and_pair_reduction():\n        solution = \"\"\"\n        Aplicando diferenças sucessivas de colunas, obtemos det(A_k)=(-1)^(k-1)k.\n        Logo a soma é 1-2+3-4+...+2025.\n        Agrupando os pares, temos 2025 - 1012 = 1013.\n        Portanto, a resposta é 1013.\n        \"\"\"\n    \n        by_type = _checks_by_type(solution, \"pytest_f2q8_correct_final_pair_reduction\")\n    \n>       assert by_type[\"f2q8_student_final_answer\"].status == \"verified\"\nE       AssertionError: assert 'technical_error' == 'verified'\nE         \nE         - verified\nE         + technical_error\n\ntests/test_f2q8_student_claim_checks.py:23: AssertionError",
+      "original_traceback_sha256": "494eddcf7f2465d0221c2863f4fe96887c01f1150d8552096102088bda05af8f",
+      "assertion_excerpt": "E       AssertionError: assert 'technical_error' == 'verified'\nE         \nE         - verified\nE         + technical_error",
+      "source_file": "tests/test_f2q8_student_claim_checks.py",
+      "preliminary_family": "FORMAL_LEAN"
+    },
+    {
+      "nodeid": "tests/test_f2q8_student_claim_checks.py::test_f2q8_wrong_final_answer_and_pair_reduction",
+      "original_status": "FAIL",
+      "original_traceback": "def test_f2q8_wrong_final_answer_and_pair_reduction():\n        solution = \"\"\"\n        Aplicando diferenças sucessivas de colunas, obtemos det(A_k)=(-1)^(k-1)k.\n        Logo a soma é 1-2+3-4+...+2025.\n        Agrupando os pares, temos 2025 - 1012 = 1014.\n        Portanto, a resposta é 1014.\n        \"\"\"\n    \n        by_type = _checks_by_type(solution, \"pytest_f2q8_wrong_final_pair_reduction\")\n    \n>       assert by_type[\"f2q8_student_final_answer\"].status == \"refuted\"\nE       AssertionError: assert 'technical_error' == 'refuted'\nE         \nE         - refuted\nE         + technical_error\n\ntests/test_f2q8_student_claim_checks.py:41: AssertionError",
+      "original_traceback_sha256": "33ce10d786cf9770d12e429fc425faf57b9fc4fba0f2c607eefc3c561cafcbbb",
+      "assertion_excerpt": "E       AssertionError: assert 'technical_error' == 'refuted'\nE         \nE         - refuted\nE         + technical_error",
+      "source_file": "tests/test_f2q8_student_claim_checks.py",
+      "preliminary_family": "FORMAL_LEAN"
+    },
+    {
+      "nodeid": "tests/test_f2q8_student_claim_checks.py::test_f2q8_generic_arithmetic_equality_still_works",
+      "original_status": "FAIL",
+      "original_traceback": "def test_f2q8_generic_arithmetic_equality_still_works():\n        solution = \"\"\"\n        O aluno faz uma conta auxiliar: 2025 - 1012 = 1013.\n        \"\"\"\n    \n        by_type = _checks_by_type(solution, \"pytest_f2q8_generic_arithmetic\")\n    \n>       assert by_type[\"arithmetic_equality\"].status == \"verified\"\nE       AssertionError: assert 'technical_error' == 'verified'\nE         \nE         - verified\nE         + technical_error\n\ntests/test_f2q8_student_claim_checks.py:54: AssertionError",
+      "original_traceback_sha256": "b638d2db5e1475648151dc7f8f189e7594599f3ce9cf7c322a387a6ad7e12a3d",
+      "assertion_excerpt": "E       AssertionError: assert 'technical_error' == 'verified'\nE         \nE         - verified\nE         + technical_error",
+      "source_file": "tests/test_f2q8_student_claim_checks.py",
+      "preliminary_family": "FORMAL_LEAN"
+    },
+    {
+      "nodeid": "tests/test_f2q8_student_claim_checks.py::test_f2q8_generic_wrong_arithmetic_equality_still_fails",
+      "original_status": "FAIL",
+      "original_traceback": "def test_f2q8_generic_wrong_arithmetic_equality_still_fails():\n        solution = \"\"\"\n        O aluno faz uma conta auxiliar: 2025 - 1012 = 1014.\n        \"\"\"\n    \n        by_type = _checks_by_type(solution, \"pytest_f2q8_generic_wrong_arithmetic\")\n    \n>       assert by_type[\"arithmetic_equality\"].status == \"refuted\"\nE       AssertionError: assert 'technical_error' == 'refuted'\nE         \nE         - refuted\nE         + technical_error\n\ntests/test_f2q8_student_claim_checks.py:64: AssertionError",
+      "original_traceback_sha256": "86b7953318786bb6875eb361978a381445dc57d9f5eeb873583f945eda8c25ac",
+      "assertion_excerpt": "E       AssertionError: assert 'technical_error' == 'refuted'\nE         \nE         - refuted\nE         + technical_error",
+      "source_file": "tests/test_f2q8_student_claim_checks.py",
+      "preliminary_family": "FORMAL_LEAN"
+    },
+    {
+      "nodeid": "tests/test_f2q8_student_claim_checks.py::test_f2q8_wrong_formula_is_rejected",
+      "original_status": "FAIL",
+      "original_traceback": "def test_f2q8_wrong_formula_is_rejected():\n        solution = \"\"\"\n        Aplicando diferenças sucessivas de colunas, obtemos det(A_k)=(-1)^k k.\n        Portanto, a resposta é 1014.\n        \"\"\"\n    \n        by_type = _checks_by_type(solution, \"pytest_f2q8_wrong_det_formula\")\n    \n>       assert by_type[\"f2q8_student_det_formula\"].status == \"refuted\"\nE       AssertionError: assert 'technical_error' == 'refuted'\nE         \nE         - refuted\nE         + technical_error\n\ntests/test_f2q8_student_claim_checks.py:75: AssertionError",
+      "original_traceback_sha256": "292d14547815cde048671dfaaccfbd961b1c806b8523c25d14147de00d3739e3",
+      "assertion_excerpt": "E       AssertionError: assert 'technical_error' == 'refuted'\nE         \nE         - refuted\nE         + technical_error",
+      "source_file": "tests/test_f2q8_student_claim_checks.py",
+      "preliminary_family": "FORMAL_LEAN"
+    },
+    {
+      "nodeid": "tests/test_f2q8_student_claim_checks.py::test_f2q8_correct_formula_is_verified",
+      "original_status": "FAIL",
+      "original_traceback": "def test_f2q8_correct_formula_is_verified():\n        solution = \"\"\"\n        Aplicando diferenças sucessivas de colunas, obtemos det(A_k)=(-1)^(k-1)k.\n        Portanto, a resposta é 1013.\n        \"\"\"\n    \n        by_type = _checks_by_type(solution, \"pytest_f2q8_correct_det_formula\")\n    \n>       assert by_type[\"f2q8_student_det_formula\"].status == \"verified\"\nE       AssertionError: assert 'technical_error' == 'verified'\nE         \nE         - verified\nE         + technical_error\n\ntests/test_f2q8_student_claim_checks.py:86: AssertionError",
+      "original_traceback_sha256": "7b173bc73070762d730551206f9474cd5a4888b09febec712ba124316af00f43",
+      "assertion_excerpt": "E       AssertionError: assert 'technical_error' == 'verified'\nE         \nE         - verified\nE         + technical_error",
+      "source_file": "tests/test_f2q8_student_claim_checks.py",
+      "preliminary_family": "FORMAL_LEAN"
+    },
+    {
+      "nodeid": "tests/test_f2q8_student_claim_checks.py::test_f2q8_correct_pair_count_but_wrong_rhs",
+      "original_status": "FAIL",
+      "original_traceback": "def test_f2q8_correct_pair_count_but_wrong_rhs():\n        solution = \"\"\"\n        A soma alternada tem 1012 pares.\n        Agrupando os pares, temos 2025 - 1012 = 999.\n        Portanto, a resposta é 999.\n        \"\"\"\n    \n        by_type = _checks_by_type(solution, \"pytest_f2q8_pair_count_correct_rhs_wrong\")\n    \n>       assert by_type[\"f2q8_student_pair_count\"].status == \"verified\"\nE       AssertionError: assert 'technical_error' == 'verified'\nE         \nE         - verified\nE         + technical_error\n\ntests/test_f2q8_student_claim_checks.py:98: AssertionError",
+      "original_traceback_sha256": "5d0ec767e1af4c80897f5b5cbdc0092d7e1e0dc3c496bbaca1625db7a70720ef",
+      "assertion_excerpt": "E       AssertionError: assert 'technical_error' == 'verified'\nE         \nE         - verified\nE         + technical_error",
+      "source_file": "tests/test_f2q8_student_claim_checks.py",
+      "preliminary_family": "FORMAL_LEAN"
+    },
+    {
+      "nodeid": "tests/test_f2q8_student_claim_checks.py::test_f2q8_wrong_pair_count_true_local_subtraction",
+      "original_status": "FAIL",
+      "original_traceback": "def test_f2q8_wrong_pair_count_true_local_subtraction():\n        solution = \"\"\"\n        Existem 1013 pares.\n        Agrupando os pares, temos 2025 - 1013 = 1012.\n        Portanto, a resposta é 1012.\n        \"\"\"\n    \n        by_type = _checks_by_type(solution, \"pytest_f2q8_wrong_pair_count_true_subtraction\")\n    \n>       assert by_type[\"f2q8_student_pair_count\"].status == \"refuted\"\nE       AssertionError: assert 'technical_error' == 'refuted'\nE         \nE         - refuted\nE         + technical_error\n\ntests/test_f2q8_student_claim_checks.py:112: AssertionError",
+      "original_traceback_sha256": "b871c86a6596d851b99569bc41dc1263a771dbd7ac865f991d228820f4d74d63",
+      "assertion_excerpt": "E       AssertionError: assert 'technical_error' == 'refuted'\nE         \nE         - refuted\nE         + technical_error",
+      "source_file": "tests/test_f2q8_student_claim_checks.py",
+      "preliminary_family": "FORMAL_LEAN"
+    },
+    {
+      "nodeid": "tests/test_handwriting_recognition_benchmark.py::test_loader_schema_artificial_samples_and_optional_strokes",
+      "original_status": "FAIL",
+      "original_traceback": "def test_loader_schema_artificial_samples_and_optional_strokes():\n        samples = load_samples(MANIFEST)\n        assert len(samples) == 5 and all(s.artificial for s in samples)\n        assert [s.sample_id for s in samples] == [\"A-preservation\", \"B-sign\", \"C-exponent\", \"D-subscript\", \"E-missing\"]\n        optional = samples[0].model_dump()\n        optional[\"input_strokes\"] = None\n        assert RecognitionSample.model_validate(optional).input_strokes is None\n>       assert json.loads((ROOT / \"sample.schema.json\").read_text()) == RecognitionSample.model_json_schema()\nE       AssertionError: assert {'$defs': {'R...iption'], ...} == {'$defs': {'R...iption'], ...}\nE         \nE         Omitting 5 identical items, use -vv to show\nE         Differing items:\nE         {'$defs': {'RecognitionSegment': {'additionalProperties': False, 'properties': {'confidence': {'anyOf': [{...}, {...}]...'number'}, 'x': {'minimum': 0, 'title': 'X', 'type': 'number'}, ...}, 'required': ['x', 'y', 'width', 'height'], ...}}} != {'$defs': {'RecognitionSegment': {'additionalProperties': False, 'properties': {'confidence': {'anyOf': [{...}, {...}]...'number'}, 'x': {'minimum': 0, 'title': 'X', 'type': 'number'}, ...}, 'required': ['x', 'y', 'width', 'height'], ...}}}\nE         Use -v to get more diff\n\ntests/test_handwriting_recognition_benchmark.py:32: AssertionError",
+      "original_traceback_sha256": "74419d9b802826fd8a943188de5abe88356907b4d0befd5d4d07aff6f1541938",
+      "assertion_excerpt": "E       AssertionError: assert {'$defs': {'R...iption'], ...} == {'$defs': {'R...iption'], ...}\nE         \nE         Omitting 5 identical items, use -vv to show\nE         Differing items:\nE         {'$defs': {'RecognitionSegment': {'additionalProperties': False, 'properties': {'confidence': {'anyOf': [{...}, {...}]...'number'}, 'x': {'minimum': 0, 'title': 'X', 'type': 'number'}, ...}, 'required': ['x', 'y', 'width', 'height'], ...}}} != {'$defs': {'RecognitionSegment': {'additionalProperties': False, 'properties': {'confidence': {'anyOf': [{...}, {...}]...'number'}, 'x': {'minimum': 0, 'title': 'X', 'type': 'number'}, ...}, 'required': ['x', 'y', 'width', 'height'], ...}}}\nE         Use -v to get more diff",
+      "source_file": "tests/test_handwriting_recognition_benchmark.py",
+      "preliminary_family": "CAPTURE_SCHEMA"
+    },
+    {
+      "nodeid": "tests/test_ita2025f2q1_level1.py::test_f2q1_correct_solution_scores_10_and_verifies_lean",
+      "original_status": "FAIL",
+      "original_traceback": "def test_f2q1_correct_solution_scores_10_and_verifies_lean():\n        data = audit_solution(read_example(\"correct_solution.txt\"))\n    \n>       assert data[\"score\"] == 10.0\nE       assert None == 10.0\n\ntests/test_ita2025f2q1_level1.py:47: AssertionError",
+      "original_traceback_sha256": "0ef763acda8a17e095da285eea75f91ae11c1e24c7e1a5fe0bdaef05e5abb400",
+      "assertion_excerpt": "E       assert None == 10.0",
+      "source_file": "tests/test_ita2025f2q1_level1.py",
+      "preliminary_family": "FORMAL_LEAN"
+    },
+    {
+      "nodeid": "tests/test_ita2025f2q1_level1.py::test_f2q1_missing_reduced_form_scores_partial",
+      "original_status": "FAIL",
+      "original_traceback": "def test_f2q1_missing_reduced_form_scores_partial():\n        data = audit_solution(read_example(\"missing_reduced_form.txt\"))\n    \n>       assert rubric_item_by_id(data, \"power_reductions\")[\"points\"] == 3.0\nE       assert None == 3.0\n\ntests/test_ita2025f2q1_level1.py:82: AssertionError",
+      "original_traceback_sha256": "232b85cfd61ffbff493471796ac4f3ae1fcb67646652a44436078cb3e2300ff0",
+      "assertion_excerpt": "E       assert None == 3.0",
+      "source_file": "tests/test_ita2025f2q1_level1.py",
+      "preliminary_family": "FORMAL_LEAN"
+    },
+    {
+      "nodeid": "tests/test_ita2025f2q1_level1.py::test_f2q1_wrong_answer_keeps_undecided_criteria_and_decided_subtotal",
+      "original_status": "FAIL",
+      "original_traceback": "def test_f2q1_wrong_answer_keeps_undecided_criteria_and_decided_subtotal():\n        data = audit_solution(read_example(\"wrong_answer.txt\"))\n    \n>       assert_incomplete(data, 0, 2)\n\ntests/test_ita2025f2q1_level1.py:97: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\ndata = {'artifact_dir': None, 'artifact_ref': None, 'coverage': 0.0, 'estimated_points': None, ...}\nsubtotal = 0, decided_max = 2\n\n    def assert_incomplete(data, subtotal, decided_max):\n        assert_score_contract(data)\n        assert data[\"score\"] is None\n        assert data[\"verdict\"] == \"inconclusivo\"\n        assert any(item[\"points\"] is None for item in data[\"rubric_assessment\"][\"items\"])\n        assert data[\"rubric_assessment\"][\"evaluated_score\"] == pytest.approx(subtotal)\n>       assert data[\"rubric_assessment\"][\"evaluated_max_score\"] == pytest.approx(decided_max)\nE       AssertionError\n\ntests/audit_contract.py:60: AssertionError",
+      "original_traceback_sha256": "e47333d9beb9fb9831eb867a47e483502757036cf76170e1531ea868666e2031",
+      "assertion_excerpt": "E       AssertionError",
+      "source_file": "tests/test_ita2025f2q1_level1.py",
+      "preliminary_family": "FORMAL_LEAN"
+    },
+    {
+      "nodeid": "tests/test_ita2025f2q3_level1.py::test_f2q3_correct_solution_scores_10_and_verifies_lean",
+      "original_status": "FAIL",
+      "original_traceback": "def test_f2q3_correct_solution_scores_10_and_verifies_lean():\n        data = audit_solution(read_example(\"correct_solution.txt\"))\n    \n>       assert data[\"score\"] == 10.0\nE       assert None == 10.0\n\ntests/test_ita2025f2q3_level1.py:47: AssertionError",
+      "original_traceback_sha256": "ec4fcfc214e7afbe607f80408ec66f8151525016e016fd36dd474fc541877da7",
+      "assertion_excerpt": "E       assert None == 10.0",
+      "source_file": "tests/test_ita2025f2q3_level1.py",
+      "preliminary_family": "FORMAL_LEAN"
+    },
+    {
+      "nodeid": "tests/test_ita2025f2q3_level1.py::test_f2q3_answer_only_scores_final_points_only",
+      "original_status": "FAIL",
+      "original_traceback": "def test_f2q3_answer_only_scores_final_points_only():\n        data = audit_solution(read_example(\"answer_only.txt\"))\n    \n>       assert_incomplete(data, 2, 2)\n\ntests/test_ita2025f2q3_level1.py:78: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\ndata = {'artifact_dir': None, 'artifact_ref': None, 'coverage': 0.0, 'estimated_points': None, ...}\nsubtotal = 2, decided_max = 2\n\n    def assert_incomplete(data, subtotal, decided_max):\n        assert_score_contract(data)\n        assert data[\"score\"] is None\n        assert data[\"verdict\"] == \"inconclusivo\"\n        assert any(item[\"points\"] is None for item in data[\"rubric_assessment\"][\"items\"])\n>       assert data[\"rubric_assessment\"][\"evaluated_score\"] == pytest.approx(subtotal)\nE       AssertionError\n\ntests/audit_contract.py:59: AssertionError",
+      "original_traceback_sha256": "08667136b5e1a91d581a794baed409c97a96b367c2dfc9271e2f8992955e1618",
+      "assertion_excerpt": "E       AssertionError",
+      "source_file": "tests/test_ita2025f2q3_level1.py",
+      "preliminary_family": "FORMAL_LEAN"
+    },
+    {
+      "nodeid": "tests/test_ita2025f2q3_level1.py::test_f2q3_partial_beta_difference_scores_partial",
+      "original_status": "FAIL",
+      "original_traceback": "def test_f2q3_partial_beta_difference_scores_partial():\n        data = audit_solution(read_example(\"partial_beta_difference.txt\"))\n    \n>       assert_incomplete(data, 2, 2)\n\ntests/test_ita2025f2q3_level1.py:88: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\ndata = {'artifact_dir': None, 'artifact_ref': None, 'coverage': 0.0, 'estimated_points': None, ...}\nsubtotal = 2, decided_max = 2\n\n    def assert_incomplete(data, subtotal, decided_max):\n        assert_score_contract(data)\n        assert data[\"score\"] is None\n        assert data[\"verdict\"] == \"inconclusivo\"\n        assert any(item[\"points\"] is None for item in data[\"rubric_assessment\"][\"items\"])\n>       assert data[\"rubric_assessment\"][\"evaluated_score\"] == pytest.approx(subtotal)\nE       AssertionError\n\ntests/audit_contract.py:59: AssertionError",
+      "original_traceback_sha256": "2c41d1b3aefe3f103eab5fdd41ed4f0b1a334651e7b3163d2ce7c56ad5f47cdd",
+      "assertion_excerpt": "E       AssertionError",
+      "source_file": "tests/test_ita2025f2q3_level1.py",
+      "preliminary_family": "FORMAL_LEAN"
+    },
+    {
+      "nodeid": "tests/test_ita2025f2q3_level1.py::test_f2q3_wrong_answer_keeps_undecided_criteria_and_decided_subtotal",
+      "original_status": "FAIL",
+      "original_traceback": "def test_f2q3_wrong_answer_keeps_undecided_criteria_and_decided_subtotal():\n        data = audit_solution(read_example(\"wrong_answer.txt\"))\n    \n>       assert_incomplete(data, 0, 5)\n\ntests/test_ita2025f2q3_level1.py:102: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\ndata = {'artifact_dir': None, 'artifact_ref': None, 'coverage': 0.0, 'estimated_points': None, ...}\nsubtotal = 0, decided_max = 5\n\n    def assert_incomplete(data, subtotal, decided_max):\n        assert_score_contract(data)\n        assert data[\"score\"] is None\n        assert data[\"verdict\"] == \"inconclusivo\"\n        assert any(item[\"points\"] is None for item in data[\"rubric_assessment\"][\"items\"])\n        assert data[\"rubric_assessment\"][\"evaluated_score\"] == pytest.approx(subtotal)\n>       assert data[\"rubric_assessment\"][\"evaluated_max_score\"] == pytest.approx(decided_max)\nE       AssertionError\n\ntests/audit_contract.py:60: AssertionError",
+      "original_traceback_sha256": "ab30567d1a5e5514485aa18ae07458ac48f9d7aec67e2220f18c5acb348ead9e",
+      "assertion_excerpt": "E       AssertionError",
+      "source_file": "tests/test_ita2025f2q3_level1.py",
+      "preliminary_family": "FORMAL_LEAN"
+    },
+    {
+      "nodeid": "tests/test_ita2025f2q5_level1.py::test_f2q5_correct_solution_scores_10_and_verifies_lean",
+      "original_status": "FAIL",
+      "original_traceback": "def test_f2q5_correct_solution_scores_10_and_verifies_lean():\n        data = audit_solution(read_example(\"correct_solution.txt\"))\n    \n>       assert data[\"score\"] == 10.0\nE       assert None == 10.0\n\ntests/test_ita2025f2q5_level1.py:47: AssertionError",
+      "original_traceback_sha256": "a2ad078c406137b474f33a15ee844a04231eae280ef3a13410bae429194b1c68",
+      "assertion_excerpt": "E       assert None == 10.0",
+      "source_file": "tests/test_ita2025f2q5_level1.py",
+      "preliminary_family": "FORMAL_LEAN"
+    },
+    {
+      "nodeid": "tests/test_ita2025f2q5_level1.py::test_f2q5_missing_bounds_scores_partial",
+      "original_status": "FAIL",
+      "original_traceback": "def test_f2q5_missing_bounds_scores_partial():\n        data = audit_solution(read_example(\"missing_bounds.txt\"))\n    \n>       assert rubric_item_by_id(data, \"log_power_decomposition\")[\"points\"] == 2.0\nE       assert None == 2.0\n\ntests/test_ita2025f2q5_level1.py:81: AssertionError",
+      "original_traceback_sha256": "3be30e78b5f2c8638a26ac199746e138a4329726b2b92879fb52a6f16704eb29",
+      "assertion_excerpt": "E       assert None == 2.0",
+      "source_file": "tests/test_ita2025f2q5_level1.py",
+      "preliminary_family": "FORMAL_LEAN"
+    },
+    {
+      "nodeid": "tests/test_ita2025f2q5_level1.py::test_f2q5_wrong_digit_keeps_undecided_criteria_and_decided_subtotal",
+      "original_status": "FAIL",
+      "original_traceback": "def test_f2q5_wrong_digit_keeps_undecided_criteria_and_decided_subtotal():\n        data = audit_solution(read_example(\"wrong_digit.txt\"))\n    \n>       assert_incomplete(data, 0, 2)\n\ntests/test_ita2025f2q5_level1.py:98: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\ndata = {'artifact_dir': None, 'artifact_ref': None, 'coverage': 0.0, 'estimated_points': None, ...}\nsubtotal = 0, decided_max = 2\n\n    def assert_incomplete(data, subtotal, decided_max):\n        assert_score_contract(data)\n        assert data[\"score\"] is None\n        assert data[\"verdict\"] == \"inconclusivo\"\n        assert any(item[\"points\"] is None for item in data[\"rubric_assessment\"][\"items\"])\n        assert data[\"rubric_assessment\"][\"evaluated_score\"] == pytest.approx(subtotal)\n>       assert data[\"rubric_assessment\"][\"evaluated_max_score\"] == pytest.approx(decided_max)\nE       AssertionError\n\ntests/audit_contract.py:60: AssertionError",
+      "original_traceback_sha256": "764b8e4d5da73dc18d79af87bb45d9cb37468a52b9c48d4787c33016ebab9a1c",
+      "assertion_excerpt": "E       AssertionError",
+      "source_file": "tests/test_ita2025f2q5_level1.py",
+      "preliminary_family": "FORMAL_LEAN"
+    },
+    {
+      "nodeid": "tests/test_ita2025f2q6_level1.py::test_f2q6_correct_solution_scores_10_and_verifies_lean",
+      "original_status": "FAIL",
+      "original_traceback": "def test_f2q6_correct_solution_scores_10_and_verifies_lean():\n        data = audit_solution(read_example(\"correct_solution.txt\"))\n    \n>       assert data[\"score\"] == 10.0\nE       assert None == 10.0\n\ntests/test_ita2025f2q6_level1.py:47: AssertionError",
+      "original_traceback_sha256": "dfed1f0e06b8599cf3d50c56f9035c3a3c6b66f54ff96f1103c54a5ce0a27d93",
+      "assertion_excerpt": "E       assert None == 10.0",
+      "source_file": "tests/test_ita2025f2q6_level1.py",
+      "preliminary_family": "FORMAL_LEAN"
+    },
+    {
+      "nodeid": "tests/test_ita2025f2q6_level1.py::test_f2q6_missing_ratio_scores_partial",
+      "original_status": "FAIL",
+      "original_traceback": "def test_f2q6_missing_ratio_scores_partial():\n        data = audit_solution(read_example(\"missing_ratio.txt\"))\n    \n>       assert rubric_item_by_id(data, \"probability_formula\")[\"points\"] == 3.0\nE       assert None == 3.0\n\ntests/test_ita2025f2q6_level1.py:81: AssertionError",
+      "original_traceback_sha256": "d0cd9cf420f3941d80bc6d0cd89ec516f095aacc400aa47f973b12379668a26a",
+      "assertion_excerpt": "E       assert None == 3.0",
+      "source_file": "tests/test_ita2025f2q6_level1.py",
+      "preliminary_family": "FORMAL_LEAN"
+    },
+    {
+      "nodeid": "tests/test_ita2025f2q6_level1.py::test_f2q6_wrong_answer_keeps_undecided_criteria_and_decided_subtotal",
+      "original_status": "FAIL",
+      "original_traceback": "def test_f2q6_wrong_answer_keeps_undecided_criteria_and_decided_subtotal():\n        data = audit_solution(read_example(\"wrong_answer.txt\"))\n    \n>       assert_incomplete(data, 0, 2)\n\ntests/test_ita2025f2q6_level1.py:96: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\ndata = {'artifact_dir': None, 'artifact_ref': None, 'coverage': 0.0, 'estimated_points': None, ...}\nsubtotal = 0, decided_max = 2\n\n    def assert_incomplete(data, subtotal, decided_max):\n        assert_score_contract(data)\n        assert data[\"score\"] is None\n        assert data[\"verdict\"] == \"inconclusivo\"\n        assert any(item[\"points\"] is None for item in data[\"rubric_assessment\"][\"items\"])\n        assert data[\"rubric_assessment\"][\"evaluated_score\"] == pytest.approx(subtotal)\n>       assert data[\"rubric_assessment\"][\"evaluated_max_score\"] == pytest.approx(decided_max)\nE       AssertionError\n\ntests/audit_contract.py:60: AssertionError",
+      "original_traceback_sha256": "653ba6c49c9a0674fe936da2e52f5a34d39e10e493fd5787344331d279f43d57",
+      "assertion_excerpt": "E       AssertionError",
+      "source_file": "tests/test_ita2025f2q6_level1.py",
+      "preliminary_family": "FORMAL_LEAN"
+    },
+    {
+      "nodeid": "tests/test_ita2025f2q8_level1.py::test_f2q8_correct_solution_scores_10_and_verifies_lean",
+      "original_status": "FAIL",
+      "original_traceback": "def test_f2q8_correct_solution_scores_10_and_verifies_lean():\n        data = audit_solution(read_example(\"correct_solution.txt\"))\n    \n>       assert data[\"score\"] == 10.0\nE       assert None == 10.0\n\ntests/test_ita2025f2q8_level1.py:47: AssertionError",
+      "original_traceback_sha256": "9ea599e504a52d914d0ca48b57e315404001a8e833752a16e173bc20e9d456ed",
+      "assertion_excerpt": "E       assert None == 10.0",
+      "source_file": "tests/test_ita2025f2q8_level1.py",
+      "preliminary_family": "FORMAL_LEAN"
+    },
+    {
+      "nodeid": "tests/test_ita2025f2q8_level1.py::test_f2q8_answer_only_scores_final_points_only",
+      "original_status": "FAIL",
+      "original_traceback": "def test_f2q8_answer_only_scores_final_points_only():\n        data = audit_solution(read_example(\"answer_only.txt\"))\n    \n>       assert_incomplete(data, 1.5, 1.5)\n\ntests/test_ita2025f2q8_level1.py:75: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\ndata = {'artifact_dir': None, 'artifact_ref': None, 'coverage': 0.0, 'estimated_points': None, ...}\nsubtotal = 1.5, decided_max = 1.5\n\n    def assert_incomplete(data, subtotal, decided_max):\n        assert_score_contract(data)\n        assert data[\"score\"] is None\n        assert data[\"verdict\"] == \"inconclusivo\"\n        assert any(item[\"points\"] is None for item in data[\"rubric_assessment\"][\"items\"])\n>       assert data[\"rubric_assessment\"][\"evaluated_score\"] == pytest.approx(subtotal)\nE       AssertionError\n\ntests/audit_contract.py:59: AssertionError",
+      "original_traceback_sha256": "1c8af2c1f96029fc33a4a5ef199abdf58fbfc7fc5f16069b4346ed85d9628f09",
+      "assertion_excerpt": "E       AssertionError",
+      "source_file": "tests/test_ita2025f2q8_level1.py",
+      "preliminary_family": "FORMAL_LEAN"
+    },
+    {
+      "nodeid": "tests/test_ita2025f2q8_level1.py::test_f2q8_missing_determinant_formula_scores_partial",
+      "original_status": "FAIL",
+      "original_traceback": "def test_f2q8_missing_determinant_formula_scores_partial():\n        data = audit_solution(read_example(\"missing_determinant_formula.txt\"))\n    \n        assert rubric_item_by_id(data, \"matrix_transformation\")[\"points\"] is None\n        assert rubric_item_by_id(data, \"determinant_formula\")[\"points\"] is None\n>       assert rubric_item_by_id(data, \"alternating_sum\")[\"points\"] == 2.0\nE       assert None == 2.0\n\ntests/test_ita2025f2q8_level1.py:87: AssertionError",
+      "original_traceback_sha256": "53a9f9c3a829a83ebb94202e501efea333135fc29ca41a4944d5ac00f8526585",
+      "assertion_excerpt": "E       assert None == 2.0",
+      "source_file": "tests/test_ita2025f2q8_level1.py",
+      "preliminary_family": "FORMAL_LEAN"
+    },
+    {
+      "nodeid": "tests/test_ita2025q1_level2.py::test_q1_correct_solution_scores_10_and_verifies_formal_step",
+      "original_status": "FAIL",
+      "original_traceback": "def test_q1_correct_solution_scores_10_and_verifies_formal_step():\n        data = audit_solution(read_example(\"correct_solution.txt\"))\n    \n>       assert data[\"score\"] == 10.0\nE       assert None == 10.0\n\ntests/test_ita2025q1_level2.py:52: AssertionError",
+      "original_traceback_sha256": "2e1e5276159b3774e1aed1d94310bd52c4865ef36c14d3c328c7ae854ff6069a",
+      "assertion_excerpt": "E       assert None == 10.0",
+      "source_file": "tests/test_ita2025q1_level2.py",
+      "preliminary_family": "FORMAL_LEAN"
+    },
+    {
+      "nodeid": "tests/test_ita2025q1_level2.py::test_q1_wrong_determinant_step_blocks_area_and_dependencies",
+      "original_status": "FAIL",
+      "original_traceback": "def test_q1_wrong_determinant_step_blocks_area_and_dependencies():\n        data = audit_solution(read_example(\"wrong_determinant_step.txt\"))\n    \n>       assert_incomplete(data, 3, 3)\n\ntests/test_ita2025q1_level2.py:69: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\ndata = {'artifact_dir': None, 'artifact_ref': None, 'coverage': 0.0, 'estimated_points': None, ...}\nsubtotal = 3, decided_max = 3\n\n    def assert_incomplete(data, subtotal, decided_max):\n        assert_score_contract(data)\n        assert data[\"score\"] is None\n        assert data[\"verdict\"] == \"inconclusivo\"\n        assert any(item[\"points\"] is None for item in data[\"rubric_assessment\"][\"items\"])\n>       assert data[\"rubric_assessment\"][\"evaluated_score\"] == pytest.approx(subtotal)\nE       AssertionError\n\ntests/audit_contract.py:59: AssertionError",
+      "original_traceback_sha256": "31d09c80d0b4af8263805ed3921d2e3d279161999876c5960f93b3d6d3025302",
+      "assertion_excerpt": "E       AssertionError",
+      "source_file": "tests/test_ita2025q1_level2.py",
+      "preliminary_family": "FORMAL_LEAN"
+    },
+    {
+      "nodeid": "tests/test_ita2025q1_level2.py::test_q1_answer_only_preserves_subtotal_without_global_score",
+      "original_status": "FAIL",
+      "original_traceback": "def test_q1_answer_only_preserves_subtotal_without_global_score():\n        data = audit_solution(read_example(\"answer_only.txt\"))\n    \n>       assert_incomplete(data, 1, 1)\n\ntests/test_ita2025q1_level2.py:104: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\ndata = {'artifact_dir': None, 'artifact_ref': None, 'coverage': 0.0, 'estimated_points': None, ...}\nsubtotal = 1, decided_max = 1\n\n    def assert_incomplete(data, subtotal, decided_max):\n        assert_score_contract(data)\n        assert data[\"score\"] is None\n        assert data[\"verdict\"] == \"inconclusivo\"\n        assert any(item[\"points\"] is None for item in data[\"rubric_assessment\"][\"items\"])\n>       assert data[\"rubric_assessment\"][\"evaluated_score\"] == pytest.approx(subtotal)\nE       AssertionError\n\ntests/audit_contract.py:59: AssertionError",
+      "original_traceback_sha256": "6e4cbbb39ed552dc60303add4491b2f707e76b9d70b1c7050a54a7451ce8ce12",
+      "assertion_excerpt": "E       AssertionError",
+      "source_file": "tests/test_ita2025q1_level2.py",
+      "preliminary_family": "FORMAL_LEAN"
+    },
+    {
+      "nodeid": "tests/test_ita2025q3_level1.py::test_q3_correct_solution_scores_10_and_verifies_formal_step",
+      "original_status": "FAIL",
+      "original_traceback": "def test_q3_correct_solution_scores_10_and_verifies_formal_step():\n        data = audit_solution(read_example(\"correct_solution.txt\"))\n    \n>       assert data[\"score\"] == 10.0\nE       assert None == 10.0\n\ntests/test_ita2025q3_level1.py:47: AssertionError",
+      "original_traceback_sha256": "f60f765f2e32bcdd01ca5d8b35f40c9fb0608351c8c9cd7c15ca8db616bdf122",
+      "assertion_excerpt": "E       assert None == 10.0",
+      "source_file": "tests/test_ita2025q3_level1.py",
+      "preliminary_family": "FORMAL_LEAN"
+    },
+    {
+      "nodeid": "tests/test_ita2025q3_level1.py::test_q3_missing_parity_blocks_formal_chain",
+      "original_status": "FAIL",
+      "original_traceback": "def test_q3_missing_parity_blocks_formal_chain():\n        data = audit_solution(read_example(\"missing_parity.txt\"))\n    \n>       assert rubric_item_by_id(data, \"first_factor_exponent\")[\"points\"] == 2.0\nE       assert None == 2.0\n\ntests/test_ita2025q3_level1.py:93: AssertionError",
+      "original_traceback_sha256": "1861a119d6fc88ecbbb71dbfd998966fcb4b099f26bf8242b87b6b2deff22ad5",
+      "assertion_excerpt": "E       assert None == 2.0",
+      "source_file": "tests/test_ita2025q3_level1.py",
+      "preliminary_family": "FORMAL_LEAN"
+    },
+    {
+      "nodeid": "tests/test_ita2025q4_level1.py::test_q4_correct_solution_scores_10_and_verifies_lean",
+      "original_status": "FAIL",
+      "original_traceback": "def test_q4_correct_solution_scores_10_and_verifies_lean():\n        data = audit_solution(read_example(\"correct_solution.txt\"))\n    \n>       assert data[\"score\"] == 10.0\nE       assert None == 10.0\n\ntests/test_ita2025q4_level1.py:47: AssertionError",
+      "original_traceback_sha256": "35e1466ff21d32680a41132563bd48d0d47602cc3dadbe242910cb3ad71ab738",
+      "assertion_excerpt": "E       assert None == 10.0",
+      "source_file": "tests/test_ita2025q4_level1.py",
+      "preliminary_family": "FORMAL_LEAN"
+    },
+    {
+      "nodeid": "tests/test_ita2025q5_level1.py::test_q5_correct_solution_scores_10_and_verifies_lean",
+      "original_status": "FAIL",
+      "original_traceback": "def test_q5_correct_solution_scores_10_and_verifies_lean():\n        data = audit_solution(read_example(\"correct_solution.txt\"))\n    \n>       assert data[\"score\"] == 10.0\nE       assert None == 10.0\n\ntests/test_ita2025q5_level1.py:47: AssertionError",
+      "original_traceback_sha256": "d7bc5fd11ca628f9db65ed55f0b6238afb2162432779539321d07657c86bbe6f",
+      "assertion_excerpt": "E       assert None == 10.0",
+      "source_file": "tests/test_ita2025q5_level1.py",
+      "preliminary_family": "FORMAL_LEAN"
+    },
+    {
+      "nodeid": "tests/test_ita2025q5_level1.py::test_q5_missing_difference_blocks_factorization_dependency",
+      "original_status": "FAIL",
+      "original_traceback": "def test_q5_missing_difference_blocks_factorization_dependency():\n        data = audit_solution(read_example(\"missing_difference_relation.txt\"))\n    \n        assert rubric_item_by_id(data, \"difference_relation\")[\"points\"] is None\n>       assert rubric_item_by_id(data, \"geometric_form\")[\"points\"] == 2.0\nE       assert None == 2.0\n\ntests/test_ita2025q5_level1.py:83: AssertionError",
+      "original_traceback_sha256": "72f629fdacd322809e3c2a6bb04d7923cf2cd426a88e4cfeb9e8723366a2792f",
+      "assertion_excerpt": "E       assert None == 2.0",
+      "source_file": "tests/test_ita2025q5_level1.py",
+      "preliminary_family": "FORMAL_LEAN"
+    },
+    {
+      "nodeid": "tests/test_ita2025q5_level1.py::test_q5_missing_factorization_blocks_formal_step",
+      "original_status": "FAIL",
+      "original_traceback": "def test_q5_missing_factorization_blocks_formal_step():\n        data = audit_solution(read_example(\"missing_factorization.txt\"))\n    \n>       assert rubric_item_by_id(data, \"difference_relation\")[\"points\"] == 3.0\nE       assert None == 3.0\n\ntests/test_ita2025q5_level1.py:97: AssertionError",
+      "original_traceback_sha256": "ea0317a027a803a442a4eee1692a8727dbd163c56d739933e74b8c01896a4b44",
+      "assertion_excerpt": "E       assert None == 3.0",
+      "source_file": "tests/test_ita2025q5_level1.py",
+      "preliminary_family": "FORMAL_LEAN"
+    },
+    {
+      "nodeid": "tests/test_ita2025q8_level1.py::test_q8_correct_solution_scores_10_and_verifies_lean",
+      "original_status": "FAIL",
+      "original_traceback": "def test_q8_correct_solution_scores_10_and_verifies_lean():\n        data = audit_solution(read_example(\"correct_solution.txt\"))\n    \n>       assert data[\"score\"] == 10.0\nE       assert None == 10.0\n\ntests/test_ita2025q8_level1.py:47: AssertionError",
+      "original_traceback_sha256": "17791a81915f7ba4f18d76ba4f4cdaea3f15aab36d37bade926556b43d1db73b",
+      "assertion_excerpt": "E       assert None == 10.0",
+      "source_file": "tests/test_ita2025q8_level1.py",
+      "preliminary_family": "FORMAL_LEAN"
+    },
+    {
+      "nodeid": "tests/test_ita2025q8_level1.py::test_q8_answer_only_scores_interval_and_sum_only",
+      "original_status": "FAIL",
+      "original_traceback": "def test_q8_answer_only_scores_interval_and_sum_only():\n        data = audit_solution(read_example(\"answer_only.txt\"))\n    \n>       assert_incomplete(data, 3.5, 3.5)\n\ntests/test_ita2025q8_level1.py:69: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\ndata = {'artifact_dir': None, 'artifact_ref': None, 'coverage': 0.2, 'estimated_points': None, ...}\nsubtotal = 3.5, decided_max = 3.5\n\n    def assert_incomplete(data, subtotal, decided_max):\n        assert_score_contract(data)\n        assert data[\"score\"] is None\n        assert data[\"verdict\"] == \"inconclusivo\"\n        assert any(item[\"points\"] is None for item in data[\"rubric_assessment\"][\"items\"])\n>       assert data[\"rubric_assessment\"][\"evaluated_score\"] == pytest.approx(subtotal)\nE       AssertionError\n\ntests/audit_contract.py:59: AssertionError",
+      "original_traceback_sha256": "12c01c9769457a32c5c4d39a6f15c4cbcfd3cd590c3c9b06aa185b584b88b1b1",
+      "assertion_excerpt": "E       AssertionError",
+      "source_file": "tests/test_ita2025q8_level1.py",
+      "preliminary_family": "FORMAL_LEAN"
+    },
+    {
+      "nodeid": "tests/test_ita2025q8_level1.py::test_q8_missing_sign_analysis_loses_sign_points",
+      "original_status": "FAIL",
+      "original_traceback": "def test_q8_missing_sign_analysis_loses_sign_points():\n        data = audit_solution(read_example(\"missing_sign_analysis.txt\"))\n    \n>       assert rubric_item_by_id(data, \"numerator_factorization\")[\"points\"] == 2.5\nE       assert None == 2.5\n\ntests/test_ita2025q8_level1.py:81: AssertionError",
+      "original_traceback_sha256": "2f26e84e67df20571bcbbc70bda069f084fd080d39932ca395432cfd66ee80f6",
+      "assertion_excerpt": "E       assert None == 2.5",
+      "source_file": "tests/test_ita2025q8_level1.py",
+      "preliminary_family": "FORMAL_LEAN"
+    },
+    {
+      "nodeid": "tests/test_math_canonical_pipeline.py::test_shifted_f2q3_equation_keeps_full_credit_and_formal_checks",
+      "original_status": "FAIL",
+      "original_traceback": "def test_shifted_f2q3_equation_keeps_full_credit_and_formal_checks():\n        original=Path('problems/ITA2025F2Q3/examples/correct_solution.txt').read_text()\n        solution=original.replace('cos beta - sen beta = 1/2','cos beta = sen beta + 1/2')\n        assert solution!=original\n        result=execute_audit(AuditRequest(problem_id='ITA2025F2Q3',solution=solution))\n>       assert result.score==10 and result.verdict=='correto'\nE       AssertionError: assert (None == 10)\nE        +  where None = AuditResponse(problem_id='ITA2025F2Q3', score=None, max_score=10.0, verdict='inconclusivo', extracted_claims=ClaimExtr...ted_max_score=0.0, coverage=0.0, estimated_points=None, needs_review=True, unscorable_reason='ADJUDICATOR_UNAVAILABLE').score\n\ntests/test_math_canonical_pipeline.py:15: AssertionError",
+      "original_traceback_sha256": "7a525a0a8ec82aa76e5eaa5fd30f0aaf5228903cbde53be2a57b6c896498ddb4",
+      "assertion_excerpt": "E       AssertionError: assert (None == 10)\nE        +  where None = AuditResponse(problem_id='ITA2025F2Q3', score=None, max_score=10.0, verdict='inconclusivo', extracted_claims=ClaimExtr...ted_max_score=0.0, coverage=0.0, estimated_points=None, needs_review=True, unscorable_reason='ADJUDICATOR_UNAVAILABLE').score",
+      "source_file": "tests/test_math_canonical_pipeline.py",
+      "preliminary_family": "FORMAL_LEAN"
+    },
+    {
+      "nodeid": "tests/test_mvp_ita_10_questions.py::test_mvp_correct_solutions_for_all_10_questions[ITA2025Q1]",
+      "original_status": "FAIL",
+      "original_traceback": "client = <starlette.testclient.TestClient object at 0x10b984730>\nproblem_id = 'ITA2025Q1'\n\n    @pytest.mark.parametrize(\"problem_id\", MVP_PROBLEM_IDS)\n    def test_mvp_correct_solutions_for_all_10_questions(client, problem_id: str):\n        data = audit_example(client, problem_id, \"correct_solution.txt\")\n    \n        assert_audit_contract(data, problem_id)\n>       assert data[\"score\"] == data[\"max_score\"]\nE       assert None == 10.0\n\ntests/test_mvp_ita_10_questions.py:111: AssertionError",
+      "original_traceback_sha256": "1f64a06f8e96c7e8bafbcdd3570785a845e13e99410bd3a89f73ae2917a2bb04",
+      "assertion_excerpt": "E       assert None == 10.0",
+      "source_file": "tests/test_mvp_ita_10_questions.py",
+      "preliminary_family": "FORMAL_LEAN"
+    },
+    {
+      "nodeid": "tests/test_mvp_ita_10_questions.py::test_mvp_correct_solutions_for_all_10_questions[ITA2025Q3]",
+      "original_status": "FAIL",
+      "original_traceback": "client = <starlette.testclient.TestClient object at 0x10bc91c40>\nproblem_id = 'ITA2025Q3'\n\n    @pytest.mark.parametrize(\"problem_id\", MVP_PROBLEM_IDS)\n    def test_mvp_correct_solutions_for_all_10_questions(client, problem_id: str):\n        data = audit_example(client, problem_id, \"correct_solution.txt\")\n    \n        assert_audit_contract(data, problem_id)\n>       assert data[\"score\"] == data[\"max_score\"]\nE       assert None == 10.0\n\ntests/test_mvp_ita_10_questions.py:111: AssertionError",
+      "original_traceback_sha256": "b276577dc5ec250a9d1fb8ac3df2afa2a661531ea305f90f3e4d583625b6c0ad",
+      "assertion_excerpt": "E       assert None == 10.0",
+      "source_file": "tests/test_mvp_ita_10_questions.py",
+      "preliminary_family": "FORMAL_LEAN"
+    },
+    {
+      "nodeid": "tests/test_mvp_ita_10_questions.py::test_mvp_correct_solutions_for_all_10_questions[ITA2025Q4]",
+      "original_status": "FAIL",
+      "original_traceback": "client = <starlette.testclient.TestClient object at 0x10be0d520>\nproblem_id = 'ITA2025Q4'\n\n    @pytest.mark.parametrize(\"problem_id\", MVP_PROBLEM_IDS)\n    def test_mvp_correct_solutions_for_all_10_questions(client, problem_id: str):\n        data = audit_example(client, problem_id, \"correct_solution.txt\")\n    \n        assert_audit_contract(data, problem_id)\n>       assert data[\"score\"] == data[\"max_score\"]\nE       assert None == 10.0\n\ntests/test_mvp_ita_10_questions.py:111: AssertionError",
+      "original_traceback_sha256": "6fbf1ae2e7319c4f35febd58df9e5596d64d167a009a48d517e038280c7b4ce1",
+      "assertion_excerpt": "E       assert None == 10.0",
+      "source_file": "tests/test_mvp_ita_10_questions.py",
+      "preliminary_family": "FORMAL_LEAN"
+    },
+    {
+      "nodeid": "tests/test_mvp_ita_10_questions.py::test_mvp_correct_solutions_for_all_10_questions[ITA2025Q5]",
+      "original_status": "FAIL",
+      "original_traceback": "client = <starlette.testclient.TestClient object at 0x10be55d90>\nproblem_id = 'ITA2025Q5'\n\n    @pytest.mark.parametrize(\"problem_id\", MVP_PROBLEM_IDS)\n    def test_mvp_correct_solutions_for_all_10_questions(client, problem_id: str):\n        data = audit_example(client, problem_id, \"correct_solution.txt\")\n    \n        assert_audit_contract(data, problem_id)\n>       assert data[\"score\"] == data[\"max_score\"]\nE       assert None == 10.0\n\ntests/test_mvp_ita_10_questions.py:111: AssertionError",
+      "original_traceback_sha256": "ca24b532963685a5611e2d8364134235b512d3bdd15e12a20fc751b7e4a2c662",
+      "assertion_excerpt": "E       assert None == 10.0",
+      "source_file": "tests/test_mvp_ita_10_questions.py",
+      "preliminary_family": "FORMAL_LEAN"
+    },
+    {
+      "nodeid": "tests/test_mvp_ita_10_questions.py::test_mvp_correct_solutions_for_all_10_questions[ITA2025Q8]",
+      "original_status": "FAIL",
+      "original_traceback": "client = <starlette.testclient.TestClient object at 0x10bc4a2e0>\nproblem_id = 'ITA2025Q8'\n\n    @pytest.mark.parametrize(\"problem_id\", MVP_PROBLEM_IDS)\n    def test_mvp_correct_solutions_for_all_10_questions(client, problem_id: str):\n        data = audit_example(client, problem_id, \"correct_solution.txt\")\n    \n        assert_audit_contract(data, problem_id)\n>       assert data[\"score\"] == data[\"max_score\"]\nE       assert None == 10.0\n\ntests/test_mvp_ita_10_questions.py:111: AssertionError",
+      "original_traceback_sha256": "c184612027d39863d6fdde8746197327847c6a790ca0d283b35f9bb1271561c1",
+      "assertion_excerpt": "E       assert None == 10.0",
+      "source_file": "tests/test_mvp_ita_10_questions.py",
+      "preliminary_family": "FORMAL_LEAN"
+    },
+    {
+      "nodeid": "tests/test_mvp_ita_10_questions.py::test_mvp_correct_solutions_for_all_10_questions[ITA2025F2Q1]",
+      "original_status": "FAIL",
+      "original_traceback": "client = <starlette.testclient.TestClient object at 0x10c13f610>\nproblem_id = 'ITA2025F2Q1'\n\n    @pytest.mark.parametrize(\"problem_id\", MVP_PROBLEM_IDS)\n    def test_mvp_correct_solutions_for_all_10_questions(client, problem_id: str):\n        data = audit_example(client, problem_id, \"correct_solution.txt\")\n    \n        assert_audit_contract(data, problem_id)\n>       assert data[\"score\"] == data[\"max_score\"]\nE       assert None == 10.0\n\ntests/test_mvp_ita_10_questions.py:111: AssertionError",
+      "original_traceback_sha256": "3f9b82889ebdcf19c17a4928b079d834a3f0f938ee212029ef258eb536a4b197",
+      "assertion_excerpt": "E       assert None == 10.0",
+      "source_file": "tests/test_mvp_ita_10_questions.py",
+      "preliminary_family": "FORMAL_LEAN"
+    },
+    {
+      "nodeid": "tests/test_mvp_ita_10_questions.py::test_mvp_correct_solutions_for_all_10_questions[ITA2025F2Q3]",
+      "original_status": "FAIL",
+      "original_traceback": "client = <starlette.testclient.TestClient object at 0x10bebc250>\nproblem_id = 'ITA2025F2Q3'\n\n    @pytest.mark.parametrize(\"problem_id\", MVP_PROBLEM_IDS)\n    def test_mvp_correct_solutions_for_all_10_questions(client, problem_id: str):\n        data = audit_example(client, problem_id, \"correct_solution.txt\")\n    \n        assert_audit_contract(data, problem_id)\n>       assert data[\"score\"] == data[\"max_score\"]\nE       assert None == 10.0\n\ntests/test_mvp_ita_10_questions.py:111: AssertionError",
+      "original_traceback_sha256": "ae427a79bad5bcceecf14b5d34386752ebb7a2298d7223b0538f45a8683e4f37",
+      "assertion_excerpt": "E       assert None == 10.0",
+      "source_file": "tests/test_mvp_ita_10_questions.py",
+      "preliminary_family": "FORMAL_LEAN"
+    },
+    {
+      "nodeid": "tests/test_mvp_ita_10_questions.py::test_mvp_correct_solutions_for_all_10_questions[ITA2025F2Q5]",
+      "original_status": "FAIL",
+      "original_traceback": "client = <starlette.testclient.TestClient object at 0x10bc94850>\nproblem_id = 'ITA2025F2Q5'\n\n    @pytest.mark.parametrize(\"problem_id\", MVP_PROBLEM_IDS)\n    def test_mvp_correct_solutions_for_all_10_questions(client, problem_id: str):\n        data = audit_example(client, problem_id, \"correct_solution.txt\")\n    \n        assert_audit_contract(data, problem_id)\n>       assert data[\"score\"] == data[\"max_score\"]\nE       assert None == 10.0\n\ntests/test_mvp_ita_10_questions.py:111: AssertionError",
+      "original_traceback_sha256": "d60eb4c5a7d920057ee8801ca0b6096614a829487488bcc5d97e91c6c2126dbc",
+      "assertion_excerpt": "E       assert None == 10.0",
+      "source_file": "tests/test_mvp_ita_10_questions.py",
+      "preliminary_family": "FORMAL_LEAN"
+    },
+    {
+      "nodeid": "tests/test_mvp_ita_10_questions.py::test_mvp_correct_solutions_for_all_10_questions[ITA2025F2Q6]",
+      "original_status": "FAIL",
+      "original_traceback": "client = <starlette.testclient.TestClient object at 0x10bf5fc70>\nproblem_id = 'ITA2025F2Q6'\n\n    @pytest.mark.parametrize(\"problem_id\", MVP_PROBLEM_IDS)\n    def test_mvp_correct_solutions_for_all_10_questions(client, problem_id: str):\n        data = audit_example(client, problem_id, \"correct_solution.txt\")\n    \n        assert_audit_contract(data, problem_id)\n>       assert data[\"score\"] == data[\"max_score\"]\nE       assert None == 10.0\n\ntests/test_mvp_ita_10_questions.py:111: AssertionError",
+      "original_traceback_sha256": "db0c3423eb407105e5f8759016b7f3bc8de7ae72d6931a63d95c8542f394235d",
+      "assertion_excerpt": "E       assert None == 10.0",
+      "source_file": "tests/test_mvp_ita_10_questions.py",
+      "preliminary_family": "FORMAL_LEAN"
+    },
+    {
+      "nodeid": "tests/test_mvp_ita_10_questions.py::test_mvp_correct_solutions_for_all_10_questions[ITA2025F2Q8]",
+      "original_status": "FAIL",
+      "original_traceback": "client = <starlette.testclient.TestClient object at 0x10bfc43d0>\nproblem_id = 'ITA2025F2Q8'\n\n    @pytest.mark.parametrize(\"problem_id\", MVP_PROBLEM_IDS)\n    def test_mvp_correct_solutions_for_all_10_questions(client, problem_id: str):\n        data = audit_example(client, problem_id, \"correct_solution.txt\")\n    \n        assert_audit_contract(data, problem_id)\n>       assert data[\"score\"] == data[\"max_score\"]\nE       assert None == 10.0\n\ntests/test_mvp_ita_10_questions.py:111: AssertionError",
+      "original_traceback_sha256": "2fa720a3a53d1fb314721ce0fd413685250e6288a784ab1604da199c13c59cac",
+      "assertion_excerpt": "E       assert None == 10.0",
+      "source_file": "tests/test_mvp_ita_10_questions.py",
+      "preliminary_family": "FORMAL_LEAN"
+    },
+    {
+      "nodeid": "tests/test_obligation_semantic.py::test_existing_lean_checks_exact_written_proposition[2*((6-x)+x)-verified]",
+      "original_status": "FAIL",
+      "original_traceback": "lhs = '2*((6-x)+x)', expected = 'verified'\n\n    @pytest.mark.parametrize('lhs,expected',[('2*((6-x)+x)','verified'),('2*((6-x)+x)+1','refuted')])\n    def test_existing_lean_checks_exact_written_proposition(lhs,expected):\n        text=f'APQR é um paralelogramo. Seu perímetro APQR é {lhs}=12.'\n        cs=[candidate(text),candidate(text,'b.perimeter_apqr','perimeter_apqr',lhs+'=12','math')]\n        result=run_shadow('TME2026P4',{'b':text},text,solution_id='formal',provider=provider(cs),use_lean=True)\n        fact=next(f for f in result.potential_bridge.auditor.facts if f.fact_id=='b.perimeter_apqr')\n>       assert fact.verification.status==expected and fact.verification_source=='student_lean'\nE       AssertionError: assert ('technical_error' == 'verified'\nE         \nE         - verified\nE         + technical_error)\n\ntests/test_obligation_semantic.py:198: AssertionError",
+      "original_traceback_sha256": "e058dba802ecad4e2246d1238790e2168cb7567c5ea6503f05cf416554599e72",
+      "assertion_excerpt": "E       AssertionError: assert ('technical_error' == 'verified'\nE         \nE         - verified\nE         + technical_error)",
+      "source_file": "tests/test_obligation_semantic.py",
+      "preliminary_family": "FORMAL_LEAN"
+    },
+    {
+      "nodeid": "tests/test_obligation_semantic.py::test_existing_lean_checks_exact_written_proposition[2*((6-x)+x)+1-refuted]",
+      "original_status": "FAIL",
+      "original_traceback": "lhs = '2*((6-x)+x)+1', expected = 'refuted'\n\n    @pytest.mark.parametrize('lhs,expected',[('2*((6-x)+x)','verified'),('2*((6-x)+x)+1','refuted')])\n    def test_existing_lean_checks_exact_written_proposition(lhs,expected):\n        text=f'APQR é um paralelogramo. Seu perímetro APQR é {lhs}=12.'\n        cs=[candidate(text),candidate(text,'b.perimeter_apqr','perimeter_apqr',lhs+'=12','math')]\n        result=run_shadow('TME2026P4',{'b':text},text,solution_id='formal',provider=provider(cs),use_lean=True)\n        fact=next(f for f in result.potential_bridge.auditor.facts if f.fact_id=='b.perimeter_apqr')\n>       assert fact.verification.status==expected and fact.verification_source=='student_lean'\nE       AssertionError: assert ('technical_error' == 'refuted'\nE         \nE         - refuted\nE         + technical_error)\n\ntests/test_obligation_semantic.py:198: AssertionError",
+      "original_traceback_sha256": "a192a8e20f1e6406cef4447a90ec3b19c952b36599ef325a6311159b85dad4b6",
+      "assertion_excerpt": "E       AssertionError: assert ('technical_error' == 'refuted'\nE         \nE         - refuted\nE         + technical_error)",
+      "source_file": "tests/test_obligation_semantic.py",
+      "preliminary_family": "FORMAL_LEAN"
+    },
+    {
+      "nodeid": "tests/test_pedagogical_report.py::test_f2q1_correct_solution_has_pedagogical_report",
+      "original_status": "FAIL",
+      "original_traceback": "def test_f2q1_correct_solution_has_pedagogical_report():\n        solution = read_f2q1_example(\"correct_solution.txt\")\n        data = audit_f2q1(solution)\n    \n        assert isinstance(data[\"feedback\"], str)\n        assert data[\"feedback\"]\n    \n        report = data[\"pedagogical_report\"]\n        text = report_text(report)\n    \n        # Validate the suggestion and attributable evidence, not words that used\n        # to appear only in the reference detector's synthetic descriptions.\n>       assert report[\"score\"] == report[\"max_score\"] == 10\nE       assert None == 10.0\n\ntests/test_pedagogical_report.py:50: AssertionError",
+      "original_traceback_sha256": "47ed135dde91f48d9f361c2feec9cef25d85dd9412eb73f73bfa8df4948334d5",
+      "assertion_excerpt": "E       assert None == 10.0",
+      "source_file": "tests/test_pedagogical_report.py",
+      "preliminary_family": "FORMAL_LEAN"
+    },
+    {
+      "nodeid": "tests/test_pedagogical_report.py::test_f2q1_wrong_solution_reports_incorrect_student_statements",
+      "original_status": "FAIL",
+      "original_traceback": "def test_f2q1_wrong_solution_reports_incorrect_student_statements():\n        solution = (\n            \"Como x^6=1, temos x^57=-1, x^14=1-x e x^7=x. \"\n            \"Logo o resto é (a-b)x-a. Comparando com 2x+1, obtemos \"\n            \"a+b=2 e a=1. Portanto, a=1 e b=1.\"\n        )\n    \n        data = audit_f2q1(solution)\n        report = data[\"pedagogical_report\"]\n        text = report_text(report)\n        dense = compact(text)\n    \n>       assert \"incorreta\" in text\nE       assert 'incorreta' in '{\"summary\": \"a avaliação é inconclusiva; não há evidência suficiente para uma nota global. parte das verificações for...-02\", \"coverage\": 0.0, \"estimated_points\": null, \"needs_review\": true, \"unscorable_reason\": \"adjudicator_unavailable\"}'\n\ntests/test_pedagogical_report.py:73: AssertionError",
+      "original_traceback_sha256": "ce761fb868e44578df7bd5db0d5135747c557f1ca28e208fee96b86146769d5c",
+      "assertion_excerpt": "E       assert 'incorreta' in '{\"summary\": \"a avaliação é inconclusiva; não há evidência suficiente para uma nota global. parte das verificações for...-02\", \"coverage\": 0.0, \"estimated_points\": null, \"needs_review\": true, \"unscorable_reason\": \"adjudicator_unavailable\"}'",
+      "source_file": "tests/test_pedagogical_report.py",
+      "preliminary_family": "FORMAL_LEAN"
+    },
+    {
+      "nodeid": "tests/test_positive_credit_evidence.py::test_f2q3_explicit_answer_label_keeps_only_final_credit_with_real_engine",
+      "original_status": "FAIL",
+      "original_traceback": "def test_f2q3_explicit_answer_label_keeps_only_final_credit_with_real_engine():\n        from fastapi.testclient import TestClient\n        from confia_lean_auditor.main import app\n        text='Portanto, resposta = (5+sqrt(7))/8.'\n        # The answer still requires the asset's existing formal microclaim.\n        assert assess('ITA2025F2Q3',text,verified=False).items[-1].points is None\n        assert all(i.points is None for i in assess('ITA2025F2Q3','Não podemos concluir: '+text).items)\n        response=TestClient(app).post('/audit',json={'problem_id':'ITA2025F2Q3','solution':text})\n        assert response.status_code==200,response.text\n        data=response.json();items=data['rubric_assessment']['items']\n>       assert [(i['id'],i['points']) for i in items]==[\n            ('beta_difference',None),('candidate_values',None),('final_sin_sum',None),('final_answer',2)]\nE       AssertionError: assert [('beta_diffe...nswer', None)] == [('beta_diffe...l_answer', 2)]\nE         \nE         At index 3 diff: ('final_answer', None) != ('final_answer', 2)\nE         Use -v to get more diff\n\ntests/test_positive_credit_evidence.py:339: AssertionError",
+      "original_traceback_sha256": "5d1eb799d7955ba0bbc4d4faaf69270ee0232a9160edeec855f9ff8d29a702dd",
+      "assertion_excerpt": "E       AssertionError: assert [('beta_diffe...nswer', None)] == [('beta_diffe...l_answer', 2)]\nE         \nE         At index 3 diff: ('final_answer', None) != ('final_answer', 2)\nE         Use -v to get more diff",
+      "source_file": "tests/test_positive_credit_evidence.py",
+      "preliminary_family": "FORMAL_LEAN"
+    },
+    {
+      "nodeid": "tests/test_rubric_bridge_pipeline.py::test_unsupported_legacy_wording_reaches_rubric_through_verified_student",
+      "original_status": "FAIL",
+      "original_traceback": "def test_unsupported_legacy_wording_reaches_rubric_through_verified_student():\n        response = execute_audit(AuditRequest(problem_id='ITA2025F2Q1',\n            solution='Logo a vale -1 e b vale 3.'))\n        assert response.extracted_claims.claims == []\n        final = response.rubric_assessment.items[-1]\n        assert final.points == 2 and final.claim_id is None\n>       assert final.positive_evidence['student_bridge']['verification_basis'] == 'formal_lean_verified'\nE       AssertionError: assert 'deterministic_expected_value' == 'formal_lean_verified'\nE         \nE         - formal_lean_verified\nE         + deterministic_expected_value\n\ntests/test_rubric_bridge_pipeline.py:15: AssertionError",
+      "original_traceback_sha256": "754171eaf988ba320e7e37430a2fb5c748e5b8cbacf77a3c23af8297bc590320",
+      "assertion_excerpt": "E       AssertionError: assert 'deterministic_expected_value' == 'formal_lean_verified'\nE         \nE         - formal_lean_verified\nE         + deterministic_expected_value",
+      "source_file": "tests/test_rubric_bridge_pipeline.py",
+      "preliminary_family": "FORMAL_LEAN"
+    },
+    {
+      "nodeid": "tests/test_semantic_claims.py::test_semantic_math_is_checked_by_real_lean[2*((6-x)+x)-12-verified-6-student_lean]",
+      "original_status": "FAIL",
+      "original_traceback": "monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10d4fef10>\nlhs = '2*((6-x)+x)', rhs = '12', expected_status = 'verified', points = 6\nmechanism = 'student_lean'\n\n    @pytest.mark.parametrize('lhs,rhs,expected_status,points,mechanism', [('2*((6-x)+x)','12','verified',6,'student_lean'),('2*((6-x)+x)','13','refuted',0,'canonical_equivalence'),('2*((6-x)+x)+1','12','refuted',0,'student_lean')])\n    def test_semantic_math_is_checked_by_real_lean(monkeypatch,lhs,rhs,expected_status,points,mechanism):\n        text=f'APQR é um paralelogramo. Seu perímetro APQR é {lhs}={rhs}.'\n        provider(monkeypatch,[candidate(text,'apqr','parallelogram',kind='geometric_relation',item='b'),\n            candidate(text,'perimeter_apqr',f'{lhs}={rhs}',kind='value',item='b').model_copy(update={'candidate_id':'c2'})])\n        bridge,result=audit_tme('TME2026P4',{'b':text},use_lean=True)\n>       assert result.items[1].points_awarded==points\nE       AssertionError: assert None == 6\nE        +  where None = PautaDecision(item_id='b', scoring_strategy='max_of', max_points=Decimal('6'), points_awarded=None, known_points=Decim...4-1f3c7eec1c1243469d25f90370a831a1/real_check_1.lean'), conditional_on=None, reason='UPSTREAM_STATUS')), children=()))).points_awarded\n\ntests/test_semantic_claims.py:216: AssertionError",
+      "original_traceback_sha256": "c22e7e9a3691859450e83bf0f5e8a8fc1365105ed0f571a8b1162742134de9d1",
+      "assertion_excerpt": "E       AssertionError: assert None == 6\nE        +  where None = PautaDecision(item_id='b', scoring_strategy='max_of', max_points=Decimal('6'), points_awarded=None, known_points=Decim...4-1f3c7eec1c1243469d25f90370a831a1/real_check_1.lean'), conditional_on=None, reason='UPSTREAM_STATUS')), children=()))).points_awarded",
+      "source_file": "tests/test_semantic_claims.py",
+      "preliminary_family": "FORMAL_LEAN"
+    },
+    {
+      "nodeid": "tests/test_semantic_claims.py::test_semantic_math_is_checked_by_real_lean[2*((6-x)+x)+1-12-refuted-0-student_lean]",
+      "original_status": "FAIL",
+      "original_traceback": "monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10d701970>\nlhs = '2*((6-x)+x)+1', rhs = '12', expected_status = 'refuted', points = 0\nmechanism = 'student_lean'\n\n    @pytest.mark.parametrize('lhs,rhs,expected_status,points,mechanism', [('2*((6-x)+x)','12','verified',6,'student_lean'),('2*((6-x)+x)','13','refuted',0,'canonical_equivalence'),('2*((6-x)+x)+1','12','refuted',0,'student_lean')])\n    def test_semantic_math_is_checked_by_real_lean(monkeypatch,lhs,rhs,expected_status,points,mechanism):\n        text=f'APQR é um paralelogramo. Seu perímetro APQR é {lhs}={rhs}.'\n        provider(monkeypatch,[candidate(text,'apqr','parallelogram',kind='geometric_relation',item='b'),\n            candidate(text,'perimeter_apqr',f'{lhs}={rhs}',kind='value',item='b').model_copy(update={'candidate_id':'c2'})])\n        bridge,result=audit_tme('TME2026P4',{'b':text},use_lean=True)\n>       assert result.items[1].points_awarded==points\nE       AssertionError: assert None == 0\nE        +  where None = PautaDecision(item_id='b', scoring_strategy='max_of', max_points=Decimal('6'), points_awarded=None, known_points=Decim...4-ee219624e5bc4bff8a4f7ce1c854e66d/real_check_1.lean'), conditional_on=None, reason='UPSTREAM_STATUS')), children=()))).points_awarded\n\ntests/test_semantic_claims.py:216: AssertionError",
+      "original_traceback_sha256": "97762bcca3f223ae4d9aea227e0bb7afd809466c713df0fc22872982aa22b9ca",
+      "assertion_excerpt": "E       AssertionError: assert None == 0\nE        +  where None = PautaDecision(item_id='b', scoring_strategy='max_of', max_points=Decimal('6'), points_awarded=None, known_points=Decim...4-ee219624e5bc4bff8a4f7ce1c854e66d/real_check_1.lean'), conditional_on=None, reason='UPSTREAM_STATUS')), children=()))).points_awarded",
+      "source_file": "tests/test_semantic_claims.py",
+      "preliminary_family": "FORMAL_LEAN"
+    },
+    {
+      "nodeid": "tests/test_student_proof_semantics.py::test_real_arithmetic_negation_and_verified_claim",
+      "original_status": "FAIL",
+      "original_traceback": "tmp_path = PosixPath('/private/var/folders/4h/mld1ypt95nq1z3nm58k0k64m0000gn/T/pytest-of-LinMarcolino/pytest-3/test_real_arithmetic_negation_0')\nmonkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10dacc700>\n\n    def test_real_arithmetic_negation_and_verified_claim(tmp_path, monkeypatch):\n        module = import_module(CHECKERS[0][0])\n        monkeypatch.setattr(module, \"CHECK_DIR\", tmp_path)\n        for value, expected in ((\"5\", \"refuted\"), (\"4\", \"verified\")):\n            claim = grounded_claim(\"ITA2025F2Q8\", \"arithmetic_equality\", f\"2+2={value}\")\n            check = module.check_one_student_claim(claim, f\"real-{value}\", 0)\n>           assert check.status == expected, check\nE           AssertionError: StudentClaimCheck(id='student_claim_0', problem_id='ITA2025F2Q8', claim_type='arithmetic_equality', raw_text='2+2=5', ...rce_end': 5, 'payload_sha256': '67fdf0ae3c0fdf8df63779548939565157d3ed2f375f7967f1088c864c3e2837'}, formal_status=None)\nE           assert 'technical_error' == 'refuted'\nE             \nE             - refuted\nE             + technical_error\n\ntests/test_student_proof_semantics.py:143: AssertionError",
+      "original_traceback_sha256": "4908b89f8ed682e4e7e8898b2bf652ac1959689b8236bdcb368ec932c31fc8a2",
+      "assertion_excerpt": "E           AssertionError: StudentClaimCheck(id='student_claim_0', problem_id='ITA2025F2Q8', claim_type='arithmetic_equality', raw_text='2+2=5', ...rce_end': 5, 'payload_sha256': '67fdf0ae3c0fdf8df63779548939565157d3ed2f375f7967f1088c864c3e2837'}, formal_status=None)\nE           assert 'technical_error' == 'refuted'\nE             \nE             - refuted\nE             + technical_error",
+      "source_file": "tests/test_student_proof_semantics.py",
+      "preliminary_family": "FORMAL_LEAN"
+    },
+    {
+      "nodeid": "tests/test_submission_audits.py::test_real_bridge_preserves_wrong_solution_and_runs_existing_lean_pipeline",
+      "original_status": "FAIL",
+      "original_traceback": "tmp_path = PosixPath('/private/var/folders/4h/mld1ypt95nq1z3nm58k0k64m0000gn/T/pytest-of-LinMarcolino/pytest-3/test_real_bridge_preserves_wro0')\nmonkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10dadc610>\n\n    def test_real_bridge_preserves_wrong_solution_and_runs_existing_lean_pipeline(tmp_path, monkeypatch):\n        monkeypatch.setenv(\"CONFIA_SUBMISSIONS_DIR\", str(tmp_path / \"submissions\"))\n        monkeypatch.setenv(\"CONFIA_SUBMISSION_AUDITS_DIR\", str(tmp_path / \"audits\"))\n        client = TestClient(main.app)\n        solution = \"x^57=1; x^14=1-x; x^7=-x. Logo a=1 e b=1.\\n2 + 2 = 5\"\n        request_payload = payload()\n        sid, rev = source(client, values=[{\"segment_id\": \"wrong\", \"page_index\": 0, \"order\": 0,\n                                         \"kind\": \"mixed\", \"text\": solution}], request_payload=request_payload)\n        request = accept(client, sid, rev)\n        folder = submissions.store().root / sid\n        before = persisted_files(folder)\n        response = execute(client, sid, request)\n        assert response.status_code == 200, response.text\n        run = response.json()\n        assert run[\"status\"] == \"COMPLETED\", run\n        internal = persisted_run(run)\n        assert Path(internal[\"artifact_dir\"], \"solution.txt\").read_text() == solution\n        assert run[\"result\"][\"student_claim_checks\"]\n>       assert any(item[\"status\"] == \"refuted\" for item in run[\"result\"][\"student_claim_checks\"])\nE       assert False\nE        +  where False = any(<generator object test_real_bridge_preserves_wrong_solution_and_runs_existing_lean_pipeline.<locals>.<genexpr> at 0x10dc13200>)\n\ntests/test_submission_audits.py:356: AssertionError",
+      "original_traceback_sha256": "2fd29d359eaf8ffa5991537bb84468bada5411580561d3bee029042d9ae0f552",
+      "assertion_excerpt": "E       assert False\nE        +  where False = any(<generator object test_real_bridge_preserves_wrong_solution_and_runs_existing_lean_pipeline.<locals>.<genexpr> at 0x10dc13200>)",
+      "source_file": "tests/test_submission_audits.py",
+      "preliminary_family": "FORMAL_LEAN"
+    },
+    {
+      "nodeid": "tests/test_tme_accepted_integration.py::test_real_local_lean_status_certificates_preserved",
+      "original_status": "FAIL",
+      "original_traceback": "offline = (<starlette.testclient.TestClient object at 0x10ded3730>, [], PosixPath('/private/var/folders/4h/mld1ypt95nq1z3nm58k0k64m0000gn/T/pytest-of-LinMarcolino/pytest-3/test_real_local_lean_status_ce0'))\n\n    def test_real_local_lean_status_certificates_preserved(offline):\n        client,_,_=offline\n        base,_,_,req=prepare(client,2,{'c':'pair_permutations: 4!=24\\npair_orientations: 2^4=8'})\n        service=audits.service();service.tme_use_lean=True\n        sid=service.submissions.transcription_history(req['transcription_id']).transcription.submission_id\n        run=service.execute(sid,AuditRequest(**req))\n        assert run.status=='COMPLETED'\n        checks=[f.student_check for f in run.result.bridge.auditor.facts if f.student_check]\n>       assert {c['status'] for c in checks}=={'verified','refuted'}\nE       AssertionError: assert {'technical_error'} == {'refuted', 'verified'}\nE         \nE         Extra items in the left set:\nE         'technical_error'\nE         Extra items in the right set:\nE         'verified'\nE         'refuted'\nE         Use -v to get more diff\n\ntests/test_tme_accepted_integration.py:193: AssertionError",
+      "original_traceback_sha256": "927b9bc8ff7e1705537b9b4a7806910f71ce1d65e5dfc1807eb3c58f2ca9b179",
+      "assertion_excerpt": "E       AssertionError: assert {'technical_error'} == {'refuted', 'verified'}\nE         \nE         Extra items in the left set:\nE         'technical_error'\nE         Extra items in the right set:\nE         'verified'\nE         'refuted'\nE         Use -v to get more diff",
+      "source_file": "tests/test_tme_accepted_integration.py",
+      "preliminary_family": "FORMAL_LEAN"
+    },
+    {
+      "nodeid": "tests/test_tme_hybrid_grader.py::test_wrong_reasoning_correct_final_is_refuted_by_real_lean",
+      "original_status": "FAIL",
+      "original_traceback": "def test_wrong_reasoning_correct_final_is_refuted_by_real_lean():\n        text='APQR é um paralelogramo.\\nSeu perímetro APQR é 2*((6-x)+x)+1=12.'\n        j=judgment('b.perimeter_apqr',('E002',),extracted_mathematical_statements=[dict(subject='perimeter_apqr',\n            expression='2*((6-x)+x)+1=12',representation_kind='math',evidence_ids=['E002'])])\n        r=run(text,{'b.perimeter_apqr':j},items={'b':text},lean=True)\n        t=next(t for t in r.reconciliation if t['obligation_id']=='b.perimeter_apqr')\n>       assert t['decision']=='refuted' and t['evidence_tier']=='CONFLICT' and t['needs_review']\nE       AssertionError: assert ('technical_error' == 'refuted'\nE         \nE         - refuted\nE         + technical_error)\n\ntests/test_tme_hybrid_grader.py:132: AssertionError",
+      "original_traceback_sha256": "5f8104eb64dc251fd914bc1651f8ad9063ba51a433da1bc06fcfa3a668829985",
+      "assertion_excerpt": "E       AssertionError: assert ('technical_error' == 'refuted'\nE         \nE         - refuted\nE         + technical_error)",
+      "source_file": "tests/test_tme_hybrid_grader.py",
+      "preliminary_family": "FORMAL_LEAN"
+    },
+    {
+      "nodeid": "tests/test_tme_hybrid_grader.py::test_real_formal_verified_is_preserved_and_not_semantic",
+      "original_status": "FAIL",
+      "original_traceback": "def test_real_formal_verified_is_preserved_and_not_semantic():\n        text='APQR é um paralelogramo.\\nSeu perímetro APQR é 2*((6-x)+x)=12.'\n        j=judgment('b.perimeter_apqr',('E002',),extracted_mathematical_statements=[dict(subject='perimeter_apqr',\n            expression='2*((6-x)+x)=12',representation_kind='math',evidence_ids=['E002'])])\n        r=run(text,{'b.perimeter_apqr':j},items={'b':text},lean=True)\n        t=next(t for t in r.reconciliation if t['obligation_id']=='b.perimeter_apqr')\n>       assert t['decision']=='supported' and t['evidence_tier']=='FORMAL_VERIFIED'\nE       AssertionError: assert ('technical_error' == 'supported'\nE         \nE         - supported\nE         + technical_error)\n\ntests/test_tme_hybrid_grader.py:143: AssertionError",
+      "original_traceback_sha256": "bba0a01068358bdf3e702348f70b122549d3209d9850550f41f3595a08b49cd3",
+      "assertion_excerpt": "E       AssertionError: assert ('technical_error' == 'supported'\nE         \nE         - supported\nE         + technical_error)",
+      "source_file": "tests/test_tme_hybrid_grader.py",
+      "preliminary_family": "FORMAL_LEAN"
+    },
+    {
+      "nodeid": "tests/test_ui_01_shell.py::test_central_product_vocabulary_is_preserved_without_contract_renames",
+      "original_status": "FAIL",
+      "original_traceback": "def test_central_product_vocabulary_is_preserved_without_contract_renames():\n        source = '\\n'.join((STATIC / path).read_text() for path in ('app.js', 'submissions/teacher.js', 'capture/tablet.js'))\n        for phrase in ('Análise ConfIA', 'Solução enviada', 'Transcrição', 'Transcrição conferida', 'Recebida pelo ConfIA',\n                       'Verificação formal com Lean', 'Critérios de avaliação', 'Número do envio'):\n>           assert phrase in source\nE           assert 'Verificação formal com Lean' in 'const problemSelect = document.querySelector(\"#problem-select\");\\nconst exampleSelect = document.querySelector(\"#exam...globalThis.addEventListener(\"orientationchange\", () => requestAnimationFrame(renderCanvas));\\n  initialize();\\n})();\\n'\n\ntests/test_ui_01_shell.py:151: AssertionError",
+      "original_traceback_sha256": "b49433beeb228c8e3d0d9b29eac136c0d3f54759b4d895b8e7d6ffc04da0b79d",
+      "assertion_excerpt": "E           assert 'Verificação formal com Lean' in 'const problemSelect = document.querySelector(\"#problem-select\");\\nconst exampleSelect = document.querySelector(\"#exam...globalThis.addEventListener(\"orientationchange\", () => requestAnimationFrame(renderCanvas));\\n  initialize();\\n})();\\n'",
+      "source_file": "tests/test_ui_01_shell.py",
+      "preliminary_family": "UI_CONTRACT"
+    },
+    {
+      "nodeid": "tests/test_ui_02_workspace.py::test_parent_statement_is_compact_and_sticky_through_notebook_and_submission",
+      "original_status": "FAIL",
+      "original_traceback": "def test_parent_statement_is_compact_and_sticky_through_notebook_and_submission():\n        html = CLIENT.get('/').text\n        page = Page(html)\n        assert page.ids['notebook-problem-context'][0] == 'section'\n        assert 'hidden' in page.ids['notebook-problem-context'][1]\n        toggle = page.ids['toggle-notebook-problem'][1]\n        assert toggle['type'] == 'button'\n        assert toggle['aria-expanded'] == 'true'\n        assert toggle['aria-controls'] == 'notebook-problem-body'\n        assert page.ids['notebook-math-message'][1]['role'] == 'status'\n        assert 'notebook-problem-title' not in page.ids\n        assert re.search(r'<p class=\"eyebrow\">Questão <span id=\"notebook-problem-code\"></span></p>', html)\n        assert html.index('id=\"resolution-title\"') < html.index('id=\"notebook-problem-context\"') < html.index('id=\"resolution-notebook\"') < html.index('id=\"prepare-analysis\"')\n        assert html.index('id=\"resolution-notebook\"') < html.index('class=\"notebook-end\"') < html.index('id=\"workspace-draft-persistence\"') < html.index('id=\"workspace-submission-actions\"') < html.index('id=\"workspace-recognition-actions\"')\n        css = (STATIC / 'styles.css').read_text()\n        sticky = re.search(r'body\\[data-resolution-active=\"true\"\\] #notebook-problem-context\\s*\\{([^}]*)\\}', css)\n        assert sticky and 'position: sticky;' in sticky.group(1) and 'top: 0;' in sticky.group(1)\n        assert 'body[data-handwriting-focus=\"true\"] #notebook-problem-context' not in css\n        assert '#notebook-problem-body { max-height:' in css\n>       assert 'position: sticky' not in (STATIC / 'capture/tablet.css').read_text().split('/* Embedded mode')[1]\nE       AssertionError: assert 'position: sticky' not in ' removes re...w: 1; }\\n}\\n'\nE         \nE         'position: sticky' is contained here:\nE           trols {\nE             position: sticky;\nE             top: calc(var(--pilot-dock-height, 0px) + 8px);\nE             z-index: calc(var(--z-sticky) - 1);\nE             background: var(--color-surface);...\nE         \nE         ...Full output truncated (26 lines hidden), use '-vv' to show\n\ntests/test_ui_02_workspace.py:108: AssertionError\n===========================",
+      "original_traceback_sha256": "109835fbdad7343c000f38a3cabe3aa7f76b8601116b6df1200c41a69ba93d28",
+      "assertion_excerpt": "E       AssertionError: assert 'position: sticky' not in ' removes re...w: 1; }\\n}\\n'\nE         \nE         'position: sticky' is contained here:\nE           trols {\nE             position: sticky;\nE             top: calc(var(--pilot-dock-height, 0px) + 8px);\nE             z-index: calc(var(--z-sticky) - 1);\nE             background: var(--color-surface);...\nE         \nE         ...Full output truncated (26 lines hidden), use '-vv' to show",
+      "source_file": "tests/test_ui_02_workspace.py",
+      "preliminary_family": "UI_CONTRACT"
+    }
+  ]
+}

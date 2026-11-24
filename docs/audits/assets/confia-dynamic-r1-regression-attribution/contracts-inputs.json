@@ -1,0 +1,147 @@
+{
+  "shared_test_files": [
+    {
+      "path": "tests/test_dynamic_dy1.py",
+      "baseline_sha256": "47456493c2e7040397ed82124b767157e91929feb7b523f17a0a96ef6fd6eb53",
+      "r1_sha256": "47456493c2e7040397ed82124b767157e91929feb7b523f17a0a96ef6fd6eb53",
+      "identical": true
+    },
+    {
+      "path": "tests/test_dynamic_dy2.py",
+      "baseline_sha256": "90ce1115fd793513872e6ad3fe9ac808e2670651c08ba4acf2e40c58ac6bfff4",
+      "r1_sha256": "90ce1115fd793513872e6ad3fe9ac808e2670651c08ba4acf2e40c58ac6bfff4",
+      "identical": true
+    },
+    {
+      "path": "tests/test_dynamic_dy3.py",
+      "baseline_sha256": "a4a52dedf6193198eb2c2d072dbe3b6bf842e35afb53133dde238e3d0c80254d",
+      "r1_sha256": "a4a52dedf6193198eb2c2d072dbe3b6bf842e35afb53133dde238e3d0c80254d",
+      "identical": true
+    },
+    {
+      "path": "tests/test_dynamic_dy4.py",
+      "baseline_sha256": "764ea2a3f476b6902004d43e910d5af9e00a720dcc98d728da10e52de6c64860",
+      "r1_sha256": "764ea2a3f476b6902004d43e910d5af9e00a720dcc98d728da10e52de6c64860",
+      "identical": true
+    },
+    {
+      "path": "tests/test_dynamic_dy5.py",
+      "baseline_sha256": "1ea8b4751c743288608d3c205d23f184733b977e33bb3aef1d4659ff162bb61e",
+      "r1_sha256": "1ea8b4751c743288608d3c205d23f184733b977e33bb3aef1d4659ff162bb61e",
+      "identical": true
+    },
+    {
+      "path": "tests/test_dynamic_dy6.py",
+      "baseline_sha256": "1d90e44967e1ed9af52b626fc4796cf6d1d6b210e538a3fc85fc20835f2faf3e",
+      "r1_sha256": "1d90e44967e1ed9af52b626fc4796cf6d1d6b210e538a3fc85fc20835f2faf3e",
+      "identical": true
+    },
+    {
+      "path": "tests/test_dynamic_dy7.py",
+      "baseline_sha256": "c151bdd5c774e7f6c50f1d3fa94a83f31bd60643682208a06bbf8609c4f58e24",
+      "r1_sha256": "c151bdd5c774e7f6c50f1d3fa94a83f31bd60643682208a06bbf8609c4f58e24",
+      "identical": true
+    },
+    {
+      "path": "tests/test_assessments.py",
+      "baseline_sha256": "7e1bad8cd1872b89e5ba380247e89132dae5f67b52831bde041b688592a90548",
+      "r1_sha256": "7e1bad8cd1872b89e5ba380247e89132dae5f67b52831bde041b688592a90548",
+      "identical": true
+    },
+    {
+      "path": "tests/test_submissions.py",
+      "baseline_sha256": "36660ae9d664df18dcce21fb5afbc4d55b2b788e4ba065c1c4c58b9f53fc6a38",
+      "r1_sha256": "36660ae9d664df18dcce21fb5afbc4d55b2b788e4ba065c1c4c58b9f53fc6a38",
+      "identical": true
+    },
+    {
+      "path": "tests/test_transcriptions.py",
+      "baseline_sha256": "f0454bb42d7288491c01e575bbcb9443bfdddcb59b8b9de6b0836d8b9a2e12e9",
+      "r1_sha256": "f0454bb42d7288491c01e575bbcb9443bfdddcb59b8b9de6b0836d8b9a2e12e9",
+      "identical": true
+    },
+    {
+      "path": "tests/test_submission_audits.py",
+      "baseline_sha256": "496136d85abbfd7f3eee25e1fbc7a0a7f12a2c4d1673dfd8777b9157babd5bfe",
+      "r1_sha256": "496136d85abbfd7f3eee25e1fbc7a0a7f12a2c4d1673dfd8777b9157babd5bfe",
+      "identical": true
+    },
+    {
+      "path": "tests/test_teacher_decisions.py",
+      "baseline_sha256": "e6d3d7cbd45d3b7083af240893f2b7ab0bde93ed73bf26662da552ea2f1652eb",
+      "r1_sha256": "e6d3d7cbd45d3b7083af240893f2b7ab0bde93ed73bf26662da552ea2f1652eb",
+      "identical": true
+    },
+    {
+      "path": "tests/test_tme_model_compat.py",
+      "baseline_sha256": "b2fe93815e07ea8548911088a08073b48a1ce4f97c8a8b95107ff8301fe54ad6",
+      "r1_sha256": "b2fe93815e07ea8548911088a08073b48a1ce4f97c8a8b95107ff8301fe54ad6",
+      "identical": true
+    },
+    {
+      "path": "tests/test_tme_full_exam.py",
+      "baseline_sha256": "e789bbd350156e785c400d6804c6785f2c5edf86cc3d81528ee69daf4e56e397",
+      "r1_sha256": "e789bbd350156e785c400d6804c6785f2c5edf86cc3d81528ee69daf4e56e397",
+      "identical": true
+    },
+    {
+      "path": "tests/test_tme_question_audit.py",
+      "baseline_sha256": "2249057dfc4125b000ad694160db83eb9c4b73cca0b6f562622008a07d832515",
+      "r1_sha256": "2249057dfc4125b000ad694160db83eb9c4b73cca0b6f562622008a07d832515",
+      "identical": true
+    },
+    {
+      "path": "tests/test_tme_reanalysis.py",
+      "baseline_sha256": "292e67a05af146f0876497b9c76150a09bb1d0e6b5681fd9943e40a3056e882f",
+      "r1_sha256": "292e67a05af146f0876497b9c76150a09bb1d0e6b5681fd9943e40a3056e882f",
+      "identical": true
+    },
+    {
+      "path": "tests/test_tme_human_confirmation.py",
+      "baseline_sha256": "69fca875a25ee84cd6e649c367938ba34eadf5b45c5651c9b02b5fa5abc1b81c",
+      "r1_sha256": "69fca875a25ee84cd6e649c367938ba34eadf5b45c5651c9b02b5fa5abc1b81c",
+      "identical": true
+    },
+    {
+      "path": "tests/test_tme_finalization.py",
+      "baseline_sha256": "18130962732963d777bd4fd89fb4718815dea171e61b48a19a737ff6f8710335",
+      "r1_sha256": "18130962732963d777bd4fd89fb4718815dea171e61b48a19a737ff6f8710335",
+      "identical": true
+    },
+    {
+      "path": "tests/test_tme_hybrid_grader.py",
+      "baseline_sha256": "66279516a534016c0c30470264000f02a52ce201c94699447b72b61c44876b46",
+      "r1_sha256": "66279516a534016c0c30470264000f02a52ce201c94699447b72b61c44876b46",
+      "identical": true
+    },
+    {
+      "path": "tests/test_tme_accepted_integration.py",
+      "baseline_sha256": "6b70a4cf2312863de84c0a7bc77363e6b0bc3c5e5d2d0ff1334aab159a0d3a47",
+      "r1_sha256": "6b70a4cf2312863de84c0a7bc77363e6b0bc3c5e5d2d0ff1334aab159a0d3a47",
+      "identical": true
+    },
+    {
+      "path": "tests/test_tme_certification.py",
+      "baseline_sha256": "410afc2b1e9f128b160f033d97f39f3389c28a5ff7fafd92d9233788260ea5fb",
+      "r1_sha256": "410afc2b1e9f128b160f033d97f39f3389c28a5ff7fafd92d9233788260ea5fb",
+      "identical": true
+    },
+    {
+      "path": "tests/test_tme_review_workspace.py",
+      "baseline_sha256": "f2c02b935af5cf292d2fc6c50fd9ffcf0510c833c434f78e65641e974fb56b30",
+      "r1_sha256": "f2c02b935af5cf292d2fc6c50fd9ffcf0510c833c434f78e65641e974fb56b30",
+      "identical": true
+    },
+    {
+      "path": "tests/test_tme_audit_view.py",
+      "baseline_sha256": "cf846430afe84e7eda11c22249879f0653fbad5ac2300d7c430ffcb842b7bab4",
+      "r1_sha256": "cf846430afe84e7eda11c22249879f0653fbad5ac2300d7c430ffcb842b7bab4",
+      "identical": true
+    }
+  ],
+  "r1_only_test_file": {
+    "path": "tests/test_dynamic_r1.py",
+    "sha256": "8ca3600e02cb825dc3d1aa134f4ccd8733be93740dc760d2f4521f243854a529"
+  },
+  "all_common_test_sources_identical": true
+}

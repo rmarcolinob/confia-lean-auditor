@@ -1,0 +1,4 @@
+[
+  "tests/test_semantic_claims.py::test_semantic_math_is_checked_by_real_lean[2*((6-x)+x)-12-verified-6-student_lean]",
+  "tests/test_semantic_claims.py::test_semantic_math_is_checked_by_real_lean[2*((6-x)+x)+1-12-refuted-0-student_lean]"
+]
