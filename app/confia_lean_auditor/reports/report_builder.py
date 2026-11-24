@@ -285,7 +285,13 @@ def _build_rubric_evidence_items(
         if evidence and evidence in checked_evidence_texts:
             continue
 
-        if item.scoring_basis == "secondary_adjudication":
+        if item.scoring_basis == "semantic_fallback":
+            result = "pontuação sugerida"
+            reliability = "avaliação semântica, sem certificação formal"
+            evidence = " | ".join(item.scoring_evidence)
+            explanation = (f"Sugestão semântica pela rubrica: {item.suggested_points:g} de {item.max_points:g}. "
+                           f"{item.scoring_rationale}")
+        elif item.scoring_basis == "secondary_adjudication":
             result = "pontuação sugerida"
             reliability = "confiabilidade baixa"
             evidence = " | ".join(item.scoring_evidence)

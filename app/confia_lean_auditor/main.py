@@ -387,7 +387,7 @@ def execute_audit(req: AuditRequest) -> AuditResponse:
 
     from confia_lean_auditor.rubric.secondary_adjudicator import artifact_trace
     atomic_write(artifact_dir / "secondary_adjudication.json",
-        json.dumps(artifact_trace(rubric), ensure_ascii=False, indent=2).encode("utf-8"))
+        json.dumps(rubric.secondary_adjudication if rubric.scoring_policy == "semantic-b-minimal.v1" else artifact_trace(rubric), ensure_ascii=False, indent=2).encode("utf-8"))
 
     # The result is the publication marker, after all referenced files exist.
     atomic_write(artifact_dir / "audit.json", response.model_dump_json(indent=2).encode("utf-8"))

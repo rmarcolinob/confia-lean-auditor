@@ -8,6 +8,10 @@ import pytest
 @pytest.fixture(autouse=True)
 def legacy_protocol_mode(monkeypatch, tmp_path):
     monkeypatch.setenv("CONFIA_AUTH_ENABLED", "0")
+    # Historical suites pin their policy; new integration tests opt into v1.
+    monkeypatch.setenv("CONFIA_SPECIALIZED_POLICY", "legacy")
+    monkeypatch.setenv("CONFIA_DYNAMIC_POLICY", "legacy")
+    monkeypatch.delenv("CONFIA_SEMANTIC_LLM_ENABLED", raising=False)
     monkeypatch.setenv("CONFIA_TEACHER_DECISIONS_DIR", str(tmp_path / "teacher_decisions"))
     # Unit/protocol tests never spend real API credits. Scoring-policy tests inject
     # an explicit adjudicator; unavailable-provider tests exercise the null path.

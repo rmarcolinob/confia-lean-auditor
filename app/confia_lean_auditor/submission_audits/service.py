@@ -89,6 +89,10 @@ class AuditService:
             from confia_lean_auditor.tme.accepted_audit import audit_context
             source = source.model_copy(update={"tme_context": audit_context(source.problem_id, self.tme_use_lean)})
             source = source.model_copy(update={"source_hash": source_digest(source)})
+        if not source.dynamic_context:
+            from confia_lean_auditor.semantic_policy.service import configuration
+            source = source.model_copy(update={"scoring_context": configuration()})
+            source = source.model_copy(update={"source_hash": source_digest(source)})
         return source
 
     @staticmethod

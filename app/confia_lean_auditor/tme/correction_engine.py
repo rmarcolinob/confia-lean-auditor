@@ -212,10 +212,12 @@ def project_result(result, run, case):
         refs = {ref for o in obligations for ref in o.evidence_refs}
         children = selected_children(decision)
         status = "technical_error" if decision.status == "technical_error" else "indeterminate" if decision.needs_review else "supported" if decision.fully_satisfied else "refuted"
+        semantic = [o for o in obligations if o.metadata.get('semantic_fallback')]
+        reason = " ".join(o.metadata['semantic_fallback'].get('response',{}).get('justification','Revisão pendente.') for o in semantic) or decision.reason
         return dict(rubric_item_id=decision.item_id, label=rules[decision.item_id].description or fallback_label or f"Item ({decision.item_id})",
             max_points=float(decision.max_points), suggested_points=float(decision.points_awarded) if decision.points_awarded is not None else None,
-            status=decision.status, display_status=status, status_label=LABELS[status], review_required=decision.needs_review,
-            reason=decision.reason, evidence_ids=ids,
+            status=decision.status, display_status=status, status_label="Avaliação semântica · sem certificação formal" if semantic else LABELS[status], review_required=decision.needs_review,
+            reason=reason, evidence_ids=ids,
             checker_ids=[c["checker_id"] for c in checks if c["trace_reference"] in refs],
             evidence_references=list(decision.evidence_refs), known_points=float(decision.known_points), possible_points=float(decision.possible_points),
             carry_forward_applied=decision.carry_forward_applied,

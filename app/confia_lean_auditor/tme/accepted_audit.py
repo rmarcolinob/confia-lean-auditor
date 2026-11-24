@@ -29,13 +29,14 @@ def audit_context(problem_id, use_lean):
     # a new identity. Read old runs with THEIR persisted version, never today's.
     app = ROOT / 'app/confia_lean_auditor'
     paths = set()
-    for directory in ('tme', 'claims', 'student_claims', 'lean', 'core/math_canonical', 'rubric/pauta', 'submission_audits'):
+    for directory in ('tme', 'claims', 'student_claims', 'lean', 'core/math_canonical', 'rubric/pauta', 'submission_audits', 'semantic_policy'):
         paths.update((app / directory).rglob('*.py'))
     paths.update(p for p in (ROOT / 'lean-toolchain', ROOT / 'lake-manifest.json', ROOT / 'pyproject.toml') if p.is_file())
     version = hashlib.sha256()
     for path in sorted(paths):
         version.update(str(path.relative_to(ROOT)).encode()); version.update(path.read_bytes())
-    return TMEAuditContext(auditor_version='tme-integration.v1:' + version.hexdigest(),
+    from confia_lean_auditor.semantic_policy.service import specialized_policy
+    return TMEAuditContext(semantic_policy=specialized_policy(), auditor_version='tme-integration.v1:' + version.hexdigest(),
         pauta_version=config.schema_version, pauta_sha256=config_digest(config), use_lean=use_lean)
 
 
@@ -103,6 +104,12 @@ def audit_accepted_tme_transcription(source, output_dir):
     solution_id = 'accepted-' + hashlib.sha256(json.dumps(solution, sort_keys=True, ensure_ascii=False).encode()).hexdigest()
     bridge, assessment = audit_tme(source.problem_id, solution, solution_id=solution_id,
         use_lean=source.tme_context.use_lean)
+    if source.tme_context.semantic_policy == 'semantic-b-minimal.v1':
+        from confia_lean_auditor.semantic_policy.tme import apply
+        from confia_lean_auditor.core.problem_catalog import list_tme_problem_catalog
+        catalog = list_tme_problem_catalog(ROOT)
+        statement = next((p.get('statement','') for p in catalog if p.get('id')==source.problem_id), config.title)
+        bridge, assessment = apply(config, bridge, source.solution_text, statement)
     if any(path.is_symlink() for path in (output_dir, *output_dir.parents)):
         raise SourceIntegrityError()
     output_dir.mkdir(parents=True, exist_ok=False)

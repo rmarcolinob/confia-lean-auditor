@@ -52,12 +52,14 @@ class AuditSource(SubmissionModel):
     provenance: AuditProvenance
     warnings: list[ConversionWarning] = Field(default_factory=list)
 
+    scoring_context: Optional[dict] = None
     tme_context: Optional[TMEAuditContext] = None
     dynamic_context: Optional[DynamicGradingContext] = None
 
     @model_serializer(mode="wrap")
     def preserve_legacy_shape(self, handler):
         data = handler(self)
+        if "scoring_context" not in self.model_fields_set: data.pop("scoring_context", None)
         if "tme_context" not in self.model_fields_set:
             data.pop("tme_context", None)
         if "dynamic_context" not in self.model_fields_set: data.pop("dynamic_context",None)

@@ -214,6 +214,18 @@ function renderRubricSection(data) {
       ? `Pontos decididos: ${format(item.points)} / ${format(item.max_points)}`
       : `Pontos decididos: Indeterminado · Máximo: ${format(item.max_points)}`);
     appendTextElement(card, "p", "audit-status", `Status matemático: ${mathematicalLabels[item.mathematical_status] || "Não registrado"}`);
+    const semanticTrace = data.rubric_assessment?.secondary_adjudication?.criteria?.[item.id];
+    if (semanticTrace?.decision === "review") {
+      appendTextElement(card, "p", "audit-status", semanticTrace.error_type
+        ? "Avaliação semântica: falha técnica · nota pendente."
+        : "Avaliação semântica: revisão necessária · nota pendente.");
+      if (semanticTrace.response?.justification) mathText(card, "p", "", semanticTrace.response.justification);
+    }
+    if (item.scoring_basis === "semantic_fallback") {
+      appendTextElement(card, "p", "audit-points", `Sugestão semântica: ${format(item.suggested_points)} / ${format(item.max_points)} · Sem certificação formal`);
+      mathText(card, "p", "", item.scoring_rationale || "");
+      for (const quote of item.scoring_evidence || []) mathText(card, "blockquote", "evidence-quote", quote);
+    }
     const evidence = evidenceFor(data, item);
     mathText(card, "p", "evidence-quote", evidence ? `Evidência: ${evidence}` : "Evidência: não identificada no resultado desta análise.");
     if (item.assessment_note) mathText(card, "p", "", `${isDecided(item) ? "Justificativa" : "Motivo"}: ${item.assessment_note}`);

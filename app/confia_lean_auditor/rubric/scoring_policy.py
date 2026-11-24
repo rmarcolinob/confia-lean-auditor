@@ -15,6 +15,13 @@ UNSCORABLE_REASONS = {"EMPTY_SOLUTION", "INVALID_RUBRIC", "ADJUDICATOR_UNAVAILAB
 
 def apply_scoring_policy(*, rubric, solution, assets, claim_extraction,
                          microclaims, student_claim_checks, technical_issue=False, claim_context=None):
+    from confia_lean_auditor.semantic_policy.service import specialized_policy
+    if specialized_policy() != 'legacy':
+        from confia_lean_auditor.semantic_policy.ita import apply
+        return apply(rubric=rubric, solution=solution, assets=assets,
+            claim_extraction=claim_extraction, microclaims=microclaims,
+            student_claim_checks=student_claim_checks, technical_issue=technical_issue,
+            claim_context=claim_context)
     refresh_assessment(rubric)
     rubric.scoring_policy = POLICY
     rubric.coverage = rubric.evaluated_max_score / rubric.max_score if rubric.max_score > 0 else 0.0

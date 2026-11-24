@@ -98,7 +98,7 @@ class RubricItemResult(ScoringCompatibleModel):
     assessment_note: Optional[str] = None
     verified_points: Optional[float] = None
     suggested_points: Optional[float] = None
-    scoring_basis: Optional[Literal["first_pass", "secondary_adjudication", "unscorable"]] = None
+    scoring_basis: Optional[Literal["first_pass", "secondary_adjudication", "semantic_fallback", "unscorable"]] = None
     scoring_evidence: List[str] = Field(default_factory=list)
     scoring_rationale: Optional[str] = None
     positive_evidence: Optional[Dict[str, Any]] = None
@@ -113,7 +113,7 @@ class RubricAssessment(ScoringCompatibleModel):
     assessment_status: Literal["complete", "partial", "indeterminate"] = "complete"
     evaluated_score: float = 0.0
     evaluated_max_score: float = 0.0
-    scoring_policy: Optional[Literal["SCORE-POLICY-02"]] = None
+    scoring_policy: Optional[Literal["SCORE-POLICY-02", "semantic-b-minimal.v1"]] = None
     coverage: Optional[float] = None
     estimated_points: Optional[float] = None
     needs_review: Optional[bool] = None
@@ -172,7 +172,7 @@ class PedagogicalReport(ScoringCompatibleModel):
     assessment_status: Literal["complete", "partial", "indeterminate"] = "complete"
     evaluated_score: float = 0.0
     evaluated_max_score: float = 0.0
-    scoring_policy: Optional[Literal["SCORE-POLICY-02"]] = None
+    scoring_policy: Optional[Literal["SCORE-POLICY-02", "semantic-b-minimal.v1"]] = None
     coverage: Optional[float] = None
     estimated_points: Optional[float] = None
     needs_review: Optional[bool] = None
@@ -198,7 +198,7 @@ class AuditResponse(ScoringCompatibleModel):
     pedagogical_report: Optional[PedagogicalReport] = None
     artifact_dir: Optional[str] = None
     reproducibility: Optional[ReproducibilityMetadata] = None
-    scoring_policy: Optional[Literal["SCORE-POLICY-02"]] = None
+    scoring_policy: Optional[Literal["SCORE-POLICY-02", "semantic-b-minimal.v1"]] = None
     evaluated_score: Optional[float] = None
     evaluated_max_score: Optional[float] = None
     coverage: Optional[float] = None

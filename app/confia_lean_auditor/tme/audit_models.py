@@ -1,6 +1,6 @@
 """Persisted TME result, embedding the unmodified mathematical contracts."""
 from typing import Literal, Optional
-from pydantic import BaseModel, ConfigDict, computed_field, model_validator
+from pydantic import BaseModel, ConfigDict, computed_field, model_validator, model_serializer
 from confia_lean_auditor.rubric.pauta.models import PautaAssessment, PautaConfig
 from confia_lean_auditor.rubric.pauta.bridge import PautaBridgeResult
 
@@ -9,6 +9,14 @@ PUBLIC_PROBLEMS = {f'TME2026P{n}': ('TME2_P1_PILOT' if n == 1 else f'TME2026P{n}
 
 class TMEAuditContext(BaseModel):
     model_config = ConfigDict(extra='forbid', frozen=True)
+    semantic_policy: Optional[Literal['legacy', 'semantic-b-minimal.v1']] = None
+
+    @model_serializer(mode='wrap')
+    def legacy(self, handler):
+        data=handler(self)
+        if 'semantic_policy' not in self.model_fields_set: data.pop('semantic_policy',None)
+        return data
+
     auditor_version: str
     pauta_version: str
     pauta_sha256: str
@@ -34,6 +42,8 @@ class TMEAuditResult(BaseModel):
     @computed_field
     @property
     def score(self) -> Optional[float]:
+        if self.context.semantic_policy == 'semantic-b-minimal.v1' and any(i.status != 'decided' for i in self.assessment.items):
+            return None  # known/possible points remain in the unchanged PautaAssessment
         return float(self.assessment.score) if self.assessment.score is not None else None
 
     @computed_field
@@ -60,7 +70,9 @@ class TMEAuditResult(BaseModel):
             if value.get('schema_version') not in (None, 'tme-audit-result.v1') or 'assessment' not in value:
                 raise ValueError('Not a TME result')
             a = PautaAssessment.model_validate(value['assessment'])
-            expected = dict(score=float(a.score) if a.score is not None else None,
+            context = TMEAuditContext.model_validate(value.get('context'))
+            pending = context.semantic_policy == 'semantic-b-minimal.v1' and any(i.status != 'decided' for i in a.items)
+            expected = dict(score=float(a.score) if a.score is not None and not pending else None,
                             max_score=float(a.max_score), needs_review=a.needs_review,
                             verdict='inconclusivo' if a.needs_review else 'concluido')
             for key, expected_value in expected.items():
@@ -73,7 +85,9 @@ class TMEAuditResult(BaseModel):
         from confia_lean_auditor.rubric.pauta.engine import PautaEngine
         if PUBLIC_PROBLEMS.get(self.problem_id) != self.pauta.problem_id:
             raise ValueError('TME problem binding mismatch')
-        if self.assessment != PautaEngine().evaluate(self.pauta, self.bridge.evidence):
+        from confia_lean_auditor.semantic_policy.tme import policy_for
+        if self.assessment != PautaEngine().evaluate(self.pauta, self.bridge.evidence,
+                evidence_policy=policy_for(self.context.semantic_policy)):
             raise ValueError('TME assessment binding mismatch')
         if (self.context.pauta_sha256 != self.assessment.config_sha256
                 or self.context.pauta_version != self.assessment.pauta_version
