@@ -16,6 +16,8 @@
     <link rel="stylesheet" href="/static/platform.css?v=teacher-02">
     <link id="teacher-home-styles" rel="stylesheet" href="/static/tme/home.css?v=teacher-02" media="not all">
     <link rel="stylesheet" href="/static/teacher-presentation.css?v=teacher-02">
+    <link id="platform-home-styles" rel="stylesheet" href="/static/tme/home.css?v=teacher-02" media="not all">
+    <link rel="stylesheet" href="/static/platform-presentation.css?v=platform-03">
   </head>
   <body>
     <div id="confia-surface">
@@ -32,6 +34,7 @@
       <details class="home-avatar"><summary id="teacher-avatar" aria-label="Perfil e recursos do professor"></summary><div class="home-session-menu">
         <p id="teacher-modern-session">Área do professor</p>
         <nav aria-label="Recursos docentes">
+          <a href="#platform/home" data-shell-link>Início da plataforma</a>
           <a href="#teacher/exams" data-shell-link>Atividades da turma</a>
           <a href="#teacher/students" data-shell-link>Alunos e turmas</a>
           <a href="#teacher/submissions" data-shell-link>Soluções recebidas</a>
@@ -47,6 +50,16 @@
       </div></details>
     </header>
     <nav id="teacher-bottom-nav" class="home-bottom-nav" aria-label="Navegação do Professor" hidden></nav>
+    <header id="platform-header" class="home-header" hidden>
+      <a class="home-brand" href="#platform/home" data-shell-link><strong>ConfIA</strong><span id="platform-brand-context">Matemática com confiança</span></a>
+      <nav id="platform-navigation" class="home-bottom-nav" aria-label="Navegação do módulo"></nav>
+      <details class="home-avatar"><summary id="platform-avatar" aria-label="Sessão e navegação geral"></summary>
+        <div class="home-session-menu"><p id="platform-session"></p>
+          <nav aria-label="Navegação geral"><a href="#platform/home" data-shell-link>Início da plataforma</a></nav>
+          <button id="platform-logout" type="button" hidden>Encerrar sessão</button>
+        </div>
+      </details>
+    </header>
     <header class="institutional-header">
       <a class="brand" href="#student/home" data-shell-link aria-label="ConfIA — início">
         <span class="brand-mark" aria-hidden="true">C<span>IA</span></span>
@@ -101,6 +114,7 @@
           <h1 id="page-title" class="page-title" tabindex="-1">Início</h1>
           <p id="page-description" class="page-description">Um espaço para resolver, compreender e conferir sua solução matemática.</p>
         </div>
+      <section id="platform-home" aria-label="Início da plataforma" hidden></section>
       <section id="student-area" class="tab-panel is-active" aria-label="Área do Aluno">
         <section id="student-home" class="home-panel">
           <div class="welcome-card card">
@@ -483,14 +497,15 @@
     <script src="/static/submissions/decisions.js?v=ux-pro-01"></script>
     <script src="/static/submissions/teacher.js?v=audit-01"></script>
     <script src="/static/assessments.js?v=ux-pro-01"></script>
-    <script src="/static/management.js?v=p2-dec-01"></script>
+    <script src="/static/management.js?v=platform-03"></script>
     <script src="/static/demo/tutoria-demo-data.js?v=tutoria-contextual-final-01"></script>
     <script src="/static/demo/tutoria-chat-demo.js?v=tutoria-contextual-final-01"></script>
     <script src="/static/tutoria-chat.js?v=tutoria-contextual-final-01"></script>
     <script src="/static/tutoria.js?v=tutoria-contextual-final-01"></script>
     <script src="/static/tutoria-assistant.js?v=tutoria-contextual-final-01"></script>
-    <script src="/static/tme/home.js?v=teacher-02"></script>
+    <script src="/static/tme/home.js?v=platform-03"></script>
+    <script src="/static/platform-presentation.js?v=platform-03"></script>
     <script src="/static/teacher-presentation.js?v=teacher-02"></script>
-    <script src="/static/shell.js?v=teacher-02"></script>
+    <script src="/static/shell.js?v=platform-03"></script>
   </body>
 </html>

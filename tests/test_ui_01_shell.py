@@ -145,7 +145,7 @@ def test_notebook_logical_geometry_and_input_surface_remain_owned_by_capture():
 
 
 def test_central_product_vocabulary_is_preserved_without_contract_renames():
-    source = '\n'.join((STATIC / path).read_text() for path in ('app.js', 'submissions/teacher.js', 'capture/tablet.js'))
+    source = '\n'.join((STATIC / path).read_text() for path in ('app.js', 'submissions/teacher.js', 'capture/tablet.js', 'audit-view.js', 'resolution-workspace.js'))
     for phrase in ('Análise ConfIA', 'Solução enviada', 'Transcrição', 'Transcrição conferida', 'Recebida pelo ConfIA',
                    'Verificação formal com Lean', 'Critérios de avaliação', 'Número do envio'):
         assert phrase in source

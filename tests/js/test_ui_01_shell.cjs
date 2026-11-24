@@ -11,7 +11,7 @@ const submissionId = "sub_" + "a".repeat(32);
 const record = { submission_id: submissionId, problem_id: "ITA2025Q1", snapshot_id: "snapshot:test",
   received_at: "2026-10-03T12:00:00Z", status: "RECEIVED", source: "tablet", capture_schema_version: "1.0",
   page_images: [{ filename: "page_1.png", page_index: 0 }] };
-async function page({ hash = "", search = "", records = [], authRole = null, teacherReview = false,
+async function page({ platformPresentation = false, hash = "", search = "", records = [], authRole = null, teacherReview = false,
   contextSchools = [{ school_id: 'school-a', name: 'Escola A' }],
   classroomsBySchool = { 'school-a': [{ classroom_id: 'class-a', school_id: 'school-a', name: 'Turma A' }] },
   recordsByClass = null, assessmentsByClass = {}, studentsByClass = {},
@@ -56,6 +56,7 @@ async function page({ hash = "", search = "", records = [], authRole = null, tea
   const body = { classList: { contains: value => bodyClasses.has(value), remove: value => bodyClasses.delete(value) } };
   const history = Object.fromEntries(['pushState', 'replaceState'].map(method => [method, (_a, _b, url) => { location.hash = url; }]));
   const window = { addEventListener: (name, handler) => { events[name] = handler; } };
+  if (platformPresentation) window.ConfIAPlatformPresentation = {show(profile,view) { window.presented = {profile,view}; }};
   const context = vm.createContext({ document: { body,
     querySelector: get, createElement: create,
     querySelectorAll: selector => ({ '[data-tab-target]': tabs, '.tab-panel': panels, '[data-student-mode]': modes,
@@ -395,4 +396,36 @@ test('teacher cross-page modes preserve edits and cannot grant another role acce
  const student=await page({authRole:'STUDENT'});blocked=false;
  await student.workspaceLinks[0].emit('click',{preventDefault(){blocked=true;}});assert(blocked);
  assert.equal(student.location.hash,'#student/home');
+});
+
+
+test('platform entry is neutral and authenticated module navigation keeps server role restrictions',async()=>{
+ for(const role of ['STUDENT','TEACHER','SCHOOL_MANAGER','NETWORK_MANAGER']) {
+  const ui=await page({platformPresentation:true,authRole:role});
+  assert.equal(ui.location.hash,'#platform/home');
+  assert.equal(ui.window.ConfIAShell.current.profile,'platform');
+  for(const id of ['student-area','teacher-area','management-area']) assert.equal(ui.get('#'+id).hidden,true);
+  ui.window.ConfIAShell.navigate('teacher','home');
+  const authorized={STUDENT:'student',TEACHER:'teacher',SCHOOL_MANAGER:'management',NETWORK_MANAGER:'management'}[role];
+  assert.equal(ui.window.ConfIAShell.current.profile,authorized);
+  ui.window.ConfIAShell.navigate('platform','home');
+  assert.equal(ui.location.hash,'#platform/home');
+  assert.equal(ui.get('#auth-logout').hidden,false);
+ }
+});
+test('entry preserves bookmarks and capture destinations and supports hash history',async()=>{
+ const direct=await page({platformPresentation:true,hash:'#teacher/submissions'});
+ assert.equal(direct.location.hash,'#teacher/submissions');
+ const capture=await page({platformPresentation:true,search:'?area=teacher'});
+ assert.equal(capture.location.hash,'#teacher/submissions');
+ const ui=await page({platformPresentation:true});assert.equal(ui.location.hash,'#platform/home');
+ ui.location.hash='#student/tutoria';await ui.events.hashchange();assert.equal(ui.window.ConfIAShell.current.view,'tutoria');
+ ui.location.hash='#platform/home';await ui.events.hashchange();assert.equal(ui.window.ConfIAShell.current.profile,'platform');
+});
+test('returning to platform entry cannot bypass the unsaved teacher edit guard',async()=>{
+ const ui=await page({platformPresentation:true,hash:'#teacher/submissions'});
+ ui.window.ConfIATeacher.canLeave=()=>false;
+ assert.equal(ui.window.ConfIAShell.navigate('platform','home'),false);
+ assert.equal(ui.location.hash,'#teacher/submissions');
+ assert.equal(ui.window.ConfIAShell.current.profile,'teacher');
 });

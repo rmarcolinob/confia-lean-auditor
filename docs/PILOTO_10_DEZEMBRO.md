@@ -20,6 +20,8 @@ O armazenamento padrão é `runtime/pilot-dec10`, isolado dos outros ambientes.
 Use `--data-dir CAMINHO` para outra base. O servidor é uma demonstração local,
 sem autenticação, restrita a `127.0.0.1`; não é um comando de implantação pública.
 
+- `/` e `/#platform/home`: entrada geral, com os três módulos e identificação
+  explícita da demonstração local ou da sessão institucional.
 - `/#teacher/home`: área do Professor, com SPECIALIZED, DYNAMIC, fila,
   resultados e os acessos institucionais existentes.
 - `/tme?view=new`: seleção SPECIALIZED / DYNAMIC, com retorno à área do Professor.
@@ -44,8 +46,9 @@ A página `/#teacher/home` monta o próprio `ConfiaTmeHome.TmeHome`, com seis
 atalhos docentes. Cabeçalho, ícones, CTA, cards, métricas, fila, progresso,
 carregamento e erro reutilizam `tme/home.js` e `tme/home.css`. O resumo usa o
 GET já existente `/tme/home-summary`; falha de carregamento não vira contagem zero.
-A folha de estilos do TME é ativada somente no Professor para preservar a
-geometria do caderno, TutorIA e Gestão.
+A folha de estilos do TME é ativada pelo adaptador do Professor. A entrada,
+o Aluno e a Gestão reutilizam a mesma folha por um adaptador separado, descrito
+abaixo, preservando a geometria do caderno e do assistente.
 
 A barra lateral anterior fica oculta no Professor. Recursos complementares
 permanecem no menu do cabeçalho; os seletores de escola/turma continuam nas
@@ -68,6 +71,67 @@ integração SPECIALIZED/DYNAMIC e acessibilidade). As duas verificações antig
 que proibiam a palavra “Professor” no HTML foram atualizadas para admitir o
 link de retorno e continuar proibindo seleção de perfil/login na tela demo.
 Nenhuma chamada paga foi realizada.
+
+## Unidade visual da entrada, Aluno e Gestão
+
+A apresentação aprovada do Professor (`1545955`) permanece como referência.
+`platform-presentation.js` reutiliza os componentes reais `QuickActions`,
+`HeroIllustration`, ícones e classes do TME². `platform-presentation.css`
+adapta os três novos contextos com os tokens existentes; seus seletores não
+atingem o Professor. O Professor e `/tme` receberam apenas o link de retorno
+à entrada geral. Seus componentes, apresentação e lógica não foram reconstruídos.
+
+A entrada tem três cartões de acesso. Em sessão institucional, somente o
+cartão do perfil autorizado fica habilitado; no login, os cartões levam o foco
+ao formulário existente. A escolha nunca atribui um perfil. Login, logout,
+restrições de rota, contratos e regras do servidor continuam os existentes.
+
+O Aluno conserva os nós de identificação e vínculo institucional, o TutorIA,
+atividades, submissões e todo o workspace de resolução. Durante a escrita, a
+navegação do módulo fica oculta e o cabeçalho compacto; o caderno e a reserva
+de espaço para o assistente mantêm seus próprios controles de dimensão.
+A Gestão mostra o painel existente também no início, com os mesmos indicadores,
+consultas, tabelas e detalhamento de escola/turma. Sem sessão autorizada, mostra
+a indisponibilidade em vez de deixar uma mensagem permanente de carregamento.
+
+Validação visual em 24/11/2026, desktop (1280 px) e celular (390 px): entrada,
+Professor preservado, Aluno, Gestão, navegação e retorno ao início. Também foram
+verificados os links diretos, TutorIA, seleção de questão, enunciado recolhível,
+adição de página no caderno e preservação da página em andamento após sair e
+voltar ao módulo. No desktop, o TutorIA lateral não sobrepôs a área de escrita.
+
+Para conferir os indicadores e permissões com dados reais do servidor, foi
+usada uma instância autenticada temporária em `127.0.0.1:8011`, com base isolada
+de teste (uma escola, uma turma, um aluno e um professor). As capturas da Gestão
+mostram esses registros de teste e contagens calculadas pelo backend existente;
+nenhum indicador foi inventado no frontend nem inserido no piloto. Foram
+verificados o detalhamento institucional, o bloqueio de outro perfil e o logout.
+Essa instância foi encerrada após a inspeção. O piloto em `8010` continua sem
+sessão institucional: o acesso aos dados protegidos depende de autenticação.
+
+Regressão: **582 testes JavaScript aprovados e 65 casos Python relevantes
+aprovados**. Na primeira execução Python, dois testes falharam: o texto estático
+completo da marca no login foi restaurado e a verificação de vocabulário passou
+a incluir os arquivos onde o relatório já era renderizado. A reexecução dos dois
+arquivos afetados aprovou seus 14 casos; os outros 51 já haviam passado.
+Não houve alteração de correção, rubricas, pontuação, persistência ou autenticação,
+nem chamadas pagas ou execução de inferência na validação visual.
+
+Capturas e logs locais: `artifacts/integration-checks/platform-visual-v3/`.
+As imagens principais são `inicio-desktop.jpg`, `professor-desktop.jpg`,
+`aluno-desktop.jpg` e `gestao-desktop.jpg`. Há também a Gestão completa, versões
+móveis e capturas do caderno com TutorIA.
+
+Arquivos desta etapa (relativos à raiz do worktree):
+
+- `app/confia_lean_auditor/static/platform-presentation.js` e `.css` (novos);
+- `app/confia_lean_auditor/static/index.html`, `login.html` e `auth.css`;
+- `app/confia_lean_auditor/static/shell.js` e `management.js`;
+- `app/confia_lean_auditor/static/tme/home.js` (exportação de componentes
+  existentes) e `tme/index.html` (retorno à entrada);
+- `tests/js/test_platform_presentation.cjs` (novo),
+  `tests/js/test_ui_01_shell.cjs` e `tests/test_ui_01_shell.py`;
+- `docs/PILOTO_10_DEZEMBRO.md`.
 
 ## Providers e estados
 

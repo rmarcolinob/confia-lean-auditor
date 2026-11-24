@@ -85,15 +85,37 @@
       visible("teacher-text-prototype", false);
     }
     visible("management-home", profile === "management" && view === "home");
-    visible("management-overview", profile === "management" && view === "overview");
-    if (profile === "management" && view === "overview") window.ConfIAManagement?.load();
+    visible("management-overview", profile === "management" && ["home", "overview"].includes(view));
+    if (profile === "management" && ["home", "overview"].includes(view)) window.ConfIAManagement?.load();
     window.ConfIATeacherPresentation?.show(profile, view);
+    window.ConfIAPlatformPresentation?.show(profile, view);
     document.title = `ConfIA — ${config.views[view][0]}`;
     window.ConfIATutoriaAssistant?.sync();
-    if (focus) (profile === "teacher" && view === "home" ? document.querySelector("#teacher-home h1") || title : title).focus();
+    if (focus) (view === "home" ? document.querySelector(`#${profile}-home h1`) || title : title).focus();
   }
 
+  // The platform entry is a neutral presentation route, never a granted role.
+  function platformHome({focus = true, historyMode = "push"} = {}) {
+    if (authMode && !authenticatedProfile) return false;
+    if (window.ConfIATeacher?.canLeave() === false) {
+      history.replaceState(null, "", `#${current.profile}/${current.view}`);
+      document.querySelector("#manuscript-message").focus();
+      return false;
+    }
+    current = {profile: "platform", view: "home"};
+    for (const profile of Object.values(profiles)) visible(profile.area, false);
+    refreshStudent();
+    window.ConfIATutoria?.show("");
+    window.ConfIATeacherPresentation?.show("platform", "home");
+    window.ConfIAPlatformPresentation.show("platform", "home");
+    window.ConfIATutoriaAssistant?.sync();
+    document.title = "ConfIA — Matemática com confiança";
+    if (location.hash !== "#platform/home") history[historyMode === "replace" ? "replaceState" : "pushState"](null, "", "#platform/home");
+    if (focus) document.querySelector("#platform-home h1")?.focus();
+    return true;
+  }
   function navigate(profile, view, { focus = true, historyMode = "push" } = {}) {
+    if (profile === "platform" && view === "home" && window.ConfIAPlatformPresentation) return platformHome({focus, historyMode});
     if (authMode && !authenticatedProfile) return false;
     if (authMode && profile !== authenticatedProfile) { profile = authenticatedProfile; view = "home"; }
     if (authMode && profile === "student" && view === "resolve") view = "tutoria/practice";
@@ -153,6 +175,7 @@
     const [hashProfile, ...parts] = location.hash.slice(1).split("/");
     const hashView = parts.join("/");
     const fromCapture = new URLSearchParams(location.search).get("area") === "teacher";
+    if ((!location.hash || location.hash === "#platform/home") && !fromCapture && window.ConfIAPlatformPresentation) { platformHome({focus:false, historyMode:"replace"}); return; }
     const initialView = authMode && authenticatedProfile === "management" ? "overview" : "home";
     navigate(hashProfile || (authMode ? authenticatedProfile : (fromCapture ? "teacher" : "student")),
       hashView || (!authMode && fromCapture ? "submissions" : initialView),

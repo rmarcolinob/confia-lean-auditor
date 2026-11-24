@@ -113,7 +113,7 @@
     else n.append(OverviewMetrics(summary.counts,period,changePeriod),PriorityQueue(summary.priority_cases,navigate,open),ExamProgress(summary.exam_progress,navigate));
     return n;
   }
-  const api={icon,status,TmeHome,HomeHeader,MobileBottomNav,PriorityCaseRow,StatusPill,MetricCard,OverviewMetrics,PrimaryCorrectionCTA};
+  const api={QuickActions,HeroIllustration,icon,status,TmeHome,HomeHeader,MobileBottomNav,PriorityCaseRow,StatusPill,MetricCard,OverviewMetrics,PrimaryCorrectionCTA};
   if(typeof module!=='undefined' && module.exports) module.exports=api;
   root.ConfiaTmeHome=api;
 })(typeof window==='undefined'?globalThis:window);
