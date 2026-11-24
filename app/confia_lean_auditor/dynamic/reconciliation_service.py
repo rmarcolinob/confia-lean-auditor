@@ -244,7 +244,11 @@ class ReconciliationService:
         if review.phase_a and review.phase_a.warnings:
             reasons.extend(review.phase_a.warnings)
         total = sum((c.reconciled_points for c in criteria), Decimal(0))
-        old = Decimal(str(run.result.score))
+        old = (Decimal(str(run.result.score)) if run.result.score is not None else
+               sum((d.suggested_points for d in run.result.decisions), Decimal(0)))
+        from .semantic import enabled
+        if enabled(context) and any(c.status in {'REVIEW_REQUIRED', 'TECHNICAL_ERROR'} for c in criteria):
+            total = None
         completed = datetime.now(timezone.utc)
         events = [
             dict(
@@ -268,7 +272,7 @@ class ReconciliationService:
             )
             for c in criteria
         )
-        if total != old:
+        if total is not None and total != old:
             events.append(
                 dict(
                     event_type="reconciled_score_changed",
@@ -323,7 +327,8 @@ class ReconciliationService:
                 rubric_sha256=model_sha256(rubric),
                 statement_sha256=model_sha256(statement),
                 preparation_sha256=model_sha256(prep),
-                authority="source spans + exact local checks + approved obligations; never opinion consensus",
+                authority=("approved rubric + literal source evidence + blind semantic review; human confirmation, not formal certification"
+                           if enabled(context) else "source spans + exact local checks + approved obligations; never opinion consensus"),
                 code_content_sha256=canonical_sha256(
                     {
                         p.name: p.read_text()

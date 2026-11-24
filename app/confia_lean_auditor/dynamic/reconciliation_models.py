@@ -84,7 +84,7 @@ class DynamicReconciliation(Evidence):
     policy_version: Literal["dynamic-safe-automation.v1"] = POLICY_VERSION
     grader_score_snapshot: Points
     reviewer_score_snapshot: Optional[Points]
-    reconciled_suggested_score: Points
+    reconciled_suggested_score: Optional[Points]
     max_score: Points
     criteria: list[CriterionReconciliation]
     review_required: bool
@@ -104,7 +104,8 @@ class DynamicReconciliation(Evidence):
             raise ValueError("invalid criterion set")
         if (
             self.reconciled_suggested_score
-            != sum(c.reconciled_points for c in self.criteria)
+            != (None if self.context.semantic_policy and any(c.status in {'REVIEW_REQUIRED','TECHNICAL_ERROR'} for c in self.criteria)
+                else sum(c.reconciled_points for c in self.criteria))
             or self.grader_score_snapshot != sum(c.grader_points for c in self.criteria)
             or self.max_score != sum(c.max_points for c in self.criteria)
         ):

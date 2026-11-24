@@ -8,6 +8,14 @@ from confia_lean_auditor.submissions.schemas import SubmissionModel, Sha256
 
 
 class DynamicGradingContext(SubmissionModel):
+    semantic_policy: Optional[Literal['dynamic-semantic.v1']] = None
+
+    @model_serializer(mode='wrap')
+    def preserve_context(self, handler):
+        data=handler(self)
+        if 'semantic_policy' not in self.model_fields_set: data.pop('semantic_policy',None)
+        return data
+
     engine_mode: Literal["DYNAMIC"] = "DYNAMIC"
     problem_id: str
     package_id: str
@@ -74,11 +82,19 @@ class RubricBinding(SubmissionModel):
 
 
 class DynamicRubricDecision(SubmissionModel):
+    semantic_trace: Optional[dict] = None
+
+    @model_serializer(mode='wrap')
+    def preserve_decision(self, handler):
+        data=handler(self)
+        if 'semantic_trace' not in self.model_fields_set: data.pop('semantic_trace',None)
+        return data
+
     criterion_id: str
     description: str
     max_points: Decimal = Field(ge=0)
     suggested_points: Decimal = Field(ge=0)
-    automation: Literal["AUTO_AWARD", "AUTO_VETO", "REVIEW_ONLY"]
+    automation: Literal["AUTO_AWARD", "AUTO_VETO", "REVIEW_ONLY", "SEMANTIC_SUGGESTION"]
     sufficiency: Literal[
         "COMPLETE", "PARTIAL", "NOT_SATISFIED", "INSUFFICIENT", "CONFLICT"
     ]
@@ -119,8 +135,8 @@ class DynamicAuditResult(SubmissionModel):
     engine_mode: Literal["DYNAMIC"] = "DYNAMIC"
     problem_id: str
     context: DynamicGradingContext
-    score: float
-    suggested_score: float
+    score: Optional[float]
+    suggested_score: Optional[float]
     max_score: float
     review_required: bool
     verdict: str
@@ -141,7 +157,7 @@ class DynamicAuditResult(SubmissionModel):
         total = sum((d.suggested_points for d in self.decisions), Decimal(0))
         maximum = sum((d.max_points for d in self.decisions), Decimal(0))
         if (
-            float(total) != self.score
+            (None if any(d.semantic_trace and d.semantic_trace.get("decision")=="review" for d in self.decisions) else float(total)) != self.score
             or self.score != self.suggested_score
             or float(maximum) != self.max_score
         ):

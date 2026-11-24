@@ -23,6 +23,8 @@ def evaluator_actor(user):
 
 
 def resolve(problem_id, actor, allow_review=False, expected=None):
+    from confia_lean_auditor.semantic_policy.service import dynamic_policy, DYNAMIC_VERSION
+    semantic = (expected.semantic_policy == DYNAMIC_VERSION) if expected is not None else dynamic_policy() == DYNAMIC_VERSION
     store = dynamic_store()
     with store._locked():
         doc, _ = store._owned(problem_id, actor)
@@ -57,11 +59,12 @@ def resolve(problem_id, actor, allow_review=False, expected=None):
             or model_sha256(prep) != ref.preparation_sha256
         ):
             raise DynamicConflict("Versões de enunciado/preparação incompatíveis.")
-        if prep.status == "REVIEW_REQUIRED" and not allow_review:
+        if prep.status == "REVIEW_REQUIRED" and not allow_review and not semantic:
             raise DynamicConflict(
                 "Autorize explicitamente a correção provisória com preparação que exige revisão."
             )
         context = DynamicGradingContext(
+            **({"semantic_policy":DYNAMIC_VERSION} if semantic else {}),
             problem_id=problem_id,
             package_id=package.package_id,
             package_version=package.package_version,

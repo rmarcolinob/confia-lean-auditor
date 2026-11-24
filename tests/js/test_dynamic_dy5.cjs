@@ -52,3 +52,12 @@ test('Specialized never requests or renders Dynamic reconciliation',async()=>{
  const ui=await pilot({automatic:true,auditRun:{...run,result:{...run.result,engine_mode:undefined}}});await ui.click('Abrir');
  assert.doesNotMatch(text(ui.root),/Reconciliação ·/);assert(!ui.calls.some(c=>c.url.includes('reconciliations')||c.url.endsWith('/policy')));
 });
+
+test('pending semantic reconciliation is never displayed as zero or confirmable',async()=>{
+ const record=reconciled(true);record.reconciled_suggested_score=null;
+ record.technical_uncertainty=true;record.review_reasons=['Falha técnica; revisão pendente.'];
+ const ui=await dynamic({record});await ui.click('Abrir');
+ assert.match(text(ui.root),/Pontuação não determinada/);
+ assert.doesNotMatch(text(ui.root),/Sugestão reconciliada: 0/);
+ assert(!walk(ui.root).some(e=>e.tag==='button'&&e.textContent==='Finalizar correção'));
+});

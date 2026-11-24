@@ -2,7 +2,7 @@
 
 from datetime import datetime
 from typing import Literal, Optional
-from pydantic import Field, model_validator
+from pydantic import Field, model_validator, model_serializer
 from .preparation_models import Evidence, GenerationProvenance
 from .grading_models import DynamicGradingContext, StudentClaim
 from confia_lean_auditor.teacher_decisions.models import Points
@@ -64,6 +64,14 @@ class CriterionReview(Evidence):
 
 
 class IndependentPhase(Evidence):
+    semantic_reviews: Optional[dict] = None
+
+    @model_serializer(mode='wrap')
+    def preserve_phase(self, handler):
+        data=handler(self)
+        if 'semantic_reviews' not in self.model_fields_set: data.pop('semantic_reviews',None)
+        return data
+
     criterion_reviews: list[CriterionReview]
     claims: list[StudentClaim]
     additional_claims: list[StudentClaim]

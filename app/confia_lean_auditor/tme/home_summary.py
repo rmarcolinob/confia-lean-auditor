@@ -418,7 +418,7 @@ def rebuild_index():
         reconciliation=service.current(case,run.audit_run_id) if run and run.status=="COMPLETED" else None
         if reconciliation and entry["audit"]:
             entry["audit"]["grader_score"]=entry["audit"]["score"]
-            entry["audit"]["score"]=float(reconciliation["reconciled_suggested_score"])
+            entry["audit"]["score"]=(float(reconciliation["reconciled_suggested_score"]) if reconciliation["reconciled_suggested_score"] is not None else None)
             entry["audit"]["inconclusive"]=reconciliation["review_required"]
     with index.locked():
         if file_signature(index.path) != signature:

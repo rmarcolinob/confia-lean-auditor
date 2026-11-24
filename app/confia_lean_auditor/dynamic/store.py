@@ -180,6 +180,19 @@ class DynamicStore(AssessmentStore):
                 events=tuple(events), current_package_id=None)), digest)
 
     def save_rubric(self, identifier, request, actor, base_id=None, generation=None):
+        from confia_lean_auditor.semantic_policy.service import dynamic_policy, DYNAMIC_VERSION
+        if not generation and dynamic_policy() == DYNAMIC_VERSION:
+            with self._locked():
+                doc, _ = self._owned(identifier, actor)
+                self._expected(doc, request)
+                prep = self.latest_preparation(doc)
+            if not prep or prep.status == 'FAILED':
+                from .preparation import PreparationService
+                from .semantic import TeacherPreparationProvider
+                from .models import PreparationRequest
+                data = PreparationService(self, TeacherPreparationProvider()).start(identifier,
+                    PreparationRequest(expected_revision=request.expected_revision), actor)
+                request = request.model_copy(update={'expected_revision':data['revision']})
         with self._locked():
             document, digest = self._owned(identifier, actor)
             self._expected(document, request)
@@ -235,7 +248,12 @@ class DynamicStore(AssessmentStore):
             latest = self.latest_preparation(document)
             if rubric.preparation_reference and (not latest or latest.preparation_id != rubric.preparation_reference.preparation_id):
                 raise DynamicConflict('A rubrica usa uma preparação anterior. Gere uma nova sugestão ou forneça nova rubrica.')
+            from confia_lean_auditor.semantic_policy.service import dynamic_policy, DYNAMIC_VERSION
+            teacher_context = latest and latest.provenance and latest.provenance.provider == 'local_teacher_context'
             needs_review = any(w.requires_review for w in self.rubric_warnings(document, rubric))
+            if teacher_context and dynamic_policy() == DYNAMIC_VERSION:
+                needs_review = False  # approving their rubric is the explicit teacher action
+
             if needs_review and not getattr(request, 'acknowledge_warnings', False):
                 raise DynamicConflict('Revise e reconheça explicitamente os avisos antes de aprovar.')
             timestamp = now()

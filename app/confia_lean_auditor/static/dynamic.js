@@ -289,7 +289,7 @@
     message = n("p"); message.setAttribute("role", "status"); message.setAttribute("aria-live", "polite");
     list = n("div", null, "dynamic-problem-list"); detail = n("div");
     creation=n("section",null,"tme-panel dynamic-creation");
-    append(creation,n("h2","Dados da atividade"),n("p","Nesta etapa, prepare uma questão por vez, com título, enunciado e pontos. Tipos de atividade (lista, atividade ou prova) e agrupamento de questões serão integrados futuramente."),statementForm());
+    append(creation,n("h2","Dados da atividade"),n("p","Cadastre o enunciado e os pontos. Forneça sua rubrica ou gere uma sugestão para aprovar. Avaliações sem verificação exata são identificadas como semânticas e passam por revisão e reconciliação."),statementForm());
     const resume=n("details",null,"tme-panel dynamic-resume");append(resume,n("summary","Retomar preparação"),list);
     append(panel,button("Nova questão",newQuestion),resume,message,creation,detail);
     try {

@@ -15,7 +15,8 @@ test('Nova presents both routes in the existing shell; historical generic module
  const ui=await pilot({startHome:true});await walk(ui.root).find(n=>n.tag==='button' && walk(n).some(c=>c.textContent==='Nova correção')).click();await flush();
  assert.equal(ui.root.dataset.view,'new');assert.equal(ui.window.history.url,'/tme?view=new');
  assert.match(text(ui.root),/Avaliação preparada/);assert.match(text(ui.root),/Nova atividade ou prova/);
- assert.doesNotMatch(text(ui.root),/Gestão|Perfil de demonstração|SPECIALIZED|DYNAMIC/);
+ assert.doesNotMatch(text(ui.root),/Gestão|Perfil de demonstração/);
+ assert.match(text(ui.root),/SPECIALIZED/);assert.match(text(ui.root),/DYNAMIC/);
  await ui.click('Avaliação preparada');assert.match(text(ui.root),/Escrever no tablet/);
  assert.equal(ui.window.history.url,'/tme?view=new&mode=specialized');
  const staticDir=path.join(__dirname,'../../app/confia_lean_auditor/static');
@@ -46,7 +47,7 @@ test('unified creation → preparation → suggestion → edit → explicit appr
   return reply(saved);
  }});
  await walk(ui.root).find(n=>n.tag==='button' && walk(n).some(c=>c.textContent==='Nova correção')).click();await flush();await ui.click('Nova atividade ou prova');
- assert.match(text(ui.root),/uma questão por vez/);assert.equal(ui.window.history.url,'/tme?view=new&mode=dynamic');
+ assert.match(text(ui.root),/Forneça sua rubrica/);assert.equal(ui.window.history.url,'/tme?view=new&mode=dynamic');
  field(ui,'Título').value='Questão inédita';field(ui,'Enunciado').value='Resolva em R: x²-5x+6=0.';await submit(ui);
  assert.equal(ui.window.history.url,`/tme?view=new&mode=dynamic&problem_id=${pid}`);
  await ui.click('Preparar com ConfIA');assert.equal(writes.length,2);

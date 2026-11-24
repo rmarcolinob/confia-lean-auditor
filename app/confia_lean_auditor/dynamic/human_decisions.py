@@ -134,6 +134,8 @@ def decide(case, body, user):
         ):
             raise DynamicConflict("Sugestão mudou; confira a reconciliação corrente.")
         max_points = Decimal(reconciliation["max_score"])
+        if reconciliation["reconciled_suggested_score"] is None:
+            raise DynamicConflict("Nota pendente: resolva a revisão antes da confirmação.")
         suggestion = Decimal(reconciliation["reconciled_suggested_score"])
         if body.max_points != max_points or body.final_points > max_points:
             raise ValueError("invalid maximum/final score")
@@ -196,7 +198,7 @@ def project_current(case, reconciliation=None, confirmed=False):
         if a:
             a.setdefault("grader_score", a["score"])
             a["score"] = (
-                float(reconciliation["reconciled_suggested_score"])
+                (float(reconciliation["reconciled_suggested_score"]) if reconciliation["reconciled_suggested_score"] is not None else None)
                 if reconciliation
                 else a["grader_score"]
             )

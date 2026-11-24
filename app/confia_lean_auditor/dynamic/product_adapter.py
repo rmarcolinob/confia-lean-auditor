@@ -41,11 +41,15 @@ def project(result,run,case):
     for d in result.decisions:
         r=decisions.get(d.criterion_id)
         points=float(r['reconciled_points']) if r else float(d.suggested_points)
+        pending=(r['status'] in {'REVIEW_REQUIRED','TECHNICAL_ERROR'}) if r else bool(d.semantic_trace and d.semantic_trace.get('decision')=='review')
+        technical=(r['technical_uncertainty']) if r else bool(d.semantic_trace and d.semantic_trace.get('error_type'))
+        if pending:
+            points=None
         needs=r['review_required'] if r else d.review_required
         supported=bool(points) or (d.max_points==0 and d.sufficiency=='COMPLETE')
         status='indeterminate' if needs else 'supported' if supported else 'refuted'
         items.append(dict(rubric_item_id=d.criterion_id,label=d.description,max_points=float(d.max_points),suggested_points=points,
-            status=status,display_status=status,status_label='Revisar' if needs else 'Sustentado' if supported else 'Não sustentado',
+            status=status,display_status=status,status_label='Falha técnica' if technical else 'Revisar' if pending else ('Avaliação semântica' if d.semantic_trace else 'Revisar') if needs else 'Sustentado' if supported else 'Não sustentado',
             review_required=needs,reason=r['reason'] if r else d.explanation,evidence_ids=d.claim_ids,checker_ids=[],children=[],
             grader_points=float(d.suggested_points),reviewer_points=r['reviewer_points'] if r else None,
             automation=r['automation'] if r else 'REVIEW_ONLY'))
@@ -55,9 +59,9 @@ def project(result,run,case):
     checks=[dict(checker_id=c.claim_id,checker_type=c.verifier,status={'VERIFIED':'verified','REFUTED':'refuted','ERROR':'technical_error'}.get(c.verification_status,'indeterminate'),
         status_label=c.verification_detail,evidence_ids=[c.claim_id],trace_reference=f'audit-run:{run.audit_run_id}') for c in result.analysis.claims]
     return dict(engine_mode='DYNAMIC',rubric_items=items,evidences=evidence,checker_summary=checks,
-        technical_uncertainty=bool(rec and rec['technical_uncertainty']) or any(c['status']=='technical_error' for c in checks),
-        suggested_score=float(rec['reconciled_suggested_score']) if rec else result.score,grader_suggested_score=result.score,
-        review_required=bool(reasons),review_reasons=reasons,suggestion_ready=bool(rec) and not getattr(run,'stale',False),
+        technical_uncertainty=bool(rec and rec['technical_uncertainty']) or any(c['status']=='technical_error' for c in checks) or any(d.semantic_trace and d.semantic_trace.get('error_type') for d in result.decisions),
+        suggested_score=(float(rec['reconciled_suggested_score']) if rec['reconciled_suggested_score'] is not None else None) if rec else result.score,grader_suggested_score=result.score,
+        review_required=bool(reasons),review_reasons=reasons,suggestion_ready=bool(rec) and rec['reconciled_suggested_score'] is not None and not getattr(run,'stale',False),
         reconciliation_id=rec['reconciliation_id'] if rec else None,reconciliation=rec,
         independent_review=review,policy_profile=rec['policy_profile'] if rec else None,
         workflow_actions=[] if getattr(run,'stale',False) else ([dict(label='Reconciliar sugestão',route=['dynamic','attempts',case.case_id,'audits',run.audit_run_id,'reconciliations'],body=dict(independent_review_id=review['review_id']))] if review and not rec else []) + [dict(label='Solicitar revisão independente',route=['dynamic','attempts',case.case_id,'audits',run.audit_run_id,'independent-reviews'])])

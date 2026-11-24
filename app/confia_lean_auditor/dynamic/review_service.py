@@ -19,7 +19,8 @@ def now():
 
 
 class DynamicReviewService:
-    def __init__(self, audits, provider=None):
+    def __init__(self, audits, provider=None, semantic_provider=None):
+        self.semantic_provider = semantic_provider
         self.audits = audits
         self.provider = provider or OpenAIIndependentReviewProvider()
         self.root = audits.root / "independent_reviews"
@@ -140,9 +141,9 @@ class DynamicReviewService:
             error = None
             failure_provenance = None
             try:
-                phase = IndependentDynamicReviewer(self.provider).analyze(
-                    payload, equation, claims, rubric
-                )
+                from .semantic import enabled, review_phase
+                phase = (review_phase(payload, rubric, self.semantic_provider) if enabled(context) else
+                    IndependentDynamicReviewer(self.provider).analyze(payload, equation, claims, rubric))
                 # Only now can the comparison inspect DY3 judgments/score.
                 comparison = compare_review(
                     run.result, phase, rubric, run.source.solution_text

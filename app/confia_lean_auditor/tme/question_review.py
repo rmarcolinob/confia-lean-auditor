@@ -277,6 +277,7 @@ def workspace(case_id, user):
         def suggested_value(r):
             c=next(c for c in detail.question_attempts if c.submission_id==r.submission_id)
             return project_audit(r,c,detail)['suggested_score']
+        scored = [r for r in scored if suggested_value(r) is not None]
         partial = dict(suggested_score=float(sum((Decimal(str(suggested_value(r))) for r in scored), Decimal(0))),
             max_score=float(sum(c.max_score for c in detail.question_attempts)),
             analyzed_questions=len(scored), total_questions=len(detail.question_attempts),

@@ -78,7 +78,10 @@ def question_readiness(item, actor, published=False):
             context, _, _, _=resolve(item.problem_id,actor)
     except (DynamicConflict, FileNotFoundError) as exc:
         blockers.append(str(exc) or 'Configuração indisponível.')
-    if not prep or prep['status'] != 'READY_FOR_REVIEW': blockers.append('Preparação ausente, em falha ou com revisão pendente.')
+    from confia_lean_auditor.semantic_policy.service import dynamic_policy, DYNAMIC_VERSION
+    semantic = (context.semantic_policy == DYNAMIC_VERSION) if context else dynamic_policy() == DYNAMIC_VERSION
+    allowed = {'READY_FOR_REVIEW','REVIEW_REQUIRED'} if semantic else {'READY_FOR_REVIEW'}
+    if not prep or prep['status'] not in allowed: blockers.append('Preparação ausente, em falha ou com revisão pendente.')
     if not rubric or rubric['status'] != 'APPROVED': blockers.append('Rubrica aprovada pendente.')
     if Decimal(str(item.points)) != Decimal(str(statement['max_score'])): blockers.append('Pontos da questão diferem do enunciado; atualize o item antes de ativar.')
     return dict(assessment_item_id=item.assessment_item_id, problem_id=item.problem_id, order=item.order,
@@ -139,7 +142,7 @@ def prepare_many(identifier, body, user):
                 data=PreparationService(dynamic_store()).start(pid,PreparationRequest(expected_revision=data['revision']),actor)
                 prep=data['current_preparation']
                 record_event(identifier,'question_preparation_completed',user,problem_id=pid,status=prep['status'])
-            if body.generate_rubrics and prep and prep['status']=='READY_FOR_REVIEW' and not data['correction_available']:
+            if body.generate_rubrics and prep and prep['status'] in {'READY_FOR_REVIEW','REVIEW_REQUIRED'} and not data['correction_available']:
                 data=PreparationService(dynamic_store()).suggest(pid,SuggestionRequest(expected_revision=data['revision'],preparation_id=prep['preparation_id']),actor)
             results.append(dict(problem_id=pid,status=prep['status'] if prep else 'FAILED'))
         except Exception as exc:

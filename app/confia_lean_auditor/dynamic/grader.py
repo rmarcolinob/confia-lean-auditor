@@ -649,6 +649,10 @@ class DynamicSolutionGrader:
             ),
             artifact_dir=str(Path(artifact_dir).absolute()),
         )
+        from .semantic import enabled, augment
+        if enabled(context):
+            result = augment(result, source, statement, rubric)
+            analysis = result.analysis
         root = Path(result.artifact_dir)
         root.mkdir(parents=True, exist_ok=False)
         for name, value in [

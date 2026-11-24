@@ -242,7 +242,7 @@
       ["dynamic","Nova atividade ou prova","Crie questões inéditas e prepare rubricas com o ConfIA."]]) {
       const choice=btn("",()=>navigate("new",{mode}),"tme-panel confia-creation-choice");
       choice.setAttribute("aria-label",title);
-      choice.append(node("h2",title),node("p",description),node("span","Continuar →","confia-choice-action"));choices.append(choice);
+      choice.append(node("span",mode.toUpperCase(),"quiet-label"),node("h2",title),node("p",description),node("span","Continuar →","confia-choice-action"));choices.append(choice);
     }
     page.append(choices);show(page);
   }
@@ -870,7 +870,7 @@
   }
   function decisionPanel(c, saved, run) {
     const reconciliation=c.dynamic_context?saved.reconciliation:null;
-    if(reconciliation && run)run={...run,result:{...run.result,score:Number(reconciliation.reconciled_suggested_score),max_score:Number(reconciliation.max_score)}};
+    if(reconciliation && run)run={...run,result:{...run.result,score:reconciliation.reconciled_suggested_score==null?null:Number(reconciliation.reconciled_suggested_score),max_score:Number(reconciliation.max_score)}};
 
     const box = node("section", undefined, "decision-bar"); box.setAttribute("aria-label", "Decisão do avaliador"); box.id="evaluator-decision";
     box.appendChild(node("h2","Decisão do avaliador"));
@@ -880,7 +880,7 @@
       box.append(success,node("strong", `Pontuação final do avaliador: ${saved.decision.final_points} / ${saved.decision.max_points}`), node("span", "Finalizada", "status"));
       const detail = node("details"); detail.append(node("summary", "Observação registrada"), node("p", saved.decision.feedback || "Sem comentário.")); box.append(detail,actions(btn("Corrigir próxima",()=>nextCorrection(c).catch(showError)),btn("Voltar para fila",()=>navigate("cases"),"secondary")));return box;
     }
-    if(c.dynamic_context && (!reconciliation || saved.reconciliationError || run?.stale)){
+    if(c.dynamic_context && (!reconciliation || reconciliation.reconciled_suggested_score==null || saved.reconciliationError || run?.stale)){
       box.append(note("Conclua a revisão independente e a reconciliação corrente antes de homologar a sugestão."));return box;
     }
     const form = node("form"), controls = {}, extras = node("details", undefined, "decision-observation"); extras.open = Boolean(saved.observationOpen);

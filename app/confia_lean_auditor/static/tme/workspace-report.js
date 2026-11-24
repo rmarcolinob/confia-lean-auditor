@@ -72,6 +72,11 @@
         if(checks.some(c=>c.status==="verified" && c.compiled && c.lean_file))box.append(n("p","Verificação formal com Lean: confirmada (etapa local).","formal-status"));
         if(checks.some(c=>c.status==="refuted" && c.refutation_verified && c.refutation_lean_file))box.append(n("p","Verificação formal: afirmação incompatível (etapa local).","formal-status"));
         if(o.verification_source==="deterministic"||o.verification_source==="canonical_equivalence")box.append(n("p","Verificação matemática da evidência encontrada."));
+        if(o.metadata?.semantic_fallback){
+          box.append(n("p","Avaliação semântica pela pauta · sem certificação formal."));
+          box.append(n("p",o.metadata.semantic_fallback.response?.justification || "Revisão pendente."));
+          for(const q of o.metadata.semantic_fallback.quotes || [])box.append(n("blockquote",q.text,"evidence-quote"));
+        }
         row.append(box);
       }
       const selected=decision.selected_method_path || decision.selected_band;
@@ -87,7 +92,7 @@
   function render(data, host, options) {
     if (data.schema_version === "tme-audit-result.v1") return renderTME(data, host, options);
     const p = root.ConfIAReport.presentation, saved = options.uiState || {};
-    const reconciliation=data.engine_mode==="DYNAMIC"?options.reconciliation:null, shownScore=reconciliation?Number(reconciliation.reconciled_suggested_score):data.score;
+    const reconciliation=data.engine_mode==="DYNAMIC"?options.reconciliation:null, shownScore=reconciliation?(reconciliation.reconciled_suggested_score==null?null:Number(reconciliation.reconciled_suggested_score)):data.score;
     const math = (tag, value, cls) => { const el = n(tag, null, cls); root.ConfiaRecognitionView.renderMathText(el, String(value || "")); return el; };
     const items = p.rubricItems(data), decided = items.filter(p.isDecided), checks = data.student_claim_checks || [];
     const formalStatus = check => p.formalStatus(check) === "verified" && (!check.compiled || !check.lean_file) ? "unverified" : p.formalStatus(check);
@@ -128,6 +133,11 @@
       if (item.assessment_note) row.appendChild(math("p", item.assessment_note, "criterion-note"));
       const claim = [...(data.extracted_claims?.claims || []), ...(data.student_claims || [])].find(claim => claim.id === item.claim_id);
       if (claim) row.appendChild(math("p", `Passo relacionado: ${claim.text || claim.normalized_text || claim.raw_text || claim.id}`, "criterion-note"));
+      if(item.verification_level==="SEMANTIC_NOT_FORMAL" || item.scoring_basis==="semantic_fallback") {
+        row.append(n("p","Avaliação semântica pela rubrica · sem certificação formal."));
+        if(item.scoring_rationale) row.append(math("p",item.scoring_rationale));
+        if(item.suggested_points!=null)row.append(n("p",`Sugestão: ${number(item.suggested_points)} / ${number(item.max_points)}`));
+      }
       row.appendChild(n("p", `Verificação: ${item.verification_status === "technical_error" ? "⚠ Verificação formal não concluída" : ({ verified_in_scope: "Verificado no escopo exato", review_only: "Revisão necessária", refuted_exact: "Refutado por verificação exata", not_attempted: "Verificação formal não executada", available: "Disponível", not_available: "Não disponível", verified: "Verificado formalmente", not_verified: "Não verificado" }[item.verification_status] || item.verification_status || "Não registrada")}`, "criterion-verification"));
       for (const note of item.adjustment_notes || []) row.appendChild(math("p", note));
       section.appendChild(row);
