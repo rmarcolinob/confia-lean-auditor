@@ -30,24 +30,13 @@
 }
 #confia-surface :is(.button-primary,.primary-action) { background: var(--confia-blue); color: var(--confia-surface); border-color: var(--confia-blue); }
 #confia-surface :is(.button-primary,.primary-action):hover { background: var(--confia-blue-dark); }
-.teacher-correction-modes { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: var(--confia-space-lg); }
-.teacher-correction-modes .card { display: flex; flex-direction: column; align-items: flex-start; }
-.teacher-correction-modes .button { margin-top: auto; }
-.teacher-workspace-links {
-  display: flex; flex-wrap: wrap; align-items: center; gap: var(--confia-space-sm);
-  max-width: var(--confia-content-max); margin: 0 auto 16px; padding: 0 20px;
-}
-.teacher-workspace-links a {
-  display: inline-flex; align-items: center; min-height: var(--control-height);
-  padding: 8px 12px; border: 1px solid var(--confia-border); border-radius: var(--confia-radius-sm);
-  background: var(--confia-surface); color: var(--confia-navy); text-decoration: none;
-  font-size: var(--confia-font-body); font-weight: 600;
-}
-.teacher-workspace-links a:hover, .teacher-workspace-links a[aria-current="page"] { background: var(--confia-blue-light); border-color: var(--confia-blue-line); }
 .platform-session-status { max-width: var(--confia-content-max); margin: 0 auto 16px; padding: 0 20px; color: var(--confia-muted); font-size: var(--confia-font-body); }
 .home-avatar .home-session-menu { position: absolute; right: 0; top: 45px; z-index: 50; width: 220px; padding: 16px; background: var(--confia-surface); border: 1px solid var(--confia-border); border-radius: var(--confia-radius-md); box-shadow: var(--confia-shadow); }
 .home-avatar .home-session-menu p { position: static; width: auto; margin: 0 0 12px; padding: 0; border: 0; box-shadow: none; background: transparent; }
-@media (max-width: 767px) {
-  .teacher-correction-modes { grid-template-columns: minmax(0,1fr); }
-  .teacher-workspace-links { gap: 6px; padding-inline: 12px; }
-}
+
+.home-brand { text-decoration: none; }
+.home-session-menu nav { display: grid; gap: 4px; }
+.home-session-menu nav + nav { border-top: 1px solid var(--confia-border); margin-top: 8px; padding-top: 8px; }
+.home-session-menu a, .home-session-menu button { display: block; min-height: 40px; padding: 8px; color: var(--confia-navy); font-size: var(--confia-font-body); text-decoration: none; border-radius: var(--confia-radius-sm); }
+.home-session-menu a:hover { background: var(--confia-blue-light); }
+.home-avatar .home-session-menu { width: min(280px,calc(100vw - 40px)); max-height: calc(100dvh - 100px); overflow: auto; }

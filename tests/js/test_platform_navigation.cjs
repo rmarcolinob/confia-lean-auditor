@@ -10,6 +10,7 @@ for(const [index,mode] of [[1,'specialized'],[2,'dynamic']])test(`teacher naviga
 for(const [status,message] of [[404,/Demonstração local/],[401,/Sessão ausente ou expirada/],[403,/perfil não tem acesso/],[500,/Não foi possível consultar a sessão/]])test(`session HTTP ${status} is explicit and does not imply authenticated access`,async()=>{
  const ui=await pilot({startHome:true,mockFetch:async url=>url==='/auth/me'?{ok:false,status,json:async()=>({})}:undefined});
  assert.match(ui.shell['platform-session-status'].textContent,message);
- assert.equal(ui.shell['platform-session-status'].hidden,false);
+ assert.equal(ui.shell['platform-session-status'].hidden,status===404);
+ assert.match(ui.shell['home-session'].textContent,message);
  assert(!ui.calls.some(c=>c.options?.method==='POST'));
 });

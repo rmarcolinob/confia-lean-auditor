@@ -87,9 +87,10 @@
     visible("management-home", profile === "management" && view === "home");
     visible("management-overview", profile === "management" && view === "overview");
     if (profile === "management" && view === "overview") window.ConfIAManagement?.load();
+    window.ConfIATeacherPresentation?.show(profile, view);
     document.title = `ConfIA — ${config.views[view][0]}`;
     window.ConfIATutoriaAssistant?.sync();
-    if (focus) title.focus();
+    if (focus) (profile === "teacher" && view === "home" ? document.querySelector("#teacher-home h1") || title : title).focus();
   }
 
   function navigate(profile, view, { focus = true, historyMode = "push" } = {}) {

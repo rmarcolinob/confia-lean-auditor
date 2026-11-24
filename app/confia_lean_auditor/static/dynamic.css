@@ -28,3 +28,9 @@
 #confia-preparation .dynamic-next { border-left:3px solid var(--confia-blue); }
 #confia-preparation section { scroll-margin-top:24px; }
 @media(max-width:640px) { .confia-creation-choices { grid-template-columns:1fr; } #confia-preparation .tme-panel { padding:18px; } #confia-preparation .dynamic-criterion { padding:12px; } }
+
+/* Assessment forms reuse the same TME form panel as prepared corrections. */
+.dynamic-workflow > .tme-new-form { margin-bottom: 24px; }
+.dynamic-workflow > .tme-new-form > label:has(textarea) { grid-column: 1 / -1; }
+.dynamic-workflow > .tme-new-form > button { justify-self: start; }
+.dynamic-workflow > .tme-new-form > h2 { margin-top: 0; }

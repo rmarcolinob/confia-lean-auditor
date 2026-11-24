@@ -12,19 +12,21 @@
   <link rel="stylesheet" href="/static/tme/home.css?v=tme-workspace-02">
   <link rel="stylesheet" href="/static/tme/correction-workspace.css?v=tme-problem-catalog-01">
   <link rel="stylesheet" href="/static/tme/secondary-views.css?v=tme-synthetic-demo-03">
-  <link rel="stylesheet" href="/static/dynamic.css?v=dy6-01">
-  <link rel="stylesheet" href="/static/platform.css?v=platform-01">
+  <link rel="stylesheet" href="/static/dynamic.css?v=teacher-02">
+  <link rel="stylesheet" href="/static/platform.css?v=teacher-02">
 </head>
 <body data-view="home" data-tme-shell="modern">
   <a class="skip" href="#main">Ir para conteúdo</a>
-  <header class="home-header"><div class="home-brand"><strong>ConfIA</strong><span>Área do professor<br>Correção assistida</span></div><details class="home-avatar"><summary id="evaluator-avatar" aria-label="Perfil do avaliador"></summary><div class="home-session-menu"><p id="home-session">Avaliador ConfIA</p><button id="logout" type="button" class="secondary" hidden>Encerrar sessão</button></div></details></header>
-  <nav class="teacher-workspace-links" aria-label="Área do professor">
-    <a href="/#teacher/home" data-platform-exit>Área do professor</a>
-    <a href="/tme" data-correction-view="home">Central de correções</a>
-    <a href="/tme?view=new&amp;mode=specialized" data-correction-view="new" data-mode="specialized">SPECIALIZED</a>
-    <a href="/tme?view=new&amp;mode=dynamic" data-correction-view="new" data-mode="dynamic">DYNAMIC</a>
-    <a href="/#teacher/exams" data-platform-exit>Atividades da turma</a>
-  </nav>
+  <header class="home-header"><a class="home-brand" href="/#teacher/home" data-platform-exit><strong>ConfIA</strong><span>Área do professor<br>Correção assistida</span></a><details class="home-avatar"><summary id="evaluator-avatar" aria-label="Perfil do avaliador"></summary><div class="home-session-menu"><p id="home-session">Avaliador ConfIA</p><nav aria-label="Recursos docentes">
+<a href="/#teacher/home" data-platform-exit>Início do Professor</a>
+<a href="/tme?view=new&amp;mode=specialized" data-correction-view="new" data-mode="specialized">SPECIALIZED · Preparadas</a>
+<a href="/tme?view=new&amp;mode=dynamic" data-correction-view="new" data-mode="dynamic">DYNAMIC · Inéditas</a>
+<a href="/#teacher/exams" data-platform-exit>Atividades da turma</a>
+<a href="/#teacher/students" data-platform-exit>Alunos e turmas</a>
+<a href="/#teacher/submissions" data-platform-exit>Soluções recebidas</a>
+<a href="/#teacher/transcriptions" data-platform-exit>Transcrições</a>
+<a href="/#teacher/analysis" data-platform-exit>Análise e devolutivas</a>
+</nav><button id="logout" type="button" class="secondary" hidden>Encerrar sessão</button></div></details></header>
   <p id="platform-session-status" class="platform-session-status" role="status" hidden></p>
   <header class="top">
     <div class="brand"><strong>ConfIA</strong><span>Confiabilidade e Explicabilidade</span><small>PILOTO ConfIA</small></div>
@@ -47,12 +49,12 @@
   <script src="/static/tme/workspace-controls.js?v=tme-workspace-01"></script>
   <script src="/static/tme/workspace-report.js?v=dy6-dy6-01"></script>
   <script src="/static/tme/scan-model.js"></script>
-  <script src="/static/tme/home.js?v=tme-synthetic-demo-03"></script>
+  <script src="/static/tme/home.js?v=teacher-02"></script>
   <script src="/static/tme/correction-workspace.js?v=dy6-01"></script>
   <script src="/static/tme/secondary-views.js?v=dy6-01"></script>
   <script src="/static/tme/full-exam.js?v=dy7-01-dy6-01"></script>
   <script src="/static/dynamic.js?v=dy6-01"></script>
-  <script src="/static/dynamic-assessment.js?v=dy6"></script>
-  <script src="/static/tme/tme.js?v=dy6-01"></script>
+  <script src="/static/dynamic-assessment.js?v=teacher-02"></script>
+  <script src="/static/tme/tme.js?v=teacher-02"></script>
 </body>
 </html>

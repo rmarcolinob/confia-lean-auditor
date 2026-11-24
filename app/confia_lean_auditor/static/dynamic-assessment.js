@@ -12,10 +12,10 @@
     async function perform(action){if(busy||disposed)return;busy=true;setBusy(true);try{await action();}catch(e){notice=e.message;}finally{busy=false;setBusy(false);if(!disposed)await render();}}
     async function refresh(){if(doc)doc=await request(`/dynamic/assessments/${doc.assessment.assessment_id}`);}
     function generalForm(){
-      const form=n('form'),title=input('Título da avaliação'),instructions=input('Orientações','','textarea');title.required=true;title.maxLength=160;
+      const form=n('form',undefined,'tme-new-form'),title=input('Título da avaliação'),instructions=input('Orientações','','textarea');title.required=true;title.maxLength=160;
       const type=select('Tipo da avaliação',[['FORMATIVE_LIST','Lista/atividade'],['SCHOOL_EXAM','Prova escolar']],'SCHOOL_EXAM');
       const feedback=select('Feedback ao aluno',[['WITHHOLD','Reter feedback'],['AFTER_CONFIRMATION','Disponibilizar após confirmação docente']],'WITHHOLD');
-      form.append(n('h2','Nova atividade/prova'),field('Título',title),field('Tipo',type),field('Orientações',instructions),field('Feedback ao aluno',feedback));
+      form.append(n('h2','Dados da avaliação'),field('Título',title),field('Tipo',type),field('Orientações',instructions),field('Feedback ao aluno',feedback));
       const submit=n('button','Criar avaliação','tme-button');submit.type='submit';submit.disabled=busy;form.append(submit);
       form.addEventListener('submit',event=>{event.preventDefault();return perform(async()=>{doc=await request('/dynamic/assessments',{title:title.value,instructions:instructions.value,policy_profile:type.value,feedback_policy:feedback.value});onSelect(doc.assessment.assessment_id);notice='Avaliação criada. Adicione as questões.';});});return form;
     }
@@ -27,7 +27,7 @@
       await editor.load(pid);
     }
     function questionForm(){
-      const form=n('form'),title=input('Título da questão'),statement=input('Enunciado da questão','','textarea'),points=input('Pontos da questão','10','number');statement.required=true;statement.maxLength=20000;statement.rows=5;points.min='0.01';points.max='1000';points.step='0.01';
+      const form=n('form',undefined,'tme-new-form'),title=input('Título da questão'),statement=input('Enunciado da questão','','textarea'),points=input('Pontos da questão','10','number');statement.required=true;statement.maxLength=20000;statement.rows=5;points.min='0.01';points.max='1000';points.step='0.01';
       form.append(n('h3','Adicionar questão inédita'),field('Título da questão',title),field('Enunciado',statement),field('Pontos',points));
       const submit=n('button','Adicionar questão','tme-button');submit.type='submit';submit.disabled=busy;form.append(submit);
       form.addEventListener('submit',event=>{event.preventDefault();return perform(async()=>{const problem=await request('/dynamic/problems',{title:title.value,statement:statement.value,max_score:points.value,correction_mode:'DYNAMIC'});doc=await request(`/dynamic/assessments/${doc.assessment.assessment_id}/questions`,{problem_id:problem.problem.problem_id,expected_revision:doc.dynamic_revision});notice='Questão adicionada. Prepare e revise sua rubrica.';});});return form;
@@ -43,7 +43,7 @@
       });
     }
     function receiveText(){
-      const form=n('form'),code=input('Código pseudônimo do participante');code.required=true;code.pattern='[A-Za-z0-9._:/-]+';code.maxLength=80;
+      const form=n('form',undefined,'tme-new-form'),code=input('Código pseudônimo do participante');code.required=true;code.pattern='[A-Za-z0-9._:/-]+';code.maxLength=80;
       form.append(n('h3','Receber soluções'),field('Código pseudônimo',code));
       const answers=doc.readiness.questions.map(q=>{const area=input(`Solução Q${q.order}`,'','textarea');area.required=true;area.maxLength=20000;area.rows=5;form.append(field(`Q${q.order} — ${q.title}`,area));return area;});
       const submit=n('button','Receber participante','tme-button');submit.type='submit';submit.disabled=busy;form.append(submit);

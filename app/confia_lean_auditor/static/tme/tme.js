@@ -33,6 +33,7 @@
   const route = id => writeRoute("workspace",{},id);
   function navigate(view, params, record=true) {
     if(state.busy)return;
+    document.querySelector(".home-avatar")?.removeAttribute("open");
     view=viewNames[view] || "home";
     if(view==="cases"||view==="exams"){
       state.filters[view]=params ? {...params} : {...(state.filters[view]||{})};
@@ -981,7 +982,7 @@
       if (detail) detail.textContent = message;
       const homeSession = document.querySelector("#home-session"); if (homeSession) homeSession.textContent = message;
       const notice = document.querySelector("#platform-session-status");
-      if (notice) { notice.textContent = message; notice.hidden = false; }
+      if (notice) { notice.textContent = message; notice.hidden = error.status === 404; }
     }
   })();
   currentURL="/tme"+(window.location.search||"");

@@ -1,0 +1,28 @@
+/* Structural teacher shell. Geometry and components come from tme/home.css;
+   these selectors only replace the old teacher layout and resolve its cascade. */
+body[data-teacher-shell="true"] #confia-surface > .institutional-header,
+body[data-teacher-shell="true"] .shell-sidebar,
+body[data-teacher-shell="true"][data-teacher-view="home"] .page-heading,
+body[data-teacher-shell="true"][data-teacher-view="home"] #teacher-institutional-context { display: none; }
+body[data-teacher-shell="true"] #teacher-modern-header { display: flex; }
+body[data-teacher-shell="true"] #confia-surface .app-layout { display: block; width: 100%; max-width: var(--confia-content-max); margin: 0 auto; padding: 0; }
+body[data-teacher-shell="true"] #app-root { padding: 0 24px 32px; min-width: 0; }
+body[data-teacher-shell="true"][data-teacher-view="home"] #app-root { padding: 0; }
+body[data-teacher-shell="true"] #teacher-home { margin: 0; }
+body[data-teacher-shell="true"] .tme-home button { margin-bottom: 0; }
+body[data-teacher-shell="true"] .tme-home .home-action { width: 100%; }
+body[data-teacher-shell="true"] .tme-home .home-quick { row-gap: 16px; }
+body[data-teacher-shell="true"] .tme-home .home-hero h1 { margin: 8px 0 10px; }
+body[data-teacher-shell="true"] .tme-home .home-primary { color: white; }
+body[data-teacher-shell="true"] .tme-home .home-action strong { color: var(--confia-navy); }
+body[data-teacher-shell="true"] .institutional-footer { max-width: var(--confia-content-max); }
+@media (min-width:768px) {
+  body[data-teacher-shell="true"] #teacher-bottom-nav { display: flex; position: absolute; top: 15px; right: max(84px,calc((100vw - var(--confia-content-max))/2 + 80px)); gap: 8px; }
+}
+@media (max-width:767px) {
+  body[data-teacher-shell="true"] #teacher-bottom-nav { display: grid; }
+  body[data-teacher-shell="true"] #app-root { padding: 0 20px calc(var(--confia-bottom-height) + 24px); }
+  body[data-teacher-shell="true"] .tme-home .home-quick { grid-template-columns: repeat(2,minmax(0,1fr)); gap: 10px; }
+  body[data-teacher-shell="true"] .tme-home .home-action { min-height: 144px; padding: 14px; }
+  body[data-teacher-shell="true"] .institutional-footer { padding-bottom: calc(var(--confia-bottom-height) + 24px); }
+}

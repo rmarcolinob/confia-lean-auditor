@@ -38,6 +38,37 @@ sem autenticação, restrita a `127.0.0.1`; não é um comando de implantação 
   auditoria, solicitar revisão independente e reconciliar. Confirmar a sugestão
   na interface compartilhada antes do fechamento e da disponibilização do feedback.
 
+## Apresentação docente baseada no TME²
+
+A página `/#teacher/home` monta o próprio `ConfiaTmeHome.TmeHome`, com seis
+atalhos docentes. Cabeçalho, ícones, CTA, cards, métricas, fila, progresso,
+carregamento e erro reutilizam `tme/home.js` e `tme/home.css`. O resumo usa o
+GET já existente `/tme/home-summary`; falha de carregamento não vira contagem zero.
+A folha de estilos do TME é ativada somente no Professor para preservar a
+geometria do caderno, TutorIA e Gestão.
+
+A barra lateral anterior fica oculta no Professor. Recursos complementares
+permanecem no menu do cabeçalho; os seletores de escola/turma continuam nas
+telas institucionais. SPECIALIZED e DYNAMIC abrem no workspace existente,
+com o mesmo cabeçalho, sem a faixa adicional de links. Os formulários de avaliação
+DYNAMIC reutilizam `tme-new-form`, sem alteração dos seus eventos ou contratos.
+A marca ConfIA retorna ao início do Professor. No celular a navegação usa a
+barra inferior já existente do TME².
+
+Validação visual local: comparação de `/tme` e `/#teacher/home`, desktop,
+tablet (768 px), celular (390 px), entradas SPECIALIZED/DYNAMIC, menu,
+atividades institucionais, TutorIA/caderno e entrada da Gestão. A consulta de
+dados institucionais completos requer uma sessão autenticada; a demonstração
+não substitui essa validação. Os testes cobrem os perfis autenticados.
+As capturas estão em `artifacts/integration-checks/teacher-visual-v2/`.
+
+Regressão desta alteração: 573 testes JavaScript aprovados e 57 casos Python
+relevantes aprovados (autenticação, isolamento institucional, avaliações,
+integração SPECIALIZED/DYNAMIC e acessibilidade). As duas verificações antigas
+que proibiam a palavra “Professor” no HTML foram atualizadas para admitir o
+link de retorno e continuar proibindo seleção de perfil/login na tela demo.
+Nenhuma chamada paga foi realizada.
+
 ## Providers e estados
 
 O launcher não habilita inferência paga. Sem provider, os critérios que precisam

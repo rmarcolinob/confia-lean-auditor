@@ -78,7 +78,8 @@ def test_demo_shell_opens_without_login_or_profile_selection(demo, monkeypatch, 
     assert "PILOTO ConfIA" in response.text
     assert "TME" not in response.text
     assert all(label in response.text for label in ("ConfIA", "Nova correção", "Correções", "Resultados"))
-    assert all(label not in response.text for label in ("Aluno", "Professor", "Gestão", "login", "profile-switch"))
+    assert all(label not in response.text for label in ('id="profile-switch"', 'action="/auth/login"', "Gestão"))
+    assert 'href="/#teacher/home"' in response.text  # Unified teacher return, not a role selector.
     assert response.headers["cache-control"] == "no-store"
     assert client.get("/tme/problems").status_code == 200
     assert client.get("/static/tme/index.html").status_code == 200

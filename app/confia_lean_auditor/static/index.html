@@ -13,7 +13,9 @@
     <link rel="stylesheet" href="/static/tutoria-chat.css?v=tutoria-contextual-final-01">
     <link rel="stylesheet" href="/static/tutoria-assistant.css?v=tutoria-contextual-final-01">
     <link rel="stylesheet" href="/static/tme/tme-theme.css?v=platform-01">
-    <link rel="stylesheet" href="/static/platform.css?v=platform-01">
+    <link rel="stylesheet" href="/static/platform.css?v=teacher-02">
+    <link id="teacher-home-styles" rel="stylesheet" href="/static/tme/home.css?v=teacher-02" media="not all">
+    <link rel="stylesheet" href="/static/teacher-presentation.css?v=teacher-02">
   </head>
   <body>
     <div id="confia-surface">
@@ -25,6 +27,26 @@
       <span class="strip-green"></span>
     </div>
 
+    <header id="teacher-modern-header" class="home-header" hidden>
+      <a class="home-brand" href="#teacher/home" data-shell-link><strong>ConfIA</strong><span>Área do professor<br>Correção assistida</span></a>
+      <details class="home-avatar"><summary id="teacher-avatar" aria-label="Perfil e recursos do professor"></summary><div class="home-session-menu">
+        <p id="teacher-modern-session">Área do professor</p>
+        <nav aria-label="Recursos docentes">
+          <a href="#teacher/exams" data-shell-link>Atividades da turma</a>
+          <a href="#teacher/students" data-shell-link>Alunos e turmas</a>
+          <a href="#teacher/submissions" data-shell-link>Soluções recebidas</a>
+          <a href="#teacher/transcriptions" data-shell-link>Transcrições</a>
+          <a href="#teacher/analysis" data-shell-link>Análise e devolutivas</a>
+          <a href="#teacher/text" data-shell-link>Demonstração textual local</a>
+        </nav>
+        <nav id="teacher-demo-profiles" aria-label="Módulos de demonstração">
+          <a href="#student/home" data-shell-link>Área do Aluno</a>
+          <a href="#management/home" data-shell-link>Área da Gestão</a>
+        </nav>
+        <button id="teacher-modern-logout" type="button" hidden>Encerrar sessão</button>
+      </div></details>
+    </header>
+    <nav id="teacher-bottom-nav" class="home-bottom-nav" aria-label="Navegação do Professor" hidden></nav>
     <header class="institutional-header">
       <a class="brand" href="#student/home" data-shell-link aria-label="ConfIA — início">
         <span class="brand-mark" aria-hidden="true">C<span>IA</span></span>
@@ -295,19 +317,7 @@
           </div>
           <p id="teacher-context-message" role="status" aria-live="polite"></p>
         </section>
-        <section id="teacher-home" class="home-panel" hidden>
-          <div class="teacher-correction-modes" aria-label="Modalidades de correção">
-            <article class="card"><p class="eyebrow">SPECIALIZED</p><h2>Questões preparadas</h2><p>Corrija questões ITA, TME² e do catálogo, com as rubricas e pautas já preparadas.</p><a class="button button-primary" href="/tme?view=new&amp;mode=specialized" data-teacher-workspace>Corrigir questão preparada</a></article>
-            <article class="card"><p class="eyebrow">DYNAMIC</p><h2>Questões inéditas</h2><p>Crie atividades, listas e provas. Forneça ou aprove a rubrica e acompanhe a correção.</p><a class="button button-primary" href="/tme?view=new&amp;mode=dynamic" data-teacher-workspace>Criar ou retomar atividade</a></article>
-          </div>
-          <p class="teacher-workspace-links"><a href="/tme?view=queue" data-teacher-workspace>Fila de correções</a><a href="/tme?view=results" data-teacher-workspace>Resultados das correções</a></p>
-          <div class="welcome-card card"><p class="eyebrow">Acompanhamento da solução</p><h2>Da solução recebida à decisão do professor</h2><p>Confira o manuscrito e a transcrição, consulte a sugestão da Análise ConfIA e registre sua decisão. Finalize e libere o resultado ao aluno quando estiver pronto.</p><a class="button button-primary" href="#teacher/submissions" data-shell-link>Abrir soluções recebidas →</a></div>
-          <div class="home-grid">
-            <article class="card"><h2>Soluções recebidas</h2><p>Consulte manuscritos enviados pelo caderno e seus arquivos originais.</p><a class="button button-secondary" href="#teacher/submissions" data-shell-link>Consultar soluções</a></article>
-            <article class="card"><h2>Transcrições</h2><p>Confira a leitura junto ao original, preservando o que o aluno escreveu.</p><a class="button button-secondary" href="#teacher/transcriptions" data-shell-link>Conferir transcrições</a></article>
-            <article class="card"><h2>Análise ConfIA</h2><p>Consulte a análise da solução e registre a pontuação final do professor.</p><a class="button button-secondary" href="#teacher/analysis" data-shell-link>Consultar análise e decisão</a></article>
-          </div>
-        </section>
+        <section id="teacher-home" aria-label="Início do Professor" hidden></section>
         <section id="teacher-exams" class="card" hidden>
           <h2>Exames da turma</h2>
           <p id="teacher-exams-message" role="status" aria-live="polite">Selecione uma escola e uma turma.</p>
@@ -479,6 +489,8 @@
     <script src="/static/tutoria-chat.js?v=tutoria-contextual-final-01"></script>
     <script src="/static/tutoria.js?v=tutoria-contextual-final-01"></script>
     <script src="/static/tutoria-assistant.js?v=tutoria-contextual-final-01"></script>
-    <script src="/static/shell.js?v=tutoria-contextual-final-01"></script>
+    <script src="/static/tme/home.js?v=teacher-02"></script>
+    <script src="/static/teacher-presentation.js?v=teacher-02"></script>
+    <script src="/static/shell.js?v=teacher-02"></script>
   </body>
 </html>

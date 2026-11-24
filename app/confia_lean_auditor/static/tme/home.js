@@ -28,9 +28,9 @@
     const copy = el('span', null, 'home-primary-copy'); copy.append(el('strong', 'Corrigir próxima'), el('span', state === 'loading' ? 'Carregando sua fila…' : next ? 'Receba a próxima questão da\u00a0fila' : state === 'error' ? 'Sua fila está indisponível' : 'Nenhuma correção pendente'));
     const arrow = el('span', null, 'home-primary-arrow'); arrow.append(icon('arrow')); n.append(icon('document'), copy, arrow); return n;
   }
-  function QuickActions(navigate) {
+  function QuickActions(navigate, entries) {
     const n = el('nav', null, 'home-quick'); n.setAttribute('aria-label', 'Atalhos da Home');
-    for (const [view, label, caption, glyph] of [['new','Nova correção','Buscar por código da prova','plus'],['cases','Ver fila','Visualizar e filtrar correções','list'],['results','Resultados','Acompanhar desempenho','chart']]) {
+    for (const [view, label, caption, glyph] of (entries || [['new','Nova correção','Buscar por código da prova','plus'],['cases','Ver fila','Visualizar e filtrar correções','list'],['results','Resultados','Acompanhar desempenho','chart']])) {
       const b = button(null, () => navigate(view), 'home-action'); b.dataset.action = view; b.append(icon(glyph), el('strong',label), el('span',caption,'home-action-caption'), icon('chevron')); n.append(b);
     } return n;
   }
@@ -94,11 +94,11 @@
     </svg>`;
     return n;
   }
-  function TmeHome({summary={counts:{pending:0,inconclusive:0,finalized:0,in_progress:0},priority_cases:[],exam_progress:[]}, state='success', period='today', changePeriod, navigate, open, retry}) {
+  function TmeHome({summary={counts:{pending:0,inconclusive:0,finalized:0,in_progress:0},priority_cases:[],exam_progress:[]}, state='success', period='today', changePeriod, navigate, open, retry, actions}) {
     const n=el('div',null,'tme-home'); n.dataset.state=state;
     const hero=el('section',null,'home-hero'); hero.append(el('p','Olá, professor!','home-greeting'),el('h1','Vamos continuar?'),el('p','Acompanhe as correções de questões preparadas e inéditas em um só lugar.','home-intro'));
     const banner=el('div',null,'home-banner'); banner.append(hero,PrimaryCorrectionCTA(summary.priority_cases,open,state),HeroIllustration());
-    n.append(banner,QuickActions(navigate));
+    n.append(banner,QuickActions(navigate, actions));
     if (state==='loading') {
       const skeleton=el('div',null,'home-loading'); skeleton.setAttribute('role','status'); skeleton.setAttribute('aria-label','Carregando visão geral, fila prioritária e progresso por prova');
       for(const [name,cls,gridClass,count] of [['Visão geral','home-overview','home-metrics',4],['Fila prioritária','home-priority','home-case-list',3],['Progresso por prova','home-progress','home-exams',2]]) {
