@@ -33,11 +33,12 @@ async function pilot({ auditRun = null, mode = 'IMAGE_SCAN', automatic = false, 
   let feedback = { state: auditRun || automatic ? 'RECOGNIZED' : 'WAITING' }, attempts = 0, recognized = Boolean(auditRun || automatic);
   const snapshot = { ...current };
   const acceptedAt = '2026-10-19T10:00:00Z';
-  const shell = Object.fromEntries(['sidebar-toggle', 'sidebar', 'session-label', 'session-detail', 'logout', 'recent-cases', 'home-bottom-nav', 'evaluator-avatar', 'home-session'].map(id => [id, element('div')]));
+  const shell = Object.fromEntries(['sidebar-toggle', 'sidebar', 'session-label', 'session-detail', 'logout', 'recent-cases', 'home-bottom-nav', 'evaluator-avatar', 'home-session', 'platform-session-status'].map(id => [id, element('div')]));
   shell['sidebar-toggle'].attributes['aria-expanded'] = 'true';
   const nav = ['cases', 'new', 'results', 'home'].map(view => { const el = element('button'); el.dataset.view = view; return el; });
+  const platformLinks=['home','specialized','dynamic','exit'].map(mode=>{const e=element('a');e.dataset=mode==='exit'?{platformExit:''}:{correctionView:mode==='home'?'home':'new',mode:mode==='home'?undefined:mode};return e;});
   const events = {};
-  const ctx = { console, document: { body: element('body'), querySelector: selector => selector === '#app' ? root : shell[selector.slice(1)], querySelectorAll: () => nav, createElement: element },
+  const ctx = { console, document: { body: element('body'), querySelector: selector => selector === '#app' ? root : shell[selector.slice(1)], querySelectorAll: selector => selector==='[data-correction-view]'?platformLinks.slice(0,3):selector==='[data-platform-exit]'?platformLinks.slice(3):nav, createElement: element },
     URLSearchParams, Blob, File, URL: { createObjectURL: () => 'blob:preserved', revokeObjectURL() {} },
     FileReader: class { readAsDataURL(file) { file.arrayBuffer().then(bytes => { this.result = 'data:image/png;base64,' + Buffer.from(bytes).toString('base64'); this.onload(); }); } },
     createImageBitmap() {},
@@ -132,7 +133,7 @@ async function pilot({ auditRun = null, mode = 'IMAGE_SCAN', automatic = false, 
   await flush();
   if (!startHome && !deepLink && initialSearch===null) { await nav[0].click(); await flush(); }
   async function click(label) { const item = walk(root).find(e => e.tag === 'button' && (e.textContent === label || e.attributes['aria-label'] === label || label === 'Abrir' && (e.textContent === 'PROVA-1'||e.attributes['aria-label']?.startsWith('Abrir correção PROVA-1')))); assert.ok(item, `Missing button ${label}`); await item.click(); await flush(); }
-  return { root, calls, rendered, reports, statements, snapshot, click, acceptedAt, shell, nav, storage, window: ctx.window };
+  return { root, calls, rendered, reports, statements, snapshot, click, acceptedAt, shell, nav, platformLinks, storage, window: ctx.window };
 }
 
 module.exports = { pilot, walk, text };

@@ -20,8 +20,14 @@ O armazenamento padrão é `runtime/pilot-dec10`, isolado dos outros ambientes.
 Use `--data-dir CAMINHO` para outra base. O servidor é uma demonstração local,
 sem autenticação, restrita a `127.0.0.1`; não é um comando de implantação pública.
 
-- `/tme?view=new`: seleção SPECIALIZED / DYNAMIC.
-- `/`: workspace ITA já existente.
+- `/#teacher/home`: área do Professor, com SPECIALIZED, DYNAMIC, fila,
+  resultados e os acessos institucionais existentes.
+- `/tme?view=new`: seleção SPECIALIZED / DYNAMIC, com retorno à área do Professor.
+- `/#student/home` e `/#management/home`: áreas preservadas do Aluno e da Gestão.
+  A seleção de perfis é demonstrativa quando a autenticação está desativada;
+  em sessão autenticada, o perfil continua definido pelo servidor.
+- As atividades institucionais exigem sessão e vínculos de escola/turma.
+  O piloto local apresenta essa limitação na interface, sem remover o 401.
 - SPECIALIZED: selecionar avaliação preparada, receber a solução, revisar/aceitar
   a transcrição e executar a auditoria. TME² conserva a pauta e a escala de 20.
 - DYNAMIC: criar atividade/prova, adicionar o enunciado, abrir “Revisar Q…”,

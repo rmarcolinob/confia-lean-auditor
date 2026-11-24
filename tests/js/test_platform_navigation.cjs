@@ -1,0 +1,15 @@
+const test=require('node:test'),assert=require('node:assert/strict');
+const {pilot}=require('./tme-dom.cjs');
+const {flush}=require('./ui-dom.cjs');
+for(const [index,mode] of [[1,'specialized'],[2,'dynamic']])test(`teacher navigation opens ${mode} in the existing router`,async()=>{
+ const ui=await pilot({startHome:true});
+ let prevented=false;await ui.platformLinks[index].handlers.click({button:0,preventDefault(){prevented=true;}});await flush();
+ assert(prevented);assert.equal(ui.window.history.url,`/tme?view=new&mode=${mode}`);
+ assert(!ui.calls.some(c=>c.options?.method==='POST'));
+});
+for(const [status,message] of [[404,/Demonstração local/],[401,/Sessão ausente ou expirada/],[403,/perfil não tem acesso/],[500,/Não foi possível consultar a sessão/]])test(`session HTTP ${status} is explicit and does not imply authenticated access`,async()=>{
+ const ui=await pilot({startHome:true,mockFetch:async url=>url==='/auth/me'?{ok:false,status,json:async()=>({})}:undefined});
+ assert.match(ui.shell['platform-session-status'].textContent,message);
+ assert.equal(ui.shell['platform-session-status'].hidden,false);
+ assert(!ui.calls.some(c=>c.options?.method==='POST'));
+});

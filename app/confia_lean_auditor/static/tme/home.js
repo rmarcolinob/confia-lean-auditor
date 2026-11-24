@@ -96,7 +96,7 @@
   }
   function TmeHome({summary={counts:{pending:0,inconclusive:0,finalized:0,in_progress:0},priority_cases:[],exam_progress:[]}, state='success', period='today', changePeriod, navigate, open, retry}) {
     const n=el('div',null,'tme-home'); n.dataset.state=state;
-    const hero=el('section',null,'home-hero'); hero.append(el('p','Olá, avaliador!','home-greeting'),el('h1','Vamos continuar?'),el('p','Contribua para uma correção mais ágil, justa e segura dos exames\u00a0TME.','home-intro'));
+    const hero=el('section',null,'home-hero'); hero.append(el('p','Olá, professor!','home-greeting'),el('h1','Vamos continuar?'),el('p','Acompanhe as correções de questões preparadas e inéditas em um só lugar.','home-intro'));
     const banner=el('div',null,'home-banner'); banner.append(hero,PrimaryCorrectionCTA(summary.priority_cases,open,state),HeroIllustration());
     n.append(banner,QuickActions(navigate));
     if (state==='loading') {

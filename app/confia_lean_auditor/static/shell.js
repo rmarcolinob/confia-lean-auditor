@@ -127,6 +127,10 @@
       history.pushState(null, "", `#${profile}/home`);
     },
   };
+  // Cross-page teacher links preserve the existing unsaved-edit guard.
+  for (const link of document.querySelectorAll("[data-teacher-workspace]")) link.addEventListener("click", event => {
+    if ((authMode && authenticatedProfile !== "teacher") || window.ConfIATeacher?.canLeave() === false) event.preventDefault();
+  });
   for (const link of links) link.addEventListener("click", event => {
     if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
     event.preventDefault();
@@ -163,6 +167,8 @@
       if (!authenticatedProfile) { location.replace("/"); return; }
       window.ConfIAAuthProfile = authenticatedProfile;
       window.ConfIAAuthUser = authenticatedUser;
+      const sessionBadge = document.querySelector(".header-context .badge");
+      if (sessionBadge) sessionBadge.textContent = "Sessão institucional";
       if (authenticatedProfile === "student") document.querySelector("#student-home-name").textContent = authenticatedUser.display_name;
       document.querySelector(".brand").setAttribute("href", `#${authenticatedProfile}/home`);
       document.querySelector("#demo-profile-label").remove();
@@ -195,5 +201,9 @@
         }).catch(() => { document.querySelector("#student-institutional-context").textContent = "Escola e turma indisponíveis nesta sessão."; window.ConfIATutoria?.updateContext(); });
       initialNavigation();
     }).catch(() => { location.replace("/"); });
-  } else initialNavigation();
+  } else {
+    const contextLabel = document.querySelector("#student-institutional-context");
+    if (contextLabel) contextLabel.textContent = "Demonstração local · escola e turma exigem sessão autenticada.";
+    initialNavigation();
+  }
 })();

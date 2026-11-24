@@ -13,13 +13,22 @@
   <link rel="stylesheet" href="/static/tme/correction-workspace.css?v=tme-problem-catalog-01">
   <link rel="stylesheet" href="/static/tme/secondary-views.css?v=tme-synthetic-demo-03">
   <link rel="stylesheet" href="/static/dynamic.css?v=dy6-01">
+  <link rel="stylesheet" href="/static/platform.css?v=platform-01">
 </head>
 <body data-view="home" data-tme-shell="modern">
   <a class="skip" href="#main">Ir para conteúdo</a>
-  <header class="home-header"><div class="home-brand"><strong>ConfIA</strong><span>Plataforma de<br>correção assistida</span></div><details class="home-avatar"><summary id="evaluator-avatar" aria-label="Perfil do avaliador"></summary><p id="home-session">Avaliador ConfIA</p></details></header>
+  <header class="home-header"><div class="home-brand"><strong>ConfIA</strong><span>Área do professor<br>Correção assistida</span></div><details class="home-avatar"><summary id="evaluator-avatar" aria-label="Perfil do avaliador"></summary><div class="home-session-menu"><p id="home-session">Avaliador ConfIA</p><button id="logout" type="button" class="secondary" hidden>Encerrar sessão</button></div></details></header>
+  <nav class="teacher-workspace-links" aria-label="Área do professor">
+    <a href="/#teacher/home" data-platform-exit>Área do professor</a>
+    <a href="/tme" data-correction-view="home">Central de correções</a>
+    <a href="/tme?view=new&amp;mode=specialized" data-correction-view="new" data-mode="specialized">SPECIALIZED</a>
+    <a href="/tme?view=new&amp;mode=dynamic" data-correction-view="new" data-mode="dynamic">DYNAMIC</a>
+    <a href="/#teacher/exams" data-platform-exit>Atividades da turma</a>
+  </nav>
+  <p id="platform-session-status" class="platform-session-status" role="status" hidden></p>
   <header class="top">
     <div class="brand"><strong>ConfIA</strong><span>Confiabilidade e Explicabilidade</span><small>PILOTO ConfIA</small></div>
-    <details class="user-menu"><summary id="session-label">Sessão do avaliador</summary><p id="session-detail" role="status">Verificando sessão…</p><button id="logout" type="button" class="secondary" hidden>Encerrar sessão</button></details>
+    <details class="user-menu"><summary id="session-label">Sessão do avaliador</summary><p id="session-detail" role="status">Verificando sessão…</p></details>
   </header>
   <div class="workspace-shell">
     <aside id="sidebar" class="sidebar">

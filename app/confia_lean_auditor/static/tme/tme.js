@@ -25,6 +25,9 @@
     const changed=url!==currentURL;
     if(changed || replace)window.history?.[replace?"replaceState":"pushState"]?.({tme:true,origin:returnTo},"",url);
     currentURL=url;
+    for (const link of document.querySelectorAll("[data-correction-view]")) {
+      link.setAttribute("aria-current", link.dataset.correctionView === view && (!link.dataset.mode || link.dataset.mode === params.mode) ? "page" : "false");
+    }
     return changed;
   }
   const route = id => writeRoute("workspace",{},id);
@@ -96,6 +99,24 @@
     }
     return data;
   }
+  // Keep the existing in-page router and its busy-state protection.
+  for (const link of document.querySelectorAll("[data-correction-view]")) link.addEventListener("click", event => {
+    if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+    event.preventDefault();
+    if (state.busy || [...state.cache.values()].some(s => s.readingDirty)) {
+      const notice = document.querySelector("#platform-session-status");
+      if (notice) { notice.hidden = false; notice.textContent = "Conclua a operação e salve ou descarte a edição da transcrição antes de sair."; }
+      return;
+    }
+    navigate(link.dataset.correctionView, {mode:link.dataset.mode});
+  });
+  for (const link of document.querySelectorAll("[data-platform-exit]")) link.addEventListener("click", event => {
+    if (state.busy || [...state.cache.values()].some(s => s.readingDirty)) {
+      event.preventDefault();
+      const notice = document.querySelector("#platform-session-status");
+      if (notice) { notice.hidden = false; notice.textContent = "Conclua a operação e salve ou descarte a edição da transcrição antes de sair."; }
+    }
+  });
   const post = (path, value) => api(path, { method: "POST", body: JSON.stringify(value) });
   const problemPresentation = p => {
     const id = p.problem_id || p.id;
@@ -951,8 +972,17 @@
     const label = document.querySelector("#session-label"), detail = document.querySelector("#session-detail"), logout = document.querySelector("#logout");
     try {
       const user = await api("/auth/me"); label.textContent = user.display_name || user.login; const homeSession = document.querySelector("#home-session"); if (homeSession) homeSession.textContent = user.display_name || user.login || "Avaliador ConfIA"; detail.textContent = "Sessão autenticada · Avaliador"; logout.hidden = false;
-      logout.addEventListener("click", async () => { const response = await fetch("/auth/logout", { method: "POST", credentials: "same-origin" }); if (response.ok) window.location.assign("/auth"); else detail.textContent = "Não foi possível encerrar a sessão."; });
-    } catch (_) { if (detail) detail.textContent = "Sessão do piloto · acesso conforme configuração do servidor"; }
+      logout.addEventListener("click", async () => { const response = await fetch("/auth/logout", { method: "POST", credentials: "same-origin" }); if (response.ok) window.location.assign("/"); else detail.textContent = "Não foi possível encerrar a sessão."; });
+    } catch (error) {
+      const message = error.status === 404 ? "Demonstração local · atividades institucionais exigem sessão autenticada."
+        : error.status === 401 ? "Sessão ausente ou expirada. Acesse a entrada do ConfIA para autenticar-se."
+        : error.status === 403 ? "Este perfil não tem acesso à área do professor."
+        : "Não foi possível consultar a sessão. Tente novamente mais tarde.";
+      if (detail) detail.textContent = message;
+      const homeSession = document.querySelector("#home-session"); if (homeSession) homeSession.textContent = message;
+      const notice = document.querySelector("#platform-session-status");
+      if (notice) { notice.textContent = message; notice.hidden = false; }
+    }
   })();
   currentURL="/tme"+(window.location.search||"");
   returnTo=window.history?.state?.origin||returnTo;

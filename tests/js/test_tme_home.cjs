@@ -15,7 +15,7 @@ const metrics = ui => walk(ui.root).filter(n=>n.className.startsWith('home-metri
 
 test('Home requests one aggregate without fetching case lists or artifacts',async()=>{
   const ui=await pilot({startHome:true,homeSummary:summary()});
-  assert.equal(ui.root.dataset.view,'home'); assert.match(text(ui.root),/Olá, avaliador!.*Vamos continuar\?/);
+  assert.equal(ui.root.dataset.view,'home'); assert.match(text(ui.root),/Olá, professor!.*Vamos continuar\?/);
   assert.deepEqual(ui.calls.map(c=>c.url).sort(),['/auth/me','/tme/home-summary?period=today']);
   assert.equal(walk(ui.root).filter(n=>n.tag==='table'||n.tag==='img'||n.tag==='textarea').length,0);
   assert.doesNotMatch(text(ui.root),/AuditRun|RecognitionRun|Lean|rubrica|hash|JSON/);

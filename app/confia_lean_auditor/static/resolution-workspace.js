@@ -384,7 +384,10 @@
     get("student-exams").setAttribute("aria-busy", "true");
     try {
       const response = await fetch("/assessments", { credentials: "same-origin", cache: "no-store" });
-      if (!response.ok) throw new Error("Não foi possível consultar as atividades da turma.");
+      if (!response.ok) {
+        const error = new Error("Não foi possível consultar as atividades da turma.");
+        error.status = response.status; throw error;
+      }
       const data = await response.json();
       if (request !== examsRequest) return;
       availableExams = Array.isArray(data) ? data.filter(exam => exam?.assessment && Array.isArray(exam.items)) : [];
@@ -401,7 +404,10 @@
           get("student-exam-list").hidden = false;
         }
       }
-    } catch (_) { if (request === examsRequest) setCopy("student-exams-message", "Não foi possível consultar os exames. Abra esta área novamente."); }
+    } catch (error) { if (request === examsRequest) setCopy("student-exams-message", error.status === 401
+      ? "As atividades da turma exigem uma sessão de aluno autenticada. Elas não estão disponíveis no modo de demonstração."
+      : error.status === 403 ? "Seu perfil não tem acesso às atividades desta turma."
+      : "Não foi possível consultar os exames. Abra esta área novamente."); }
     finally { if (request === examsRequest) get("student-exams").setAttribute("aria-busy", "false"); }
   }
   function enter(view) {

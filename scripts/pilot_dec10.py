@@ -33,7 +33,7 @@ def main():
     args=parser.parse_args()
     data=configure(args.data_dir,args.legacy)
     print('Data:',data,'\nSPECIALIZED / DYNAMIC: http://127.0.0.1:'+str(args.port)+'/tme',flush=True)
-    print('ITA workspace: http://127.0.0.1:'+str(args.port)+'/\nPaid providers are not enabled by this launcher.',flush=True)
+    print('Professor: http://127.0.0.1:'+str(args.port)+'/#teacher/home\nAluno / Gestao: http://127.0.0.1:'+str(args.port)+'/\nPaid providers are not enabled by this launcher.',flush=True)
     import uvicorn
     uvicorn.run('confia_lean_auditor.main:app',host='127.0.0.1',port=args.port)
 

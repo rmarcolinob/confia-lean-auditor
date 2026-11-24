@@ -16,7 +16,7 @@ async function page({ hash = "", search = "", records = [], authRole = null, tea
   classroomsBySchool = { 'school-a': [{ classroom_id: 'class-a', school_id: 'school-a', name: 'Turma A' }] },
   recordsByClass = null, assessmentsByClass = {}, studentsByClass = {},
   summariesBySubmission = {}, historiesByTranscription = {}, progressByAssessment = {} } = {}) {
-  const nodes = new Map(), links = [], menus = [], tabs = [], modes = [], calls = [], events = {}, store = new Map();
+  const nodes = new Map(), workspaceLinks = [], links = [], menus = [], tabs = [], modes = [], calls = [], events = {}, store = new Map();
   let accepted = false;
   const acceptance = { submission_id: submissionId, transcription_id: summary.transcription.transcription_id,
     revision_number: 1, acceptance_id: 'acc_' + 'c'.repeat(32), accepted_at: revision.created_at,
@@ -42,6 +42,7 @@ async function page({ hash = "", search = "", records = [], authRole = null, tea
     if (attrs.id) nodes.set(`#${attrs.id}`, n);
     if (attrs.id === "profile-navigation") inNav = true;
     if (tag === "p" && attrs.class === "sidebar-note") inNav = false;
+    if (/\bdata-teacher-workspace\b/.test(raw)) workspaceLinks.push(n);
     if (/\bdata-shell-link\b/.test(raw)) { n.inNav = inNav; links.push(n); }
     if (attrs['data-profile-menu']) { n.dataset.profileMenu = attrs['data-profile-menu']; menus.push(n); }
     if (attrs['data-tab-target']) { n.dataset.tabTarget = attrs['data-tab-target']; tabs.push(n); nodes.set(`[data-tab-target="${n.dataset.tabTarget}"]`, n); }
@@ -58,7 +59,7 @@ async function page({ hash = "", search = "", records = [], authRole = null, tea
   const context = vm.createContext({ document: { body,
     querySelector: get, createElement: create,
     querySelectorAll: selector => ({ '[data-tab-target]': tabs, '.tab-panel': panels, '[data-student-mode]': modes,
-      '[data-shell-link]': links, '[data-profile-menu]': menus })[selector] || [],
+      '[data-teacher-workspace]': workspaceLinks, '[data-shell-link]': links, '[data-profile-menu]': menus })[selector] || [],
   }, location, history, window, URLSearchParams, console,
     katex: { render(latex, target) { target.textContent = `rendered:${latex}`; } },
     localStorage: { getItem: key => store.get(key), setItem: (key, value) => store.set(key, value) },
@@ -113,7 +114,7 @@ async function page({ hash = "", search = "", records = [], authRole = null, tea
     assert(link, `missing menu link ${href}`);
     await link.emit('click', { button: 0, preventDefault() {} }); await flush();
   };
-  return { get, links, menus, tabs, modes, visit, location, window, events, calls, store, bodyClasses };
+  return { get, links, workspaceLinks, menus, tabs, modes, visit, location, window, events, calls, store, bodyClasses };
 }
 
 test('authenticated shell locks navigation to the server role and exposes logout', async () => {
@@ -383,4 +384,15 @@ test('capture return query, deep links, invalid links and skip link preserve con
   assert.equal(invalid.location.hash, '#student/home');
   ui.location.hash = '#app-root'; await ui.events.hashchange();
   assert.equal(ui.location.hash, '#app-root'); assert.equal(ui.get('#teacher-area').hidden, false);
+});
+
+test('teacher cross-page modes preserve edits and cannot grant another role access',async()=>{
+ const teacher=await page({authRole:'TEACHER'});
+ assert(teacher.workspaceLinks.some(l=>l.getAttribute('href').includes('mode=specialized')));
+ assert(teacher.workspaceLinks.some(l=>l.getAttribute('href').includes('mode=dynamic')));
+ let blocked=false;teacher.window.ConfIATeacher.canLeave=()=>false;
+ await teacher.workspaceLinks[0].emit('click',{preventDefault(){blocked=true;}});assert(blocked);
+ const student=await page({authRole:'STUDENT'});blocked=false;
+ await student.workspaceLinks[0].emit('click',{preventDefault(){blocked=true;}});assert(blocked);
+ assert.equal(student.location.hash,'#student/home');
 });

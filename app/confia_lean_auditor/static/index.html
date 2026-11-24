@@ -12,6 +12,8 @@
     <link rel="stylesheet" href="/static/tutoria.css?v=tutoria-contextual-final-01">
     <link rel="stylesheet" href="/static/tutoria-chat.css?v=tutoria-contextual-final-01">
     <link rel="stylesheet" href="/static/tutoria-assistant.css?v=tutoria-contextual-final-01">
+    <link rel="stylesheet" href="/static/tme/tme-theme.css?v=platform-01">
+    <link rel="stylesheet" href="/static/platform.css?v=platform-01">
   </head>
   <body>
     <div id="confia-surface">
@@ -54,8 +56,11 @@
           </div>
           <div data-profile-menu="teacher" hidden>
             <a href="#teacher/home" data-shell-link>Início</a>
+            <a href="/tme" data-teacher-workspace>Central de correções</a>
+            <a href="/tme?view=new&amp;mode=specialized" data-teacher-workspace>SPECIALIZED · Preparadas</a>
+            <a href="/tme?view=new&amp;mode=dynamic" data-teacher-workspace>DYNAMIC · Inéditas</a>
             <a href="#teacher/students" data-shell-link>Alunos</a>
-            <a href="#teacher/exams" data-shell-link>Exames</a>
+            <a href="#teacher/exams" data-shell-link>Atividades da turma</a>
             <a href="#teacher/submissions" data-shell-link>Soluções recebidas</a>
             <a href="#teacher/transcriptions" data-shell-link>Transcrições</a>
             <a href="#teacher/analysis" data-shell-link>Correção / Análise ConfIA</a>
@@ -291,6 +296,11 @@
           <p id="teacher-context-message" role="status" aria-live="polite"></p>
         </section>
         <section id="teacher-home" class="home-panel" hidden>
+          <div class="teacher-correction-modes" aria-label="Modalidades de correção">
+            <article class="card"><p class="eyebrow">SPECIALIZED</p><h2>Questões preparadas</h2><p>Corrija questões ITA, TME² e do catálogo, com as rubricas e pautas já preparadas.</p><a class="button button-primary" href="/tme?view=new&amp;mode=specialized" data-teacher-workspace>Corrigir questão preparada</a></article>
+            <article class="card"><p class="eyebrow">DYNAMIC</p><h2>Questões inéditas</h2><p>Crie atividades, listas e provas. Forneça ou aprove a rubrica e acompanhe a correção.</p><a class="button button-primary" href="/tme?view=new&amp;mode=dynamic" data-teacher-workspace>Criar ou retomar atividade</a></article>
+          </div>
+          <p class="teacher-workspace-links"><a href="/tme?view=queue" data-teacher-workspace>Fila de correções</a><a href="/tme?view=results" data-teacher-workspace>Resultados das correções</a></p>
           <div class="welcome-card card"><p class="eyebrow">Acompanhamento da solução</p><h2>Da solução recebida à decisão do professor</h2><p>Confira o manuscrito e a transcrição, consulte a sugestão da Análise ConfIA e registre sua decisão. Finalize e libere o resultado ao aluno quando estiver pronto.</p><a class="button button-primary" href="#teacher/submissions" data-shell-link>Abrir soluções recebidas →</a></div>
           <div class="home-grid">
             <article class="card"><h2>Soluções recebidas</h2><p>Consulte manuscritos enviados pelo caderno e seus arquivos originais.</p><a class="button button-secondary" href="#teacher/submissions" data-shell-link>Consultar soluções</a></article>
