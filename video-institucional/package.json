@@ -1,0 +1,29 @@
+{
+  "name": "confia-video-institucional",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "studio": "remotion studio src/index.ts",
+    "check": "tsc --noEmit && node scripts/check.mjs",
+    "audio": "python3 scripts/audio.py",
+    "qa": "node scripts/render.mjs stills",
+    "sample": "node scripts/render.mjs sample",
+    "preview": "node scripts/render.mjs preview",
+    "render": "node scripts/render.mjs full"
+  },
+  "dependencies": {
+    "remotion": "4.0.540",
+    "@remotion/cli": "4.0.540",
+    "@remotion/bundler": "4.0.540",
+    "@remotion/renderer": "4.0.540",
+    "@remotion/media": "4.0.540",
+    "react": "19.2.0",
+    "react-dom": "19.2.0"
+  },
+  "devDependencies": {
+    "@types/react": "19.2.2",
+    "@types/react-dom": "19.2.2",
+    "typescript": "5.9.3"
+  }
+}

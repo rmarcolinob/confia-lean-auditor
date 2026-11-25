@@ -1,0 +1,135 @@
+[
+  {
+    "start": 1,
+    "end": 6.8,
+    "text": "Uma resolução matemática revela muito mais do que uma resposta."
+  },
+  {
+    "start": 7.4,
+    "end": 14.3,
+    "text": "Em cada linha, o estudante registra escolhas, relações e caminhos para construir seu raciocínio."
+  },
+  {
+    "start": 15,
+    "end": 19.7,
+    "text": "Mas como compreender esse percurso e identificar onde ele precisa de apoio?"
+  },
+  {
+    "start": 20.1,
+    "end": 24.5,
+    "text": "Avaliar também é entender como se chegou ao resultado."
+  },
+  {
+    "start": 25.3,
+    "end": 29.9,
+    "text": "Essa é a proposta do ConfIA: confiabilidade e explicabilidade.",
+    "speech": "Essa é a proposta do Confia: confiabilidade e explicabilidade."
+  },
+  {
+    "start": 31.2,
+    "end": 37.5,
+    "text": "Um agente para analisar soluções matemáticas e produzir avaliações que explicam seus fundamentos."
+  },
+  {
+    "start": 38.1,
+    "end": 44,
+    "text": "Da escrita aos dados, o raciocínio ganha estrutura, preservando a solução apresentada pelo estudante."
+  },
+  {
+    "start": 46,
+    "end": 51.8,
+    "text": "Observe este exemplo: calcular a soma dos vinte primeiros números naturais positivos."
+  },
+  {
+    "start": 52.5,
+    "end": 57.6,
+    "text": "O aluno começa com a fórmula correta: vinte vezes vinte mais um, dividido por dois."
+  },
+  {
+    "start": 58.2,
+    "end": 63.3,
+    "text": "Na linha seguinte, registra vinte vezes vinte e um. E conclui: quatrocentos e vinte."
+  },
+  {
+    "start": 64,
+    "end": 69,
+    "text": "A resolução é enviada para análise. O que aconteceu entre esses passos?"
+  },
+  {
+    "start": 71,
+    "end": 77,
+    "text": "Primeiro, a inteligência artificial identifica os argumentos e organiza as afirmações da solução."
+  },
+  {
+    "start": 78,
+    "end": 84.5,
+    "text": "A análise matemática examina as relações entre os passos. Aqui, a divisão por dois desapareceu."
+  },
+  {
+    "start": 85.3,
+    "end": 91.7,
+    "text": "A formalização traduz proposições selecionadas para uma linguagem precisa, com hipóteses e objetivos explícitos."
+  },
+  {
+    "start": 92.5,
+    "end": 99.1,
+    "text": "Quando aplicável, o Lean quatro verifica provas formais. Ele não lê diretamente o manuscrito do aluno."
+  },
+  {
+    "start": 100,
+    "end": 106.5,
+    "text": "Uma proposição não verificada não é automaticamente falsa. O resultado pode permanecer inconclusivo."
+  },
+  {
+    "start": 107.3,
+    "end": 114,
+    "text": "Nesta demonstração, todas essas etapas são ilustrativas. Não estamos executando uma auditoria ou uma verificação real."
+  },
+  {
+    "start": 116,
+    "end": 122.1,
+    "text": "A devolutiva transforma a análise em uma orientação que ajuda a aprender: sua fórmula inicial está correta."
+  },
+  {
+    "start": 123,
+    "end": 129.2,
+    "text": "Ao calcular o produto, você deixou de dividir por dois. Vamos recuperar essa operação."
+  },
+  {
+    "start": 130,
+    "end": 136.4,
+    "text": "Vinte vezes vinte e um resulta em quatrocentos e vinte. Dividindo por dois, chegamos a duzentos e dez."
+  },
+  {
+    "start": 137.3,
+    "end": 144,
+    "text": "Mais que apontar um erro, explicar o passo permite rever a estratégia e avançar na aprendizagem."
+  },
+  {
+    "start": 146,
+    "end": 152.4,
+    "text": "Aluno, professor e gestão: aprendizagem, avaliação matemática e informações educacionais."
+  },
+  {
+    "start": 153,
+    "end": 158.6,
+    "text": "O caderno, o fluxo docente e os indicadores agregados já estão implementados no projeto."
+  },
+  {
+    "start": 159,
+    "end": 164.5,
+    "text": "O feedback do TutorIA é demonstrativo. O histórico permanente de prática está em desenvolvimento.",
+    "speech": "O feedback do Tutoria é demonstrativo. O histórico permanente de prática está em desenvolvimento."
+  },
+  {
+    "start": 166,
+    "end": 170.4,
+    "text": "ConfIA. Confiabilidade e Explicabilidade.",
+    "speech": "Confia. Confiabilidade e Explicabilidade."
+  },
+  {
+    "start": 171,
+    "end": 178.9,
+    "text": "Pesquisa, matemática e inteligência artificial para transformar a avaliação e a aprendizagem."
+  }
+]

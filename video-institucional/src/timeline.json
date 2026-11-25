@@ -1,0 +1,9 @@
+[
+ {"id":1,"start":0,"end":25,"title":"O desafio"},
+ {"id":2,"start":25,"end":45,"title":"O ConfIA"},
+ {"id":3,"start":45,"end":70,"title":"A resolução"},
+ {"id":4,"start":70,"end":115,"title":"A auditoria"},
+ {"id":5,"start":115,"end":145,"title":"A explicação"},
+ {"id":6,"start":145,"end":165,"title":"O ecossistema ConfIA"},
+ {"id":7,"start":165,"end":180,"title":"Encerramento institucional"}
+]

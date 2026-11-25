@@ -1,0 +1,12 @@
+<svg viewBox="0 0 260 200" fill="none" xmlns="http://www.w3.org/2000/svg" focusable="false">
+      <path class="hero-surface" d="M40 200 95 73q11-27 42-27h78q26 0 33 25l12 129Z"/>
+      <g stroke-width="2.2" stroke-linecap="round">
+        <path class="hero-green" d="m10 89 28-54Q49 14 76 14h70"/>
+        <path class="hero-yellow" d="m26 165 49-106q10-23 36-23h56"/>
+        <path class="hero-red" d="m166 36 6-8q10-14 29-14h59"/>
+      </g>
+      <rect class="hero-paper" x="112" y="65" width="100" height="112" rx="18"/>
+      <g class="hero-lines" stroke-width="6" stroke-linecap="round"><path d="M135 94h49M135 112h32M135 130h15"/></g>
+      <circle class="hero-check-disc" cx="197" cy="145" r="25"/>
+      <path d="m187 145 7 7 14-16" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>

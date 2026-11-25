@@ -1,0 +1,8 @@
+node_modules/
+.npm-cache/
+.cache/
+output/
+qa/
+public/audio/*.wav
+public/audio/*.aiff
+public/audio/takes/

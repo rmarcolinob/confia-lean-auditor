@@ -1,0 +1,34 @@
+{
+  "repository_commit": "1b3daea41ba4ce31c0cfd35dd07907da3d03669f",
+  "references": [
+    {
+      "source": "app/confia_lean_auditor/static/design-system.css",
+      "sha256": "baf0b9f733377ef387286a358af332ba11003f1fedcd459eb6ed6740ef4a2af5"
+    },
+    {
+      "source": "app/confia_lean_auditor/static/styles.css",
+      "sha256": "c94e44dd3ae23212c2bca4b3527f5ebaaa61dea4876b775373d2aab6cf17f9af"
+    },
+    {
+      "source": "app/confia_lean_auditor/static/index.html",
+      "sha256": "6bcffb1d6daeb075c884df0d6fec00cd65b2c8c5578eb407091dee6026f9cd3d"
+    },
+    {
+      "source": "app/confia_lean_auditor/static/tme/tme-theme.css",
+      "sha256": "d59ada4505caed73020549821a46cd0c673b4c7a3c26b82f64bfc828f2ffa618"
+    },
+    {
+      "source": "app/confia_lean_auditor/static/tme/home.css",
+      "sha256": "6b6b25f3858fe900660ae1bb8ea3e4044984c1c1069e6de962edf63512550586"
+    },
+    {
+      "source": "app/confia_lean_auditor/static/tme/home.js",
+      "sha256": "17208f07228da077d593f1b87be3ffa1d683f4298b38a4c1d04c6b2e5193ec5c"
+    },
+    {
+      "source": "app/confia_lean_auditor/static/capture/identity.css",
+      "sha256": "26d39be44202e9a4a19aed385bb55a0f4e1276db12b2ca887b05db416a6704e6"
+    }
+  ],
+  "official_logo_files_found": []
+}
