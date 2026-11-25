@@ -62,7 +62,9 @@
       for(const o of decision.obligations||[]){
         if(seen.has(o.obligation_id))continue;seen.add(o.obligation_id);
         const box=n("div",null,"criterion-evidence");box.dataset.mathematicalStatus=o.effective_status;
-        box.append(n("p",`${glyph(o.effective_status)} ${title(o.obligation_id)} — ${labels[o.effective_status]}`));
+        const statusLabel=o.effective_status==="refuted" && o.metadata?.semantic_fallback?.decision==="not_met"
+          ? "Critério não atendido" : labels[o.effective_status];
+        box.append(n("p",`${glyph(o.effective_status)} ${title(o.obligation_id)} — ${statusLabel}`));
         for(const id of o.source_claim_ids||[]){
           const record=records[id];if(!record)continue;
           if(record.source.raw_text)box.append(n("blockquote",record.source.raw_text,"evidence-quote"));

@@ -59,7 +59,10 @@ P5_ROLES = {
 # Only these obligations explicitly permit mathematical evidence from these
 # earlier items. No problem-wide blanket cross-item permission.
 CROSS_ITEM = {
- 'TME2_P1_PILOT': {'c.uses_expression': ['b']},
+ 'TME2_P1_PILOT': {'c.uses_expression': ['b'],
+                   # The expression proved in (b) also establishes which values
+                   # are admissible in (c) and why the middle digit is free in (d).
+                   'c.no_extraneous_values': ['b'], 'd.middle_choices': ['b']},
  'TME2026P2': {'b.realizable_5': ['a'], 'c.pairs': ['b']},
  'TME2026P3': {},
  'TME2026P4': {'b.qr':['a'], 'b.pq':['a'], 'c.perimeter_pbq':['a'],

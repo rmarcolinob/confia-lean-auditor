@@ -45,3 +45,15 @@ test('pending SPECIALIZED never announces completion and offers an explicit retr
   assert.equal(requests.length,2);assert.ok(requests[0].execution_key);assert.notEqual(requests[0].execution_key,requests[1].execution_key);
   assert.equal(walk(ui.root).find(e=>e.textContent==='Usar sugestão').disabled,true);
 });
+
+test('semantic not_met labels an unmet criterion without claiming a true assertion was refuted',async()=>{
+  const data=result(), o=data.assessment.items[0].obligations[1];
+  o.verification_source='semantic';
+  o.metadata={semantic_fallback:{decision:'not_met',response:{justification:'O intervalo afirmado é correto, mas não foi justificado.'},quotes:[]}};
+  data.bridge.auditor.facts=[];
+  const before=JSON.stringify(data);
+  const ui=await pilot({auditRun:{audit_run_id:'aud_'+'e'.repeat(64),status:'COMPLETED',stale:false,result:data}});
+  await ui.click('Abrir');const visible=text(walk(ui.root).find(e=>e.className==='dense-criteria'));
+  assert.match(visible,/Critério não atendido/);assert.match(visible,/correto, mas não foi justificado/);
+  assert.doesNotMatch(visible,/Afirmação refutada/);assert.equal(JSON.stringify(data),before);
+});
