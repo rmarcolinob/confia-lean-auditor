@@ -45,8 +45,8 @@ def test_ita_active_fallback_no_second_adjudication(isolated_engine,monkeypatch)
     assert calls,[(c['claim_type'],c['status'],c.get('grounding')) for c in result.student_claim_checks]
     assert result.scoring_policy==VERSION
     semantic=[i for i in result.rubric_assessment.items if i.scoring_basis=='semantic_fallback']
-    assert semantic and all(i.points is None and i.suggested_points==i.max_points for i in semantic)
-    assert all(i.mathematical_status=='indeterminate' for i in semantic)
+    assert semantic and all(i.points == i.suggested_points == i.max_points for i in semantic)
+    assert all(i.mathematical_status=='supported' and i.verified_points is None for i in semantic)
     trace=json.loads((Path(result.artifact_dir)/'secondary_adjudication.json').read_text())
     assert trace['policy']==VERSION
     saved=AuditResponse.model_validate_json((Path(result.artifact_dir)/'audit.json').read_text())
@@ -108,8 +108,10 @@ def test_ita_minimal_gate_preserves_unknown_and_zero(monkeypatch,decision,expect
         if decision=='error':raise TimeoutError()
         return dict(decision=decision,justification='Simulação offline.',quotes=['2+2=4'])
     result=ita.apply(rubric=rubric,solution='2+2=4',assets=assets,microclaims=[],student_claim_checks=[],provider=opinion)
-    assert result.score==expected and result.items[0].points is None
-    assert result.items[0].mathematical_status=='indeterminate'
+    assert result.score==expected and result.items[0].points == expected
+    assert result.items[0].mathematical_status == {'met':'supported','not_met':'refuted'}.get(decision,'indeterminate')
+    assert result.items[0].verified_points is None
+    assert result.coverage == 0
     if decision=='error':assert result.secondary_adjudication['criteria']['criterion']['error_type']=='TimeoutError'
 
 

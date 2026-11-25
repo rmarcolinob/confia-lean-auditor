@@ -3,6 +3,7 @@ from .service import assess, VERSION
 from confia_lean_auditor.rubric.assessment import refresh_assessment
 from confia_lean_auditor.rubric.secondary_context import prepare_payload
 from confia_lean_auditor.rubric.secondary_award_gate import _scope_issue
+from confia_lean_auditor.rubric.secondary_candidates import candidate_binding
 from confia_lean_auditor.student_claims.schemas import is_mathematically_refuted
 
 
@@ -10,12 +11,19 @@ def apply(*, rubric, solution, assets, microclaims, student_claim_checks, claim_
           technical_issue=False, claim_extraction=None, provider=None):
     refresh_assessment(rubric)
     rubric.scoring_policy = VERSION
+    previous = rubric.secondary_adjudication or {}
     rubric.secondary_adjudication = {'policy': VERSION, 'criteria': {}}
     pending = [i for i in rubric.items if i.points is None]
     payload = prepare_payload(pending=pending, solution=solution, assets=assets,
         microclaims=microclaims, student_checks=student_claim_checks, claim_context=claim_context)
     rows = {r['id']:r for r in payload['pending_criteria']}
     for item in rubric.items:
+        if item.points is not None and item.scoring_basis == 'semantic_fallback':
+            # Reusing a decided assessment must not relabel semantic evidence as
+            # first-pass verification or adjudicate the same criterion again.
+            if item.id in previous.get('criteria', {}):
+                rubric.secondary_adjudication['criteria'][item.id] = previous['criteria'][item.id]
+            continue
         item.verified_points = item.points
         item.suggested_points = item.points
         item.scoring_basis = 'first_pass' if item.points is not None else 'unscorable'
@@ -38,6 +46,14 @@ def apply(*, rubric, solution, assets, microclaims, student_claim_checks, claim_
             if isinstance(a,int) and isinstance(b,int) and 0 <= a < b <= len(solution):
                 e = dict(source_start=a,source_end=b,source_text=solution[a:b])
                 if not _scope_issue(e, solution, row): candidates.append(e)
+        if not candidates:
+            # The existing retrieval layer also supplies literal, relevant prose
+            # when a finite structured extractor cannot represent the student's
+            # formula. Retrieval is eligibility for review, never proof or points.
+            for e in row.get('candidate_evidence', []):
+                if (e.get('source_kind') in {'local_context', 'criterion_evidence'}
+                        and candidate_binding(e, solution) and not _scope_issue(e, solution, row)):
+                    candidates.append(e)
         blocked = any(is_mathematically_refuted(c) or c.get('status') == 'failed' for c in checks)
         conflict = any(a.get('status') == 'conflicting' for c in claims for a in c.get('alignment',[]))
         if not candidates or blocked or conflict:
@@ -55,12 +71,15 @@ def apply(*, rubric, solution, assets, microclaims, student_claim_checks, claim_
         item.adjustment_notes.append('Avaliação semântica pela rubrica; sem certificação formal.')
         if trace['decision'] != 'review':
             item.suggested_points = item.max_points if trace['decision']=='met' else 0.0
+            item.points = item.suggested_points
+            item.mathematical_status = 'supported' if trace['decision']=='met' else 'refuted'
+            item.assessment_note = 'Critério decidido por avaliação semântica; sem certificação formal.'
             item.scoring_basis = 'semantic_fallback'
-    values=[i.suggested_points for i in rubric.items]
-    rubric.score = sum(values) if all(v is not None for v in values) else None
+    refresh_assessment(rubric)
     rubric.needs_review = technical_issue or rubric.score is None or any(i.scoring_basis == "semantic_fallback" for i in rubric.items)
-    rubric.coverage = rubric.evaluated_max_score / rubric.max_score if rubric.max_score else 0
-    rubric.estimated_points = rubric.score-rubric.evaluated_score if rubric.score is not None else None
+    # Coverage/verified_points continue to describe the first pass, not GPT.
+    rubric.coverage = sum(i.max_points for i in rubric.items if i.verified_points is not None) / rubric.max_score if rubric.max_score else 0
+    rubric.estimated_points = sum(i.points for i in rubric.items if i.scoring_basis == 'semantic_fallback') if rubric.score is not None else None
     semantic_failure = any(t.get('error_type') for t in rubric.secondary_adjudication['criteria'].values())
     rubric.unscorable_reason = ('SEMANTIC_PROVIDER_FAILURE' if semantic_failure else 'SEMANTIC_REVIEW_REQUIRED') if rubric.score is None else None
     return rubric
