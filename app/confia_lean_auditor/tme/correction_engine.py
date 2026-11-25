@@ -29,7 +29,8 @@ def review_reasons(run):
         reasons.append("A análise não foi concluída por uma falha técnica.")
     elif run.result:
         if run.result.score is None:
-            reasons.append("O motor não determinou uma pontuação para esta leitura.")
+            reasons.append("O motor não determinou uma pontuação para esta leitura." if run.source.dynamic_context else
+                "Correção não concluída: há critérios pendentes e nenhuma nota final. Revise ou solicite nova análise.")
         if getattr(run.result,"needs_review",getattr(run.result,"review_required",False)):
             reasons.append("A pauta registra evidência insuficiente, conflito ou verificação pendente.")
     facts = getattr(getattr(getattr(run.result, "bridge", None), "auditor", None), "facts", [])
@@ -122,6 +123,10 @@ def project_audit(run, case, detail, *, previous=None):
             reasons.append("Uma ou mais verificações não puderam concluir por erro técnico.")
         base["review_required"] = bool(reasons)
         base["analysis_status"] = "COMPLETED_WITH_REVIEW" if reasons else "COMPLETED"
+        if not run.source.dynamic_context and result.score is None:
+            # Audit execution may finish while mathematical correction remains
+            # incomplete. Preserve the immutable run and its partial evidence.
+            base["analysis_status"] = "INCOMPLETE"
     # The predecessor snapshot is persisted in the reanalysis event. Re-reading a
     # run must never select a different predecessor after later runs are added.
     prior = next((e for e in run.question_events or [] if e["event_type"] == "question_reanalysis_requested"), None)

@@ -1,0 +1,84 @@
+........................................................................ [  7%]
+........................................................................ [ 15%]
+........................................................................ [ 22%]
+........................................................................ [ 30%]
+........................................................................ [ 37%]
+........................................................................ [ 45%]
+........................................................................ [ 52%]
+........................................................................ [ 60%]
+........................................................................ [ 67%]
+........................................................................ [ 75%]
+........................................................................ [ 82%]
+........................................................................ [ 90%]
+...........................................F............................ [ 97%]
+.......................                                                  [100%]
+=================================== FAILURES ===================================
+____ test_generic_audit_started_before_finalization_cannot_publish_after_it ____
+
+exam = (<starlette.testclient.TestClient object at 0x10995f310>, PosixPath('/private/var/folders/4h/mld1ypt95nq1z3nm58k0k64m0...c9f2b71d76ef5b113060c', 'created_at': '2026-11-25T02:42:15.120012Z', 'created_by_user_id': 'tme-demo-evaluator', ...}])
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x109784580>
+
+    def test_generic_audit_started_before_finalization_cannot_publish_after_it(exam,monkeypatch):
+        from threading import Event
+        from confia_lean_auditor.tme import accepted_audit
+        from confia_lean_auditor.submission_audits.router import service
+        from confia_lean_auditor.submission_audits.schemas import AuditRequest
+        from confia_lean_auditor.submissions.store import SubmissionConflict
+        client,_,eid,cases=exam;versions,_,_=populate(exam)
+        request=AuditRequest(**request_for(client,cases[0]['case_id'],versions[0]))
+        original=accepted_audit.audit_accepted_tme_transcription
+        started,release=Event(),Event()
+        def slow(*args):
+            started.set();assert release.wait(30)
+            return original(*args)
+        monkeypatch.setattr(accepted_audit,'audit_accepted_tme_transcription',slow)
+        with ThreadPoolExecutor(max_workers=1) as pool:
+            pending=pool.submit(service().execute,versions[0]['submission_id'],request)
+            try:
+                assert started.wait(10)
+                f=finalize(client,eid)
+            finally:release.set()
+>           with pytest.raises(SubmissionConflict):pending.result(timeout=30)
+
+tests/test_tme_finalization.py:216: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = None, timeout = 30
+
+    def result(self, timeout=None):
+        """Return the result of the call that the future represents.
+    
+        Args:
+            timeout: The number of seconds to wait for the result if the future
+                isn't done. If None, then there is no limit on the wait time.
+    
+        Returns:
+            The result of the call that the future represents.
+    
+        Raises:
+            CancelledError: If the future was cancelled.
+            TimeoutError: If the future didn't finish executing before the given
+                timeout.
+            Exception: If the call raised then that exception will be raised.
+        """
+        try:
+            with self._condition:
+                if self._state in [CANCELLED, CANCELLED_AND_NOTIFIED]:
+                    raise CancelledError()
+                elif self._state == FINISHED:
+                    return self.__get_result()
+    
+                self._condition.wait(timeout)
+    
+                if self._state in [CANCELLED, CANCELLED_AND_NOTIFIED]:
+                    raise CancelledError()
+                elif self._state == FINISHED:
+                    return self.__get_result()
+                else:
+>                   raise TimeoutError()
+E                   concurrent.futures._base.TimeoutError
+
+/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/concurrent/futures/_base.py:447: TimeoutError
+=========================== short test summary info ============================
+FAILED tests/test_tme_finalization.py::test_generic_audit_started_before_finalization_cannot_publish_after_it
+1 failed, 958 passed, 1 deselected in 305.88s (0:05:05)

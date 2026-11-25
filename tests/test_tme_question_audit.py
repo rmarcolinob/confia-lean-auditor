@@ -172,3 +172,35 @@ def test_item_across_pages_does_not_invent_visual_mapping(questions):
     assert run['evidences']
     assert all(e['exam_page_id'] is None and e['region'] is None for e in run['evidences'])
     assert any(e['source_span'] for e in run['evidences'])
+
+
+def test_specialized_pending_is_incomplete_and_explicit_retry_preserves_history(questions, monkeypatch):
+    from confia_lean_auditor.semantic_policy import service as semantic
+    from confia_lean_auditor.tme import accepted_audit
+    from confia_lean_auditor.rubric.pauta.engine import PautaEngine
+    monkeypatch.setenv('CONFIA_SPECIALIZED_POLICY', semantic.VERSION)
+    original = accepted_audit.audit_tme
+    def unavailable(*args, **kwargs):
+        bridge, _ = original(*args, **kwargs)
+        rows = tuple(e.model_copy(update={'status':'technical_error'}) if e.obligation_id=='a.result_594' else e
+                     for e in bridge.evidence.obligations)
+        bridge = bridge.model_copy(update={'evidence':bridge.evidence.model_copy(update={'obligations':rows})})
+        return bridge, PautaEngine().evaluate(accepted_audit.pauta_for(args[0]), bridge.evidence)
+    monkeypatch.setattr(accepted_audit, 'audit_tme', unavailable)
+    def down(self, request): raise TimeoutError('simulated unavailable provider')
+    monkeypatch.setattr(semantic.SemanticProvider, '__call__', down)
+    client, _, _, cid, _ = questions
+    rev, _ = reading(client, cid); request = request_for(client, cid, rev)
+    pending = analyze(client, cid, request)
+    assert pending['status']=='COMPLETED'  # Immutable technical execution status.
+    assert pending['analysis_status']=='INCOMPLETE' and pending['suggested_score'] is None
+    assert any('Correção não concluída' in r for r in pending['review_reasons'])
+    path = service()._path(pending['audit_run_id']); before = path.read_bytes()
+    def recovered(self, request):
+        return dict(decision='met', justification='Simulação: a igualdade escrita é correta.',
+                    quotes=[request['accepted_item_evidence'][0]['source_text']])
+    monkeypatch.setattr(semantic.SemanticProvider, '__call__', recovered)
+    assert analyze(client, cid, request)['audit_run_id']==pending['audit_run_id']
+    recovered_run = analyze(client, cid, {**request, 'execution_key':uuid4().hex})
+    assert recovered_run['suggested_score']==20 and recovered_run['analysis_status']=='COMPLETED_WITH_REVIEW'
+    assert path.read_bytes()==before and len(service().list(rev['submission_id']))==2

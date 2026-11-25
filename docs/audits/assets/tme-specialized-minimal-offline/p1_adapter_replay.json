@@ -1,0 +1,606 @@
+{
+  "mode": "offline_adapter_replay_simulated_provider_no_audit_reexecution",
+  "source": {
+    "source_directory": "runtime/pilot-dec10/submission_audits/artifacts/aud_5b0f90a76bf2bc56abff79009130daa25524c8853f6f14eb3797ec476d383027-ed34f75dcb724356a011638291ae0ec5",
+    "audit_run_id": "aud_5b0f90a76bf2bc56abff79009130daa25524c8853f6f14eb3797ec476d383027",
+    "files": {
+      "audit.json": "e436c9fecc44586322b86e3b2da6f08b4f683efd73a2b69258b937a55b449d56",
+      "solution.txt": "52ddc7ccc2c48e9e9bc97e6d8c4e5a2d0c73389dd40538e6cc666b406058aacd",
+      "input_mapping.json": "bc89aed91f2876bdeffab2f698d21378a7de3e27c5924c020daaa9a2d35cca5d",
+      "accepted_revision.json": "5fe4f5f8b7b844c56188247fddf5c0b82caa5d968f6f79c949ecd33ca6009944"
+    }
+  },
+  "original_score": null,
+  "original_known_points": "1",
+  "score": 18.0,
+  "items": [
+    {
+      "item": "a",
+      "points": "2",
+      "status": "decided",
+      "selected_band": "a.arithmetic_only"
+    },
+    {
+      "item": "b",
+      "points": "5",
+      "status": "decided",
+      "selected_band": null
+    },
+    {
+      "item": "c",
+      "points": "5",
+      "status": "decided",
+      "selected_band": null
+    },
+    {
+      "item": "d",
+      "points": "6",
+      "status": "decided",
+      "selected_band": null
+    }
+  ],
+  "opinions": [
+    {
+      "obligation": "a.arithmetic_error_only",
+      "status": "supported",
+      "request_sha256": "09111036783e3c68886e6f006ffb741de9d3a3bd3639343818a50b58a8b43ec7",
+      "response": {
+        "decision": "met",
+        "justification": "SIMULAÇÃO OFFLINE: 137 foi identificado e a única operação 731−137 foi montada corretamente; 595 é um erro aritmético isolado.",
+        "quotes": [
+          "Invertendo 731, obtenho 137. Portanto, 731 - 137 = 595."
+        ]
+      },
+      "quotes": [
+        {
+          "text": "Invertendo 731, obtenho 137. Portanto, 731 - 137 = 595.",
+          "occurrences": [
+            {
+              "start": 0,
+              "end": 55
+            }
+          ]
+        }
+      ],
+      "evidence": [
+        {
+          "item_id": "a",
+          "source_text": "Invertendo 731, obtenho 137. Portanto, 731 - 137 = 595.",
+          "occurrences": [
+            {
+              "start": 0,
+              "end": 55
+            }
+          ],
+          "evidence_id": "accepted:a:81e99a89ac8a3a6cdbc81ccf7c0fda98ff1103f676958a77d495aedf4889cb95"
+        }
+      ]
+    },
+    {
+      "obligation": "b.reversed_number",
+      "status": "supported",
+      "request_sha256": "aeed9d0792131989b4274780d081bb39b743afdbb88abc7d6feccc6ec601a298",
+      "response": {
+        "decision": "met",
+        "justification": "SIMULAÇÃO OFFLINE: A expansão 100c+10b+a está explicitamente escrita.",
+        "quotes": [
+          "O número original é 100a + 10b + c e o invertido é 100c + 10b + a. Subtraindo, os termos 10b se cancelam: (100a+10b+c)-(100c+10b+a)=99a-99c=99(a-c)."
+        ]
+      },
+      "quotes": [
+        {
+          "text": "O número original é 100a + 10b + c e o invertido é 100c + 10b + a. Subtraindo, os termos 10b se cancelam: (100a+10b+c)-(100c+10b+a)=99a-99c=99(a-c).",
+          "occurrences": [
+            {
+              "start": 56,
+              "end": 204
+            }
+          ]
+        }
+      ],
+      "evidence": [
+        {
+          "item_id": "b",
+          "source_text": "O número original é 100a + 10b + c e o invertido é 100c + 10b + a. Subtraindo, os termos 10b se cancelam: (100a+10b+c)-(100c+10b+a)=99a-99c=99(a-c).",
+          "occurrences": [
+            {
+              "start": 56,
+              "end": 204
+            }
+          ],
+          "evidence_id": "accepted:b:1cefd73ad8cc67583f1c43ecbd502ed57cf77a1d34eecc6f53f5558b05984270"
+        }
+      ]
+    },
+    {
+      "obligation": "b.subtraction",
+      "status": "supported",
+      "request_sha256": "f8b601ae9a5f7c7a2d7038c303b74fc19d44149536838fe57c2636ea0b9c63d6",
+      "response": {
+        "decision": "met",
+        "justification": "SIMULAÇÃO OFFLINE: As duas expansões decimais estão subtraídas na ordem correta.",
+        "quotes": [
+          "O número original é 100a + 10b + c e o invertido é 100c + 10b + a. Subtraindo, os termos 10b se cancelam: (100a+10b+c)-(100c+10b+a)=99a-99c=99(a-c)."
+        ]
+      },
+      "quotes": [
+        {
+          "text": "O número original é 100a + 10b + c e o invertido é 100c + 10b + a. Subtraindo, os termos 10b se cancelam: (100a+10b+c)-(100c+10b+a)=99a-99c=99(a-c).",
+          "occurrences": [
+            {
+              "start": 56,
+              "end": 204
+            }
+          ]
+        }
+      ],
+      "evidence": [
+        {
+          "item_id": "b",
+          "source_text": "O número original é 100a + 10b + c e o invertido é 100c + 10b + a. Subtraindo, os termos 10b se cancelam: (100a+10b+c)-(100c+10b+a)=99a-99c=99(a-c).",
+          "occurrences": [
+            {
+              "start": 56,
+              "end": 204
+            }
+          ],
+          "evidence_id": "accepted:b:1cefd73ad8cc67583f1c43ecbd502ed57cf77a1d34eecc6f53f5558b05984270"
+        }
+      ]
+    },
+    {
+      "obligation": "b.middle_cancellation",
+      "status": "supported",
+      "request_sha256": "eeb90c2aed0dbd4c268a9ba1479b877c0d60e5f9470c3419cfa49a187562ae05",
+      "response": {
+        "decision": "met",
+        "justification": "SIMULAÇÃO OFFLINE: O texto afirma o cancelamento de 10b e mostra a subtração.",
+        "quotes": [
+          "O número original é 100a + 10b + c e o invertido é 100c + 10b + a. Subtraindo, os termos 10b se cancelam: (100a+10b+c)-(100c+10b+a)=99a-99c=99(a-c)."
+        ]
+      },
+      "quotes": [
+        {
+          "text": "O número original é 100a + 10b + c e o invertido é 100c + 10b + a. Subtraindo, os termos 10b se cancelam: (100a+10b+c)-(100c+10b+a)=99a-99c=99(a-c).",
+          "occurrences": [
+            {
+              "start": 56,
+              "end": 204
+            }
+          ]
+        }
+      ],
+      "evidence": [
+        {
+          "item_id": "b",
+          "source_text": "O número original é 100a + 10b + c e o invertido é 100c + 10b + a. Subtraindo, os termos 10b se cancelam: (100a+10b+c)-(100c+10b+a)=99a-99c=99(a-c).",
+          "occurrences": [
+            {
+              "start": 56,
+              "end": 204
+            }
+          ],
+          "evidence_id": "accepted:b:1cefd73ad8cc67583f1c43ecbd502ed57cf77a1d34eecc6f53f5558b05984270"
+        }
+      ]
+    },
+    {
+      "obligation": "b.factorization",
+      "status": "supported",
+      "request_sha256": "f477fcf0d983403d0e3dc3c93f0be18d72f1c63f2910555ff17f75ca4d9ec114",
+      "response": {
+        "decision": "met",
+        "justification": "SIMULAÇÃO OFFLINE: O desenvolvimento escrito termina em 99a−99c=99(a−c).",
+        "quotes": [
+          "O número original é 100a + 10b + c e o invertido é 100c + 10b + a. Subtraindo, os termos 10b se cancelam: (100a+10b+c)-(100c+10b+a)=99a-99c=99(a-c)."
+        ]
+      },
+      "quotes": [
+        {
+          "text": "O número original é 100a + 10b + c e o invertido é 100c + 10b + a. Subtraindo, os termos 10b se cancelam: (100a+10b+c)-(100c+10b+a)=99a-99c=99(a-c).",
+          "occurrences": [
+            {
+              "start": 56,
+              "end": 204
+            }
+          ]
+        }
+      ],
+      "evidence": [
+        {
+          "item_id": "b",
+          "source_text": "O número original é 100a + 10b + c e o invertido é 100c + 10b + a. Subtraindo, os termos 10b se cancelam: (100a+10b+c)-(100c+10b+a)=99a-99c=99(a-c).",
+          "occurrences": [
+            {
+              "start": 56,
+              "end": 204
+            }
+          ],
+          "evidence_id": "accepted:b:1cefd73ad8cc67583f1c43ecbd502ed57cf77a1d34eecc6f53f5558b05984270"
+        }
+      ]
+    },
+    {
+      "obligation": "c.uses_expression",
+      "status": "supported",
+      "request_sha256": "9a6a9ff723919660c354a035bcb3fce28c98b2496b43cf22880035a7ef94d5c9",
+      "response": {
+        "decision": "met",
+        "justification": "SIMULAÇÃO OFFLINE: Usa o domínio de a−c para listar os múltiplos de 99, com a expressão demonstrada em (b).",
+        "quotes": [
+          "Como a-c pode assumir os valores de 1 a 8, os resultados são 99, 198, 297, 396, 495, 594 e 693.",
+          "O número original é 100a + 10b + c e o invertido é 100c + 10b + a. Subtraindo, os termos 10b se cancelam: (100a+10b+c)-(100c+10b+a)=99a-99c=99(a-c)."
+        ]
+      },
+      "quotes": [
+        {
+          "text": "Como a-c pode assumir os valores de 1 a 8, os resultados são 99, 198, 297, 396, 495, 594 e 693.",
+          "occurrences": [
+            {
+              "start": 205,
+              "end": 300
+            }
+          ]
+        },
+        {
+          "text": "O número original é 100a + 10b + c e o invertido é 100c + 10b + a. Subtraindo, os termos 10b se cancelam: (100a+10b+c)-(100c+10b+a)=99a-99c=99(a-c).",
+          "occurrences": [
+            {
+              "start": 56,
+              "end": 204
+            }
+          ]
+        }
+      ],
+      "evidence": [
+        {
+          "item_id": "c",
+          "source_text": "Como a-c pode assumir os valores de 1 a 8, os resultados são 99, 198, 297, 396, 495, 594 e 693.",
+          "occurrences": [
+            {
+              "start": 205,
+              "end": 300
+            }
+          ],
+          "evidence_id": "accepted:c:2f6e91135050e6b7963f940292094b355ed44805fea63b9bf96fd1107edb02a6"
+        },
+        {
+          "item_id": "b",
+          "source_text": "O número original é 100a + 10b + c e o invertido é 100c + 10b + a. Subtraindo, os termos 10b se cancelam: (100a+10b+c)-(100c+10b+a)=99a-99c=99(a-c).",
+          "occurrences": [
+            {
+              "start": 56,
+              "end": 204
+            }
+          ],
+          "evidence_id": "accepted:b:1cefd73ad8cc67583f1c43ecbd502ed57cf77a1d34eecc6f53f5558b05984270"
+        }
+      ]
+    },
+    {
+      "obligation": "c.difference_domain",
+      "status": "supported",
+      "request_sha256": "80bc059595523e6d7333c9c723187716f7a6393d9ce2d8c80f620feafeb1ca87",
+      "response": {
+        "decision": "met",
+        "justification": "SIMULAÇÃO OFFLINE: Declara os valores inteiros de 1 a 8 para a−c, compatíveis com os dígitos extremos não nulos.",
+        "quotes": [
+          "Como a-c pode assumir os valores de 1 a 8, os resultados são 99, 198, 297, 396, 495, 594 e 693."
+        ]
+      },
+      "quotes": [
+        {
+          "text": "Como a-c pode assumir os valores de 1 a 8, os resultados são 99, 198, 297, 396, 495, 594 e 693.",
+          "occurrences": [
+            {
+              "start": 205,
+              "end": 300
+            }
+          ]
+        }
+      ],
+      "evidence": [
+        {
+          "item_id": "c",
+          "source_text": "Como a-c pode assumir os valores de 1 a 8, os resultados são 99, 198, 297, 396, 495, 594 e 693.",
+          "occurrences": [
+            {
+              "start": 205,
+              "end": 300
+            }
+          ],
+          "evidence_id": "accepted:c:2f6e91135050e6b7963f940292094b355ed44805fea63b9bf96fd1107edb02a6"
+        }
+      ]
+    },
+    {
+      "obligation": "c.complete_list",
+      "status": "refuted",
+      "request_sha256": "0de87fdab1099c03addbb8b5090cbad2d6d8a5f1d999f8648e5844b6e17ae281",
+      "response": {
+        "decision": "not_met",
+        "justification": "SIMULAÇÃO OFFLINE: Falta 792, correspondente à diferença 8; a lista não está completa.",
+        "quotes": [
+          "Como a-c pode assumir os valores de 1 a 8, os resultados são 99, 198, 297, 396, 495, 594 e 693."
+        ]
+      },
+      "quotes": [
+        {
+          "text": "Como a-c pode assumir os valores de 1 a 8, os resultados são 99, 198, 297, 396, 495, 594 e 693.",
+          "occurrences": [
+            {
+              "start": 205,
+              "end": 300
+            }
+          ]
+        }
+      ],
+      "evidence": [
+        {
+          "item_id": "c",
+          "source_text": "Como a-c pode assumir os valores de 1 a 8, os resultados são 99, 198, 297, 396, 495, 594 e 693.",
+          "occurrences": [
+            {
+              "start": 205,
+              "end": 300
+            }
+          ],
+          "evidence_id": "accepted:c:2f6e91135050e6b7963f940292094b355ed44805fea63b9bf96fd1107edb02a6"
+        }
+      ]
+    },
+    {
+      "obligation": "c.no_extraneous_values",
+      "status": "supported",
+      "request_sha256": "9ffc7e2a0fe034d0058b0ca36b1adc2ea7394cd52f211c48667ef997d8af5e05",
+      "response": {
+        "decision": "met",
+        "justification": "SIMULAÇÃO OFFLINE: Todos os sete valores escritos são múltiplos de 99 entre 99 e 792.",
+        "quotes": [
+          "Como a-c pode assumir os valores de 1 a 8, os resultados são 99, 198, 297, 396, 495, 594 e 693."
+        ]
+      },
+      "quotes": [
+        {
+          "text": "Como a-c pode assumir os valores de 1 a 8, os resultados são 99, 198, 297, 396, 495, 594 e 693.",
+          "occurrences": [
+            {
+              "start": 205,
+              "end": 300
+            }
+          ]
+        }
+      ],
+      "evidence": [
+        {
+          "item_id": "c",
+          "source_text": "Como a-c pode assumir os valores de 1 a 8, os resultados são 99, 198, 297, 396, 495, 594 e 693.",
+          "occurrences": [
+            {
+              "start": 205,
+              "end": 300
+            }
+          ],
+          "evidence_id": "accepted:c:2f6e91135050e6b7963f940292094b355ed44805fea63b9bf96fd1107edb02a6"
+        }
+      ]
+    },
+    {
+      "obligation": "c.single_list_error",
+      "status": "supported",
+      "request_sha256": "2a68c64248136dca456e439f7556bd8de5955e279614daae035c6e345cc44f58",
+      "response": {
+        "decision": "met",
+        "justification": "SIMULAÇÃO OFFLINE: A lista contém exatamente os sete primeiros valores; há uma única omissão, 792, sem valor indevido.",
+        "quotes": [
+          "Como a-c pode assumir os valores de 1 a 8, os resultados são 99, 198, 297, 396, 495, 594 e 693."
+        ]
+      },
+      "quotes": [
+        {
+          "text": "Como a-c pode assumir os valores de 1 a 8, os resultados são 99, 198, 297, 396, 495, 594 e 693.",
+          "occurrences": [
+            {
+              "start": 205,
+              "end": 300
+            }
+          ]
+        }
+      ],
+      "evidence": [
+        {
+          "item_id": "c",
+          "source_text": "Como a-c pode assumir os valores de 1 a 8, os resultados são 99, 198, 297, 396, 495, 594 e 693.",
+          "occurrences": [
+            {
+              "start": 205,
+              "end": 300
+            }
+          ],
+          "evidence_id": "accepted:c:2f6e91135050e6b7963f940292094b355ed44805fea63b9bf96fd1107edb02a6"
+        }
+      ]
+    },
+    {
+      "obligation": "d.equation",
+      "status": "supported",
+      "request_sha256": "f0ae9fbc8aca8d1363d7ec6bfee1f242a7e96bb619188ff0eaf6c3d0b550f4fc",
+      "response": {
+        "decision": "met",
+        "justification": "SIMULAÇÃO OFFLINE: A equação 99(a−c)=594 está escrita.",
+        "quotes": [
+          "Se o resultado é 594, então 99(a-c)=594, logo a-c=6. Os pares possíveis são (7,1), (8,2) e (9,3). Para cada par existem 10 escolhas para o algarismo b. Assim, existem 30 números."
+        ]
+      },
+      "quotes": [
+        {
+          "text": "Se o resultado é 594, então 99(a-c)=594, logo a-c=6. Os pares possíveis são (7,1), (8,2) e (9,3). Para cada par existem 10 escolhas para o algarismo b. Assim, existem 30 números.",
+          "occurrences": [
+            {
+              "start": 301,
+              "end": 479
+            }
+          ]
+        }
+      ],
+      "evidence": [
+        {
+          "item_id": "d",
+          "source_text": "Se o resultado é 594, então 99(a-c)=594, logo a-c=6. Os pares possíveis são (7,1), (8,2) e (9,3). Para cada par existem 10 escolhas para o algarismo b. Assim, existem 30 números.",
+          "occurrences": [
+            {
+              "start": 301,
+              "end": 479
+            }
+          ],
+          "evidence_id": "accepted:d:42667d66b1ea6446a6a400c14f0e31b8cf770c897b41ee213363b5189b30cf74"
+        }
+      ]
+    },
+    {
+      "obligation": "d.difference_six",
+      "status": "supported",
+      "request_sha256": "998efc433e3bbbfa0a77dc205bd0cab88d8cca946377b08c6fda045e5814df46",
+      "response": {
+        "decision": "met",
+        "justification": "SIMULAÇÃO OFFLINE: O texto obtém a−c=6 a partir da equação.",
+        "quotes": [
+          "Se o resultado é 594, então 99(a-c)=594, logo a-c=6. Os pares possíveis são (7,1), (8,2) e (9,3). Para cada par existem 10 escolhas para o algarismo b. Assim, existem 30 números."
+        ]
+      },
+      "quotes": [
+        {
+          "text": "Se o resultado é 594, então 99(a-c)=594, logo a-c=6. Os pares possíveis são (7,1), (8,2) e (9,3). Para cada par existem 10 escolhas para o algarismo b. Assim, existem 30 números.",
+          "occurrences": [
+            {
+              "start": 301,
+              "end": 479
+            }
+          ]
+        }
+      ],
+      "evidence": [
+        {
+          "item_id": "d",
+          "source_text": "Se o resultado é 594, então 99(a-c)=594, logo a-c=6. Os pares possíveis são (7,1), (8,2) e (9,3). Para cada par existem 10 escolhas para o algarismo b. Assim, existem 30 números.",
+          "occurrences": [
+            {
+              "start": 301,
+              "end": 479
+            }
+          ],
+          "evidence_id": "accepted:d:42667d66b1ea6446a6a400c14f0e31b8cf770c897b41ee213363b5189b30cf74"
+        }
+      ]
+    },
+    {
+      "obligation": "d.digit_pairs",
+      "status": "supported",
+      "request_sha256": "4bcda0270817ce4dba406d22726f71ee778714b83e4c6b07003a367bf9f6fead",
+      "response": {
+        "decision": "met",
+        "justification": "SIMULAÇÃO OFFLINE: Lista exatamente (7,1), (8,2) e (9,3).",
+        "quotes": [
+          "Se o resultado é 594, então 99(a-c)=594, logo a-c=6. Os pares possíveis são (7,1), (8,2) e (9,3). Para cada par existem 10 escolhas para o algarismo b. Assim, existem 30 números."
+        ]
+      },
+      "quotes": [
+        {
+          "text": "Se o resultado é 594, então 99(a-c)=594, logo a-c=6. Os pares possíveis são (7,1), (8,2) e (9,3). Para cada par existem 10 escolhas para o algarismo b. Assim, existem 30 números.",
+          "occurrences": [
+            {
+              "start": 301,
+              "end": 479
+            }
+          ]
+        }
+      ],
+      "evidence": [
+        {
+          "item_id": "d",
+          "source_text": "Se o resultado é 594, então 99(a-c)=594, logo a-c=6. Os pares possíveis são (7,1), (8,2) e (9,3). Para cada par existem 10 escolhas para o algarismo b. Assim, existem 30 números.",
+          "occurrences": [
+            {
+              "start": 301,
+              "end": 479
+            }
+          ],
+          "evidence_id": "accepted:d:42667d66b1ea6446a6a400c14f0e31b8cf770c897b41ee213363b5189b30cf74"
+        }
+      ]
+    },
+    {
+      "obligation": "d.middle_choices",
+      "status": "supported",
+      "request_sha256": "d79e0f4a315818fa0383b13f893e0d5442f5d459633e721fe0548bc179a1b444",
+      "response": {
+        "decision": "met",
+        "justification": "SIMULAÇÃO OFFLINE: Afirma dez escolhas para o dígito central b.",
+        "quotes": [
+          "Se o resultado é 594, então 99(a-c)=594, logo a-c=6. Os pares possíveis são (7,1), (8,2) e (9,3). Para cada par existem 10 escolhas para o algarismo b. Assim, existem 30 números."
+        ]
+      },
+      "quotes": [
+        {
+          "text": "Se o resultado é 594, então 99(a-c)=594, logo a-c=6. Os pares possíveis são (7,1), (8,2) e (9,3). Para cada par existem 10 escolhas para o algarismo b. Assim, existem 30 números.",
+          "occurrences": [
+            {
+              "start": 301,
+              "end": 479
+            }
+          ]
+        }
+      ],
+      "evidence": [
+        {
+          "item_id": "d",
+          "source_text": "Se o resultado é 594, então 99(a-c)=594, logo a-c=6. Os pares possíveis são (7,1), (8,2) e (9,3). Para cada par existem 10 escolhas para o algarismo b. Assim, existem 30 números.",
+          "occurrences": [
+            {
+              "start": 301,
+              "end": 479
+            }
+          ],
+          "evidence_id": "accepted:d:42667d66b1ea6446a6a400c14f0e31b8cf770c897b41ee213363b5189b30cf74"
+        }
+      ]
+    },
+    {
+      "obligation": "d.total_thirty",
+      "status": "supported",
+      "request_sha256": "2a882a12d15d3acc1e2fcdbc6d9bb9929ed78a78bd8ec7fbdf499671359b6c6e",
+      "response": {
+        "decision": "met",
+        "justification": "SIMULAÇÃO OFFLINE: Relaciona três pares e dez escolhas ao total correto de 30.",
+        "quotes": [
+          "Se o resultado é 594, então 99(a-c)=594, logo a-c=6. Os pares possíveis são (7,1), (8,2) e (9,3). Para cada par existem 10 escolhas para o algarismo b. Assim, existem 30 números."
+        ]
+      },
+      "quotes": [
+        {
+          "text": "Se o resultado é 594, então 99(a-c)=594, logo a-c=6. Os pares possíveis são (7,1), (8,2) e (9,3). Para cada par existem 10 escolhas para o algarismo b. Assim, existem 30 números.",
+          "occurrences": [
+            {
+              "start": 301,
+              "end": 479
+            }
+          ]
+        }
+      ],
+      "evidence": [
+        {
+          "item_id": "d",
+          "source_text": "Se o resultado é 594, então 99(a-c)=594, logo a-c=6. Os pares possíveis são (7,1), (8,2) e (9,3). Para cada par existem 10 escolhas para o algarismo b. Assim, existem 30 números.",
+          "occurrences": [
+            {
+              "start": 301,
+              "end": 479
+            }
+          ],
+          "evidence_id": "accepted:d:42667d66b1ea6446a6a400c14f0e31b8cf770c897b41ee213363b5189b30cf74"
+        }
+      ]
+    }
+  ],
+  "auditor_unchanged": true
+}

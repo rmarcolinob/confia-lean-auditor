@@ -33,3 +33,15 @@ test('P5 labels are pedagogical rather than internal obligation identifiers',asy
   const ui=await pilot({auditRun:{audit_run_id:'aud_'+'c'.repeat(64),status:'COMPLETED',stale:false,result:data}});await ui.click('Abrir');
   const criteria=walk(ui.root).find(e=>e.className==='dense-criteria');assert.match(text(criteria),/Calcula o produto da decomposição/);assert.doesNotMatch(text(criteria),/a\.product/);
 });
+
+test('pending SPECIALIZED never announces completion and offers an explicit retry with a new key',async()=>{
+  const data=result();
+  const ui=await pilot({pendingAudit:true,auditRun:{audit_run_id:'aud_'+'d'.repeat(64),status:'COMPLETED',stale:false,result:data}});
+  await ui.click('Abrir');await ui.click('Analisar com ConfIA');
+  assert.match(text(ui.root),/Correção não concluída/);
+  assert.doesNotMatch(text(ui.root),/Análise concluída\./);
+  await ui.click('Tentar novamente');
+  const requests=ui.calls.filter(c=>c.url.endsWith('/audits')&&c.options.method==='POST').map(c=>JSON.parse(c.options.body));
+  assert.equal(requests.length,2);assert.ok(requests[0].execution_key);assert.notEqual(requests[0].execution_key,requests[1].execution_key);
+  assert.equal(walk(ui.root).find(e=>e.textContent==='Usar sugestão').disabled,true);
+});

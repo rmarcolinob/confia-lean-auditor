@@ -66,7 +66,7 @@ def test_tme_accepted_pauta_fallback_and_rollback(offline,monkeypatch):
     def unavailable(*a,**kw):
         bridge,assessment=original(*a,**kw)
         rows=list(bridge.evidence.obligations)
-        i=next(i for i,e in enumerate(rows) if e.status=='supported' and e.source_claim_ids)
+        i=next(i for i,e in enumerate(rows) if e.obligation_id=='a.result_594')
         rows[i]=rows[i].model_copy(update={'status':'indeterminate'})
         bridge=bridge.model_copy(update={'evidence':bridge.evidence.model_copy(update={'obligations':tuple(rows)})})
         return bridge,PautaEngine().evaluate(accepted_audit.pauta_for('TME2026P1'),bridge.evidence)
@@ -74,7 +74,8 @@ def test_tme_accepted_pauta_fallback_and_rollback(offline,monkeypatch):
     calls=[]
     def opinion(self,request):
         calls.append(request)
-        return dict(decision='met',justification='Obrigação atendida; simulação offline.',quotes=[request['solution']])
+        return dict(decision='met',justification='Obrigação atendida; simulação offline.',
+            quotes=[request['accepted_item_evidence'][0]['source_text']])
     monkeypatch.setattr(semantic_service.SemanticProvider,'__call__',opinion)
     monkeypatch.setenv('CONFIA_SPECIALIZED_POLICY',VERSION)
     base,_,_,request=prepare(client,1,solution_for(1,FULL[1]))
@@ -89,7 +90,7 @@ def test_tme_accepted_pauta_fallback_and_rollback(offline,monkeypatch):
     assert service().get(run['audit_run_id']).result.score==20
     response=client.post(base+'/audits',json=request);assert response.status_code==200,response.text
     old=response.json();assert old['audit_run_id']!=run['audit_run_id']
-    assert old['result']['score']==17 and old['result']['needs_review']
+    assert old['result']['score']==18 and old['result']['needs_review']
     assert len(calls)==1
 
 

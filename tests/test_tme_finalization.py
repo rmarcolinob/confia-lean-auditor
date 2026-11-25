@@ -207,8 +207,12 @@ def test_generic_audit_started_before_finalization_cannot_publish_after_it(exam,
         started.set();assert release.wait(30)
         return original(*args)
     monkeypatch.setattr(accepted_audit,'audit_accepted_tme_transcription',slow)
+    worker = service()
+    # Match this fixture's offline question engine. This test checks publication
+    # ordering, not Lean compilation; the generic service otherwise defaults on.
+    worker.tme_use_lean = False
     with ThreadPoolExecutor(max_workers=1) as pool:
-        pending=pool.submit(service().execute,versions[0]['submission_id'],request)
+        pending=pool.submit(worker.execute,versions[0]['submission_id'],request)
         try:
             assert started.wait(10)
             f=finalize(client,eid)

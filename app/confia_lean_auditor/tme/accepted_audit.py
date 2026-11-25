@@ -109,7 +109,7 @@ def audit_accepted_tme_transcription(source, output_dir):
         from confia_lean_auditor.core.problem_catalog import list_tme_problem_catalog
         catalog = list_tme_problem_catalog(ROOT)
         statement = next((p.get('statement','') for p in catalog if p.get('id')==source.problem_id), config.title)
-        bridge, assessment = apply(config, bridge, source.solution_text, statement)
+        bridge, assessment = apply(config, bridge, source.solution_text, statement, item_sources=solution)
     if any(path.is_symlink() for path in (output_dir, *output_dir.parents)):
         raise SourceIntegrityError()
     output_dir.mkdir(parents=True, exist_ok=False)

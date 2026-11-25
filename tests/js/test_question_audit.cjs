@@ -74,3 +74,11 @@ test('ambiguous network result retries the same key, then a new requested analys
   const keys=postAudits(ui).map(c=>JSON.parse(c.options.body).execution_key);
   assert.equal(keys[0],keys[1]);assert.notEqual(keys[1],keys[2]);
 });
+
+test('technically completed question without a score is presented as incomplete',async()=>{
+  const {ui}=await open((body,id)=>result(body,id,{analysis_status:'INCOMPLETE',suggested_score:null,review_required:true}));
+  await ui.click('Importar leitura da captura');await ui.click('Analisar com ConfIA');
+  assert.match(text(ui.root),/Correção não concluída/);assert.doesNotMatch(text(ui.root),/Análise concluída\./);
+  assert.match(text(ui.root),/Pontuação não determinada/);
+  await ui.click('Executar nova análise');assert.equal(postAudits(ui).length,2);
+});

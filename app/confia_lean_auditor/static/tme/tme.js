@@ -6,6 +6,9 @@
   const Home = window.ConfiaTmeHome;
   const Workspace = window.ConfiaCorrectionWorkspace;
   const Views = window.ConfiaTmeViews;
+  const incompleteMessage = "Correção não concluída: há critérios pendentes e nenhuma nota final. Revise ou tente novamente.";
+  const incomplete = (c, run) => !c.dynamic_context && run?.status === "COMPLETED" &&
+    (c.exam_submission_id ? run.suggested_score == null : run.result?.score == null);
   let fullExam, preparation;
   const viewNames = {home:"home",queue:"cases",cases:"cases",new:"new",results:"results",exams:"exams"};
   let currentURL = "", returnTo = {view:"cases",params:{}};
@@ -696,13 +699,13 @@
     if(c.dynamic_context && saved.dynamicDecisionHistory?.length){const history=node("details");history.append(node("summary","Histórico de confirmações"));for(const row of saved.dynamicDecisionHistory){const d=row.decision;history.append(node("p",`${row.current?"Confirmação corrente":"Confirmação anterior invalidada"} · Primeira análise: ${d.grader_suggested_points} · Sugestão reconciliada: ${d.suggested_points} · Nota final: ${d.final_points}`));}analysisBody.append(history);}
     const decisionBox = c.exam_submission_id ? node("div") : decisionPanel(c, saved, run?.status === "COMPLETED" && (!run.stale || saved.decision) ? run : null);if(c.exam_submission_id)decisionBox.hidden=true;
     const actionbar = node("div", undefined, "workspace-actions");
-    const progress = saved.processing === "audit" ? "Analisando matemática · executando verificações…" : saved.processing === "recognition" ? "Reconhecendo solução…" : state.message || (run?.status === "FAILED" ? "Não foi possível concluir a análise matemática." : run ? "Análise concluída." : latest ? (c.exam_submission_id || c.source_mode==="TEXT") ? "Transcrição disponível." : "Transcrição automática disponível." : saved.feedback?.state === "FAILED" ? saved.feedback.message : "Aguardando reconhecimento");
+    const progress = saved.processing === "audit" ? "Analisando matemática · executando verificações…" : saved.processing === "recognition" ? "Reconhecendo solução…" : state.message || (run?.status === "FAILED" ? "Não foi possível concluir a análise matemática." : run ? (incomplete(c, run) ? incompleteMessage : "Análise concluída.") : latest ? (c.exam_submission_id || c.source_mode==="TEXT") ? "Transcrição disponível." : "Transcrição automática disponível." : saved.feedback?.state === "FAILED" ? saved.feedback.message : "Aguardando reconhecimento");
     actionbar.appendChild(note(progress));
-    actionbar.dataset.quiet=String(!c.exam_submission_id && !state.message && !saved.processing && run?.status==="COMPLETED" && !run.stale);
+    actionbar.dataset.quiet=String(!c.exam_submission_id && !state.message && !saved.processing && run?.status==="COMPLETED" && !run.stale && !incomplete(c, run));
     let primary;
     if (!latest && (!c.exam_submission_id || pages.length)) primary = btn(saved.feedback?.state === "FAILED" ? "Tentar novamente" : "Reconhecer", recognize);
     else if(c.exam_submission_id && latest) primary=btn(run?.status==="FAILED"?"Tentar novamente":saved.examReview.reanalysis_required?"Reanalisar questão":run?"Executar nova análise":"Analisar com ConfIA",audit);
-    else if (!c.exam_submission_id && (!run || run.stale || run.status === "FAILED")) primary = btn("Analisar com ConfIA", audit);
+    else if (!c.exam_submission_id && (!run || run.stale || run.status === "FAILED" || incomplete(c, run))) primary = btn(incomplete(c, run) ? "Tentar novamente" : "Analisar com ConfIA", audit);
     if (primary) { primary.disabled = state.busy || Boolean(c.exam_submission_id && saved.editing) || Boolean(saved.examReview?.exam_finalized); actionbar.appendChild(primary); }
     if (saved.processing === "recognition") actionbar.appendChild(loading("Reconhecendo…"));
     const heading = context(c, saved.decision || saved.examReview?.current_human_decision ? 3 : run ? 2 : latest ? 1 : 0); heading.appendChild(openDrawer);
@@ -805,14 +808,15 @@
     try {
       const accepted = await ensureAcceptance(c, history, latest);
       const request={transcription_id:history.transcription.transcription_id,revision_number:latest.revision_number,acceptance_id:accepted.acceptance_id};
-      if(c.exam_submission_id){
+      if(c.exam_submission_id || !c.dynamic_context){
         const version=`${history.transcription.transcription_id}:${latest.revision_number}`;
         if(saved.auditRequestVersion!==version){delete saved.auditRequestKey;saved.auditRequestVersion=version;}
         saved.auditRequestKey ||= window.crypto.randomUUID();request.execution_key=saved.auditRequestKey;
       }
       const run = await post(`/tme/cases/${c.case_id}/audits`, request);
-      if(c.exam_submission_id){delete saved.auditRequestKey;saved.loaded=false;}
-      saved.audits = [run, ...(saved.audits || []).filter(r => r.audit_run_id !== run.audit_run_id)]; state.message = run.stale ? "A leitura mudou durante a análise. O resultado foi preservado no histórico; reanalise a versão atual." : run.status === "COMPLETED" ? "Análise concluída." : reanalysis ? "Não foi possível concluir a reanálise." : "Não foi possível concluir a análise matemática.";
+      if(c.exam_submission_id || !c.dynamic_context) delete saved.auditRequestKey;
+      if(c.exam_submission_id) saved.loaded=false;
+      saved.audits = [run, ...(saved.audits || []).filter(r => r.audit_run_id !== run.audit_run_id)]; state.message = run.stale ? "A leitura mudou durante a análise. O resultado foi preservado no histórico; reanalise a versão atual." : run.status === "COMPLETED" ? (incomplete(c, run) ? incompleteMessage : "Análise concluída.") : reanalysis ? "Não foi possível concluir a reanálise." : "Não foi possível concluir a análise matemática.";
     } catch (_) { if(c.exam_submission_id)saved.loaded=false;state.message = reanalysis ? "Não foi possível concluir a reanálise. Confira a versão atual e tente novamente." : "Não foi possível concluir a análise matemática. A solução permanece preservada; tente novamente."; }
     finally { state.busy = false; saved.processing = null; }
     if (state.current === c && state.view === "workspace") await renderCorrection();
