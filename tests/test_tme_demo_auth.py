@@ -58,7 +58,8 @@ def test_tme_without_explicit_demo_flag_requires_session(demo, monkeypatch, flag
     assert client.post("/tme/cases", json={"problem_id": "ITA2025F2Q1",
         "external_candidate_ref": "TME-1", "source_mode": "IMAGE_SCAN"}).status_code == 401
     case_path = "/tme/cases/case_" + "a" * 32
-    for path in ("capture", "submission", "pages/0", "originals/0", "transcriptions", "audits", "decision", "scan-manifest", "recognition-status"):
+    for path in ("capture", "submission", "pages/0", "originals/0", "transcriptions", "audits", "decision", "scan-manifest", "recognition-status",
+                 "audits/aud_" + "a" * 64 + "/diagnostics"):
         assert client.get(f"{case_path}/{path}").status_code == 401
     for path in ("scan", "digital-submission", "recognize", "recognition-preview", "audits",
                  "transcriptions/trn_example/accept", "transcriptions/trn_example/revisions"):

@@ -94,6 +94,17 @@ def test_unconfirmed_question_blocker_and_completion(exam):
     s=summary(client,eid)
     assert s['pending_question_count']==1 and s['blockers'][0]['question_order']==3
     assert s['final_total_complete'] is False and s['total_adjustment'] is None
+    # The separate diagnostic identifies this explicit workflow rule, without
+    # inferring human confirmation status from needs_review or score.
+    for case,run in zip(cases,runs):
+        # Demo access stays case-scoped; it cannot bypass institutional auth.
+        assert client.get(f"/submission-audits/{run['audit_run_id']}/diagnostics").status_code==401
+        response=client.get(f"/tme/cases/{case['case_id']}/audits/{run['audit_run_id']}/diagnostics")
+        assert response.status_code==200,response.text
+        human=response.json()['human_review']
+        assert human['required'] is True and human['confirmation_state']=='unknown'
+        assert human['scope']=='current_exam_finalization'
+    assert client.get(f"/tme/cases/{cases[0]['case_id']}/audits/{runs[1]['audit_run_id']}/diagnostics").status_code==404
     finalize(client,eid,status=409)
     confirm(client,cases[2]['case_id'],selection(runs[2]))
     assert finalize(client,eid)['confirmed_question_count']==3

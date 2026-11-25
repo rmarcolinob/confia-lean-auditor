@@ -1,0 +1,4 @@
+Synthetic negative controls; no original artifact or saved configuration changed.
+Altered temporary bundle copy rejected: RC1 verification failed: Reference bundle checksum mismatch
+Temporary process configuration rejected: RC1 verification failed: Semantic provider configuration mismatch
+Temporary process configuration rejected: RC1 verification failed: Exam Lean disabled; candidate requires Lean

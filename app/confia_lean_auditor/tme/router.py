@@ -276,6 +276,24 @@ def list_cases(response: Response, user=Depends(require_tme_evaluator),
             if (not origin or c.data_origin == origin) and (not sample or c.demo_sample_groups)]
 
 
+@router.get("/cases/{case_id}/audits/{audit_run_id}/diagnostics", response_model=dict)
+def audit_diagnostics(case_id: str, audit_run_id: str, response: Response,
+                      user=Depends(require_tme_evaluator)):
+    from confia_lean_auditor.core.public_audit import public_response
+    from confia_lean_auditor.submission_audits.router import guarded as audit_guarded
+    from .review_diagnostics import diagnose_run
+    submission_id = source_for(case_id, user)
+    response.headers["Cache-Control"] = "no-store"
+
+    def project():
+        run = audit_service().get(audit_run_id)
+        if run.submission_id != submission_id:
+            raise HTTPException(404, "Análise não encontrada nesta correção.")
+        return public_response(diagnose_run(run))
+
+    return audit_guarded(project)
+
+
 @router.get("/cases/{case_id}", response_model=CorrectionCase)
 def get_case(case_id: str, response: Response, user=Depends(require_tme_evaluator)):
     response.headers["Cache-Control"] = "no-store"

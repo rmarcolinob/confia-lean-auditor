@@ -1,0 +1,1383 @@
+{
+  "mode": "READ_ONLY_EXISTING_AUDIT_HTTP_DIAGNOSTICS",
+  "api_calls_to_providers": 0,
+  "audits_executed": 0,
+  "historical_files_checked": 65,
+  "historical_files_unchanged": true,
+  "institutional_anonymous_status": 401,
+  "cross_case_status": 404,
+  "rows": [
+    {
+      "audit_run_id": "aud_1eb247481575591afe015612b9bcab6b98943d338347f5ce36da598eabaa019e",
+      "problem_id": "TME2026P1",
+      "case_id": "case_4a0483deeca147419940220e5c39996b",
+      "http_status": 200,
+      "cache_control": "no-store",
+      "diagnostics": {
+        "schema_version": "tme-review-diagnostics.v1",
+        "scope": "persisted_pauta_decisions",
+        "score_state": "undetermined",
+        "final_score": null,
+        "known_points": "15",
+        "possible_points": "17",
+        "max_score": "20",
+        "reason": "SAVED_SCORING_INTERVAL",
+        "items": [
+          {
+            "item_id": "a",
+            "score_state": "determined",
+            "points_awarded": "2",
+            "known_points": "2",
+            "possible_points": "2",
+            "selected_method_path": null,
+            "selected_band": "a.arithmetic_only"
+          },
+          {
+            "item_id": "b",
+            "score_state": "determined",
+            "points_awarded": "5",
+            "known_points": "5",
+            "possible_points": "5",
+            "selected_method_path": null,
+            "selected_band": null
+          },
+          {
+            "item_id": "c",
+            "score_state": "determined",
+            "points_awarded": "4",
+            "known_points": "4",
+            "possible_points": "4",
+            "selected_method_path": null,
+            "selected_band": null
+          },
+          {
+            "item_id": "d",
+            "score_state": "undetermined",
+            "points_awarded": null,
+            "known_points": "4",
+            "possible_points": "6",
+            "selected_method_path": null,
+            "selected_band": null
+          }
+        ],
+        "mathematical_pending": {
+          "state": "present",
+          "obligation_ids": [
+            "d.middle_choices"
+          ],
+          "occurrences": [
+            {
+              "item_id": "d",
+              "rule_path": [
+                "d",
+                "d.count"
+              ],
+              "obligation_id": "d.middle_choices",
+              "effective_status": "technical_error",
+              "origin": "semantic",
+              "evidence_refs": [
+                "accepted:d:db70ea68d225c78b5654ff9228730baafba6c700cef6d77d2150d1251410ed38"
+              ],
+              "affects_score": true,
+              "dispensable_alternative": false,
+              "reason": "OPEN_SCORING_INTERVAL"
+            }
+          ]
+        },
+        "nonblocking_pending": [
+          {
+            "item_id": "c",
+            "rule_path": [
+              "c",
+              "c.list",
+              "c.list.full"
+            ],
+            "obligation_id": "c.no_extraneous_values",
+            "effective_status": "technical_error",
+            "origin": "semantic",
+            "evidence_refs": [
+              "accepted:c:e750d753dba150790505385c986dc060822823e408400279b431219104ec51af"
+            ],
+            "affects_score": false,
+            "dispensable_alternative": true,
+            "reason": "ALTERNATIVE_CANNOT_IMPROVE_SCORE"
+          },
+          {
+            "item_id": "c",
+            "rule_path": [
+              "c",
+              "c.list",
+              "c.list.pattern"
+            ],
+            "obligation_id": "c.several_correct",
+            "effective_status": "indeterminate",
+            "origin": "deterministic",
+            "evidence_refs": [],
+            "affects_score": false,
+            "dispensable_alternative": true,
+            "reason": "ALTERNATIVE_CANNOT_IMPROVE_SCORE"
+          },
+          {
+            "item_id": "c",
+            "rule_path": [
+              "c",
+              "c.list",
+              "c.list.pattern"
+            ],
+            "obligation_id": "c.pattern_recognized",
+            "effective_status": "indeterminate",
+            "origin": "deterministic",
+            "evidence_refs": [],
+            "affects_score": false,
+            "dispensable_alternative": true,
+            "reason": "ALTERNATIVE_CANNOT_IMPROVE_SCORE"
+          },
+          {
+            "item_id": "c",
+            "rule_path": [
+              "c",
+              "c.list",
+              "c.list.some"
+            ],
+            "obligation_id": "c.some_correct",
+            "effective_status": "indeterminate",
+            "origin": "deterministic",
+            "evidence_refs": [],
+            "affects_score": false,
+            "dispensable_alternative": true,
+            "reason": "ALTERNATIVE_CANNOT_IMPROVE_SCORE"
+          }
+        ],
+        "dispensable_alternatives": [
+          {
+            "item_id": "c",
+            "rule_path": [
+              "c",
+              "c.list",
+              "c.list.full"
+            ],
+            "obligation_id": "c.no_extraneous_values",
+            "effective_status": "technical_error",
+            "origin": "semantic",
+            "evidence_refs": [
+              "accepted:c:e750d753dba150790505385c986dc060822823e408400279b431219104ec51af"
+            ],
+            "affects_score": false,
+            "dispensable_alternative": true,
+            "reason": "ALTERNATIVE_CANNOT_IMPROVE_SCORE"
+          },
+          {
+            "item_id": "c",
+            "rule_path": [
+              "c",
+              "c.list",
+              "c.list.pattern"
+            ],
+            "obligation_id": "c.several_correct",
+            "effective_status": "indeterminate",
+            "origin": "deterministic",
+            "evidence_refs": [],
+            "affects_score": false,
+            "dispensable_alternative": true,
+            "reason": "ALTERNATIVE_CANNOT_IMPROVE_SCORE"
+          },
+          {
+            "item_id": "c",
+            "rule_path": [
+              "c",
+              "c.list",
+              "c.list.pattern"
+            ],
+            "obligation_id": "c.pattern_recognized",
+            "effective_status": "indeterminate",
+            "origin": "deterministic",
+            "evidence_refs": [],
+            "affects_score": false,
+            "dispensable_alternative": true,
+            "reason": "ALTERNATIVE_CANNOT_IMPROVE_SCORE"
+          },
+          {
+            "item_id": "c",
+            "rule_path": [
+              "c",
+              "c.list",
+              "c.list.some"
+            ],
+            "obligation_id": "c.some_correct",
+            "effective_status": "indeterminate",
+            "origin": "deterministic",
+            "evidence_refs": [],
+            "affects_score": false,
+            "dispensable_alternative": true,
+            "reason": "ALTERNATIVE_CANNOT_IMPROVE_SCORE"
+          }
+        ],
+        "technical_errors": [
+          {
+            "item_id": "c",
+            "rule_path": [
+              "c",
+              "c.list",
+              "c.list.full"
+            ],
+            "obligation_id": "c.no_extraneous_values",
+            "effective_status": "technical_error",
+            "origin": "semantic",
+            "evidence_refs": [
+              "accepted:c:e750d753dba150790505385c986dc060822823e408400279b431219104ec51af"
+            ],
+            "affects_score": false,
+            "dispensable_alternative": true,
+            "reason": "ALTERNATIVE_CANNOT_IMPROVE_SCORE"
+          },
+          {
+            "item_id": "d",
+            "rule_path": [
+              "d",
+              "d.count"
+            ],
+            "obligation_id": "d.middle_choices",
+            "effective_status": "technical_error",
+            "origin": "semantic",
+            "evidence_refs": [
+              "accepted:d:db70ea68d225c78b5654ff9228730baafba6c700cef6d77d2150d1251410ed38"
+            ],
+            "affects_score": true,
+            "dispensable_alternative": false,
+            "reason": "OPEN_SCORING_INTERVAL"
+          }
+        ],
+        "semantic_evidence_review": {
+          "state": "present",
+          "occurrences": [
+            {
+              "item_id": "a",
+              "rule_path": [
+                "a",
+                "a.arithmetic_only"
+              ],
+              "obligation_id": "a.arithmetic_error_only",
+              "effective_status": "supported",
+              "origin": "semantic",
+              "evidence_refs": [
+                "accepted:a:81e99a89ac8a3a6cdbc81ccf7c0fda98ff1103f676958a77d495aedf4889cb95"
+              ],
+              "affects_score": false,
+              "dispensable_alternative": false,
+              "reason": "CONCLUSIVE_EVIDENCE",
+              "decision_conclusive": true
+            },
+            {
+              "item_id": "b",
+              "rule_path": [
+                "b",
+                "b.reverse"
+              ],
+              "obligation_id": "b.reversed_number",
+              "effective_status": "supported",
+              "origin": "semantic",
+              "evidence_refs": [
+                "accepted:b:ebeeca0f2cd084c9d021db4797f25c746d30aef3b9b2e266ec2dd57ba7c5b60a"
+              ],
+              "affects_score": false,
+              "dispensable_alternative": false,
+              "reason": "CONCLUSIVE_EVIDENCE",
+              "decision_conclusive": true
+            },
+            {
+              "item_id": "b",
+              "rule_path": [
+                "b",
+                "b.subtract_cancel"
+              ],
+              "obligation_id": "b.subtraction",
+              "effective_status": "supported",
+              "origin": "semantic",
+              "evidence_refs": [
+                "accepted:b:ebeeca0f2cd084c9d021db4797f25c746d30aef3b9b2e266ec2dd57ba7c5b60a"
+              ],
+              "affects_score": false,
+              "dispensable_alternative": false,
+              "reason": "CONCLUSIVE_EVIDENCE",
+              "decision_conclusive": true
+            },
+            {
+              "item_id": "b",
+              "rule_path": [
+                "b",
+                "b.subtract_cancel"
+              ],
+              "obligation_id": "b.middle_cancellation",
+              "effective_status": "supported",
+              "origin": "semantic",
+              "evidence_refs": [
+                "accepted:b:ebeeca0f2cd084c9d021db4797f25c746d30aef3b9b2e266ec2dd57ba7c5b60a"
+              ],
+              "affects_score": false,
+              "dispensable_alternative": false,
+              "reason": "CONCLUSIVE_EVIDENCE",
+              "decision_conclusive": true
+            },
+            {
+              "item_id": "b",
+              "rule_path": [
+                "b",
+                "b.simplify"
+              ],
+              "obligation_id": "b.factorization",
+              "effective_status": "supported",
+              "origin": "semantic",
+              "evidence_refs": [
+                "accepted:b:ebeeca0f2cd084c9d021db4797f25c746d30aef3b9b2e266ec2dd57ba7c5b60a"
+              ],
+              "affects_score": false,
+              "dispensable_alternative": false,
+              "reason": "CONCLUSIVE_EVIDENCE",
+              "decision_conclusive": true
+            },
+            {
+              "item_id": "c",
+              "rule_path": [
+                "c",
+                "c.expression"
+              ],
+              "obligation_id": "c.uses_expression",
+              "effective_status": "supported",
+              "origin": "semantic",
+              "evidence_refs": [
+                "accepted:c:e750d753dba150790505385c986dc060822823e408400279b431219104ec51af",
+                "accepted:b:ebeeca0f2cd084c9d021db4797f25c746d30aef3b9b2e266ec2dd57ba7c5b60a"
+              ],
+              "affects_score": false,
+              "dispensable_alternative": false,
+              "reason": "CONCLUSIVE_EVIDENCE",
+              "decision_conclusive": true
+            },
+            {
+              "item_id": "c",
+              "rule_path": [
+                "c",
+                "c.domain"
+              ],
+              "obligation_id": "c.difference_domain",
+              "effective_status": "refuted",
+              "origin": "semantic",
+              "evidence_refs": [
+                "accepted:c:e750d753dba150790505385c986dc060822823e408400279b431219104ec51af"
+              ],
+              "affects_score": false,
+              "dispensable_alternative": false,
+              "reason": "CONCLUSIVE_EVIDENCE",
+              "decision_conclusive": true
+            },
+            {
+              "item_id": "c",
+              "rule_path": [
+                "c",
+                "c.list",
+                "c.list.full"
+              ],
+              "obligation_id": "c.complete_list",
+              "effective_status": "refuted",
+              "origin": "semantic",
+              "evidence_refs": [
+                "accepted:c:e750d753dba150790505385c986dc060822823e408400279b431219104ec51af"
+              ],
+              "affects_score": false,
+              "dispensable_alternative": false,
+              "reason": "CONCLUSIVE_EVIDENCE",
+              "decision_conclusive": true
+            },
+            {
+              "item_id": "c",
+              "rule_path": [
+                "c",
+                "c.list",
+                "c.list.full"
+              ],
+              "obligation_id": "c.no_extraneous_values",
+              "effective_status": "technical_error",
+              "origin": "semantic",
+              "evidence_refs": [
+                "accepted:c:e750d753dba150790505385c986dc060822823e408400279b431219104ec51af"
+              ],
+              "affects_score": false,
+              "dispensable_alternative": true,
+              "reason": "ALTERNATIVE_CANNOT_IMPROVE_SCORE",
+              "decision_conclusive": false
+            },
+            {
+              "item_id": "c",
+              "rule_path": [
+                "c",
+                "c.list",
+                "c.list.one_error"
+              ],
+              "obligation_id": "c.single_list_error",
+              "effective_status": "supported",
+              "origin": "semantic",
+              "evidence_refs": [
+                "accepted:c:e750d753dba150790505385c986dc060822823e408400279b431219104ec51af"
+              ],
+              "affects_score": false,
+              "dispensable_alternative": false,
+              "reason": "CONCLUSIVE_EVIDENCE",
+              "decision_conclusive": true
+            },
+            {
+              "item_id": "d",
+              "rule_path": [
+                "d",
+                "d.pairs"
+              ],
+              "obligation_id": "d.digit_pairs",
+              "effective_status": "supported",
+              "origin": "semantic",
+              "evidence_refs": [
+                "accepted:d:db70ea68d225c78b5654ff9228730baafba6c700cef6d77d2150d1251410ed38"
+              ],
+              "affects_score": false,
+              "dispensable_alternative": false,
+              "reason": "CONCLUSIVE_EVIDENCE",
+              "decision_conclusive": true
+            },
+            {
+              "item_id": "d",
+              "rule_path": [
+                "d",
+                "d.count"
+              ],
+              "obligation_id": "d.middle_choices",
+              "effective_status": "technical_error",
+              "origin": "semantic",
+              "evidence_refs": [
+                "accepted:d:db70ea68d225c78b5654ff9228730baafba6c700cef6d77d2150d1251410ed38"
+              ],
+              "affects_score": true,
+              "dispensable_alternative": false,
+              "reason": "OPEN_SCORING_INTERVAL",
+              "decision_conclusive": false
+            },
+            {
+              "item_id": "d",
+              "rule_path": [
+                "d",
+                "d.count"
+              ],
+              "obligation_id": "d.total_thirty",
+              "effective_status": "supported",
+              "origin": "semantic",
+              "evidence_refs": [
+                "accepted:d:db70ea68d225c78b5654ff9228730baafba6c700cef6d77d2150d1251410ed38"
+              ],
+              "affects_score": false,
+              "dispensable_alternative": false,
+              "reason": "CONCLUSIVE_EVIDENCE",
+              "decision_conclusive": true
+            }
+          ]
+        },
+        "human_review": {
+          "state": "unknown",
+          "required": null,
+          "confirmation_state": "unknown",
+          "rule_id": null,
+          "scope": "audit_record",
+          "reason": "NO_EXPLICIT_HUMAN_REVIEW_RULE_IN_AUDIT"
+        },
+        "audit_run_id": "aud_1eb247481575591afe015612b9bcab6b98943d338347f5ce36da598eabaa019e",
+        "problem_id": "TME2026P1",
+        "source_result_sha256": "3d28898de9f98fb3f6f023cfddfc59217509582582f384948583828aefb69eb1",
+        "source_hash": "aff2adf82342ab432f68e43700864bafddf91674923c66823fd2d0a81ed124e4",
+        "stale": false,
+        "legacy": {
+          "status": "COMPLETED",
+          "score": null,
+          "needs_review": true,
+          "verdict": "inconclusivo"
+        }
+      }
+    },
+    {
+      "audit_run_id": "aud_6f7e8d0a116941fe22164444b60ecbd0c71e1e227c4a6c244528fafc5eed1808",
+      "problem_id": "TME2026P2",
+      "case_id": "case_79c459a365044631ae59e9c98d894598",
+      "http_status": 200,
+      "cache_control": "no-store",
+      "diagnostics": {
+        "schema_version": "tme-review-diagnostics.v1",
+        "scope": "persisted_pauta_decisions",
+        "score_state": "determined",
+        "final_score": "20",
+        "known_points": "20",
+        "possible_points": "20",
+        "max_score": "20",
+        "reason": "SAVED_SCORING_INTERVAL",
+        "items": [
+          {
+            "item_id": "a",
+            "score_state": "determined",
+            "points_awarded": "5",
+            "known_points": "5",
+            "possible_points": "5",
+            "selected_method_path": "a.complete_configuration_path",
+            "selected_band": null
+          },
+          {
+            "item_id": "b",
+            "score_state": "determined",
+            "points_awarded": "7",
+            "known_points": "7",
+            "possible_points": "7",
+            "selected_method_path": null,
+            "selected_band": null
+          },
+          {
+            "item_id": "c",
+            "score_state": "determined",
+            "points_awarded": "8",
+            "known_points": "8",
+            "possible_points": "8",
+            "selected_method_path": null,
+            "selected_band": null
+          }
+        ],
+        "mathematical_pending": {
+          "state": "absent",
+          "obligation_ids": [],
+          "occurrences": []
+        },
+        "nonblocking_pending": [
+          {
+            "item_id": "a",
+            "rule_path": [
+              "a",
+              "a.obligation_path",
+              "a.rule"
+            ],
+            "obligation_id": "a.line_sum",
+            "effective_status": "indeterminate",
+            "origin": "deterministic",
+            "evidence_refs": [],
+            "affects_score": false,
+            "dispensable_alternative": true,
+            "reason": "ALTERNATIVE_CANNOT_IMPROVE_SCORE"
+          },
+          {
+            "item_id": "c",
+            "rule_path": [
+              "c",
+              "c.counting",
+              "c.direct_product_path"
+            ],
+            "obligation_id": "c.counting_product",
+            "effective_status": "indeterminate",
+            "origin": "deterministic",
+            "evidence_refs": [],
+            "affects_score": false,
+            "dispensable_alternative": true,
+            "reason": "ALTERNATIVE_CANNOT_IMPROVE_SCORE"
+          }
+        ],
+        "dispensable_alternatives": [
+          {
+            "item_id": "a",
+            "rule_path": [
+              "a",
+              "a.obligation_path",
+              "a.rule"
+            ],
+            "obligation_id": "a.line_sum",
+            "effective_status": "indeterminate",
+            "origin": "deterministic",
+            "evidence_refs": [],
+            "affects_score": false,
+            "dispensable_alternative": true,
+            "reason": "ALTERNATIVE_CANNOT_IMPROVE_SCORE"
+          },
+          {
+            "item_id": "c",
+            "rule_path": [
+              "c",
+              "c.counting",
+              "c.direct_product_path"
+            ],
+            "obligation_id": "c.counting_product",
+            "effective_status": "indeterminate",
+            "origin": "deterministic",
+            "evidence_refs": [],
+            "affects_score": false,
+            "dispensable_alternative": true,
+            "reason": "ALTERNATIVE_CANNOT_IMPROVE_SCORE"
+          }
+        ],
+        "technical_errors": [],
+        "semantic_evidence_review": {
+          "state": "absent",
+          "occurrences": []
+        },
+        "human_review": {
+          "state": "unknown",
+          "required": null,
+          "confirmation_state": "unknown",
+          "rule_id": null,
+          "scope": "audit_record",
+          "reason": "NO_EXPLICIT_HUMAN_REVIEW_RULE_IN_AUDIT"
+        },
+        "audit_run_id": "aud_6f7e8d0a116941fe22164444b60ecbd0c71e1e227c4a6c244528fafc5eed1808",
+        "problem_id": "TME2026P2",
+        "source_result_sha256": "0f99a6c6527ea0c7ec9e8bd035609c7c71d0d171c3e725dc7fa2db5ef5fc4d74",
+        "source_hash": "eb60a48d9f1c70da6f47739e367a0eb2ca1582df4c31589acd33e5c748112952",
+        "stale": false,
+        "legacy": {
+          "status": "COMPLETED",
+          "score": 20.0,
+          "needs_review": true,
+          "verdict": "inconclusivo"
+        }
+      }
+    },
+    {
+      "audit_run_id": "aud_b78d47c5651567e96939a38cd3ac76b1ead85eb9e5cde1a308360ae687067ee6",
+      "problem_id": "TME2026P3",
+      "case_id": "case_c21e1c2390334142a51add2f79bfd2b8",
+      "http_status": 200,
+      "cache_control": "no-store",
+      "diagnostics": {
+        "schema_version": "tme-review-diagnostics.v1",
+        "scope": "persisted_pauta_decisions",
+        "score_state": "determined",
+        "final_score": "20",
+        "known_points": "20",
+        "possible_points": "20",
+        "max_score": "20",
+        "reason": "SAVED_SCORING_INTERVAL",
+        "items": [
+          {
+            "item_id": "a",
+            "score_state": "determined",
+            "points_awarded": "4",
+            "known_points": "4",
+            "possible_points": "4",
+            "selected_method_path": null,
+            "selected_band": null
+          },
+          {
+            "item_id": "b",
+            "score_state": "determined",
+            "points_awarded": "8",
+            "known_points": "8",
+            "possible_points": "8",
+            "selected_method_path": "b.counting",
+            "selected_band": null
+          },
+          {
+            "item_id": "c",
+            "score_state": "determined",
+            "points_awarded": "8",
+            "known_points": "8",
+            "possible_points": "8",
+            "selected_method_path": null,
+            "selected_band": null
+          }
+        ],
+        "mathematical_pending": {
+          "state": "absent",
+          "obligation_ids": [],
+          "occurrences": []
+        },
+        "nonblocking_pending": [
+          {
+            "item_id": "b",
+            "rule_path": [
+              "b",
+              "b.alternative"
+            ],
+            "obligation_id": "b.alternative_complete",
+            "effective_status": "indeterminate",
+            "origin": "deterministic",
+            "evidence_refs": [],
+            "affects_score": false,
+            "dispensable_alternative": true,
+            "reason": "ALTERNATIVE_CANNOT_IMPROVE_SCORE"
+          }
+        ],
+        "dispensable_alternatives": [
+          {
+            "item_id": "b",
+            "rule_path": [
+              "b",
+              "b.alternative"
+            ],
+            "obligation_id": "b.alternative_complete",
+            "effective_status": "indeterminate",
+            "origin": "deterministic",
+            "evidence_refs": [],
+            "affects_score": false,
+            "dispensable_alternative": true,
+            "reason": "ALTERNATIVE_CANNOT_IMPROVE_SCORE"
+          }
+        ],
+        "technical_errors": [],
+        "semantic_evidence_review": {
+          "state": "absent",
+          "occurrences": []
+        },
+        "human_review": {
+          "state": "unknown",
+          "required": null,
+          "confirmation_state": "unknown",
+          "rule_id": null,
+          "scope": "audit_record",
+          "reason": "NO_EXPLICIT_HUMAN_REVIEW_RULE_IN_AUDIT"
+        },
+        "audit_run_id": "aud_b78d47c5651567e96939a38cd3ac76b1ead85eb9e5cde1a308360ae687067ee6",
+        "problem_id": "TME2026P3",
+        "source_result_sha256": "c098a8ff044032b3a91d63d70964f26b923cee7d8bce7e2847c3ba6b07b897ba",
+        "source_hash": "17f4a5ff3a2d70b39cf1795d790fb68801ef7d755a39cc4062e5da39e0ca1955",
+        "stale": false,
+        "legacy": {
+          "status": "COMPLETED",
+          "score": 20.0,
+          "needs_review": true,
+          "verdict": "inconclusivo"
+        }
+      }
+    },
+    {
+      "audit_run_id": "aud_00e84780b3c5556e82c092d34fbc66f8af67da2b398b1860da19b88366433bb2",
+      "problem_id": "TME2026P4",
+      "case_id": "case_02f6cc6ec5574a6c8d765c1994a1725e",
+      "http_status": 200,
+      "cache_control": "no-store",
+      "diagnostics": {
+        "schema_version": "tme-review-diagnostics.v1",
+        "scope": "persisted_pauta_decisions",
+        "score_state": "determined",
+        "final_score": "20",
+        "known_points": "20",
+        "possible_points": "20",
+        "max_score": "20",
+        "reason": "SAVED_SCORING_INTERVAL",
+        "items": [
+          {
+            "item_id": "a",
+            "score_state": "determined",
+            "points_awarded": "4",
+            "known_points": "4",
+            "possible_points": "4",
+            "selected_method_path": null,
+            "selected_band": null
+          },
+          {
+            "item_id": "b",
+            "score_state": "determined",
+            "points_awarded": "6",
+            "known_points": "6",
+            "possible_points": "6",
+            "selected_method_path": "b.official_metric_path",
+            "selected_band": null
+          },
+          {
+            "item_id": "c",
+            "score_state": "determined",
+            "points_awarded": "10",
+            "known_points": "10",
+            "possible_points": "10",
+            "selected_method_path": null,
+            "selected_band": null
+          }
+        ],
+        "mathematical_pending": {
+          "state": "absent",
+          "obligation_ids": [],
+          "occurrences": []
+        },
+        "nonblocking_pending": [
+          {
+            "item_id": "b",
+            "rule_path": [
+              "b",
+              "b.parallelogram_path"
+            ],
+            "obligation_id": "b.apqr",
+            "effective_status": "indeterminate",
+            "origin": "deterministic",
+            "evidence_refs": [],
+            "affects_score": false,
+            "dispensable_alternative": true,
+            "reason": "ALTERNATIVE_CANNOT_IMPROVE_SCORE"
+          },
+          {
+            "item_id": "c",
+            "rule_path": [
+              "c",
+              "c.methods",
+              "c.cases_path",
+              "c.case_equations"
+            ],
+            "obligation_id": "c.case_3x",
+            "effective_status": "indeterminate",
+            "origin": "deterministic",
+            "evidence_refs": [],
+            "affects_score": false,
+            "dispensable_alternative": true,
+            "reason": "ALTERNATIVE_CANNOT_IMPROVE_SCORE"
+          },
+          {
+            "item_id": "c",
+            "rule_path": [
+              "c",
+              "c.methods",
+              "c.cases_path",
+              "c.case_equations"
+            ],
+            "obligation_id": "c.case_other",
+            "effective_status": "indeterminate",
+            "origin": "deterministic",
+            "evidence_refs": [],
+            "affects_score": false,
+            "dispensable_alternative": true,
+            "reason": "ALTERNATIVE_CANNOT_IMPROVE_SCORE"
+          },
+          {
+            "item_id": "c",
+            "rule_path": [
+              "c",
+              "c.methods",
+              "c.cases_path",
+              "c.case_values"
+            ],
+            "obligation_id": "c.case_3x_root",
+            "effective_status": "indeterminate",
+            "origin": "deterministic",
+            "evidence_refs": [],
+            "affects_score": false,
+            "dispensable_alternative": true,
+            "reason": "ALTERNATIVE_CANNOT_IMPROVE_SCORE"
+          },
+          {
+            "item_id": "c",
+            "rule_path": [
+              "c",
+              "c.methods",
+              "c.cases_path",
+              "c.case_values"
+            ],
+            "obligation_id": "c.case_other_root",
+            "effective_status": "indeterminate",
+            "origin": "deterministic",
+            "evidence_refs": [],
+            "affects_score": false,
+            "dispensable_alternative": true,
+            "reason": "ALTERNATIVE_CANNOT_IMPROVE_SCORE"
+          },
+          {
+            "item_id": "c",
+            "rule_path": [
+              "c",
+              "c.methods",
+              "c.cases_path",
+              "c.case_union"
+            ],
+            "obligation_id": "c.case_3x",
+            "effective_status": "indeterminate",
+            "origin": "deterministic",
+            "evidence_refs": [],
+            "affects_score": false,
+            "dispensable_alternative": true,
+            "reason": "ALTERNATIVE_CANNOT_IMPROVE_SCORE"
+          },
+          {
+            "item_id": "c",
+            "rule_path": [
+              "c",
+              "c.methods",
+              "c.cases_path",
+              "c.case_union"
+            ],
+            "obligation_id": "c.case_other",
+            "effective_status": "indeterminate",
+            "origin": "deterministic",
+            "evidence_refs": [],
+            "affects_score": false,
+            "dispensable_alternative": true,
+            "reason": "ALTERNATIVE_CANNOT_IMPROVE_SCORE"
+          },
+          {
+            "item_id": "c",
+            "rule_path": [
+              "c",
+              "c.methods",
+              "c.cases_path",
+              "c.case_union"
+            ],
+            "obligation_id": "c.case_3x_root",
+            "effective_status": "indeterminate",
+            "origin": "deterministic",
+            "evidence_refs": [],
+            "affects_score": false,
+            "dispensable_alternative": true,
+            "reason": "ALTERNATIVE_CANNOT_IMPROVE_SCORE"
+          },
+          {
+            "item_id": "c",
+            "rule_path": [
+              "c",
+              "c.methods",
+              "c.cases_path",
+              "c.case_union"
+            ],
+            "obligation_id": "c.case_other_root",
+            "effective_status": "indeterminate",
+            "origin": "deterministic",
+            "evidence_refs": [],
+            "affects_score": false,
+            "dispensable_alternative": true,
+            "reason": "ALTERNATIVE_CANNOT_IMPROVE_SCORE"
+          }
+        ],
+        "dispensable_alternatives": [
+          {
+            "item_id": "b",
+            "rule_path": [
+              "b",
+              "b.parallelogram_path"
+            ],
+            "obligation_id": "b.apqr",
+            "effective_status": "indeterminate",
+            "origin": "deterministic",
+            "evidence_refs": [],
+            "affects_score": false,
+            "dispensable_alternative": true,
+            "reason": "ALTERNATIVE_CANNOT_IMPROVE_SCORE"
+          },
+          {
+            "item_id": "c",
+            "rule_path": [
+              "c",
+              "c.methods",
+              "c.cases_path",
+              "c.case_equations"
+            ],
+            "obligation_id": "c.case_3x",
+            "effective_status": "indeterminate",
+            "origin": "deterministic",
+            "evidence_refs": [],
+            "affects_score": false,
+            "dispensable_alternative": true,
+            "reason": "ALTERNATIVE_CANNOT_IMPROVE_SCORE"
+          },
+          {
+            "item_id": "c",
+            "rule_path": [
+              "c",
+              "c.methods",
+              "c.cases_path",
+              "c.case_equations"
+            ],
+            "obligation_id": "c.case_other",
+            "effective_status": "indeterminate",
+            "origin": "deterministic",
+            "evidence_refs": [],
+            "affects_score": false,
+            "dispensable_alternative": true,
+            "reason": "ALTERNATIVE_CANNOT_IMPROVE_SCORE"
+          },
+          {
+            "item_id": "c",
+            "rule_path": [
+              "c",
+              "c.methods",
+              "c.cases_path",
+              "c.case_values"
+            ],
+            "obligation_id": "c.case_3x_root",
+            "effective_status": "indeterminate",
+            "origin": "deterministic",
+            "evidence_refs": [],
+            "affects_score": false,
+            "dispensable_alternative": true,
+            "reason": "ALTERNATIVE_CANNOT_IMPROVE_SCORE"
+          },
+          {
+            "item_id": "c",
+            "rule_path": [
+              "c",
+              "c.methods",
+              "c.cases_path",
+              "c.case_values"
+            ],
+            "obligation_id": "c.case_other_root",
+            "effective_status": "indeterminate",
+            "origin": "deterministic",
+            "evidence_refs": [],
+            "affects_score": false,
+            "dispensable_alternative": true,
+            "reason": "ALTERNATIVE_CANNOT_IMPROVE_SCORE"
+          },
+          {
+            "item_id": "c",
+            "rule_path": [
+              "c",
+              "c.methods",
+              "c.cases_path",
+              "c.case_union"
+            ],
+            "obligation_id": "c.case_3x",
+            "effective_status": "indeterminate",
+            "origin": "deterministic",
+            "evidence_refs": [],
+            "affects_score": false,
+            "dispensable_alternative": true,
+            "reason": "ALTERNATIVE_CANNOT_IMPROVE_SCORE"
+          },
+          {
+            "item_id": "c",
+            "rule_path": [
+              "c",
+              "c.methods",
+              "c.cases_path",
+              "c.case_union"
+            ],
+            "obligation_id": "c.case_other",
+            "effective_status": "indeterminate",
+            "origin": "deterministic",
+            "evidence_refs": [],
+            "affects_score": false,
+            "dispensable_alternative": true,
+            "reason": "ALTERNATIVE_CANNOT_IMPROVE_SCORE"
+          },
+          {
+            "item_id": "c",
+            "rule_path": [
+              "c",
+              "c.methods",
+              "c.cases_path",
+              "c.case_union"
+            ],
+            "obligation_id": "c.case_3x_root",
+            "effective_status": "indeterminate",
+            "origin": "deterministic",
+            "evidence_refs": [],
+            "affects_score": false,
+            "dispensable_alternative": true,
+            "reason": "ALTERNATIVE_CANNOT_IMPROVE_SCORE"
+          },
+          {
+            "item_id": "c",
+            "rule_path": [
+              "c",
+              "c.methods",
+              "c.cases_path",
+              "c.case_union"
+            ],
+            "obligation_id": "c.case_other_root",
+            "effective_status": "indeterminate",
+            "origin": "deterministic",
+            "evidence_refs": [],
+            "affects_score": false,
+            "dispensable_alternative": true,
+            "reason": "ALTERNATIVE_CANNOT_IMPROVE_SCORE"
+          }
+        ],
+        "technical_errors": [],
+        "semantic_evidence_review": {
+          "state": "absent",
+          "occurrences": []
+        },
+        "human_review": {
+          "state": "unknown",
+          "required": null,
+          "confirmation_state": "unknown",
+          "rule_id": null,
+          "scope": "audit_record",
+          "reason": "NO_EXPLICIT_HUMAN_REVIEW_RULE_IN_AUDIT"
+        },
+        "audit_run_id": "aud_00e84780b3c5556e82c092d34fbc66f8af67da2b398b1860da19b88366433bb2",
+        "problem_id": "TME2026P4",
+        "source_result_sha256": "9da6740904da21905f6a2e1be6e21cd7ca1281f8d0bd1cab2eb16199a7ac21db",
+        "source_hash": "062a408fd18303d6503972803f74520016db788b74ac64efa59de5e31005dc6f",
+        "stale": false,
+        "legacy": {
+          "status": "COMPLETED",
+          "score": 20.0,
+          "needs_review": true,
+          "verdict": "inconclusivo"
+        }
+      }
+    },
+    {
+      "audit_run_id": "aud_e840502ea785c0ff3469e187a2f2d53831f8a9eba6f281ac9805103b0d230c93",
+      "problem_id": "TME2026P5",
+      "case_id": "case_7afbd8a254c942198f74c3ec5af32969",
+      "http_status": 200,
+      "cache_control": "no-store",
+      "diagnostics": {
+        "schema_version": "tme-review-diagnostics.v1",
+        "scope": "persisted_pauta_decisions",
+        "score_state": "determined",
+        "final_score": "20",
+        "known_points": "20",
+        "possible_points": "20",
+        "max_score": "20",
+        "reason": "SAVED_SCORING_INTERVAL",
+        "items": [
+          {
+            "item_id": "a",
+            "score_state": "determined",
+            "points_awarded": "6",
+            "known_points": "6",
+            "possible_points": "6",
+            "selected_method_path": null,
+            "selected_band": null
+          },
+          {
+            "item_id": "b",
+            "score_state": "determined",
+            "points_awarded": "4",
+            "known_points": "4",
+            "possible_points": "4",
+            "selected_method_path": null,
+            "selected_band": null
+          },
+          {
+            "item_id": "c",
+            "score_state": "determined",
+            "points_awarded": "6",
+            "known_points": "6",
+            "possible_points": "6",
+            "selected_method_path": "c.official_replacement_path",
+            "selected_band": null
+          },
+          {
+            "item_id": "d",
+            "score_state": "determined",
+            "points_awarded": "4",
+            "known_points": "4",
+            "possible_points": "4",
+            "selected_method_path": null,
+            "selected_band": null
+          }
+        ],
+        "mathematical_pending": {
+          "state": "absent",
+          "obligation_ids": [],
+          "occurrences": []
+        },
+        "nonblocking_pending": [
+          {
+            "item_id": "a",
+            "rule_path": [
+              "a",
+              "a.argument"
+            ],
+            "obligation_id": "a.structural_max",
+            "effective_status": "indeterminate",
+            "origin": "deterministic",
+            "evidence_refs": [],
+            "affects_score": false,
+            "dispensable_alternative": true,
+            "reason": "SATISFIED_DISJUNCTION"
+          },
+          {
+            "item_id": "c",
+            "rule_path": [
+              "c",
+              "c.general_integer_break_path"
+            ],
+            "obligation_id": "c.general_complete",
+            "effective_status": "indeterminate",
+            "origin": "deterministic",
+            "evidence_refs": [
+              "native:digital-quantity.v1:1234:1249",
+              "native:real-a750f8aa20406a06b37f",
+              "native:digital-quantity.v1:1250:1269",
+              "native:real-09ca7f29afe50d0a3ff9",
+              "native:digital-quantity.v1:1270:1289",
+              "native:real-201d9c038289a2ebff5e",
+              "native:digital-quantity.v1:1290:1310",
+              "native:real-115719ce80bdaca10fd5",
+              "native:digital-quantity.v1:1126:1142",
+              "native:digital-quantity.v1:1143:1159",
+              "native:digital-quantity.v1:1160:1175",
+              "native:digital-quantity.v1:1176:1188",
+              "native:digital-quantity.v1:1189:1213",
+              "native:real-0ba6a43ce16456eff9fd",
+              "native:digital-quantity.v1:1214:1233",
+              "native:real-32e4961b3134a019adae",
+              "native:digital-quantity.v1:1373:1393",
+              "check:0393b5eaa9f55ddc2c44"
+            ],
+            "affects_score": false,
+            "dispensable_alternative": true,
+            "reason": "ALTERNATIVE_CANNOT_IMPROVE_SCORE"
+          },
+          {
+            "item_id": "d",
+            "rule_path": [
+              "d",
+              "d.counts",
+              "d.sizes_cf"
+            ],
+            "obligation_id": "d.cf_adoption",
+            "effective_status": "indeterminate",
+            "origin": "deterministic",
+            "evidence_refs": [],
+            "affects_score": false,
+            "dispensable_alternative": true,
+            "reason": "CARRY_FORWARD_INAPPLICABLE_PRIOR_SUPPORTED"
+          },
+          {
+            "item_id": "d",
+            "rule_path": [
+              "d",
+              "d.counts",
+              "d.sizes_cf"
+            ],
+            "obligation_id": "d.cf_dependency",
+            "effective_status": "indeterminate",
+            "origin": "deterministic",
+            "evidence_refs": [],
+            "affects_score": false,
+            "dispensable_alternative": true,
+            "reason": "CARRY_FORWARD_INAPPLICABLE_PRIOR_SUPPORTED"
+          },
+          {
+            "item_id": "d",
+            "rule_path": [
+              "d",
+              "d.counts",
+              "d.sizes_cf"
+            ],
+            "obligation_id": "d.cf_coherence",
+            "effective_status": "indeterminate",
+            "origin": "deterministic",
+            "evidence_refs": [],
+            "affects_score": false,
+            "dispensable_alternative": true,
+            "reason": "CARRY_FORWARD_INAPPLICABLE_PRIOR_SUPPORTED"
+          }
+        ],
+        "dispensable_alternatives": [
+          {
+            "item_id": "a",
+            "rule_path": [
+              "a",
+              "a.argument"
+            ],
+            "obligation_id": "a.structural_max",
+            "effective_status": "indeterminate",
+            "origin": "deterministic",
+            "evidence_refs": [],
+            "affects_score": false,
+            "dispensable_alternative": true,
+            "reason": "SATISFIED_DISJUNCTION"
+          },
+          {
+            "item_id": "c",
+            "rule_path": [
+              "c",
+              "c.general_integer_break_path"
+            ],
+            "obligation_id": "c.general_complete",
+            "effective_status": "indeterminate",
+            "origin": "deterministic",
+            "evidence_refs": [
+              "native:digital-quantity.v1:1234:1249",
+              "native:real-a750f8aa20406a06b37f",
+              "native:digital-quantity.v1:1250:1269",
+              "native:real-09ca7f29afe50d0a3ff9",
+              "native:digital-quantity.v1:1270:1289",
+              "native:real-201d9c038289a2ebff5e",
+              "native:digital-quantity.v1:1290:1310",
+              "native:real-115719ce80bdaca10fd5",
+              "native:digital-quantity.v1:1126:1142",
+              "native:digital-quantity.v1:1143:1159",
+              "native:digital-quantity.v1:1160:1175",
+              "native:digital-quantity.v1:1176:1188",
+              "native:digital-quantity.v1:1189:1213",
+              "native:real-0ba6a43ce16456eff9fd",
+              "native:digital-quantity.v1:1214:1233",
+              "native:real-32e4961b3134a019adae",
+              "native:digital-quantity.v1:1373:1393",
+              "check:0393b5eaa9f55ddc2c44"
+            ],
+            "affects_score": false,
+            "dispensable_alternative": true,
+            "reason": "ALTERNATIVE_CANNOT_IMPROVE_SCORE"
+          },
+          {
+            "item_id": "d",
+            "rule_path": [
+              "d",
+              "d.counts",
+              "d.sizes_cf"
+            ],
+            "obligation_id": "d.cf_adoption",
+            "effective_status": "indeterminate",
+            "origin": "deterministic",
+            "evidence_refs": [],
+            "affects_score": false,
+            "dispensable_alternative": true,
+            "reason": "CARRY_FORWARD_INAPPLICABLE_PRIOR_SUPPORTED"
+          },
+          {
+            "item_id": "d",
+            "rule_path": [
+              "d",
+              "d.counts",
+              "d.sizes_cf"
+            ],
+            "obligation_id": "d.cf_dependency",
+            "effective_status": "indeterminate",
+            "origin": "deterministic",
+            "evidence_refs": [],
+            "affects_score": false,
+            "dispensable_alternative": true,
+            "reason": "CARRY_FORWARD_INAPPLICABLE_PRIOR_SUPPORTED"
+          },
+          {
+            "item_id": "d",
+            "rule_path": [
+              "d",
+              "d.counts",
+              "d.sizes_cf"
+            ],
+            "obligation_id": "d.cf_coherence",
+            "effective_status": "indeterminate",
+            "origin": "deterministic",
+            "evidence_refs": [],
+            "affects_score": false,
+            "dispensable_alternative": true,
+            "reason": "CARRY_FORWARD_INAPPLICABLE_PRIOR_SUPPORTED"
+          }
+        ],
+        "technical_errors": [],
+        "semantic_evidence_review": {
+          "state": "absent",
+          "occurrences": []
+        },
+        "human_review": {
+          "state": "unknown",
+          "required": null,
+          "confirmation_state": "unknown",
+          "rule_id": null,
+          "scope": "audit_record",
+          "reason": "NO_EXPLICIT_HUMAN_REVIEW_RULE_IN_AUDIT"
+        },
+        "audit_run_id": "aud_e840502ea785c0ff3469e187a2f2d53831f8a9eba6f281ac9805103b0d230c93",
+        "problem_id": "TME2026P5",
+        "source_result_sha256": "b9fdf2feea88cfa4881fda8ee0249bae28762f911cd15cbe67fddc83a516e554",
+        "source_hash": "aac43facd743d93eb13f42a0a6d2784d485673c1d6943c77840358a3de3e9069",
+        "stale": false,
+        "legacy": {
+          "status": "COMPLETED",
+          "score": 20.0,
+          "needs_review": true,
+          "verdict": "inconclusivo"
+        }
+      }
+    }
+  ]
+}
