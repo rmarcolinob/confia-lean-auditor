@@ -15,19 +15,21 @@
     const assetURL = (exam, id) => `/tme/exam-submissions/${exam}/assets/${id}`;
     let generation = 0;
 
-    async function newCorrection() {
+    async function newCorrection(options={}) {
       const ticket = ++generation;
-      const box = Views.Page("Nova correção", "Selecione a avaliação e envie a prova completa.");
+      const box = Views.Page(options.assessmentId?"DYNAMIC · Enviar resoluções":"Nova correção", "Selecione a atividade e envie as páginas das resoluções.");
       const content = n("div"); content.append(Views.Loading()); box.append(content); show(box);
       let assessments;
       try { assessments = await api("/tme/assessments"); }
       catch (_) { if(ticket===generation) content.replaceChildren(Views.ErrorState("Não foi possível carregar as avaliações.", newCorrection)); return; }
       if(ticket!==generation)return;
+      if(options.assessmentId) assessments=assessments.filter(d=>d.assessment.assessment_id===options.assessmentId && d.assessment.correction_mode==='DYNAMIC');
       content.replaceChildren();
       const form = n("form", undefined, "tme-new-form"), select = n("select"); select.required = true;
       select.setAttribute("aria-label", "Avaliação"); select.dataset.examField="assessment";
       const empty = n("option", "Selecione uma avaliação"); empty.value=""; select.append(empty);
       for(const doc of assessments){const option=n("option",doc.assessment.title);option.value=doc.assessment.assessment_id;select.append(option);}
+      if(options.assessmentId){select.value=options.assessmentId;select.disabled=true;}
       const code=n("input");code.required=true;code.maxLength=80;code.pattern="[A-Za-z0-9._:/-]+";code.autocomplete="off";code.placeholder="Ex.: PROVA-2026-0001";code.dataset.examField="participant";
       const generate=btn("Gerar código",()=>{code.value=`PROVA-${key().slice(0,8).toUpperCase()}`;invalidate();},"secondary");
       const files=n("input");files.type="file";files.multiple=true;files.accept="application/pdf,image/jpeg,image/png,image/webp";files.dataset.examField="files";
@@ -67,12 +69,13 @@
           const detail=await post("/tme/exam-submissions",{schema_version:"exam-capture-package.v1",assessment_identifier:select.value,external_participant_code:code.value.trim(),external_namespace:"tme",idempotency_key:requestKey,original_documents});
           busy=false;setBusy(false);await openExam(detail.submission.submission_id);
         }catch(e){error.textContent=e.message||"Não foi possível receber a prova. Os arquivos selecionados foram mantidos para tentar novamente.";}
-        finally{busy=false;setBusy(false);submit.disabled=false;files.disabled=false;select.disabled=false;code.disabled=false;generate.disabled=false;renderFiles();}
+        finally{busy=false;setBusy(false);submit.disabled=false;files.disabled=false;select.disabled=Boolean(options.assessmentId);code.disabled=false;generate.disabled=false;renderFiles();}
       });
       form.addEventListener("submit",event=>{event.preventDefault();submit.click();});
       form.append(field("Avaliação",select),field("Código pseudônimo do participante / prova",code),row(generate),n("p","Não informe nome, CPF, e-mail ou matrícula. A identificação civil fica com a organização.","muted"),field("PDF ou imagens da prova",files),n("p","Até 50 páginas. O original é preservado; o recebimento não depende do reconhecimento da escrita.","muted"),selected,error,row(submit));
       if(!assessments.length){form.prepend(Views.Empty("Nenhuma avaliação disponível. Configure uma avaliação para este avaliador."));submit.disabled=true;}
-      content.append(form,row(btn("Corrigir questão avulsa / escrita digital",()=>{if(!busy)return legacy();},"secondary")));
+      content.append(form);
+      if(!options.assessmentId)content.append(row(btn("Corrigir questão avulsa / escrita digital",()=>{if(!busy)return legacy();},"secondary")));
     }
 
     async function list(host,isCurrent=()=>true) {
@@ -97,6 +100,29 @@
         question.append(historical?n('span',`Q${q.question_order}`):btn(`Q${q.question_order}`,()=>openExam(examId,q.question_attempt_id),'secondary'));
         tr.append(question,n('td',q.suggested_score==null?'—':`${points(q.suggested_score)} / ${points(q.max_score)}`),n('td',q.final_score==null?'—':`${points(q.final_score)} / ${points(q.max_score)}`),n('td',delta(q.adjustment)),n('td',q.status==='CONFIRMED'||historical?q.review_required?'Confirmada após revisão':'Confirmada':q.blocker||'Pendente'));
         body.append(tr);
+        if(!historical && q.engine_mode==='DYNAMIC'){
+          const details=n('div');let loaded=false;
+          const view=btn(`Ver critérios Q${q.question_order}`,async()=>{
+            if(loaded){details.hidden=!details.hidden;return;}view.disabled=true;
+            try{const w=await api(`/tme/question-attempts/${q.question_attempt_id}/workspace`),a=w.current_audit;
+              details.replaceChildren();if(!a)details.append(message('Análise corrente ainda indisponível.'));
+              else{
+                for(const item of a.rubric_items||[]){
+                  const human=w.current_human_decision?.adjudication?.criteria.find(c=>c.criterion_id===item.rubric_item_id);
+                  details.append(n('h4',item.label),n('p',`Sugestão: ${points(item.suggested_points)} / ${points(item.max_points)}${human?` · Final humano: ${points(human.final_points)}`:''}`),n('p',human?.justification||item.grader_explanation||item.reason||'Pendente.'),n('p',item.reason||''));
+                  for(const evidence of (a.evidences||[]).filter(e=>(item.evidence_ids||[]).includes(e.evidence_id))){
+                    details.append(n('blockquote',evidence.text));
+                    for(const page of evidence.source_pages||[]){const link=n('a',`Original · página ${page.page_number}`);link.href=`/tme/exam-submissions/${encodeURIComponent(examId)}/assets/${encodeURIComponent(page.original_asset_id)}`;link.target='_blank';link.rel='noopener';details.append(link);}
+                  }
+                }
+                const opinions=n('details');opinions.append(n('summary','Comparar pareceres e pendências'));
+                for(const c of a.independent_review?.phase_a?.criterion_reviews||[])opinions.append(n('p',`${c.criterion_id} · Reviewer: ${c.explanation}`));
+                for(const c of a.reconciliation?.criteria||[])opinions.append(n('p',`${c.criterion_id} · ${c.reason}`));
+                details.append(opinions);
+              }loaded=true;
+            }catch(_){details.replaceChildren(message('Não foi possível carregar as justificativas. Tente novamente.'));}finally{view.disabled=false;}
+          },'secondary');question.append(view,details);
+        }
       }table.append(body);wrapper.append(table);return wrapper;
     }
     async function summary(examId,notice=''){
@@ -162,7 +188,7 @@
         const question=attemptId?await api(`/tme/question-attempts/${attemptId}`):null;
         if(ticket!==generation)return;
         if(question&&question.question_attempt.exam_submission_id!==examId)throw new Error("Questão fora desta prova.");
-        const box=Views.Page(Workspace.displayExamName(detail.participant.external_code),detail.assessment.assessment.title);
+        const box=Views.Page(Workspace.displayExamName(detail.participant.external_code),`${detail.assessment.assessment.correction_mode==='DYNAMIC'?'DYNAMIC · ':''}${detail.assessment.assessment.title}`);
         const intro=message(`${detail.submission.source==="TEXT"?"Originais textuais preservados":`${detail.submission.page_count} páginas preservadas`} · ${detail.question_attempts.length} questões esperadas`);
         const originals=row();
         for(const asset of detail.submission.original_documents){const link=n("a",`Original ${originals.children.length+1}`,"tme-button secondary");link.href=assetURL(examId,asset.asset_id);link.target="_blank";link.rel="noopener";originals.append(link);}

@@ -2,6 +2,7 @@ from datetime import datetime
 from typing import Annotated, Literal, Optional, Union
 
 from pydantic import Field, model_validator, model_serializer
+from confia_lean_auditor.submissions.reading_confirmation import ReadingConfirmation
 from confia_lean_auditor.submissions.integrity import model_sha256, canonical_sha256
 
 from confia_lean_auditor.core.schemas import AuditResponse
@@ -33,6 +34,14 @@ class ConversionWarning(SubmissionModel):
 
 
 class AuditProvenance(SubmissionModel):
+    reading_confirmation: Optional[ReadingConfirmation] = None
+
+    @model_serializer(mode='wrap')
+    def historical_shape(self, handler):
+        data=handler(self)
+        if self.reading_confirmation is None: data.pop('reading_confirmation',None)
+        return data
+
     conversion_version: Literal["segments-v1"] = "segments-v1"
     original_artifacts: list[ArtifactReference]
     revision: TranscriptionRevision

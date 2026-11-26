@@ -253,7 +253,7 @@
       page.heading.append(btn("Voltar às opções",()=>navigate("new"),"tme-button secondary"));
       const host=node("div");host.id="confia-preparation";page.append(host);show(page);
       if(!params.problem_id && window.ConfIADynamicAssessment){
-        preparation=window.ConfIADynamicAssessment.create({host,setBusy:value=>{state.busy=value;},onSelect:id=>writeRoute("new",{mode:"dynamic",assessment_id:id}),onOpenExam:id=>openExam(id).catch(showError)});
+        preparation=window.ConfIADynamicAssessment.create({host,setBusy:value=>{state.busy=value;},onSelect:id=>writeRoute("new",{mode:"dynamic",assessment_id:id}),onOpenExam:id=>openExam(id).catch(showError),onUpload:id=>{preparation?.cancel();preparation=null;return fullExam.newCorrection({assessmentId:id});}});
         return preparation.load(params.assessment_id);
       }
       preparation=window.ConfIADynamic.create({host,setBusy:value=>{state.busy=value;},
@@ -601,10 +601,17 @@
         for (const segment of segments) { const block = node("div"); window.ConfiaRecognitionView.renderMathText(block, segment.text || segment.latex || "", !segment.text && Boolean(segment.latex) || segment.kind === "math"); doc.appendChild(block); } documentView.appendChild(doc);
         const area = node("textarea"); area.value = saved.editors[index] ?? text; area.maxLength=20000;area.addEventListener("input", () => { saved.editors[index] = area.value; if(c.exam_submission_id)saved.readingDirty=true; });
         editor.appendChild(field(`Editar página ${index + 1}`, area));
+        if(saved.examReview?.reading_review?.required){
+          area.setAttribute('aria-label',`Trecho da questão nesta página ${index+1}`);
+          const unclear=node('input');unclear.type='checkbox';unclear.dataset.unreadablePage=String(index);unclear.checked=segments.some(s=>s.kind==='unknown');
+          unclear.addEventListener('change',()=>{saved.readingDirty=true;});
+          editor.append(field(`Página ${index+1}: há trecho ilegível ou ambíguo`,unclear));
+        }
       }
       editor.append(note(c.exam_submission_id ? "Rascunho não salvo: fica nesta sessão ao trocar de questão. Salvar cria uma nova versão e preserva a leitura anterior." : "Cada salvamento cria uma revisão. Preserve a matemática escrita pelo participante."), actions(btn("Salvar nova revisão", () => saveRevision(c, editor)), btn("Cancelar edição", () => { saved.editing = false; if(c.exam_submission_id){saved.loaded=false;saved.editors={};saved.readingDirty=false;delete saved.editingBase;return renderCorrection();} editor.hidden = true; documentView.hidden = false; }, "secondary")));
       if(!latest)documentView.append(note("Nenhuma transcrição registrada. Digite a leitura, importe a captura disponível ou use o reconhecimento existente."));
     } else documentView.appendChild(note(saved.processing === "recognition" ? "Reconhecendo solução…" : saved.feedback?.state === "FAILED" ? "Falha de reconhecimento. Isso não indica erro na solução do participante." : "Reconhecimento não concluído. A transcrição aparecerá após o reconhecimento automático."));
+    if(saved.examReview?.reading_review?.required)editor.prepend(note('Mantenha somente o desenvolvimento desta questão em cada página. Exclua da transcrição as respostas de outras questões; os originais permanecem intactos. Marque o que não conseguir ler.'));
     transcript.append(documentView, editor);
     let transcriptionStatus, metadata;
     const setTab = value => {
@@ -626,7 +633,7 @@
     views.append(original, transcript); setTab(saved.tab);
     const secondary = actions(); secondary.classList.add("transcript-commands");
     if (latest || c.exam_submission_id && pages.length) {
-      secondary.append(btn(c.exam_submission_id ? latest ? "Corrigir leitura" : "Digitar transcrição" : "Editar", () => { saved.editing = true; if(c.exam_submission_id && primary)primary.disabled=true; saved.editingBase ??= latest?.revision_number || 0; editor.hidden = false; documentView.hidden = true; setTab("transcript"); }, "secondary"));
+      secondary.append(btn(c.exam_submission_id ? latest ? "Corrigir leitura" : "Digitar transcrição" : "Editar", () => { saved.editing = true; if(c.exam_submission_id && primary)primary.disabled=true; if(saved.examReview?.reading_review?.required)for(const control of actionbar.querySelectorAll('input,button'))control.disabled=true; saved.editingBase ??= latest?.revision_number || 0; editor.hidden = false; documentView.hidden = true; setTab("transcript"); }, "secondary"));
       if(c.source_mode!=="TEXT" && c.data_origin !== "synthetic_demo" && !c.exam_submission_id) secondary.append(btn("Reprocessar", recognize, "secondary"));
     }
     if(c.exam_submission_id && saved.examReview.capture_candidate_available)secondary.append(btn("Importar leitura da captura",()=>importCapture(c),"secondary"));
@@ -700,6 +707,23 @@
     if(c.dynamic_context && saved.dynamicDecisionHistory?.length){const history=node("details");history.append(node("summary","Histórico de confirmações"));for(const row of saved.dynamicDecisionHistory){const d=row.decision;history.append(node("p",`${row.current?"Confirmação corrente":"Confirmação anterior invalidada"} · Primeira análise: ${d.grader_suggested_points} · Sugestão reconciliada: ${d.suggested_points} · Nota final: ${d.final_points}`));}analysisBody.append(history);}
     const decisionBox = c.exam_submission_id ? node("div") : decisionPanel(c, saved, run?.status === "COMPLETED" && (!run.stale || saved.decision) ? run : null);if(c.exam_submission_id)decisionBox.hidden=true;
     const actionbar = node("div", undefined, "workspace-actions");
+    const reading=saved.examReview?.reading_review;
+    if(reading?.required && latest){
+      const reviewBox=node('section',undefined,'tme-panel');reviewBox.setAttribute('aria-label','Conferência da leitura');
+      reviewBox.append(node('h3','Conferência da transcrição'),note(reading.status==='CONFIRMED'?'Texto e escopo conferidos explicitamente pelo professor.':reading.status==='UNRESOLVED'?'Há trechos ilegíveis, ambíguos ou páginas sem leitura. Corrija a transcrição antes de autorizar a análise.':'Transcrição disponível; ainda não conferida pelo professor.'),note(reading.technically_accepted?'Vinculação técnica registrada; ela não substitui a conferência humana.':'A vinculação técnica será registrada ao iniciar a análise.'));
+      if(reading.shared_pages?.length)reviewBox.append(note(`Página(s) ${reading.shared_pages.join(', ')} compartilhada(s): confira se o texto contém somente a resposta desta questão.`));
+      if(reading.status==='NEEDS_CONFIRMATION'){
+        const check=node('input');check.type='checkbox';check.setAttribute('aria-label','Conferi o texto com os originais e somente os trechos desta questão');
+        const confirm=btn('Confirmar leitura desta questão',async()=>{
+          if(state.busy||saved.editing||!check.checked)return;state.busy=true;
+          try{await post(`/tme/question-attempts/${c.case_id}/transcriptions/${saved.history.transcription.transcription_id}/confirm-reading`,{revision_number:reading.revision_number,revision_sha256:reading.revision_sha256,confirmed:true,question_scope_confirmed:true});saved.loaded=false;state.message='Conferência registrada. A correção pode ser autorizada.';}catch(e){state.message=e.message;}finally{state.busy=false;}
+          if(state.current===c)await renderCorrection();
+        });confirm.disabled=true;check.addEventListener('change',()=>{confirm.disabled=!check.checked||state.busy||Boolean(saved.editing);});
+        check.disabled=state.busy||Boolean(saved.editing)||Boolean(saved.examReview.exam_finalized);
+        reviewBox.append(field('Conferi o texto com os originais e somente os trechos desta questão',check),confirm);
+      }
+      actionbar.append(reviewBox);
+    }
     const progress = saved.processing === "audit" ? "Analisando matemática · executando verificações…" : saved.processing === "recognition" ? "Reconhecendo solução…" : state.message || (run?.status === "FAILED" ? "Não foi possível concluir a análise matemática." : run ? (incomplete(c, run) ? incompleteMessage : "Análise concluída.") : latest ? (c.exam_submission_id || c.source_mode==="TEXT") ? "Transcrição disponível." : "Transcrição automática disponível." : saved.feedback?.state === "FAILED" ? saved.feedback.message : "Aguardando reconhecimento");
     actionbar.appendChild(note(progress));
     actionbar.dataset.quiet=String(!c.exam_submission_id && !state.message && !saved.processing && run?.status==="COMPLETED" && !run.stale && !incomplete(c, run));
@@ -707,7 +731,7 @@
     if (!latest && (!c.exam_submission_id || pages.length)) primary = btn(saved.feedback?.state === "FAILED" ? "Tentar novamente" : "Reconhecer", recognize);
     else if(c.exam_submission_id && latest) primary=btn(run?.status==="FAILED"?"Tentar novamente":saved.examReview.reanalysis_required?"Reanalisar questão":run?"Executar nova análise":"Analisar com ConfIA",audit);
     else if (!c.exam_submission_id && (!run || run.stale || run.status === "FAILED" || incomplete(c, run))) primary = btn(incomplete(c, run) ? "Tentar novamente" : "Analisar com ConfIA", audit);
-    if (primary) { primary.disabled = state.busy || Boolean(c.exam_submission_id && saved.editing) || Boolean(saved.examReview?.exam_finalized); actionbar.appendChild(primary); }
+    if (primary) { primary.disabled = state.busy || Boolean(c.exam_submission_id && saved.editing) || Boolean(saved.examReview?.exam_finalized) || Boolean(latest && reading?.required && reading.status!=='CONFIRMED'); actionbar.appendChild(primary); }
     if (saved.processing === "recognition") actionbar.appendChild(loading("Reconhecendo…"));
     const heading = context(c, saved.decision || saved.examReview?.current_human_decision ? 3 : run ? 2 : latest ? 1 : 0); heading.appendChild(openDrawer);
     if(c.exam_submission_id){
@@ -762,10 +786,11 @@
     const segments=[];
     areas.forEach((area,index)=>{
       const old=latest?.segments.filter(s=>s.page_index===index).sort((a,b)=>a.order-b.order)||[];
-      const text=area.value.trim();if(!text)return;
+      const unclear=Array.from(editor.querySelectorAll('input')).find(x=>x.dataset.unreadablePage===String(index))?.checked;
+      const text=area.value.trim()||(unclear?'[Trecho ilegível]':'');if(!text)return;
       const previous=old.map(s=>s.text||s.latex||"").join("\n\n");
-      if(text===previous)segments.push(...old);
-      else segments.push({segment_id:`review-page:${index}`,page_index:index,order:0,kind:"text",text});
+      if(text===previous && (!saved.examReview?.reading_review?.required || Boolean(unclear)===old.some(s=>s.kind==='unknown')))segments.push(...old);
+      else segments.push({segment_id:`review-page:${index}`,page_index:index,order:0,kind:unclear?"unknown":"text",text});
     });
     if(!segments.length){state.message="Informe a leitura de pelo menos uma página.";return renderCorrection();}
     if(latest && base===latest.revision_number && JSON.stringify(segments)===JSON.stringify(latest.segments)){
@@ -823,6 +848,7 @@
     if (state.current === c && state.view === "workspace") await renderCorrection();
   }
   async function ensureAcceptance(c, history, latest) {
+    if(local(c).examReview?.reading_review?.required && local(c).examReview.reading_review.status!=='CONFIRMED')throw new Error('Confirme explicitamente a leitura desta questão antes da correção.');
     let accepted = history.acceptances.find(a => a.revision_number === latest.revision_number);
     if (!accepted) {
       const receipt = await post(`/tme/cases/${c.case_id}/transcriptions/${history.transcription.transcription_id}/accept`, { revision_number: latest.revision_number, reviewer_identity_verified: false, acceptance_note: "Vinculação automática da revisão para análise ou decisão a pedido do avaliador; sem conferência humana obrigatória." });

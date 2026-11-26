@@ -1,6 +1,6 @@
 /* Dynamic preparation only. Correction and closure use the shared exam workspace. */
 (function(root){
-  function create({host,setBusy=()=>{},onSelect=()=>{},onOpenExam=()=>{}}){
+  function create({host,setBusy=()=>{},onSelect=()=>{},onOpenExam=()=>{},onUpload=()=>{}}){
     let doc=null,busy=false,disposed=false,editor=null,notice='';
     const panel=document.createElement('section');panel.className='dynamic-workflow';host.append(panel);
     const n=(tag,text,cls)=>{const x=document.createElement(tag);if(text!==undefined)x.textContent=text;if(cls)x.className=cls;return x;};
@@ -68,7 +68,7 @@
         const activate=button('Ativar avaliação',()=>perform(async()=>{doc=await request(`/dynamic/assessments/${id}/activate`,{expected_revision:doc.dynamic_revision});notice='Avaliação ativa. Versões publicadas preservadas para as submissões.';}));activate.disabled=busy||!r.ready;panel.append(activate);
       }else{
         panel.append(n('p','As correções usam as versões desta publicação. Novas versões exigem uma nova ativação; as submissões anteriores não serão reprocessadas automaticamente.'));
-        if(r.state==='ACTIVE'){panel.append(receiveText(),button('Preparar nova versão da avaliação',()=>perform(async()=>{doc=await request(`/dynamic/assessments/${id}/successor`,{});onSelect(doc.assessment.assessment_id);notice='Nova versão em rascunho. Revise antes de ativar.';})));}
+        if(r.state==='ACTIVE'){panel.append(button('Enviar fotografias ou PDF',()=>onUpload(id)),receiveText(),button('Preparar nova versão da avaliação',()=>perform(async()=>{doc=await request(`/dynamic/assessments/${id}/successor`,{});onSelect(doc.assessment.assessment_id);notice='Nova versão em rascunho. Revise antes de ativar.';})));}
         const students=n('section');students.append(n('h3','Participantes e correções'));panel.append(students);
         try{for(const exam of (await request('/tme/exam-submissions')).filter(e=>e.assessment_id===id))students.append(button(`${exam.participant_code} · ${exam.status}`,()=>onOpenExam(exam.submission_id)));}catch(e){students.append(n('p',e.message));}
       }

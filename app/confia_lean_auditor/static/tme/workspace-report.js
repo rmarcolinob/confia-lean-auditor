@@ -274,6 +274,10 @@
         const box=n("div",null,"criterion-evidence");
         if(e.text){const quote=n("blockquote",null,"evidence-quote");root.ConfiaRecognitionView.renderMathText(quote,e.text);box.append(quote);}
         else box.append(n("p","Evidência estruturada registrada nesta análise."));
+        for(const page of e.source_pages||[]){
+          const button=n('button',`Conferir evidência · página ${page.page_number}`,'secondary');button.type='button';
+          button.addEventListener('click',()=>options.onOriginal?.({...e,...page,region:null}));box.append(button);
+        }
         if(e.exam_page_id && options.onOriginal){
           const button=n("button",`Ver no original · página ${e.page_number}`,"secondary");button.type="button";
           button.addEventListener("click",()=>options.onOriginal(e));box.append(button);

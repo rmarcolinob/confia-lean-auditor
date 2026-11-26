@@ -81,6 +81,13 @@ class AuditService:
                 from confia_lean_auditor.dynamic.grading_context import case_context
                 from confia_lean_auditor.dynamic.solution_input import require_usable
                 require_usable(source,case)
+                from confia_lean_auditor.submissions.reading_confirmation import required, read, unresolved
+                if required(case):
+                    proof=read(self.submissions,case,submission,persisted,folder)
+                    if not proof or unresolved(persisted,len(submission.page_images)):
+                        from confia_lean_auditor.dynamic.solution_input import InputRequiresReview
+                        raise InputRequiresReview()
+                    source=source.model_copy(update={'provenance':source.provenance.model_copy(update={'reading_confirmation':proof})})
                 context=case_context(case)[0]
                 source=source.model_copy(update={"dynamic_context":context})
                 source=source.model_copy(update={"source_hash":source_digest(source)})

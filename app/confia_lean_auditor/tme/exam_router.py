@@ -21,6 +21,14 @@ from .exam_store import exam_store, ExamConflict
 
 router = APIRouter()
 
+from confia_lean_auditor.submissions.reading_confirmation import ConfirmReading
+
+@router.post('/question-attempts/{case_id}/transcriptions/{transcription_id}/confirm-reading')
+def confirm_reading(case_id: str, transcription_id: str, body: ConfirmReading, response: Response, user=Depends(require_tme_evaluator)):
+    from .question_review import confirm_reading as confirm
+    response.headers['Cache-Control']='no-store'
+    return guarded(confirm,case_id,transcription_id,body,user)
+
 
 def guarded(operation, *args, **kwargs):
     try:

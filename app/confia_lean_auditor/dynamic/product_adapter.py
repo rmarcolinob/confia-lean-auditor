@@ -64,7 +64,8 @@ def project(result,run,case):
             **({'dependency_rules':[v.model_dump(mode='json') for v in rubric_by_id[d.criterion_id].dependency_rules], 'dependency_assessment':d.dependency_trace} if d.dependency_trace else {})))
     evidence=[dict(evidence_id=c.claim_id,text=c.text,kind='text',claim_type=c.claim_type,
         source_span=dict(start=c.start,end=c.end,scope='transcription',sha256=run.source_hash),exam_page_id=None,page_number=None,
-        region=None,grounding_status=c.fidelity) for c in result.analysis.claims]
+        region=None,grounding_status=c.fidelity,
+        **({'source_pages':evidence_pages(run.source,case,c.start,c.end)} if case.exam_submission_id and case.source_mode=='IMAGE_SCAN' else {})) for c in result.analysis.claims]
     checks=[dict(checker_id=c.claim_id,checker_type=c.verifier,status={'VERIFIED':'verified','REFUTED':'refuted','ERROR':'technical_error'}.get(c.verification_status,'indeterminate'),
         status_label=c.verification_detail,evidence_ids=[c.claim_id],trace_reference=f'audit-run:{run.audit_run_id}') for c in result.analysis.claims]
     return dict(engine_mode='DYNAMIC',rubric_items=items,evidences=evidence,checker_summary=checks,
@@ -87,3 +88,26 @@ def decision_reference(audit,body,case,run):
         raise ExamConflict('select the current reconciled suggestion')
     return dict(reconciliation_id=rec['reconciliation_id'],reconciliation_sha256=canonical_sha256(rec),
         grader_suggested_points=rec['grader_score_snapshot'],independent_review_id=rec['independent_review_id'])
+
+
+def evidence_pages(source, case, start, end):
+    """Map literal character spans back to this question's accepted page segments."""
+    if not case.exam_submission_id or case.source_mode!='IMAGE_SCAN':return []
+    from confia_lean_auditor.submission_audits.source import convert_segments
+    from confia_lean_auditor.tme.exam_store import exam_store
+    from types import SimpleNamespace
+    submission,_,_=exam_store()._manifest(case.exam_submission_id,SimpleNamespace(user_id=case.created_by_user_id))
+    pages={p.exam_page_id:p for p in submission.pages}
+    refs={a.page_index:a for a in source.provenance.original_artifacts if a.page_index is not None}
+    segments=sorted(source.provenance.revision.segments,key=lambda s:(s.page_index,s.order))
+    if convert_segments(segments)[0]!=source.solution_text:return []
+    position=0;result=[]
+    for segment in segments:
+        text=convert_segments([segment])[0];stop=position+len(text)
+        ref=refs.get(segment.page_index);page=pages.get(ref.page_id) if ref else None
+        if page and start<stop and end>position:
+            result.append(dict(segment_id=segment.segment_id,exam_page_id=page.exam_page_id,
+                page_number=page.page_number,original_asset_id=page.original_asset_id,
+                start=max(start,position),end=min(end,stop)))
+        position=stop+1
+    return result

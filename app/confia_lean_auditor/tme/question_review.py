@@ -149,6 +149,23 @@ def recognize(case_id, request, user, registry):
         return RecognitionService(submission_store(), registry).recognize(case.submission_id, request)
 
 
+def confirm_reading(case_id, transcription_id, request, user):
+    from confia_lean_auditor.submissions.reading_confirmation import required, confirm
+    from .finalization import assert_editable
+    case,exams=owned_case(case_id,user),exam_store()
+    with exams._locked():
+        detail=exams._detail(case.exam_submission_id,user)
+        case=next(c for c in detail.question_attempts if c.case_id==case_id)
+        assert_editable(case.exam_submission_id)
+        if not required(case) or case.status=='DECIDED' or not case.submission_id:
+            raise ExamConflict('Conferência indisponível para esta questão.')
+        # Revalidate the original bytes as well as the immutable question binding.
+        freeze_source(exams,detail,case,user)
+        store=submission_store()
+        with store._locked(exclusive=True):
+            return confirm(store,case,transcription_id,request,user.user_id)
+
+
 def version_view(revision, pages, *, current):
     origin = ("human" if revision.revision_number > 1 or revision.source == "manual" else
               "capture" if revision.source == "capture" else "digital_ink" if revision.provenance and
@@ -291,10 +308,18 @@ def workspace(case_id, user):
             total_questions=len(detail.question_attempts), remaining_questions=len(detail.question_attempts)-len(confirmed))
         from .finalization import lifecycle
         closure = lifecycle(case.exam_submission_id)
-        return dict(student_feedback=feedback,exam_finalized=bool(closure['current_final_correction']), **human_data, confirmed_total=confirmed_total, question_decisions=human_current,
+        reading_review=None
+        from confia_lean_auditor.submissions.reading_confirmation import required, project as reading_status
+        if required(case):
+            with store._locked():
+                reading_review=reading_status(store,case,history.transcription.transcription_id) if history else dict(required=True,status='NO_TRANSCRIPTION')
+            reading_review['shared_pages']=[p.page_number for p in pages if len({b.question_attempt_id for b in detail.mapping.bindings if b.exam_page_id==p.exam_page_id})>1]
+            if reading_review.get('confirmation'):
+                events.append(dict(event_id=f"{history.transcription.transcription_id}:{reading_review['revision_number']}:reading_confirmed",event_type='reading_human_confirmed',question_attempt_id=case_id,confirmation=reading_review['confirmation']))
+        return dict(**({'reading_review':reading_review} if reading_review else {}),student_feedback=feedback,exam_finalized=bool(closure['current_final_correction']), **human_data, confirmed_total=confirmed_total, question_decisions=human_current,
             question_attempt=case, pages=pages, mapping_version=detail.mapping.version,
             history=history, versions=versions, question_states=question_states, current_version=next((v for v in versions if v["current"]), None),
-            state=state, human_reviewed=human, audit_stale=audit_stale, reanalysis_required=reanalysis,
+            state=state, human_reviewed=reading_review['status']=='CONFIRMED' if reading_review else human, audit_stale=audit_stale, reanalysis_required=reanalysis,
             analysis_state="FAILED" if current_run and current_run.status == "FAILED" else "REANALYSIS_REQUIRED" if reanalysis else "AVAILABLE" if current_run else "AWAITING_ANALYSIS",
             capture_candidate_available=bool(segments) and history is None,
             audits=audits, current_audit=current_audit, previous_audit=previous_audit,
