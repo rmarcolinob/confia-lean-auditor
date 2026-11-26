@@ -45,6 +45,8 @@ def receive_text(store, case, user, text):
         text=text,
     )
     raw = snapshot.model_dump_json().encode()
+    from confia_lean_auditor.dynamic.school_scope import source_binding
+    author_binding=source_binding(case)
     record = SubmissionRecord(
         submission_id="sub_" + uuid4().hex,
         problem_id=case.problem_id,
@@ -59,7 +61,7 @@ def receive_text(store, case, user, text):
             size_bytes=len(raw),
         ),
         page_images=[],
-        submitted_by_user_id=user.user_id,
+        **dict({"submitted_by_user_id":user.user_id},**author_binding),
         tenant_id=user.tenant_id,
         tme_case_id=case.case_id,
     )

@@ -80,6 +80,11 @@ class AuditService:
             if case.dynamic_context:
                 from confia_lean_auditor.dynamic.grading_context import case_context
                 from confia_lean_auditor.dynamic.solution_input import require_usable
+                from confia_lean_auditor.dynamic.school_scope import exam_context, source_binding
+                school=exam_context(case)
+                if school:
+                    if any(getattr(submission,k)!=v for k,v in source_binding(case).items()):raise SourceIntegrityError()
+                    source=source.model_copy(update={'provenance':source.provenance.model_copy(update={'school_attempt':school[0].school_attempt})})
                 require_usable(source,case)
                 from confia_lean_auditor.submissions.reading_confirmation import required, read, unresolved
                 if required(case):

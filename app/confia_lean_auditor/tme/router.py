@@ -1,4 +1,5 @@
 """Case-scoped TME access to the existing submission and audit services."""
+from confia_lean_auditor.dynamic.school_scope import valid_source_author
 import base64
 import binascii
 import json
@@ -47,7 +48,7 @@ def case_for(case_id, user):
             record = submission_store().get_record(case.submission_id)
             if (record.tme_case_id != case_id or record.problem_id != case.problem_id
                     or record.source != ("text" if case.source_mode == "TEXT" else "exam_pages" if case.exam_submission_id else "tablet" if case.source_mode == "DIGITAL_INK" else "image_scan")
-                    or record.submitted_by_user_id != user.user_id):
+                    or not valid_source_author(case,record)):
                 raise ValueError("case/source binding mismatch")
         return case
     except FileNotFoundError:

@@ -2,7 +2,7 @@
 from datetime import datetime, timezone
 from typing import Literal, Optional
 
-from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator, model_serializer
+from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator, model_serializer, PrivateAttr
 
 from confia_lean_auditor.institutional.models import InstitutionId
 from confia_lean_auditor.submissions.schemas import Sha256
@@ -15,7 +15,11 @@ class AssessmentModel(BaseModel):
     model_config = ConfigDict(extra="forbid", allow_inf_nan=False)
 
 
+from confia_lean_auditor.dynamic.school_contracts import SchoolPolicy
+
+
 class Assessment(AssessmentModel):
+    school_policy: Optional[SchoolPolicy] = None
     correction_mode: Literal["SPECIALIZED", "DYNAMIC"] = "SPECIALIZED"
     feedback_policy: Literal["WITHHOLD", "AFTER_CONFIRMATION"] = "WITHHOLD"
     supersedes_assessment_id: Optional[str] = None
@@ -43,7 +47,7 @@ class Assessment(AssessmentModel):
     @model_serializer(mode="wrap")
     def legacy_shape(self, handler):
         data = handler(self)
-        for key in ("dynamic_policy_profile", "dynamic_policy_version", "supersedes_assessment_id", "superseded_by"):
+        for key in ("school_policy", "dynamic_policy_profile", "dynamic_policy_version", "supersedes_assessment_id", "superseded_by"):
             if getattr(self, key) is None: data.pop(key, None)
         for key in ("correction_mode", "feedback_policy"):
             if key not in self.model_fields_set: data.pop(key, None)
@@ -64,8 +68,12 @@ class Assessment(AssessmentModel):
     def coherent(self):
         if (self.dynamic_policy_profile is None) != (self.dynamic_policy_version is None):
             raise ValueError("complete policy configuration required")
-        if self.correction_mode == "DYNAMIC" and (not self.dynamic_policy_profile or self.scope != "TME"):
+        if self.correction_mode == "DYNAMIC" and (not self.dynamic_policy_profile or (self.scope == "INSTITUTIONAL" and self.school_policy is None)):
             raise ValueError("Dynamic requires explicit activity policy")
+        if self.school_policy and (self.correction_mode != 'DYNAMIC' or self.scope != 'INSTITUTIONAL'):
+            raise ValueError('classroom policy requires institutional Dynamic')
+        if self.school_policy and self.dynamic_policy_profile == 'SCHOOL_EXAM' and self.school_policy.feedback == 'GUIDANCE':
+            raise ValueError('summative activity cannot release automatic guidance')
         institutions = (self.network_id, self.school_id, self.classroom_id)
         if self.scope == "INSTITUTIONAL" and not all(institutions):
             raise ValueError("institutional assessment requires network, school and classroom")
@@ -194,6 +202,17 @@ class UpdateAssessmentItem(AssessmentModel):
 
 
 class AssessmentView(AssessmentDocument):
+    _student_dynamic: bool = PrivateAttr(default=False)
+
+    @model_serializer(mode='wrap')
+    def access_projection(self, handler):
+        data = super().legacy_document(handler)
+        if self._student_dynamic:
+            data.pop('dynamic_events', None)
+            data.pop('dynamic_revision', None)
+            for item in data['items']: item.pop('dynamic_context', None)
+        return data
+
     teacher_name: str
     classroom_name: str
     availability: Literal["RASCUNHO", "AGENDADO", "DISPONÍVEL", "ENCERRADO"]

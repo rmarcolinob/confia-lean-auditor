@@ -1,4 +1,5 @@
 """Small operational envelope; the solution stays in Submission artifacts."""
+from confia_lean_auditor.dynamic.school_scope import valid_source_author
 from contextlib import contextmanager
 from datetime import datetime, timezone
 import fcntl
@@ -98,7 +99,7 @@ class CaseStore:
             from confia_lean_auditor.submissions.router import store as submission_store
             record = submission_store().get_record(submission_id)
             if (record.tme_case_id != case_id or record.problem_id != case.problem_id
-                    or record.submitted_by_user_id != user.user_id
+                    or not valid_source_author(case,record)
                     or record.source != ("text" if case.source_mode == "TEXT" else "exam_pages" if case.exam_submission_id else "tablet" if case.source_mode == "DIGITAL_INK" else "image_scan")):
                 raise ValueError("case/source binding mismatch")
             if case.submission_id is not None:

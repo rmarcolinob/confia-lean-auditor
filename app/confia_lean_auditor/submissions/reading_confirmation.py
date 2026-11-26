@@ -4,10 +4,10 @@ Callers authorize the actor and hold the submission lock. Existing acceptances a
 revisions are never rewritten. A new revision needs a new attestation.
 """
 from datetime import datetime, timezone
-from typing import Literal
+from typing import Literal, Optional
 import json
 import re
-from pydantic import Field
+from pydantic import Field, model_serializer
 from .schemas import SubmissionModel, Sha256
 from .integrity import model_sha256, canonical_sha256
 from .store import TranscriptionConflict, TranscriptionIntegrityConflict
@@ -21,6 +21,14 @@ class ConfirmReading(SubmissionModel):
 
 
 class ReadingConfirmation(SubmissionModel):
+    reviewer_role: Optional[Literal['STUDENT','TEACHER']] = None
+
+    @model_serializer(mode='wrap')
+    def legacy_shape(self, handler):
+        data=handler(self)
+        if self.reviewer_role is None:data.pop('reviewer_role',None)
+        return data
+
     schema_version: Literal['reading-confirmation.v1'] = 'reading-confirmation.v1'
     case_id: str
     submission_id: str
@@ -64,18 +72,22 @@ def read(store, case, source, revision, folder):
     if not path.exists():return None
     try:
         raw=json.loads(path.read_bytes());proof=ReadingConfirmation.model_validate(raw['data'])
+        from confia_lean_auditor.dynamic.school_scope import exam_context
+        school=exam_context(case)
+        expected_actor=school[0].school_attempt.student_user_id if school and proof.reviewer_role=='STUDENT' else case.created_by_user_id
+        if proof.reviewer_role=='STUDENT' and not school:raise ValueError()
         if raw['sha256']!=canonical_sha256(raw['data']):raise ValueError()
         if (proof.case_id!=case.case_id or proof.submission_id!=source.submission_id
             or proof.transcription_id!=revision.transcription_id or proof.revision_number!=revision.revision_number
             or proof.revision_sha256!=model_sha256(revision) or proof.source_snapshot_sha256!=source.snapshot.sha256
             or proof.page_indices!=sorted({s.page_index for s in revision.segments})
             or proof.segment_ids!=[s.segment_id for s in revision.segments]
-            or proof.reviewer_reference!=case.created_by_user_id or proof.confirmed_at.tzinfo is None):raise ValueError()
+            or proof.reviewer_reference!=expected_actor or proof.confirmed_at.tzinfo is None):raise ValueError()
     except (ValueError,KeyError,TypeError):raise TranscriptionIntegrityConflict() from None
     return proof
 
 
-def confirm(store, case, transcription_id, body, actor_id):
+def confirm(store, case, transcription_id, body, actor_id, *, actor_role=None):
     source,revision,folder,_=revision_and_source(store,case,transcription_id)
     if body.revision_number!=revision.revision_number or body.revision_sha256!=model_sha256(revision):
         raise TranscriptionConflict('A leitura mudou. Confira a versão atual.')
@@ -86,7 +98,7 @@ def confirm(store, case, transcription_id, body, actor_id):
     proof=ReadingConfirmation(case_id=case.case_id,submission_id=source.submission_id,
         transcription_id=transcription_id,revision_number=revision.revision_number,
         revision_sha256=model_sha256(revision),source_snapshot_sha256=source.snapshot.sha256,
-        reviewer_reference=actor_id,confirmed_at=datetime.now(timezone.utc),
+        reviewer_role=actor_role,reviewer_reference=actor_id,confirmed_at=datetime.now(timezone.utc),
         page_indices=sorted({s.page_index for s in revision.segments}),segment_ids=[s.segment_id for s in revision.segments])
     data=proof.model_dump(mode='json');path=folder/'reading_confirmations'/f'revision_{revision.revision_number:06d}.json'
     store._write_atomic_new(path,json.dumps(dict(data=data,sha256=canonical_sha256(data))).encode())

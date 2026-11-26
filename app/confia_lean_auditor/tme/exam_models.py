@@ -1,7 +1,7 @@
 """D1 capture contracts. No grading state is fabricated by capture."""
 from datetime import datetime
 from typing import Literal, Optional
-from pydantic import Field, model_validator
+from pydantic import Field, model_validator, model_serializer
 
 from confia_lean_auditor.assessments.models import AssessmentDocument, AssessmentParticipant, CreateAssessmentItem
 from confia_lean_auditor.submissions.schemas import SubmissionModel, Sha256
@@ -100,7 +100,17 @@ class UpdatePageMapping(SubmissionModel):
     bindings: list[QuestionAttemptPage] = Field(max_length=5000)
 
 
+from confia_lean_auditor.dynamic.school_contracts import SchoolAttemptBinding
+
 class ExamSubmission(SubmissionModel):
+    school_attempt: Optional[SchoolAttemptBinding] = None
+
+    @model_serializer(mode='wrap')
+    def historical_shape(self, handler):
+        data=handler(self)
+        if self.school_attempt is None: data.pop('school_attempt',None)
+        return data
+
     schema_version: Literal["exam-submission.v1"] = "exam-submission.v1"
     submission_id: str = Field(pattern=r"^exam_[0-9a-f]{32}$")
     assessment_id: str

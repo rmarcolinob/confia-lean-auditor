@@ -216,7 +216,7 @@ def _summary(detail, submissions, audits):
     state = 'FINALIZED' if life['current_final_correction'] else 'REOPENED' if life['reopened'] else 'READY_TO_FINALIZE' if not blockers else 'IN_PROGRESS'
     result = dict(assessment_id=detail.submission.assessment_id, assessment_title=detail.assessment.assessment.title,
         assessment_definition_sha256=detail.submission.assessment_definition_sha256,
-        submission_id=eid, participant_id=detail.submission.participant_id, participant_code=detail.participant.external_code,
+        submission_id=eid, participant_id=detail.submission.participant_id, participant_code=detail.participant.external_code or detail.participant.user_id,
         status=state, ready_to_finalize=not blockers and not life['current_final_correction'],
         question_count=len(rows), confirmed_question_count=len(confirmed), pending_question_count=len(rows)-len(confirmed),
         review_question_count=sum(r['review_required'] for r in rows),

@@ -116,11 +116,20 @@ def submission_access(submission_id: str, user: Optional[AuthUser] = Depends(
     return authorize_submission_record(user, _record_for_access(submission_id))
 
 
+def _school_write_gateway(record):
+    if record.assessment_id and record.tme_case_id:
+        from confia_lean_auditor.assessments.store import assessment_store
+        if assessment_store().get(record.assessment_id).assessment.school_policy:
+            raise HTTPException(403, "Use o fluxo da atividade para preservar versões, prazos e autoria.")
+
+
 def student_submission_access(submission_id: str, user: Optional[AuthUser] = Depends(
         require_role(Role.STUDENT))):
     if not auth_enabled():
         return None
-    return authorize_submission_record(user, _record_for_access(submission_id), student_write=True)
+    record = _record_for_access(submission_id)
+    _school_write_gateway(record)
+    return authorize_submission_record(user, record, student_write=True)
 
 
 def recognition_write_access(submission_id: str, user: Optional[AuthUser] = Depends(
@@ -129,6 +138,7 @@ def recognition_write_access(submission_id: str, user: Optional[AuthUser] = Depe
         return None
     record = _record_for_access(submission_id)
     if user.role == Role.STUDENT:
+        _school_write_gateway(record)
         return authorize_submission_record(user, record, student_write=True)
     if record.tme_case_id and record.submitted_by_user_id == user.user_id:
         return record

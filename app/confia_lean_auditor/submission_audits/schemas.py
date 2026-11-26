@@ -33,12 +33,16 @@ class ConversionWarning(SubmissionModel):
     message: str
 
 
+from confia_lean_auditor.dynamic.school_contracts import SchoolAttemptBinding
+
 class AuditProvenance(SubmissionModel):
+    school_attempt: Optional[SchoolAttemptBinding] = None
     reading_confirmation: Optional[ReadingConfirmation] = None
 
     @model_serializer(mode='wrap')
     def historical_shape(self, handler):
         data=handler(self)
+        if self.school_attempt is None: data.pop('school_attempt',None)
         if self.reading_confirmation is None: data.pop('reading_confirmation',None)
         return data
 

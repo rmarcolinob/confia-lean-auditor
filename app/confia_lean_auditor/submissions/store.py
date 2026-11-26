@@ -201,12 +201,14 @@ class SubmissionStore:
                     shutil.rmtree(pending)
             return receipt, True
 
-    def receive_exam_question(self, snapshot, previews, owner):
+    def receive_exam_question(self, snapshot, previews, owner, *, author_binding=None):
         """Freeze a question's page references. Originals stay in the exam store.
 
         The caller holds the exam mapping lock. PNGs are immutable recognition
         inputs, never replacements for the referenced original documents.
         """
+        author_binding = author_binding or {}
+        author_id = author_binding.get("submitted_by_user_id",owner.user_id)
         from confia_lean_auditor.tme.review_models import QuestionSourceSnapshot
         snapshot = QuestionSourceSnapshot.model_validate(snapshot)
         if len(previews) != len(snapshot.pages):
@@ -223,14 +225,14 @@ class SubmissionStore:
             if (self.root / identifier).exists():
                 record = self.assert_submission_integrity(identifier)
                 frozen = QuestionSourceSnapshot.model_validate_json((self._folder(identifier) / "snapshot.json").read_bytes())
-                if (record.submitted_by_user_id != owner.user_id or
+                if (record.submitted_by_user_id != author_id or
                         frozen.model_dump(exclude={"mapping_version"}) != snapshot.model_dump(exclude={"mapping_version"})):
                     raise SubmissionConflict("question source already frozen differently")
                 return record
             raw = snapshot.model_dump_json().encode()
             record = SubmissionRecord(submission_id=identifier, problem_id=snapshot.problem_id,
                 snapshot_id=snapshot.snapshot_id, source="exam_pages", capture_schema_version=snapshot.schema_version,
-                received_at=datetime.now(timezone.utc), submitted_by_user_id=owner.user_id,
+                received_at=datetime.now(timezone.utc), **dict({"submitted_by_user_id":owner.user_id},**author_binding),
                 tme_case_id=snapshot.question_attempt_id, snapshot=ArtifactReference(filename="snapshot.json",
                     media_type="application/json", sha256=sha256(raw), size_bytes=len(raw)), page_images=refs)
             receipt = SubmissionReceipt(**record.model_dump())

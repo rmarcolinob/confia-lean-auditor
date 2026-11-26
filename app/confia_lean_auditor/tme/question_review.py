@@ -61,7 +61,8 @@ def freeze_source(exams, detail, case, user):
                 raise ExamConflict("asset integrity mismatch")
             if ref == page.preview:
                 previews.append(data)
-    record = submission_store().receive_exam_question(source, previews, user)
+    from confia_lean_auditor.dynamic.school_scope import source_binding
+    record = submission_store().receive_exam_question(source, previews, user, author_binding=source_binding(case))
     if case.submission_id and case.submission_id != record.submission_id:
         raise ExamConflict("different source already bound")
     return case_store().bind(case.case_id, record.submission_id, user)
@@ -81,7 +82,7 @@ def capture_segments(detail, case):
     return segments, ids
 
 
-def create(case_id, request, user):
+def create(case_id, request, user, *, reading_author=None):
     case, exams = owned_case(case_id, user), exam_store()
     with exams._locked():
         detail = exams._detail(case.exam_submission_id, user)
@@ -103,7 +104,7 @@ def create(case_id, request, user):
             raise TranscriptionConflict("initial transcription already exists")
         if request.origin == "manual":
             return store.create_transcription(case.submission_id, CreateTranscriptionRequest(
-                reviewer_reference=user.user_id, segments=segments))
+                reviewer_reference=reading_author or user.user_id, segments=segments))
         with store._locked(exclusive=True):
             record = TranscriptionRecord(transcription_id="tr_" + uuid4().hex, submission_id=case.submission_id,
                 created_at=datetime.now(timezone.utc), source="capture", capture_origin=CaptureImportProvenance(
@@ -163,7 +164,7 @@ def confirm_reading(case_id, transcription_id, request, user):
         freeze_source(exams,detail,case,user)
         store=submission_store()
         with store._locked(exclusive=True):
-            return confirm(store,case,transcription_id,request,user.user_id)
+            return confirm(store,case,transcription_id,request,user.user_id,actor_role="TEACHER" if detail.submission.school_attempt else None)
 
 
 def version_view(revision, pages, *, current):

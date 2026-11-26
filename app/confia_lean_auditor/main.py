@@ -86,6 +86,8 @@ app.include_router(management_router)
 app.include_router(teacher_decisions_router)
 app.include_router(tme_router)
 app.include_router(dynamic_router)
+from confia_lean_auditor.dynamic.school_router import router as school_router
+app.include_router(school_router)
 
 
 def repo_root() -> Path:

@@ -38,6 +38,8 @@ def definition_hash(document: AssessmentDocument) -> str:
         definition.update(dynamic_policy_profile=assessment.dynamic_policy_profile, dynamic_policy_version=assessment.dynamic_policy_version)
     if assessment.correction_mode == "DYNAMIC":
         definition.update(correction_mode=assessment.correction_mode, feedback_policy=assessment.feedback_policy, supersedes_assessment_id=assessment.supersedes_assessment_id)
+    if assessment.school_policy is not None:
+        definition["school_policy"] = assessment.school_policy.model_dump(mode="json")
     definition["items"] = [item.model_dump(mode="json") for item in sorted(document.items, key=lambda x: x.order)]
     return hashlib.sha256(json.dumps(definition, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8")).hexdigest()
 

@@ -104,18 +104,22 @@ def _view(document, user, records=None):
     data = institutional_store().snapshot()
     classroom = next((item for item in data.classrooms if item.classroom_id == assessment.classroom_id), None)
     records = records if records is not None else submission_store().list()
+    from confia_lean_auditor.dynamic.school_scope import sent_source
     matching = {(record.assessment_item_id, record.problem_id) for record in records
                 if user.role == Role.STUDENT and record.submitted_by_user_id == user.user_id
                 and record.assessment_id == assessment.assessment_id
+                and (not assessment.school_policy or sent_source(record))
                 and (record.network_id, record.school_id, record.classroom_id) ==
                     (assessment.network_id, assessment.school_id, assessment.classroom_id)}
     submitted = [item.assessment_item_id for item in sorted(document.items, key=lambda item: item.order)
                  if (item.assessment_item_id, item.problem_id) in matching]
-    return AssessmentView(assessment=assessment, items=document.items,
+    result = AssessmentView(assessment=assessment, items=document.items,
         teacher_name=teacher.display_name if teacher else "Professor",
         classroom_name=classroom.name if classroom else assessment.classroom_id,
         availability=availability(assessment), submitted_item_ids=submitted,
         released_results=results_for_student(user, document, records) if user.role == Role.STUDENT else [])
+    result._student_dynamic = user.role == Role.STUDENT and assessment.correction_mode == "DYNAMIC"
+    return result
 
 
 @router.get("", response_model=list[AssessmentView])
@@ -305,6 +309,8 @@ async def submit_assessment_item(assessment_id: str, item_id: str, request: Requ
         item = next((item for item in document.items if item.assessment_item_id == item_id), None)
         if item is None:
             raise FileNotFoundError()
+        if assessment.correction_mode == "DYNAMIC":
+            raise AssessmentConflict("Use o envio DYNAMIC desta atividade para preservar tentativas e versões.")
         if availability(assessment) != "DISPONÍVEL":
             raise AssessmentConflict("Exame fora do período de envio.")
         if request.headers.get("content-type", "").split(";")[0].strip().lower() != "application/json":

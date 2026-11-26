@@ -211,3 +211,14 @@ test('Minhas submissões reads official records and ignores TutorIA attempts', a
   assert.doesNotMatch(ui.get('#student-receipt-list').textContent, /sub_tutor/);
   assert(ui.calls.some(call => call.url === '/submissions'));
 });
+
+
+test('authorized Dynamic activities are listed without prepared catalog entries and open the student gateway',async()=>{
+  const dynamic={...exam,assessment:{...exam.assessment,correction_mode:'DYNAMIC'},items:[{...exam.items[0],problem_id:'dyn_unprepared_novel'}]};
+  const ui=await workspacePage(undefined,{exams:[dynamic],catalog:[]});
+  let opened=null;ui.window.ConfIADynamicStudent={create(host,id){opened=id;return {dispose(){}};}};
+  ui.visit('exams');await flush();
+  const card=ui.get('#student-exam-list').children.find(c=>c.tag==='article');assert(card);
+  await card.children.find(c=>c.tag==='button').click();assert.equal(opened,dynamic.assessment.assessment_id);
+  assert.equal(ui.get('#student-workspace').hidden,true);
+});

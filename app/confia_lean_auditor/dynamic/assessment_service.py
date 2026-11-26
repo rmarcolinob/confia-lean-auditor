@@ -19,11 +19,14 @@ from .reconciliation_models import POLICY_VERSION
 
 def owned(identifier, user):
     doc = assessment_store().get(identifier)
-    if doc.assessment.teacher_user_id != user.user_id or doc.assessment.scope != 'TME':
+    if doc.assessment.teacher_user_id != user.user_id:
         raise HTTPException(403, 'Avaliação fora do escopo do avaliador.')
     if doc.assessment.correction_mode != 'DYNAMIC':
         raise DynamicConflict('A operação exige avaliação Dynamic.')
     evaluator_actor(user)
+    if doc.assessment.scope == "INSTITUTIONAL":
+        from .school_scope import teacher_for
+        teacher_for(doc)
     return doc
 
 
@@ -194,6 +197,7 @@ def activate(identifier, body, user):
 
 def successor(identifier,user):
     old=owned(identifier,user)
+    if old.assessment.scope != "TME": raise DynamicConflict("Prepare e publique uma nova atividade; a publicação institucional é imutável.")
     if old.assessment.status=='DRAFT' or old.assessment.superseded_by: raise DynamicConflict('Selecione uma publicação corrente.')
     return create(SimpleNamespace(title=old.assessment.title+' — nova versão',instructions=old.assessment.instructions,
         policy_profile=old.assessment.dynamic_policy_profile,feedback_policy=old.assessment.feedback_policy),user,predecessor=old)

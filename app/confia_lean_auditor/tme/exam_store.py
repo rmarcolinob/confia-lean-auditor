@@ -37,10 +37,14 @@ def exam_store():
     return ExamStore(Path(configured).resolve() if configured else get_repo_root() / "runtime/tme_exams")
 
 
-def tme_assessment(identifier, user):
+def tme_assessment(identifier, user, school_attempt=None):
     doc = assessment_store().get(identifier)
-    if doc.assessment.scope != "TME" or doc.assessment.teacher_user_id != user.user_id:
+    if doc.assessment.teacher_user_id != user.user_id or (doc.assessment.scope != "TME" and school_attempt is None):
         raise HTTPException(403, "Avaliação fora do escopo do avaliador.")
+    if school_attempt is not None:
+        from confia_lean_auditor.dynamic.school_scope import teacher_for
+        if doc.assessment.scope!='INSTITUTIONAL' or teacher_for(doc).user_id!=user.user_id or school_attempt.teacher_user_id!=user.user_id:
+            raise HTTPException(403,'Vínculo institucional inválido.')
     if doc.assessment.status != "PUBLISHED":
         raise ExamConflict("A avaliação não está disponível para recebimento.")
     return doc
@@ -84,6 +88,8 @@ class ExamStore(AssessmentStore):
                 or [p.page_number for p in submission.pages] != list(range(1, submission.page_count + 1))
                 or any(p.submission_id != identifier for p in submission.pages)):
             raise ExamConflict("Vínculos da prova inválidos.")
+        from confia_lean_auditor.dynamic.school_scope import validate_manifest
+        validate_manifest(submission,assessment,participant)
         return submission, assessment, participant
 
     def _mapping(self, identifier, submission):
@@ -145,15 +151,20 @@ class ExamStore(AssessmentStore):
                 from .finalization import lifecycle
                 closure = lifecycle(submission.submission_id)
                 current = closure['current_final_correction']
+                participant_label=participant.external_code
+                if submission.school_attempt:
+                    from confia_lean_auditor.auth.dependencies import auth_store
+                    student=auth_store().get_user(submission.school_attempt.student_user_id)
+                    participant_label=f'{student.display_name if student else participant.user_id} · tentativa {submission.school_attempt.attempt_number}'
                 result.append(dict(assessment_id=submission.assessment_id, correction_mode=assessment.assessment.correction_mode, policy_profile=assessment.assessment.dynamic_policy_profile, status='FINALIZED' if current else 'REOPENED' if closure['reopened'] else 'IN_PROGRESS',
                     final_total=current['final_total'] if current else None,
                     adjusted_question_count=current['adjusted_question_count'] if current else None,
                     finalized_at=current['finalized_at'] if current else None, submission_id=submission.submission_id, title=assessment.assessment.title,
-                    participant_code=participant.external_code, page_count=submission.page_count,
+                    participant_code=participant_label, page_count=submission.page_count,
                     question_count=len(submission.question_attempt_ids), created_at=submission.created_at))
             return sorted(result, key=lambda r: r["created_at"], reverse=True)
 
-    def receive(self, package, user):
+    def receive(self, package, user, *, school_attempt=None):
         identity = hashlib.sha256(f"{user.user_id}:{package.idempotency_key}".encode()).hexdigest()[:32]
         identifier = "exam_" + identity
         request_hash = canonical_sha256(package.model_dump(mode="json"))
@@ -163,10 +174,11 @@ class ExamStore(AssessmentStore):
                 if previous.submission.request_sha256 != request_hash:
                     raise ExamConflict("A chave de envio já foi usada com outro conteúdo.")
                 return previous, False
-            assessment = tme_assessment(package.assessment_identifier, user)
+            assessment = tme_assessment(package.assessment_identifier, user, school_attempt)
             originals, rendered = prepare(package)
-            participant = participant_store().get_or_create(package.assessment_identifier, "EXTERNAL_PSEUDONYM",
-                external_namespace=package.external_namespace, external_code=package.external_participant_code)
+            participant = (participant_store().get_or_create(package.assessment_identifier,'REGISTERED_USER',user_id=school_attempt.student_user_id)
+                if school_attempt else participant_store().get_or_create(package.assessment_identifier, "EXTERNAL_PSEUDONYM",
+                external_namespace=package.external_namespace, external_code=package.external_participant_code))
             now = datetime.now(timezone.utc)
             assets = [ExamAsset(asset_id=f"original_{i:04d}", media_type=doc.media_type,
                 sha256=hashlib.sha256(data).hexdigest(), byte_size=len(data))
@@ -181,7 +193,7 @@ class ExamStore(AssessmentStore):
                     width=width, height=height, rotation_degrees=rotation, transformation=transformation))
             cases = ["case_" + hashlib.sha256(f"{identifier}:{item.assessment_item_id}".encode()).hexdigest()[:32]
                      for item in assessment.items]
-            submission = ExamSubmission(submission_id=identifier, assessment_id=package.assessment_identifier,
+            submission = ExamSubmission(**({"school_attempt":school_attempt} if school_attempt else {}),submission_id=identifier, assessment_id=package.assessment_identifier,
                 assessment_definition_sha256=assessment.assessment.definition_sha256,
                 participant_id=participant.participant_id, created_by_user_id=user.user_id, created_at=now,
                 source="PDF" if assets[0].media_type == "application/pdf" else "IMAGES", page_count=len(pages),
@@ -197,7 +209,7 @@ class ExamStore(AssessmentStore):
                 manifest = dict(submission=submission.model_dump(mode="json"),
                     assessment=assessment.model_dump(mode="json"), participant=participant.model_dump(mode="json"))
                 SubmissionStore._write(pending / "exam.json", json.dumps(sealed(manifest)).encode())
-                mapping = PageMapping(version=1, updated_at=now, updated_by=user.user_id)
+                mapping = PageMapping(version=1, updated_at=now, updated_by=school_attempt.student_user_id if school_attempt else user.user_id)
                 SubmissionStore._write(pending / "mapping_000001.json", json.dumps(sealed(mapping.model_dump(mode="json"))).encode())
                 # Child records use the existing store and deterministic IDs. A
                 # crash before publication is retryable without duplicate cases.
@@ -214,7 +226,7 @@ class ExamStore(AssessmentStore):
                     shutil.rmtree(pending)
             return self._detail(identifier, user), True
 
-    def receive_text(self, request, user):
+    def receive_text(self, request, user, *, school_attempt=None):
         """Minimal upstream adapter: native text originals, existing transcription store.
 
         No rendered pages, OCR or page segmentation. Retry resumes missing child
@@ -229,13 +241,14 @@ class ExamStore(AssessmentStore):
         with self._locked():
             created=not (self.root/identifier).exists()
             if created:
-                assessment=tme_assessment(request.assessment_identifier,user)
+                assessment=tme_assessment(request.assessment_identifier,user,school_attempt)
                 if assessment.assessment.correction_mode!='DYNAMIC' or len(request.solutions)!=len(assessment.items):
                     raise ExamConflict('Envie uma solução textual por questão Dynamic, na ordem publicada.')
-                participant=participant_store().get_or_create(request.assessment_identifier,'EXTERNAL_PSEUDONYM',external_namespace='dynamic',external_code=request.external_participant_code)
+                participant=(participant_store().get_or_create(request.assessment_identifier,'REGISTERED_USER',user_id=school_attempt.student_user_id)
+                    if school_attempt else participant_store().get_or_create(request.assessment_identifier,'EXTERNAL_PSEUDONYM',external_namespace='dynamic',external_code=request.external_participant_code))
                 now=datetime.now(timezone.utc)
                 ids=['case_'+hashlib.sha256(f"{identifier}:{i.assessment_item_id}".encode()).hexdigest()[:32] for i in assessment.items]
-                submission=ExamSubmission(submission_id=identifier,assessment_id=request.assessment_identifier,
+                submission=ExamSubmission(**({"school_attempt":school_attempt} if school_attempt else {}),submission_id=identifier,assessment_id=request.assessment_identifier,
                     assessment_definition_sha256=assessment.assessment.definition_sha256,participant_id=participant.participant_id,
                     created_by_user_id=user.user_id,created_at=now,source='TEXT',page_count=0,
                     capture_metadata=CaptureMetadata(producer='confia-text-input'),capture_pages=[],original_documents=[],previews=[],pages=[],question_attempt_ids=ids,request_sha256=request_hash)
@@ -243,7 +256,7 @@ class ExamStore(AssessmentStore):
                 try:
                     manifest=dict(submission=submission.model_dump(mode='json'),assessment=assessment.model_dump(mode='json'),participant=participant.model_dump(mode='json'))
                     SubmissionStore._write(pending/'exam.json',json.dumps(sealed(manifest)).encode())
-                    mapping=PageMapping(version=1,updated_at=now,updated_by=user.user_id)
+                    mapping=PageMapping(version=1,updated_at=now,updated_by=school_attempt.student_user_id if school_attempt else user.user_id)
                     SubmissionStore._write(pending/'mapping_000001.json',json.dumps(sealed(mapping.model_dump(mode='json'))).encode())
                     for cid,item in zip(ids,assessment.items):
                         case_store().create(CaseCreate(problem_id=item.problem_id,external_candidate_ref=request.external_participant_code,source_mode='TEXT'),user,
@@ -258,11 +271,11 @@ class ExamStore(AssessmentStore):
                     receipt=receive_text(submissions(),case,user,text)
                     case=case_store().bind(case.case_id,receipt.submission_id,user)
                 if not submissions().list_transcriptions(case.submission_id):
-                    submissions().create_transcription(case.submission_id,CreateTranscriptionRequest(reviewer_reference=user.user_id,
+                    submissions().create_transcription(case.submission_id,CreateTranscriptionRequest(reviewer_reference=school_attempt.student_user_id if school_attempt else user.user_id,
                         segments=[dict(segment_id='text:0',page_index=0,order=0,kind='text',text=text)]))
             return self._detail(identifier,user),created
 
-    def update_mapping(self, identifier, request, user):
+    def update_mapping(self, identifier, request, user, *, mapping_author=None):
         with self._locked():
             detail = self._detail(identifier, user)
             from .finalization import assert_editable
@@ -278,7 +291,7 @@ class ExamStore(AssessmentStore):
             if request.bindings == detail.mapping.bindings:
                 return detail.mapping
             mapping = PageMapping(version=detail.mapping.version + 1, bindings=request.bindings,
-                updated_at=datetime.now(timezone.utc), updated_by=user.user_id)
+                updated_at=datetime.now(timezone.utc), updated_by=mapping_author or user.user_id)
             path = self.folder(identifier) / f"mapping_{mapping.version:06d}.json"
             SubmissionStore._write_atomic_new(path, json.dumps(sealed(mapping.model_dump(mode="json"))).encode())
             return mapping

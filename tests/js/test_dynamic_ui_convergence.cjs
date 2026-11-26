@@ -11,7 +11,7 @@ function prepared(doc){const prep={preparation_id:prepId,preparation_version:1,s
 const field=(ui,name)=>walk(ui.root).find(n=>n.name===name);
 const submit=ui=>walk(ui.root).find(n=>n.tag==='form').handlers.submit({preventDefault(){}});
 
-test('Nova presents both routes in the existing shell; historical generic modules remain without Dynamic',async()=>{
+test('Nova presents both routes in the existing shell; teacher preparation remains in the shared shell while student integration is separate',async()=>{
  const ui=await pilot({startHome:true});await walk(ui.root).find(n=>n.tag==='button' && walk(n).some(c=>c.textContent==='Nova correção')).click();await flush();
  assert.equal(ui.root.dataset.view,'new');assert.equal(ui.window.history.url,'/tme?view=new');
  assert.match(text(ui.root),/Avaliação preparada/);assert.match(text(ui.root),/Nova atividade ou prova/);
@@ -21,7 +21,8 @@ test('Nova presents both routes in the existing shell; historical generic module
  assert.equal(ui.window.history.url,'/tme?view=new&mode=specialized');
  const staticDir=path.join(__dirname,'../../app/confia_lean_auditor/static');
  const legacy=fs.readFileSync(path.join(staticDir,'index.html'),'utf8'),shell=fs.readFileSync(path.join(staticDir,'shell.js'),'utf8');
- assert.match(legacy,/Gestão/);assert.doesNotMatch(legacy+shell,/teacher-dynamic|teacher\/dynamic|ConfIADynamic|\/static\/dynamic/);
+ assert.match(legacy,/Gestão/);assert.doesNotMatch(legacy+shell,/teacher-dynamic|teacher\/dynamic|ConfIADynamic(?:Assessment)?\b|\/static\/dynamic(?:-assessment)?\.js/);
+ assert.match(legacy,/\/static\/dynamic-student\.js/);
  const modern=fs.readFileSync(path.join(staticDir,'tme/index.html'),'utf8');
  assert.match(modern,/data-tme-shell="modern"/);assert.match(modern,/\/static\/dynamic.js/);assert.doesNotMatch(modern,/Gestão|Perfil de demonstração/);
  const css=fs.readFileSync(path.join(staticDir,'tme/secondary-views.css'),'utf8');
