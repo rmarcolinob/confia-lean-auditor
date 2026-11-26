@@ -208,6 +208,27 @@ def test_validation_and_method_errors_before_endpoint_are_safe(pipeline):
     assert_no_local_paths(response.json())
 
 
+@pytest.mark.parametrize("status,detail,code", [
+    (409, "Integridade da submissão inválida.", "SOURCE_INTEGRITY_MISMATCH"),
+    (403, "Integridade da submissão inválida.", "AUDIT_OPERATION_FAILED"),
+    (409, "Integridade da submissão inválida. /Users/private/data", "AUDIT_OPERATION_FAILED"),
+    (409, {"diagnostic": "/Users/private/data"}, "AUDIT_OPERATION_FAILED"),
+])
+def test_access_guard_integrity_category_is_fixed_and_does_not_echo_detail(
+        pipeline, monkeypatch, caplog, status, detail, code):
+    def fail(*args):
+        raise HTTPException(status, detail)
+    monkeypatch.setattr(main, "execute_audit", fail)
+    response = pipeline.post("/audit", json={"problem_id": PROBLEM, "solution": "x=1"})
+    assert response.status_code == status
+    assert response.json()["error_code"] == code
+    expected = ("A fonte desta análise não passou na verificação de integridade."
+                if code == "SOURCE_INTEGRITY_MISMATCH" else "Não foi possível concluir a operação.")
+    assert response.json()["detail"] == response.json()["message"] == expected
+    assert_no_local_paths(response.json())
+    assert "/Users/private/data" not in response.text + caplog.text
+
+
 def test_gov_endpoint_advertises_public_dto_in_openapi(pipeline):
     spec = pipeline.get("/openapi.json").json()
     schema = spec["paths"]["/submission-audits/{audit_run_id}/reproducibility"]["get"]["responses"]["200"]["content"]["application/json"]["schema"]
