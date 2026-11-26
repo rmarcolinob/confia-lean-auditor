@@ -1,5 +1,7 @@
 # Guia para Rian, Luis e colaboradores
 
+A política vigente está em [CONTRIBUTING.md](../../CONTRIBUTING.md): `main` integrada, branches de trabalho e PRs revisados. O [relatório de consolidação](../audits/CONFIA_MAIN_CONSOLIDATION_2026_12.md) registra a transição; números de validações anteriores abaixo permanecem históricos.
+
 ## Código e responsabilidades
 
 | Local | Responsabilidade |
@@ -17,7 +19,7 @@
 
 SPECIALIZED atende muitas soluções de poucas questões preparadas. Checkers e Lean produzem evidências quando possível; Semantic B com fallback mínimo avalia critérios elegíveis inconclusivos usando texto e pauta. O provider decide atendimento e apresenta citações; os pontos continuam definidos pelo mecanismo de pontuação. A projeção `tme-review-diagnostics.v1` é derivada e não reescreve pontuação, `needs_review`, `verdict` ou AuditRuns antigos.
 
-DYNAMIC atende questões inéditas sem exigir microclaims, checker individual ou Lean preparado por nossa equipe. Há entrada manual de rubrica e geração opcional, aprovação docente, publicação da atividade e correção pelo fluxo compartilhado. Isso é implementação funcional de piloto, não validação geral da matemática. O plano específico está em `docs/collaboration/DYNAMIC_STATUS.md` na branch `codex/dynamic-development`.
+DYNAMIC atende questões inéditas sem exigir microclaims, checker individual ou Lean preparado por nossa equipe. Há entrada manual de rubrica e geração opcional, aprovação docente, publicação da atividade e correção pelo fluxo compartilhado. Isso é implementação funcional de piloto, não validação geral da matemática. O plano específico está em `docs/collaboration/DYNAMIC_STATUS.md` neste repositório.
 
 ## Onde começar por frente
 
@@ -39,7 +41,7 @@ Providers são opt-in. Preparação automática DYNAMIC: `CONFIA_DYNAMIC_LLM_ENA
 
 ### DYNAMIC com sessão autenticada
 
-Na raiz de um clone próprio da branch DYNAMIC, após instalar o ambiente do README, execute em um mesmo terminal:
+Na raiz de um clone próprio da `main` integrada (ou da branch do PR durante a revisão), após instalar o ambiente do README, execute em um mesmo terminal:
 
 ```sh
 export CONFIA_ENV=development CONFIA_AUTH_ENABLED=1 CONFIA_COOKIE_SECURE=0
@@ -77,6 +79,6 @@ Rodada de organização: **152 testes Python e 45 JavaScript aprovados**. O veri
 
 Para a consolidação I6+6B, consulte os comandos e resultados atuais no [relatório](../audits/CONFIA_DYNAMIC_INTERVENCOES_6_6B_CONSOLIDACAO.md). Os números da rodada de organização acima são históricos. Os testes específicos dos feedbacks são `tests/test_dynamic_self_study_feedback_policy.py` e `tests/js/test_dynamic_self_study.cjs`; a suíte ampliada inclui os contratos TME². Permanecem dois skips por pacote DEV controlado ausente e uma ocorrência P3 intermitente sem causa identificada, preservados no relatório.
 
-Rian pode clonar o remoto, ler este guia e os três históricos de interface (`a5d2461`, `1545955`, `8c17274`), executar a regressão offline e abrir uma branch da frente escolhida. O código atual das duas frentes já tem ancestralidade comum na RC1; as novas branches separam **trabalho futuro**, não apagam o histórico compartilhado.
+Rian pode clonar o remoto, ler este guia e os três históricos de interface (`a5d2461`, `1545955`, `8c17274`), executar a regressão offline e abrir uma branch a partir da `main` integrada. O código atual das duas frentes já tem ancestralidade comum na RC1; as novas branches separam **trabalho futuro**, não apagam o histórico compartilhado.
 
 Prioridades DYNAMIC: avaliação independente por domínio e critério; comportamento fora do parser exato; qualidade de rubricas e citações; divergências e revisão humana; custo/latência; integração de captura sem confundir OCR e correção matemática. Prioridades de interface: revisão desktop/mobile e acessibilidade, preservando caderno, TutorIA, dados reais de gestão e permissões. Não há nova implementação dessas tarefas nesta organização.

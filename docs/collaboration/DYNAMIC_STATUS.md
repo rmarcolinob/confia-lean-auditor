@@ -1,6 +1,6 @@
 # DYNAMIC — estado experimental após I6 e 6B
 
-Esta branch parte da RC1 integrada e da documentação de colaboração. Não modifica o snapshot SPECIALIZED nem acrescenta regras matemáticas. Seu propósito é permitir evolução revisada do DYNAMIC, separadamente da candidata congelada.
+O DYNAMIC integrado parte da RC1 e da documentação de colaboração. Não modifica o snapshot SPECIALIZED nem acrescenta regras matemáticas. Seu desenvolvimento segue por branches de trabalho e PRs para a `main`, preservando a candidata SPECIALIZED congelada.
 
 Atualização: 26/11/2026. Público principal: anos finais do Ensino Fundamental e Ensino Médio. Os três contextos usam o mesmo núcleo; parecer semântico não equivale a prova Lean. O estudo autônomo não executa Lean nem aplica PautaEngine; não é um segundo corretor SPECIALIZED.
 

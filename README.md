@@ -5,20 +5,27 @@ Plataforma experimental de correção matemática, resolução assistida e acomp
 | Frente | Situação em 26/11/2026 | Referência |
 | --- | --- | --- |
 | SPECIALIZED | RC1 experimental congelada; avaliação independente com gold humano pendente | Tag `SPECIALIZED-TME2-RC1` |
-| DYNAMIC | Professor, atividade institucional do aluno e estudo autônomo integrados; feedback público restrito da I6+6B; validação independente pendente | Branch `codex/dynamic-development` |
-| Interface | Professor baseado no TME²; entrada, Aluno e Gestão harmonizados | Branch `codex/interface-review` |
-| Colaboração | Instalação, limites, inventário e orientações para revisão | Branch `codex/collaboration-handoff` |
+| DYNAMIC | Professor, atividade institucional do aluno e estudo autônomo integrados; feedback público restrito da I6+6B; validação independente pendente | `main`, após revisão do PR de consolidação |
+| Interface | Professor baseado no TME²; entrada, Aluno e Gestão harmonizados | `main`, após revisão do PR de consolidação |
+| Colaboração | Instalação, limites, inventário e orientações para revisão | Documentação neste repositório |
 
-A `main` permanece preservada. As branches de trabalho não significam aprovação para produção nem devem ser integradas automaticamente. O vídeo institucional é um projeto separado em `codex/interface-video`, com exemplos ilustrativos.
+A `main` é a referência integrada e testada da plataforma. Novos trabalhos partem dela e retornam por pull requests revisados. Esta consolidação só atualiza a `main` após aprovação humana do PR; até lá, a versão completa está em `codex/main-consolidation-dec10`. Integração técnica não significa aprovação para produção. O vídeo institucional é um projeto separado em `codex/interface-video`, com exemplos ilustrativos.
 
 ## Começar
+
+Rian e Luis devem usar a `main` após o merge do PR de consolidação. Para avaliar o PR antes disso, execute `git switch --track origin/codex/main-consolidation-dec10` depois do clone.
 
 ```sh
 git clone https://github.com/rmarcolinob/confia-lean-auditor.git
 cd confia-lean-auditor
-git switch --track origin/codex/dynamic-development
 python3 -m venv .venv
-.venv/bin/python -m pip install -e .
+.venv/bin/python -m pip install --upgrade pip
+.venv/bin/python -m pip install -e . -c docs/audits/assets/dynamic-rc1/python-constraints.txt
+```
+
+Para executar **os três contextos completos**, continue com o [ambiente autenticado de desenvolvimento](docs/collaboration/README.md#dynamic-com-sessão-autenticada), incluindo contas e vínculos locais. Para abrir somente a demonstração visual sem sessão:
+
+```sh
 env -u OPENAI_API_KEY CONFIA_SEMANTIC_LLM_ENABLED=0 CONFIA_DYNAMIC_LLM_ENABLED=0 \
   .venv/bin/python scripts/pilot_dec10.py --port 8010
 ```
@@ -28,6 +35,8 @@ Instalar dependências pode acessar a rede. O launcher inicia **demonstração l
 Entrada: `http://127.0.0.1:8010/`. Professor: `/#teacher/home`; Aluno: `/#student/home`; Gestão: `/#management/home`; correção: `/tme`. Selecionar um módulo não concede permissões institucionais. Ver [operação do piloto](docs/PILOTO_10_DEZEMBRO.md) e [guia de colaboração](docs/collaboration/README.md).
 
 **Estudo autônomo e atividades institucionais exigem sessão autenticada.** O launcher acima desabilita autenticação e não serve para testar esses fluxos. Para eles, use o [ambiente autenticado de desenvolvimento](docs/collaboration/README.md#dynamic-com-sessão-autenticada). O [estado atual do DYNAMIC](docs/collaboration/DYNAMIC_STATUS.md) reúne os três contextos e as limitações; o [relatório de consolidação I6+6B](docs/audits/CONFIA_DYNAMIC_INTERVENCOES_6_6B_CONSOLIDACAO.md) registra revisão, testes e prontidão experimental.
+
+A preparação da candidata DYNAMIC foi preservada, sem criar tag: [manifesto e limites](docs/audits/DYNAMIC_RC1_CANDIDATE.md). Ela identifica o código `fc6f271`, anterior às correções de navegação integradas. Para conferir essa referência histórica no clone atual, execute `python3 scripts/evaluation/verify_dynamic_rc1_reference.py`. Isso verifica bytes, não declara que o checkout atual possui o fingerprint da candidata. Consulte o [relatório de consolidação](docs/audits/CONFIA_MAIN_CONSOLIDATION_2026_12.md).
 
 ## Evidência e reprodução
 

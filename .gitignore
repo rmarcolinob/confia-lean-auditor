@@ -39,3 +39,6 @@ runtime/
 dataset_1000_v1.2/
 
 datasets/
+
+# Also ignore a local shared Lake cache mounted as a symlink.
+/.lake
