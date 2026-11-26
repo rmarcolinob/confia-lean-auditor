@@ -148,6 +148,13 @@ class DynamicReviewService:
                 comparison = compare_review(
                     run.result, phase, rubric, run.source.solution_text
                 )
+                if enabled(context):
+                    from .semantic_provenance import evaluation_record
+                    for item in phase.criterion_reviews:
+                        events.append(dict(event_type='independent_semantic_criterion_review',
+                            **evaluation_record(item.criterion_id,phase.semantic_reviews[item.criterion_id],item.claim_ids),
+                            proposed_points=str(item.proposed_points) if item.proposed_points is not None else None,
+                            sufficiency=item.sufficiency))
                 for claim in phase.additional_claims:
                     events.append(
                         dict(event_type="reviewer_claim_added", claim_id=claim.claim_id)
@@ -227,7 +234,7 @@ class DynamicReviewService:
                 phase_a_input=payload,
                 context_snapshot=dict(
                     phase_a_input_sha256=canonical_sha256(payload),
-                    provider_adapter=type(self.provider).__name__,
+                    provider_adapter=(type(self.semantic_provider).__name__ if self.semantic_provider is not None else 'SemanticProvider') if enabled(context) else type(self.provider).__name__,
                     failed_generation=failure_provenance,
                     statement=statement.model_dump(mode="json"),
                     rubric=rubric.model_dump(mode="json"),

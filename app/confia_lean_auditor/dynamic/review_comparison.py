@@ -5,6 +5,9 @@ from .grader import criterion_policy
 
 
 def compare_review(grader, phase, rubric, solution):
+    from .semantic import enabled
+    if enabled(grader.context):
+        return compare_semantic_review(grader, phase, rubric)
     independent = {r.criterion_id: r for r in phase.criterion_reviews}
     checked = {
         (c.start, c.end, c.text): c for c in [*phase.claims, *phase.additional_claims]
@@ -145,3 +148,38 @@ def compare_review(grader, phase, rubric, solution):
             "DISAGREEMENT" if conflicts else "AGREEMENT" if exact else "INCONCLUSIVE"
         ),
     )
+
+
+def compare_semantic_review(grader, phase, rubric):
+    """Use the same point/state comparison as reconciliation; human review is separate."""
+    from types import SimpleNamespace
+    from .semantic import reconcile
+    rows = []
+    decisions = {d.criterion_id: d for d in grader.decisions}
+    independent = {r.criterion_id: r for r in phase.criterion_reviews}
+    for item in reconcile(grader, SimpleNamespace(phase_a=phase, status='COMPLETED'), rubric):
+        g = decisions[item.criterion_id]
+        r = independent.get(item.criterion_id)
+        pending = (item.technical_uncertainty or not r or r.proposed_points is None or
+                   r.review_required or bool(g.semantic_trace and g.semantic_trace['decision']=='review'))
+        agrees = item.status in {'AGREEMENT_SUPPORTED', 'AGREEMENT_UNVERIFIED'}
+        difference = None if pending else float(r.proposed_points-g.suggested_points)
+        kinds = []
+        if not agrees and not pending:
+            kinds.append('SUFFICIENCY_DISAGREEMENT')
+            if difference:
+                kinds.append('MISSED_CREDIT_SUSPECTED' if difference>0 else 'FALSE_CREDIT_SUSPECTED')
+        rows.append(CriterionComparison(criterion_id=item.criterion_id,
+            grader_points=item.grader_points,reviewer_points=item.reviewer_points,
+            grader_status=g.sufficiency,reviewer_status=r.assessment if r else 'INSUFFICIENT',
+            agreement='AGREEMENT' if agrees else 'UNRESOLVED' if pending else 'DISAGREEMENT',
+            difference=difference,disagreement_types=kinds,
+            evidence_overlap=sorted(set(item.grader_evidence)&set(item.reviewer_evidence)),
+            reason=item.reason,review_required=item.review_required))
+    conflicts=[r.criterion_id for r in rows if r.agreement=='DISAGREEMENT']
+    agreement=all(r.agreement=='AGREEMENT' for r in rows)
+    return DynamicReviewComparison(criteria=rows,exact_agreement=agreement,
+        agreement_count=sum(r.agreement=='AGREEMENT' for r in rows),
+        total_point_difference=round(sum(r.difference for r in rows),2) if all(r.difference is not None for r in rows) else None,
+        conflicting_criteria=conflicts,review_required=any(r.review_required for r in rows),
+        status='DISAGREEMENT' if conflicts else 'AGREEMENT' if agreement else 'INCONCLUSIVE')

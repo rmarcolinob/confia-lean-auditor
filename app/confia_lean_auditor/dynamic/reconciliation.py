@@ -25,7 +25,7 @@ class SafeAutomationPolicy:
 def reconcile_criteria(grader, review, statement, rubric, solution, profile):
     from .semantic import enabled, reconcile
     if enabled(grader.context):
-        return reconcile(grader, review)
+        return reconcile(grader, review, rubric)
     policy = SafeAutomationPolicy(profile)
     equation, fresh, source_warnings = evidence_inventory(solution, statement)
     phase = review.phase_a
