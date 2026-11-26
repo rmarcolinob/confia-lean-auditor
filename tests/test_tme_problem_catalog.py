@@ -129,10 +129,9 @@ def test_auditor_without_public_content_alias_is_rejected(monkeypatch):
 @pytest.mark.parametrize("origin", ["http://127.0.0.1:8000", "https://figure-control.trycloudflare.com"])
 def test_public_figures_are_same_origin_and_not_filesystem_paths(setup, origin):
     """ASGI transport exercises HTTP/HTTPS origins without contacting Cloudflare."""
-    import httpx
     from confia_lean_auditor.main import STATIC_DIR
     client, calls, _ = setup
-    client.base_url = httpx.URL(origin)
+    client.base_url = origin
     response = client.get("/tme/problems")
     assert response.status_code == 200
     for forbidden in ("/Users/", "file://", "app/confia_lean_auditor/static/"):
