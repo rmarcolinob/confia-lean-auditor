@@ -105,7 +105,13 @@ def test_parent_statement_is_compact_and_sticky_through_notebook_and_submission(
     assert sticky and 'position: sticky;' in sticky.group(1) and 'top: 0;' in sticky.group(1)
     assert 'body[data-handwriting-focus="true"] #notebook-problem-context' not in css
     assert '#notebook-problem-body { max-height:' in css
-    assert 'position: sticky' not in (STATIC / 'capture/tablet.css').read_text().split('/* Embedded mode')[1]
+    tablet_css = re.sub(r'/\*.*?\*/', '', (STATIC / 'capture/tablet.css').read_text(), flags=re.S)
+    embedded_sticky = [selector.strip()
+        for selectors, declarations in re.findall(r'([^{}]+)\{([^{}]*)\}', tablet_css)
+        if re.search(r'\bposition\s*:\s*sticky\b', declarations)
+        for selector in selectors.split(',') if 'body[data-embedded="true"]' in selector]
+    # TME owns its embedded controls; the general student workspace owns them in the parent.
+    assert embedded_sticky and all('[data-tme="true"]' in selector for selector in embedded_sticky)
     workspace = (STATIC / 'resolution-workspace.js').read_text()
     assert 'get("notebook-problem-statement").textContent = problem?.statement || ""' in workspace
     assert 'notebook-problem-title' not in workspace
