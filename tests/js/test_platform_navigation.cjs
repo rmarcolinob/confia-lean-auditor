@@ -14,3 +14,17 @@ for(const [status,message] of [[404,/Demonstração local/],[401,/Sessão ausent
  assert.match(ui.shell['home-session'].textContent,message);
  assert(!ui.calls.some(c=>c.options?.method==='POST'));
 });
+
+test('platform brand is static while the three modules retain the menu home link',()=>{
+ const fs=require('node:fs'),path=require('node:path');
+ const root=path.resolve(__dirname,'../../app/confia_lean_auditor/static');
+ const html=fs.readFileSync(path.join(root,'index.html'),'utf8');
+ const platform=html.match(/<header\b[^>]*id="platform-header"[\s\S]*?<\/header>/)[0];
+ const brand=platform.match(/<div\b[^>]*class="home-brand"[^>]*>/);
+ assert(brand,'The approved brand is a non-interactive div');
+ assert.doesNotMatch(brand[0],/\b(?:href|tabindex|role|onclick)\s*=/);
+ assert.doesNotMatch(platform,/<a\b[^>]*class="home-brand"/);
+ const shell=fs.readFileSync(path.join(root,'shell.js'),'utf8');
+ for(const role of ['student','teacher','management'])assert(shell.includes(role));
+ assert.match(html,/Início da plataforma/);
+});
