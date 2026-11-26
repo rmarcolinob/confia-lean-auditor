@@ -1,0 +1,43 @@
+{
+  "offline": true,
+  "paid_calls": 0,
+  "main_python": {
+    "passed": 769,
+    "skipped": 2,
+    "seconds": 369.33
+  },
+  "javascript": {
+    "passed": 614,
+    "failed": 0,
+    "seconds": 2.499954167
+  },
+  "budget_guard": {
+    "passed": 10,
+    "seconds": 0.1,
+    "transport": "simulated"
+  },
+  "specialized_integrity": {
+    "files": 754,
+    "reference_members": 65,
+    "environment_checked": true,
+    "audits": 0
+  },
+  "skips": [
+    {
+      "test": "test_tme_model_compat.py::test_real_smoke_dry_run_separates_semantic_hashes_from_transport",
+      "reason": "Frozen local DEV pack unavailable"
+    },
+    {
+      "test": "test_tme_model_compat.py::test_transport_builder_does_not_weaken_holdout_guard",
+      "reason": "Frozen local DEV pack unavailable"
+    }
+  ],
+  "previous_p3": {
+    "test": "test_stale_invalidated_failed_and_new_audit_block_closure",
+    "cause": "UNKNOWN",
+    "resolved": false,
+    "raw_local_log": "artifacts/qa/dynamic-intervention6/regression-initial.log",
+    "raw_local_log_available": true,
+    "raw_local_log_sha256": "181e32d3b0e95d885ba4618466bba26c4f826d52a5c40cb11f786ca21b9d321a"
+  }
+}
