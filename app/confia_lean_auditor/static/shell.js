@@ -12,6 +12,7 @@
       "tutoria/trails": ["Trilhas · TutorIA", "Conheça percursos de aprendizagem por tema."],
       "tutoria/progress": ["Meu progresso · TutorIA", "Uma visão do acompanhamento da aprendizagem."],
       "tutoria/attempts": ["Minhas atividades · TutorIA", "Retome suas tentativas de prática."],
+      study: ["Estudo autônomo", "Receba orientações matemáticas progressivas, sem nota."],
       exams: ["Exames", "Acesse atividades disponibilizadas para sua turma."],
       resolve: ["TutorIA", "Escolha uma questão e resolva no Caderno de Resolução ConfIA."],
       feedback: ["Feedback", "Consulte a análise atual da resolução nesta sessão."],
@@ -68,6 +69,7 @@
     visible("tutoria-root", profile === "student" && (view === "tutoria" || view.startsWith("tutoria/")));
     if (profile === "student") window.ConfIAWorkspace?.enter(view);
     window.ConfIATutoria?.show(profile === "student" ? view : "");
+    window.ConfIASelfStudy?.show(profile === "student" ? view : "");
     visible("student-home", profile === "student" && view === "home");
     visible("student-exams", profile === "student" && view === "exams" && !window.ConfIAWorkspace?.examSelected);
     visible("student-workspace", profile === "student" && (view === "resolve" || view === "tutoria/practice" || (view === "exams" && window.ConfIAWorkspace?.examSelected)));

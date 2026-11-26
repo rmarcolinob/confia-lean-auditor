@@ -47,8 +47,8 @@ class SubmissionRequest(SubmissionModel):
 
 
 class ArtifactReference(SubmissionModel):
-    filename: Annotated[str, StringConstraints(pattern=r"^(snapshot\.json|page_(?:[1-9]|[1-4][0-9]|50)\.png|original_[123]\.bin)$")]
-    media_type: Literal["application/json", "image/png", "image/jpeg", "image/webp", "image/heic", "image/heif"]
+    filename: Annotated[str, StringConstraints(pattern=r"^(snapshot\.json|page_(?:[1-9]|[1-4][0-9]|50)\.png|original_(?:[1-9]|[1-4][0-9]|50)\.bin)$")]
+    media_type: Literal["application/json", "application/pdf", "image/png", "image/jpeg", "image/webp", "image/heic", "image/heif"]
     sha256: Sha256
     size_bytes: int = Field(gt=0)
     page_id: Optional[Identifier] = None
@@ -59,8 +59,8 @@ class SubmissionRecord(SubmissionModel):
     submission_id: SubmissionId
     problem_id: Identifier
     snapshot_id: Identifier
-    source: Literal["tablet", "image_scan", "exam_pages", "text"] = "tablet"
-    capture_schema_version: Literal[SCHEMA_VERSION, "tme-scan-1.0", "exam-question-source.v1", "text-source.v1"] = SCHEMA_VERSION
+    source: Literal["tablet", "image_scan", "exam_pages", "text", "self_study"] = "tablet"
+    capture_schema_version: Literal[SCHEMA_VERSION, "tme-scan-1.0", "exam-question-source.v1", "text-source.v1", "self-study-source.v1"] = SCHEMA_VERSION
     received_at: datetime
     status: Literal["RECEIVED"] = "RECEIVED"
     snapshot: ArtifactReference
@@ -84,6 +84,11 @@ class SubmissionRecord(SubmissionModel):
 
     @model_validator(mode="after")
     def assessment_binding_is_complete(self):
+        if self.source == "self_study":
+            if self.capture_schema_version != "self-study-source.v1" or any((self.tme_case_id,self.assessment_id,self.assessment_item_id,self.assessment_definition_sha256)) or not self.submitted_by_user_id:
+                raise ValueError("invalid self study source")
+            return self
+        if self.capture_schema_version == "self-study-source.v1": raise ValueError("source/schema mismatch")
         if self.source == "text":
             if self.capture_schema_version != "text-source.v1" or self.page_images or not self.tme_case_id or self.scan_originals: raise ValueError("invalid text source")
         elif not self.page_images or self.capture_schema_version == "text-source.v1": raise ValueError("missing source pages")

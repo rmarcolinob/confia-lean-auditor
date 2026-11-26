@@ -46,7 +46,8 @@ test('student home preserves live identity and enrollment nodes and routes to ex
  ui.show('student','home');ui.show('platform','home');ui.show('student','home');
  const content=descendants(ui.nodes['student-home']);assert(content.includes(name));assert(content.includes(context));
  assert.equal(content.filter(x=>x===context).length,1);
- assert.equal(ui.actions('student-home').length,6);
+ assert.equal(ui.actions('student-home').length,7);
+ assert(content.some(x=>x.dataset?.action==='student/study'));
  await content.find(x=>x.className==='home-primary').click();
  assert.deepEqual(ui.routes,[['student','tutoria/practice']]);
 });

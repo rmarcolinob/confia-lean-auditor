@@ -82,6 +82,7 @@
     hero.querySelector('.home-hero').append(studentContext);
     host.replaceChildren(hero, Home.QuickActions(go, [
       ['student/tutoria','TutorIA','Conteúdos, questões e resolução assistida','plus'],
+      ['student/study','Estudo autônomo','Novos problemas, pistas e revisão — sem nota','check'],
       ['student/exams','Atividades e provas','Avaliações disponibilizadas pela turma','document'],
       ['student/submissions','Minhas submissões','Soluções enviadas e devolutivas','list'],
       ['student/tutoria/feedback','Feedback','Revisitar o raciocínio e as orientações','check'],
@@ -100,7 +101,7 @@
       primary('Abrir indicadores', 'Consultar escolas e turmas', 'management/overview', 'chart')));
   }
   const navigation = {
-    student: [['home','Início','home'],['tutoria','TutorIA','plus'],['exams','Atividades','document'],['submissions','Envios','list']],
+    student: [['home','Início','home'],['tutoria','TutorIA','plus'],['study','Estudo','check'],['exams','Atividades','document'],['submissions','Envios','list']],
     management: [['home','Início','home'],['overview','Indicadores','chart']],
   };
   function show(profile, view) {

@@ -353,12 +353,19 @@ class SubmissionStore:
                     or record.snapshot.media_type != "application/json"
                     or record.snapshot.size_bytes > MAX_IMPORT_BYTES):
                 raise SubmissionIntegrityConflict()
-            if record.source == "text":
+            if record.source == "self_study":
+                from confia_lean_auditor.dynamic.study_models import StudySourceSnapshot
+                snapshot=StudySourceSnapshot.model_validate_json((folder / "snapshot.json").read_bytes())
+                if (snapshot.problem_id!=record.problem_id or snapshot.snapshot_id!=record.snapshot_id or snapshot.author_id!=record.submitted_by_user_id
+                    or bool(snapshot.original_text)==bool(snapshot.pages)):
+                    raise SubmissionIntegrityConflict()
+                if not snapshot.pages: return record
+            elif record.source == "text":
                 from .text_source import TextSnapshot
                 snapshot=TextSnapshot.model_validate_json((folder / "snapshot.json").read_bytes())
                 if snapshot.problem_id!=record.problem_id or snapshot.snapshot_id!=record.snapshot_id or snapshot.case_id!=record.tme_case_id: raise SubmissionIntegrityConflict()
                 return record
-            if record.source == "exam_pages":
+            elif record.source == "exam_pages":
                 from confia_lean_auditor.tme.review_models import QuestionSourceSnapshot
                 snapshot = QuestionSourceSnapshot.model_validate_json((folder / "snapshot.json").read_bytes())
                 if (snapshot.problem_id != record.problem_id or snapshot.snapshot_id != record.snapshot_id
@@ -519,7 +526,7 @@ class SubmissionStore:
 
     @staticmethod
     def _validate_segment_pages(segments, record):
-        page_indices = {0} if record.source == "text" else {page.page_index for page in record.page_images}
+        page_indices = {0} if record.source == "text" or (record.source == "self_study" and not record.page_images) else {page.page_index for page in record.page_images}
         if any(segment.page_index not in page_indices for segment in segments):
             raise ValueError("transcription segment references an unknown page")
 
