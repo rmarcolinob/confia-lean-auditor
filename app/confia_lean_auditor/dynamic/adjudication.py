@@ -27,9 +27,9 @@ class HumanAdjudication(SubmissionModel):
 def validate(case, run, reconciliation, body):
     """Validate all criteria against the immutable approved rubric and source.
 
-    Dependencies are pedagogical links, not executable zero-credit gates. Their
-    application must be explained explicitly by the teacher; no new credit rule
-    is inferred from a prerequisite's numeric score.
+    Legacy links require an explicit explanation. Typed mathematical prerequisites
+    enforce only their approved threshold; procedural and carry-forward conditions
+    remain the teacher's explicit judgment. No dependency assigns zero by itself.
     """
     from .grading_context import case_context
     from .store import DynamicConflict
@@ -46,6 +46,13 @@ def validate(case, run, reconciliation, body):
     for criterion in rubric.criteria:
         row = rows[criterion.criterion_id]
         if row.final_points > criterion.max_points: raise ValueError('criterion exceeds approved maximum')
+        if criterion.credit_levels and row.final_points not in {0,criterion.max_points,*(v.points for v in criterion.credit_levels)}:
+            raise ValueError('select an approved credit level')
+        for rule in criterion.dependency_rules:
+            if rule.kind=='MATHEMATICAL' and row.final_points>0:
+                prerequisite=next(c for c in rubric.criteria if c.criterion_id==rule.criterion_id)
+                minimum=rule.minimum_points if rule.minimum_points is not None else prerequisite.max_points
+                if rows[rule.criterion_id].final_points<minimum:raise ValueError('mathematical prerequisite not satisfied')
         if criterion.dependencies and not (row.dependency_justification or '').strip():
             raise ValueError('explain application of rubric dependencies')
     if body.final_points is None or sum(c.final_points for c in a.criteria) != body.final_points:

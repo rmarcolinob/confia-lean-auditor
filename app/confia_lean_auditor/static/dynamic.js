@@ -156,10 +156,23 @@
     const approve = button("Aprovar rubrica", () => perform(() => saved(`/dynamic/problems/${pid}/rubrics/${rubric.rubric_id}/approve`,
       {expected_revision: doc.revision, ...(requiresAcknowledgement ? {acknowledge_warnings: acknowledgement.checked} : {})}, "POST", "Rubrica aprovada. Versão exata registrada na configuração aprovada.")), "tme-button");
     function read() { return editors.map((row, i) => ({...row.original, criterion_id: row.id, title: row.title.value,
-      description: row.description.value, max_points: row.points.value, order: i + 1})); }
+      description: row.description.value, max_points: row.points.value, order: i + 1,
+      ...((row.levels.length||row.original.credit_levels)?{credit_levels:row.levels.map(l=>({level_id:l.id,points:l.points.value,description:l.description.value}))}:{}),
+      ...((row.links.length||row.original.dependencies)?{dependencies:row.links.map(l=>l.target.value)}:{}),
+      ...((row.links.some(l=>l.kind.value)||row.original.dependency_rules)?{dependency_rules:row.links.filter(l=>l.kind.value).map(l=>({criterion_id:l.target.value,kind:l.kind.value,condition:l.condition.value,minimum_points:l.kind.value==="MATHEMATICAL"&&l.minimum.value!==""?l.minimum.value:null}))}:{})})); }
     function valid() { return editors.every(row => row.title.value.trim() && row.description.value.trim() && cents(row.points.value) !== null)
+      && editors.every(row=>row.levels.every(l=>l.description.value.trim()&&cents(l.points.value)>0&&cents(l.points.value)<cents(row.points.value))
+        && row.links.every(l=>l.target.value&&l.target.value!==row.id&&(!l.kind.value||l.condition.value.trim())&&(!l.minimum.value||l.kind.value!=="MATHEMATICAL"||cents(l.minimum.value)>0))
+        && new Set(row.links.map(l=>l.target.value)).size===row.links.length)
       && (!editors.length || editors.reduce((sum, row) => sum + cents(row.points.value), 0) === cents(statement.max_score)); }
     function update() {
+      for(const row of editors)for(const link of row.links){
+        const selected=link.target.value||link.initial;
+        link.target.replaceChildren();
+        const empty=n("option","Selecione o critério anterior");empty.value="";link.target.appendChild(empty);
+        for(const other of editors.filter(e=>e!==row)){const option=n("option",other.title.value||other.id);option.value=other.id;link.target.appendChild(option);}
+        link.target.value=selected;
+      }
       const values = editors.map(row => cents(row.points.value));
       total.textContent = `Total dos critérios: ${values.some(v => v === null) ? "inválido" : money(values.reduce((a,b) => a+b,0)/100)} / ${money(statement.max_score)} pontos`;
       save.disabled = !valid();
@@ -172,13 +185,42 @@
       const box = n("fieldset", null, "dynamic-criterion"), title = input(`Critério ${id}: título`, data?.title || ""),
         description = input(`Critério ${id}: descrição`, data?.description || "", "textarea"), points = input(`Critério ${id}: pontos`, data?.max_points ?? "0", "number");
       title.maxLength = 160; description.maxLength = 20000; description.rows = 2; points.min = "0"; points.max = "1000"; points.step = "0.01";
-      const row = {id, title, description, points, original: data || {}, box}; editors.push(row);
+      const row = {id, title, description, points, levels:[],links:[],original: data || {}, box}; editors.push(row);
       [title, description, points].forEach(el => el.addEventListener("input", () => { dirty = true; update(); }));
       append(box, n("legend", `Critério ${editors.length}`), label("Título", title), label("Descrição / justificativa", description), label("Pontos", points), button("Remover critério", () => {
         editors.splice(editors.indexOf(row), 1);
         editors.forEach(other => { if (other.original.dependencies) other.original = {...other.original, dependencies: other.original.dependencies.filter(id => id !== row.id)}; });
+        for(const other of editors)for(const link of [...other.links])if(link.target.value===row.id){other.links.splice(other.links.indexOf(link),1);link.box.parentNode.removeChild(link.box);}
         rows.removeChild(box); dirty = true; update();
       }));
+      const advanced=n("details"),levelBox=n("div"),linkBox=n("div");
+      append(advanced,n("summary","Crédito parcial e dependências"),n("p","O corretor só usa níveis parciais explicitamente aprovados. Dependências sem tipo definido exigem revisão."),levelBox);
+      let nextLevel=1;
+      const usedLevels=new Set((data?.credit_levels||[]).map(l=>l.level_id));
+      const changed=()=>{dirty=true;update();};
+      function addLevel(value){
+        let key=value?.level_id;if(!key){do{key=`level_${nextLevel++}`;}while(usedLevels.has(key));}usedLevels.add(key);
+        const entry=n("fieldset"),credit=input(`${id}: pontos do nível ${key}`,value?.points||"","number"),description=input(`${id}: evidência do nível ${key}`,value?.description||"","textarea");
+        credit.min="0.01";credit.step="0.01";credit.max=points.value;description.maxLength=20000;
+        const level={id:key,points:credit,description};row.levels.push(level);
+        append(entry,label("Pontos do nível parcial",credit),label("Desenvolvimento exigido para este nível",description),button("Remover nível",()=>{row.levels.splice(row.levels.indexOf(level),1);levelBox.removeChild(entry);changed();}));
+        credit.addEventListener("input",changed);description.addEventListener("input",changed);levelBox.appendChild(entry);
+      }
+      for(const level of data?.credit_levels||[])addLevel(level);
+      append(advanced,button("Adicionar nível parcial",()=>{addLevel();changed();}),linkBox);
+      function addDependency(value){
+        const entry=n("fieldset"),target=n("select"),kind=n("select"),condition=input(`${id}: condição da dependência`,value?.condition||"","textarea"),minimum=input(`${id}: mínimo no pré-requisito`,value?.minimum_points??"","number");
+        target.setAttribute("aria-label",`${id}: critério anterior`);kind.setAttribute("aria-label",`${id}: tipo de dependência`);
+        for(const [v,t] of [["","Tipo não definido — revisão"],["MATHEMATICAL","Pré-requisito matemático"],["PROCEDURAL","Etapa procedimental"],["CARRY_FORWARD","Continuidade após erro"]]){const option=n("option",t);option.value=v;kind.appendChild(option);}
+        kind.value=value?.kind||"";minimum.min="0.01";minimum.step="0.01";minimum.disabled=kind.value!=="MATHEMATICAL";condition.maxLength=20000;
+        const link={target,kind,condition,minimum,box:entry,initial:value?.criterion_id||""};row.links.push(link);
+        append(entry,label("Critério anterior",target),label("Relação exigida",kind),label("Condição matemática ou procedimental",condition),label("Pontos mínimos no pré-requisito (vazio: atendimento integral)",minimum),button("Remover dependência",()=>{row.links.splice(row.links.indexOf(link),1);linkBox.removeChild(entry);changed();}));
+        for(const field of [target,kind,condition,minimum])field.addEventListener("input",changed);
+        target.addEventListener("change",()=>{link.initial=target.value;changed();});
+        kind.addEventListener("change",()=>{minimum.disabled=kind.value!=="MATHEMATICAL";changed();});linkBox.appendChild(entry);
+      }
+      for(const dep of data?.dependencies||[])addDependency((data.dependency_rules||[]).find(r=>r.criterion_id===dep)||{criterion_id:dep});
+      advanced.appendChild(button("Adicionar dependência",()=>{addDependency();changed();}));box.appendChild(advanced);
       if (data?.evidence) {
         const info = n("details"); append(info, n("summary", "Vínculos da sugestão original"),
           n("p", `Objetivo: ${data.evidence.mathematical_objective}`),
@@ -209,7 +251,9 @@
     }
     for (const item of doc.rubrics) {
       const block = n("details"); append(block, n("summary", `Rubrica V${item.version_number} · ${readable(item.status)} · Enunciado V${item.statement_version}`));
-      item.criteria.forEach(c => block.appendChild(n("p", `${c.title} — ${money(c.max_points)} pontos. ${c.description}`)));
+      item.criteria.forEach(c => {block.appendChild(n("p", `${c.title} — ${money(c.max_points)} pontos. ${c.description}`));
+        for(const level of c.credit_levels||[])block.appendChild(n("p",`Crédito parcial: ${money(level.points)} — ${level.description}`));
+        for(const rule of c.dependency_rules||[])block.appendChild(n("p",`Dependência: ${rule.criterion_id} — ${rule.condition}`));});
       if (item.approved_at) block.appendChild(n("p", `Aprovação: ${readable(item.approved_by.kind)} · ${item.approved_by.actor_id} · ${item.approved_at}`));
       history.appendChild(block);
     }

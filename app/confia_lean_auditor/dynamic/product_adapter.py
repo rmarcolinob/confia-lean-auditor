@@ -44,7 +44,7 @@ def project(result,run,case):
     for d in result.decisions:
         r=decisions.get(d.criterion_id)
         points=float(r['reconciled_points']) if r else float(d.suggested_points)
-        pending=(r['status'] in {'REVIEW_REQUIRED','TECHNICAL_ERROR'}) if r else bool(d.semantic_trace and d.semantic_trace.get('decision')=='review')
+        pending=(r['status'] in {'REVIEW_REQUIRED','TECHNICAL_ERROR'}) if r else bool(d.semantic_trace and d.semantic_trace.get('decision')=='review' or d.dependency_trace and d.dependency_trace['status'] in {'unknown','violated'})
         technical=(r['technical_uncertainty']) if r else bool(d.semantic_trace and d.semantic_trace.get('error_type'))
         if pending:
             points=None
@@ -59,7 +59,9 @@ def project(result,run,case):
             dependencies=list(rubric_by_id[d.criterion_id].dependencies),
             teacher_guidance=rubric_by_id[d.criterion_id].teacher_guidance,
             rubric_notes=rubric_by_id[d.criterion_id].notes,grader_explanation=d.explanation,
-            grader_semantic_trace=d.semantic_trace))
+            grader_semantic_trace=d.semantic_trace,
+            **({'credit_levels':[v.model_dump(mode='json') for v in rubric_by_id[d.criterion_id].credit_levels]} if rubric_by_id[d.criterion_id].credit_levels else {}),
+            **({'dependency_rules':[v.model_dump(mode='json') for v in rubric_by_id[d.criterion_id].dependency_rules], 'dependency_assessment':d.dependency_trace} if d.dependency_trace else {})))
     evidence=[dict(evidence_id=c.claim_id,text=c.text,kind='text',claim_type=c.claim_type,
         source_span=dict(start=c.start,end=c.end,scope='transcription',sha256=run.source_hash),exam_page_id=None,page_number=None,
         region=None,grounding_status=c.fidelity) for c in result.analysis.claims]

@@ -860,14 +860,16 @@
       form.append(field(`${label} · pontos (máximo ${item.max_points})`,score),node("p",item.teacher_guidance||item.rubric_notes||""),field(`${label} · justificativa`,why));
       let dependency=null;
       if(item.dependencies?.length){dependency=node("textarea");dependency.required=true;dependency.maxLength=2000;dependency.value=row.dependency_justification||"";dependency.addEventListener("input",()=>{row.dependency_justification=dependency.value;});form.append(field(`${label} · aplicação das dependências (${item.dependencies.join(", ")})`,dependency));}
-      rows.push({id,score,why,dependency,max:Number(item.max_points)});
+      const allowed=item.credit_levels?.length?[0,Number(item.max_points),...item.credit_levels.map(l=>Number(l.points))]:null;
+      if(allowed)form.append(node("p",`Créditos autorizados: ${allowed.join(", ")}.`));
+      rows.push({id,score,why,dependency,max:Number(item.max_points),allowed});
     }
     reason.required=true;reason.maxLength=2000;reason.value=draft.reason||"";reason.addEventListener("input",()=>{draft.reason=reason.value;});
     form.append(field("Justificativa da adjudicação humana",reason));
     const submit=btn("Confirmar adjudicação humana",async()=>{
       if(state.busy)return;
       if(!rows.length){error.textContent="Rubrica aprovada indisponível. Recarregue a questão.";return;}
-      for(const r of rows){const n=Number(r.score.value);if(!r.score.value.trim()||!Number.isFinite(n)||n<0||n>r.max||Math.abs(n*100-Math.round(n*100))>1e-7||!r.why.value.trim()||(r.dependency&&!r.dependency.value.trim())){error.textContent="Decida todos os critérios dentro dos limites e justifique as decisões e dependências.";return;}}
+      for(const r of rows){const n=Number(r.score.value);if(!r.score.value.trim()||!Number.isFinite(n)||n<0||n>r.max||(r.allowed&&!r.allowed.includes(n))||Math.abs(n*100-Math.round(n*100))>1e-7||!r.why.value.trim()||(r.dependency&&!r.dependency.value.trim())){error.textContent="Decida todos os critérios dentro dos limites e justifique as decisões e dependências.";return;}}
       if(!reason.value.trim()){error.textContent="Informe a justificativa da adjudicação.";return;}
       return onSubmit({final_points:(rows.reduce((total,r)=>total+Math.round(Number(r.score.value)*100),0)/100).toFixed(2),override_reason:reason.value.trim(),
         adjudication:{rubric_sha256:rec.context.rubric_sha256,criteria:rows.map(r=>({criterion_id:r.id,final_points:r.score.value,justification:r.why.value.trim(),dependency_justification:r.dependency?.value.trim()||null}))}});

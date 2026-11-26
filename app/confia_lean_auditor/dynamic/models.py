@@ -2,7 +2,7 @@
 from datetime import datetime, timezone
 from typing import Annotated, Literal, Optional
 
-from pydantic import ConfigDict, Field, StringConstraints, field_validator, model_validator
+from pydantic import ConfigDict, Field, StringConstraints, field_validator, model_validator, model_serializer
 from confia_lean_auditor.submissions.schemas import SubmissionModel, Sha256
 from confia_lean_auditor.submissions.integrity import model_sha256 as _model_sha256
 from .preparation_models import (PreparationRecord, PreparationReference, CriterionEvidence, GenerationProvenance, SemanticReview, Warning)
@@ -50,7 +50,47 @@ class Provenance(Immutable):
     model_provenance: Optional[dict] = None
 
 
+class CreditLevel(Immutable):
+    level_id: CriterionId
+    points: Points = Field(gt=0)
+    description: Text
+
+
+class DependencyRule(Immutable):
+    criterion_id: CriterionId
+    kind: Literal['MATHEMATICAL', 'PROCEDURAL', 'CARRY_FORWARD']
+    condition: Text
+    minimum_points: Optional[Points] = Field(default=None, gt=0)
+
+    @model_validator(mode='after')
+    def threshold_only_for_mathematics(self):
+        if self.minimum_points is not None and self.kind != 'MATHEMATICAL':
+            raise ValueError('only mathematical dependencies have score thresholds')
+        return self
+
+
 class RubricCriterion(Immutable):
+    credit_levels: tuple[CreditLevel, ...] = Field(default=(), max_length=20)
+    dependency_rules: tuple[DependencyRule, ...] = Field(default=(), max_length=100)
+
+    @model_serializer(mode='wrap')
+    def preserve_historical_shape(self, handler):
+        data = handler(self)
+        for key in ('credit_levels', 'dependency_rules'):
+            if key not in self.model_fields_set: data.pop(key, None)
+        return data
+
+    @model_validator(mode='after')
+    def authorized_levels_and_rules(self):
+        if len({v.level_id for v in self.credit_levels}) != len(self.credit_levels):
+            raise ValueError('duplicate credit level')
+        if any(v.points >= self.max_points for v in self.credit_levels):
+            raise ValueError('partial levels must be strictly below criterion maximum')
+        ids = [v.criterion_id for v in self.dependency_rules]
+        if len(set(ids)) != len(ids) or not set(ids) <= set(self.dependencies):
+            raise ValueError('dependency rules must name distinct declared dependencies')
+        return self
+
     criterion_id: CriterionId
     title: str = Field(min_length=1, max_length=160)
     description: Text
@@ -88,6 +128,11 @@ class RubricContent(Immutable):
         for key, deps in graph.items():
             if len(deps) != len(set(deps)) or not set(deps) <= set(ids):
                 raise ValueError("invalid criterion dependencies")
+        by_id = {c.criterion_id:c for c in self.criteria}
+        for c in self.criteria:
+            for rule in c.dependency_rules:
+                if rule.minimum_points is not None and rule.minimum_points > by_id[rule.criterion_id].max_points:
+                    raise ValueError('dependency threshold exceeds prerequisite maximum')
         done, visiting = set(), set()
         def visit(key):
             if key in visiting:

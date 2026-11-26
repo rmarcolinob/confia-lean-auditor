@@ -6,7 +6,9 @@ from confia_lean_auditor.semantic_policy.service import SemanticProvider, assess
 
 
 def assess_with_provenance(request, provider=None):
-    actual = provider if provider is not None else SemanticProvider()
+    from .semantic_credit import DynamicCreditProvider, assess_credit
+    extended = request.get('credit_contract') == 'dynamic-credit.v1'
+    actual = provider if provider is not None else DynamicCreditProvider() if extended else SemanticProvider()
     previous_metadata = getattr(actual, 'metadata', None)
     received = False
     unavailable = False
@@ -27,7 +29,7 @@ def assess_with_provenance(request, provider=None):
             if isinstance(metadata, dict) and metadata is not previous_metadata:
                 invoke.metadata = deepcopy(metadata)
 
-    trace = assess(request, invoke)
+    trace = assess_credit(request, invoke) if extended else assess(request, invoke)
     metadata = trace.get('provider', {})
     standard = isinstance(actual, SemanticProvider)
     has_receipt = standard and bool(metadata.get('response_id'))
@@ -64,6 +66,7 @@ def summarize(traces):
 def evaluation_record(criterion_id, trace, claim_ids):
     return dict(criterion_id=criterion_id, stage=trace['request']['stage'],
                 decision=trace['decision'], execution=deepcopy(trace['execution']),
+                **({k:deepcopy(trace.get(k)) for k in ('credit_contract','level_id','finding','dependency_assessment')} if trace.get('credit_contract') or trace.get('dependency_assessment') else {}),
                 claim_ids=list(claim_ids), quotes=deepcopy(trace.get('quotes', [])),
                 justification=trace.get('response', {}).get('justification'),
                 request_sha256=trace['request_sha256'], response_sha256=trace.get('response_sha256'),

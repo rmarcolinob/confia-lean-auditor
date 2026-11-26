@@ -82,12 +82,14 @@ class RubricBinding(SubmissionModel):
 
 
 class DynamicRubricDecision(SubmissionModel):
+    dependency_trace: Optional[dict] = None
     semantic_trace: Optional[dict] = None
 
     @model_serializer(mode='wrap')
     def preserve_decision(self, handler):
         data=handler(self)
         if 'semantic_trace' not in self.model_fields_set: data.pop('semantic_trace',None)
+        if 'dependency_trace' not in self.model_fields_set: data.pop('dependency_trace',None)
         return data
 
     criterion_id: str

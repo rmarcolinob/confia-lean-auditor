@@ -117,3 +117,36 @@ test('removed criterion IDs are not reused for a different criterion in later ed
   assert(ui.nodes().some(n=>n.name==='Critério criterion_4: título'));
   assert(!ui.nodes().some(n=>n.name==='Critério criterion_1: título'));
 });
+
+test('approved discrete levels and typed dependencies are editable only through a new saved rubric',async()=>{
+ const d=doc('draft');
+ d.rubrics[0].criteria=criteria.map(c=>({...c}));
+ let saved;
+ const ui=await page(d,(url,body)=>{saved=body;return d;});
+ const first=ui.nodes().find(n=>n.tag==='fieldset');
+ await descendants(first).find(n=>n.tag==='button'&&n.textContent==='Adicionar nível parcial').click();
+ assert(ui.button('Salvar como nova versão da rubrica').disabled);
+ const credit=ui.nodes().find(n=>n.name==='c0: pontos do nível level_1'),evidence=ui.nodes().find(n=>n.name==='c0: evidência do nível level_1');
+ credit.value='1.5';await credit.emit('input');evidence.value='Etapa inicial matematicamente justificada.';await evidence.emit('input');
+ await descendants(first).find(n=>n.tag==='button'&&n.textContent==='Adicionar dependência').click();
+ const target=ui.nodes().find(n=>n.getAttribute('aria-label')==='c0: critério anterior');target.value='c1';await target.emit('change');
+ const kind=ui.nodes().find(n=>n.getAttribute('aria-label')==='c0: tipo de dependência');kind.value='CARRY_FORWARD';await kind.emit('change');
+ const condition=ui.nodes().find(n=>n.name==='c0: condição da dependência');condition.value='Aceitar continuidade coerente sem repetir o desconto do erro anterior.';await condition.emit('input');
+ assert.equal(ui.button('Aprovar rubrica').disabled,true);
+ await ui.button('Salvar como nova versão da rubrica').click();
+ assert.equal(saved.criteria[0].max_points,'3');assert.equal(saved.criteria[0].credit_levels[0].points,'1.5');
+ assert.deepEqual(saved.criteria[0].dependencies,['c1']);assert.equal(saved.criteria[0].dependency_rules[0].kind,'CARRY_FORWARD');
+ assert.equal(saved.criteria[0].dependency_rules[0].minimum_points,null);
+ assert(!ui.calls.some(c=>c.url.endsWith('/approve')));
+});
+
+test('partial levels outside the maximum cannot be saved and legacy rubric fields are retained',async()=>{
+ const d=doc('draft');d.rubrics[0].criteria=criteria.map(c=>({...c}));
+ d.rubrics[0].criteria[0].credit_levels=[{level_id:'initial',points:'1',description:'Etapa inicial.'}];
+ d.rubrics[0].criteria[1].dependencies=['c0'];
+ const ui=await page(d,()=>d);const points=ui.nodes().find(n=>n.name==='c0: pontos do nível initial');
+ points.value='3';await points.emit('input');assert(ui.button('Salvar como nova versão da rubrica').disabled);
+ points.value='1';await points.emit('input');await ui.button('Salvar como nova versão da rubrica').click();
+ const body=ui.calls.find(c=>c.body)?.body;assert(body);assert.equal(body.criteria[0].credit_levels[0].level_id,'initial');
+ assert.deepEqual(body.criteria[1].dependencies,['c0']);assert(!body.criteria[1].dependency_rules);
+});
