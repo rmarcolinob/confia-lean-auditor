@@ -332,6 +332,7 @@
     state.problems = problems;
     if(state.current?.dynamic_context) {
       const doc=await api(`/dynamic/problems/${state.current.problem_id}`),version=doc.statements.find(s=>s.version_number===state.current.dynamic_context.statement_version);
+      local(state.current).approvedRubric=doc.rubrics?.find(r=>r.rubric_id===state.current.dynamic_context.rubric_id);
       if(version)state.current.display_title=version.title;
       if(version)state.problems=[...problems,{problem_id:state.current.problem_id,title:version.title,statement:version.statement,max_score:Number(version.max_score)}];
     }
@@ -835,14 +836,45 @@
     if (next) return openCase(next.case_id);
     await cases(); root.prepend(note("Não há outra correção pendente na fila."));
   }
-  const humanPoints=v=>Number(v).toLocaleString("pt-BR",{maximumFractionDigits:2});
+  const humanPoints=v=>v==null?"Não determinada":Number(v).toLocaleString("pt-BR",{maximumFractionDigits:2});
   function humanDecisionDetails(d){
     const box=node("div"),delta=Number(d.adjustment_delta),fmt=humanPoints;
     box.append(node("p",`ConfIA: ${fmt(d.suggested_points)} / ${fmt(d.max_points)}`),node("p",`Nota final: ${fmt(d.final_points)} / ${fmt(d.max_points)}`),
-      node("p",delta?`Ajuste: ${delta>0?"+":""}${fmt(d.adjustment_delta)}`:"Sugestão aceita"),node("p",d.override_reason||"Sem ajuste de pontuação."),
+      node("p",d.adjudication?"Decisão humana por critério · sem certificação formal":delta?`Ajuste: ${delta>0?"+":""}${fmt(d.adjustment_delta)}`:"Sugestão aceita"),node("p",d.override_reason||"Sem ajuste de pontuação."),
       node("p",`Confirmada por ${d.decided_by_user_id} · ${new Date(d.decided_at).toLocaleString("pt-BR")}`));
+    if(d.adjudication)for(const item of d.adjudication.criteria)box.append(node("p",`${item.criterion_id}: ${fmt(item.final_points)} — ${item.justification}`),node("p",item.dependency_justification||""));
     if(d.review_required_snapshot)box.append(note("Homologação realizada com alertas de revisão do ConfIA."));
     const technical=node("details");technical.append(node("summary","Vínculos da decisão"),node("pre",JSON.stringify(d,window.ConfIAReport.publicTechnicalValue,2)));box.append(technical);return box;
+  }
+  function adjudicationForm(items,rec,saved,onSubmit){
+    if(saved.adjudicationKey!==rec.reconciliation_id){saved.adjudicationKey=rec.reconciliation_id;saved.adjudicationDraft={};}
+    const draft=saved.adjudicationDraft, form=node("form"), rows=[], reason=node("textarea"),error=note("");
+    form.setAttribute("aria-label","Adjudicação humana por critério");error.setAttribute("role","alert");
+    form.append(node("h3","Adjudicação humana"),note("A nota automática permanece indeterminada. Confira os pareceres, a solução e a rubrica; decida cada critério explicitamente. Zero deve ser digitado. Esta decisão não é certificação Lean."));
+    for(const item of items){
+      const id=item.rubric_item_id||item.criterion_id, label=item.label||item.description||id, row=draft[id]||={};
+      const score=node("input"),why=node("textarea");
+      score.type="number";score.min="0";score.max=String(item.max_points);score.step="0.01";score.required=true;score.value=row.points??"";
+      why.maxLength=2000;why.required=true;why.value=row.justification||"";
+      score.addEventListener("input",()=>{row.points=score.value;});why.addEventListener("input",()=>{row.justification=why.value;});
+      form.append(field(`${label} · pontos (máximo ${item.max_points})`,score),node("p",item.teacher_guidance||item.rubric_notes||""),field(`${label} · justificativa`,why));
+      let dependency=null;
+      if(item.dependencies?.length){dependency=node("textarea");dependency.required=true;dependency.maxLength=2000;dependency.value=row.dependency_justification||"";dependency.addEventListener("input",()=>{row.dependency_justification=dependency.value;});form.append(field(`${label} · aplicação das dependências (${item.dependencies.join(", ")})`,dependency));}
+      rows.push({id,score,why,dependency,max:Number(item.max_points)});
+    }
+    reason.required=true;reason.maxLength=2000;reason.value=draft.reason||"";reason.addEventListener("input",()=>{draft.reason=reason.value;});
+    form.append(field("Justificativa da adjudicação humana",reason));
+    const submit=btn("Confirmar adjudicação humana",async()=>{
+      if(state.busy)return;
+      if(!rows.length){error.textContent="Rubrica aprovada indisponível. Recarregue a questão.";return;}
+      for(const r of rows){const n=Number(r.score.value);if(!r.score.value.trim()||!Number.isFinite(n)||n<0||n>r.max||Math.abs(n*100-Math.round(n*100))>1e-7||!r.why.value.trim()||(r.dependency&&!r.dependency.value.trim())){error.textContent="Decida todos os critérios dentro dos limites e justifique as decisões e dependências.";return;}}
+      if(!reason.value.trim()){error.textContent="Informe a justificativa da adjudicação.";return;}
+      return onSubmit({final_points:(rows.reduce((total,r)=>total+Math.round(Number(r.score.value)*100),0)/100).toFixed(2),override_reason:reason.value.trim(),
+        adjudication:{rubric_sha256:rec.context.rubric_sha256,criteria:rows.map(r=>({criterion_id:r.id,final_points:r.score.value,justification:r.why.value.trim(),dependency_justification:r.dependency?.value.trim()||null}))}});
+    });
+    form.addEventListener("submit",event=>{event.preventDefault();submit.click();});form.append(submit,error);
+    for(const control of form.querySelectorAll("button,input,textarea"))control.disabled=state.busy||Boolean(saved.editing);
+    return form;
   }
   function humanDecisionPanel(c,saved,run){
     const box=node("section");box.setAttribute("aria-label","Homologação da questão");
@@ -850,9 +882,13 @@
     const finalized=saved.examReview.exam_finalized;
     if(current){
       const delta=Number(current.adjustment_delta),success=note("✓ Confirmada");success.classList.add("decision-success");
-      box.append(success,node("strong",`Nota final: ${humanPoints(current.final_points)} / ${humanPoints(current.max_points)}`),node("p",delta?`Ajuste: ${delta>0?"+":""}${humanPoints(current.adjustment_delta)}`:"Sugestão aceita"));
+      box.append(success,node("strong",`Nota final: ${humanPoints(current.final_points)} / ${humanPoints(current.max_points)}`),node("p",current.adjudication?"Decisão humana por critério · sem certificação formal":delta?`Ajuste: ${delta>0?"+":""}${humanPoints(current.adjustment_delta)}`:"Sugestão aceita"));
       const detail=node("details");detail.append(node("summary","Ver decisão"),humanDecisionDetails(current));box.append(detail);
       if(!finalized)box.append(btn("Reabrir questão",()=>humanAction(c,{human_decision_id:current.human_decision_id},true),"secondary"));
+    }else if(run?.engine_mode==="DYNAMIC" && !run.stale && run.status==="COMPLETED" && run.reconciliation && run.suggested_score==null){
+      box.append(adjudicationForm(run.rubric_items,run.reconciliation,saved,values=>humanAction(c,{...values,
+        audit_run_id:run.audit_run_id,transcription_version_id:run.transcription_version_id,reconciliation_id:run.reconciliation_id,
+        expected_last_decision_id:saved.examReview.last_human_decision_id||null,decision_type:"ADJUST_SCORE"})));
     }else if(!run || run.stale || run.status!=="COMPLETED" || run.suggested_score==null || run.suggestion_ready===false){
       box.append(note("Uma análise atual com pontuação disponível é necessária antes da homologação."));
     }else{
@@ -904,9 +940,18 @@
     if (saved.decision) {
       const success=note("Correção registrada");success.classList.add("decision-success");
       box.append(success,node("strong", `Pontuação final do avaliador: ${saved.decision.final_points} / ${saved.decision.max_points}`), node("span", "Finalizada", "status"));
+      if(saved.decision.adjudication)box.append(humanDecisionDetails(saved.decision));
       const detail = node("details"); detail.append(node("summary", "Observação registrada"), node("p", saved.decision.feedback || "Sem comentário.")); box.append(detail,actions(btn("Corrigir próxima",()=>nextCorrection(c).catch(showError)),btn("Voltar para fila",()=>navigate("cases"),"secondary")));return box;
     }
-    if(c.dynamic_context && (!reconciliation || reconciliation.reconciled_suggested_score==null || saved.reconciliationError || run?.stale)){
+    if(c.dynamic_context && reconciliation && reconciliation.reconciled_suggested_score==null && !saved.reconciliationError && run?.status==="COMPLETED" && !run.stale){
+      box.append(adjudicationForm((saved.approvedRubric?.criteria||[]).map(d=>({...d,label:d.title,rubric_notes:d.notes})),reconciliation,saved,async values=>{
+        state.busy=true;
+        try{saved.decision=await post(`/tme/cases/${c.case_id}/decision`,{...values,audit_run_id:run.audit_run_id,reconciliation_id:reconciliation.reconciliation_id,max_points:reconciliation.max_score});saved.loaded=false;}
+        catch(error){state.message=error.message;}finally{state.busy=false;}
+        await renderCorrection();
+      }));return box;
+    }
+    if(c.dynamic_context && (!reconciliation || saved.reconciliationError || run?.stale)){
       box.append(note("Conclua a revisão independente e a reconciliação corrente antes de homologar a sugestão."));return box;
     }
     const form = node("form"), controls = {}, extras = node("details", undefined, "decision-observation"); extras.open = Boolean(saved.observationOpen);

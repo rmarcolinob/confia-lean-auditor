@@ -241,6 +241,18 @@
       n("p","Sugestão de análise; a nota final depende da decisão do avaliador."));
     report.append(summary);
     if(options.decisionPanel)report.append(options.decisionPanel);
+    if(data.engine_mode==="DYNAMIC"){
+      const opinions=n("section");opinions.setAttribute("aria-label","Pareceres da avaliação Dynamic");
+      const grader=n("details"),reviewer=n("details"),reconciliation=n("details");
+      grader.append(n("summary","Parecer do Grader"));
+      for(const item of data.rubric_items||[]){grader.append(n("h4",item.label),n("p",item.grader_semantic_trace?.justification||item.grader_explanation||"Parecer indisponível."));for(const quote of item.grader_semantic_trace?.quotes||[])grader.append(n("blockquote",typeof quote==="string"?quote:quote.quote||quote.text||""));}
+      reviewer.append(n("summary","Parecer do Reviewer"));
+      for(const item of data.independent_review?.phase_a?.criterion_reviews||[]){reviewer.append(n("h4",item.criterion_id),n("p",item.explanation||"Parecer inconclusivo."));for(const quote of item.evidence||[])reviewer.append(n("blockquote",quote));}
+      if(!data.independent_review?.phase_a)reviewer.append(n("p","Revisão indisponível ou não concluída."));
+      reconciliation.append(n("summary","Resultado da Reconciliation"),n("p",`Nota automática: ${fmt(data.suggested_score)}`));
+      for(const item of data.reconciliation?.criteria||[])reconciliation.append(n("p",`${item.criterion_id}: ${item.status} — ${item.reason}`));
+      opinions.append(grader,reviewer,reconciliation);report.append(opinions);
+    }
     if(data.reconciliation)report.append(n("p",`Primeira análise: ${fmt(data.grader_suggested_score)} · Sugestão reconciliada: ${fmt(data.suggested_score)} · Perfil: ${data.policy_profile}`));
     if(!data.stale && !options.historical)for(const action of data.workflow_actions||[]){
       const button=n("button",action.label,"secondary");button.type="button";button.disabled=Boolean(options.workflowDisabled);button.addEventListener("click",()=>options.onWorkflow?.(action));report.append(button);

@@ -94,12 +94,16 @@ class ScanUpload(SubmissionModel):
     pages: list[ScanPageUpload] = Field(min_length=1, max_length=MAX_PAGES)
 
 
+from confia_lean_auditor.dynamic.adjudication import HumanAdjudication
+
+
 class EvaluatorDecisionRequest(SubmissionModel):
+    adjudication: Optional[HumanAdjudication] = None
     reconciliation_id: Optional[str] = Field(default=None, pattern=r"^drec_[0-9a-f]{64}$")
     @model_serializer(mode="wrap")
     def preserve_decision_shape(self, handler):
         data=handler(self)
-        for key in ("reconciliation_id", "reconciliation_sha256", "grader_suggested_points", "independent_review_id", "transcription_version_id", "review_required_snapshot", "review_reasons_snapshot", "human_decision_id"):
+        for key in ("adjudication", "reconciliation_id", "reconciliation_sha256", "grader_suggested_points", "independent_review_id", "transcription_version_id", "review_required_snapshot", "review_reasons_snapshot", "human_decision_id"):
             if key not in self.model_fields_set: data.pop(key,None)
         return data
 

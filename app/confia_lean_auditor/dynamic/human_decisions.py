@@ -91,6 +91,7 @@ def history(case):
         result.append(
             dict(
                 decision=d.model_dump(mode="json"),
+                **({"events":row["events"]} if d.adjudication and "events" in row else {}),
                 current=active,
                 effective_status="CONFIRMED" if active else reason,
             )
@@ -134,9 +135,12 @@ def decide(case, body, user):
         ):
             raise DynamicConflict("Sugestão mudou; confira a reconciliação corrente.")
         max_points = Decimal(reconciliation["max_score"])
-        if reconciliation["reconciled_suggested_score"] is None:
+        if reconciliation["reconciled_suggested_score"] is None and not body.adjudication:
             raise DynamicConflict("Nota pendente: resolva a revisão antes da confirmação.")
-        suggestion = Decimal(reconciliation["reconciled_suggested_score"])
+        suggestion = Decimal(reconciliation["reconciled_suggested_score"]) if reconciliation["reconciled_suggested_score"] is not None else None
+        if body.adjudication:
+            from .adjudication import validate
+            validate(case,run,reconciliation,body)
         if body.max_points != max_points or body.final_points > max_points:
             raise ValueError("invalid maximum/final score")
         if body.final_points != suggestion and not (body.override_reason or "").strip():
@@ -176,10 +180,17 @@ def decide(case, body, user):
             request_sha256=request_sha,
             decision=d.model_dump(mode="json"),
         )
+        if d.adjudication:
+            from .adjudication import event
+            record["events"]=[event(d.model_dump(mode="json"))]
         if case_context(case)[0] != run.source.dynamic_context:
             raise DynamicConflict("Configuração mudou.")
         with s.audits.submissions._locked(exclusive=True):
             s.assert_source_current_unlocked(case, run)
+            if body.adjudication:
+                s.audits.submissions.assert_submission_integrity(case.submission_id)
+                history=s.audits.submissions._transcription_history(run.transcription_id)
+                if history.revisions[-1].status != "ACCEPTED": raise DynamicConflict("Confira a transcrição.")
             sealed_write(folder / f"{len(chain)+1:06d}.json", record)
         project_current(case, reconciliation, confirmed=True)
         return d

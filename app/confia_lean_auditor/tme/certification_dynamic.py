@@ -46,6 +46,12 @@ def project(case,run,human,gold,current,profile,feedback_policy='WITHHOLD'):
         artifact_id=rec['reconciliation_id'] if rec else None,artifact_sha256=canonical_sha256(rec) if rec else None)
     g3=stage(human['final_points'] if human else None,status='COMPLETED' if human else 'UNAVAILABLE',artifact_id=human['human_decision_id'] if human else None,
              adjustment_reason_recorded=bool(human and human.get('override_reason')))
+    if human and human.get('adjudication'):
+        a=human['adjudication']
+        g3.update(origin='HUMAN_ADJUDICATION', formal_certification=False,
+            adjudication_version=a['schema_version'],rubric_sha256=a['rubric_sha256'],
+            criteria=[dict(criterion_id=c['criterion_id'],points=c['final_points'],
+                justification_recorded=bool(c['justification'])) for c in a['criteria']])
     exclusions=[]
     binding=gold.get('binding') if gold else None
     if not gold:exclusions.append('MISSING_GOLD')

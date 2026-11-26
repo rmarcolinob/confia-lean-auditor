@@ -18,16 +18,19 @@ from confia_lean_auditor.submissions.integrity import canonical_sha256
 from confia_lean_auditor.submissions.store import SubmissionStore
 from confia_lean_auditor.teacher_decisions.models import Points
 from .models import EvaluatorDecision
+from confia_lean_auditor.dynamic.adjudication import HumanAdjudication
 from .store import case_store
 from .exam_store import exam_store, ExamConflict
 
 
 class HumanDecisionRequest(SubmissionModel):
+    adjudication: Optional[HumanAdjudication] = None
     reconciliation_id: Optional[str] = Field(default=None,pattern=r"^drec_[0-9a-f]{64}$")
     @model_serializer(mode='wrap')
     def legacy_request(self,handler):
         data=handler(self)
         if self.reconciliation_id is None: data.pop('reconciliation_id',None)
+        if self.adjudication is None: data.pop('adjudication',None)
         return data
 
     audit_run_id: str = Field(pattern=r"^aud_[0-9a-f]{64}$")
@@ -62,7 +65,7 @@ class HumanDecision(EvaluatorDecision):
     engine_version: str
     review_required_snapshot: bool
     review_reasons_snapshot: list[str]
-    adjustment_delta: Decimal = Field(decimal_places=2)
+    adjustment_delta: Optional[Decimal] = Field(decimal_places=2)
     decision_type: Literal['ACCEPT_SUGGESTION', 'ADJUST_SCORE']
     supersedes_decision_id: Optional[str] = None
     status: Literal['CONFIRMED'] = 'CONFIRMED'
@@ -70,9 +73,14 @@ class HumanDecision(EvaluatorDecision):
 
     @model_validator(mode='after')
     def coherent_human(self):
-        if self.suggested_points is None or not self.audit_run_id or self.case_id != self.question_attempt_id:
+        if (self.suggested_points is None and not self.adjudication) or not self.audit_run_id or self.case_id != self.question_attempt_id:
             raise ValueError('decision requires an audit suggestion and question')
-        if self.final_points > self.max_points or self.adjustment_delta != self.final_points - self.suggested_points:
+        if self.adjudication and (self.engine_mode != 'DYNAMIC' or self.decision_type != 'ADJUST_SCORE'
+                or not (self.override_reason or '').strip() or not self.reconciliation_id
+                or sum(c.final_points for c in self.adjudication.criteria) != self.final_points):
+            raise ValueError('invalid human adjudication')
+        delta = self.final_points - self.suggested_points if self.suggested_points is not None else None
+        if self.final_points > self.max_points or self.adjustment_delta != delta:
             raise ValueError('invalid final score or delta')
         if self.decision_type == 'ACCEPT_SUGGESTION' and self.adjustment_delta != 0:
             raise ValueError('accept must preserve suggestion')
@@ -160,6 +168,15 @@ def append_current(case, chain, kind, decision, request, user):
             key=lambda r:r.created_at, reverse=True)
         if not current or current[0].audit_run_id != decision.audit_run_id:
             raise ExamConflict('audit changed before decision publication')
+        if decision.adjudication:
+            submissions.assert_submission_integrity(case.submission_id)
+            if history.revisions[-1].status != 'ACCEPTED': raise ExamConflict('accepted reading required')
+            from confia_lean_auditor.dynamic.product_adapter import current_reconciliation
+            from confia_lean_auditor.dynamic.adjudication import validate
+            rec=current_reconciliation(case,current[0])
+            if not rec or canonical_sha256(rec)!=decision.reconciliation_sha256:
+                raise ExamConflict('reconciliation changed before publication')
+            validate(case,current[0],rec,decision)
         return append(case, chain, kind, decision, request, user)
 
 
@@ -172,8 +189,12 @@ def project(case, runs, versions):
     for index, decision in enumerate(decisions):
         did = decision['human_decision_id']
         timestamp = decision['decided_at']
-        delta = Decimal(decision['adjustment_delta'])
-        events.append(event(decision, 'score_adjusted' if delta else 'suggestion_accepted', timestamp))
+        delta = Decimal(decision['adjustment_delta']) if decision['adjustment_delta'] is not None else None
+        if decision.get('adjudication'):
+            from confia_lean_auditor.dynamic.adjudication import event as adjudication_event
+            events.append(adjudication_event(decision))
+        else:
+            events.append(event(decision, 'score_adjusted' if delta else 'suggestion_accepted', timestamp))
         if delta: events.append(event(decision, 'adjustment_reason_recorded', timestamp, reason=decision['override_reason']))
         events.append(event(decision, 'question_confirmed', timestamp))
         if case.dynamic_context: events.append(event(decision,'question_human_confirmed',timestamp))
@@ -216,7 +237,7 @@ def project(case, runs, versions):
         state = 'CONFIRMED' if active else 'SUPERSEDED' if index+1 < len(decisions) else min(transitions)[1] if transitions else 'INVALIDATED'
         row = dict(**decision, current=active, effective_status=state,
             certification=dict(human_final_score=decision['final_points'],confia_suggested_score=decision['suggested_points'],
-                signed_error=str(-delta),absolute_error=str(abs(delta)),adjustment=str(delta),
+                signed_error=str(-delta) if delta is not None else None,absolute_error=str(abs(delta)) if delta is not None else None,adjustment=str(delta) if delta is not None else None,
                 review_required=decision['review_required_snapshot'],audit_run_id=decision['audit_run_id'],engine_version=decision['engine_version']))
         history.append(row)
         if active: current=row
@@ -245,21 +266,32 @@ def decide(case_id, body, user):
             version=f'{readings[0].transcription.transcription_id}:{readings[0].latest_revision.revision_number}' if readings else None
             audit=snapshot['current_audit']
             if (version != body.transcription_version_id or not audit or audit['audit_run_id']!=body.audit_run_id
-                    or audit['transcription_version_id']!=version or audit['status']!='COMPLETED' or audit['suggested_score'] is None):
+                    or audit['transcription_version_id']!=version or audit['status']!='COMPLETED' or (audit['suggested_score'] is None and not body.adjudication)):
                 raise ExamConflict('audit no longer current or scorable')
             if snapshot['current_human_decision'] or snapshot['last_human_decision_id'] != body.expected_last_decision_id:
                 raise ExamConflict('human decision changed; reopen before confirming')
             from confia_lean_auditor.dynamic.product_adapter import decision_reference
             raw=audit_service().get(body.audit_run_id)
             reference=decision_reference(audit,body,case,raw)
-            suggested=Decimal(str(audit['suggested_score']))
+            extra={}
+            if body.adjudication:
+                if not case.dynamic_context or body.decision_type!='ADJUST_SCORE':
+                    raise ValueError('adjudication requires Dynamic ADJUST_SCORE')
+                from confia_lean_auditor.dynamic.adjudication import validate
+                from confia_lean_auditor.dynamic.product_adapter import current_reconciliation
+                adjudication=validate(case,raw,current_reconciliation(case,raw),body)
+                items={i['rubric_item_id']:i for i in audit['rubric_items']}
+                extra=dict(adjudication=adjudication,rubric_decisions=[dict(rubric_item_id=c.criterion_id,
+                    final_points=c.final_points,suggested_points=items[c.criterion_id]['suggested_points'],
+                    adjustment_reason=c.justification) for c in adjudication.criteria])
+            suggested=Decimal(str(audit['suggested_score'])) if audit['suggested_score'] is not None else None
             final=suggested if body.decision_type=='ACCEPT_SUGGESTION' else body.final_points
             if final is None or (body.decision_type=='ACCEPT_SUGGESTION' and body.final_points is not None and body.final_points!=suggested):
                 raise ValueError('invalid final score')
-            decision=HumanDecision(**reference,human_decision_id='hdec_'+uuid4().hex,case_id=case_id,question_attempt_id=case_id,
+            decision=HumanDecision(**extra,**reference,human_decision_id='hdec_'+uuid4().hex,case_id=case_id,question_attempt_id=case_id,
                 assessment_id=audit['assessment_id'],participant_id=audit['participant_id'],submission_id=case.exam_submission_id,
                 transcription_version_id=version,audit_run_id=raw.audit_run_id,audit_source_sha256=raw.source_hash,audit_result_sha256=raw.result_sha256,
-                max_points=case.max_score,suggested_points=suggested,final_points=final,adjustment_delta=final-suggested,
+                max_points=case.max_score,suggested_points=suggested,final_points=final,adjustment_delta=final-suggested if suggested is not None else None,
                 override_reason=(body.override_reason or '').strip() or None,decision_type=body.decision_type,
                 decided_by_user_id=user.user_id,decided_at=datetime.now(timezone.utc),engine_mode=audit['engine_mode'],engine_version=audit['engine_version'],
                 review_required_snapshot=audit['review_required'],review_reasons_snapshot=audit['review_reasons'],supersedes_decision_id=body.expected_last_decision_id)

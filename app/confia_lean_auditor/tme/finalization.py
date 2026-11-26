@@ -39,9 +39,9 @@ class ConfirmedQuestion(SubmissionModel):
     transcription_version_id: str
     audit_run_id: str
     human_decision_id: str
-    suggested_score: Points
+    suggested_score: Optional[Points]
     final_score: Points
-    adjustment: Decimal
+    adjustment: Optional[Decimal]
     max_score: Decimal
     review_required: bool
     engine_mode: str
@@ -70,9 +70,9 @@ class FinalCorrection(SubmissionModel):
     participant_id: str
     participant_code: str
     status: Literal['FINALIZED'] = 'FINALIZED'
-    suggested_total_snapshot: Decimal
+    suggested_total_snapshot: Optional[Decimal]
     final_total: Decimal
-    total_adjustment: Decimal
+    total_adjustment: Optional[Decimal]
     max_total: Decimal
     question_count: int = Field(ge=1)
     confirmed_question_count: int
@@ -88,14 +88,16 @@ class FinalCorrection(SubmissionModel):
     @model_validator(mode='after')
     def coherent(self):
         qs = self.questions
+        suggested = sum(q.suggested_score for q in qs) if all(q.suggested_score is not None for q in qs) else None
+        adjustment = self.final_total - suggested if suggested is not None else None
         if (self.question_count != len(qs) or self.confirmed_question_count != len(qs)
                 or len({q.question_attempt_id for q in qs}) != len(qs)
-                or self.suggested_total_snapshot != sum(q.suggested_score for q in qs)
+                or self.suggested_total_snapshot != suggested
                 or self.final_total != sum(q.final_score for q in qs)
                 or self.max_total != sum(q.max_score for q in qs)
-                or self.total_adjustment != self.final_total - self.suggested_total_snapshot
+                or self.total_adjustment != adjustment
                 or self.review_question_count != sum(q.review_required for q in qs)
-                or self.adjusted_question_count != sum(q.adjustment != 0 for q in qs)
+                or self.adjusted_question_count != sum(q.adjustment is not None and q.adjustment != 0 for q in qs)
                 or any((q.human_decision.assessment_id, q.human_decision.submission_id, q.human_decision.participant_id)
                        != (self.assessment_id, self.submission_id, self.participant_id) for q in qs)):
             raise ValueError('inconsistent exam totals or scope')
@@ -187,8 +189,8 @@ def _summary(detail, submissions, audits):
         if not version: reason = 'Leitura pendente.'
         elif not run: reason = 'Análise anterior desatualizada; reanálise necessária.' if runs else 'Análise pendente.'
         elif run.status == 'FAILED': reason = 'A análise corrente falhou; reanálise necessária.'
-        elif audit['suggested_score'] is None: reason = 'Análise sem pontuação disponível.'
-        elif audit.get('suggestion_ready') is False: reason = 'Revisão e reconciliação correntes pendentes.'
+        elif audit['suggested_score'] is None and not (human and human.get('adjudication')): reason = 'Análise sem pontuação disponível.'
+        elif audit.get('suggestion_ready') is False and not (human and human.get('adjudication')): reason = 'Revisão e reconciliação correntes pendentes.'
         elif not human: reason = 'Questão ainda não confirmada; homologue a análise corrente.'
         suggested = Decimal(str(audit['suggested_score'])) if audit and run.status == 'COMPLETED' and audit['suggested_score'] is not None else None
         d = HumanDecision.model_validate({k:v for k,v in human.items() if k in HumanDecision.model_fields}) if human else None
@@ -198,7 +200,7 @@ def _summary(detail, submissions, audits):
             transcription_version_id=version, audit_run_id=run.audit_run_id if run else None,
             human_decision_id=d.human_decision_id if d else None,
             suggested_score=str(suggested) if suggested is not None else None,
-            final_score=str(d.final_points) if d else None, adjustment=str(d.adjustment_delta) if d else None,
+            final_score=str(d.final_points) if d else None, adjustment=str(d.adjustment_delta) if d and d.adjustment_delta is not None else None,
             max_score=str(case.max_score), review_required=bool(audit and audit['review_required']),
             engine_mode=audit['engine_mode'] if audit else None, engine_version=audit['engine_version'] if audit else None,
             human_decision=d.model_dump(mode='json') if d else None,
@@ -219,7 +221,7 @@ def _summary(detail, submissions, audits):
         question_count=len(rows), confirmed_question_count=len(confirmed), pending_question_count=len(rows)-len(confirmed),
         review_question_count=sum(r['review_required'] for r in rows),
         unconfirmed_review_question_count=sum(r['status']=='REVIEW' for r in rows),
-        adjusted_question_count=sum(Decimal(r['adjustment']) != 0 for r in confirmed),
+        adjusted_question_count=sum(r['adjustment'] is not None and Decimal(r['adjustment']) != 0 for r in confirmed),
         suggested_total=str(suggested) if suggested is not None else None, suggested_total_complete=complete,
         final_total=str(final) if final is not None else None, final_total_complete=len(confirmed)==len(rows),
         total_adjustment=str(final-suggested) if complete and len(confirmed)==len(rows) else None,
@@ -283,7 +285,7 @@ def finalize(exam_id, body, user):
             final = FinalCorrection(final_correction_id='final_'+uuid4().hex,
                 **{k:data[k] for k in ('assessment_id','assessment_title','assessment_definition_sha256','submission_id','participant_id','participant_code',
                     'final_total','total_adjustment','max_total','question_count','confirmed_question_count','review_question_count','adjusted_question_count')},
-                suggested_total_snapshot=data['suggested_total'], finalized_at=now, finalized_by=user.user_id,
+                suggested_total_snapshot=data['suggested_total'] if data['suggested_total_complete'] else None, finalized_at=now, finalized_by=user.user_id,
                 version=(previous['version']+1) if previous else 1, previous_final_correction_id=previous['final_correction_id'] if previous else None,
                 snapshot_sha256=data['snapshot_sha256'], questions=[{k:v for k,v in r.items() if k in ConfirmedQuestion.model_fields} for r in data['questions']])
             snapshot = final.model_dump(mode='json')

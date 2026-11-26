@@ -34,6 +34,9 @@ def current_reconciliation(case, run):
 
 def project(result,run,case):
     review,rec=associated(case,run)
+    from .grading_context import case_context
+    _,_,rubric,_=case_context(case)
+    rubric_by_id={c.criterion_id:c for c in rubric.criteria}
     reasons=list(rec['review_reasons']) if rec else ['Conclua a revisão independente e a reconciliação antes da homologação.']
     if getattr(run,'stale',False): reasons.append('Leitura alterada: esta análise pertence a uma versão anterior.')
     decisions={c['criterion_id']:c for c in rec['criteria']} if rec else {}
@@ -52,7 +55,11 @@ def project(result,run,case):
             status=status,display_status=status,status_label='Falha técnica' if technical else 'Revisar' if pending else ('Avaliação semântica' if d.semantic_trace else 'Revisar') if needs else 'Sustentado' if supported else 'Não sustentado',
             review_required=needs,reason=r['reason'] if r else d.explanation,evidence_ids=d.claim_ids,checker_ids=[],children=[],
             grader_points=float(d.suggested_points),reviewer_points=r['reviewer_points'] if r else None,
-            automation=r['automation'] if r else 'REVIEW_ONLY'))
+            automation=r['automation'] if r else 'REVIEW_ONLY',
+            dependencies=list(rubric_by_id[d.criterion_id].dependencies),
+            teacher_guidance=rubric_by_id[d.criterion_id].teacher_guidance,
+            rubric_notes=rubric_by_id[d.criterion_id].notes,grader_explanation=d.explanation,
+            grader_semantic_trace=d.semantic_trace))
     evidence=[dict(evidence_id=c.claim_id,text=c.text,kind='text',claim_type=c.claim_type,
         source_span=dict(start=c.start,end=c.end,scope='transcription',sha256=run.source_hash),exam_page_id=None,page_number=None,
         region=None,grounding_status=c.fidelity) for c in result.analysis.claims]
@@ -69,11 +76,11 @@ def project(result,run,case):
 
 def decision_reference(audit,body,case,run):
     if audit.get('engine_mode')!='DYNAMIC':
-        if body.reconciliation_id: raise ValueError('reconciliation is unavailable for this engine')
+        if body.reconciliation_id or body.adjudication: raise ValueError('reconciliation is unavailable for this engine')
         return {}
     # Integrity binds the persisted artifact, never its public/redacted projection.
     rec=current_reconciliation(case,run)
-    if not audit.get('suggestion_ready') or not rec or body.reconciliation_id!=rec['reconciliation_id']:
+    if (not audit.get('suggestion_ready') and not body.adjudication) or not rec or body.reconciliation_id!=rec['reconciliation_id']:
         from confia_lean_auditor.tme.exam_store import ExamConflict
         raise ExamConflict('select the current reconciled suggestion')
     return dict(reconciliation_id=rec['reconciliation_id'],reconciliation_sha256=canonical_sha256(rec),

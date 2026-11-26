@@ -40,7 +40,8 @@ class CertificationEvent(SubmissionModel):
 SAFE_PAYLOAD = {'status','suggested_points','suggested_score','final_score','adjustment_delta',
     'old_score','new_score','previous_audit_run_id','new_audit_run_id','new_transcription_version_id',
     'superseded_by','suggested_total','final_total','total_adjustment','question_count',
-    'adjusted_question_count','review_question_count','human_decision_ids','engines','checker_id'}
+    'adjusted_question_count','review_question_count','human_decision_ids','engines','checker_id',
+    'origin','formal_certification','rubric_sha256','criterion_ids','final_points','automatic_suggested_points'}
 
 
 def normalize(event, context, *, timestamp=None, basis='persisted_operation'):

@@ -116,6 +116,8 @@
         n('p',`${data.final_total_complete?'Final humano':'Confirmado parcial'}: ${points(data.final_total)} / ${points(data.max_total)}`),
         n('p',`Ajuste total: ${delta(data.total_adjustment)}`),n('p',`${data.adjusted_question_count} de ${data.question_count} questões tiveram ajuste humano`),
         n('p',`${data.confirmed_question_count} confirmadas · ${data.pending_question_count} pendentes · ${data.unconfirmed_review_question_count} em revisão · ${data.review_question_count} com alerta ConfIA`));
+      const adjudicated=data.questions.filter(q=>q.human_decision?.adjudication && q.suggested_score==null).length;
+      if(adjudicated)totals.append(n('p',`${adjudicated} adjudicação(ões) humana(s) sem nota automática: diferença de pontuação não calculável; não incluídas na contagem de ajustes.`));
       panel.append(totals);
       if(current)panel.append(message(`Finalizada em ${new Date(current.finalized_at).toLocaleString('pt-BR')} por ${current.finalized_by} · versão ${current.version}. Reabra explicitamente antes de alterar a prova.`));
       if(data.blockers.length){const pending=n('section',undefined,'card');pending.append(n('h3','Não é possível finalizar.'));
