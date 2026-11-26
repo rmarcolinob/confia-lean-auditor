@@ -38,7 +38,9 @@
         throw new Error("Prepare uma versão congelada antes de enviar.");
       }
       if (inFlight) throw new Error("Aguarde o envio em andamento.");
-      if (target !== "/submissions" && !/^\/assessments\/asmt_[0-9a-f]{32}\/items\/ait_[0-9a-f]{32}\/submissions$/.test(target)) {
+      const assessmentTarget = /^\/assessments\/asmt_[0-9a-f]{32}\/items\/ait_[0-9a-f]{32}\/submissions$/.test(target);
+      const tmeTarget = /^\/tme\/cases\/case_[0-9a-f]{32}\/digital-submission$/.test(target);
+      if (target !== "/submissions" && !assessmentTarget && !tmeTarget) {
         throw new Error("Destino do envio inválido.");
       }
       inFlight = true;
@@ -85,11 +87,13 @@
         if (![200, 201].includes(response.status) || !validReceipt(receipt, snapshot)) {
           throw new Error("Resposta sem recibo válido. A versão local foi preservada; tente novamente.");
         }
-        if (target !== "/submissions") {
+        if (assessmentTarget) {
           const [, , assessmentId, , itemId] = target.split("/");
           if (receipt.assessment_id !== assessmentId || receipt.assessment_item_id !== itemId) {
             throw new Error("Recibo não corresponde à questão do exame. Preserve a versão local.");
           }
+        } else if (tmeTarget && receipt.tme_case_id !== target.split("/")[3]) {
+          throw new Error("Recibo não corresponde à correção TME. Preserve a versão local.");
         }
         return receipt;
       } finally {

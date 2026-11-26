@@ -1,0 +1,12 @@
+[
+  {
+    "id": "run_e0ed0913d8d7532b8431337b99e5635217695b18c3a8f56be854685a744dbe0a",
+    "N": 24,
+    "verdict": "PILOT_METRICS_AVAILABLE"
+  },
+  {
+    "id": "run_ef21bfce69c02f052e635453d3991c88dfe40aa110ac591b7f0e6d1d3ea149df",
+    "N": 24,
+    "verdict": "PILOT_METRICS_AVAILABLE"
+  }
+]

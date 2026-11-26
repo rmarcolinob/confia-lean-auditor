@@ -250,7 +250,7 @@ def _extract_final_digit(solution: str, claims: List[StudentClaim]) -> None:
         )
     )
 
-def extract_f2q5_student_claims(solution: str) -> List[StudentClaim]:
+def extract_f2q5_student_claims(solution: str, *, _ground: bool = True) -> List[StudentClaim]:
     claims: List[StudentClaim] = []
 
     _extract_log_power_decomposition(solution, claims)
@@ -259,4 +259,7 @@ def extract_f2q5_student_claims(solution: str) -> List[StudentClaim]:
     _extract_between_bounds(solution, claims)
     _extract_final_digit(solution, claims)
 
+    if _ground:
+        from confia_lean_auditor.student_claims.grounding import ground_student_claims
+        return ground_student_claims(solution, claims, extract_f2q5_student_claims)
     return claims

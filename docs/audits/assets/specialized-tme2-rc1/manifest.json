@@ -1,0 +1,4240 @@
+{
+  "candidate": "SPECIALIZED-TME2-RC1",
+  "schema_version": "confia-experimental-candidate.v1",
+  "status": "experimental_candidate_uncommitted_not_for_official_grading",
+  "prepared_at_utc": "2026-11-25T19:44:06.536533+00:00",
+  "prepared_local_date": "2026-11-25",
+  "timezone": "America/Fortaleza",
+  "git": {
+    "base_commit": "afa82c38b26132c9ba90b74bf6984a9867bd9623",
+    "branch": "codex/dec10-functional-integration",
+    "worktree": "artifacts/worktrees/confia-dec10-integration",
+    "porcelain_status": [
+      " M app/confia_lean_auditor/submission_audits/router.py",
+      " M app/confia_lean_auditor/tme/router.py",
+      " M tests/test_core_auth.py",
+      " M tests/test_tme_demo_auth.py",
+      " M tests/test_tme_finalization.py",
+      "?? app/confia_lean_auditor/tme/review_diagnostics.py",
+      "?? docs/audits/SPECIALIZED_TME2_RC1.md",
+      "?? docs/audits/SPECIALIZED_TME2_RC1_GOLD_PROTOCOL.md",
+      "?? docs/audits/assets/specialized-tme2-rc1/diagnostic-implementation.patch",
+      "?? docs/audits/assets/specialized-tme2-rc1/final-verification.txt",
+      "?? docs/audits/assets/specialized-tme2-rc1/historical-verification.json",
+      "?? docs/audits/assets/specialized-tme2-rc1/lean-certificate-test.txt",
+      "?? docs/audits/assets/specialized-tme2-rc1/manifest.json",
+      "?? docs/audits/assets/specialized-tme2-rc1/manifest.sha256",
+      "?? docs/audits/assets/specialized-tme2-rc1/prior-comparison.json",
+      "?? docs/audits/assets/specialized-tme2-rc1/prior-regression-971.txt",
+      "?? docs/audits/assets/specialized-tme2-rc1/python-environment.txt",
+      "?? docs/audits/assets/specialized-tme2-rc1/tamper-control.txt",
+      "?? docs/audits/assets/specialized-tme2-rc1/verification.txt",
+      "?? scripts/evaluation/verify_specialized_tme2_rc1.py",
+      "?? tests/test_tme_review_diagnostics.py"
+    ],
+    "tracked_diff_stat": "app/confia_lean_auditor/submission_audits/router.py |  9 +++++++++\n app/confia_lean_auditor/tme/router.py               | 18 ++++++++++++++++++\n tests/test_core_auth.py                             |  7 +++++++\n tests/test_tme_demo_auth.py                         |  3 ++-\n tests/test_tme_finalization.py                      | 11 +++++++++++\n 5 files changed, 47 insertions(+), 1 deletion(-)",
+    "pending_implementation_patch": "docs/audits/assets/specialized-tme2-rc1/diagnostic-implementation.patch",
+    "commit_created": false,
+    "tag_created": false,
+    "push_performed": false,
+    "state_note": "Before candidate commit; manifest/checksum self-hashes excluded to avoid cycles; tag will identify final commit."
+  },
+  "auditor": {
+    "fingerprint": "tme-integration.v1:2da7a5bd4d0cd615fd06993b9e7e45fa86c27b6778476724882d65342526b9da",
+    "policy": "semantic-b-minimal.v1",
+    "diagnostic_version": "tme-review-diagnostics.v1",
+    "score_engine": "existing PautaEngine, unchanged",
+    "use_lean": true,
+    "student_proof_timeout_seconds": 90,
+    "student_proof_timeout_scope": "shared positive proof and refutation",
+    "generic_lean_timeout_seconds": 30
+  },
+  "pautas": [
+    {
+      "public_problem_id": "TME2026P1",
+      "internal_problem_id": "TME2_P1_PILOT",
+      "pauta_version": "pauta.v1",
+      "path": "examples/pautas/tme2_problem1.v1.json",
+      "file": {
+        "sha256": "cd4b776173a9e726d8e3f18365641dad5354bab392a76f320d1f5ecf4b6bee3f",
+        "size_bytes": 8401
+      },
+      "config_sha256": "76887c541019255a3ac4522e13debaff32aa739a604198e4e35a52e0b0ecd0bf",
+      "max_score": "20",
+      "items": [
+        {
+          "id": "a",
+          "max_points": "3"
+        },
+        {
+          "id": "b",
+          "max_points": "5"
+        },
+        {
+          "id": "c",
+          "max_points": "6"
+        },
+        {
+          "id": "d",
+          "max_points": "6"
+        }
+      ],
+      "auditor_context": {
+        "semantic_policy": "semantic-b-minimal.v1",
+        "auditor_version": "tme-integration.v1:2da7a5bd4d0cd615fd06993b9e7e45fa86c27b6778476724882d65342526b9da",
+        "pauta_version": "pauta.v1",
+        "pauta_sha256": "76887c541019255a3ac4522e13debaff32aa739a604198e4e35a52e0b0ecd0bf",
+        "use_lean": true
+      }
+    },
+    {
+      "public_problem_id": "TME2026P2",
+      "internal_problem_id": "TME2026P2",
+      "pauta_version": "pauta.v1",
+      "path": "examples/pautas/tme2_problem2.v1.json",
+      "file": {
+        "sha256": "694886b93c81f18942148adda2d9340d1054309c65f215ca1edaeff949f89c54",
+        "size_bytes": 8700
+      },
+      "config_sha256": "548eaf14d73475bb04a6a34aafecd9c28b32beff46945f9fa470fa613d85ee87",
+      "max_score": "20",
+      "items": [
+        {
+          "id": "a",
+          "max_points": "5"
+        },
+        {
+          "id": "b",
+          "max_points": "7"
+        },
+        {
+          "id": "c",
+          "max_points": "8"
+        }
+      ],
+      "auditor_context": {
+        "semantic_policy": "semantic-b-minimal.v1",
+        "auditor_version": "tme-integration.v1:2da7a5bd4d0cd615fd06993b9e7e45fa86c27b6778476724882d65342526b9da",
+        "pauta_version": "pauta.v1",
+        "pauta_sha256": "548eaf14d73475bb04a6a34aafecd9c28b32beff46945f9fa470fa613d85ee87",
+        "use_lean": true
+      }
+    },
+    {
+      "public_problem_id": "TME2026P3",
+      "internal_problem_id": "TME2026P3",
+      "pauta_version": "pauta.v1",
+      "path": "examples/pautas/tme2_problem3.v1.json",
+      "file": {
+        "sha256": "0d89e2056d77972a91ab24107d6437745305960ea493b8da1eb824fd64049f53",
+        "size_bytes": 6334
+      },
+      "config_sha256": "6cfa27451c7760b1f0520154d473679bed86506d52191dd5c85fa663106e58f0",
+      "max_score": "20",
+      "items": [
+        {
+          "id": "a",
+          "max_points": "4"
+        },
+        {
+          "id": "b",
+          "max_points": "8"
+        },
+        {
+          "id": "c",
+          "max_points": "8"
+        }
+      ],
+      "auditor_context": {
+        "semantic_policy": "semantic-b-minimal.v1",
+        "auditor_version": "tme-integration.v1:2da7a5bd4d0cd615fd06993b9e7e45fa86c27b6778476724882d65342526b9da",
+        "pauta_version": "pauta.v1",
+        "pauta_sha256": "6cfa27451c7760b1f0520154d473679bed86506d52191dd5c85fa663106e58f0",
+        "use_lean": true
+      }
+    },
+    {
+      "public_problem_id": "TME2026P4",
+      "internal_problem_id": "TME2026P4",
+      "pauta_version": "pauta.v1",
+      "path": "examples/pautas/tme2_problem4.v1.json",
+      "file": {
+        "sha256": "d5234ee1cc5253756c5b39570c2413b45ae1dd90c6d64b81248ffc6ed844b48d",
+        "size_bytes": 10814
+      },
+      "config_sha256": "334bb73129a8abfff6d73999aa2bbb73632fca2bd2dfe0a7025fcb5b39510ed6",
+      "max_score": "20",
+      "items": [
+        {
+          "id": "a",
+          "max_points": "4"
+        },
+        {
+          "id": "b",
+          "max_points": "6"
+        },
+        {
+          "id": "c",
+          "max_points": "10"
+        }
+      ],
+      "auditor_context": {
+        "semantic_policy": "semantic-b-minimal.v1",
+        "auditor_version": "tme-integration.v1:2da7a5bd4d0cd615fd06993b9e7e45fa86c27b6778476724882d65342526b9da",
+        "pauta_version": "pauta.v1",
+        "pauta_sha256": "334bb73129a8abfff6d73999aa2bbb73632fca2bd2dfe0a7025fcb5b39510ed6",
+        "use_lean": true
+      }
+    },
+    {
+      "public_problem_id": "TME2026P5",
+      "internal_problem_id": "TME2026P5",
+      "pauta_version": "pauta.v1",
+      "path": "examples/pautas/tme2_problem5.v1.json",
+      "file": {
+        "sha256": "e10dde423192004f5a3d31823de84cadb4d118cfa8c5cd4b519717503a92d61e",
+        "size_bytes": 13879
+      },
+      "config_sha256": "39c4abc64e3fecd7caeba87216824dca0e3b29ff756b7f918ebf30d064a5aa1d",
+      "max_score": "20",
+      "items": [
+        {
+          "id": "a",
+          "max_points": "6"
+        },
+        {
+          "id": "b",
+          "max_points": "4"
+        },
+        {
+          "id": "c",
+          "max_points": "6"
+        },
+        {
+          "id": "d",
+          "max_points": "4"
+        }
+      ],
+      "auditor_context": {
+        "semantic_policy": "semantic-b-minimal.v1",
+        "auditor_version": "tme-integration.v1:2da7a5bd4d0cd615fd06993b9e7e45fa86c27b6778476724882d65342526b9da",
+        "pauta_version": "pauta.v1",
+        "pauta_sha256": "39c4abc64e3fecd7caeba87216824dca0e3b29ff756b7f918ebf30d064a5aa1d",
+        "use_lean": true
+      }
+    }
+  ],
+  "p3_machine": {
+    "path": "examples/pautas/tme2_problem3.machine.v1.json",
+    "sha256": "2fd059233244b4f7d66204a33a4924902865c5ebebd3480c5f2ebc648cefd4a4",
+    "size_bytes": 585
+  },
+  "environment": {
+    "python_version": "3.9.6",
+    "python_build": "3.9.6 (default, Oct 19 2026, 19:18:13) \n[Clang 21.0.0 (clang-2100.4.1.1)]",
+    "python_implementation": "CPython",
+    "platform": "macOS-27.2.1-arm64-arm-64bit",
+    "architecture": "arm64",
+    "python_packages": {
+      "Pygments": "2.20.0",
+      "annotated-doc": "0.0.4",
+      "annotated-types": "0.7.0",
+      "anyio": "4.12.1",
+      "certifi": "2026.6.17",
+      "click": "8.1.8",
+      "distro": "1.9.0",
+      "exceptiongroup": "1.3.1",
+      "fastapi": "0.128.8",
+      "h11": "0.16.0",
+      "httpcore": "1.0.9",
+      "httpx": "0.28.1",
+      "idna": "3.18",
+      "iniconfig": "2.1.0",
+      "jiter": "0.16.0",
+      "openai": "2.44.0",
+      "packaging": "26.2",
+      "pillow": "11.3.0",
+      "pip": "26.0.1",
+      "pluggy": "1.6.0",
+      "pydantic": "2.13.4",
+      "pydantic_core": "2.46.4",
+      "pypdfium2": "4.30.0",
+      "pytest": "8.4.2",
+      "setuptools": "82.0.1",
+      "sniffio": "1.3.1",
+      "starlette": "0.49.3",
+      "tomli": "2.4.1",
+      "tqdm": "4.68.3",
+      "typing-inspection": "0.4.2",
+      "typing_extensions": "4.16.0",
+      "uvicorn": "0.39.0",
+      "wheel": "0.47.0"
+    },
+    "python_lock_kind": "observed package versions; wheels and hashes not bundled",
+    "lean_version": "Lean (version 4.28.0, arm64-apple-darwin24.6.0, commit 7e01a1bf5c70fc6167d49c345d3bf80596e9a79b, Release)",
+    "lake_version": "Lake version 5.0.0-src+7e01a1b (Lean version 4.28.0)",
+    "lake_packages": {
+      "mathlib": {
+        "locked_revision": "8f9d9cff6bd728b17a24e163c9402775d9e6a365",
+        "installed_revision": "8f9d9cff6bd728b17a24e163c9402775d9e6a365",
+        "input_revision": "v4.28.0",
+        "clean": true,
+        "url": "https://github.com/leanprover-community/mathlib4"
+      },
+      "plausible": {
+        "locked_revision": "55c8532eb21ec9f6d565d51d96b8ca50bd1fbef3",
+        "installed_revision": "55c8532eb21ec9f6d565d51d96b8ca50bd1fbef3",
+        "input_revision": "main",
+        "clean": true,
+        "url": "https://github.com/leanprover-community/plausible"
+      },
+      "LeanSearchClient": {
+        "locked_revision": "c5d5b8fe6e5158def25cd28eb94e4141ad97c843",
+        "installed_revision": "c5d5b8fe6e5158def25cd28eb94e4141ad97c843",
+        "input_revision": "main",
+        "clean": true,
+        "url": "https://github.com/leanprover-community/LeanSearchClient"
+      },
+      "importGraph": {
+        "locked_revision": "85b59af46828c029a9168f2f9c35119bd0721e6e",
+        "installed_revision": "85b59af46828c029a9168f2f9c35119bd0721e6e",
+        "input_revision": "main",
+        "clean": true,
+        "url": "https://github.com/leanprover-community/import-graph"
+      },
+      "proofwidgets": {
+        "locked_revision": "be3b2e63b1bbf496c478cef98b86972a37c1417d",
+        "installed_revision": "be3b2e63b1bbf496c478cef98b86972a37c1417d",
+        "input_revision": "v0.0.87",
+        "clean": true,
+        "url": "https://github.com/leanprover-community/ProofWidgets4"
+      },
+      "aesop": {
+        "locked_revision": "f642a64c76df8ba9cb53dba3b919425a0c2aeaf1",
+        "installed_revision": "f642a64c76df8ba9cb53dba3b919425a0c2aeaf1",
+        "input_revision": "master",
+        "clean": true,
+        "url": "https://github.com/leanprover-community/aesop"
+      },
+      "Qq": {
+        "locked_revision": "b8f98e9087e02c8553945a2c5abf07cec8e798c3",
+        "installed_revision": "b8f98e9087e02c8553945a2c5abf07cec8e798c3",
+        "input_revision": "master",
+        "clean": true,
+        "url": "https://github.com/leanprover-community/quote4"
+      },
+      "batteries": {
+        "locked_revision": "495c008c3e3f4fb4256ff5582ddb3abf3198026f",
+        "installed_revision": "495c008c3e3f4fb4256ff5582ddb3abf3198026f",
+        "input_revision": "main",
+        "clean": true,
+        "url": "https://github.com/leanprover-community/batteries"
+      },
+      "Cli": {
+        "locked_revision": "4f10f47646cb7d5748d6f423f4a07f98f7bbcc9e",
+        "installed_revision": "4f10f47646cb7d5748d6f423f4a07f98f7bbcc9e",
+        "input_revision": "v4.28.0",
+        "clean": true,
+        "url": "https://github.com/leanprover/lean4-cli"
+      }
+    },
+    "lake_manifest": {
+      "version": "1.1.0",
+      "packagesDir": ".lake/packages",
+      "packages": [
+        {
+          "url": "https://github.com/leanprover-community/mathlib4",
+          "type": "git",
+          "subDir": null,
+          "scope": "leanprover-community",
+          "rev": "8f9d9cff6bd728b17a24e163c9402775d9e6a365",
+          "name": "mathlib",
+          "manifestFile": "lake-manifest.json",
+          "inputRev": "v4.28.0",
+          "inherited": false,
+          "configFile": "lakefile.lean"
+        },
+        {
+          "url": "https://github.com/leanprover-community/plausible",
+          "type": "git",
+          "subDir": null,
+          "scope": "leanprover-community",
+          "rev": "55c8532eb21ec9f6d565d51d96b8ca50bd1fbef3",
+          "name": "plausible",
+          "manifestFile": "lake-manifest.json",
+          "inputRev": "main",
+          "inherited": true,
+          "configFile": "lakefile.toml"
+        },
+        {
+          "url": "https://github.com/leanprover-community/LeanSearchClient",
+          "type": "git",
+          "subDir": null,
+          "scope": "leanprover-community",
+          "rev": "c5d5b8fe6e5158def25cd28eb94e4141ad97c843",
+          "name": "LeanSearchClient",
+          "manifestFile": "lake-manifest.json",
+          "inputRev": "main",
+          "inherited": true,
+          "configFile": "lakefile.toml"
+        },
+        {
+          "url": "https://github.com/leanprover-community/import-graph",
+          "type": "git",
+          "subDir": null,
+          "scope": "leanprover-community",
+          "rev": "85b59af46828c029a9168f2f9c35119bd0721e6e",
+          "name": "importGraph",
+          "manifestFile": "lake-manifest.json",
+          "inputRev": "main",
+          "inherited": true,
+          "configFile": "lakefile.toml"
+        },
+        {
+          "url": "https://github.com/leanprover-community/ProofWidgets4",
+          "type": "git",
+          "subDir": null,
+          "scope": "leanprover-community",
+          "rev": "be3b2e63b1bbf496c478cef98b86972a37c1417d",
+          "name": "proofwidgets",
+          "manifestFile": "lake-manifest.json",
+          "inputRev": "v0.0.87",
+          "inherited": true,
+          "configFile": "lakefile.lean"
+        },
+        {
+          "url": "https://github.com/leanprover-community/aesop",
+          "type": "git",
+          "subDir": null,
+          "scope": "leanprover-community",
+          "rev": "f642a64c76df8ba9cb53dba3b919425a0c2aeaf1",
+          "name": "aesop",
+          "manifestFile": "lake-manifest.json",
+          "inputRev": "master",
+          "inherited": true,
+          "configFile": "lakefile.toml"
+        },
+        {
+          "url": "https://github.com/leanprover-community/quote4",
+          "type": "git",
+          "subDir": null,
+          "scope": "leanprover-community",
+          "rev": "b8f98e9087e02c8553945a2c5abf07cec8e798c3",
+          "name": "Qq",
+          "manifestFile": "lake-manifest.json",
+          "inputRev": "master",
+          "inherited": true,
+          "configFile": "lakefile.toml"
+        },
+        {
+          "url": "https://github.com/leanprover-community/batteries",
+          "type": "git",
+          "subDir": null,
+          "scope": "leanprover-community",
+          "rev": "495c008c3e3f4fb4256ff5582ddb3abf3198026f",
+          "name": "batteries",
+          "manifestFile": "lake-manifest.json",
+          "inputRev": "main",
+          "inherited": true,
+          "configFile": "lakefile.toml"
+        },
+        {
+          "url": "https://github.com/leanprover/lean4-cli",
+          "type": "git",
+          "subDir": null,
+          "scope": "leanprover",
+          "rev": "4f10f47646cb7d5748d6f423f4a07f98f7bbcc9e",
+          "name": "Cli",
+          "manifestFile": "lake-manifest.json",
+          "inputRev": "v4.28.0",
+          "inherited": true,
+          "configFile": "lakefile.toml"
+        }
+      ],
+      "name": "confia_lean_auditor",
+      "lakeDir": ".lake"
+    },
+    "shared_venv_observed": true,
+    "shell_overrides_before_per_command_PYTHONPATH": {
+      "ELAN_TOOLCHAIN": null,
+      "ELAN_HOME": null,
+      "LEAN_PATH": null,
+      "LEAN_SYSROOT": null,
+      "LAKE_HOME": null,
+      "PYTHONHASHSEED": null,
+      "PYTHONPATH": null,
+      "CONFIA_LEAN_AUDITOR_ROOT": null,
+      "CONFIA_TME_QUESTION_USE_LEAN": null,
+      "CONFIA_ENABLE_LLM_FORMAL_STEPS": null
+    },
+    "lake_env_lean_version": "Lean (version 4.28.0, arm64-apple-darwin24.6.0, commit 7e01a1bf5c70fc6167d49c345d3bf80596e9a79b, Release)"
+  },
+  "provider": {
+    "observed_configuration": {
+      "policy": "semantic-b-minimal.v1",
+      "prompt_version": "semantic-b-minimal.v1",
+      "model": "gpt-6.1-sol",
+      "reasoning_effort": "medium",
+      "enabled": false
+    },
+    "credential_present": true,
+    "remote_availability_verified": false,
+    "model_snapshot_immutable": false,
+    "archived_returned_models": [
+      "gpt-6.1-sol"
+    ],
+    "endpoint": "https://api.openai.com/v1",
+    "api": "responses.create",
+    "timeout_seconds": 60,
+    "max_retries": 0,
+    "max_output_tokens": 4000,
+    "store": false,
+    "temperature": null,
+    "seed": null,
+    "temperature_and_seed_note": "Not explicitly sent by current implementation",
+    "response_format": "strict json_schema",
+    "prompt_version": "semantic-b-minimal.v1",
+    "prompt_sha256": "f0744b72db181b505dbcf9d3d05014c305d3be2bc2dddeb34274787091a149f9",
+    "response_schema_sha256": "09fd4a366c54440857969eafc0530da9f30c4f40af78375a2d5929967ec6b500",
+    "sdk_openai_version": "2.44.0",
+    "future_evaluation_profile": {
+      "CONFIA_SPECIALIZED_POLICY": "semantic-b-minimal.v1",
+      "CONFIA_SEMANTIC_MODEL": "gpt-6.1-sol",
+      "CONFIA_SEMANTIC_REASONING_EFFORT": "medium",
+      "use_lean": true
+    },
+    "paid_enablement": "Not enabled by RC preparation; future authorized execution requires external credentials and explicit enabling flag"
+  },
+  "reference_bundle": {
+    "path": "artifacts/releases/SPECIALIZED-TME2-RC1/references.tar.gz",
+    "sha256": "e9d5801d5b77dbcc2673bb371addee727b72906d9895080a79523502812a9ff3",
+    "size_bytes": 383195,
+    "member_count": 65,
+    "members": {
+      "runtime/pilot-dec10/submission_audits/artifacts/aud_00e84780b3c5556e82c092d34fbc66f8af67da2b398b1860da19b88366433bb2-a801630986a14d108c0ebe0b71de22df/accepted_revision.json": {
+        "sha256": "48d0744e512d7ad863cdc36cb9896b0a94abde7d1af204b1a317cd345e407e5f",
+        "size_bytes": 1798
+      },
+      "runtime/pilot-dec10/submission_audits/artifacts/aud_00e84780b3c5556e82c092d34fbc66f8af67da2b398b1860da19b88366433bb2-a801630986a14d108c0ebe0b71de22df/audit.json": {
+        "sha256": "309724b9be4014bc199785b3e2805709fa27dcdc5b0da66131660940085340be",
+        "size_bytes": 596198
+      },
+      "runtime/pilot-dec10/submission_audits/artifacts/aud_00e84780b3c5556e82c092d34fbc66f8af67da2b398b1860da19b88366433bb2-a801630986a14d108c0ebe0b71de22df/certificates/3181095fec4861c6a11d5bada776480d81235c82e0a0d5754b789a063ad9db3d.lean": {
+        "sha256": "6a27df2d721eee768e6402e8c0c429081b1a162925cba2fb07d926ecc65335ae",
+        "size_bytes": 144
+      },
+      "runtime/pilot-dec10/submission_audits/artifacts/aud_00e84780b3c5556e82c092d34fbc66f8af67da2b398b1860da19b88366433bb2-a801630986a14d108c0ebe0b71de22df/certificates/33850301dd1d479a376fbc8be8fec677ad725d98e83abaf950734a5a72910a8d.lean": {
+        "sha256": "3655c7729a7f2c239e13bd3cc49aea8174a801c9ce6fe60628f0d57b0a665adf",
+        "size_bytes": 189
+      },
+      "runtime/pilot-dec10/submission_audits/artifacts/aud_00e84780b3c5556e82c092d34fbc66f8af67da2b398b1860da19b88366433bb2-a801630986a14d108c0ebe0b71de22df/certificates/3f956c4abf53af017e28a857901cf1d4d1bccd6293eb5131c52fedfc2fa66cf1.lean": {
+        "sha256": "9179736e013a449fb6df6cd7e85a4473a12d1acd068fed581dbab8ce842fcfda",
+        "size_bytes": 243
+      },
+      "runtime/pilot-dec10/submission_audits/artifacts/aud_00e84780b3c5556e82c092d34fbc66f8af67da2b398b1860da19b88366433bb2-a801630986a14d108c0ebe0b71de22df/certificates/3ff5b1c6f890e2d7ffd1e868840545236e46ec9635b042b8c6dc90e94554b210.lean": {
+        "sha256": "c8561f3499a2e5dee492dc3020d2a813f33f9598a2aa78ca513df68b38915e71",
+        "size_bytes": 141
+      },
+      "runtime/pilot-dec10/submission_audits/artifacts/aud_00e84780b3c5556e82c092d34fbc66f8af67da2b398b1860da19b88366433bb2-a801630986a14d108c0ebe0b71de22df/certificates/71942b3ce32917ebf159b5bca439df49a3f93e9333315b9cc81cf1239d5b546c.lean": {
+        "sha256": "5f4d3f1a047fc5d76558bf35026ff2bd210ae2b818672a48273de1dba47cceba",
+        "size_bytes": 191
+      },
+      "runtime/pilot-dec10/submission_audits/artifacts/aud_00e84780b3c5556e82c092d34fbc66f8af67da2b398b1860da19b88366433bb2-a801630986a14d108c0ebe0b71de22df/certificates/808aab269fef9c1402174ab49cdb1ff11216efd4dd1f9698cae36822fd4285a4.lean": {
+        "sha256": "26d8db5c079193f83ee02e53768071ec0eee055c9a122434f76a0dd6b47c896f",
+        "size_bytes": 188
+      },
+      "runtime/pilot-dec10/submission_audits/artifacts/aud_00e84780b3c5556e82c092d34fbc66f8af67da2b398b1860da19b88366433bb2-a801630986a14d108c0ebe0b71de22df/certificates/8735b60d451ab5e3fc47ac810e80691ae723144839f0678de2f2eec86015986c.lean": {
+        "sha256": "750c4b61f5a7c4379cf3fb340530212a71d72de2156a226a0c067f674fd404a2",
+        "size_bytes": 137
+      },
+      "runtime/pilot-dec10/submission_audits/artifacts/aud_00e84780b3c5556e82c092d34fbc66f8af67da2b398b1860da19b88366433bb2-a801630986a14d108c0ebe0b71de22df/certificates/8b0a50f366666b41a6cb000fcef678aabe1b975498cce2e46f9ae8e8936ff1a1.lean": {
+        "sha256": "39b71633aed0a9a33ebf7164639d9c9c72de9f3c43cd083ec96142a5dc212558",
+        "size_bytes": 139
+      },
+      "runtime/pilot-dec10/submission_audits/artifacts/aud_00e84780b3c5556e82c092d34fbc66f8af67da2b398b1860da19b88366433bb2-a801630986a14d108c0ebe0b71de22df/certificates/d22f3b7c99b7802e0582a87837c1627c5907bca3292c9f6bc8a9a0024a20245b.lean": {
+        "sha256": "318dd3bec207e5a9c967e7f6e2e823b5346715b89dcba76fb6590eac07cfc2e8",
+        "size_bytes": 197
+      },
+      "runtime/pilot-dec10/submission_audits/artifacts/aud_00e84780b3c5556e82c092d34fbc66f8af67da2b398b1860da19b88366433bb2-a801630986a14d108c0ebe0b71de22df/input_mapping.json": {
+        "sha256": "fc2c57a9a2795a253d3cb600ecbdf37edeb85811adc70c70ad84fe07632ed4f9",
+        "size_bytes": 2705
+      },
+      "runtime/pilot-dec10/submission_audits/artifacts/aud_00e84780b3c5556e82c092d34fbc66f8af67da2b398b1860da19b88366433bb2-a801630986a14d108c0ebe0b71de22df/solution.txt": {
+        "sha256": "aab3240c93702393bf6fdb2a68372274bced524780fb40e69e60b41bdd4d00d4",
+        "size_bytes": 438
+      },
+      "runtime/pilot-dec10/submission_audits/artifacts/aud_1eb247481575591afe015612b9bcab6b98943d338347f5ce36da598eabaa019e-954184e1018f41e3af8f4bd8e3c09943/accepted_revision.json": {
+        "sha256": "115c15218c3df7bb9f6ce7483c8c966b1a070fba18f24b304d8c1a7a25b843d6",
+        "size_bytes": 2015
+      },
+      "runtime/pilot-dec10/submission_audits/artifacts/aud_1eb247481575591afe015612b9bcab6b98943d338347f5ce36da598eabaa019e-954184e1018f41e3af8f4bd8e3c09943/audit.json": {
+        "sha256": "56397b600d3b9681b44ccd9ab8ed57bc13b833a3cd33923b2991fe10cc4cbd19",
+        "size_bytes": 1192683
+      },
+      "runtime/pilot-dec10/submission_audits/artifacts/aud_1eb247481575591afe015612b9bcab6b98943d338347f5ce36da598eabaa019e-954184e1018f41e3af8f4bd8e3c09943/certificates/4d4b2822cfae86e723604d112e31f981347a086355c2ea72686cb5f33b1a1004.lean": {
+        "sha256": "268f140d5e465cb79ea78acdbfa8342d54ea2d6d6d4280522261d66eef2d2b48",
+        "size_bytes": 260
+      },
+      "runtime/pilot-dec10/submission_audits/artifacts/aud_1eb247481575591afe015612b9bcab6b98943d338347f5ce36da598eabaa019e-954184e1018f41e3af8f4bd8e3c09943/input_mapping.json": {
+        "sha256": "bf86e0af02671a1084f0d1224a677a6ebb1b83657d4013096355ed5c830e016b",
+        "size_bytes": 851
+      },
+      "runtime/pilot-dec10/submission_audits/artifacts/aud_1eb247481575591afe015612b9bcab6b98943d338347f5ce36da598eabaa019e-954184e1018f41e3af8f4bd8e3c09943/solution.txt": {
+        "sha256": "015cd234e48ee8f8f97aefceec6e3375405757d4d7d305364735ca8d6938dd69",
+        "size_bytes": 421
+      },
+      "runtime/pilot-dec10/submission_audits/artifacts/aud_6f7e8d0a116941fe22164444b60ecbd0c71e1e227c4a6c244528fafc5eed1808-090477ae550c430f9103647850bc4a01/accepted_revision.json": {
+        "sha256": "b6da0f9b2cb552ac866770008179f283056e5ce0b02eb159dc1b75929dd51e15",
+        "size_bytes": 1854
+      },
+      "runtime/pilot-dec10/submission_audits/artifacts/aud_6f7e8d0a116941fe22164444b60ecbd0c71e1e227c4a6c244528fafc5eed1808-090477ae550c430f9103647850bc4a01/audit.json": {
+        "sha256": "1fab26b553c9af993faa2000b3ec4480a7260f38ef53bb4780347773775ef427",
+        "size_bytes": 356071
+      },
+      "runtime/pilot-dec10/submission_audits/artifacts/aud_6f7e8d0a116941fe22164444b60ecbd0c71e1e227c4a6c244528fafc5eed1808-090477ae550c430f9103647850bc4a01/certificates/0ecfdcb3afef7679d5afcafec6bbe44ac0d762b8596adafdfb8b5d4ac52b4bb3.lean": {
+        "sha256": "18cc68c7628bc466e8ffacbaeaa1c95494ba182faebbeaec01fdf99c6a9fba5e",
+        "size_bytes": 153
+      },
+      "runtime/pilot-dec10/submission_audits/artifacts/aud_6f7e8d0a116941fe22164444b60ecbd0c71e1e227c4a6c244528fafc5eed1808-090477ae550c430f9103647850bc4a01/certificates/763ca48daecb2fb454a0abe62657a75cd8ea1a3a29c142ee7e7c75c6b230f778.lean": {
+        "sha256": "d542c9415163081e615dc50a20e014952ec611f7456f170ca91f32fb7200384a",
+        "size_bytes": 86
+      },
+      "runtime/pilot-dec10/submission_audits/artifacts/aud_6f7e8d0a116941fe22164444b60ecbd0c71e1e227c4a6c244528fafc5eed1808-090477ae550c430f9103647850bc4a01/certificates/c6552b338a44b1230da42cf7cc7b3b589ffa18ab1b0bae12e589d52c8de7f684.lean": {
+        "sha256": "a4d3762aa721154bb9690136931441acd0b6cdac03f6b2724577ff521211d332",
+        "size_bytes": 181
+      },
+      "runtime/pilot-dec10/submission_audits/artifacts/aud_6f7e8d0a116941fe22164444b60ecbd0c71e1e227c4a6c244528fafc5eed1808-090477ae550c430f9103647850bc4a01/certificates/cebe22e001efc321e9b68bf8fadc9f065ed693ccb438cecbded05fa39e387438.lean": {
+        "sha256": "e2c7b5dcc54c06742c66bc686d6683aecc538c9d2423884f6e1be8ab938c17cc",
+        "size_bytes": 211
+      },
+      "runtime/pilot-dec10/submission_audits/artifacts/aud_6f7e8d0a116941fe22164444b60ecbd0c71e1e227c4a6c244528fafc5eed1808-090477ae550c430f9103647850bc4a01/certificates/e0037781582415eaa1fd16cdeacba2e01b6b6cd4ac5f32ad29f3fed87ee4efe4.lean": {
+        "sha256": "18ac8a4aba1bb87df9a2308e724eeb35a98c19229f2156fd97c1b202449f961d",
+        "size_bytes": 102
+      },
+      "runtime/pilot-dec10/submission_audits/artifacts/aud_6f7e8d0a116941fe22164444b60ecbd0c71e1e227c4a6c244528fafc5eed1808-090477ae550c430f9103647850bc4a01/certificates/e49b7bb30ec1789b81f52f15dcc50811bbb7c00c5e7b111c88016783fa69f9c0.lean": {
+        "sha256": "5adf5c5e748a2c3bb459508f56dcb45b36132792bb55c6695931f66e2121e5b7",
+        "size_bytes": 152
+      },
+      "runtime/pilot-dec10/submission_audits/artifacts/aud_6f7e8d0a116941fe22164444b60ecbd0c71e1e227c4a6c244528fafc5eed1808-090477ae550c430f9103647850bc4a01/input_mapping.json": {
+        "sha256": "52a549f9635ee831919de76af216b39f0904c32e986e183df3e686910c836222",
+        "size_bytes": 2014
+      },
+      "runtime/pilot-dec10/submission_audits/artifacts/aud_6f7e8d0a116941fe22164444b60ecbd0c71e1e227c4a6c244528fafc5eed1808-090477ae550c430f9103647850bc4a01/solution.txt": {
+        "sha256": "80d19b52db48ccf83e6f27c330f35eefd4aa609d3f1b55c0ea2ce513188443b7",
+        "size_bytes": 503
+      },
+      "runtime/pilot-dec10/submission_audits/artifacts/aud_b78d47c5651567e96939a38cd3ac76b1ead85eb9e5cde1a308360ae687067ee6-d23d850481044ab98463da9149ebd93f/accepted_revision.json": {
+        "sha256": "b655c3cad3f95ad273e1b7d03b182e47efafb6a1e65d210160962f5d430bca07",
+        "size_bytes": 1665
+      },
+      "runtime/pilot-dec10/submission_audits/artifacts/aud_b78d47c5651567e96939a38cd3ac76b1ead85eb9e5cde1a308360ae687067ee6-d23d850481044ab98463da9149ebd93f/audit.json": {
+        "sha256": "8cdf7b359eaee53638d7056868307ef2c4c0d77860c20c864efb3d7e5aa5a8b8",
+        "size_bytes": 270563
+      },
+      "runtime/pilot-dec10/submission_audits/artifacts/aud_b78d47c5651567e96939a38cd3ac76b1ead85eb9e5cde1a308360ae687067ee6-d23d850481044ab98463da9149ebd93f/certificates/2d7a3370a6eae8bbe7d148a7527f77465158d7753d6e56a7104dde94949b2640.lean": {
+        "sha256": "162970a84b8de634047ff624c61fbb08e878fefe8679696b85498e6c9581a839",
+        "size_bytes": 110
+      },
+      "runtime/pilot-dec10/submission_audits/artifacts/aud_b78d47c5651567e96939a38cd3ac76b1ead85eb9e5cde1a308360ae687067ee6-d23d850481044ab98463da9149ebd93f/certificates/3af283513481b10f54e9caaab5339a532c9995e781a3d8ff0878d3523151f6ee.lean": {
+        "sha256": "141a676fb8f4e05ac528fb4adf11202a972a255b8922560f13b81484d47497a9",
+        "size_bytes": 194
+      },
+      "runtime/pilot-dec10/submission_audits/artifacts/aud_b78d47c5651567e96939a38cd3ac76b1ead85eb9e5cde1a308360ae687067ee6-d23d850481044ab98463da9149ebd93f/certificates/45495eb460b5d6f41c345b2cde3219682ff708d106e763de039e45181b5ed988.lean": {
+        "sha256": "eac23a24f5533c9b1ecfe606fd9e0d509a2a280ef89dd372b0ffedfbd38e16e8",
+        "size_bytes": 110
+      },
+      "runtime/pilot-dec10/submission_audits/artifacts/aud_b78d47c5651567e96939a38cd3ac76b1ead85eb9e5cde1a308360ae687067ee6-d23d850481044ab98463da9149ebd93f/certificates/65398caff279c25613dc2889379e64987c98f527f042e865cc4ee0cceaac8901.lean": {
+        "sha256": "1c8a7b86cd2d7984241871e126b03df2c862f98f8b48169d0e1b120f729aa205",
+        "size_bytes": 110
+      },
+      "runtime/pilot-dec10/submission_audits/artifacts/aud_b78d47c5651567e96939a38cd3ac76b1ead85eb9e5cde1a308360ae687067ee6-d23d850481044ab98463da9149ebd93f/certificates/c2d2eefaaca6a8cd769f6a743633abfab27fd161a9311affa0d4ad15ab1a0455.lean": {
+        "sha256": "0056ba0315cd08113af4da29a60de7bc51abb9f4b46a6dceb91ae73dfef6b30e",
+        "size_bytes": 128
+      },
+      "runtime/pilot-dec10/submission_audits/artifacts/aud_b78d47c5651567e96939a38cd3ac76b1ead85eb9e5cde1a308360ae687067ee6-d23d850481044ab98463da9149ebd93f/input_mapping.json": {
+        "sha256": "68ff0829ad4b532259de60575466fe8dc8b98527a20f4eef728b144bf7384fa2",
+        "size_bytes": 1576
+      },
+      "runtime/pilot-dec10/submission_audits/artifacts/aud_b78d47c5651567e96939a38cd3ac76b1ead85eb9e5cde1a308360ae687067ee6-d23d850481044ab98463da9149ebd93f/solution.txt": {
+        "sha256": "d2db7c95b1fbfbe1a3c807a8559f546d04eb8ee91309b45ff05b7126a7610126",
+        "size_bytes": 317
+      },
+      "runtime/pilot-dec10/submission_audits/artifacts/aud_e840502ea785c0ff3469e187a2f2d53831f8a9eba6f281ac9805103b0d230c93-9117abcb309a43ef9e394e3bafaa2a0a/accepted_revision.json": {
+        "sha256": "ee4f58b2dd914e08f1f2bd34220fdbf305a90cf4dcbbc46f38a0ac960a4889c8",
+        "size_bytes": 3176
+      },
+      "runtime/pilot-dec10/submission_audits/artifacts/aud_e840502ea785c0ff3469e187a2f2d53831f8a9eba6f281ac9805103b0d230c93-9117abcb309a43ef9e394e3bafaa2a0a/audit.json": {
+        "sha256": "3a35cf55741a67bc70899bc34d6cdead613232e11830610bb876a65253ed137b",
+        "size_bytes": 623020
+      },
+      "runtime/pilot-dec10/submission_audits/artifacts/aud_e840502ea785c0ff3469e187a2f2d53831f8a9eba6f281ac9805103b0d230c93-9117abcb309a43ef9e394e3bafaa2a0a/certificates/03ad3440b43b79ccfe7f8544ec7e647190e2c0578bfc640a7e5b5202c1d5e3d9.lean": {
+        "sha256": "f783421f751b7b9ee20989086f336e1df51721c1f0078afe61090408f539ab16",
+        "size_bytes": 126
+      },
+      "runtime/pilot-dec10/submission_audits/artifacts/aud_e840502ea785c0ff3469e187a2f2d53831f8a9eba6f281ac9805103b0d230c93-9117abcb309a43ef9e394e3bafaa2a0a/certificates/0dd4d4ceefa9a4f4bef972800fc296ae2ba53e9fc966a603355187b00c955e08.lean": {
+        "sha256": "3b6eed8a981ecfb6555cf57ba8e5f03988db7304160de146c73e4b6f1a5f1fdf",
+        "size_bytes": 93
+      },
+      "runtime/pilot-dec10/submission_audits/artifacts/aud_e840502ea785c0ff3469e187a2f2d53831f8a9eba6f281ac9805103b0d230c93-9117abcb309a43ef9e394e3bafaa2a0a/certificates/4d5ec80a8ccb2a26aa9bff00b5a7deaa3c5757c37e9fc2938499258b8b12abd8.lean": {
+        "sha256": "080893500480a110662611c5c12785fd0428d857a824ad0bf1dc93b203ca41be",
+        "size_bytes": 110
+      },
+      "runtime/pilot-dec10/submission_audits/artifacts/aud_e840502ea785c0ff3469e187a2f2d53831f8a9eba6f281ac9805103b0d230c93-9117abcb309a43ef9e394e3bafaa2a0a/certificates/518450c9dbdca737d0c47d7605fb7a94c941560c3782f89f86394969a367a36b.lean": {
+        "sha256": "d4891ce5db7cc4bbe25fb32fbec0c189b4a3efad580a89a9fde03b6c541b7927",
+        "size_bytes": 93
+      },
+      "runtime/pilot-dec10/submission_audits/artifacts/aud_e840502ea785c0ff3469e187a2f2d53831f8a9eba6f281ac9805103b0d230c93-9117abcb309a43ef9e394e3bafaa2a0a/certificates/58c0c34bb6718b72135532dcca2ba928ae28897eee8234a6db0ebe6a9975828f.lean": {
+        "sha256": "f2bd99ab57233a385ea807c2af96e8da1024a083a12a2ff3978cc9d6b9823ae6",
+        "size_bytes": 130
+      },
+      "runtime/pilot-dec10/submission_audits/artifacts/aud_e840502ea785c0ff3469e187a2f2d53831f8a9eba6f281ac9805103b0d230c93-9117abcb309a43ef9e394e3bafaa2a0a/certificates/6c712787cc2d3a1387952223b541d6467046787bbca66c38d0b3945df6399ecd.lean": {
+        "sha256": "db704afc8f07d609d5281ed815cc3fc76fa12242e628b26897000c84d16f9a50",
+        "size_bytes": 121
+      },
+      "runtime/pilot-dec10/submission_audits/artifacts/aud_e840502ea785c0ff3469e187a2f2d53831f8a9eba6f281ac9805103b0d230c93-9117abcb309a43ef9e394e3bafaa2a0a/certificates/779d4c8dc462c5eac2e2faad4672f8ef579d09a0ffdb4d132d541356f91418ad.lean": {
+        "sha256": "8ce3f64f14d2c7377131bec735dc7fa981d3dd5db76f711295fb7481bd33e0ac",
+        "size_bytes": 97
+      },
+      "runtime/pilot-dec10/submission_audits/artifacts/aud_e840502ea785c0ff3469e187a2f2d53831f8a9eba6f281ac9805103b0d230c93-9117abcb309a43ef9e394e3bafaa2a0a/certificates/a776638b9d9365297ca6301fe4a1211bf39a5c814ffa8e537652a0fd22ea93d8.lean": {
+        "sha256": "d2fd87eb02d4078e6b6026f3ada21013f917acc22954636228a203902d6e57f1",
+        "size_bytes": 93
+      },
+      "runtime/pilot-dec10/submission_audits/artifacts/aud_e840502ea785c0ff3469e187a2f2d53831f8a9eba6f281ac9805103b0d230c93-9117abcb309a43ef9e394e3bafaa2a0a/certificates/acd2a88722685b8fe4f9c028094c6b130b74391bce3a2d4ef99c35dbd129ed11.lean": {
+        "sha256": "2814f6825c248e406fda44bcdd01c4dc10aacdfdb166f28dd7bb033231ee217e",
+        "size_bytes": 121
+      },
+      "runtime/pilot-dec10/submission_audits/artifacts/aud_e840502ea785c0ff3469e187a2f2d53831f8a9eba6f281ac9805103b0d230c93-9117abcb309a43ef9e394e3bafaa2a0a/certificates/b951ab9839d0c185ca36f3ad3f7d320a509363a3146cd4a11b87f7bbdc3612fe.lean": {
+        "sha256": "1395c73acd6e6c9e5da001161f46e57a17325787fe03db6e739492b99a77b7d2",
+        "size_bytes": 109
+      },
+      "runtime/pilot-dec10/submission_audits/artifacts/aud_e840502ea785c0ff3469e187a2f2d53831f8a9eba6f281ac9805103b0d230c93-9117abcb309a43ef9e394e3bafaa2a0a/certificates/bf25dd1d881b3c62ec126e4a44ec0f26e9a14268febd21521ed430ad1ed57002.lean": {
+        "sha256": "9390c534b69cad30ea676aaa93f0a800977a26dbd5386ec850ad7b91ed5bfe6e",
+        "size_bytes": 121
+      },
+      "runtime/pilot-dec10/submission_audits/artifacts/aud_e840502ea785c0ff3469e187a2f2d53831f8a9eba6f281ac9805103b0d230c93-9117abcb309a43ef9e394e3bafaa2a0a/certificates/c58c43c1a58138d189116d91e2b5289441f72fbd8a8c4e1e805b350951c1c897.lean": {
+        "sha256": "22a8acd85aa1f6c9c8a9f1c8248b81066e9da2263913730295023903f4b1d4c6",
+        "size_bytes": 93
+      },
+      "runtime/pilot-dec10/submission_audits/artifacts/aud_e840502ea785c0ff3469e187a2f2d53831f8a9eba6f281ac9805103b0d230c93-9117abcb309a43ef9e394e3bafaa2a0a/certificates/e64965ff5c19756e48291a0eb43812804b0775d1b9d6d2d03c267100067797ca.lean": {
+        "sha256": "ac9f99379ecdf4be16e192d7547c48b515297189dde586199bddf94835e53e0b",
+        "size_bytes": 129
+      },
+      "runtime/pilot-dec10/submission_audits/artifacts/aud_e840502ea785c0ff3469e187a2f2d53831f8a9eba6f281ac9805103b0d230c93-9117abcb309a43ef9e394e3bafaa2a0a/certificates/fe1ac22738852ad001444dc3a3a94e1cf2ea49cacc4b62891755ea3d037ad197.lean": {
+        "sha256": "204f45f11210d009b2b6175c95f5c141841bf05b7c8346ae0d4cb7c11efa36a0",
+        "size_bytes": 97
+      },
+      "runtime/pilot-dec10/submission_audits/artifacts/aud_e840502ea785c0ff3469e187a2f2d53831f8a9eba6f281ac9805103b0d230c93-9117abcb309a43ef9e394e3bafaa2a0a/input_mapping.json": {
+        "sha256": "102039f90e1257efbee07f6a930c85e3b392e2cedb50c0e649b9f512b9a61560",
+        "size_bytes": 4253
+      },
+      "runtime/pilot-dec10/submission_audits/artifacts/aud_e840502ea785c0ff3469e187a2f2d53831f8a9eba6f281ac9805103b0d230c93-9117abcb309a43ef9e394e3bafaa2a0a/solution.txt": {
+        "sha256": "9b16182ac1995b0b3edcf54144e3d446fa00a4954e65a5503518a711c96c4dff",
+        "size_bytes": 1555
+      },
+      "runtime/pilot-dec10/submission_audits/aud_00e84780b3c5556e82c092d34fbc66f8af67da2b398b1860da19b88366433bb2.json": {
+        "sha256": "29b2e49b56e3556ef4031837c75e894ec20bce288396abbf6d00e33ae4774d96",
+        "size_bytes": 638674
+      },
+      "runtime/pilot-dec10/submission_audits/aud_1eb247481575591afe015612b9bcab6b98943d338347f5ce36da598eabaa019e.json": {
+        "sha256": "e120f5fbd9c9c0515ae91df33dd5e59565c14da060ed2da593deff8fd26358fd",
+        "size_bytes": 1253035
+      },
+      "runtime/pilot-dec10/submission_audits/aud_6f7e8d0a116941fe22164444b60ecbd0c71e1e227c4a6c244528fafc5eed1808.json": {
+        "sha256": "a92a49e8da804590590c75e333d2cd75a107e68aebd61db61a2435168c166683",
+        "size_bytes": 386402
+      },
+      "runtime/pilot-dec10/submission_audits/aud_b78d47c5651567e96939a38cd3ac76b1ead85eb9e5cde1a308360ae687067ee6.json": {
+        "sha256": "b79f62212d4bb4267c802f95847ed065c82dc272a8abbdbf20a4205980fdc826",
+        "size_bytes": 294823
+      },
+      "runtime/pilot-dec10/submission_audits/aud_e840502ea785c0ff3469e187a2f2d53831f8a9eba6f281ac9805103b0d230c93.json": {
+        "sha256": "3692306f156042cba5a5bf540b41bf21be72fa044a8674242febff28f8346647",
+        "size_bytes": 674366
+      },
+      "tests/fixtures/tme_p1_archived_quote_scope/accepted_revision.json": {
+        "sha256": "115c15218c3df7bb9f6ce7483c8c966b1a070fba18f24b304d8c1a7a25b843d6",
+        "size_bytes": 2015
+      },
+      "tests/fixtures/tme_p1_archived_quote_scope/audit.json": {
+        "sha256": "56397b600d3b9681b44ccd9ab8ed57bc13b833a3cd33923b2991fe10cc4cbd19",
+        "size_bytes": 1192683
+      },
+      "tests/fixtures/tme_p1_archived_quote_scope/input_mapping.json": {
+        "sha256": "bf86e0af02671a1084f0d1224a677a6ebb1b83657d4013096355ed5c830e016b",
+        "size_bytes": 851
+      },
+      "tests/fixtures/tme_p1_archived_quote_scope/solution.txt": {
+        "sha256": "015cd234e48ee8f8f97aefceec6e3375405757d4d7d305364735ca8d6938dd69",
+        "size_bytes": 421
+      },
+      "tests/fixtures/tme_p1_archived_quote_scope/source_manifest.json": {
+        "sha256": "7739330e0f7666ba1d6ab2677e2c95ff7a18a0216d4a01106c34a8069dc8dd48",
+        "size_bytes": 651
+      }
+    },
+    "git_tracked": false,
+    "purpose": "Exact historical bytes; not future human gold",
+    "portability_note": "Embedded historical absolute paths remain unchanged; verification reads archive members without importing a runtime"
+  },
+  "reference_runs": [
+    {
+      "problem_id": "TME2026P1",
+      "audit_run_id": "aud_1eb247481575591afe015612b9bcab6b98943d338347f5ce36da598eabaa019e",
+      "original_result_sha256": "3d28898de9f98fb3f6f023cfddfc59217509582582f384948583828aefb69eb1",
+      "original_score": null,
+      "source_mode": "historical_p1_original_before_replay",
+      "historical_score_unchanged": true
+    },
+    {
+      "problem_id": "TME2026P2",
+      "audit_run_id": "aud_6f7e8d0a116941fe22164444b60ecbd0c71e1e227c4a6c244528fafc5eed1808",
+      "original_result_sha256": "0f99a6c6527ea0c7ec9e8bd035609c7c71d0d171c3e725dc7fa2db5ef5fc4d74",
+      "original_score": 20.0,
+      "source_mode": "integrated_structured_fixture",
+      "historical_score_unchanged": true
+    },
+    {
+      "problem_id": "TME2026P3",
+      "audit_run_id": "aud_b78d47c5651567e96939a38cd3ac76b1ead85eb9e5cde1a308360ae687067ee6",
+      "original_result_sha256": "c098a8ff044032b3a91d63d70964f26b923cee7d8bce7e2847c3ba6b07b897ba",
+      "original_score": 20.0,
+      "source_mode": "integrated_structured_fixture",
+      "historical_score_unchanged": true
+    },
+    {
+      "problem_id": "TME2026P4",
+      "audit_run_id": "aud_00e84780b3c5556e82c092d34fbc66f8af67da2b398b1860da19b88366433bb2",
+      "original_result_sha256": "9da6740904da21905f6a2e1be6e21cd7ca1281f8d0bd1cab2eb16199a7ac21db",
+      "original_score": 20.0,
+      "source_mode": "integrated_structured_fixture",
+      "historical_score_unchanged": true
+    },
+    {
+      "problem_id": "TME2026P5",
+      "audit_run_id": "aud_e840502ea785c0ff3469e187a2f2d53831f8a9eba6f281ac9805103b0d230c93",
+      "original_result_sha256": "b9fdf2feea88cfa4881fda8ee0249bae28762f911cd15cbe67fddc83a516e554",
+      "original_score": 20.0,
+      "source_mode": "integrated_structured_fixture",
+      "historical_score_unchanged": true
+    }
+  ],
+  "p1_archived_replay": {
+    "mode": "OFFLINE_ARCHIVED_GPT_RESPONSES",
+    "score": 17,
+    "max_score": 20,
+    "response_count": 13,
+    "new_provider_calls": 0,
+    "record_not_rewritten": true,
+    "archived_responses": [
+      {
+        "obligation_id": "a.arithmetic_error_only",
+        "request_sha256": "df72d7178af3a44c18d1916d8372b523cb3c9271dd75a74a46ce877156a44929",
+        "response_sha256": "078ae585bebf5dae6e0901fae248a0284eb6b6e4c3384baac100911273e83014",
+        "source_sha256": "015cd234e48ee8f8f97aefceec6e3375405757d4d7d305364735ca8d6938dd69",
+        "provider": {
+          "response_id": "resp_095ca96cd0039d39016b0718b461e087d28b6f14263082faba",
+          "model": "gpt-6.1-sol",
+          "status": "completed",
+          "usage": {
+            "input_tokens": 3187,
+            "input_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 3184,
+              "cache_write_tokens_details": {
+                "ttl_12h_tokens": 0,
+                "ttl_30m_tokens": 3184
+              }
+            },
+            "output_tokens": 119,
+            "output_tokens_details": {
+              "reasoning_tokens": 0
+            },
+            "total_tokens": 3306
+          }
+        }
+      },
+      {
+        "obligation_id": "b.reversed_number",
+        "request_sha256": "7ec88ee5f400756e5df50cad6d48b50c6dfcd802ed1a3ea324553eb4a8942998",
+        "response_sha256": "71afb8d1be02c93477151b1e9f8febad64024ac6ab8e025a8bfe653c0ca3bcbd",
+        "source_sha256": "015cd234e48ee8f8f97aefceec6e3375405757d4d7d305364735ca8d6938dd69",
+        "provider": {
+          "response_id": "resp_09eba36feb51bc85016b0718b84d2887d29cc26069a7ab375c",
+          "model": "gpt-6.1-sol",
+          "status": "completed",
+          "usage": {
+            "input_tokens": 3213,
+            "input_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 3210,
+              "cache_write_tokens_details": {
+                "ttl_12h_tokens": 0,
+                "ttl_30m_tokens": 3210
+              }
+            },
+            "output_tokens": 122,
+            "output_tokens_details": {
+              "reasoning_tokens": 0
+            },
+            "total_tokens": 3335
+          }
+        }
+      },
+      {
+        "obligation_id": "b.subtraction",
+        "request_sha256": "2253a7e608032edf4cd642b8dd4c1f5aac7a3b5dfc1e2d28765a42e910958055",
+        "response_sha256": "b80af33989dcfe389abc0c747e0f0d1a92913de997a46f56a8615bd5e3f8bcbb",
+        "source_sha256": "015cd234e48ee8f8f97aefceec6e3375405757d4d7d305364735ca8d6938dd69",
+        "provider": {
+          "response_id": "resp_0d8035b6be73c890016b0718bc12a087d2a12c9aa951a83cdc",
+          "model": "gpt-6.1-sol",
+          "status": "completed",
+          "usage": {
+            "input_tokens": 3219,
+            "input_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 3216,
+              "cache_write_tokens_details": {
+                "ttl_12h_tokens": 0,
+                "ttl_30m_tokens": 3216
+              }
+            },
+            "output_tokens": 129,
+            "output_tokens_details": {
+              "reasoning_tokens": 0
+            },
+            "total_tokens": 3348
+          }
+        }
+      },
+      {
+        "obligation_id": "b.middle_cancellation",
+        "request_sha256": "2a98706586eedbb4a6ff21035da232c0f899321725b90433b95fef623c1926d8",
+        "response_sha256": "59968dac9bf79f65df5df16ec379c31a12b91d1d3eef22463a6ca25b1c4c8c64",
+        "source_sha256": "015cd234e48ee8f8f97aefceec6e3375405757d4d7d305364735ca8d6938dd69",
+        "provider": {
+          "response_id": "resp_03489a1b337a20a8016b0718c0016887d2871d03b17d044b15",
+          "model": "gpt-6.1-sol",
+          "status": "completed",
+          "usage": {
+            "input_tokens": 3220,
+            "input_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 3217,
+              "cache_write_tokens_details": {
+                "ttl_12h_tokens": 0,
+                "ttl_30m_tokens": 3217
+              }
+            },
+            "output_tokens": 129,
+            "output_tokens_details": {
+              "reasoning_tokens": 0
+            },
+            "total_tokens": 3349
+          }
+        }
+      },
+      {
+        "obligation_id": "b.factorization",
+        "request_sha256": "e374298c35c2f7c257e1512e8a09c01071961e16645f5e2420dbc9155cd83352",
+        "response_sha256": "4dfe99e45e8e13d0eb626384422edc66663e0f6515d6e9bc86b492c92b23bbec",
+        "source_sha256": "015cd234e48ee8f8f97aefceec6e3375405757d4d7d305364735ca8d6938dd69",
+        "provider": {
+          "response_id": "resp_08feeb763d077695016b0718c39b8487d2a68a321a815ef391",
+          "model": "gpt-6.1-sol",
+          "status": "completed",
+          "usage": {
+            "input_tokens": 3236,
+            "input_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 3233,
+              "cache_write_tokens_details": {
+                "ttl_12h_tokens": 0,
+                "ttl_30m_tokens": 3233
+              }
+            },
+            "output_tokens": 118,
+            "output_tokens_details": {
+              "reasoning_tokens": 0
+            },
+            "total_tokens": 3354
+          }
+        }
+      },
+      {
+        "obligation_id": "c.uses_expression",
+        "request_sha256": "e78266d2d00c98951050564e0391f8ea3840e590d2db248b726f99950356f460",
+        "response_sha256": "7a2a56d82bd5e5cecc62947865fb8f1aad839bf140daa44d9587b92cb4795ee6",
+        "source_sha256": "015cd234e48ee8f8f97aefceec6e3375405757d4d7d305364735ca8d6938dd69",
+        "provider": {
+          "response_id": "resp_0825a6cb24f6f71d016b0718c76fb887d291691775c56bbd20",
+          "model": "gpt-6.1-sol",
+          "status": "completed",
+          "usage": {
+            "input_tokens": 3314,
+            "input_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 3311,
+              "cache_write_tokens_details": {
+                "ttl_12h_tokens": 0,
+                "ttl_30m_tokens": 3311
+              }
+            },
+            "output_tokens": 213,
+            "output_tokens_details": {
+              "reasoning_tokens": 43
+            },
+            "total_tokens": 3527
+          }
+        }
+      },
+      {
+        "obligation_id": "c.difference_domain",
+        "request_sha256": "a70fa1f062a8591c017c6aec116aed0ce74b7660f05922c9800a24ebe93733f9",
+        "response_sha256": "d68be144a94a1972cefb9fe928d9c6b7a78ae63847aa9016c63e9f0de500d23e",
+        "source_sha256": "015cd234e48ee8f8f97aefceec6e3375405757d4d7d305364735ca8d6938dd69",
+        "provider": {
+          "response_id": "resp_0384e9b5b44ebf07016b0718cc959c87d295766ebaa5294475",
+          "model": "gpt-6.1-sol",
+          "status": "completed",
+          "usage": {
+            "input_tokens": 3178,
+            "input_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 3175,
+              "cache_write_tokens_details": {
+                "ttl_12h_tokens": 0,
+                "ttl_30m_tokens": 3175
+              }
+            },
+            "output_tokens": 156,
+            "output_tokens_details": {
+              "reasoning_tokens": 0
+            },
+            "total_tokens": 3334
+          }
+        }
+      },
+      {
+        "obligation_id": "c.complete_list",
+        "request_sha256": "494e0cba3927eb016325c3c5fc9ed268cd6110296477e76d2ee5b861dae5a61f",
+        "response_sha256": "87bf0f1381795cd20d1f53d767adf19e237a14ad2d8fd2635aa3e71ce4fc0cf1",
+        "source_sha256": "015cd234e48ee8f8f97aefceec6e3375405757d4d7d305364735ca8d6938dd69",
+        "provider": {
+          "response_id": "resp_0edcca5574126e0c016b0718d092d487d2a143a00c97503b0f",
+          "model": "gpt-6.1-sol",
+          "status": "completed",
+          "usage": {
+            "input_tokens": 3157,
+            "input_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 3154,
+              "cache_write_tokens_details": {
+                "ttl_12h_tokens": 0,
+                "ttl_30m_tokens": 3154
+              }
+            },
+            "output_tokens": 147,
+            "output_tokens_details": {
+              "reasoning_tokens": 0
+            },
+            "total_tokens": 3304
+          }
+        }
+      },
+      {
+        "obligation_id": "c.no_extraneous_values",
+        "request_sha256": "85e199a08dffd4688848924d85eed502b13661ba5904db4e1ecf4d02ae144258",
+        "response_sha256": "6b0be043105c0b0cbdaee4cd8253c37654d3efd42b45dd777d226b4d015ffc22",
+        "source_sha256": "015cd234e48ee8f8f97aefceec6e3375405757d4d7d305364735ca8d6938dd69",
+        "provider": {
+          "response_id": "resp_073673b978ba1cce016b0718d42c4087d29128ae701f2687f1",
+          "model": "gpt-6.1-sol",
+          "status": "completed",
+          "usage": {
+            "input_tokens": 3171,
+            "input_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 3168,
+              "cache_write_tokens_details": {
+                "ttl_12h_tokens": 0,
+                "ttl_30m_tokens": 3168
+              }
+            },
+            "output_tokens": 170,
+            "output_tokens_details": {
+              "reasoning_tokens": 0
+            },
+            "total_tokens": 3341
+          }
+        }
+      },
+      {
+        "obligation_id": "c.single_list_error",
+        "request_sha256": "d0d51ef49d8b6feaffbdd3ec87c786d7eade150f845bffcbfbac7ad9648bb260",
+        "response_sha256": "cac48d9cb32cb7724075b9d3b9c08f67ba4d3c77de2532971eeab9928d0173b9",
+        "source_sha256": "015cd234e48ee8f8f97aefceec6e3375405757d4d7d305364735ca8d6938dd69",
+        "provider": {
+          "response_id": "resp_08d699c8b434c7d1016b0718d8899487d28f7935f117814feb",
+          "model": "gpt-6.1-sol",
+          "status": "completed",
+          "usage": {
+            "input_tokens": 3187,
+            "input_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 3184,
+              "cache_write_tokens_details": {
+                "ttl_12h_tokens": 0,
+                "ttl_30m_tokens": 3184
+              }
+            },
+            "output_tokens": 166,
+            "output_tokens_details": {
+              "reasoning_tokens": 0
+            },
+            "total_tokens": 3353
+          }
+        }
+      },
+      {
+        "obligation_id": "d.digit_pairs",
+        "request_sha256": "8d2dbc45b2338ff63195fb896d9ffaa3272eeabb7fe5180bbec61460e124e3c6",
+        "response_sha256": "fdb403fe80f3c3ecc54f4adc18ba3fc38fce6dbaff8fb963dd5784a109d21613",
+        "source_sha256": "015cd234e48ee8f8f97aefceec6e3375405757d4d7d305364735ca8d6938dd69",
+        "provider": {
+          "response_id": "resp_08fb5ece4299647b016b0718dcc14087d2a5e023ce054c87f8",
+          "model": "gpt-6.1-sol",
+          "status": "completed",
+          "usage": {
+            "input_tokens": 3215,
+            "input_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 3212,
+              "cache_write_tokens_details": {
+                "ttl_12h_tokens": 0,
+                "ttl_30m_tokens": 3212
+              }
+            },
+            "output_tokens": 123,
+            "output_tokens_details": {
+              "reasoning_tokens": 0
+            },
+            "total_tokens": 3338
+          }
+        }
+      },
+      {
+        "obligation_id": "d.middle_choices",
+        "request_sha256": "529a89321a882820417e081ac930d8dc87e57da4025c0516f1ff98721e7dc0fc",
+        "response_sha256": "a82814b8ba7447591f77fda9e1f57db559c0575eafce3878ff961b3ccc811439",
+        "source_sha256": "015cd234e48ee8f8f97aefceec6e3375405757d4d7d305364735ca8d6938dd69",
+        "provider": {
+          "response_id": "resp_09af3b592bc67967016b0718e018d487d298ce7740a433d067",
+          "model": "gpt-6.1-sol",
+          "status": "completed",
+          "usage": {
+            "input_tokens": 3186,
+            "input_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 3183,
+              "cache_write_tokens_details": {
+                "ttl_12h_tokens": 0,
+                "ttl_30m_tokens": 3183
+              }
+            },
+            "output_tokens": 245,
+            "output_tokens_details": {
+              "reasoning_tokens": 72
+            },
+            "total_tokens": 3431
+          }
+        }
+      },
+      {
+        "obligation_id": "d.total_thirty",
+        "request_sha256": "6ce2dad53796df74c05904402fd2bfb67d3d2713a55934d648ecc4ce51ece947",
+        "response_sha256": "fdc72a8741009602722479d88d39a9b591f1fe22c1e7d7a52f2a8e4348a4b4bc",
+        "source_sha256": "015cd234e48ee8f8f97aefceec6e3375405757d4d7d305364735ca8d6938dd69",
+        "provider": {
+          "response_id": "resp_01ae4261be54504e016b0718e5cac087d28d11c91ba0c513af",
+          "model": "gpt-6.1-sol",
+          "status": "completed",
+          "usage": {
+            "input_tokens": 3209,
+            "input_tokens_details": {
+              "cached_tokens": 0,
+              "cache_write_tokens": 3206,
+              "cache_write_tokens_details": {
+                "ttl_12h_tokens": 0,
+                "ttl_30m_tokens": 3206
+              }
+            },
+            "output_tokens": 130,
+            "output_tokens_details": {
+              "reasoning_tokens": 0
+            },
+            "total_tokens": 3339
+          }
+        }
+      }
+    ],
+    "assessment_sha256": "a2fa9aa78097f4d6186e5bc0414729482fbad7ff632309143fda0b35bc569c74"
+  },
+  "validation": {
+    "prior_suite": {
+      "passed": 971,
+      "deselected": 1,
+      "seconds": 320.94,
+      "log": "docs/audits/assets/specialized-tme2-rc1/prior-regression-971.txt",
+      "scope": "previous run, not rerun in this preparation"
+    },
+    "isolated_lean": {
+      "passed": 1,
+      "seconds": 33.55,
+      "log": "docs/audits/assets/specialized-tme2-rc1/lean-certificate-test.txt",
+      "exclusion_reason": "explicit prior scope selection; not a known failure"
+    },
+    "focused_current": {
+      "passed": 55,
+      "seconds": 23.15,
+      "log": "docs/audits/assets/specialized-tme2-rc1/final-verification.txt"
+    },
+    "historical_http": {
+      "log": "docs/audits/assets/specialized-tme2-rc1/historical-verification.json",
+      "successful_read_count": 5,
+      "cross_case_status": 404,
+      "institutional_anonymous_status": 401
+    },
+    "historical_files_unchanged": 65,
+    "paid_api_calls": 0,
+    "historical_audits_reexecuted": 0
+  },
+  "evidence_limits": [
+    "Experimental only; not official tournament grading",
+    "Independent solutions not validated",
+    "Handwriting capture and recognition not validated",
+    "P1 archived real GPT replay; P2-P5 structured fixtures",
+    "Lean coverage is local and partial, not global formalization",
+    "Remote model alias does not guarantee deterministic reproduction",
+    "Gold dataset and external artifact custody remain prospective"
+  ],
+  "files": {
+    "ConfiaLeanAuditor.lean": {
+      "sha256": "7933362741e4071396f1b241391c2c82bd3a2ee3794163f6f68959284b5fe9d2",
+      "size_bytes": 581
+    },
+    "ConfiaLeanAuditor/Basic.lean": {
+      "sha256": "a88fef4d3efa63c9f9f5c948dd5ba1de3ea09d828ce8388ee83fa3d039e734a4",
+      "size_bytes": 21
+    },
+    "ConfiaLeanAuditor/Problems/ITA2025F2Q1/Statement.lean": {
+      "sha256": "4d6acb8b7e8d8c52dc92ebea465ecd49633c86093ff27857e564cc12d79fcf1a",
+      "size_bytes": 3545
+    },
+    "ConfiaLeanAuditor/Problems/ITA2025F2Q3/Statement.lean": {
+      "sha256": "801ac13f890e7d8d826517b3f478899cba00536d9ed6af84cc1f9b5926824d08",
+      "size_bytes": 5438
+    },
+    "ConfiaLeanAuditor/Problems/ITA2025F2Q5/Statement.lean": {
+      "sha256": "203f39a7ba5b75041fcc85904569d3d9d5b6fb1ced773aa9cc365b6a33271961",
+      "size_bytes": 3397
+    },
+    "ConfiaLeanAuditor/Problems/ITA2025F2Q6/Statement.lean": {
+      "sha256": "b53a8e07d6bea794cd832dd9db1bab80898bbdd3aac077a3b0a4edd02146a32d",
+      "size_bytes": 3717
+    },
+    "ConfiaLeanAuditor/Problems/ITA2025F2Q8/Statement.lean": {
+      "sha256": "4f57ba7dded5310a140eeeb17a23028cb2a774827006c6fe6718ca29a9745f53",
+      "size_bytes": 12249
+    },
+    "ConfiaLeanAuditor/Problems/ITA2025Q1/Statement.lean": {
+      "sha256": "8917deace6fde10fc314ef4ce4d5a8eb2f2a22d809f2cc789f053971579d64de",
+      "size_bytes": 647
+    },
+    "ConfiaLeanAuditor/Problems/ITA2025Q3/Statement.lean": {
+      "sha256": "53b72f5b5536591e40cca0730b8fe9221a58d213d11231f618a738022384c5f6",
+      "size_bytes": 680
+    },
+    "ConfiaLeanAuditor/Problems/ITA2025Q4/Statement.lean": {
+      "sha256": "56e83575b925a364c0afd09895f836019927151c5cd9f37f3e7a92e41ce83f28",
+      "size_bytes": 811
+    },
+    "ConfiaLeanAuditor/Problems/ITA2025Q5/Statement.lean": {
+      "sha256": "2e5cf21bb38df980f83748741c16645d8f24df737628e6c1786e655af28f14a0",
+      "size_bytes": 709
+    },
+    "ConfiaLeanAuditor/Problems/ITA2025Q8/Statement.lean": {
+      "sha256": "cdd433ad1a1c859abc687e68c3e8791d22718f0589fc9ec98deb14b59563e461",
+      "size_bytes": 617
+    },
+    "app/confia_lean_auditor/__init__.py": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    "app/confia_lean_auditor/assessments/__init__.py": {
+      "sha256": "ead4d7cdc5dcf71c0d88b9be6dda29512c15bfd9af4043f0888858c55e02dec3",
+      "size_bytes": 75
+    },
+    "app/confia_lean_auditor/assessments/models.py": {
+      "sha256": "bc42f61935db7cbe03c499d5471ff413472a758e29977a1deeb6581c543c0e17",
+      "size_bytes": 9644
+    },
+    "app/confia_lean_auditor/assessments/participants.py": {
+      "sha256": "d99bbf2ed5a42719c7eb2a16e8818ee792df1eae4d30ea7daf87143d9a8ad21b",
+      "size_bytes": 2195
+    },
+    "app/confia_lean_auditor/assessments/router.py": {
+      "sha256": "2a6eccfafb8115a90c5d3f1c6fdfbc89b7c9e4e4ee7f5e0cda71518e15baabc3",
+      "size_bytes": 16988
+    },
+    "app/confia_lean_auditor/assessments/store.py": {
+      "sha256": "2ec16c8eba12451859f93c01df64d159485026d3a33a5932e3af38ab37023fa5",
+      "size_bytes": 11520
+    },
+    "app/confia_lean_auditor/auth/__init__.py": {
+      "sha256": "e10e174dc5dcc20041015338f2f0264dcdb0d511bb8a2c7d67df9a7c83e1193c",
+      "size_bytes": 50
+    },
+    "app/confia_lean_auditor/auth/dependencies.py": {
+      "sha256": "482feffe9e2892279d23fab39f738e37e2bbf419eb563dfd3b4a4828cd44008c",
+      "size_bytes": 7906
+    },
+    "app/confia_lean_auditor/auth/models.py": {
+      "sha256": "df3cfd914e64e1e44053cae91cf85aa22869edc9752c62adfc4279f9821e177f",
+      "size_bytes": 1132
+    },
+    "app/confia_lean_auditor/auth/router.py": {
+      "sha256": "d6c697bea063f5a1f59e23ee06604ceae54c5148c3b1b8413ef4d6c651ba1bba",
+      "size_bytes": 2523
+    },
+    "app/confia_lean_auditor/auth/store.py": {
+      "sha256": "52c2046697bbf794ee07de5509ff680e7a23ae2f7ad4907eeb97bfe37891cc01",
+      "size_bytes": 6991
+    },
+    "app/confia_lean_auditor/capture/__init__.py": {
+      "sha256": "dbe034355a4974affce26f146d5469f23dbc163a3414e30eb8d1880fcc9c595e",
+      "size_bytes": 189
+    },
+    "app/confia_lean_auditor/capture/schemas.py": {
+      "sha256": "5379aad980c54b0a05259f798e12fedb64f3bf6220a8b0164c792fd8a2534011",
+      "size_bytes": 9479
+    },
+    "app/confia_lean_auditor/claims/__init__.py": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    "app/confia_lean_auditor/claims/common/__init__.py": {
+      "sha256": "e888158e96fb77eab5e2ddcf855458913e43e8e79389771fa1ca3b255eb4656b",
+      "size_bytes": 410
+    },
+    "app/confia_lean_auditor/claims/common/adapters.py": {
+      "sha256": "fb7df5aed27842d5f5ef7f93264e86f86ea292fdbf4c3d63e80244070e8ad2a5",
+      "size_bytes": 7879
+    },
+    "app/confia_lean_auditor/claims/common/alignment.py": {
+      "sha256": "2aa65d582c7a62a63adcd4aba1099cc9aed44ed05adb8513337c61ac39eae22f",
+      "size_bytes": 6806
+    },
+    "app/confia_lean_auditor/claims/common/bridges.py": {
+      "sha256": "89d96b717981c57dadf59ce25ccd8f78cd5e25bf6e84a7a7dfacff56b80b2336",
+      "size_bytes": 2722
+    },
+    "app/confia_lean_auditor/claims/common/canonical.py": {
+      "sha256": "6afcb20a87cb84db0d08b941c93803ab12a80332c32672d3cd86de159ce8dd5d",
+      "size_bytes": 7712
+    },
+    "app/confia_lean_auditor/claims/common/catalog.py": {
+      "sha256": "3e4d4ee258afd6d007c3703f4628605a715a3160835ffae1d75bfe5c264ff15e",
+      "size_bytes": 5596
+    },
+    "app/confia_lean_auditor/claims/common/compatibility.py": {
+      "sha256": "7211ae9b1225207c2198266683007b8bfcca77a838f5c7c1263d5f655c15f40e",
+      "size_bytes": 5936
+    },
+    "app/confia_lean_auditor/claims/common/expected.py": {
+      "sha256": "ed5334b7067a672a58498d1e496f16ff9ff804d326e063490027a871dc78c8fc",
+      "size_bytes": 4614
+    },
+    "app/confia_lean_auditor/claims/common/fact_results.py": {
+      "sha256": "ae410ed4efe58dbaaa357093e0d56d51baf635b1d2305a7dac8f1d257d975f95",
+      "size_bytes": 2462
+    },
+    "app/confia_lean_auditor/claims/common/rubric_bridge.py": {
+      "sha256": "b64b81c10c08cd9c6b3ff68cc248612ba057a4b2d53bb7f1771104f4e056b1d7",
+      "size_bytes": 7763
+    },
+    "app/confia_lean_auditor/claims/common/schemas.py": {
+      "sha256": "f42f8b367f9e6f9e03b81e4f8643182d6f40251fe5aafbfdcd23924032a5854e",
+      "size_bytes": 7798
+    },
+    "app/confia_lean_auditor/claims/extract_claims.py": {
+      "sha256": "bdf6c498d3ce699637bfa939611d4242d4d76afce553386aba8a416fb27dd61a",
+      "size_bytes": 2086
+    },
+    "app/confia_lean_auditor/claims/extractors/__init__.py": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    "app/confia_lean_auditor/claims/extractors/ita2025f2q1.py": {
+      "sha256": "254374ed0974a16cdbd890c050b8f5acb19a7951488d468855a8863620872a9b",
+      "size_bytes": 10415
+    },
+    "app/confia_lean_auditor/claims/extractors/ita2025f2q3.py": {
+      "sha256": "3d4814a51c19246da2b25b4f3229b651b0210c51ac3a858116f07ccb5a1b300b",
+      "size_bytes": 11127
+    },
+    "app/confia_lean_auditor/claims/extractors/ita2025f2q5.py": {
+      "sha256": "1493f77d3fb54cb35181c9b3a4fe6f91e2fd7ae36cc728ca1e8ab2fab90373e4",
+      "size_bytes": 12381
+    },
+    "app/confia_lean_auditor/claims/extractors/ita2025f2q6.py": {
+      "sha256": "3d05d9570f5fab67ca66f5ec837bd2eec0f83a6f055073b73dd830f09fdfce4a",
+      "size_bytes": 12291
+    },
+    "app/confia_lean_auditor/claims/extractors/ita2025f2q8.py": {
+      "sha256": "c1f0ecf18d29d05f6b917418b5800842d8683e36c7f8c78a21eba4136271afce",
+      "size_bytes": 11108
+    },
+    "app/confia_lean_auditor/claims/extractors/ita2025q1.py": {
+      "sha256": "3ff0fdbbba3e617747c4669ae65f9bd83899296c4d7bd04789f83912afcfc9d5",
+      "size_bytes": 6267
+    },
+    "app/confia_lean_auditor/claims/extractors/ita2025q3.py": {
+      "sha256": "714191d126189cd28628991dd8bad95e140d99c68c280cf44745704a0d62641a",
+      "size_bytes": 6353
+    },
+    "app/confia_lean_auditor/claims/extractors/ita2025q4.py": {
+      "sha256": "776c208622a0e592d6819c597d8f2d73c22e69c692e50af7452b9e57b0802584",
+      "size_bytes": 7281
+    },
+    "app/confia_lean_auditor/claims/extractors/ita2025q5.py": {
+      "sha256": "6560275c48f4cd5e7d7d08f75ed4217c696aadedc9c503d6cf3572ec4d5692dc",
+      "size_bytes": 5776
+    },
+    "app/confia_lean_auditor/claims/extractors/ita2025q8.py": {
+      "sha256": "ac738b792f952b595be6254e66763aceac58b86fe3be58c324514f26f9bac432",
+      "size_bytes": 7299
+    },
+    "app/confia_lean_auditor/core/__init__.py": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    "app/confia_lean_auditor/core/audit_math_projection.py": {
+      "sha256": "e71d504d59a7ee705becef99ec471b9f16e0425ced69d4b936ff57adc098a55c",
+      "size_bytes": 10119
+    },
+    "app/confia_lean_auditor/core/correction_mode.py": {
+      "sha256": "995076057d0605449ce410a30316c27ad679c0fc8a08b8c1698451756ed7e7ca",
+      "size_bytes": 1999
+    },
+    "app/confia_lean_auditor/core/math_canonical/__init__.py": {
+      "sha256": "7c08eddf6ce3a2afde8cbabbda7e097a76252ff27cf3447ea9afd0cc2a803728",
+      "size_bytes": 372
+    },
+    "app/confia_lean_auditor/core/math_canonical/combinatorial.py": {
+      "sha256": "bac62deea0f03d7db88236dd3472943e7e70a39b380e1e2dad9ac5fa01712c37",
+      "size_bytes": 3132
+    },
+    "app/confia_lean_auditor/core/math_canonical/development.py": {
+      "sha256": "6ef01b7459dcbec7c92eb1b812879c512e90d9aeaca8994b3b99cd971bfe7bdf",
+      "size_bytes": 1590
+    },
+    "app/confia_lean_auditor/core/math_canonical/equivalence.py": {
+      "sha256": "055285107b772e3f446ec5210470c729d98f7b0e3f1bffbdb4b84cb3ecb970b9",
+      "size_bytes": 1832
+    },
+    "app/confia_lean_auditor/core/math_canonical/integer_structures.py": {
+      "sha256": "28c6bd23299407f7daba3d52d11f1c10ecb5240c678c7c1bd1ef7d884ca0c722",
+      "size_bytes": 5071
+    },
+    "app/confia_lean_auditor/core/math_canonical/models.py": {
+      "sha256": "371e326964198c4f36e8a91bc0bd568c5f362963e1514e96979ec62fdc0b086c",
+      "size_bytes": 1608
+    },
+    "app/confia_lean_auditor/core/math_canonical/normalization.py": {
+      "sha256": "4c629bcd402fe7e72fe8946090c9870ec1ac2bd7015e3fb192d8ffff0c22e4f7",
+      "size_bytes": 609
+    },
+    "app/confia_lean_auditor/core/math_canonical/parser.py": {
+      "sha256": "45c016dc533b93a429cf40e447c12c1563f92675358bc9a49eb848ad437d0769",
+      "size_bytes": 14607
+    },
+    "app/confia_lean_auditor/core/math_canonical/rational.py": {
+      "sha256": "32f11f5aafecc3c493c48114013ce943f3874ec20931bf42beb12748ed72eeec",
+      "size_bytes": 3432
+    },
+    "app/confia_lean_auditor/core/math_canonical/source.py": {
+      "sha256": "4691e34fe9c82e8dfb5bb2dea05e1c1d6a11f7612711c925573c79b6f440031b",
+      "size_bytes": 617
+    },
+    "app/confia_lean_auditor/core/math_canonical/syntax.py": {
+      "sha256": "596833d9507fddf96a8dacedac65676a6d5f5d9823da5b9f581be4dc977de4cb",
+      "size_bytes": 668
+    },
+    "app/confia_lean_auditor/core/paths.py": {
+      "sha256": "ea0ce0430514624a87588f867952642ce14b6842dce43d43ad226704239ee172",
+      "size_bytes": 1121
+    },
+    "app/confia_lean_auditor/core/problem_assets.py": {
+      "sha256": "5149e6f2c74404e4aeffd1ff4a037492bf719746f19364269d72a8d3368f2b0f",
+      "size_bytes": 6715
+    },
+    "app/confia_lean_auditor/core/problem_catalog.py": {
+      "sha256": "0724b08896d68fd7084d1619990ebe505f25f1eb41d3ed853d3447e9afeeddb4",
+      "size_bytes": 8909
+    },
+    "app/confia_lean_auditor/core/public_audit.py": {
+      "sha256": "dd747700c56b6d449078ea261152439a72b2a486cca7a8f10b888ced4f30aeac",
+      "size_bytes": 10676
+    },
+    "app/confia_lean_auditor/core/schemas.py": {
+      "sha256": "58e7e3b667b388c71d645920d71a64cee1a633bc0dc9b8e49882f7a5a05b21bc",
+      "size_bytes": 7765
+    },
+    "app/confia_lean_auditor/dynamic/__init__.py": {
+      "sha256": "910716357ac3a734dcf83eefe58b4158bd19765e7ce3e22ffb08ea203cc1c401",
+      "size_bytes": 82
+    },
+    "app/confia_lean_auditor/dynamic/assessment_router.py": {
+      "sha256": "331afc3c71889c10b7e53e047508a07e8bab0373269652819cf92d190017488d",
+      "size_bytes": 3281
+    },
+    "app/confia_lean_auditor/dynamic/assessment_service.py": {
+      "sha256": "625918874c82fc33213c886c05649515bccab966586a7fea8e19c63a31a3da72",
+      "size_bytes": 13087
+    },
+    "app/confia_lean_auditor/dynamic/feedback.py": {
+      "sha256": "4bd619d278c586aaa683bd37ea55cb8d951d32d100efe81a856fd35f76120867",
+      "size_bytes": 818
+    },
+    "app/confia_lean_auditor/dynamic/grader.py": {
+      "sha256": "5917de6685591397dd8505e7227ea67a47182ce822888ef16c0478bb66ba9304",
+      "size_bytes": 28004
+    },
+    "app/confia_lean_auditor/dynamic/grading_context.py": {
+      "sha256": "2c13bf825173984111ca438fdb278b5423e7391a7ba5c62a6529f758452b36f6",
+      "size_bytes": 7047
+    },
+    "app/confia_lean_auditor/dynamic/grading_models.py": {
+      "sha256": "4d9f2981a7ed60b7c5ee8e98af2c92f3d3fa615fcd3cf7a08f13f6e26db76ac5",
+      "size_bytes": 5770
+    },
+    "app/confia_lean_auditor/dynamic/human_decisions.py": {
+      "sha256": "081f9918030e8b589624d0365100761e9ff2683bd82dbf77ed10cea0dea67458",
+      "size_bytes": 8564
+    },
+    "app/confia_lean_auditor/dynamic/method_sufficiency.py": {
+      "sha256": "33b02b6e9a7745033d6588f6d6af5a7e0e4196eab009dc64c0b5bd4acb605d75",
+      "size_bytes": 4440
+    },
+    "app/confia_lean_auditor/dynamic/models.py": {
+      "sha256": "fc42a4c5907135780bdac6917efd97a153cd899b0858582e291fc06c2166e17f",
+      "size_bytes": 16207
+    },
+    "app/confia_lean_auditor/dynamic/preparation.py": {
+      "sha256": "2ece70d0a515050811955d9c53b285536d83cceb0bb39eb89d186470be218347",
+      "size_bytes": 10068
+    },
+    "app/confia_lean_auditor/dynamic/preparation_models.py": {
+      "sha256": "dfecdc7602c222f2f915b7eea9ea75c1af4386577539d31388d1cc563db2739e",
+      "size_bytes": 7626
+    },
+    "app/confia_lean_auditor/dynamic/product_adapter.py": {
+      "sha256": "b49ea8152de3c92bd24a6537682bb21439b1ab169a04a1f7ae51acad35d33704",
+      "size_bytes": 6053
+    },
+    "app/confia_lean_auditor/dynamic/provider.py": {
+      "sha256": "70cdfac96ebe050954e4c05535867d15b4ccf80a42fb40c97563974bb86a3b80",
+      "size_bytes": 7737
+    },
+    "app/confia_lean_auditor/dynamic/reconciliation.py": {
+      "sha256": "9f0e24b878700e5d11ed306ef38f0607cd2fb0f4ca2305b5d0301c4a28573112",
+      "size_bytes": 8409
+    },
+    "app/confia_lean_auditor/dynamic/reconciliation_models.py": {
+      "sha256": "f81684c97364e3242f4276ce5031886924cb51b1f6c9ca931eb8c30b57121022",
+      "size_bytes": 4360
+    },
+    "app/confia_lean_auditor/dynamic/reconciliation_service.py": {
+      "sha256": "7d15125964cc149d6733f0c04113e3e69c4676c5ab40c3fd2f072d5c18d33bbf",
+      "size_bytes": 15323
+    },
+    "app/confia_lean_auditor/dynamic/review_comparison.py": {
+      "sha256": "d2dfef2a8a81663f777e9f37754550bb24a616f77327811dd4b9adc6c190a06f",
+      "size_bytes": 6424
+    },
+    "app/confia_lean_auditor/dynamic/review_models.py": {
+      "sha256": "3c3330135722a8acd9d459f0f823cd314c56217e0bfa55bff94ba15d3a798141",
+      "size_bytes": 5101
+    },
+    "app/confia_lean_auditor/dynamic/review_provider.py": {
+      "sha256": "324ff247f65f9e5888709c30548786383027859f6beef9fb912d729e3431d897",
+      "size_bytes": 5512
+    },
+    "app/confia_lean_auditor/dynamic/review_service.py": {
+      "sha256": "a94d1a7a5f63a0247f1b26d62d7af5d6c11bc06e5f1559980765c85ae4c371f2",
+      "size_bytes": 11917
+    },
+    "app/confia_lean_auditor/dynamic/reviewer.py": {
+      "sha256": "61cd15a8629c91a0ff4488b555ad81d7866b5569c27049705dbff903a42fddad",
+      "size_bytes": 14494
+    },
+    "app/confia_lean_auditor/dynamic/router.py": {
+      "sha256": "33f6e5cf8b4158cac62727a1396694bdfe8d4cd91fd4fde30c8a8e61f3965082",
+      "size_bytes": 13869
+    },
+    "app/confia_lean_auditor/dynamic/semantic.py": {
+      "sha256": "964ed9b218c83b0bdcd7c2fa7776f663cacd982eb8f0b6705300157601c93b41",
+      "size_bytes": 10169
+    },
+    "app/confia_lean_auditor/dynamic/solution_input.py": {
+      "sha256": "4b5306979581166f02ad5c773fbea07dc3cc68361da7d051cc010569aae9a3b3",
+      "size_bytes": 1015
+    },
+    "app/confia_lean_auditor/dynamic/store.py": {
+      "sha256": "225be49152f4ac43c4ac53af6ec99c37fe7a3358eb6493fea44386cddbaa6d05",
+      "size_bytes": 19688
+    },
+    "app/confia_lean_auditor/dynamic/substitution.py": {
+      "sha256": "423b0ac03475d587f30a428c88f828aee33c5769214cf23a719e47e646e7d02d",
+      "size_bytes": 5985
+    },
+    "app/confia_lean_auditor/dynamic/verification.py": {
+      "sha256": "0e22852381280d80db889e860b16951de78e6c70b6d0b6beb4b9e05a1e2f199b",
+      "size_bytes": 10575
+    },
+    "app/confia_lean_auditor/dynamic/versions.py": {
+      "sha256": "208079e1af940804b67b636081722f60dc3912caf17fc4ac24b98d2882cf65e4",
+      "size_bytes": 257
+    },
+    "app/confia_lean_auditor/institutional/__init__.py": {
+      "sha256": "e088c84cb85b5d47956c2518d56be23eca3bf1fb1bd4bad9980a1784416ad58b",
+      "size_bytes": 66
+    },
+    "app/confia_lean_auditor/institutional/models.py": {
+      "sha256": "1fa7a5b667b70b38f691aa36dc0ec7194c030b2fa31a3628577cdd900d1bc16a",
+      "size_bytes": 4251
+    },
+    "app/confia_lean_auditor/institutional/router.py": {
+      "sha256": "33b6077933f186ec350d5285bb3b6dbf05e78b75211a714ca18dd9c60e40d005",
+      "size_bytes": 5653
+    },
+    "app/confia_lean_auditor/institutional/store.py": {
+      "sha256": "192599a065556c252d46b129a57d1502ee92a4adee8b139cfd53dba205acedb9",
+      "size_bytes": 9686
+    },
+    "app/confia_lean_auditor/lean/__init__.py": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    "app/confia_lean_auditor/lean/attempt_builders/__init__.py": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    "app/confia_lean_auditor/lean/attempt_builders/ita2025f2q1.py": {
+      "sha256": "a59f16e34d2611cbf2fbd1c60064069b59e608e2fa2a98f2cb4986b8948c1026",
+      "size_bytes": 3601
+    },
+    "app/confia_lean_auditor/lean/attempt_builders/ita2025f2q3.py": {
+      "sha256": "b72ba39543a23d7ecebb55b52ef7a3ffb3f7542c6d299b846306a87cf1e3d7e7",
+      "size_bytes": 3522
+    },
+    "app/confia_lean_auditor/lean/attempt_builders/ita2025f2q5.py": {
+      "sha256": "36f89c7bc541ae026bd22bba0e4d865538a426f0bcf491588cf4ba7af5e919c5",
+      "size_bytes": 3609
+    },
+    "app/confia_lean_auditor/lean/attempt_builders/ita2025f2q6.py": {
+      "sha256": "b67a93451a20607809b83148b6464ea496860e65149e81317288d7c2c273115b",
+      "size_bytes": 3294
+    },
+    "app/confia_lean_auditor/lean/attempt_builders/ita2025f2q8.py": {
+      "sha256": "cdcc73b016d538bef811823c9d3c0f5f3ddf4705eb19e80e5a223ca7fa7a86c1",
+      "size_bytes": 3438
+    },
+    "app/confia_lean_auditor/lean/attempt_builders/ita2025q1.py": {
+      "sha256": "a71906b938a82360b41a73618a83385f2ee472b4d75352cfdec24b1de7d17bbb",
+      "size_bytes": 3524
+    },
+    "app/confia_lean_auditor/lean/attempt_builders/ita2025q3.py": {
+      "sha256": "804cb2f66e0e777aa81f121eb7b59fe284094e77b0c86095668269a6de1396f5",
+      "size_bytes": 3321
+    },
+    "app/confia_lean_auditor/lean/attempt_builders/ita2025q4.py": {
+      "sha256": "b33db6b6bfc197a543364c4c5421f4c677f66127476f867a5b113c5c7c61b89f",
+      "size_bytes": 4024
+    },
+    "app/confia_lean_auditor/lean/attempt_builders/ita2025q5.py": {
+      "sha256": "74b0c0bb7da4235ab54082fbc0ac6dafb3977359d7c34808ed4d8b6e343a9ced",
+      "size_bytes": 3077
+    },
+    "app/confia_lean_auditor/lean/attempt_builders/ita2025q8.py": {
+      "sha256": "df03178c222be0e032ee8e70072c87ad160520a8be7ecd344d566906033ccb9a",
+      "size_bytes": 2473
+    },
+    "app/confia_lean_auditor/lean/build_attempt.py": {
+      "sha256": "eb4215ba841f3393c2aa1dd94f7f5f5f45dc219a7c973436a90b37a204b2f55e",
+      "size_bytes": 3688
+    },
+    "app/confia_lean_auditor/lean/formal_step_evaluator.py": {
+      "sha256": "0b85910e7e9ff033e0ecbd929b9e9bc59698baee246adc0f9cf684e8464ebe21",
+      "size_bytes": 13216
+    },
+    "app/confia_lean_auditor/lean/microclaim_evaluator.py": {
+      "sha256": "71409dae793b6c548f5a976684f027ca30c9d967b85cab327a2f7e90f32ccb21",
+      "size_bytes": 5936
+    },
+    "app/confia_lean_auditor/lean/run_lean.py": {
+      "sha256": "8343d9c8e8e30c36c837e378de01f95f423cdd5c6723b87a1e6821f5b4691410",
+      "size_bytes": 4093
+    },
+    "app/confia_lean_auditor/lean/safe_formal_step.py": {
+      "sha256": "379af38a1553fe3e97dbd27553cc3d43b20be3abfe3353e23658bb98d457131f",
+      "size_bytes": 1820
+    },
+    "app/confia_lean_auditor/lean/student_claim_checker.py": {
+      "sha256": "133b7a1d1a9bc202e1b4ce26b88c79e2268f19ad21bc0f276fd1961df71944bb",
+      "size_bytes": 7424
+    },
+    "app/confia_lean_auditor/lean/student_claim_checkers/__init__.py": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    "app/confia_lean_auditor/lean/student_claim_checkers/ita2025f2q1.py": {
+      "sha256": "d8e070b19ea87c8e49aac4d4e2c461d76ac559379b3c474d0f94ef2d505f1487",
+      "size_bytes": 6116
+    },
+    "app/confia_lean_auditor/lean/student_claim_checkers/ita2025f2q3.py": {
+      "sha256": "2a4aa1980a73e26c195c1cdf1e7bff9cda20f9b7d5ab7a3d75a42bb385e99e65",
+      "size_bytes": 5759
+    },
+    "app/confia_lean_auditor/lean/student_claim_checkers/ita2025f2q5.py": {
+      "sha256": "275e384cd9c35c5fe25b6af6f26fbe5e2dfbcc1c21aab2b013f35828b1d8e41f",
+      "size_bytes": 5853
+    },
+    "app/confia_lean_auditor/lean/student_claim_checkers/ita2025f2q6.py": {
+      "sha256": "63966520e9a9725e8cf4e53f6803d36714f1958820697eadedbac25db4a43cb7",
+      "size_bytes": 7301
+    },
+    "app/confia_lean_auditor/lean/student_claim_checkers/ita2025f2q8.py": {
+      "sha256": "3f156ee33e01c4bd6d07643c54073ae769637b5862860a03299c471da35898cf",
+      "size_bytes": 460
+    },
+    "app/confia_lean_auditor/lean/student_claim_checkers/rational_equality.py": {
+      "sha256": "20e68914b1c275cd38e0959a801acafdd6343422e5b43be8c61417ddfa8d6b03",
+      "size_bytes": 3502
+    },
+    "app/confia_lean_auditor/lean/student_claim_checkers/real_algebra.py": {
+      "sha256": "d533975a58369dd412ff0a61b04ccd1b57b4e4f772c2066c31b3227d91d83fab",
+      "size_bytes": 5443
+    },
+    "app/confia_lean_auditor/lean/student_claim_checkers/registry.py": {
+      "sha256": "45a656f03cb90626ac4223263d1abf8b1cf76ac40fea2c30d5ba1b4fb4c0aced",
+      "size_bytes": 2202
+    },
+    "app/confia_lean_auditor/lean/student_claim_checkers/tme2_p1.py": {
+      "sha256": "a4afe40a653fc833c479d22600f9fc21c22d3950a17867f10b52360929640683",
+      "size_bytes": 17174
+    },
+    "app/confia_lean_auditor/lean/student_claim_checkers/tme2_p2.py": {
+      "sha256": "d3624f15b5cbdecf13260fecd37139561b373c572f7f76a6d09360af3218a369",
+      "size_bytes": 15069
+    },
+    "app/confia_lean_auditor/lean/student_claim_checkers/tme2_p3.py": {
+      "sha256": "799a95318911d44094ee668f25b333884cb541e70f5c4995ab7736ac085c8a73",
+      "size_bytes": 13181
+    },
+    "app/confia_lean_auditor/lean/student_claim_checkers/tme2_p4.py": {
+      "sha256": "2d72ca00ee222d7a19a614ef3b2f782cf2143f6cd2dc76e17a0935b97f716d4d",
+      "size_bytes": 16713
+    },
+    "app/confia_lean_auditor/lean/student_claim_checkers/tme2_p5.py": {
+      "sha256": "357c2172ce9566ae6e7e1e75611f4118f6b4bd1182d377ab29d211845208a3f8",
+      "size_bytes": 20175
+    },
+    "app/confia_lean_auditor/lean/student_proof.py": {
+      "sha256": "cd0cb750bd10014854dc9d26710c51926d8768266769ad5f7f4c1669a7bb241d",
+      "size_bytes": 7213
+    },
+    "app/confia_lean_auditor/lean/verification.py": {
+      "sha256": "e60d3758a2958be4ce28942e4d7ff18a8d6af5a21bb32badc7f226c4737cddbd",
+      "size_bytes": 1042
+    },
+    "app/confia_lean_auditor/llm/__init__.py": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    "app/confia_lean_auditor/llm/formal_step_extractor.py": {
+      "sha256": "e0891d8751bee580760d9614d4f4f514fb2eb336e32296f2fe32fcedabb31636",
+      "size_bytes": 8655
+    },
+    "app/confia_lean_auditor/main.py": {
+      "sha256": "0fcea69c6f9dbdd9376e2912b7197d77b00245a9762b714bc378c21d3c72c07b",
+      "size_bytes": 17664
+    },
+    "app/confia_lean_auditor/management/__init__.py": {
+      "sha256": "a4af6fe34e702d54fac53846a9baecb1a411e646dc9c5d6a5e10912040a6e002",
+      "size_bytes": 48
+    },
+    "app/confia_lean_auditor/management/router.py": {
+      "sha256": "e5366d2ffa1c9ec4c810398e496861583e656265a7d4f2478f60df45660ca070",
+      "size_bytes": 10250
+    },
+    "app/confia_lean_auditor/recognition/README.md": {
+      "sha256": "20c09a2954fc31b286b1cef65e8b57b6ff3478284e5a4dfd47c871ba27bc1ff3",
+      "size_bytes": 9222
+    },
+    "app/confia_lean_auditor/recognition/__init__.py": {
+      "sha256": "c05222fe8758cc8400534ba0eec29dde3f914a2c31ed06ae9c5bb40e55bc928b",
+      "size_bytes": 77
+    },
+    "app/confia_lean_auditor/recognition/errors.py": {
+      "sha256": "72865fbebcaa099a7f4df41daf9e4557a44e650e80f9c8b377799978c7478aeb",
+      "size_bytes": 695
+    },
+    "app/confia_lean_auditor/recognition/execution.py": {
+      "sha256": "ff413d226d95d621e25779cff7560b7e938575180fc00397ed8b8ff1149c8f2c",
+      "size_bytes": 4617
+    },
+    "app/confia_lean_auditor/recognition/fake.py": {
+      "sha256": "e3e099a7b6c1c9e631ed37db993ffa1bd3d90edb6806e8f387c4c91778544013",
+      "size_bytes": 937
+    },
+    "app/confia_lean_auditor/recognition/mathpix.py": {
+      "sha256": "4824bfafcd355df00dd96d59083387c404db6ca1d52167716e64c314eabadc7d",
+      "size_bytes": 9963
+    },
+    "app/confia_lean_auditor/recognition/mathpix_image.py": {
+      "sha256": "bf2eb2ec6c67e28f1bc5f5d7d674979c2c8949ebfcaf66b92aca8cdfe1f5de3d",
+      "size_bytes": 9648
+    },
+    "app/confia_lean_auditor/recognition/preview.py": {
+      "sha256": "4ccef36b931754fbb99f9450a43bc8ae4ac613caebac26d134026d340e176bec",
+      "size_bytes": 3076
+    },
+    "app/confia_lean_auditor/recognition/registry.py": {
+      "sha256": "bcb83d235a73ad657fa3afa0c924b20f0026de46475aa8173f1976cf099460ce",
+      "size_bytes": 2523
+    },
+    "app/confia_lean_auditor/recognition/schemas.py": {
+      "sha256": "3f243b6dd7e00bf3c59222027e0f40586e9c7254ff38f167f8992b90aabe54c1",
+      "size_bytes": 5358
+    },
+    "app/confia_lean_auditor/recognition/service.py": {
+      "sha256": "fdacb34a4ff3181789f028628ce7d1fdabedd47599d992b24e43cc533338b60c",
+      "size_bytes": 13287
+    },
+    "app/confia_lean_auditor/recognition/validation.py": {
+      "sha256": "894f0275b6489cf4ba6df5a0fa3d82f037ad693c063c548605e8f37b09941a97",
+      "size_bytes": 3872
+    },
+    "app/confia_lean_auditor/reports/__init__.py": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    "app/confia_lean_auditor/reports/report_builder.py": {
+      "sha256": "8ae95b9671c5465c2dd3d4294d0db2772997a9e056cef9d7692ec5e49752abca",
+      "size_bytes": 18205
+    },
+    "app/confia_lean_auditor/reproducibility/__init__.py": {
+      "sha256": "73baf708b3c9676615c9cd7c0e7fbf3d31d533fd21117967b3bcaa87dea8e260",
+      "size_bytes": 77
+    },
+    "app/confia_lean_auditor/reproducibility/canonical.py": {
+      "sha256": "01f7f8fa0e80fb552eed813414ef8aa89b7e312ae8907e6c2475ecf47e1ddf76",
+      "size_bytes": 838
+    },
+    "app/confia_lean_auditor/reproducibility/collector.py": {
+      "sha256": "389e2bc7eb3c91cd12c08c0c636cd758ae38358f4ec0d9f0415c90e73e492167",
+      "size_bytes": 12832
+    },
+    "app/confia_lean_auditor/reproducibility/schemas.py": {
+      "sha256": "0c3eaa5ffd11c5dcf2c49778c32771dd426e5315d6fdd89fce85fe1e4d889b31",
+      "size_bytes": 5946
+    },
+    "app/confia_lean_auditor/reproducibility/service.py": {
+      "sha256": "5d67632191849dd18b04af64525c18e5bd0844cc493af9547576d4dd75578576",
+      "size_bytes": 2989
+    },
+    "app/confia_lean_auditor/rubric/__init__.py": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    "app/confia_lean_auditor/rubric/adjusters/__init__.py": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    "app/confia_lean_auditor/rubric/adjusters/ita2025f2q1.py": {
+      "sha256": "b34d0bd66c1aac18b41f2bfb957ed9c7f4427b882368bbdb822472310589c45e",
+      "size_bytes": 3444
+    },
+    "app/confia_lean_auditor/rubric/adjusters/ita2025f2q3.py": {
+      "sha256": "2ae3c81a1e88310c8c8d3f5e37690bee5c01edf58d6d0c31e6707bd5b8bd7902",
+      "size_bytes": 3445
+    },
+    "app/confia_lean_auditor/rubric/adjusters/ita2025f2q5.py": {
+      "sha256": "c3dcd58a36f88bbe88c4addd9d202ca9496569ec2098285f4c4a6631f3fbaf32",
+      "size_bytes": 3693
+    },
+    "app/confia_lean_auditor/rubric/adjusters/ita2025f2q6.py": {
+      "sha256": "051a01f3385937d5550d8848670904e5fed5b20c6a2e29decf44274ed9779ed4",
+      "size_bytes": 3619
+    },
+    "app/confia_lean_auditor/rubric/adjusters/ita2025f2q8.py": {
+      "sha256": "c4a1a9e2d39a35747618deab2f0c5522f7315215d0a071f5b6a15a2d145a1ba6",
+      "size_bytes": 3624
+    },
+    "app/confia_lean_auditor/rubric/adjusters/registry.py": {
+      "sha256": "a27adcbf8c2ef025f72de8347ff161ec00f9db15fad5f2a955d814e374584906",
+      "size_bytes": 1376
+    },
+    "app/confia_lean_auditor/rubric/assessment.py": {
+      "sha256": "e604dea79f37b30404a07d77b7721cc08e5618fa5b4b3ef8ed2fa3b318200d0a",
+      "size_bytes": 669
+    },
+    "app/confia_lean_auditor/rubric/pauta/__init__.py": {
+      "sha256": "7598c2463d3a0fdbd397f090b3db289dd855d060251a824ec441d488f6078ad5",
+      "size_bytes": 1037
+    },
+    "app/confia_lean_auditor/rubric/pauta/bridge.py": {
+      "sha256": "0db93c42264d33dbc36ddec79c4e8b4d8a551c57e07fee3f77449ad78663c4ea",
+      "size_bytes": 12042
+    },
+    "app/confia_lean_auditor/rubric/pauta/engine.py": {
+      "sha256": "ebf5449a12bc729685baf7227282132434370578a4abf0f0d071c29193ac07c6",
+      "size_bytes": 10415
+    },
+    "app/confia_lean_auditor/rubric/pauta/evidence_policy.py": {
+      "sha256": "739b9ae934e5693d9dc1c922456bcc0db9ba28c9ef56e6ba77aa7b09c995ee59",
+      "size_bytes": 1641
+    },
+    "app/confia_lean_auditor/rubric/pauta/models.py": {
+      "sha256": "961912b4728ee877a755de9dc49067f3739a8d022b9f0f2fc22dbc61571f3d80",
+      "size_bytes": 12236
+    },
+    "app/confia_lean_auditor/rubric/pauta/tme2_p1.py": {
+      "sha256": "6f75306f59c631f33aa8ce56fc2c6868ac58bafafc66527f3e1f5029c50e2376",
+      "size_bytes": 653
+    },
+    "app/confia_lean_auditor/rubric/pauta/tme2_p2.py": {
+      "sha256": "9f18b1858eae84cdaa0d9871ba5bd538d4a7e13c693c9048b47772748160e6d2",
+      "size_bytes": 1655
+    },
+    "app/confia_lean_auditor/rubric/pauta/tme2_p3.py": {
+      "sha256": "20aeb0128d532b9d24a7990fd05756ff52bb1370fc236241dd7984cedb7c3c9c",
+      "size_bytes": 1268
+    },
+    "app/confia_lean_auditor/rubric/pauta/tme2_p4.py": {
+      "sha256": "a6e56f653cee731c6efd971c935f06d448e8fa08b643a059620f940fd7d2ab3d",
+      "size_bytes": 1457
+    },
+    "app/confia_lean_auditor/rubric/pauta/tme2_p5.py": {
+      "sha256": "e49485899b3c4fd504d528103f4f90eefbb595029d7e67f115bd7b6686ad7327",
+      "size_bytes": 2072
+    },
+    "app/confia_lean_auditor/rubric/positive_evidence.py": {
+      "sha256": "8313a344f7a202b99910a7d5440f46f600c2a1efc4158a18161110a7549467a2",
+      "size_bytes": 17102
+    },
+    "app/confia_lean_auditor/rubric/positive_rules.py": {
+      "sha256": "43c161f771b70b8238550fe76d89deba39cfa42b3ed2c1f680f3477527a357ed",
+      "size_bytes": 11013
+    },
+    "app/confia_lean_auditor/rubric/rubric_evaluator.py": {
+      "sha256": "42fa3c830e82993b8a5a912fc02b3f0cb2782ca4221181c5d75ea7db2087065c",
+      "size_bytes": 4821
+    },
+    "app/confia_lean_auditor/rubric/scoring_policy.py": {
+      "sha256": "adbc990388f25f08ec90292a0579b31a336499bc08161fb595ed6e3103ce7bd8",
+      "size_bytes": 4664
+    },
+    "app/confia_lean_auditor/rubric/secondary_adjudicator.py": {
+      "sha256": "1f59ad169ab05eef2b60c04d4c8a5e15803b1e8ea6b6e221cd6f3d1e8f7f52f3",
+      "size_bytes": 32910
+    },
+    "app/confia_lean_auditor/rubric/secondary_award_gate.py": {
+      "sha256": "3656eab47865084050a410f38469266c5ff5a3f7d5920120ed70a5db2ef31f50",
+      "size_bytes": 6581
+    },
+    "app/confia_lean_auditor/rubric/secondary_candidates.py": {
+      "sha256": "910183304ae4dc15b418653fa7b435487abfaa9e4ebcc9dbe50818a56ab50308",
+      "size_bytes": 5110
+    },
+    "app/confia_lean_auditor/rubric/secondary_context.py": {
+      "sha256": "34182315d4a44844506bc3a17451b7da7ca313c3098751434ac5be96b8242f0a",
+      "size_bytes": 6619
+    },
+    "app/confia_lean_auditor/rubric/secondary_evidence.py": {
+      "sha256": "3c3de78fa1ac2aada8559ac2269d916a4d10de0a7dd8b28586a5d3e9cc03232f",
+      "size_bytes": 2595
+    },
+    "app/confia_lean_auditor/semantic_policy/__init__.py": {
+      "sha256": "e3951368096733f5a1d1d5d76460d86f9f02c50113caf65412643b936f7cffc8",
+      "size_bytes": 80
+    },
+    "app/confia_lean_auditor/semantic_policy/ita.py": {
+      "sha256": "d282de5011fb49e744c6ba59d24b3c0b7ca574686183833319112814278ef35a",
+      "size_bytes": 5960
+    },
+    "app/confia_lean_auditor/semantic_policy/minimal_review.py": {
+      "sha256": "8984d03ab6a009d791a5765e158ecbaf9001ae097223f3a4ac276d1ec0b89888",
+      "size_bytes": 3778
+    },
+    "app/confia_lean_auditor/semantic_policy/service.py": {
+      "sha256": "53e3f1720b5702566277ac3f38db06a407279f8d78cffcdb8abb6e0b6ca68f17",
+      "size_bytes": 2810
+    },
+    "app/confia_lean_auditor/semantic_policy/tme.py": {
+      "sha256": "cf84ed8e5bc5c5b71397c82499d6f10520d1677814ea306ef4125fdd760b5ef0",
+      "size_bytes": 4225
+    },
+    "app/confia_lean_auditor/semantic_policy/tme_context.py": {
+      "sha256": "b51e57d7c5b7042bf33bde079d30fa5158494401b94c53bbef53c09129dd38c7",
+      "size_bytes": 2862
+    },
+    "app/confia_lean_auditor/static/app.js": {
+      "sha256": "1157df24ed105d3b37e69fbf7917f60c0228560c3b4db7f28485ce34d5a2f7af",
+      "size_bytes": 29186
+    },
+    "app/confia_lean_auditor/static/assessments.js": {
+      "sha256": "d3018ad5c3d7bc7c2258ea05757c72ed2cba098b4246b46a6b1b429ef872b3be",
+      "size_bytes": 16118
+    },
+    "app/confia_lean_auditor/static/audit-view.css": {
+      "sha256": "f261b73897cbb140d7a46722403c171f446b4acdc30b2254e7bcbc84170a66cd",
+      "size_bytes": 2027
+    },
+    "app/confia_lean_auditor/static/audit-view.js": {
+      "sha256": "c4b4dc894f521fa64ca02236d4582cb3fc5144acb4967102200fd9bcefad719c",
+      "size_bytes": 23485
+    },
+    "app/confia_lean_auditor/static/auth.css": {
+      "sha256": "f36e70c2e67bcbcb758a90afaa695e5f52ffb793a87da1a032495eaadd598f48",
+      "size_bytes": 1884
+    },
+    "app/confia_lean_auditor/static/capture/draft-store.js": {
+      "sha256": "f930b4717069914eb9ea56ee81b1d6ea6f88baa52c3cd14ebe8b782f6b3ec0dc",
+      "size_bytes": 3381
+    },
+    "app/confia_lean_auditor/static/capture/identity.css": {
+      "sha256": "26d39be44202e9a4a19aed385bb55a0f4e1276db12b2ca887b05db416a6704e6",
+      "size_bytes": 1274
+    },
+    "app/confia_lean_auditor/static/capture/ink-canvas.js": {
+      "sha256": "bc65b379761d5f31c3f2b73556f1705f617535f88379387b9b57ced3081414ef",
+      "size_bytes": 6165
+    },
+    "app/confia_lean_auditor/static/capture/ink-model.js": {
+      "sha256": "a4d6f2d4ec869dda3afba2313fbcea8220c8b97ec4827fbffe3e52670f24905f",
+      "size_bytes": 8145
+    },
+    "app/confia_lean_auditor/static/capture/problem-math.js": {
+      "sha256": "1c139de9520e546948181f1733103a763d47cd627ebf227d15b10c6fb8dec060",
+      "size_bytes": 7360
+    },
+    "app/confia_lean_auditor/static/capture/submission-client.js": {
+      "sha256": "1fc59b5bbd328a47d8330e409f97f6a7e416b2e431b9c01719e02a6479ce1c9e",
+      "size_bytes": 5302
+    },
+    "app/confia_lean_auditor/static/capture/tablet.css": {
+      "sha256": "bcae8b10b80c391f6ceb12a5bc5edc5525d8cc0962a74127646581deba1d0432",
+      "size_bytes": 15869
+    },
+    "app/confia_lean_auditor/static/capture/tablet.html": {
+      "sha256": "6202a7c6abcc2d0c250b441727e1571f60610cd37e3fdb227cd92d79ae858bd6",
+      "size_bytes": 12274
+    },
+    "app/confia_lean_auditor/static/capture/tablet.js": {
+      "sha256": "a6dd4bfea48a04221d9d4717db4e8df40f16d8ef09a657763d2fc648cd433d9e",
+      "size_bytes": 49397
+    },
+    "app/confia_lean_auditor/static/capture/vendor/katex-0.18.9/LICENSE": {
+      "sha256": "766ccc1f306c885aa45542a9846bbd0a505b27a0374f146778171c2254ce18e3",
+      "size_bytes": 1107
+    },
+    "app/confia_lean_auditor/static/capture/vendor/katex-0.18.9/README.md": {
+      "sha256": "5460ee22aa75b4f76dd50390d07d8dd7ff4f632a88e5219f4af4238e52fdada8",
+      "size_bytes": 843
+    },
+    "app/confia_lean_auditor/static/capture/vendor/katex-0.18.9/contrib/auto-render.min.js": {
+      "sha256": "e5372d199bcdae8b4de71d0f7ceba72a4ba12774a27c60a6f1f77d03b3228ee4",
+      "size_bytes": 3486
+    },
+    "app/confia_lean_auditor/static/capture/vendor/katex-0.18.9/fonts/KaTeX_AMS-Regular.ttf": {
+      "sha256": "68534840bcfdd2bffb6f0e8deb48684dd01e7f04ea2813267577afb906de1d13",
+      "size_bytes": 63632
+    },
+    "app/confia_lean_auditor/static/capture/vendor/katex-0.18.9/fonts/KaTeX_AMS-Regular.woff": {
+      "sha256": "30da91e84c893f875e252689faebdc590b2871145e8adc7f9a9d4dbd8ce0b251",
+      "size_bytes": 33516
+    },
+    "app/confia_lean_auditor/static/capture/vendor/katex-0.18.9/fonts/KaTeX_AMS-Regular.woff2": {
+      "sha256": "0cdd387c9590a1a9f9794560022dbb59654a7d86f187aa0c81495ad42d3a7308",
+      "size_bytes": 28076
+    },
+    "app/confia_lean_auditor/static/capture/vendor/katex-0.18.9/fonts/KaTeX_Caligraphic-Bold.ttf": {
+      "sha256": "07d8e303ce4fc12b4bb54f1004170dd190a1f3db45d400fe68060df3e0897268",
+      "size_bytes": 12368
+    },
+    "app/confia_lean_auditor/static/capture/vendor/katex-0.18.9/fonts/KaTeX_Caligraphic-Bold.woff": {
+      "sha256": "1ae6bd7475590e97e7f145a89e09ccde322f7a6bc0b91607b1c8b8ee28290fed",
+      "size_bytes": 7716
+    },
+    "app/confia_lean_auditor/static/capture/vendor/katex-0.18.9/fonts/KaTeX_Caligraphic-Bold.woff2": {
+      "sha256": "de7701e42cf1f4cf0b766c03fb27977207eee2f4fd5d76fa82188406da43ea4c",
+      "size_bytes": 6912
+    },
+    "app/confia_lean_auditor/static/capture/vendor/katex-0.18.9/fonts/KaTeX_Caligraphic-Regular.ttf": {
+      "sha256": "ed0b74372feefcbb9c0666b2e210da37b7e49fa7fbbf3eeb11db5f693dacfbb7",
+      "size_bytes": 12344
+    },
+    "app/confia_lean_auditor/static/capture/vendor/katex-0.18.9/fonts/KaTeX_Caligraphic-Regular.woff": {
+      "sha256": "3398dd02302557a793f2863f88e02d96ce10df2abffa07c8e9fa90775116e65c",
+      "size_bytes": 7656
+    },
+    "app/confia_lean_auditor/static/capture/vendor/katex-0.18.9/fonts/KaTeX_Caligraphic-Regular.woff2": {
+      "sha256": "5d53e70ad607c2352162dec9e0923fb54ecdafaccbf604cd8dcf7d00facb989b",
+      "size_bytes": 6908
+    },
+    "app/confia_lean_auditor/static/capture/vendor/katex-0.18.9/fonts/KaTeX_Fraktur-Bold.ttf": {
+      "sha256": "9163df9c7122432e6495b4229fa9071cf9ae86a758ae5efc4924ec2e1a6dbce1",
+      "size_bytes": 19584
+    },
+    "app/confia_lean_auditor/static/capture/vendor/katex-0.18.9/fonts/KaTeX_Fraktur-Bold.woff": {
+      "sha256": "9be7ceb88004ab8ad124082246fbfcca4091e36385d4ec6ed1df67375dad50fb",
+      "size_bytes": 13296
+    },
+    "app/confia_lean_auditor/static/capture/vendor/katex-0.18.9/fonts/KaTeX_Fraktur-Bold.woff2": {
+      "sha256": "74444efd593c005e3f4573b44524704c0af0a937fe911cca9e94068d0d140d3f",
+      "size_bytes": 11348
+    },
+    "app/confia_lean_auditor/static/capture/vendor/katex-0.18.9/fonts/KaTeX_Fraktur-Regular.ttf": {
+      "sha256": "1e6f9579e90e2cac37f8f60a597c436e075c114385652b7cbeb0dec0421291b3",
+      "size_bytes": 19572
+    },
+    "app/confia_lean_auditor/static/capture/vendor/katex-0.18.9/fonts/KaTeX_Fraktur-Regular.woff": {
+      "sha256": "5e28753be717dac97f559f49bc10be9cf3c124ddcabda6659d11cb68febc6463",
+      "size_bytes": 13208
+    },
+    "app/confia_lean_auditor/static/capture/vendor/katex-0.18.9/fonts/KaTeX_Fraktur-Regular.woff2": {
+      "sha256": "51814d270d06ff0255dba0799994fa4d8c84d11f09951d47595f4abb1f3602dc",
+      "size_bytes": 11316
+    },
+    "app/confia_lean_auditor/static/capture/vendor/katex-0.18.9/fonts/KaTeX_Main-Bold.ttf": {
+      "sha256": "138ac28d1663b3037e9c5f52371fa5c63d8324f4a38d22cd573e6ea3a3fd0cf8",
+      "size_bytes": 51336
+    },
+    "app/confia_lean_auditor/static/capture/vendor/katex-0.18.9/fonts/KaTeX_Main-Bold.woff": {
+      "sha256": "c76c5d696297d51b9cb1639c7da4334f0e7dec81b42b11213b5e25ef671bb822",
+      "size_bytes": 29912
+    },
+    "app/confia_lean_auditor/static/capture/vendor/katex-0.18.9/fonts/KaTeX_Main-Bold.woff2": {
+      "sha256": "0f60d1b897938ec918c8ce073092411baf9438f6739465693ff18b0f9d20b021",
+      "size_bytes": 25324
+    },
+    "app/confia_lean_auditor/static/capture/vendor/katex-0.18.9/fonts/KaTeX_Main-BoldItalic.ttf": {
+      "sha256": "70ee1f64a20f2048c21940ef46d0144fd215baa953ca69afd1e31e98544f708f",
+      "size_bytes": 32968
+    },
+    "app/confia_lean_auditor/static/capture/vendor/katex-0.18.9/fonts/KaTeX_Main-BoldItalic.woff": {
+      "sha256": "a6f7ec0d846ac7ad975adb8959c37ed49b94acbc4ae436db9ce9e20287e4a64c",
+      "size_bytes": 19412
+    },
+    "app/confia_lean_auditor/static/capture/vendor/katex-0.18.9/fonts/KaTeX_Main-BoldItalic.woff2": {
+      "sha256": "99cd42a3c072d918f2f44984a807cf7aa16e13545fd0875fc07c6c65f99e715b",
+      "size_bytes": 16780
+    },
+    "app/confia_lean_auditor/static/capture/vendor/katex-0.18.9/fonts/KaTeX_Main-Italic.ttf": {
+      "sha256": "0d85ae7cc30f23790a7f1a58c4a112fdca8aae769b6ba11429af1d98b1b6cb3a",
+      "size_bytes": 33580
+    },
+    "app/confia_lean_auditor/static/capture/vendor/katex-0.18.9/fonts/KaTeX_Main-Italic.woff": {
+      "sha256": "f1d6ef86f3b11a528bd5185199bd2443ecb2b0dead96d88674b5a2c12be24bdf",
+      "size_bytes": 19676
+    },
+    "app/confia_lean_auditor/static/capture/vendor/katex-0.18.9/fonts/KaTeX_Main-Italic.woff2": {
+      "sha256": "97479ca6cce906abc961ecac96faa5f9ca2e61b8e7670d475826bcdee9a7c267",
+      "size_bytes": 16988
+    },
+    "app/confia_lean_auditor/static/capture/vendor/katex-0.18.9/fonts/KaTeX_Main-Regular.ttf": {
+      "sha256": "d0332f52868370fd83ae7fa46470f90c8f2eab2fcf12bc4f88080b340c95a830",
+      "size_bytes": 53580
+    },
+    "app/confia_lean_auditor/static/capture/vendor/katex-0.18.9/fonts/KaTeX_Main-Regular.woff": {
+      "sha256": "c6368d87e8a1a3a5d337623d83d8dc4b868f242a9ad476237d6f8d1e0f168cdc",
+      "size_bytes": 30772
+    },
+    "app/confia_lean_auditor/static/capture/vendor/katex-0.18.9/fonts/KaTeX_Main-Regular.woff2": {
+      "sha256": "c2342cd8b869e01752a9321dc17213fc40d4d04c79688c1d43f2cf316abd7866",
+      "size_bytes": 26272
+    },
+    "app/confia_lean_auditor/static/capture/vendor/katex-0.18.9/fonts/KaTeX_Math-BoldItalic.ttf": {
+      "sha256": "f9377ab0271cda59af24bcffbd46a4d0c8a3572ffafdbb38de2ad5ea7b0d5ee5",
+      "size_bytes": 31196
+    },
+    "app/confia_lean_auditor/static/capture/vendor/katex-0.18.9/fonts/KaTeX_Math-BoldItalic.woff": {
+      "sha256": "850c0af5c2238497febaf5e461d880bf458c341f42f4f330f1b1ab5698b1998e",
+      "size_bytes": 18668
+    },
+    "app/confia_lean_auditor/static/capture/vendor/katex-0.18.9/fonts/KaTeX_Math-BoldItalic.woff2": {
+      "sha256": "dc47344dbb6cb5b655c8460d561f4df5f501b90c804ad3c6cec65fe322351ab1",
+      "size_bytes": 16400
+    },
+    "app/confia_lean_auditor/static/capture/vendor/katex-0.18.9/fonts/KaTeX_Math-Italic.ttf": {
+      "sha256": "08ce98e51b04d58945a301e639e02b6998af29fdfd61a7b8afdd07bbfc479d4a",
+      "size_bytes": 31308
+    },
+    "app/confia_lean_auditor/static/capture/vendor/katex-0.18.9/fonts/KaTeX_Math-Italic.woff": {
+      "sha256": "8a8d244581371912b8f3f5a23e2437cb2a59cd9bcaebb0346e722c05737a2571",
+      "size_bytes": 18748
+    },
+    "app/confia_lean_auditor/static/capture/vendor/katex-0.18.9/fonts/KaTeX_Math-Italic.woff2": {
+      "sha256": "7af58c5ec8f132a2ddde9027c6d7814decce4d3b822a11192a42a20e2e973264",
+      "size_bytes": 16440
+    },
+    "app/confia_lean_auditor/static/capture/vendor/katex-0.18.9/fonts/KaTeX_SansSerif-Bold.ttf": {
+      "sha256": "1ece03f79f95277d57dc7f6b435a74e1379b0d46104a8530286b60ff49369ea0",
+      "size_bytes": 24504
+    },
+    "app/confia_lean_auditor/static/capture/vendor/katex-0.18.9/fonts/KaTeX_SansSerif-Bold.woff": {
+      "sha256": "ece03cfd83e22c212cdef66feb8442d25a083beb988db3f1883f3f9738d750ba",
+      "size_bytes": 14408
+    },
+    "app/confia_lean_auditor/static/capture/vendor/katex-0.18.9/fonts/KaTeX_SansSerif-Bold.woff2": {
+      "sha256": "e99ae51144bf1232efcc1bfe5add36262c6866b0faab24fa75740e1b98577a62",
+      "size_bytes": 12216
+    },
+    "app/confia_lean_auditor/static/capture/vendor/katex-0.18.9/fonts/KaTeX_SansSerif-Italic.ttf": {
+      "sha256": "3931dd81faed86ba021bb2bbdc36f5bed9a38d6b4f4077aca59b265aa1b02083",
+      "size_bytes": 22364
+    },
+    "app/confia_lean_auditor/static/capture/vendor/katex-0.18.9/fonts/KaTeX_SansSerif-Italic.woff": {
+      "sha256": "91ee67500cc0129aa0ace3ac5c61ff1692102f0f31d02b69347fba35dcb75bf2",
+      "size_bytes": 14112
+    },
+    "app/confia_lean_auditor/static/capture/vendor/katex-0.18.9/fonts/KaTeX_SansSerif-Italic.woff2": {
+      "sha256": "00b26ac825e2095056396e0553b8ac26d3f8ad158c3826e28b4c45b385c4714a",
+      "size_bytes": 12028
+    },
+    "app/confia_lean_auditor/static/capture/vendor/katex-0.18.9/fonts/KaTeX_SansSerif-Regular.ttf": {
+      "sha256": "f36ea897e19f4a2e571d1e900e4e3710e438deb05a842486045ba0a3e616a4ad",
+      "size_bytes": 19436
+    },
+    "app/confia_lean_auditor/static/capture/vendor/katex-0.18.9/fonts/KaTeX_SansSerif-Regular.woff": {
+      "sha256": "11e4dc8a6471ff6d6ee561d53d10fde8f7489e798257ff449c5d37c197435605",
+      "size_bytes": 12316
+    },
+    "app/confia_lean_auditor/static/capture/vendor/katex-0.18.9/fonts/KaTeX_SansSerif-Regular.woff2": {
+      "sha256": "68e8c73ef42afd3ccec58bf0fba302cce448938e7fc020a5e31f8a952eee1342",
+      "size_bytes": 10344
+    },
+    "app/confia_lean_auditor/static/capture/vendor/katex-0.18.9/fonts/KaTeX_Script-Regular.ttf": {
+      "sha256": "1c67f068fea8bb09bf099c088b1cf64bd27516a6e07f4684344873564bb66a67",
+      "size_bytes": 16648
+    },
+    "app/confia_lean_auditor/static/capture/vendor/katex-0.18.9/fonts/KaTeX_Script-Regular.woff": {
+      "sha256": "d96cdf2b3bdd4d64a8fd5f74a4c467f123a8a73931cd435889f08ffaf9bf947a",
+      "size_bytes": 10588
+    },
+    "app/confia_lean_auditor/static/capture/vendor/katex-0.18.9/fonts/KaTeX_Script-Regular.woff2": {
+      "sha256": "036d4e95149b69ff9bcc0cd55771efeb25ffa3947293e69acd78d5ac328c684b",
+      "size_bytes": 9644
+    },
+    "app/confia_lean_auditor/static/capture/vendor/katex-0.18.9/fonts/KaTeX_Size1-Regular.ttf": {
+      "sha256": "95b6d2f1a50173bfedb8c63e1d1c99b10427d0a4df4201cb44513b226951a22b",
+      "size_bytes": 12228
+    },
+    "app/confia_lean_auditor/static/capture/vendor/katex-0.18.9/fonts/KaTeX_Size1-Regular.woff": {
+      "sha256": "c943cc986384f59e86bea5fd7dc50a9c4dfe567a7c05eb40d6790720dead97c9",
+      "size_bytes": 6496
+    },
+    "app/confia_lean_auditor/static/capture/vendor/katex-0.18.9/fonts/KaTeX_Size1-Regular.woff2": {
+      "sha256": "6b47c40166b6dbe21a5dfca7718413f2147fd2399be1ba605d8ad39cedf25dfe",
+      "size_bytes": 5468
+    },
+    "app/confia_lean_auditor/static/capture/vendor/katex-0.18.9/fonts/KaTeX_Size2-Regular.ttf": {
+      "sha256": "a6b2099fb555c60e3a0db3a08842ebf1d732c6eb4e4bf44913613bed4fc4e39b",
+      "size_bytes": 11508
+    },
+    "app/confia_lean_auditor/static/capture/vendor/katex-0.18.9/fonts/KaTeX_Size2-Regular.woff": {
+      "sha256": "2014c523c3210bcc166648c4d4cc57f05b747df07a24277bf71c51e67dc79e3d",
+      "size_bytes": 6188
+    },
+    "app/confia_lean_auditor/static/capture/vendor/katex-0.18.9/fonts/KaTeX_Size2-Regular.woff2": {
+      "sha256": "d04c54219f9eaec6d4d4fd42dfb28785975a4794d6b2fc71e566b9cd6db842dd",
+      "size_bytes": 5208
+    },
+    "app/confia_lean_auditor/static/capture/vendor/katex-0.18.9/fonts/KaTeX_Size3-Regular.ttf": {
+      "sha256": "500e04d54f0d51666332c9d2089aa803be22aa878eca539e59fa53c6e522b082",
+      "size_bytes": 7588
+    },
+    "app/confia_lean_auditor/static/capture/vendor/katex-0.18.9/fonts/KaTeX_Size3-Regular.woff": {
+      "sha256": "6ab6b62e9b62dae2c00dd90f791bd10950be0ecc3490d7d6045f51c2e8fe0949",
+      "size_bytes": 4420
+    },
+    "app/confia_lean_auditor/static/capture/vendor/katex-0.18.9/fonts/KaTeX_Size3-Regular.woff2": {
+      "sha256": "73d591271b1604960cb10bb90fee021670af7297017e0e98480b332d11f51995",
+      "size_bytes": 3624
+    },
+    "app/confia_lean_auditor/static/capture/vendor/katex-0.18.9/fonts/KaTeX_Size4-Regular.ttf": {
+      "sha256": "c647367d1dd4e162468717d020e1fc0f1dc5c26ebfdffbe55261713bf88c5877",
+      "size_bytes": 10364
+    },
+    "app/confia_lean_auditor/static/capture/vendor/katex-0.18.9/fonts/KaTeX_Size4-Regular.woff": {
+      "sha256": "99f9c6750b489c9462bf04900bd3f939df9b829339daaaaa99ef5495cdddea58",
+      "size_bytes": 5980
+    },
+    "app/confia_lean_auditor/static/capture/vendor/katex-0.18.9/fonts/KaTeX_Size4-Regular.woff2": {
+      "sha256": "a4af7d414440a1c1790825cfb700cf9cf43b0f2c4b04f0ebc523011ad9853ec0",
+      "size_bytes": 4928
+    },
+    "app/confia_lean_auditor/static/capture/vendor/katex-0.18.9/fonts/KaTeX_Typewriter-Regular.ttf": {
+      "sha256": "f01f3e87d9c6a61c0c081ceb577abd864eb00a612f7ac1620dd6915fad2ef5aa",
+      "size_bytes": 27556
+    },
+    "app/confia_lean_auditor/static/capture/vendor/katex-0.18.9/fonts/KaTeX_Typewriter-Regular.woff": {
+      "sha256": "e14fed02b1aba7ce9f5afd5844b5d0321b22351febc720e0de8b8723527609f7",
+      "size_bytes": 16028
+    },
+    "app/confia_lean_auditor/static/capture/vendor/katex-0.18.9/fonts/KaTeX_Typewriter-Regular.woff2": {
+      "sha256": "71d517d67827787cfabdf186914cc3358eda539e37931941f2b2fd4a21f68c0b",
+      "size_bytes": 13568
+    },
+    "app/confia_lean_auditor/static/capture/vendor/katex-0.18.9/katex.min.css": {
+      "sha256": "b9ce0e8ce93f0c18c4986fe1f1c3c269d921b56a69e6c97f83a507916b38aab5",
+      "size_bytes": 24788
+    },
+    "app/confia_lean_auditor/static/capture/vendor/katex-0.18.9/katex.min.js": {
+      "sha256": "155f6c2d673c5912e3b48f45d8830eaad18ae1953915939ceb648ea8b9c3e7e2",
+      "size_bytes": 272755
+    },
+    "app/confia_lean_auditor/static/demo/tutoria-chat-demo.js": {
+      "sha256": "0f72c59e543cb3a9ccc26326b527eafea52b5a7e77dc035d9975412c74aff866",
+      "size_bytes": 4589
+    },
+    "app/confia_lean_auditor/static/demo/tutoria-demo-data.js": {
+      "sha256": "6546c9e07bfd70ed13d261de273ad3ddd908de12a541495b7959df8edb97d032",
+      "size_bytes": 8345
+    },
+    "app/confia_lean_auditor/static/design-system.css": {
+      "sha256": "baf0b9f733377ef387286a358af332ba11003f1fedcd459eb6ed6740ef4a2af5",
+      "size_bytes": 7075
+    },
+    "app/confia_lean_auditor/static/dynamic-assessment.js": {
+      "sha256": "31c2c748db9398984cba3e444882163a36eaea3046cbaefeaf72ec2600e4519b",
+      "size_bytes": 10306
+    },
+    "app/confia_lean_auditor/static/dynamic.css": {
+      "sha256": "410a0c4886f7ba1a0fa201153de8bf9508a7d900231cfb91effe3abe13f1d06c",
+      "size_bytes": 3230
+    },
+    "app/confia_lean_auditor/static/dynamic.js": {
+      "sha256": "9a35b5d596f4619d94be9fca372557ea90f16e2aa80821306743d477223f4c5c",
+      "size_bytes": 25852
+    },
+    "app/confia_lean_auditor/static/index.html": {
+      "sha256": "418f4e9ad418dd875d7b836293bf7c6083c7da69dcae17c571ceddaa01849b67",
+      "size_bytes": 35194
+    },
+    "app/confia_lean_auditor/static/login.html": {
+      "sha256": "d161dddfe1fcc7bb30cbcc4ab982a75d024815c152e8e641bcd21e328433853e",
+      "size_bytes": 2302
+    },
+    "app/confia_lean_auditor/static/login.js": {
+      "sha256": "dff53ffa3964a0487bf68f460bba3a0c796d38b729481d54fe98b5add00f9fa0",
+      "size_bytes": 976
+    },
+    "app/confia_lean_auditor/static/management.js": {
+      "sha256": "c4c52e7816334b6c5fca23b1d5fb1fe9135163b9753afcbc95653f5a5febfefc",
+      "size_bytes": 6499
+    },
+    "app/confia_lean_auditor/static/platform-presentation.css": {
+      "sha256": "8d46c811a67c16a76cf2d47a014abc87d6c6e5bc378492cfbf3332f63b8b38eb",
+      "size_bytes": 7790
+    },
+    "app/confia_lean_auditor/static/platform-presentation.js": {
+      "sha256": "57d80a875e755cac1761514feae4dac118a9709fd8a4a5fce495551c8c053333",
+      "size_bytes": 8464
+    },
+    "app/confia_lean_auditor/static/platform.css": {
+      "sha256": "191ae92bca44bf601be1cde1a553c53cd4a871de802143fb784fa706f37965a7",
+      "size_bytes": 2985
+    },
+    "app/confia_lean_auditor/static/problem-assets/TME2026P2/circulos.png": {
+      "sha256": "b55883f42cc005745aa206c81aa7f88ef2139943f682633757461c3f5d4c4ee5",
+      "size_bytes": 11143
+    },
+    "app/confia_lean_auditor/static/problem-assets/TME2026P2/item-a.png": {
+      "sha256": "56dda632fbf2005a077d6146b07e0fd8beaec523cec84f9c02d27869f605179a",
+      "size_bytes": 8947
+    },
+    "app/confia_lean_auditor/static/problem-assets/TME2026P3/compartimentos.png": {
+      "sha256": "8cc64c9e55156560121b9a4d209f707bcf09127e0704d2f954eaafafa8723ee4",
+      "size_bytes": 11290
+    },
+    "app/confia_lean_auditor/static/problem-assets/TME2026P4/triangulo.png": {
+      "sha256": "85c3da3a9394f9af67c795f4bf54d9c67ef7f48e5debb8aa1554f910febef94b",
+      "size_bytes": 9957
+    },
+    "app/confia_lean_auditor/static/problem-presentations/registry.json": {
+      "sha256": "470474d510f27c36efbf89e0717839306f6eabb5eb39787dbf3190e094cb5d71",
+      "size_bytes": 9201
+    },
+    "app/confia_lean_auditor/static/recognition-view.js": {
+      "sha256": "db1af8a1b1e620fae679bf222983a1ccd7a4ff19ea4e02970df157b2688108fb",
+      "size_bytes": 5542
+    },
+    "app/confia_lean_auditor/static/resolution-workspace.js": {
+      "sha256": "cf29bef02f3f43a1dec6ac5d39a0608fe4e02cde9171976d134feff94ca33c71",
+      "size_bytes": 34710
+    },
+    "app/confia_lean_auditor/static/shell.js": {
+      "sha256": "5bcef9f477808c025c179ec8937ecb4254708dc4010b0cdf109554b3289bf757",
+      "size_bytes": 15425
+    },
+    "app/confia_lean_auditor/static/styles.css": {
+      "sha256": "c94e44dd3ae23212c2bca4b3527f5ebaaa61dea4876b775373d2aab6cf17f9af",
+      "size_bytes": 38093
+    },
+    "app/confia_lean_auditor/static/submissions/decisions.js": {
+      "sha256": "760953fafdbd264855b965aa2d416dcb31bce081bbd962732a707098c443abf0",
+      "size_bytes": 15578
+    },
+    "app/confia_lean_auditor/static/submissions/teacher.css": {
+      "sha256": "73b2e8ffb18442734b3efd35ed342db7e8332cd8598f83adb35b6a928d53ce32",
+      "size_bytes": 12944
+    },
+    "app/confia_lean_auditor/static/submissions/teacher.js": {
+      "sha256": "0a64f715d5172cf94f815e41ddeb1c2a0f5e43238b7c703438edc34796233663",
+      "size_bytes": 69638
+    },
+    "app/confia_lean_auditor/static/teacher-presentation.css": {
+      "sha256": "36c8cb0c24b47e8c149735c4cd3500e13a67e7f154fbbc88ba95d8452ac2703b",
+      "size_bytes": 2233
+    },
+    "app/confia_lean_auditor/static/teacher-presentation.js": {
+      "sha256": "8d3faf9a905ee79a8128e7af6a44c7f676a4f471fcbfb92cf1d998736246dd18",
+      "size_bytes": 4446
+    },
+    "app/confia_lean_auditor/static/tme/correction-workspace.css": {
+      "sha256": "92473768fbf556bb95cee0278a5cd37bd84d3d876f8e0d433690bc69e57f82c8",
+      "size_bytes": 33596
+    },
+    "app/confia_lean_auditor/static/tme/correction-workspace.js": {
+      "sha256": "f2d46ef74f0729e1e93dc307a4667b380a865c224d9766eea757a98dd03e9065",
+      "size_bytes": 10741
+    },
+    "app/confia_lean_auditor/static/tme/full-exam.js": {
+      "sha256": "077f2f0a74268eed477abfd1f9cad9a2ca1bee14a07fc6b2904f6cc18aa42d3b",
+      "size_bytes": 28841
+    },
+    "app/confia_lean_auditor/static/tme/home.css": {
+      "sha256": "6b6b25f3858fe900660ae1bb8ea3e4044984c1c1069e6de962edf63512550586",
+      "size_bytes": 26202
+    },
+    "app/confia_lean_auditor/static/tme/home.js": {
+      "sha256": "3bf0c963a6341d26846c16281612b60308d5f217c5bf52a11e8b89beab40c804",
+      "size_bytes": 12634
+    },
+    "app/confia_lean_auditor/static/tme/index.html": {
+      "sha256": "9c30caf4270cf4ddbda9eefb898d05d08734dc96a6d41e8b2e752b4f6b4f2b7d",
+      "size_bytes": 5093
+    },
+    "app/confia_lean_auditor/static/tme/scan-model.js": {
+      "sha256": "6e9e256765787741b612b513b37ef6b0625bf74979dc276d76cd5fa81b8b0867",
+      "size_bytes": 2935
+    },
+    "app/confia_lean_auditor/static/tme/secondary-views.css": {
+      "sha256": "1dac9237937469549f198a6fed684c1472b6a0fbe0729c2714c565d0daf58feb",
+      "size_bytes": 11907
+    },
+    "app/confia_lean_auditor/static/tme/secondary-views.js": {
+      "sha256": "ab821855e0844188887732a1e4cccec4a68e9cf0bca2220061e50256d658018d",
+      "size_bytes": 8123
+    },
+    "app/confia_lean_auditor/static/tme/tme-theme.css": {
+      "sha256": "d59ada4505caed73020549821a46cd0c673b4c7a3c26b82f64bfc828f2ffa618",
+      "size_bytes": 2213
+    },
+    "app/confia_lean_auditor/static/tme/tme.css": {
+      "sha256": "3149825e644f121a5698a42f271540b67e185ffc6e01af1fa6fd6dc79eb29413",
+      "size_bytes": 20285
+    },
+    "app/confia_lean_auditor/static/tme/tme.js": {
+      "sha256": "24b9233eff020a4be1ebac89103f4735c9d0b2a766460a65dc0be7d2febedd73",
+      "size_bytes": 92128
+    },
+    "app/confia_lean_auditor/static/tme/workspace-controls.js": {
+      "sha256": "bcb3ca322cfa8ded02b018192bbe74a65e53601dccb8c437acc98cd8b4e02129",
+      "size_bytes": 2527
+    },
+    "app/confia_lean_auditor/static/tme/workspace-report.js": {
+      "sha256": "93c1c7d8ea61ce3f55f6407ed9eacb1cef36216b1d32102b12632c1e4f04eb71",
+      "size_bytes": 32286
+    },
+    "app/confia_lean_auditor/static/tutoria-assistant.css": {
+      "sha256": "59204ab56c48fea5038f87d89447fde2ea3cfa64a3387d745665761bff64f0f8",
+      "size_bytes": 2647
+    },
+    "app/confia_lean_auditor/static/tutoria-assistant.js": {
+      "sha256": "6d67e71ed6b45de17a13bf484772d9e5d0270d7bae5b05acb724b6c156fc4f08",
+      "size_bytes": 2951
+    },
+    "app/confia_lean_auditor/static/tutoria-chat.css": {
+      "sha256": "4fd9eb0d3fd3aeb01445efbe68d2380ff9e4a123b54ebbd056d09882bdf47a6d",
+      "size_bytes": 4126
+    },
+    "app/confia_lean_auditor/static/tutoria-chat.js": {
+      "sha256": "8e843737b8d25c95b372249071be524355916d5010d5c24209c2b00233cb4750",
+      "size_bytes": 11751
+    },
+    "app/confia_lean_auditor/static/tutoria.css": {
+      "sha256": "33fa2a03f016b01251cd48c52c04df4680850539cb0ba10e6fd88aa58c0fc81f",
+      "size_bytes": 5262
+    },
+    "app/confia_lean_auditor/static/tutoria.js": {
+      "sha256": "d0955283769b60e1d5a852f09b126ff290f679c2b888da6f988db625f4046c40",
+      "size_bytes": 22295
+    },
+    "app/confia_lean_auditor/student_claims/__init__.py": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    "app/confia_lean_auditor/student_claims/digital_items.py": {
+      "sha256": "97829bfad9fe653e58afbe34141e87221a53557b350f30e6ca6136fa86c61ff2",
+      "size_bytes": 2795
+    },
+    "app/confia_lean_auditor/student_claims/digital_literals.py": {
+      "sha256": "021a1db15529bf9bcc10a9b8239a58c1ee3c977c3980af2f549919c266c06403",
+      "size_bytes": 4795
+    },
+    "app/confia_lean_auditor/student_claims/evidence_id_semantic.py": {
+      "sha256": "8af87a776327ea56edaeeed0e162e4badd1c978151f8ea65057a3f961c3ca2bc",
+      "size_bytes": 17271
+    },
+    "app/confia_lean_auditor/student_claims/evidence_units.py": {
+      "sha256": "d0b649013ca7e468b28b17f88aed557a36f8adef227ce7ce826aba7a6b332ad0",
+      "size_bytes": 2158
+    },
+    "app/confia_lean_auditor/student_claims/extract_f2q1_student_claims.py": {
+      "sha256": "4ac747109380c2e4907553ea4018cea34d791bff1699baf852fc531f36e0bd44",
+      "size_bytes": 7546
+    },
+    "app/confia_lean_auditor/student_claims/extract_f2q3_student_claims.py": {
+      "sha256": "103e816671cbef0845d58c910f6e9ad17034aa840e3226e81ac4cc4c8fa30356",
+      "size_bytes": 7866
+    },
+    "app/confia_lean_auditor/student_claims/extract_f2q5_student_claims.py": {
+      "sha256": "91117b431184d66c312f9588673958d0a55833cb92b6adb6b92c4e4774f15296",
+      "size_bytes": 8066
+    },
+    "app/confia_lean_auditor/student_claims/extract_f2q6_student_claims.py": {
+      "sha256": "a854a9d0083bf5d70f7ecbe1b5d1b69c0d32d4203f2b57ceeaf45042df511eff",
+      "size_bytes": 6329
+    },
+    "app/confia_lean_auditor/student_claims/extract_f2q8_student_claims.py": {
+      "sha256": "0a1920552c1cbb952d2ab31df9dc8ec4ab3f97cff7f8715de92ba60f70d32104",
+      "size_bytes": 11249
+    },
+    "app/confia_lean_auditor/student_claims/generic_math.py": {
+      "sha256": "2084bbbfaa8f2b8a5abbdbe55e9b2800f4f6d98e564bb78b4bcdfbb6ff44b6b7",
+      "size_bytes": 16917
+    },
+    "app/confia_lean_auditor/student_claims/grounding.py": {
+      "sha256": "b2edf62876e9fe9d8e7a541bb6b620c25e914891da1a7fcfd92e323ccf888a98",
+      "size_bytes": 16361
+    },
+    "app/confia_lean_auditor/student_claims/hybrid_semantic.py": {
+      "sha256": "2d424de50398cf1ea5ea4b02be2b7c135939f9bd3c65a70dd5df65012284bc91",
+      "size_bytes": 10781
+    },
+    "app/confia_lean_auditor/student_claims/model_transport.py": {
+      "sha256": "4b774be8b53d63e5be8031847c32e166d9e449da948cbe8e07b9ee695bf7fb14",
+      "size_bytes": 1888
+    },
+    "app/confia_lean_auditor/student_claims/named_math.py": {
+      "sha256": "2679f3518847117e80d0e1205b8cb7d7a32039ce6210551635d5a8be9f036125",
+      "size_bytes": 8169
+    },
+    "app/confia_lean_auditor/student_claims/obligation_catalog.py": {
+      "sha256": "8e8afd33428fecf8e94ec92facfff9bb35f391e8408f4ac378a6e5629f9fec27",
+      "size_bytes": 12606
+    },
+    "app/confia_lean_auditor/student_claims/obligation_semantic.py": {
+      "sha256": "ab34c2449af161e4c80caefa94a8285ae5d8c9eff46531615d0ac5eadd94a825",
+      "size_bytes": 16201
+    },
+    "app/confia_lean_auditor/student_claims/registry.py": {
+      "sha256": "5d486ff793a8a1793387a1021449b8baf4bfe38174a2725604602a2571fe8595",
+      "size_bytes": 1657
+    },
+    "app/confia_lean_auditor/student_claims/schemas.py": {
+      "sha256": "66e09473c019d4200fbc922e5c97a4ef3860ac9f750119dcdf734c622dd2560f",
+      "size_bytes": 2676
+    },
+    "app/confia_lean_auditor/student_claims/semantic.py": {
+      "sha256": "81a781d82985eba83e5ca78b7e315433d25c279d30b17eddc6a910c6790135e7",
+      "size_bytes": 26190
+    },
+    "app/confia_lean_auditor/student_claims/semantic_sufficiency.py": {
+      "sha256": "085c43aba0a151f4658c2e9653dbe38c6c062480ae4dc5ce0837917e1e667743",
+      "size_bytes": 9696
+    },
+    "app/confia_lean_auditor/student_claims/sufficiency_context.py": {
+      "sha256": "47881c3029e0d7ad77c32de7795911b59129cbc1d3984df2d7af8fb842f91c03",
+      "size_bytes": 6212
+    },
+    "app/confia_lean_auditor/student_claims/sufficiency_requirements.py": {
+      "sha256": "8fd4c577bf08c7b623b16f81335f29e36648531035cc69e9a3a91be02aefc355",
+      "size_bytes": 5774
+    },
+    "app/confia_lean_auditor/student_claims/tme2_p1_digital.py": {
+      "sha256": "a053fb11ff159b3966ab5155336ac94c5a48b087dc3fbb0cf251d784a940f55d",
+      "size_bytes": 270
+    },
+    "app/confia_lean_auditor/student_claims/tme2_p2_digital.py": {
+      "sha256": "42edb42f46bae4aeabf82977cac02798b7e529a2cafb97fbf5cb1e694b67c493",
+      "size_bytes": 2131
+    },
+    "app/confia_lean_auditor/student_claims/tme2_p3_digital.py": {
+      "sha256": "e6b83a0b30c7a34011aab75c2d1659c5f491a3697f64a74a9f6c836eaf173075",
+      "size_bytes": 1234
+    },
+    "app/confia_lean_auditor/student_claims/tme2_p4_digital.py": {
+      "sha256": "9949b5fbb45ba93955d66417a64d0fcbd63a5138f031c3e742fd41dc702ce5c0",
+      "size_bytes": 1293
+    },
+    "app/confia_lean_auditor/student_claims/tme2_p5_digital.py": {
+      "sha256": "cbc0b9f4b43c564e9b80642400d305d56700b1cf70b0dd466fdb06cb71c42d63",
+      "size_bytes": 1480
+    },
+    "app/confia_lean_auditor/submission_audits/__init__.py": {
+      "sha256": "b3df57a20ba4240588bf6fab4b1a370a2e8d27a246820306eee5228edb39f486",
+      "size_bytes": 78
+    },
+    "app/confia_lean_auditor/submission_audits/artifacts.py": {
+      "sha256": "d85c0b038685136820f26d0c7680bb68c72ad8204541e13811051fe6a24769dc",
+      "size_bytes": 4043
+    },
+    "app/confia_lean_auditor/submission_audits/errors.py": {
+      "sha256": "a285846895cfedd98c9d8aabc72fb9cb470f7270e3897116e94ff3fdd59e517d",
+      "size_bytes": 907
+    },
+    "app/confia_lean_auditor/submission_audits/router.py": {
+      "sha256": "a6ecbc1597914ddd9abe537ff008912d4bc8099c34bd70a911c3b56d8b481236",
+      "size_bytes": 4332
+    },
+    "app/confia_lean_auditor/submission_audits/schemas.py": {
+      "sha256": "132ced6d8e7b6e5ec5241e7cfd0b2820164d848c6d3154f7141ad3be37da4a19",
+      "size_bytes": 10928
+    },
+    "app/confia_lean_auditor/submission_audits/service.py": {
+      "sha256": "675fc3c423d906757a0cb62135f506cf7931a9e079ba8197926bb1f9b48f78b9",
+      "size_bytes": 17579
+    },
+    "app/confia_lean_auditor/submission_audits/source.py": {
+      "sha256": "44cc669456ceb1f98be349e5a23ecd630a9cd87030367a0ccff4dac34cc3e26a",
+      "size_bytes": 2632
+    },
+    "app/confia_lean_auditor/submissions/__init__.py": {
+      "sha256": "1a5b5a44a5c2461b89708de298bd42828235f75372778a698c4357b208adcd71",
+      "size_bytes": 82
+    },
+    "app/confia_lean_auditor/submissions/body_limit.py": {
+      "sha256": "e29c29bcd39d6c4ed728c631af57a4dba488cd358d56a8a00c855a214a4ae796",
+      "size_bytes": 1891
+    },
+    "app/confia_lean_auditor/submissions/integrity.py": {
+      "sha256": "9d1418a80eb41a94b699823b1fe4e69b753a0905f01b4b92e05bc4a470651230",
+      "size_bytes": 467
+    },
+    "app/confia_lean_auditor/submissions/png.py": {
+      "sha256": "2fac52fc2bdb10546166d67045e4fb065638d6afd312f5c19945c9bc881f4977",
+      "size_bytes": 3342
+    },
+    "app/confia_lean_auditor/submissions/router.py": {
+      "sha256": "2025a5c95492ccf9fc427084196cd5c382b51fa004ebd423f7356a994c3f7633",
+      "size_bytes": 14208
+    },
+    "app/confia_lean_auditor/submissions/schemas.py": {
+      "sha256": "b52b61490115ee38786cebb43ae61ef11fd61c7aa269aea37e748d7a3607cb61",
+      "size_bytes": 14673
+    },
+    "app/confia_lean_auditor/submissions/store.py": {
+      "sha256": "c290d7ebf5783cd20225a149b35cb1976ea07a0f06958454f320065a01d0699c",
+      "size_bytes": 43788
+    },
+    "app/confia_lean_auditor/submissions/text_source.py": {
+      "sha256": "86b9c652e5632a6c46405bc9b72836b774a1d8183bc456600b50597fddc93b51",
+      "size_bytes": 2549
+    },
+    "app/confia_lean_auditor/teacher_decisions/__init__.py": {
+      "sha256": "c332da06d9ebf39f3a0179cb7e3bd66d50f40505b3586a8bc1f60cab50cb1f00",
+      "size_bytes": 80
+    },
+    "app/confia_lean_auditor/teacher_decisions/models.py": {
+      "sha256": "55aaa110aa305198e55636eed04662635bbb722007ce555425e501267556a6cb",
+      "size_bytes": 6504
+    },
+    "app/confia_lean_auditor/teacher_decisions/router.py": {
+      "sha256": "662e98258764ab2e335c166658b74eaf731a1330809424cded6baf79fb00fe44",
+      "size_bytes": 4892
+    },
+    "app/confia_lean_auditor/teacher_decisions/service.py": {
+      "sha256": "5f34d6fb05d91ad528f081ca068526a92340e741927c2711145208ee8d497a03",
+      "size_bytes": 11643
+    },
+    "app/confia_lean_auditor/teacher_decisions/store.py": {
+      "sha256": "65ebdd8198814c5f676a57368014b1591abe8cb2d3ab08d3c33da4b0451471b6",
+      "size_bytes": 6014
+    },
+    "app/confia_lean_auditor/tme/__init__.py": {
+      "sha256": "71659c0c881081c4f4579ddba95d7b1ba82c8789377d23d70286a91ed12059cf",
+      "size_bytes": 37
+    },
+    "app/confia_lean_auditor/tme/accepted_audit.py": {
+      "sha256": "051d3b86641970e6f67d3d280d8bce206fc7a46a9f6574c128aa5e36074d778f",
+      "size_bytes": 7464
+    },
+    "app/confia_lean_auditor/tme/audit_artifacts.py": {
+      "sha256": "23a4a03b0de21df6d940f647cd796b3f052f49adbd212cfd714133c248879000",
+      "size_bytes": 1960
+    },
+    "app/confia_lean_auditor/tme/audit_models.py": {
+      "sha256": "5b98b22a1785d135132f699baf99103ad5d7d96a45e723fc88909a42398b3f73",
+      "size_bytes": 4344
+    },
+    "app/confia_lean_auditor/tme/auth.py": {
+      "sha256": "0e6feb5abacf3a9b0135a74bf639b9b9acdda51eec9de7113ccb77de70a45b8a",
+      "size_bytes": 1564
+    },
+    "app/confia_lean_auditor/tme/certification.py": {
+      "sha256": "f09500ce85b3ab4cf0ef4a645b55a8172a755b0483b65105e48fc4557cdd29df",
+      "size_bytes": 19151
+    },
+    "app/confia_lean_auditor/tme/certification_dynamic.py": {
+      "sha256": "97029f51bd6ad1f238d454f0d337652f7daf84d0a34b2c5ac5e3dd138c64f742",
+      "size_bytes": 5702
+    },
+    "app/confia_lean_auditor/tme/certification_events.py": {
+      "sha256": "bfaf28ff91b1de284756429bb4783fd41a82675ee55e94ac4aa5e115d84ec15d",
+      "size_bytes": 5895
+    },
+    "app/confia_lean_auditor/tme/certification_experiment_metrics.py": {
+      "sha256": "a42795320ddddac4fbdec886b9f7ccf3909dad2490f9076510b7f191626561be",
+      "size_bytes": 12589
+    },
+    "app/confia_lean_auditor/tme/certification_gold.py": {
+      "sha256": "0c2b553350d11bb1c391a8ea12d12bae6e75abe30481c6e2e6e2a53ef2ecfa48",
+      "size_bytes": 12625
+    },
+    "app/confia_lean_auditor/tme/certification_metrics.py": {
+      "sha256": "5bd6366bc17c6664b02863ec092973969ac7a811b10387cc928aed3b059cf1dd",
+      "size_bytes": 4860
+    },
+    "app/confia_lean_auditor/tme/certification_models.py": {
+      "sha256": "bdf314ea4756129384de2f24c2f1106e1ecd07990d0c6922d3f074cc6debac69",
+      "size_bytes": 4291
+    },
+    "app/confia_lean_auditor/tme/certification_paired.py": {
+      "sha256": "56808565377fd0901419e923b479f9d0253c1ce66294e24f3a009df17e8f758b",
+      "size_bytes": 7853
+    },
+    "app/confia_lean_auditor/tme/certification_router.py": {
+      "sha256": "41fedb29fae76931668382827988a03eeb89f4bf3d269f03763099e81abb0f05",
+      "size_bytes": 5846
+    },
+    "app/confia_lean_auditor/tme/certification_runs.py": {
+      "sha256": "1b1e04a0a30e05979c675725d7bb6fcdc117d8026096f56d47a797380b2655b2",
+      "size_bytes": 15728
+    },
+    "app/confia_lean_auditor/tme/correction_engine.py": {
+      "sha256": "720f83c3a735e0065dba315340d234ab888e4305e5c412544f32ecbfda836666",
+      "size_bytes": 17560
+    },
+    "app/confia_lean_auditor/tme/evidence_id_experiment.py": {
+      "sha256": "3316a5f8316a1f2d9ad7ecaaf1798b35a16ed0e64e3fe8bca11f053ef6118da4",
+      "size_bytes": 2231
+    },
+    "app/confia_lean_auditor/tme/exam_capture.py": {
+      "sha256": "21a49e0dd3a7d74d4cb164cbe9a8940ef0d133aa21d732c8e653375542ccb841",
+      "size_bytes": 4104
+    },
+    "app/confia_lean_auditor/tme/exam_models.py": {
+      "sha256": "c6dd64784323aa288a1675a914799e0ed9e3bb450a73fa0db8d80609528f8b96",
+      "size_bytes": 6592
+    },
+    "app/confia_lean_auditor/tme/exam_router.py": {
+      "sha256": "446878c0f16c1506dba22712cfe0bbf7bf9c1d56f7225624181a48eb7c9f16c0",
+      "size_bytes": 11181
+    },
+    "app/confia_lean_auditor/tme/exam_store.py": {
+      "sha256": "c6b01669172a41c42cca2e70241170d35962f5d5edb081753c722ea17b86c399",
+      "size_bytes": 19850
+    },
+    "app/confia_lean_auditor/tme/finalization.py": {
+      "sha256": "ab2c101b17398b1ba93b9fc1258d1e4b15170cb26e5bea67ba34876d3dbdc496",
+      "size_bytes": 20270
+    },
+    "app/confia_lean_auditor/tme/home_summary.py": {
+      "sha256": "50fa699e61e4a07c1a0ae609fe13a08dd29f78cb39229e7cd6f4dc3ec534fe76",
+      "size_bytes": 21070
+    },
+    "app/confia_lean_auditor/tme/human_decisions.py": {
+      "sha256": "eb358f0edb28d833e01b5c49cfdd419013eb1d7b9f8a5a15b17f5c7c4a5f3ab7",
+      "size_bytes": 18876
+    },
+    "app/confia_lean_auditor/tme/hybrid_grader.py": {
+      "sha256": "8f0f5736bb9a844fccee08f0c77a9c9102fa2d8a281545ef43fa7dc3b4392f6d",
+      "size_bytes": 14795
+    },
+    "app/confia_lean_auditor/tme/models.py": {
+      "sha256": "7c77a20ce3753f905e75479b333bce5b62c0549c13ee50506a7feb7155aeede0",
+      "size_bytes": 5726
+    },
+    "app/confia_lean_auditor/tme/obligation_experiment.py": {
+      "sha256": "a78709f7ca67978bf3f800f3b590dc2e850da689aed2654f57ebfe3d0b0b56c7",
+      "size_bytes": 4505
+    },
+    "app/confia_lean_auditor/tme/p2_diagram.py": {
+      "sha256": "e321155ee3af76d3e03771b8bcd61372e14c3551cb19525be332b06962a6c467",
+      "size_bytes": 5246
+    },
+    "app/confia_lean_auditor/tme/p3_machine.py": {
+      "sha256": "f2480db8c624479611d386c83eb5c6e0163582b438724e5df1f0a2a89f5da351",
+      "size_bytes": 2307
+    },
+    "app/confia_lean_auditor/tme/p4_geometry.py": {
+      "sha256": "473a397af54bb305fd71fb9faee80e719bc3cb1256174d3c7b989bca6c045a95",
+      "size_bytes": 996
+    },
+    "app/confia_lean_auditor/tme/p5_integer_break.py": {
+      "sha256": "c3ba86cf998fae4ec13e795ac938c12725cdd719eda34be1566256ad09cfc0a5",
+      "size_bytes": 1698
+    },
+    "app/confia_lean_auditor/tme/question_review.py": {
+      "sha256": "c82eda409715776574596302e6bb31fe459cd5fc7156fc8058e638488ae38410",
+      "size_bytes": 20382
+    },
+    "app/confia_lean_auditor/tme/recognition_status.py": {
+      "sha256": "a718e9e830498e6b69bf410cacf3000c898322ad9dba5c40ed9a16351f274e76",
+      "size_bytes": 2475
+    },
+    "app/confia_lean_auditor/tme/references/hybrid_official.json": {
+      "sha256": "3277324e1e558254f9cb76d2fdbdbf5f8be473ed4b757e7be1dff602cc231df4",
+      "size_bytes": 4089
+    },
+    "app/confia_lean_auditor/tme/registry.py": {
+      "sha256": "73ccd28bb95f5979542eabcf37fde07655a045f7921ddee0af15edae295ec2e5",
+      "size_bytes": 2357
+    },
+    "app/confia_lean_auditor/tme/review_diagnostics.py": {
+      "sha256": "44e73e3b7550f801766f6eb9472d7af93e8982b7d75b2d51cf2e475e468e9de3",
+      "size_bytes": 9917
+    },
+    "app/confia_lean_auditor/tme/review_models.py": {
+      "sha256": "9c9a5b13b4fb8e7c4f93585bfcc9252efc3f059540a84b7d4f0da384d9ad9b12",
+      "size_bytes": 2310
+    },
+    "app/confia_lean_auditor/tme/router.py": {
+      "sha256": "710c9a28d2150e9ffd7aeb1264dd32a0660b0efc796fd3102a00f2d4105589db",
+      "size_bytes": 25782
+    },
+    "app/confia_lean_auditor/tme/store.py": {
+      "sha256": "9d67be743609cc4585afd62cb0c43bfb27f9a2cfee7d8dec478fdb568178a3e0",
+      "size_bytes": 7510
+    },
+    "app/confia_lean_auditor/tme/sufficiency_experiment.py": {
+      "sha256": "f29e354b0eff2cf21036f29f961c793ccf72de98ed8b128a10e07612ff6bd2f9",
+      "size_bytes": 7438
+    },
+    "app/confia_lean_auditor/versions.py": {
+      "sha256": "126bad5ba84df5587d7011b8a99e6a258a20a379702defc44de2381762f99f31",
+      "size_bytes": 100
+    },
+    "docs/audits/SPECIALIZED_TME2_RC1.md": {
+      "sha256": "33c4bf702e9a64e4a46cda5fdccf2624643ab96ea3c04225a4e3d38a98195dab",
+      "size_bytes": 11581
+    },
+    "docs/audits/SPECIALIZED_TME2_RC1_GOLD_PROTOCOL.md": {
+      "sha256": "f22f16ac4de862dfae27ac3bfbcad5df0adea9960b071237505e781e1441925f",
+      "size_bytes": 13631
+    },
+    "docs/audits/assets/specialized-tme2-rc1/diagnostic-implementation.patch": {
+      "sha256": "686fb987469f844ea775fc5e14b2a1f8b9c2258be268bdf31b06fc3ad9237642",
+      "size_bytes": 31447
+    },
+    "docs/audits/assets/specialized-tme2-rc1/final-verification.txt": {
+      "sha256": "2e27bcefc2e2a0fe876db936d7d58e12ad465fced65e4bac2c13fc8083f330d7",
+      "size_bytes": 100
+    },
+    "docs/audits/assets/specialized-tme2-rc1/historical-verification.json": {
+      "sha256": "dd35f54642ae27a1c884879b52ff7511c6a46aa6b6fe019f6b1c4868c55ae82d",
+      "size_bytes": 46136
+    },
+    "docs/audits/assets/specialized-tme2-rc1/lean-certificate-test.txt": {
+      "sha256": "90aafb04912c8588987eeeff44debb5a60d9e4069e113e68a40001c58c9f7da1",
+      "size_bytes": 99
+    },
+    "docs/audits/assets/specialized-tme2-rc1/prior-comparison.json": {
+      "sha256": "61cdd4a23bb5c4a16838406e5ceb91c0af4bd4a34745560798377286ffbbff51",
+      "size_bytes": 78879
+    },
+    "docs/audits/assets/specialized-tme2-rc1/prior-regression-971.txt": {
+      "sha256": "f410690c8c117ed47d1a9649755ee9166dc397e025873428456517be41ca9541",
+      "size_bytes": 1166
+    },
+    "docs/audits/assets/specialized-tme2-rc1/python-environment.txt": {
+      "sha256": "66ffe7f33e7cae7f0c38e842eaabddf884333c2140fa2b8286c4132adba17ca0",
+      "size_bytes": 623
+    },
+    "examples/pautas/tme2_problem1.v1.json": {
+      "sha256": "cd4b776173a9e726d8e3f18365641dad5354bab392a76f320d1f5ecf4b6bee3f",
+      "size_bytes": 8401
+    },
+    "examples/pautas/tme2_problem2.v1.json": {
+      "sha256": "694886b93c81f18942148adda2d9340d1054309c65f215ca1edaeff949f89c54",
+      "size_bytes": 8700
+    },
+    "examples/pautas/tme2_problem3.machine.v1.json": {
+      "sha256": "2fd059233244b4f7d66204a33a4924902865c5ebebd3480c5f2ebc648cefd4a4",
+      "size_bytes": 585
+    },
+    "examples/pautas/tme2_problem3.v1.json": {
+      "sha256": "0d89e2056d77972a91ab24107d6437745305960ea493b8da1eb824fd64049f53",
+      "size_bytes": 6334
+    },
+    "examples/pautas/tme2_problem4.v1.json": {
+      "sha256": "d5234ee1cc5253756c5b39570c2413b45ae1dd90c6d64b81248ffc6ed844b48d",
+      "size_bytes": 10814
+    },
+    "examples/pautas/tme2_problem5.v1.json": {
+      "sha256": "e10dde423192004f5a3d31823de84cadb4d118cfa8c5cd4b519717503a92d61e",
+      "size_bytes": 13879
+    },
+    "lake-manifest.json": {
+      "sha256": "670c704b256c73ce48046b838bf9562b92bf128a2f0239f521e2f9ec404f6219",
+      "size_bytes": 3130
+    },
+    "lakefile.toml": {
+      "sha256": "1a256e6f5f182586c3e0f3d78e02cac3cf3cf22f11088382790351a3455ca5aa",
+      "size_bytes": 382
+    },
+    "lean-toolchain": {
+      "sha256": "db7bb24b756d745bbde83fe92718b51bd3625dae3701ba0f598d0eedcd3f3028",
+      "size_bytes": 25
+    },
+    "problems/ITA2025F2Q1/examples/answer_only.txt": {
+      "sha256": "97d877e8b4fcd9fc01141622de21b568d118a11615ff253ddfbb3b1b0dabc86f",
+      "size_bytes": 32
+    },
+    "problems/ITA2025F2Q1/examples/correct_solution.txt": {
+      "sha256": "121558291e4b28600f9a8431084411cb89a1d17a0fe83fe264ef390f982dbda1",
+      "size_bytes": 487
+    },
+    "problems/ITA2025F2Q1/examples/missing_reduced_form.txt": {
+      "sha256": "233685d9e19026b0f68e53d679add630828d49ef530e7e8983045cd8f9e7548d",
+      "size_bytes": 145
+    },
+    "problems/ITA2025F2Q1/examples/wrong_answer.txt": {
+      "sha256": "b55898835293399f1f73e7be1cea2b45c739bd80426673a5a0892db375edb23f",
+      "size_bytes": 49
+    },
+    "problems/ITA2025F2Q1/microclaims.json": {
+      "sha256": "6c277d31f286d2fc2cef0d75e96895ce21cd7c68d22f79b65c656844c757fb0b",
+      "size_bytes": 1590
+    },
+    "problems/ITA2025F2Q1/problem.json": {
+      "sha256": "905d9242c796b5e43eaf139466e0edc32f8c4869b046050777eb585849e098bb",
+      "size_bytes": 864
+    },
+    "problems/ITA2025F2Q1/rubric.json": {
+      "sha256": "3f91c0b4c804d54656e296298d421fd7669cd22a2b9b67333a31a695459b6bfc",
+      "size_bytes": 1017
+    },
+    "problems/ITA2025F2Q3/examples/answer_only.txt": {
+      "sha256": "a8142ac271716778974434c178c613ffa205c57781016f5284213a362a8ed90a",
+      "size_bytes": 47
+    },
+    "problems/ITA2025F2Q3/examples/correct_solution.txt": {
+      "sha256": "3e940e013ea474f1f88ef17919d8e59132e0fb70d76d7f2a7cfdefea1d832a60",
+      "size_bytes": 524
+    },
+    "problems/ITA2025F2Q3/examples/partial_beta_difference.txt": {
+      "sha256": "b38491d7e270518c6c67b804c2d879913c17955165ab68caa2ecbdad0fce37e2",
+      "size_bytes": 157
+    },
+    "problems/ITA2025F2Q3/examples/wrong_answer.txt": {
+      "sha256": "f1bedfe21249542f9315f6b7acb1ad3ea74a4a343a1f09d8fba51611f0251bd9",
+      "size_bytes": 87
+    },
+    "problems/ITA2025F2Q3/microclaims.json": {
+      "sha256": "5ddc1ebfee6941af163758b85b80e20fc44208717e6c617d3e0eb4dc74de18d0",
+      "size_bytes": 1916
+    },
+    "problems/ITA2025F2Q3/problem.json": {
+      "sha256": "cf671d0becf9b81dd15a68959cd7a8a24cf58f53f272fb170b7ad9374cc815f4",
+      "size_bytes": 457
+    },
+    "problems/ITA2025F2Q3/rubric.json": {
+      "sha256": "0f304b2748b64fef03c55f85fbe9bc3c58930001abc77bd9a9847d7b2151af0b",
+      "size_bytes": 1092
+    },
+    "problems/ITA2025F2Q5/examples/answer_only.txt": {
+      "sha256": "65aa11595d3ecaa4051e7efc0792116f25491a3c1ed8d6f3f7dd69de2691e6f1",
+      "size_bytes": 36
+    },
+    "problems/ITA2025F2Q5/examples/correct_solution.txt": {
+      "sha256": "47d3600caa7bc707e4b0faaaf73e8d59f604a92ad718222ffb8544ddb8317f71",
+      "size_bytes": 441
+    },
+    "problems/ITA2025F2Q5/examples/missing_bounds.txt": {
+      "sha256": "afc1a21e3b295d71bd13d14949fd6aeb53dbbb28e7c18ed59467c09fa33f3a64",
+      "size_bytes": 124
+    },
+    "problems/ITA2025F2Q5/examples/wrong_digit.txt": {
+      "sha256": "00b860f5db2f2596a4c7287cf1c8ba6d265d8348b6b368428974e640dd905ecd",
+      "size_bytes": 36
+    },
+    "problems/ITA2025F2Q5/microclaims.json": {
+      "sha256": "1352b49cdff0de57b845eaf601d9264e304e0ddc5c6019fbff5290b662fd1f6b",
+      "size_bytes": 2021
+    },
+    "problems/ITA2025F2Q5/problem.json": {
+      "sha256": "95467ff8c84a19448ef067c7cf4eeed71e4d3b7eee4f6686d207bda48e4c4a8d",
+      "size_bytes": 884
+    },
+    "problems/ITA2025F2Q5/rubric.json": {
+      "sha256": "9e12d2bc21fcb4297e1a987965ca5a24c0a14dccedce042fc328cc310bed7cfa",
+      "size_bytes": 1268
+    },
+    "problems/ITA2025F2Q6/examples/answer_only.txt": {
+      "sha256": "000f5b90ddbf6dfdaceca5f59eb5c05e89ccebffd662f9379b1507dcb91a1292",
+      "size_bytes": 28
+    },
+    "problems/ITA2025F2Q6/examples/correct_solution.txt": {
+      "sha256": "6ce47ccb290750e7d61cf15e398ab1d6bca419c0582a4bc758e8ff5203761f5f",
+      "size_bytes": 678
+    },
+    "problems/ITA2025F2Q6/examples/missing_ratio.txt": {
+      "sha256": "41ea0ad8c96213f721d613120b1d16cf5f9c2baa066da95e923ceed3ed3caa7e",
+      "size_bytes": 225
+    },
+    "problems/ITA2025F2Q6/examples/wrong_answer.txt": {
+      "sha256": "c877a8cdc6543074fbddfd07db556cd4f75122d2ffb81f7c4fd8ba132ac64945",
+      "size_bytes": 98
+    },
+    "problems/ITA2025F2Q6/microclaims.json": {
+      "sha256": "42c345d09d3134c95ea6fe7cb502b75bc2165ec6afa4ff1ba79fb01faa3b89f5",
+      "size_bytes": 1669
+    },
+    "problems/ITA2025F2Q6/problem.json": {
+      "sha256": "445dbeeef6f0dbb328827570f268422c241cc18416bbc617fbd33d5ca7d10a7b",
+      "size_bytes": 951
+    },
+    "problems/ITA2025F2Q6/rubric.json": {
+      "sha256": "ba209217d1d5f09fbfea40507dda1fc8207880bdc17fd5885a3e1c336fa15db1",
+      "size_bytes": 1080
+    },
+    "problems/ITA2025F2Q8/examples/answer_only.txt": {
+      "sha256": "1aed9ffb84c3aac6c03a36e6b384e77bcde61155a0fb0919278c216df3f60be0",
+      "size_bytes": 20
+    },
+    "problems/ITA2025F2Q8/examples/correct_solution.txt": {
+      "sha256": "7038183568e489cb69b15f08a2960c24cfc639b1ff455c506341f7e5cbc634c0",
+      "size_bytes": 556
+    },
+    "problems/ITA2025F2Q8/examples/missing_determinant_formula.txt": {
+      "sha256": "0f872ab9f5cf7ce46a528ed6ee4ffe898ddfd5820c4b8c94326128c88002c8c9",
+      "size_bytes": 69
+    },
+    "problems/ITA2025F2Q8/examples/wrong_answer.txt": {
+      "sha256": "b3424500ef92787d575f2f091ef27179a03cbb6e77a95c05938a19c7f1ca26b7",
+      "size_bytes": 77
+    },
+    "problems/ITA2025F2Q8/microclaims.json": {
+      "sha256": "a600dffd85d4334f097551c8a887cd80a3eeb2db727359bf8df090031088c9bd",
+      "size_bytes": 1936
+    },
+    "problems/ITA2025F2Q8/problem.json": {
+      "sha256": "63a0bbc5c1215aaa8b14043e52495cc0f2dc431796583e37915cb3493811d1a6",
+      "size_bytes": 438
+    },
+    "problems/ITA2025F2Q8/rubric.json": {
+      "sha256": "0463e1c25e342150258312e096b2767054b6b7bc78ed258ea70b7370fae371ae",
+      "size_bytes": 1023
+    },
+    "problems/ITA2025Q1/certificate/Statement.lean": {
+      "sha256": "33a4a95a0969584de63d456d906ba70367aac985c34ee2591d614121513c10da",
+      "size_bytes": 54
+    },
+    "problems/ITA2025Q1/examples/answer_only.txt": {
+      "sha256": "20d5f5ff8f1703509746dae943aea4f742b9ecc5f57475d86949bf59037ac4a4",
+      "size_bytes": 20
+    },
+    "problems/ITA2025Q1/examples/correct_solution.txt": {
+      "sha256": "c2deaac216b88517de6b08d677ecb037c2e917ef83e0ce0b7de0287136528b2c",
+      "size_bytes": 449
+    },
+    "problems/ITA2025Q1/examples/injection_attempt.txt": {
+      "sha256": "8bc861cfc14b6b49950fa5e334e87c9bfd9b8f32e339af8697276a247b3dd565",
+      "size_bytes": 318
+    },
+    "problems/ITA2025Q1/examples/partial_no_positive_root.txt": {
+      "sha256": "04380f7b9fce3bbcef49895843e9f0cb9cb23f1c28ac8a1faea5d0c7da17529a",
+      "size_bytes": 219
+    },
+    "problems/ITA2025Q1/examples/wrong_determinant_step.txt": {
+      "sha256": "6dc7a165c035dd8e1ed2dc0ce9bf11d1d5e7055530c8f48fd68471643aa4c208",
+      "size_bytes": 303
+    },
+    "problems/ITA2025Q1/examples/wrong_solution.txt": {
+      "sha256": "595498c74a7d0651513aea91948ac2ca7e531dad8ec12223368cdf87fa215ed0",
+      "size_bytes": 84
+    },
+    "problems/ITA2025Q1/microclaims.json": {
+      "sha256": "e6f45a56bf257306ee7ea9edf79479d4b63333d324fc61502470b589287d137f",
+      "size_bytes": 1487
+    },
+    "problems/ITA2025Q1/problem.json": {
+      "sha256": "6bd013b5fabc9c0c9f4149f6f9df190e10ac5628c4b3c301ba381a040e587f70",
+      "size_bytes": 352
+    },
+    "problems/ITA2025Q1/rubric.json": {
+      "sha256": "ae5f571b77b083b399e95188d42e9fbf532dc53af8757677a8b8f95ff2f918fd",
+      "size_bytes": 1259
+    },
+    "problems/ITA2025Q3/examples/answer_only.txt": {
+      "sha256": "ec1797788783be8cdd0d1b2213f6630b0de54ba2dd11b039b22a131c9ad274d7",
+      "size_bytes": 27
+    },
+    "problems/ITA2025Q3/examples/correct_solution.txt": {
+      "sha256": "81adfa5913140cbd261577019aa6b76301b895df255aace5fd7a4d5889078d37",
+      "size_bytes": 491
+    },
+    "problems/ITA2025Q3/examples/missing_parity.txt": {
+      "sha256": "b8133ae25f08d5b8650b751932682a1805634054733548362dbf966704e9bd3b",
+      "size_bytes": 186
+    },
+    "problems/ITA2025Q3/examples/wrong_coefficient.txt": {
+      "sha256": "9f3bc7a488da67da328e9727b6cb87ed091d50a35f8ff8c171f48d708981760d",
+      "size_bytes": 41
+    },
+    "problems/ITA2025Q3/microclaims.json": {
+      "sha256": "fda02b840ebe69f13603bcdfba696eb5412f53ef6b824de71d940ed10dcac663",
+      "size_bytes": 2026
+    },
+    "problems/ITA2025Q3/problem.json": {
+      "sha256": "a14c7d3b517773169fb301f7c0c18c61810b68ad225feed3a2ce03430cdceaae",
+      "size_bytes": 451
+    },
+    "problems/ITA2025Q3/rubric.json": {
+      "sha256": "5b064cafb98ef2a1930c7c3c294909ad25f3be94468b3bbc2f79439c7e5f3358",
+      "size_bytes": 1349
+    },
+    "problems/ITA2025Q4/examples/answer_only.txt": {
+      "sha256": "6321efe731974f3bf9fbd09073d395ba43903bf39ce3c32fbf556e5c192e6119",
+      "size_bytes": 20
+    },
+    "problems/ITA2025Q4/examples/correct_solution.txt": {
+      "sha256": "5ae6eda0c9c5018a0ced588899022be7c3af160bbac2296dd0bf4777f78de023",
+      "size_bytes": 456
+    },
+    "problems/ITA2025Q4/examples/missing_distinct_inputs.txt": {
+      "sha256": "e62de20e710618f2abed4bed138edc500305351067f4bec0ac3c2e19fa090245",
+      "size_bytes": 296
+    },
+    "problems/ITA2025Q4/examples/wrong_target.txt": {
+      "sha256": "ee97716c7e36c776aba09a44b8b3398478df81b753fe018742ae6b06c47b6e0d",
+      "size_bytes": 186
+    },
+    "problems/ITA2025Q4/examples/wrong_witnesses.txt": {
+      "sha256": "c442f05e75f987e5f6f00d883005abe3823f84a753eb510991b6208c6e119f46",
+      "size_bytes": 195
+    },
+    "problems/ITA2025Q4/microclaims.json": {
+      "sha256": "0b93477ec7f828ed605747edf9d4c1da44d9953e35eca4a239b6a87a09fd024a",
+      "size_bytes": 2319
+    },
+    "problems/ITA2025Q4/problem.json": {
+      "sha256": "c9d10a0dbb27273100e0630d51087067f8d9468a3dbdd6742c91dfcc8dff324e",
+      "size_bytes": 992
+    },
+    "problems/ITA2025Q4/rubric.json": {
+      "sha256": "b2c35b889f34864a8d9379d3e9a7182091c182120819b396df4e499ef9dc9987",
+      "size_bytes": 1269
+    },
+    "problems/ITA2025Q5/examples/answer_only.txt": {
+      "sha256": "61d3cd403bc6547788ef7ba8a7bc75277e267e540cc125c1c4ed0b27c147bf14",
+      "size_bytes": 48
+    },
+    "problems/ITA2025Q5/examples/correct_solution.txt": {
+      "sha256": "2e1aea2143e889a91883b84f659fa98069cec30c8396356d127aad1f9924fc64",
+      "size_bytes": 390
+    },
+    "problems/ITA2025Q5/examples/missing_difference_relation.txt": {
+      "sha256": "157b287f955ebd3eb96a32f63d902e519cb7aa8582d548c7345cf7cd47239fa9",
+      "size_bytes": 131
+    },
+    "problems/ITA2025Q5/examples/missing_factorization.txt": {
+      "sha256": "963812e61c6af50dda69e85fad8f2601ec9ce60ef964d5037c4bacb09ef20e64",
+      "size_bytes": 194
+    },
+    "problems/ITA2025Q5/examples/wrong_direction.txt": {
+      "sha256": "16ea37294919b92750b148235dd5a89a3a2c5c8a326cc5a153d9a0025994bd1a",
+      "size_bytes": 48
+    },
+    "problems/ITA2025Q5/microclaims.json": {
+      "sha256": "d3abeabdc50062aee4176ec4ed00af05a6a8e59d4f835487c939e2443e2278c6",
+      "size_bytes": 1605
+    },
+    "problems/ITA2025Q5/problem.json": {
+      "sha256": "f8a76bc64c58a7664b899a863d16c151bef8ade4d814d6a6ba6289119b3da2c1",
+      "size_bytes": 1060
+    },
+    "problems/ITA2025Q5/rubric.json": {
+      "sha256": "e156780037ea49805de9e7926ae584cd553277577fcc88e69b61b787aabb1365",
+      "size_bytes": 1021
+    },
+    "problems/ITA2025Q8/examples/answer_only.txt": {
+      "sha256": "ffd3efa1d7343fe111dd0bcaa07ec240364b9503d3b332b126eca6b602ec3e94",
+      "size_bytes": 46
+    },
+    "problems/ITA2025Q8/examples/correct_solution.txt": {
+      "sha256": "49153e05f5c53446943169fb1d7d3cf8cb5c9be87e84b81202fa86eb41ba1419",
+      "size_bytes": 916
+    },
+    "problems/ITA2025Q8/examples/missing_sign_analysis.txt": {
+      "sha256": "ede730c477b8a68d66ee702753e86c6efdcb373c4ccf982085803a63f7ef6222",
+      "size_bytes": 193
+    },
+    "problems/ITA2025Q8/examples/wrong_interval.txt": {
+      "sha256": "82a3a2e3d1454e93401800abf299c18bf7471a22da27427baa2d5dd6d97d3fa1",
+      "size_bytes": 54
+    },
+    "problems/ITA2025Q8/microclaims.json": {
+      "sha256": "4f4e1a0334c9cd54208f43e3e30296fa5306bc68988631f7adb19400edc1339d",
+      "size_bytes": 795
+    },
+    "problems/ITA2025Q8/problem.json": {
+      "sha256": "bd690962b3a75985a02291dcf1e0aed2dbac87ede88f036c2cf54b2ecb7514fe",
+      "size_bytes": 1064
+    },
+    "problems/ITA2025Q8/rubric.json": {
+      "sha256": "d0c489b90d155b1a21474c90fc3c18b3750ab90759e286759a2be2bba6ad2706",
+      "size_bytes": 1257
+    },
+    "problems/TME2026P1/problem.json": {
+      "sha256": "2174613e563e9496ba90ab014856266c291a91eaf364b612b8615f1379bcd299",
+      "size_bytes": 1567
+    },
+    "problems/TME2026P2/problem.json": {
+      "sha256": "da24e64110fb0076fae74d503ea906ff4db96fd147986600086b809512510da5",
+      "size_bytes": 2763
+    },
+    "problems/TME2026P3/problem.json": {
+      "sha256": "eb45dd2d22cc8160e078689982a9739f4a5f0f1a384e882d4c5c2df63bfbdfcd",
+      "size_bytes": 2553
+    },
+    "problems/TME2026P4/problem.json": {
+      "sha256": "a419259d72714fb38cd3b7013c02b1a011fbaf8f9218ad33a2e1f6d6856d1557",
+      "size_bytes": 1908
+    },
+    "problems/TME2026P5/problem.json": {
+      "sha256": "52528a0e08363ad043577858a5e35692e6742707fb067fb75cc71be2682c72de",
+      "size_bytes": 2082
+    },
+    "pyproject.toml": {
+      "sha256": "9cc46c96d49acdd066d4219687f78f0652a293a3a8562ceff376a1a717b49587",
+      "size_bytes": 528
+    },
+    "scripts/evaluation/verify_specialized_tme2_rc1.py": {
+      "sha256": "159847ee9a2534f88c9c157cdd7b9b87c20ce074ce9291571f85e6631d7bc31a",
+      "size_bytes": 4873
+    },
+    "scripts/pilot_dec10.py": {
+      "sha256": "cce99846afd78807450181f6767e56c2c60dfba838a841af095056da8bbe4ddb",
+      "size_bytes": 2018
+    },
+    "tests/audit_contract.py": {
+      "sha256": "761dbfa7581de368f148d2364bb2386bd7959f0280a642561cec6f1cfb96a89c",
+      "size_bytes": 3052
+    },
+    "tests/claim_fixtures.py": {
+      "sha256": "2299f1bc43a27a64082a5e98cd7aca1afe8761c10b1d8d5aed5ff267e1d34609",
+      "size_bytes": 638
+    },
+    "tests/conftest.py": {
+      "sha256": "156d14c46c0f33c6c11286594f8abf5b4e1804f333900a614938ce3d70da875d",
+      "size_bytes": 891
+    },
+    "tests/fixtures/capture_math_catalog.json": {
+      "sha256": "2d7a9cb4f3d0d5aa507ddc13d472935b1b983806c5b51920ebd8bba30ff39828",
+      "size_bytes": 1071
+    },
+    "tests/fixtures/f2q1_claim_fidelity.txt": {
+      "sha256": "5b87dc8d4659f6071790553ae2ebf20e472b17124ecf1ef5fe156f29a008b26e",
+      "size_bytes": 608
+    },
+    "tests/fixtures/ita_s071_real_run/audit.json": {
+      "sha256": "847322f5fde73e861f14a79e3b90cd2b4ffe21597d892e565be7156038d61e46",
+      "size_bytes": 78378
+    },
+    "tests/fixtures/ita_s071_real_run/solution.txt": {
+      "sha256": "abfd6160505dd7a7f5cc483d474e94960ce9f27c2446394dbf3f0f135533f016",
+      "size_bytes": 467
+    },
+    "tests/fixtures/ita_s071_real_run/source_manifest.json": {
+      "sha256": "43a19070b9e71452575dd1f34bd9e22e8b4c75214d64161cb0a2637a0fb12894",
+      "size_bytes": 958
+    },
+    "tests/fixtures/ita_s071_real_run/student_claim_checks/student_check_1_lean_file.lean": {
+      "sha256": "3032aea2308ad7d7a903dd766eea8f21030906a0fb7bb41fccafed30d50843c5",
+      "size_bytes": 493
+    },
+    "tests/fixtures/ita_s071_real_run/student_claim_checks/student_check_2_lean_file.lean": {
+      "sha256": "40fcbcc9698c8b4c9b6f38408f8527a21dbe798f078d60827beecf48e7c44fbd",
+      "size_bytes": 496
+    },
+    "tests/fixtures/ita_s071_real_run/student_claim_checks/student_check_3_lean_file.lean": {
+      "sha256": "57d098bcf1a1957fc69ef5325fe4ce3778400b16bb8d1b02d9f7a2237ff62a87",
+      "size_bytes": 449
+    },
+    "tests/fixtures/rich_audit_response.json": {
+      "sha256": "2c6b12fb6aace5cff02ba1d18038bc0edd483fca7b565e88e8533ac1dd9b640e",
+      "size_bytes": 3548
+    },
+    "tests/fixtures/secondary_evidence_03/ITA2025Q1_S001_L04.json": {
+      "sha256": "415becfdc5e809931c35e1d248d1ecc4c07fd6997f8e10c6f98ff9c00366bbbc",
+      "size_bytes": 62342
+    },
+    "tests/fixtures/secondary_evidence_03/ITA2025Q1_S016_L01.json": {
+      "sha256": "f1b59db85758de9e647ffbfcb304f1d2022b77d350d2d604972b17d7c4cfd68c",
+      "size_bytes": 102862
+    },
+    "tests/fixtures/secondary_evidence_03/ITA2025Q4_S003_L04.json": {
+      "sha256": "f3efca97add74dab854fae870e0575e892f2732b0636b3af24c711ca9f3d6c50",
+      "size_bytes": 87766
+    },
+    "tests/fixtures/secondary_evidence_ids/legacy_without_evidence_ids.json": {
+      "sha256": "a4fe05a30df1279a052ca61aaffeb614fbafd4cbd8b80e3ad1ce61dd05646bff",
+      "size_bytes": 1583
+    },
+    "tests/fixtures/secondary_false_credit_04/ITA2025F2Q1_S002_L04.json": {
+      "sha256": "ce757901ea7a9f6bb69cd5b467103e06a9da0ec4896ddb84359a978fa6511c80",
+      "size_bytes": 2868
+    },
+    "tests/fixtures/secondary_false_credit_04/ITA2025F2Q1_S003_L02.json": {
+      "sha256": "23b5e52d8c3a050b832605487145887f155850d7c8a7c1d0ad6d94407f14e6df",
+      "size_bytes": 75744
+    },
+    "tests/fixtures/secondary_false_credit_04/ITA2025F2Q5_S003_L04.json": {
+      "sha256": "801331c788b98909fc958a5cc8461f032058a133595b8ce69aa9d96b620bcbf7",
+      "size_bytes": 6817
+    },
+    "tests/fixtures/secondary_false_credit_04/ITA2025F2Q5_S024_L04.json": {
+      "sha256": "a9b3974307077b9d75a376a443dce5b98ac194e728549776763a24d2280a5f41",
+      "size_bytes": 5914
+    },
+    "tests/fixtures/secondary_false_credit_04/ITA2025F2Q6_S006_L04.json": {
+      "sha256": "688b73216e3b1a7ed92f60e32de818e4edd9ed5b3b0ba82f32c8bbf8e050b4dd",
+      "size_bytes": 2733
+    },
+    "tests/fixtures/secondary_false_credit_04/ITA2025Q1_S014_L04.json": {
+      "sha256": "6150e99e71b5d3cdc3ece24e9f0cf008bafa82a16ad4fc8e268a9a838556d4f1",
+      "size_bytes": 5408
+    },
+    "tests/fixtures/secondary_false_credit_04/ITA2025Q3_S002_L01.json": {
+      "sha256": "bd4f7b833a679779e518acf7f5f98e8cf6b1580e86a6e8f6c2f1700d770d44e3",
+      "size_bytes": 2855
+    },
+    "tests/fixtures/secondary_false_credit_04/ITA2025Q4_S002_L04.json": {
+      "sha256": "61e809e3d661bdaa9b89a96336c92eb423ecf5b910fea12ef7eb906c41bdcb52",
+      "size_bytes": 2320
+    },
+    "tests/fixtures/secondary_live_02/ITA2025Q1_S001_L04.json": {
+      "sha256": "b7dafae9c5335d9b57d221a79d04f9c7d3d4727e91ea323299853a2c1a6ca6aa",
+      "size_bytes": 27835
+    },
+    "tests/fixtures/secondary_live_02/ITA2025Q1_S016_L01.json": {
+      "sha256": "88a253844461b7959167e0d453673f30bdaa1c8f58cd107e7645f093d25b1fb1",
+      "size_bytes": 76252
+    },
+    "tests/fixtures/secondary_live_02/ITA2025Q4_S003_L04.json": {
+      "sha256": "b5ff9a5df9f6f31ff8641de793b71b370357fe6fa10b9c1e84e6bdd38b492a00",
+      "size_bytes": 65460
+    },
+    "tests/fixtures/secondary_live_02/v3_observed.json": {
+      "sha256": "a7469c51c0bd6b9990df49a569e48726eb1109fbd1063577e971ed79234afc38",
+      "size_bytes": 7542
+    },
+    "tests/fixtures/tme2_p1_digital/cases.json": {
+      "sha256": "7fc58be120fa19f2e8d61139fe2a5458f17e4ed5b1e6504b43937ac1294393f9",
+      "size_bytes": 2270
+    },
+    "tests/fixtures/tme2_p2_digital/cases.json": {
+      "sha256": "78ac4ba34cb397d47eedc3bb7f706e144c9ac35248cd5a4262d04601e2a00c61",
+      "size_bytes": 20813
+    },
+    "tests/fixtures/tme2_p3_digital/cases.json": {
+      "sha256": "a5086425f78451e726c696493351dcbf2eae5f45f0157c025290461da984b6e1",
+      "size_bytes": 4605
+    },
+    "tests/fixtures/tme2_p4_digital/cases.json": {
+      "sha256": "1fffa187e4c6448833231943fbe2bc7efee34538e2191e139c624b6eb48b6eab",
+      "size_bytes": 8244
+    },
+    "tests/fixtures/tme2_p5_digital/cases.json": {
+      "sha256": "95f222b915aafa4da17c0e987011b20a4b49ba734cd1402b43d516fcea720087",
+      "size_bytes": 17076
+    },
+    "tests/fixtures/tme_p1_archived_quote_scope/accepted_revision.json": {
+      "sha256": "115c15218c3df7bb9f6ce7483c8c966b1a070fba18f24b304d8c1a7a25b843d6",
+      "size_bytes": 2015
+    },
+    "tests/fixtures/tme_p1_archived_quote_scope/audit.json": {
+      "sha256": "56397b600d3b9681b44ccd9ab8ed57bc13b833a3cd33923b2991fe10cc4cbd19",
+      "size_bytes": 1192683
+    },
+    "tests/fixtures/tme_p1_archived_quote_scope/input_mapping.json": {
+      "sha256": "bf86e0af02671a1084f0d1224a677a6ebb1b83657d4013096355ed5c830e016b",
+      "size_bytes": 851
+    },
+    "tests/fixtures/tme_p1_archived_quote_scope/solution.txt": {
+      "sha256": "015cd234e48ee8f8f97aefceec6e3375405757d4d7d305364735ca8d6938dd69",
+      "size_bytes": 421
+    },
+    "tests/fixtures/tme_p1_archived_quote_scope/source_manifest.json": {
+      "sha256": "7739330e0f7666ba1d6ab2677e2c95ff7a18a0216d4a01106c34a8069dc8dd48",
+      "size_bytes": 651
+    },
+    "tests/fixtures/tme_p1_real_run/accepted_revision.json": {
+      "sha256": "5fe4f5f8b7b844c56188247fddf5c0b82caa5d968f6f79c949ecd33ca6009944",
+      "size_bytes": 2082
+    },
+    "tests/fixtures/tme_p1_real_run/audit.json": {
+      "sha256": "e436c9fecc44586322b86e3b2da6f08b4f683efd73a2b69258b937a55b449d56",
+      "size_bytes": 141078
+    },
+    "tests/fixtures/tme_p1_real_run/input_mapping.json": {
+      "sha256": "bc89aed91f2876bdeffab2f698d21378a7de3e27c5924c020daaa9a2d35cca5d",
+      "size_bytes": 918
+    },
+    "tests/fixtures/tme_p1_real_run/solution.txt": {
+      "sha256": "52ddc7ccc2c48e9e9bc97e6d8c4e5a2d0c73389dd40538e6cc666b406058aacd",
+      "size_bytes": 488
+    },
+    "tests/fixtures/tme_p1_real_run/source_manifest.json": {
+      "sha256": "28c297b1976517931b99fddac930d441dedc2563cc533fb8ebba5a8f33509f71",
+      "size_bytes": 651
+    },
+    "tests/fixtures/tme_semantic_sufficiency_dev.json": {
+      "sha256": "c979a50bfb4d066719edbbdbf66c732ac1d373020aabe481f5c24279eade3981",
+      "size_bytes": 33328
+    },
+    "tests/js/capture-dom.cjs": {
+      "sha256": "fefc5d130b154640db69d694aa7c16943af58048c87e4cabd7a31a5c04caee44",
+      "size_bytes": 6079
+    },
+    "tests/js/exam-fixture.cjs": {
+      "sha256": "c4c00869a8ed783c51786fec3966ce5f6af276f63088aa7df25e099904d4da0a",
+      "size_bytes": 12497
+    },
+    "tests/js/teacher-dom.cjs": {
+      "sha256": "37581869bf57d0ff81103b894e4991c53f6ac4c3d228e5d2584718d2cf55cc78",
+      "size_bytes": 4501
+    },
+    "tests/js/test_assessments_ui.cjs": {
+      "sha256": "4218991ea0ebc1875a27de36410de90a489c889238ec1b17c2c272098a40c0e6",
+      "size_bytes": 9945
+    },
+    "tests/js/test_audit_view.cjs": {
+      "sha256": "35939127172ad6b9e916eb0579fafbe5581b72a0d12ee5ffed473abc5d713b7a",
+      "size_bytes": 7782
+    },
+    "tests/js/test_auth_login.cjs": {
+      "sha256": "0401cf95963fa1796d0f2592d2baa0518c45e4002e8e1f946668dd38b85a1f74",
+      "size_bytes": 1875
+    },
+    "tests/js/test_capture_persistence_ui.cjs": {
+      "sha256": "280274739a68beaa07277e9b26e3a09efbfed10cd042f0bd96aa704f99804f5e",
+      "size_bytes": 8421
+    },
+    "tests/js/test_certification.cjs": {
+      "sha256": "930a6d99251fd1b0dc82db3f99e467a1fbc9bf7aa9ba7bc275f4fa19db74380f",
+      "size_bytes": 4640
+    },
+    "tests/js/test_core_institutional_management.cjs": {
+      "sha256": "35dff8325b0df1d2f33b1212b9184e74351c810115408f3b6925637b0baffb89",
+      "size_bytes": 4183
+    },
+    "tests/js/test_correction_workspace.cjs": {
+      "sha256": "8daac55305ffbe5e7b1b2294c781bee2433bed571855987b593dd793eab37843",
+      "size_bytes": 13240
+    },
+    "tests/js/test_dynamic_dy1.cjs": {
+      "sha256": "ceeedf4652e6c77a0d6b6e7bc57a6fe0b7ede9cb5044282e31b6841d9dbb797e",
+      "size_bytes": 6987
+    },
+    "tests/js/test_dynamic_dy2.cjs": {
+      "sha256": "e5f1f733d4ea8b4f0ed715c8c041f1be36a866b9564691c5ce4963ab77fefa64",
+      "size_bytes": 7310
+    },
+    "tests/js/test_dynamic_dy3.cjs": {
+      "sha256": "bc46559cd0b3b079ef5e06214509dbe8a2d39a8c21c0ac9516ada528f4eb0ebd",
+      "size_bytes": 4062
+    },
+    "tests/js/test_dynamic_dy4.cjs": {
+      "sha256": "5403d93f8cfb534301b1885c631cca9a54a783a77fb29172d3bae640052179e6",
+      "size_bytes": 5000
+    },
+    "tests/js/test_dynamic_dy5.cjs": {
+      "sha256": "db77322aceeea720740dccd1fac0d2379ae9fc127fbe173ee35d32a1842c8938",
+      "size_bytes": 6528
+    },
+    "tests/js/test_dynamic_dy6.cjs": {
+      "sha256": "e4eac0790128a206355691bdb9a5bceeae01edbe5953642dd581b5c54820c87a",
+      "size_bytes": 5871
+    },
+    "tests/js/test_dynamic_dy7.cjs": {
+      "sha256": "7b1df8a4869ef0c2a3665e978a50d392aeaed08e20ca87ff77cc912f78421821",
+      "size_bytes": 2651
+    },
+    "tests/js/test_dynamic_ui_convergence.cjs": {
+      "sha256": "9f48de50363839ccb5b335a71fb49c1d7b70d47c0b4bb1b97fefa2038247abad",
+      "size_bytes": 11108
+    },
+    "tests/js/test_finalization.cjs": {
+      "sha256": "41ac6a69f032291d1aa3f2bd1d87041f259e3468d186368845ab5c664dfb8f60",
+      "size_bytes": 5136
+    },
+    "tests/js/test_full_exam.cjs": {
+      "sha256": "ecfc836fa2a8d444b6c5710db44e862b76fba0a6946f0a5217e57ec22199521e",
+      "size_bytes": 5256
+    },
+    "tests/js/test_human_confirmation.cjs": {
+      "sha256": "b3b95d7da0e2f74aee05c01fc4c20c95955ddfa922cd108f89f8a32e90b9d754",
+      "size_bytes": 6150
+    },
+    "tests/js/test_ink_canvas.cjs": {
+      "sha256": "fdac821bc221909835ef6a7ef4b624c3d701c987f6a1db87b223222436435c97",
+      "size_bytes": 6657
+    },
+    "tests/js/test_ink_model.cjs": {
+      "sha256": "f38bbdcf2f0bf5a8026b6dfb1c0830e953b083cb378e30f2f5ff9c8bd7f44f36",
+      "size_bytes": 3023
+    },
+    "tests/js/test_mathpix_capture_ui.cjs": {
+      "sha256": "974729cc7bc8b7e98dc154373ea7465c44de27f49cf1954759dcbc77d2566e45",
+      "size_bytes": 14318
+    },
+    "tests/js/test_platform_navigation.cjs": {
+      "sha256": "2a61c2126223b377e3140cd634e3c9e2b178ba2cef8205a17da0f137dd47d8e3",
+      "size_bytes": 1255
+    },
+    "tests/js/test_platform_presentation.cjs": {
+      "sha256": "85e3338c93a3b9cca0114ab6fa0f7f5376e0b02768eeab8908b4ae15a05f0845",
+      "size_bytes": 4693
+    },
+    "tests/js/test_problem_math.cjs": {
+      "sha256": "0efa7dd0d2c99a1b54d1316e68f888a52d71eb79c9c6392cfa89ca7ba59743c6",
+      "size_bytes": 18278
+    },
+    "tests/js/test_question_audit.cjs": {
+      "sha256": "bb672d86f8408c0ce1feee8fc42a9baeafa998b861a3c73295461c891fb8e899",
+      "size_bytes": 6818
+    },
+    "tests/js/test_question_reanalysis.cjs": {
+      "sha256": "6f8235fbd9ceea97649b71ef2ddb6ca766c29e29f3224b77a053901c2bb572a5",
+      "size_bytes": 5466
+    },
+    "tests/js/test_recognition_math_view.cjs": {
+      "sha256": "e8c2ab5d02885827ec146664843523a85f9a7740a8f8315f15c8cfc47df8d27e",
+      "size_bytes": 5147
+    },
+    "tests/js/test_recognition_preview_ui.cjs": {
+      "sha256": "0a19c7ce7a33d945f30e1a17f4f5c37032e49d499790471158066804fe7f590d",
+      "size_bytes": 11189
+    },
+    "tests/js/test_reproducibility.cjs": {
+      "sha256": "a38fd31f15119c9609dda38a446791b6711447d9490e661cc68224454230f995",
+      "size_bytes": 4535
+    },
+    "tests/js/test_review_workspace.cjs": {
+      "sha256": "88ab9c160f30e1d2062bc7173a891b0c0dae1984eda2f12d396c6eca84537b78",
+      "size_bytes": 5579
+    },
+    "tests/js/test_student_tutor_exams.cjs": {
+      "sha256": "9a9bacfc0bd3932283f787a3109fee3cca53ba70c7be22a4672c90c892b0bade",
+      "size_bytes": 13883
+    },
+    "tests/js/test_submission_audits.cjs": {
+      "sha256": "64b195f770b4f040c4c55c643c5063d714fdbe40986fd3c9bf9241b9ac1732f1",
+      "size_bytes": 13111
+    },
+    "tests/js/test_submission_client.cjs": {
+      "sha256": "ddb4736f5fbb271c02b111fe166131844edfe60832598f84723f1b1bda8d6bf1",
+      "size_bytes": 7720
+    },
+    "tests/js/test_teacher_decisions.cjs": {
+      "sha256": "cc49292eaf253f40446ccef5c51789e5beb739a5dd6c85e6886d8d4287e80c74",
+      "size_bytes": 16939
+    },
+    "tests/js/test_teacher_exam_context.cjs": {
+      "sha256": "2c99213761d2525ca4efd39b37b7c616faa9455d4d4f3589206e8a2a37afe88d",
+      "size_bytes": 6830
+    },
+    "tests/js/test_teacher_presentation.cjs": {
+      "sha256": "0755cd0320c5ca934eaeefca88fed8658b6e43135cd1849f4d95c15dbd2923f8",
+      "size_bytes": 4961
+    },
+    "tests/js/test_teacher_submissions.cjs": {
+      "sha256": "21caca4824031e4a32c0dfd7aeaf3f03719fc1d0c310a003b92be9378a41d5a8",
+      "size_bytes": 21428
+    },
+    "tests/js/test_teacher_transcription_view.cjs": {
+      "sha256": "ccacef4e9f49db2121c8da75acad0b7edb606bb64a9a172e44cc20b605aa10f3",
+      "size_bytes": 16700
+    },
+    "tests/js/test_tme_accepted_integration.cjs": {
+      "sha256": "2221fa4e3c520e4d81869dbcc676f9fe4758ddb1e474f2640e43120e1c517c7d",
+      "size_bytes": 5131
+    },
+    "tests/js/test_tme_home.cjs": {
+      "sha256": "0cdb71aefd0070fd78809e2350114527553f4b8ce2aaa56dca21b9c873eacf99",
+      "size_bytes": 8376
+    },
+    "tests/js/test_tme_mac_01.cjs": {
+      "sha256": "7b2d290e8e8a9a62a9a79ec203cd9bdbfc4e0324f1c1d2c3964b779fde38e715",
+      "size_bytes": 3952
+    },
+    "tests/js/test_tme_navigation.cjs": {
+      "sha256": "8db7e61fc05052b88ec721e0ae54e49836e85741de1e8780a0c4d4e1ee38f67b",
+      "size_bytes": 6758
+    },
+    "tests/js/test_tme_notebook_figures.cjs": {
+      "sha256": "511456fb578e654262645705fbfbbd74401ad127101680f54b3a15f44eebf540",
+      "size_bytes": 2764
+    },
+    "tests/js/test_tme_pilot_ui.cjs": {
+      "sha256": "548080f8287d7a181bd88f2fe4e0da955138c60d18286a3c4cd40c4e00eed17c",
+      "size_bytes": 4722
+    },
+    "tests/js/test_tme_problem_catalog.cjs": {
+      "sha256": "60987d044dd3160cff77b0dc614090d11b881c60f0dc49f4b5d4c659dccf810c",
+      "size_bytes": 3156
+    },
+    "tests/js/test_tme_problem_selector.cjs": {
+      "sha256": "0fa22d4f4f6f4465e0cd07069fa146cfb943f8ac5e7c9cf75fe6fd4378d60284",
+      "size_bytes": 2751
+    },
+    "tests/js/test_tme_scan.cjs": {
+      "sha256": "aecd08a20f2813c43d0fb1b107bf179b20ed5c60033f8b81ab4f69d69637a0df",
+      "size_bytes": 3006
+    },
+    "tests/js/test_tme_synthetic_demo.cjs": {
+      "sha256": "f1800cb9daa64075a0e04eca9ad59e19f39c828794e1aa4d2c47e02c4ba923c2",
+      "size_bytes": 1828
+    },
+    "tests/js/test_tme_workspace_01.cjs": {
+      "sha256": "df2a47e2a1ecd5e0f9cfedba90b08e68315faf9bb9129601a0e963238d9d9682",
+      "size_bytes": 14673
+    },
+    "tests/js/test_tme_workspace_01b.cjs": {
+      "sha256": "cdc687e870b1bef216832a1190aa82c2f01d309ed1163e53174aaf79f4ed6d50",
+      "size_bytes": 5334
+    },
+    "tests/js/test_tme_workspace_01c.cjs": {
+      "sha256": "d2ad7c4bf9150f32568d79977463de6336612cd9b5fd22aae5fdea4c464c3f2d",
+      "size_bytes": 4549
+    },
+    "tests/js/test_tme_workspace_01d.cjs": {
+      "sha256": "af21096dc0205e4874fe94fbab51021d800903403ec50edd7062460bc3a863c8",
+      "size_bytes": 2680
+    },
+    "tests/js/test_tme_workspace_02.cjs": {
+      "sha256": "db7d11068179bfa49f4cb3638cef322aa4a9cd47a99e0a1cf628bfe89dff3237",
+      "size_bytes": 2375
+    },
+    "tests/js/test_tme_workspace_03.cjs": {
+      "sha256": "bc0a451033b98450e17eed2175b91e893fb89911ef317fed4752ffd0ee795cb9",
+      "size_bytes": 3393
+    },
+    "tests/js/test_tutoria_assistant.cjs": {
+      "sha256": "7a59e09792b99f26c541cdda9d0d49bddafbbfbdd64b737da095b6651fe09dcf",
+      "size_bytes": 9975
+    },
+    "tests/js/test_tutoria_chat.cjs": {
+      "sha256": "d7caa5e83a2acec35ffbf85442ab9a236ca846fe4d0d6a3a840b55dcf08787cd",
+      "size_bytes": 10385
+    },
+    "tests/js/test_tutoria_demo.cjs": {
+      "sha256": "a4b7dfe87b69d3320562077c9153036d35a2f6c05ba602240d58efd11e51ae7d",
+      "size_bytes": 11408
+    },
+    "tests/js/test_ui_01_shell.cjs": {
+      "sha256": "49bbf7389edbef00fc79122538feca4ac543e9a67a5820ac7a18c79ba6d31e96",
+      "size_bytes": 28735
+    },
+    "tests/js/test_ui_02_workspace.cjs": {
+      "sha256": "e756c3497fa9f08f96a6129cfb6f00109fa9991a5a5572f34a35aa0f8020d7f1",
+      "size_bytes": 27864
+    },
+    "tests/js/test_ui_03_teacher_workflow.cjs": {
+      "sha256": "755dbfc173b00d4d7e1b7eb46511b85b187e2b42ac3cf6c0455dfdb373247b66",
+      "size_bytes": 11824
+    },
+    "tests/js/test_ui_p0_context.cjs": {
+      "sha256": "7cdcb6dac80e5f88835291e65089e67685c340c7965c7b7ac668272bf91ad7a8",
+      "size_bytes": 20703
+    },
+    "tests/js/tme-dom.cjs": {
+      "sha256": "0e416e6f18deec7eaca877ef886bd91a62246c3fdd751c7b1c633747b85abf48",
+      "size_bytes": 13943
+    },
+    "tests/js/ui-dom.cjs": {
+      "sha256": "2b14f75ee065c345dcf0178e96bb73fead467522270091c55027f04695e1e157",
+      "size_bytes": 2406
+    },
+    "tests/js/workspace-dom.cjs": {
+      "sha256": "4045eb1cb2e7a4e351686e07721636ec0e4621c63d65d42188b1e5ecca9b4b9c",
+      "size_bytes": 4934
+    },
+    "tests/public_privacy.py": {
+      "sha256": "2ed80a0c40c9e032dbef1a46cd43b95f747f514e9f4a612d41d054786c2a29c6",
+      "size_bytes": 1112
+    },
+    "tests/secondary_selection_helpers.py": {
+      "sha256": "f9f4e7e2000b26781a42922bedd370ae964295aacc74b9f2ac60173ec47bbb0d",
+      "size_bytes": 808
+    },
+    "tests/test_assessments.py": {
+      "sha256": "7e1bad8cd1872b89e5ba380247e89132dae5f67b52831bde041b688592a90548",
+      "size_bytes": 22273
+    },
+    "tests/test_audit_math_canonicalization.py": {
+      "sha256": "0237df48cf614a2fa55687eecf5695c65a6e084aabb893d9f07dd3c7eb02c825",
+      "size_bytes": 4489
+    },
+    "tests/test_cap04_global_semantics.py": {
+      "sha256": "61ac39a2efa6a77d7a1550f61ec978be6b9a222db307eaff1b8af1a73e5046bd",
+      "size_bytes": 14173
+    },
+    "tests/test_cap04_integrity_regressions.py": {
+      "sha256": "ba143c862621f6924d59efed1137001e59aa3bb2e53f976200b9ee2cc0c20830",
+      "size_bytes": 11948
+    },
+    "tests/test_cap04_parity.py": {
+      "sha256": "f226f53c9284348f0877788428d22c2cdbd9b2fc341dba06d5d3b578862cd440",
+      "size_bytes": 25072
+    },
+    "tests/test_capture_contracts.py": {
+      "sha256": "2f66d33bc8b66b0da51604ee2b416767e628296495f0a4f029a7b2c380623b2e",
+      "size_bytes": 7463
+    },
+    "tests/test_capture_static.py": {
+      "sha256": "de5d1a695be1d7bff53fefa602bcdb17a949e8bd56b466ddb0a0405a6152267e",
+      "size_bytes": 9302
+    },
+    "tests/test_claim_alignment_obligations.py": {
+      "sha256": "f98f4e1551f53d85d397b2edf802f669d9f61aa1b5ad6731a3a0b9331aa407ee",
+      "size_bytes": 8813
+    },
+    "tests/test_claim_fidelity.py": {
+      "sha256": "1df3698832dba11d87f54b5330246a3240419bf0ff964008df1f6f492a8c18b2",
+      "size_bytes": 10216
+    },
+    "tests/test_common_claim_pipeline.py": {
+      "sha256": "39b1bb5ffaa4179c4d4a234e893fd8d5f381f7514e0247730caae62f4e8173bb",
+      "size_bytes": 2521
+    },
+    "tests/test_common_math_claims.py": {
+      "sha256": "fc16f27a265f9b417425965798749ee62e08e2918ab8f9f9cbe894150f7f62cd",
+      "size_bytes": 16495
+    },
+    "tests/test_core_auth.py": {
+      "sha256": "78cbfe376c82825cfaf7a2c1c5681d9de0011ba4ad0d5eea6c2a10a0f1de8fbd",
+      "size_bytes": 22865
+    },
+    "tests/test_core_institutional.py": {
+      "sha256": "fc48f0ed0d87877f16f3cea8902a2f327fefa26a124f31e3b5659e5bbbddf274",
+      "size_bytes": 11475
+    },
+    "tests/test_dec10_integration.py": {
+      "sha256": "7ea51e8fa97ddbf2be98355613f9e5b8600f02cc5776ac7c71084f6c437e5f7e",
+      "size_bytes": 8955
+    },
+    "tests/test_dec10_specialized.py": {
+      "sha256": "7a826970c56a43ae0d2223bb5a81ff89b9cbf3638701ac0d75d30a8732756a5d",
+      "size_bytes": 8706
+    },
+    "tests/test_demo_december_operations.py": {
+      "sha256": "0d48a1305dcde93344df46b5a3b9241e5aed3742fea94d10155114185439b352",
+      "size_bytes": 2766
+    },
+    "tests/test_dynamic_dy1.py": {
+      "sha256": "47456493c2e7040397ed82124b767157e91929feb7b523f17a0a96ef6fd6eb53",
+      "size_bytes": 14824
+    },
+    "tests/test_dynamic_dy2.py": {
+      "sha256": "90ce1115fd793513872e6ad3fe9ac808e2670651c08ba4acf2e40c58ac6bfff4",
+      "size_bytes": 24734
+    },
+    "tests/test_dynamic_dy3.py": {
+      "sha256": "a4a52dedf6193198eb2c2d072dbe3b6bf842e35afb53133dde238e3d0c80254d",
+      "size_bytes": 17582
+    },
+    "tests/test_dynamic_dy4.py": {
+      "sha256": "764ea2a3f476b6902004d43e910d5af9e00a720dcc98d728da10e52de6c64860",
+      "size_bytes": 24675
+    },
+    "tests/test_dynamic_dy5.py": {
+      "sha256": "1ea8b4751c743288608d3c205d23f184733b977e33bb3aef1d4659ff162bb61e",
+      "size_bytes": 30538
+    },
+    "tests/test_dynamic_dy6.py": {
+      "sha256": "1d90e44967e1ed9af52b626fc4796cf6d1d6b210e538a3fc85fc20835f2faf3e",
+      "size_bytes": 22105
+    },
+    "tests/test_dynamic_dy7.py": {
+      "sha256": "c151bdd5c774e7f6c50f1d3fa94a83f31bd60643682208a06bbf8609c4f58e24",
+      "size_bytes": 16455
+    },
+    "tests/test_dynamic_r1.py": {
+      "sha256": "8ca3600e02cb825dc3d1aa134f4ccd8733be93740dc760d2f4521f243854a529",
+      "size_bytes": 8826
+    },
+    "tests/test_evaluator_architecture.py": {
+      "sha256": "f56bcf2bbb24723bf1a824bfdc5183e49f67139aad9cda02aeb9a7106304862b",
+      "size_bytes": 393
+    },
+    "tests/test_evidence_id_semantic.py": {
+      "sha256": "c109d5a0a7cf621d6575891b1f6b82393af282a75fc8b97c544dccb936e906bd",
+      "size_bytes": 14971
+    },
+    "tests/test_f2_strong_lean_suite.py": {
+      "sha256": "3c2a337f0d783c74c629d552eaf29fccb9d0cb9f3d214d4413cd45ccaf363820",
+      "size_bytes": 2225
+    },
+    "tests/test_f2q1_rubric_adjustments.py": {
+      "sha256": "1e6fee88a4ac5bf4be92f5bb1c866d8afc284d01014c9efc956057f344878b91",
+      "size_bytes": 5451
+    },
+    "tests/test_f2q1_strong_certificate.py": {
+      "sha256": "7c353db8f66ead48ca2aa12235ee8af53fa04166bc2a09162b6819ab4b7c6556",
+      "size_bytes": 1435
+    },
+    "tests/test_f2q1_student_claim_checks.py": {
+      "sha256": "4dd9b6ae251f7986db10c13a68526975eb3fd1bc59567c8b126ee77ce0667e6c",
+      "size_bytes": 2745
+    },
+    "tests/test_f2q3_rubric_adjustments.py": {
+      "sha256": "33201f370d38c06949f5a8ac881276bf0f89d028f78ffd507cbc4147e2a56a61",
+      "size_bytes": 6113
+    },
+    "tests/test_f2q3_strong_certificate.py": {
+      "sha256": "dcc11432864bcb9e7eb0e0c0f4ce9e364770dd9ac958de2165424b841af4ce02",
+      "size_bytes": 2332
+    },
+    "tests/test_f2q3_student_claim_checks.py": {
+      "sha256": "efc34aaab9b84c874325a43a251101b4a46cfd8f603447c5bc2340510aeec3ef",
+      "size_bytes": 2790
+    },
+    "tests/test_f2q5_rubric_adjustments.py": {
+      "sha256": "b81f6ec7dcad7b40ace42490b54036f044e58325e6f8efb32df7cfc7fd88dee0",
+      "size_bytes": 6471
+    },
+    "tests/test_f2q5_strong_certificate.py": {
+      "sha256": "300401d58ffa30cb575cd156d2691168a1eeae6a88b801384135db6bfc42bc5b",
+      "size_bytes": 2275
+    },
+    "tests/test_f2q5_student_claim_checks.py": {
+      "sha256": "be9212e2be1de5267e1d189a4ef91adf1b11372ea8d88b7d9b7c9ff35ae8e5ee",
+      "size_bytes": 2995
+    },
+    "tests/test_f2q6_rubric_adjustments.py": {
+      "sha256": "a3b5a9a35526056992018ddbab2f07b63e98c64c2d532bee83eb80a07f4ef406",
+      "size_bytes": 5497
+    },
+    "tests/test_f2q6_strong_certificate.py": {
+      "sha256": "25b7f4f876c2080176c37c69cdb70fe70e4e05ae693777312905706c59679492",
+      "size_bytes": 2656
+    },
+    "tests/test_f2q6_student_claim_checks.py": {
+      "sha256": "3e6b71d254dd91c721e9d3843d87e81caa9faa39cd38657a51c7f082b78877fb",
+      "size_bytes": 2839
+    },
+    "tests/test_f2q8_rubric_adjustments.py": {
+      "sha256": "81ef56e56eb2359a3f55cf1a0357e6e673752b7fde22e1ef1fcd4e67dd3d03d5",
+      "size_bytes": 5850
+    },
+    "tests/test_f2q8_strong_certificate.py": {
+      "sha256": "9a6af628ea54c48cc5db9ff2b847f0e677e8e3ec865a205e09b595bd58d86658",
+      "size_bytes": 1370
+    },
+    "tests/test_f2q8_student_claim_checks.py": {
+      "sha256": "91db91f9b5651127a91a16fac56b63a7c3db32ff0c930064f1d782fc0592b832",
+      "size_bytes": 4180
+    },
+    "tests/test_generic_student_math.py": {
+      "sha256": "bd8047517638b4f7d0c73197c3b7981d7a97f966ceb1e47f1364a9272323a530",
+      "size_bytes": 10448
+    },
+    "tests/test_generic_student_math_pipeline.py": {
+      "sha256": "facf53547841ff3004136ccee8e303da43ca3de99b86f3b4cbdc6d3cf534023a",
+      "size_bytes": 1693
+    },
+    "tests/test_gov01_public_api.py": {
+      "sha256": "84133c526c3f7f382339a008977f85a81dac5e40d94e5b9a3156de2296596e3e",
+      "size_bytes": 9731
+    },
+    "tests/test_handwriting_recognition_benchmark.py": {
+      "sha256": "fb06c62016f130e95955b61fcc3de05482225a69ef548f82d126053efb81371e",
+      "size_bytes": 5893
+    },
+    "tests/test_hmer_audit_parity.py": {
+      "sha256": "a0e25ac8b86abacc2f81ec44c6511cfbba98ebead3c26fd3ca86de508f001b8b",
+      "size_bytes": 7970
+    },
+    "tests/test_ita2025f2q1_level1.py": {
+      "sha256": "cc0c8a28631acfd9db3785e4a6b644d5cbd805ada9ebec4e27e3b50816845dc4",
+      "size_bytes": 3488
+    },
+    "tests/test_ita2025f2q3_level1.py": {
+      "sha256": "dd2b9da243c411d35f33fa0679c73be27922eadc1c1cedc1b9d271b0240f3f3d",
+      "size_bytes": 3968
+    },
+    "tests/test_ita2025f2q5_level1.py": {
+      "sha256": "2be072941fb967c5efcaa13b4f6feaa17e9b2b4d38d04a3bfb211504a07c1276",
+      "size_bytes": 3553
+    },
+    "tests/test_ita2025f2q6_level1.py": {
+      "sha256": "f1ee99eee41462e562df3cfd9544ec18a46158a2925763d95178c1aabbd3890e",
+      "size_bytes": 3373
+    },
+    "tests/test_ita2025f2q8_level1.py": {
+      "sha256": "ca6f50d2fc05513c3a316472bf9af500781ecaa9d06f2952a1fda2a5d04ee883",
+      "size_bytes": 3735
+    },
+    "tests/test_ita2025q1_level2.py": {
+      "sha256": "cda74a3152b179f5971e912226d183c6f7d5f69fbd8d30190f6e397d45bd4864",
+      "size_bytes": 6829
+    },
+    "tests/test_ita2025q3_level1.py": {
+      "sha256": "5e00a23feb45872b08c0e5f25966b09fa1351222a50dfaad14912475b4a747c0",
+      "size_bytes": 3588
+    },
+    "tests/test_ita2025q4_level1.py": {
+      "sha256": "6458b51763bc72de4b4ce90bea63f1263d9bbf1eb074389fe8be71cb62524649",
+      "size_bytes": 2907
+    },
+    "tests/test_ita2025q4_level2.py": {
+      "sha256": "ce867c673bc4717b809068ff1ae351fedd226387866398b45a108666de68c4d8",
+      "size_bytes": 3177
+    },
+    "tests/test_ita2025q5_level1.py": {
+      "sha256": "6c81df26ca68ea4d8301c53f11f20bd063c4da0553471aec35f964cc231446a5",
+      "size_bytes": 4212
+    },
+    "tests/test_ita2025q8_level1.py": {
+      "sha256": "6354540e852792341fe838879f17c29ef9073af97038a885233acbc9be300951",
+      "size_bytes": 3326
+    },
+    "tests/test_ita_real_fallback_replay.py": {
+      "sha256": "fb3dd87c1cef530c1d0fab7071b251982499698359f3c3ac4f8908f8a19f9f75",
+      "size_bytes": 11533
+    },
+    "tests/test_level1_f2_suite_regressions.py": {
+      "sha256": "85f44c8f6649a33210c7fc2f6148f2ae6ebe4f8ed2b42dc996b1395e2134db85",
+      "size_bytes": 3466
+    },
+    "tests/test_math_canonical.py": {
+      "sha256": "2e0a914364f2567d4c21a5b5fe1048c6015812f06a0c2ca0cdc55d465af1b8d3",
+      "size_bytes": 11423
+    },
+    "tests/test_math_canonical_pipeline.py": {
+      "sha256": "48569970f4e34ec15804634ea532c84e2b8cd4860a7d611f88eae96403cc084b",
+      "size_bytes": 1664
+    },
+    "tests/test_mathpix_strokes.py": {
+      "sha256": "07df67d0ea7bb25771b6d14e5d17f58a7aad3d0b838c0262f9da0c4ad38f09dc",
+      "size_bytes": 15363
+    },
+    "tests/test_mvp_ita_10_questions.py": {
+      "sha256": "acd344277b2ca9136715d6a6efd21b20185a42feb08686958503ddd02feff7d8",
+      "size_bytes": 4828
+    },
+    "tests/test_obligation_semantic.py": {
+      "sha256": "122b421fbeb97359c3d38c0f953f86fb53c5d783b041add3c12fa3d07d2cc471",
+      "size_bytes": 13143
+    },
+    "tests/test_official_mathpix_flow.py": {
+      "sha256": "344648d688bf7bda31851bbddb2762cf8a104e19301974dca78a83ef6b1f0b8e",
+      "size_bytes": 9388
+    },
+    "tests/test_pauta_engine.py": {
+      "sha256": "ef6b91162dd7cfef7852869ff02dfd3ae6c5894e3c2ec492c0aca7e21f88fcac",
+      "size_bytes": 20486
+    },
+    "tests/test_pedagogical_report.py": {
+      "sha256": "6c7d488b2dab5dedc58b5d33ab58cafb1ce79791c596958c5bc03f840e239b4e",
+      "size_bytes": 3106
+    },
+    "tests/test_positive_credit_evidence.py": {
+      "sha256": "3ded98495aa57f31c8db83f63de1cf366a7f3607203407e0fb778f1490bea8d1",
+      "size_bytes": 18119
+    },
+    "tests/test_problem_assets_contracts.py": {
+      "sha256": "89c45a43443ed0d6b79dba322deb7776da34f19cb194a81c3087d1e65798e314",
+      "size_bytes": 739
+    },
+    "tests/test_problem_assets_validation.py": {
+      "sha256": "d9f4541c67ef1d9984744229454a6170ace14638a3039a53b66f5f8e60e66fed",
+      "size_bytes": 1705
+    },
+    "tests/test_problem_router_coverage.py": {
+      "sha256": "df981ea0c18e30f8dda34cdc769f4569127d3a32224fea76c7ab877df2c04e22",
+      "size_bytes": 1939
+    },
+    "tests/test_public_audit_boundary.py": {
+      "sha256": "3833b60893bd7e51f3d3f75fe36a8fbe5e8f0dd2c084ca475cc04758184f2ad1",
+      "size_bytes": 11665
+    },
+    "tests/test_recognition.py": {
+      "sha256": "e80027cc96eeb836ee12240217f1a6a2889a10a916b554e501a3d178811ab0fd",
+      "size_bytes": 19991
+    },
+    "tests/test_recognition_invariants.py": {
+      "sha256": "2693190eb037d36b09d11a215a8fd880d5b1aad9eb98a433475fc74bb791b27d",
+      "size_bytes": 25967
+    },
+    "tests/test_recognition_preview.py": {
+      "sha256": "090ec3eb411663cea2bd99c85e08b8d382aa033ea6f1f150f564c3131d86db86",
+      "size_bytes": 5108
+    },
+    "tests/test_recognition_preview_auth.py": {
+      "sha256": "5ae0d791b19de4d6393222572f89afd18915dd53cf2cd496e6c1c54a89eb3057",
+      "size_bytes": 7492
+    },
+    "tests/test_reproducibility.py": {
+      "sha256": "4f179c21ade248dca32f7b4cdd4881ef471d2872fd600ea6968e30a1a069cd2c",
+      "size_bytes": 26012
+    },
+    "tests/test_rubric_bridge.py": {
+      "sha256": "a705695a6c149a450340132883b38e23589cb585986a64acd7add90d3766fc76",
+      "size_bytes": 11528
+    },
+    "tests/test_rubric_bridge_pipeline.py": {
+      "sha256": "70b403fa2f5ac10a06905e12b23cf7357f0c08f1b730889af79aeed8a38fd40a",
+      "size_bytes": 1478
+    },
+    "tests/test_scope_boundary.py": {
+      "sha256": "12ec0f7821fc86654e702883fea150029a9aeff9a830afecb1cc50ca473e0600",
+      "size_bytes": 4571
+    },
+    "tests/test_scope_boundary_replay.py": {
+      "sha256": "1871df3a44630cf043bc263fb134ca3be28706ec7b43ee6edd87b6b261549b8c",
+      "size_bytes": 3777
+    },
+    "tests/test_score_policy.py": {
+      "sha256": "b9d1c127fac64708aaf0570fe58be83e99bf5b90be9d231b8ef891fa4ccc207a",
+      "size_bytes": 9841
+    },
+    "tests/test_score_policy_api.py": {
+      "sha256": "a38817a4441b6d48f827fd99f057376b74c096568e3eb8cac963a840d683be5f",
+      "size_bytes": 6323
+    },
+    "tests/test_secondary_adjudicator_contract.py": {
+      "sha256": "8a20bcd00edc2c0d76d4162b8d4f377ae45024d4841b56062f5addd0401cc5f6",
+      "size_bytes": 19555
+    },
+    "tests/test_secondary_evidence_ids.py": {
+      "sha256": "038541a7b2807e826210babb8186bf3db72f3dc1791c6f2947c3a6e7b2a0e422",
+      "size_bytes": 11215
+    },
+    "tests/test_secondary_false_credit.py": {
+      "sha256": "32d9d8f95d030831bf0363b542d88ba6aba0aa64722e3876ac769a4ff1a23862",
+      "size_bytes": 13121
+    },
+    "tests/test_secondary_live_contract.py": {
+      "sha256": "67e7e0ab924e006c43eef30aacf1ff28858614e398e5ca30e9f41d24278aca98",
+      "size_bytes": 7429
+    },
+    "tests/test_semantic_claims.py": {
+      "sha256": "099ed04a47286642d27196836ef45a5344e217067616d5b867ec1c0a2e3fc873",
+      "size_bytes": 13773
+    },
+    "tests/test_semantic_sufficiency.py": {
+      "sha256": "e583c725da21a1c5f500cbff7609c55ff9ba4129e395b349fff9f1d4cbaa8dde",
+      "size_bytes": 9637
+    },
+    "tests/test_static_ui.py": {
+      "sha256": "8e970cf296031e5ccaa579111f4e1f5858e0ddec38135c7d2c7fb49ef0145fc0",
+      "size_bytes": 5261
+    },
+    "tests/test_student_proof_semantics.py": {
+      "sha256": "9882c372fe87932e2ac4935e9ee60c22d4f89f1d5fda731879b9554ec37a6a4b",
+      "size_bytes": 8383
+    },
+    "tests/test_submission_audits.py": {
+      "sha256": "496136d85abbfd7f3eee25e1fbc7a0a7f12a2c4d1673dfd8777b9157babd5bfe",
+      "size_bytes": 18199
+    },
+    "tests/test_submissions.py": {
+      "sha256": "36660ae9d664df18dcce21fb5afbc4d55b2b788e4ba065c1c4c58b9f53fc6a38",
+      "size_bytes": 12383
+    },
+    "tests/test_submissions_ui.py": {
+      "sha256": "f72ffd1d0ad793eee280d4b423f1108d4f903f3514cb0d6d3c1bbb1e8eb1420b",
+      "size_bytes": 2353
+    },
+    "tests/test_sufficiency_dev_regressions.py": {
+      "sha256": "7a5f750bfe3b054c1209671f831b53e5580eda7e44c2d34650f2314c41332658",
+      "size_bytes": 1373
+    },
+    "tests/test_teacher_decisions.py": {
+      "sha256": "e6d3d7cbd45d3b7083af240893f2b7ab0bde93ed73bf26662da552ea2f1652eb",
+      "size_bytes": 23787
+    },
+    "tests/test_tme2_p1_pauta_bridge.py": {
+      "sha256": "7cdef96e422c5ca8f3d83c6ba0b53e8b97644daa4633862550dcf3d1ede1f692",
+      "size_bytes": 13450
+    },
+    "tests/test_tme2_p2_pauta_bridge.py": {
+      "sha256": "089552658640f3befa4ebd5fb45c8c63d5ba683ae51ea92315f700ba53fedae5",
+      "size_bytes": 15086
+    },
+    "tests/test_tme2_p3_pauta_bridge.py": {
+      "sha256": "f8244fc46025b429af7c41a16ff72080549697b215178a74070f86236ef6822f",
+      "size_bytes": 12655
+    },
+    "tests/test_tme2_p4_pauta_bridge.py": {
+      "sha256": "1bd758ab4f82a34144eff36d678617b58543a3c3ef258a1bf1c5582235347ebf",
+      "size_bytes": 12508
+    },
+    "tests/test_tme2_p5_pauta_bridge.py": {
+      "sha256": "cf594ac2553499c7bc25d1794f460e1dd97545239dab9d5feb77ad7c7204335e",
+      "size_bytes": 12210
+    },
+    "tests/test_tme_accepted_integration.py": {
+      "sha256": "6b70a4cf2312863de84c0a7bc77363e6b0bc3c5e5d2d0ff1334aab159a0d3a47",
+      "size_bytes": 19724
+    },
+    "tests/test_tme_archived_quote_scope.py": {
+      "sha256": "d0b0e08799edaad488047aa154b6896009a34dc29907203bc1a97115f36bacf1",
+      "size_bytes": 9238
+    },
+    "tests/test_tme_audit_view.py": {
+      "sha256": "cf846430afe84e7eda11c22249879f0653fbad5ac2300d7c430ffcb842b7bab4",
+      "size_bytes": 4872
+    },
+    "tests/test_tme_certification.py": {
+      "sha256": "410afc2b1e9f128b160f033d97f39f3389c28a5ff7fafd92d9233788260ea5fb",
+      "size_bytes": 12758
+    },
+    "tests/test_tme_demo_auth.py": {
+      "sha256": "2e72acf95dee03628da98657a530d76dc70ecd07a74a97794a5f4af302ca01f2",
+      "size_bytes": 14612
+    },
+    "tests/test_tme_finalization.py": {
+      "sha256": "8c08de3fca09817f964145ee03d6e0f7849d4cfdb27a912ec823943765144949",
+      "size_bytes": 14570
+    },
+    "tests/test_tme_full_exam.py": {
+      "sha256": "e789bbd350156e785c400d6804c6785f2c5edf86cc3d81528ee69daf4e56e397",
+      "size_bytes": 14867
+    },
+    "tests/test_tme_home_summary.py": {
+      "sha256": "b3942dc0d5804e4ab51554f2282671f82804f9a28b351ee4b62f0e7276e569ca",
+      "size_bytes": 17010
+    },
+    "tests/test_tme_human_confirmation.py": {
+      "sha256": "69fca875a25ee84cd6e649c367938ba34eadf5b45c5651c9b02b5fa5abc1b81c",
+      "size_bytes": 13478
+    },
+    "tests/test_tme_hybrid_grader.py": {
+      "sha256": "66279516a534016c0c30470264000f02a52ce201c94699447b72b61c44876b46",
+      "size_bytes": 13470
+    },
+    "tests/test_tme_minimal_functional.py": {
+      "sha256": "76b4928102f1f795ea6cee570cce62032e6a7f4db01d9f00378d7dd2f168d5de",
+      "size_bytes": 15217
+    },
+    "tests/test_tme_model_ablation.py": {
+      "sha256": "016bcb8ac3898c2a7e04ba2ef2230d74ac7d27fa38656526be937813be4a2006",
+      "size_bytes": 11353
+    },
+    "tests/test_tme_model_compat.py": {
+      "sha256": "b2fe93815e07ea8548911088a08073b48a1ce4f97c8a8b95107ff8301fe54ad6",
+      "size_bytes": 7677
+    },
+    "tests/test_tme_navigation.py": {
+      "sha256": "df3064786220b05ac8adc8e4024c0ace9a00b668268bc56195d59ec930184211",
+      "size_bytes": 5652
+    },
+    "tests/test_tme_photo_errors.py": {
+      "sha256": "dce74bd9e291f174ca6a90c9727d257b3fdc710c974ae19353349deb849df83d",
+      "size_bytes": 6619
+    },
+    "tests/test_tme_pilot.py": {
+      "sha256": "965848d279c616387a372d96629a68a0aa9dc15f95660a11dc4e3c4e3c726ec5",
+      "size_bytes": 13872
+    },
+    "tests/test_tme_problem_catalog.py": {
+      "sha256": "e53114ef6376d37844b3fa5a0980fc5a0286249cf3de38a2df225e4c23285924",
+      "size_bytes": 7774
+    },
+    "tests/test_tme_question_audit.py": {
+      "sha256": "7f0564a4f7441890aa6ec6aa9e8d7d95452c06f4c82a338794270fd497264309",
+      "size_bytes": 12536
+    },
+    "tests/test_tme_reanalysis.py": {
+      "sha256": "292e67a05af146f0876497b9c76150a09bb1d0e6b5681fd9943e40a3056e882f",
+      "size_bytes": 9113
+    },
+    "tests/test_tme_review_diagnostics.py": {
+      "sha256": "904905d69a9eef20040d6129a65e59f6c6c5bd0ea2b51a65c72db3819c8883ae",
+      "size_bytes": 14295
+    },
+    "tests/test_tme_review_workspace.py": {
+      "sha256": "f2c02b935af5cf292d2fc6c50fd9ffcf0510c833c434f78e65641e974fb56b30",
+      "size_bytes": 11480
+    },
+    "tests/test_tme_synthetic_demo.py": {
+      "sha256": "10af2702a3b6c6443db1980aa5e5d15692989997eb8020603d27a5efa9b015c7",
+      "size_bytes": 9056
+    },
+    "tests/test_transcriptions.py": {
+      "sha256": "f0454bb42d7288491c01e575bbcb9443bfdddcb59b8b9de6b0836d8b9a2e12e9",
+      "size_bytes": 20953
+    },
+    "tests/test_tutoria_chat_demo.py": {
+      "sha256": "f883b83d0d83ef5bd887a3b8b590e860da6a14a10a13df9a24c0c698767a7c70",
+      "size_bytes": 3033
+    },
+    "tests/test_tutoria_demo.py": {
+      "sha256": "625ba8cd09bf532d69d5ece411f8c2a0231f9e9c5fa22a758bb58ef20ac233da",
+      "size_bytes": 2234
+    },
+    "tests/test_ui_01_shell.py": {
+      "sha256": "aa5b7d0f7f910c2e4b8316ada490645d878b1e83aa2f0e4865a7ecfbf1a4ccb9",
+      "size_bytes": 8118
+    },
+    "tests/test_ui_02_workspace.py": {
+      "sha256": "4ee32d6ed21e68f3cd8957a7de4aa3c83dd3a09c9f2e5aa908ad81821861d3d8",
+      "size_bytes": 7472
+    },
+    "tests/test_ui_03_teacher_workflow.py": {
+      "sha256": "70c2b5a5738569acede095b9380d37a8fa5a92172754631e55bf049987cc6547",
+      "size_bytes": 4443
+    },
+    "tests/test_ui_p0_accessibility.py": {
+      "sha256": "f19e3a6c2a06a7aaa385c172d89a14be7134e50c7dbad2034577b37d71f7f997",
+      "size_bytes": 2324
+    },
+    "tests/test_ux_pro_01.py": {
+      "sha256": "6c98a5395e596f26e9de96cd214c7916685e4bf7106d03682eb3cceabe9ae4cd",
+      "size_bytes": 2244
+    }
+  },
+  "inventory_note": "Execution sources, prepared assets, tests and RC documents/evidence. Manifest/checksum, output-only verifier logs, .lake build cache, secrets and future gold are excluded."
+}

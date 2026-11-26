@@ -1,0 +1,450 @@
+{
+  "schema_version": "pauta.v1",
+  "problem_id": "TME2026P4",
+  "title": "TME² 2026 — Problema 4",
+  "max_score": 20,
+  "unresolved_policy": "withhold",
+  "obligations": [
+    {
+      "id": "a.triangle_pbq",
+      "description": "Reconhece PBQ equilátero.",
+      "accepted_origins": [
+        "deterministic",
+        "student_lean"
+      ]
+    },
+    {
+      "id": "a.pb",
+      "description": "Determina PB=x.",
+      "accepted_origins": [
+        "deterministic",
+        "student_lean"
+      ]
+    },
+    {
+      "id": "a.bq",
+      "description": "Determina BQ=x.",
+      "accepted_origins": [
+        "deterministic",
+        "student_lean"
+      ]
+    },
+    {
+      "id": "a.pq",
+      "description": "Determina PQ=x.",
+      "accepted_origins": [
+        "deterministic",
+        "student_lean"
+      ]
+    },
+    {
+      "id": "a.perimeter_pbq",
+      "description": "Determina o perímetro PBQ como 3x.",
+      "accepted_origins": [
+        "deterministic",
+        "student_lean"
+      ]
+    },
+    {
+      "id": "a.triangle_rqc",
+      "description": "Reconhece RQC equilátero.",
+      "accepted_origins": [
+        "deterministic",
+        "student_lean"
+      ]
+    },
+    {
+      "id": "a.qc",
+      "description": "Determina QC=6-x.",
+      "accepted_origins": [
+        "deterministic",
+        "student_lean"
+      ]
+    },
+    {
+      "id": "a.qr",
+      "description": "Determina QR=6-x.",
+      "accepted_origins": [
+        "deterministic",
+        "student_lean"
+      ]
+    },
+    {
+      "id": "a.rc",
+      "description": "Determina RC=6-x.",
+      "accepted_origins": [
+        "deterministic",
+        "student_lean"
+      ]
+    },
+    {
+      "id": "a.perimeter_rqc",
+      "description": "Determina o perímetro RQC como 3(6-x).",
+      "accepted_origins": [
+        "deterministic",
+        "student_lean"
+      ]
+    },
+    {
+      "id": "a.shaded_sum",
+      "description": "Desenvolve a soma dos perímetros sombreados e obtém 18.",
+      "accepted_origins": [
+        "deterministic",
+        "student_lean"
+      ]
+    },
+    {
+      "id": "b.ap",
+      "description": "Determina AP=6-x.",
+      "accepted_origins": [
+        "deterministic",
+        "student_lean"
+      ]
+    },
+    {
+      "id": "b.qr",
+      "description": "Determina QR=6-x.",
+      "accepted_origins": [
+        "deterministic",
+        "student_lean"
+      ]
+    },
+    {
+      "id": "b.pq",
+      "description": "Determina PQ=x.",
+      "accepted_origins": [
+        "deterministic",
+        "student_lean"
+      ]
+    },
+    {
+      "id": "b.ar",
+      "description": "Determina AR=x.",
+      "accepted_origins": [
+        "deterministic",
+        "student_lean"
+      ]
+    },
+    {
+      "id": "b.apqr",
+      "description": "Reconhece APQR como paralelogramo; isoladamente não concede pontos.",
+      "accepted_origins": [
+        "deterministic",
+        "student_lean"
+      ]
+    },
+    {
+      "id": "b.perimeter_apqr",
+      "description": "Calcula o perímetro por soma dos quatro lados ou dobro dos lados adjacentes e obtém 12.",
+      "accepted_origins": [
+        "deterministic",
+        "student_lean"
+      ]
+    },
+    {
+      "id": "c.perimeter_pbq",
+      "description": "Identifica 3x como um dos três perímetros.",
+      "accepted_origins": [
+        "deterministic",
+        "student_lean"
+      ]
+    },
+    {
+      "id": "c.perimeter_rqc",
+      "description": "Identifica 3(6-x) como outro perímetro.",
+      "accepted_origins": [
+        "deterministic",
+        "student_lean"
+      ]
+    },
+    {
+      "id": "c.perimeter_apqr",
+      "description": "Identifica 12 como terceiro perímetro.",
+      "accepted_origins": [
+        "deterministic",
+        "student_lean"
+      ]
+    },
+    {
+      "id": "c.exclude_12",
+      "description": "Escreve a equação com hipotenusa 12 e declara ausência de solução real.",
+      "accepted_origins": [
+        "deterministic",
+        "student_lean"
+      ]
+    },
+    {
+      "id": "c.h_plus_c",
+      "description": "Relaciona os dois perímetros sombreados por h+c=18.",
+      "accepted_origins": [
+        "deterministic",
+        "student_lean"
+      ]
+    },
+    {
+      "id": "c.pythagoras",
+      "description": "Estabelece h²=c²+144.",
+      "accepted_origins": [
+        "deterministic",
+        "student_lean"
+      ]
+    },
+    {
+      "id": "c.h",
+      "description": "Obtém h=13.",
+      "accepted_origins": [
+        "deterministic",
+        "student_lean"
+      ]
+    },
+    {
+      "id": "c.c",
+      "description": "Obtém c=5.",
+      "accepted_origins": [
+        "deterministic",
+        "student_lean"
+      ]
+    },
+    {
+      "id": "c.shaded_lengths",
+      "description": "Relaciona explicitamente {3x,3(6-x)}={5,13}.",
+      "accepted_origins": [
+        "deterministic",
+        "student_lean"
+      ]
+    },
+    {
+      "id": "c.x_candidates",
+      "description": "Apresenta o conjunto exato {5/3,13/3}; isoladamente não completa C5.",
+      "accepted_origins": [
+        "deterministic",
+        "student_lean"
+      ]
+    },
+    {
+      "id": "c.case_3x",
+      "description": "Escreve Pitágoras no caso de hipotenusa 3x.",
+      "accepted_origins": [
+        "deterministic",
+        "student_lean"
+      ]
+    },
+    {
+      "id": "c.case_other",
+      "description": "Escreve Pitágoras no caso de hipotenusa 3(6-x).",
+      "accepted_origins": [
+        "deterministic",
+        "student_lean"
+      ]
+    },
+    {
+      "id": "c.case_3x_root",
+      "description": "Resolve o caso 3x e obtém 13/3.",
+      "accepted_origins": [
+        "deterministic",
+        "student_lean"
+      ]
+    },
+    {
+      "id": "c.case_other_root",
+      "description": "Resolve o caso 3(6-x) e obtém 5/3.",
+      "accepted_origins": [
+        "deterministic",
+        "student_lean"
+      ]
+    }
+  ],
+  "items": [
+    {
+      "id": "a",
+      "max_points": 4,
+      "scoring_strategy": "additive",
+      "children": [
+        {
+          "id": "a.pbq",
+          "max_points": 1,
+          "scoring_strategy": "all_of",
+          "obligation_ids": [
+            "a.triangle_pbq",
+            "a.pb",
+            "a.bq",
+            "a.pq",
+            "a.perimeter_pbq"
+          ]
+        },
+        {
+          "id": "a.rqc",
+          "max_points": 1,
+          "scoring_strategy": "all_of",
+          "obligation_ids": [
+            "a.triangle_rqc",
+            "a.qc",
+            "a.qr",
+            "a.rc",
+            "a.perimeter_rqc"
+          ]
+        },
+        {
+          "id": "a.sum",
+          "max_points": 2,
+          "scoring_strategy": "all_of",
+          "obligation_ids": [
+            "a.shaded_sum"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b",
+      "max_points": 6,
+      "scoring_strategy": "max_of",
+      "children": [
+        {
+          "id": "b.official_metric_path",
+          "max_points": 6,
+          "scoring_strategy": "additive",
+          "children": [
+            {
+              "id": "b.first_sides",
+              "max_points": 2,
+              "scoring_strategy": "all_of",
+              "obligation_ids": [
+                "b.ap",
+                "b.qr"
+              ]
+            },
+            {
+              "id": "b.other_sides",
+              "max_points": 2,
+              "scoring_strategy": "all_of",
+              "obligation_ids": [
+                "b.pq",
+                "b.ar"
+              ]
+            },
+            {
+              "id": "b.perimeter",
+              "max_points": 2,
+              "scoring_strategy": "all_of",
+              "obligation_ids": [
+                "b.perimeter_apqr"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "b.parallelogram_path",
+          "max_points": 6,
+          "scoring_strategy": "all_of",
+          "obligation_ids": [
+            "b.apqr",
+            "b.perimeter_apqr"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "c",
+      "max_points": 10,
+      "scoring_strategy": "additive",
+      "children": [
+        {
+          "id": "c.perimeters",
+          "max_points": 2,
+          "scoring_strategy": "all_of",
+          "obligation_ids": [
+            "c.perimeter_pbq",
+            "c.perimeter_rqc",
+            "c.perimeter_apqr"
+          ]
+        },
+        {
+          "id": "c.exclude",
+          "max_points": 2,
+          "scoring_strategy": "all_of",
+          "obligation_ids": [
+            "c.exclude_12"
+          ]
+        },
+        {
+          "id": "c.methods",
+          "max_points": 6,
+          "scoring_strategy": "max_of",
+          "children": [
+            {
+              "id": "c.h_c_path",
+              "max_points": 6,
+              "scoring_strategy": "additive",
+              "children": [
+                {
+                  "id": "c.relations",
+                  "max_points": 2,
+                  "scoring_strategy": "all_of",
+                  "obligation_ids": [
+                    "c.h_plus_c",
+                    "c.pythagoras"
+                  ]
+                },
+                {
+                  "id": "c.values",
+                  "max_points": 2,
+                  "scoring_strategy": "all_of",
+                  "obligation_ids": [
+                    "c.h",
+                    "c.c"
+                  ]
+                },
+                {
+                  "id": "c.roots",
+                  "max_points": 2,
+                  "scoring_strategy": "all_of",
+                  "obligation_ids": [
+                    "c.shaded_lengths",
+                    "c.x_candidates"
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "c.cases_path",
+              "max_points": 6,
+              "scoring_strategy": "additive",
+              "children": [
+                {
+                  "id": "c.case_equations",
+                  "max_points": 2,
+                  "scoring_strategy": "all_of",
+                  "obligation_ids": [
+                    "c.case_3x",
+                    "c.case_other"
+                  ]
+                },
+                {
+                  "id": "c.case_values",
+                  "max_points": 2,
+                  "scoring_strategy": "all_of",
+                  "obligation_ids": [
+                    "c.case_3x_root",
+                    "c.case_other_root"
+                  ]
+                },
+                {
+                  "id": "c.case_union",
+                  "max_points": 2,
+                  "scoring_strategy": "all_of",
+                  "obligation_ids": [
+                    "c.case_3x",
+                    "c.case_other",
+                    "c.case_3x_root",
+                    "c.case_other_root",
+                    "c.x_candidates"
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

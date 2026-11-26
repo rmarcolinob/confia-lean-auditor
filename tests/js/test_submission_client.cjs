@@ -121,3 +121,18 @@ test("Assessment sender uses item endpoint and checks server-derived binding", a
   }));
   await assert.rejects(bad.send(document, target), /não corresponde/);
 });
+
+test("TME notebook uses its case endpoint and rejects a mismatched receipt", async () => {
+  const document = snapshot();
+  const caseId = "case_" + "d".repeat(32), target = `/tme/cases/${caseId}/digital-submission`;
+  const sender = Client.create({ pngBlob: async () => new Blob(["png"]) }, async (url, options) => {
+    assert.equal(url, target);
+    assert.equal(Object.hasOwn(JSON.parse(options.body), "external_candidate_ref"), false);
+    return { ok: true, status: 201, json: async () => ({ ...receipt(document), tme_case_id: caseId }) };
+  });
+  assert.equal((await sender.send(document, target)).tme_case_id, caseId);
+  const wrong = Client.create({ pngBlob: async () => new Blob(["png"]) }, async () => ({
+    ok: true, status: 201, json: async () => ({ ...receipt(document), tme_case_id: "case_" + "e".repeat(32) }),
+  }));
+  await assert.rejects(wrong.send(document, target), /não corresponde/);
+});

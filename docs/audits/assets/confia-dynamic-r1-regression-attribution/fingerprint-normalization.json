@@ -1,0 +1,23 @@
+{
+  "version": "r1-attribution-normalization.v3",
+  "base": "runner.py norm()",
+  "additional_rules": [
+    "artifacts/student_claim_checks/<timestamp>_student_claims directory",
+    "manifest_id=rep_<32 hex>",
+    "generated_at=datetime.datetime(...)",
+    "manifest_sha256=<64 hex>",
+    "TME P4 run UUID directory",
+    "consistent alpha-renaming of TME P4 verification/check tokens derived from random solution_id; reference graph preserved"
+  ],
+  "preserved": [
+    "all assertions",
+    "mathematical values",
+    "scores",
+    "statuses",
+    "Lean source hashes and source text",
+    "Lean stdout/stderr",
+    "raw tracebacks and strict fingerprints"
+  ],
+  "same_attribution_traceback_count": 105,
+  "strict_traceback_difference_count": 4
+}

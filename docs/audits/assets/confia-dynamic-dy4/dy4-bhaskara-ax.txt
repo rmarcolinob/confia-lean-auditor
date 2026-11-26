@@ -1,0 +1,152 @@
+Browser tab: 5, Title: "ConfIA — Confiabilidade e Explicabilidade", URL: "http://127.0.0.1:8769/tme?case_id=case_beef1774f56f4584865917385e666471".
+1 AXWebArea ConfIA — Confiabilidade e Explicabilidade, URL: 127.0.0.1:8769/tme?case_id=case_beef1774f56f4584865917385e666471
+	2 link Description: Ir para conteúdo, Value: 127.0.0.1:8769/tme?case_id=case_beef1774f56f4584865917385e666471#main
+	3 container
+		4 text ConfIA Plataforma de
+		5 text correção assistida
+		6 button (collapsed) Description: Perfil do avaliador, ID: evaluator-avatar, Secondary Actions: Expand
+	7 container app
+		8 container
+			9 button Voltar para fila
+			10 heading Prova DY3-S2, Value: 1
+				11 text Prova DY3-S2
+			12 text Aguardando decisão Questão 1 · 1 questão disponível · DY3 Quadrática · Resolução textual
+			13 container Questões disponíveis desta prova
+				14 button Q1 · Questão atual
+			15 content list Progresso da correção
+				16 text Entrada
+				17 text Transcrição
+				18 text Análise
+				19 text Decisão
+		20 container
+			21 heading Enunciado, Value: 2
+				22 text Enunciado
+			23 button (collapsed) Ver enunciado completo, Secondary Actions: Expand
+			24 text Resolva no conjunto dos reais: 2y² - 14y + 24 = 0.
+		25 container
+			26 container solution-pane
+				27 container
+					28 heading Solução do participante, Value: 2
+						29 text Solução do participante
+					30 button (collapsed) Description: Expandir solução, Secondary Actions: Expand
+				31 tab group Visualização da solução
+					32 tab (selected, settable, boolean) Original, Value: 1, ID: tab-original
+					33 tab (selectable, settable, boolean) Transcrição, Value: 0, ID: tab-transcript
+					34 tab (selectable, settable, boolean) Comparar, Value: 0, ID: tab-compare
+				35 container Description: Original, ID: solution-views
+					36 container Original
+						37 text Delta=(-14)^2-4*2*24=4; y=(14+sqrt(4))/4=4; y=(14-sqrt(4))/4=3; S={3,4}; 2*3^2-14*3+24=0; 2*4^2-14*4+24=0
+				38 button (collapsed) Originais e histórico, Secondary Actions: Expand
+					39 text Originais e histórico
+			40 splitter Description: Redimensionar solução e análise, Help: Arraste ou use as setas. Home: 45%; End: 70%; duplo clique: 60%., Value: 60
+			41 container Description: Análise ConfIA, ID: analysis-pane
+				42 container
+					43 heading ANÁLISE CONFIA, Value: 2
+						44 text ANÁLISE CONFIA
+					45 button (expanded) Recolher análise, Secondary Actions: Collapse
+					46 container analysis-content
+						47 container Resultado sugerido
+							48 text Sugestão ConfIA
+							49 text 10 / 10
+							50 text Revisão Necessária
+							51 text Revisão necessária · sugestão provisória
+							52 text Modo: Correção dinâmica
+							53 text Preparação com revisão necessária; execução explicitamente permitida, resultado provisório.
+						54 container Cobertura da análise
+							55 heading Cobertura da análise, Value: 3
+								56 text Cobertura da análise
+							57 text 3/3 critérios decididos
+							58 text 3 critérios · 3 decididos · 0 claims formalmente verificados · 0 indeterminados
+						59 container Revisão independente
+							141 container
+								142 button (expanded) Revisão independente · Concordância: 3/3 critérios, Secondary Actions: Collapse
+									143 text Revisão independente · Concordância: 3/3 critérios
+								144 text A revisão não altera a sugestão original nem a decisão do professor. Revisão necessária. Divergências e incertezas permanecem pendentes.
+								145 button (collapsed) Justificar a resolução por transformações equivalentes. · Grader: 4 · Reviewer: 4, Secondary Actions: Expand
+									146 text Justificar a resolução por transformações equivalentes. · Grader: 4 · Reviewer: 4
+								147 button (collapsed) Secondary Actions: Expand, Obter todas as raízes reais. Crédito parcial proporcional às raízes corretas. · Grader: 3 · Reviewer: 3
+									148 text Obter todas as raízes reais. Crédito parcial proporcional às raízes corretas. · Grader: 3 · Reviewer: 3
+								149 button (collapsed) Secondary Actions: Expand, Verificar as raízes por substituição. Crédito parcial proporcional às raízes corretas. · Grader: 3 · Reviewer: 3
+									150 text Verificar as raízes por substituição. Crédito parcial proporcional às raízes corretas. · Grader: 3 · Reviewer: 3
+								151 text Preparação mantém avisos de revisão docente. Concordância não é prova matemática nem certificação.
+							62 button Solicitar nova revisão independente
+						63 button (collapsed) Evidências e verificações da resolução, Secondary Actions: Expand
+							64 text Evidências e verificações da resolução
+						65 container
+							66 heading Critérios de correção, Value: 3
+								67 text Critérios de correção
+							68 button (collapsed) Sustentado Critério 1 4 / 4 Justificar a resolução por transformações equivalentes., Secondary Actions: Expand
+								69 image Sustentado
+								70 text Critério 1
+								71 text 4 / 4
+								72 text Justificar a resolução por transformações equivalentes.
+							73 button (collapsed) Secondary Actions: Expand, Sustentado Critério 2 3 / 3 Obter todas as raízes reais. Crédito parcial proporcional às raízes corretas.
+								74 image Sustentado
+								75 text Critério 2
+								76 text 3 / 3
+								77 text Obter todas as raízes reais. Crédito parcial proporcional às raízes corretas.
+							78 button (collapsed) Secondary Actions: Expand, Sustentado Critério 3 3 / 3 Verificar as raízes por substituição. Crédito parcial proporcional às raízes corretas.
+								79 image Sustentado
+								80 text Critério 3
+								81 text 3 / 3
+								82 text Verificar as raízes por substituição. Crédito parcial proporcional às raízes corretas.
+						83 container
+							84 heading Passos identificados, Value: 3
+								85 text Passos identificados
+							86 checkbox Description: Passo 1: Delta=(-14)^2-4*2*24=4. Verificado no escopo, Value: 1
+								87 text 01
+								88 text Delta=(-14)^2-4*2*24=4
+								89 image Sustentado
+							90 checkbox Description: Passo 2: y=(14+sqrt(4))/4=4. Verificado no escopo, Value: 0
+								91 text 02
+								92 text y=(14+sqrt(4))/4=4
+								93 image Sustentado
+							94 checkbox Description: Passo 3: y=(14-sqrt(4))/4=3. Verificado no escopo, Value: 0
+								95 text 03
+								96 text y=(14-sqrt(4))/4=3
+								97 image Sustentado
+							98 checkbox Description: Passo 4: S={3,4}. Verificado no escopo, Value: 0
+								99 text 04
+								100 text S={3,4}
+								101 image Sustentado
+							102 checkbox Description: Passo 5: 2*3^2-14*3+24=0. Verificado no escopo, Value: 0
+								103 text 05
+								104 text 2*3^2-14*3+24=0
+								105 image Sustentado
+							106 checkbox Description: Passo 6: 2*4^2-14*4+24=0. Verificado no escopo, Value: 0
+								107 text 06
+								108 text 2*4^2-14*4+24=0
+								109 image Sustentado
+							110 text Delta=(-14)^2-4*2*24=4
+							111 text Verificado no escopo
+							112 text Trecho preservado: caracteres 0–22 da transcrição aceita.
+						113 container
+							114 heading Verificação matemática, Value: 3
+								115 text Verificação matemática
+							116 text 0 claims verificados formalmente 6 não formalizados 0 falhas técnicas
+							117 button (collapsed) Detalhes da verificação, Secondary Actions: Expand
+								118 text Detalhes da verificação
+						119 button (collapsed) Resumo e evidências da análise, Secondary Actions: Expand
+							120 text Resumo e evidências da análise
+						121 button (collapsed) Detalhes técnicos, Secondary Actions: Expand
+							122 text Detalhes técnicos
+		123 container Description: Decisão do avaliador, ID: evaluator-decision
+			124 heading Decisão do avaliador, Value: 2
+				125 text Decisão do avaliador
+			126 text Sugestão ConfIA
+			127 text 10 / 10
+			128 container
+				129 text Pontuação final
+				130 stepper (settable) Pontuação final
+				131 button Usar sugestão
+				132 button Ajustar
+				133 button (collapsed) Adicionar observação, Secondary Actions: Expand
+					134 text Adicionar observação
+				135 button Finalizar correção
+	136 container Description: Navegação principal, ID: home-bottom-nav
+		137 button Início
+		138 button Fila
+		139 button Nova
+		140 button Resultados
+
+The focused UI element is 142 button (expanded) Revisão independente · Concordância: 3/3 critérios, Secondary Actions: Collapse

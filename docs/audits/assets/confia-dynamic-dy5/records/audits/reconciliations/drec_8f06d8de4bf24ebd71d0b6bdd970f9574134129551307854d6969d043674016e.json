@@ -1,0 +1,366 @@
+{
+  "data": {
+    "schema_version": "dynamic-reconciliation.v1",
+    "reconciliation_id": "drec_8f06d8de4bf24ebd71d0b6bdd970f9574134129551307854d6969d043674016e",
+    "grader_audit_run_id": "aud_e3bea497dc5c011ed2e61ae2e2010293eb8c2053fa1c9a48fccf0019b8dd89a5",
+    "independent_review_id": "drev_58eca530c96686e8e6538827d114bdc8d187d3c113c9b4a8958da2060a59bbf0",
+    "question_attempt_id": "case_3279467491d9453a81aad5fe70aa1fbb",
+    "transcription_version_id": "tr_6ba51d1d7d9f44d1bbe1962da38c8b59:1",
+    "context": {
+      "engine_mode": "DYNAMIC",
+      "problem_id": "dyn_2826d1f1d0304c0c88f42d06c523f18b",
+      "package_id": "dpkg_b9353efd255c4e58ab4c7a05a79fde31",
+      "package_version": 3,
+      "package_sha256": "231d06caec18a60a3cb5d16eca89d0b7f97f8ed59dc4da747c09ae1c07faa1b3",
+      "statement_version": 1,
+      "statement_sha256": "22937b294288cb6a3b960be25c0bc74b812ea3c02c6fbcf39a8faa9ae05f7a36",
+      "preparation_id": "dprep_b466cb92c6ce4bb294dbd5f808edc2bc",
+      "preparation_version": 1,
+      "preparation_sha256": "1c74b7354d529ed0f4f236b4d6dc0aff2fdeed787886292d8b2f133bf80a4657",
+      "rubric_id": "drub_d2c16659402842749da6787724fcc5d1",
+      "rubric_version": 1,
+      "rubric_sha256": "99784ff219ffe4d191c2ba58fa48853e7d534156b15aeb828be783fc9b578cb8",
+      "allow_preparation_review": true,
+      "grader_version": "dynamic-grader.v1"
+    },
+    "assessment_id": "asmt_29050725320c4d4984ae4d8951437c7d",
+    "assessment_definition_sha256": "88f47b7e207980be6bf6cd896012ff63db3560c1178a3f605cec3b346cd1ed00",
+    "policy_profile": "SCHOOL_EXAM",
+    "policy_version": "dynamic-safe-automation.v1",
+    "grader_score_snapshot": "6.0",
+    "reviewer_score_snapshot": "10",
+    "reconciled_suggested_score": "6",
+    "max_score": "10",
+    "criteria": [
+      {
+        "criterion_id": "method",
+        "max_points": "4",
+        "grader_points": "0",
+        "reviewer_points": "4",
+        "grader_evidence": [
+          "y=(14+sqrt(4))/4=4",
+          "y=(14-sqrt(4))/4=3"
+        ],
+        "reviewer_evidence": [
+          "y=(14+sqrt(4))/4=4",
+          "y=(14-sqrt(4))/4=3"
+        ],
+        "mathematical_verification": [
+          {
+            "claim_id": "review_claim_2",
+            "start": 24,
+            "end": 42,
+            "text": "y=(14+sqrt(4))/4=4",
+            "normalized": "y=(14+sqrt(4))/4=4",
+            "claim_type": "FORMULA",
+            "subject": "y",
+            "dependencies": [],
+            "polarity": "POSITIVE",
+            "adoption": "ADOPTED",
+            "fidelity": "FAITHFUL",
+            "strategy_context": "quadratic_formula",
+            "verification_status": "VERIFIED",
+            "verification_detail": "Checagem exata e vínculo com a equação original; sem certificado Lean.",
+            "verifier": "dynamic-exact-polynomial.v1",
+            "components": [
+              {
+                "kind": "claim",
+                "status": "VERIFIED",
+                "verifier": "dynamic-exact-polynomial.v1"
+              }
+            ],
+            "values": [
+              "4"
+            ],
+            "verified_values": [
+              "4"
+            ]
+          },
+          {
+            "claim_id": "review_claim_3",
+            "start": 44,
+            "end": 62,
+            "text": "y=(14-sqrt(4))/4=3",
+            "normalized": "y=(14-sqrt(4))/4=3",
+            "claim_type": "FORMULA",
+            "subject": "y",
+            "dependencies": [],
+            "polarity": "POSITIVE",
+            "adoption": "ADOPTED",
+            "fidelity": "FAITHFUL",
+            "strategy_context": "quadratic_formula",
+            "verification_status": "VERIFIED",
+            "verification_detail": "Checagem exata e vínculo com a equação original; sem certificado Lean.",
+            "verifier": "dynamic-exact-polynomial.v1",
+            "components": [
+              {
+                "kind": "claim",
+                "status": "VERIFIED",
+                "verifier": "dynamic-exact-polynomial.v1"
+              }
+            ],
+            "values": [
+              "3"
+            ],
+            "verified_values": [
+              "3"
+            ]
+          }
+        ],
+        "fidelity_binding_state": "SUPPORTED",
+        "sufficiency": "COMPLETE",
+        "status": "GRADER_MISSED_CREDIT_CONFIRMED",
+        "reconciled_points": "0",
+        "automation": "REVIEW_ONLY",
+        "reason": "Evidência fiel e verificável satisfaz a rubrica; crédito legítimo identificado. Perfil SCHOOL_EXAM exige homologação da divergência; sem ajuste automático.",
+        "review_required": true,
+        "technical_uncertainty": false,
+        "recovered_credit": "0",
+        "points_removed": "0"
+      },
+      {
+        "criterion_id": "roots",
+        "max_points": "3",
+        "grader_points": "3",
+        "reviewer_points": "3",
+        "grader_evidence": [
+          "y=(14+sqrt(4))/4=4",
+          "y=(14-sqrt(4))/4=3",
+          "S={3,4}"
+        ],
+        "reviewer_evidence": [
+          "S={3,4}"
+        ],
+        "mathematical_verification": [
+          {
+            "claim_id": "review_claim_4",
+            "start": 64,
+            "end": 71,
+            "text": "S={3,4}",
+            "normalized": "S={3,4}",
+            "claim_type": "ROOTS",
+            "subject": "y",
+            "dependencies": [],
+            "polarity": "POSITIVE",
+            "adoption": "ADOPTED",
+            "fidelity": "FAITHFUL",
+            "strategy_context": "UNKNOWN_STRATEGY",
+            "verification_status": "VERIFIED",
+            "verification_detail": "Checagem exata e vínculo com a equação original; sem certificado Lean.",
+            "verifier": "dynamic-exact-polynomial.v1",
+            "components": [
+              {
+                "kind": "root_membership",
+                "value": "3",
+                "status": "VERIFIED"
+              },
+              {
+                "kind": "root_membership",
+                "value": "4",
+                "status": "VERIFIED"
+              },
+              {
+                "kind": "claim",
+                "status": "VERIFIED",
+                "verifier": "dynamic-exact-polynomial.v1"
+              }
+            ],
+            "values": [
+              "3",
+              "4"
+            ],
+            "verified_values": [
+              "3",
+              "4"
+            ]
+          }
+        ],
+        "fidelity_binding_state": "SUPPORTED",
+        "sufficiency": "COMPLETE",
+        "status": "AGREEMENT_SUPPORTED",
+        "reconciled_points": "3",
+        "automation": "AUTO_ACCEPT",
+        "reason": "Concordância sustentada por fonte fiel, verificação local e obrigação aprovada.",
+        "review_required": false,
+        "technical_uncertainty": false,
+        "recovered_credit": "0",
+        "points_removed": "0"
+      },
+      {
+        "criterion_id": "check",
+        "max_points": "3",
+        "grader_points": "3",
+        "reviewer_points": "3",
+        "grader_evidence": [
+          "2*3^2-14*3+24=0",
+          "2*4^2-14*4+24=0"
+        ],
+        "reviewer_evidence": [
+          "2*3^2-14*3+24=0",
+          "2*4^2-14*4+24=0"
+        ],
+        "mathematical_verification": [
+          {
+            "claim_id": "review_claim_5",
+            "start": 73,
+            "end": 88,
+            "text": "2*3^2-14*3+24=0",
+            "normalized": "2*3^2-14*3+24=0",
+            "claim_type": "SUBSTITUTION",
+            "subject": "y",
+            "dependencies": [],
+            "polarity": "POSITIVE",
+            "adoption": "ADOPTED",
+            "fidelity": "FAITHFUL",
+            "strategy_context": "UNKNOWN_STRATEGY",
+            "verification_status": "VERIFIED",
+            "verification_detail": "Checagem exata e vínculo com a equação original; sem certificado Lean.",
+            "verifier": "dynamic-exact-polynomial.v1",
+            "components": [
+              {
+                "kind": "claim",
+                "status": "VERIFIED",
+                "verifier": "dynamic-exact-polynomial.v1"
+              }
+            ],
+            "values": [
+              "3"
+            ],
+            "verified_values": [
+              "3"
+            ]
+          },
+          {
+            "claim_id": "review_claim_6",
+            "start": 90,
+            "end": 105,
+            "text": "2*4^2-14*4+24=0",
+            "normalized": "2*4^2-14*4+24=0",
+            "claim_type": "SUBSTITUTION",
+            "subject": "y",
+            "dependencies": [],
+            "polarity": "POSITIVE",
+            "adoption": "ADOPTED",
+            "fidelity": "FAITHFUL",
+            "strategy_context": "UNKNOWN_STRATEGY",
+            "verification_status": "VERIFIED",
+            "verification_detail": "Checagem exata e vínculo com a equação original; sem certificado Lean.",
+            "verifier": "dynamic-exact-polynomial.v1",
+            "components": [
+              {
+                "kind": "claim",
+                "status": "VERIFIED",
+                "verifier": "dynamic-exact-polynomial.v1"
+              }
+            ],
+            "values": [
+              "4"
+            ],
+            "verified_values": [
+              "4"
+            ]
+          }
+        ],
+        "fidelity_binding_state": "SUPPORTED",
+        "sufficiency": "COMPLETE",
+        "status": "AGREEMENT_SUPPORTED",
+        "reconciled_points": "3",
+        "automation": "AUTO_ACCEPT",
+        "reason": "Concordância sustentada por fonte fiel, verificação local e obrigação aprovada.",
+        "review_required": false,
+        "technical_uncertainty": false,
+        "recovered_credit": "0",
+        "points_removed": "0"
+      }
+    ],
+    "review_required": true,
+    "review_reasons": [
+      "method: Evidência fiel e verificável satisfaz a rubrica; crédito legítimo identificado. Perfil SCHOOL_EXAM exige homologação da divergência; sem ajuste automático."
+    ],
+    "technical_uncertainty": false,
+    "provenance": {
+      "audit_sha256": "c45a843040117c287b4ae22f533f0263c01e516c1e79801e6ca37d10081a2b75",
+      "review_sha256": "b6855cd7db12f19348aa423cde555798afa7fdbe603e45f39d0d6418add6e35d",
+      "source_sha256": "006a661a2ec10a3e9bbd7ca5563cb1395d2147270fca7772114c6ebe5a235742",
+      "rubric_sha256": "7246a596b4e9fb8e279c9dd273e81d48873b7fe97e030fc1d592124d29c05624",
+      "statement_sha256": "b64eea24e7565cc9196dec300f5f55805d63f35829509edff2cdd8d582ac8554",
+      "preparation_sha256": "c53c46470e58a115372e39f90c00572bcf85be7759dbf41f22d208134b5fbb2f",
+      "authority": "source spans + exact local checks + approved obligations; never opinion consensus",
+      "code_content_sha256": "fa9b34631b4ca0ac3cd7afcb1b034f2cd38ae5d726ac738652b3229391f324ea"
+    },
+    "started_at": "2026-11-12T03:41:19.292439Z",
+    "completed_at": "2026-11-12T03:41:19.295505Z",
+    "events": [
+      {
+        "event_type": "dynamic_reconciliation_started",
+        "timestamp": "2026-11-12T03:41:19.292439+00:00",
+        "event_id": "5ddb477d97f6ecbf248e9f36f734be10acd80d9817ea333369d487f947c4cd79",
+        "reconciliation_id": "drec_8f06d8de4bf24ebd71d0b6bdd970f9574134129551307854d6969d043674016e",
+        "grader_audit_run_id": "aud_e3bea497dc5c011ed2e61ae2e2010293eb8c2053fa1c9a48fccf0019b8dd89a5",
+        "independent_review_id": "drev_58eca530c96686e8e6538827d114bdc8d187d3c113c9b4a8958da2060a59bbf0",
+        "question_attempt_id": "case_3279467491d9453a81aad5fe70aa1fbb"
+      },
+      {
+        "event_type": "criterion_review_only",
+        "criterion_id": "method",
+        "old_points": "0",
+        "new_points": "0",
+        "reason": "Evidência fiel e verificável satisfaz a rubrica; crédito legítimo identificado. Perfil SCHOOL_EXAM exige homologação da divergência; sem ajuste automático.",
+        "event_id": "ab65ab5cd9b2c274c2167f833fbbb88a2d5e57f005b72cb96ab38ea948dc2cb9",
+        "reconciliation_id": "drec_8f06d8de4bf24ebd71d0b6bdd970f9574134129551307854d6969d043674016e",
+        "grader_audit_run_id": "aud_e3bea497dc5c011ed2e61ae2e2010293eb8c2053fa1c9a48fccf0019b8dd89a5",
+        "independent_review_id": "drev_58eca530c96686e8e6538827d114bdc8d187d3c113c9b4a8958da2060a59bbf0",
+        "question_attempt_id": "case_3279467491d9453a81aad5fe70aa1fbb",
+        "timestamp": "2026-11-12T03:41:19.295505+00:00"
+      },
+      {
+        "event_type": "criterion_auto_accepted",
+        "criterion_id": "roots",
+        "old_points": "3",
+        "new_points": "3",
+        "reason": "Concordância sustentada por fonte fiel, verificação local e obrigação aprovada.",
+        "event_id": "9f89980c1976ac52b31a9f067b884afd840f245c8d7088f4a4ea7b6788084215",
+        "reconciliation_id": "drec_8f06d8de4bf24ebd71d0b6bdd970f9574134129551307854d6969d043674016e",
+        "grader_audit_run_id": "aud_e3bea497dc5c011ed2e61ae2e2010293eb8c2053fa1c9a48fccf0019b8dd89a5",
+        "independent_review_id": "drev_58eca530c96686e8e6538827d114bdc8d187d3c113c9b4a8958da2060a59bbf0",
+        "question_attempt_id": "case_3279467491d9453a81aad5fe70aa1fbb",
+        "timestamp": "2026-11-12T03:41:19.295505+00:00"
+      },
+      {
+        "event_type": "criterion_auto_accepted",
+        "criterion_id": "check",
+        "old_points": "3",
+        "new_points": "3",
+        "reason": "Concordância sustentada por fonte fiel, verificação local e obrigação aprovada.",
+        "event_id": "9318f2027ff562c543998917e95d9283304376f1a1bbe5648f2c796cb5c8c933",
+        "reconciliation_id": "drec_8f06d8de4bf24ebd71d0b6bdd970f9574134129551307854d6969d043674016e",
+        "grader_audit_run_id": "aud_e3bea497dc5c011ed2e61ae2e2010293eb8c2053fa1c9a48fccf0019b8dd89a5",
+        "independent_review_id": "drev_58eca530c96686e8e6538827d114bdc8d187d3c113c9b4a8958da2060a59bbf0",
+        "question_attempt_id": "case_3279467491d9453a81aad5fe70aa1fbb",
+        "timestamp": "2026-11-12T03:41:19.295505+00:00"
+      },
+      {
+        "event_type": "reconciliation_review_required",
+        "reasons": [
+          "method: Evidência fiel e verificável satisfaz a rubrica; crédito legítimo identificado. Perfil SCHOOL_EXAM exige homologação da divergência; sem ajuste automático."
+        ],
+        "event_id": "ae46215fda17cf1992bbdf5668a0d3c8fdd7d4a44ec5157a24806ad6bd432b66",
+        "reconciliation_id": "drec_8f06d8de4bf24ebd71d0b6bdd970f9574134129551307854d6969d043674016e",
+        "grader_audit_run_id": "aud_e3bea497dc5c011ed2e61ae2e2010293eb8c2053fa1c9a48fccf0019b8dd89a5",
+        "independent_review_id": "drev_58eca530c96686e8e6538827d114bdc8d187d3c113c9b4a8958da2060a59bbf0",
+        "question_attempt_id": "case_3279467491d9453a81aad5fe70aa1fbb",
+        "timestamp": "2026-11-12T03:41:19.295505+00:00"
+      },
+      {
+        "event_type": "dynamic_reconciliation_completed",
+        "event_id": "f1a843810bd66512c7ac68b5d37de5823db7437750788069858a2438729104ed",
+        "reconciliation_id": "drec_8f06d8de4bf24ebd71d0b6bdd970f9574134129551307854d6969d043674016e",
+        "grader_audit_run_id": "aud_e3bea497dc5c011ed2e61ae2e2010293eb8c2053fa1c9a48fccf0019b8dd89a5",
+        "independent_review_id": "drev_58eca530c96686e8e6538827d114bdc8d187d3c113c9b4a8958da2060a59bbf0",
+        "question_attempt_id": "case_3279467491d9453a81aad5fe70aa1fbb",
+        "timestamp": "2026-11-12T03:41:19.295505+00:00"
+      }
+    ]
+  },
+  "sha256": "660f8cc6a5f02034c380e4a3062c1d3d2c797e62041668e37c5a67643bfc5983"
+}

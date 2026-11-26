@@ -1,0 +1,61 @@
+{
+  "problem_id": "TME2026P3",
+  "title": "TME² 2026 — Problema 3",
+  "max_score": 20,
+  "pauta_reference": "examples/pautas/tme2_problem3.v1.json",
+  "source": {
+    "document": "Segunda Fase TME² - Gabarito com pauta.pdf",
+    "sha256": "a2660f1c0761738a8b9232dc179feaea9538efb45102e1b2a9b991a3dd2ac384",
+    "pages": [
+      7,
+      8
+    ]
+  },
+  "statement_blocks": [
+    {
+      "type": "text",
+      "text": "Uma máquina possui seis compartimentos, como mostra a figura. Em cada compartimento, as bolas estão empilhadas e saem de baixo para cima. Cada bola é preta, branca ou cinza."
+    },
+    {
+      "type": "figure",
+      "figure_id": "compartimentos"
+    },
+    {
+      "type": "text",
+      "text": "Sempre que um botão é apertado, a máquina escolhe um dos seis compartimentos, todos com a mesma probabilidade, e libera a bola que ocupa a posição mais baixa desse compartimento. Depois disso, as demais bolas desse compartimento descem uma posição."
+    },
+    {
+      "type": "text",
+      "text": "(a) Qual é a probabilidade de ser liberada uma bola branca quando o botão é apertado pela primeira vez?",
+      "item_id": "a"
+    },
+    {
+      "type": "text",
+      "text": "(b) O botão é apertado duas vezes consecutivas. Qual é a probabilidade da segunda bola liberada ser branca?",
+      "item_id": "b"
+    },
+    {
+      "type": "text",
+      "text": "(c) Laura participa do seguinte jogo: o botão é apertado uma primeira vez. Se a bola liberada não for branca, ela perde. Se a bola for branca, Laura observa de qual compartimento ela saiu e escolhe uma cor para a próxima bola. O botão é então apertado novamente, e Laura ganha se acertar a cor da segunda bola. Que estratégia ela deve usar para ter a maior probabilidade possível de ganhar? Considerando o jogo desde o primeiro acionamento, qual é essa probabilidade?",
+      "item_id": "c"
+    }
+  ],
+  "figures": [
+    {
+      "id": "compartimentos",
+      "src": "/static/problem-assets/TME2026P3/compartimentos.png",
+      "alt": "Seis compartimentos, da esquerda para a direita, com bolas de baixo para cima: 1: branca, preta, branca, cinza, preta; 2: branca, cinza, preta; 3: cinza, preta; 4: preta, preta; 5: cinza, preta; 6: preta, branca, cinza, preta.",
+      "width": 250,
+      "height": 321,
+      "source_page": 7,
+      "source_crop_pixels": [
+        440,
+        182,
+        690,
+        503
+      ],
+      "source_render_height": 1600,
+      "sha256": "8cc64c9e55156560121b9a4d209f707bcf09127e0704d2f954eaafafa8723ee4"
+    }
+  ]
+}

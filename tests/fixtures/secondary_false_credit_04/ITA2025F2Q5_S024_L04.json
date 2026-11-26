@@ -1,0 +1,148 @@
+{
+  "dataset_id": "ITA2025F2Q5_S024_L04",
+  "problem_id": "ITA2025F2Q5",
+  "criterion_id": "log_power_decomposition",
+  "kind": "deny",
+  "payload": {
+    "problem": {
+      "statement": "Usando as aproximações log10 2 = 0,3010, log10 3 = 0,4771 e log10 7 = 0,8450, determine o primeiro algarismo, da esquerda para a direita, do resultado de 3^100."
+    },
+    "solution_text": "Escrevo x = 3^100. Tomando logaritmo decimal:\n\nlog x = log 3^100 = 100 log 3 = 100 · 0,4771 = 47,17.\n\nEntão x = 10^47,17 = 10^47 · 10^0,17. A parte inteira 47 mostra que x está entre 10^47 e 10^48, logo tem 48 algarismos. Para achar o primeiro algarismo, preciso saber onde 10^0,17 cai entre 1 e 10.\n\nCalculo os logaritmos que interessam:\n\nlog 1 = 0\nlog 2 = 0,3010.\n\nComo 0 < 0,17 < 0,3010, segue que 1 < 10^0,17 < 2. Multiplicando por 10^47,\n\n1 · 10^47 < x < 2 · 10^47.\n\nAssim, os números desse intervalo começam por 1. O primeiro algarismo de 3^100 é 1.",
+    "pending_criteria": [
+      {
+        "id": "log_power_decomposition",
+        "description": "Calcula log10(3^100)=100log10(3)=47,7100.",
+        "max_points": 2.0,
+        "allowed_points": [
+          0.0,
+          2.0
+        ],
+        "input_status": "indeterminate",
+        "verification_status": "partial",
+        "coded_requirements": [
+          {
+            "description": "logarithm result",
+            "relation_alternatives": [
+              [
+                "log10(3^100)=47,7100",
+                "log10(3^100)=47.7100"
+              ]
+            ]
+          }
+        ],
+        "expected_bindings": null,
+        "conclusion_only": false,
+        "required_microclaims": [
+          {
+            "description": "100log10(3)=47,7100.",
+            "status": "no_textual_evidence",
+            "origin": "generated_reference",
+            "does_not_prove_student_attribution": true
+          }
+        ],
+        "existing_evidence": [],
+        "grounded_claims": [],
+        "grounded_claims_omitted": 0,
+        "candidate_student_checks": [],
+        "student_checks": [],
+        "candidate_evidence": [
+          {
+            "source_start": 301,
+            "source_end": 338,
+            "source_text": "Calculo os logaritmos que interessam:",
+            "source_kind": "local_context",
+            "grounding_status": "grounded",
+            "verification_status": "not_checked",
+            "evidence_id": "E1_1"
+          },
+          {
+            "source_start": 0,
+            "source_end": 45,
+            "source_text": "Escrevo x = 3^100. Tomando logaritmo decimal:",
+            "source_kind": "local_context",
+            "grounding_status": "grounded",
+            "verification_status": "not_checked",
+            "evidence_id": "E1_2"
+          },
+          {
+            "source_start": 47,
+            "source_end": 100,
+            "source_text": "log x = log 3^100 = 100 log 3 = 100 · 0,4771 = 47,17.",
+            "source_kind": "local_context",
+            "grounding_status": "grounded",
+            "verification_status": "not_checked",
+            "evidence_id": "E1_3"
+          },
+          {
+            "source_start": 340,
+            "source_end": 349,
+            "source_text": "log 1 = 0",
+            "source_kind": "local_context",
+            "grounding_status": "grounded",
+            "verification_status": "not_checked",
+            "evidence_id": "E1_4"
+          },
+          {
+            "source_start": 340,
+            "source_end": 365,
+            "source_text": "log 1 = 0\nlog 2 = 0,3010.",
+            "source_kind": "local_context",
+            "grounding_status": "grounded",
+            "verification_status": "not_checked",
+            "evidence_id": "E1_5"
+          }
+        ]
+      }
+    ]
+  },
+  "proposal": {
+    "log_power_decomposition": {
+      "decision": "deny",
+      "suggested_points": 0,
+      "evidence_ids": [],
+      "reason_code": "INSUFFICIENT_EVIDENCE",
+      "rationale": "Os candidatos disponíveis não trazem evidência suficiente para o critério da pauta: «Calcula log10(3^100)=100log10(3)=47,7100.»."
+    }
+  },
+  "refuted_control_check": {
+    "id": "student_claim_1",
+    "problem_id": "ITA2025F2Q5",
+    "claim_type": "f2q5_student_final_digit",
+    "raw_text": "primeiro algarismo = 1",
+    "normalized_text": "final_digit = 1",
+    "lean_statement": "(5 : ℤ) = (1 : ℤ)",
+    "method": "norm_num",
+    "status": "refuted",
+    "compiled": false,
+    "lean_file": "/Users/LinMarcolino/Documents/confia-lean-auditor/artifacts/student_claim_checks/20261029T211328_317045_student_claims/student_claim_check_1.lean",
+    "stdout": "/Users/LinMarcolino/Documents/confia-lean-auditor/artifacts/student_claim_checks/20261029T211328_317045_student_claims/student_claim_check_1.lean:9:25: error: unsolved goals\n⊢ False\n",
+    "stderr": "",
+    "data": {
+      "digit": 1
+    },
+    "failure_category": null,
+    "refutation_lean_file": "/Users/LinMarcolino/Documents/confia-lean-auditor/artifacts/runs/20261029T211328_317045/student_claim_checks/student_check_1_refutation_lean_file.lean",
+    "refutation_verified": true,
+    "refutation_stdout": "",
+    "refutation_stderr": "",
+    "grounding": {
+      "status": "grounded",
+      "reason": "Local re-extraction and independent representation validation agree",
+      "extraction_method": "extract_f2q5_student_claims",
+      "validator": "local-source-v1",
+      "source_sha256": "67ebdbe737c2e75cc83972cc063eb669268e8a07541692ed94c94168d6d0200d",
+      "source_text": "O primeiro algarismo de 3^100 é 1.",
+      "source_start": 521,
+      "source_end": 555,
+      "payload_sha256": "d333c6efc691aa82667ab6fba1a010f4b2148dc833974bfd736274e9182b9c18",
+      "extraction_origins": [
+        "extract_f2q5_student_claims",
+        "generic_math"
+      ],
+      "generic_source_ids": [
+        "generic_math_523_554_value"
+      ]
+    },
+    "formal_status": "refuted"
+  }
+}

@@ -198,7 +198,7 @@ def test_capture_layout_prioritizes_canvas_and_collapses_secondary_information()
 def test_capture_surface_uses_catalog_but_not_audit_or_recognition_services():
     javascript = "\n".join(path.read_text(encoding="utf-8") for path in CAPTURE_DIR.glob("*.js"))
 
-    assert 'fetch("/problems"' in javascript
+    assert '"/tme/problems" : "/problems"' in javascript
     assert 'fetch("/audit"' not in javascript
     assert "Mathpix" not in javascript
     assert "openai" not in javascript.lower()

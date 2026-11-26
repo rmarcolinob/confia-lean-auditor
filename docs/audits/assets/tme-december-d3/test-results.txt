@@ -1,0 +1,31 @@
+D3 — resultados finais (2026-11-10)
+SHA inicial: d23ebf5f11b1ccf02fbe4a09bbf125ef0bc323df
+
+Python ampliado — 23 arquivos, comando no relatório:
+=========================== short test summary info ============================
+FAILED tests/test_tme_accepted_integration.py::test_real_local_lean_status_certificates_preserved
+FAILED tests/test_submission_audits.py::test_real_bridge_preserves_wrong_solution_and_runs_existing_lean_pipeline
+2 failed, 826 passed, 1 skipped in 233.89s (0:03:53)
+
+Python focado — 8 D3 + 8 D2 + full-5, contagem sobreposta ao ampliado:
+.................                                                        [100%]
+17 passed in 11.11s
+
+JavaScript — suíte completa:
+ℹ tests 502
+ℹ suites 0
+ℹ pass 502
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1429.0475
+
+Baseline D2 JavaScript reproduzida: 498 PASS / 0 FAIL.
+Baseline Lean no SHA inicial: 2 FAIL em 2,47 s (lean-baseline.txt).
+Diagnóstico dos artifacts Lean da regressão final:
+info: mathlib: cloning https://github.com/leanprover-community/mathlib4
+error: external command 'git' exited with code 128
+
+
+Browser: motor estável real com use_lean=False explícito; Q1 e Q2 20/20; edição Q1 para v2 deixa current_audit=null; três AuditRuns anteriores mantêm hashes; Q2 mantém análise corrente. Evidências em screenshots e persistence-check.json.

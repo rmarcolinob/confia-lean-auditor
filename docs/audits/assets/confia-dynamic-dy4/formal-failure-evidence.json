@@ -1,0 +1,179 @@
+{
+  "source": "artifacts/runs/20261112T030547_938569/student_claim_checks.json",
+  "checks": [
+    {
+      "id": "student_claim_0",
+      "problem_id": "ITA2025F2Q1",
+      "claim_type": "f2q1_student_power_reduction",
+      "raw_text": "x^57=1",
+      "normalized_text": "powRem 57 = (1, 0)",
+      "lean_statement": "powRem 57 = (1, 0)",
+      "method": "norm_num [powRem]",
+      "status": "technical_error",
+      "compiled": false,
+      "lean_file": "/Users/LinMarcolino/Documents/confia-lean-auditor-dynamic/artifacts/student_claim_checks/20261112T030547_938569_student_claims/student_claim_check_0.lean",
+      "stdout": "",
+      "stderr": "info: mathlib: checking out revision '8f9d9cff6bd728b17a24e163c9402775d9e6a365'\nerror: external command 'git' exited with code 1\n",
+      "data": {
+        "exponent": 57,
+        "rhs": "1",
+        "const": 1,
+        "coeff": 0
+      },
+      "failure_category": "PROCESS_ERROR",
+      "refutation_lean_file": null,
+      "refutation_verified": false,
+      "refutation_stdout": "",
+      "refutation_stderr": "",
+      "grounding": {
+        "status": "grounded",
+        "reason": "Local re-extraction and independent representation validation agree",
+        "extraction_method": "extract_f2q1_student_claims",
+        "validator": "local-source-v1",
+        "source_sha256": "63c87acb616fd0cea7419da741e63709df146012a6078656c35054a1a010a699",
+        "source_text": "x^57=1; x^14=1-x; x^7=-x.",
+        "source_start": 0,
+        "source_end": 25,
+        "payload_sha256": "7b6af8173334f9e2ac882a006cd519bc2b51b548a11c13a82a328b5b1c8489aa",
+        "extraction_origins": [
+          "extract_f2q1_student_claims",
+          "generic_math"
+        ],
+        "generic_source_ids": [
+          "generic_math_0_6_relation"
+        ]
+      },
+      "formal_status": null
+    },
+    {
+      "id": "student_claim_1",
+      "problem_id": "ITA2025F2Q1",
+      "claim_type": "f2q1_student_power_reduction",
+      "raw_text": "x^14=1-x",
+      "normalized_text": "powRem 14 = (1, -1)",
+      "lean_statement": "powRem 14 = (1, -1)",
+      "method": "norm_num [powRem]",
+      "status": "technical_error",
+      "compiled": false,
+      "lean_file": "/Users/LinMarcolino/Documents/confia-lean-auditor-dynamic/artifacts/student_claim_checks/20261112T030547_938569_student_claims/student_claim_check_1.lean",
+      "stdout": "",
+      "stderr": "info: mathlib: checking out revision '8f9d9cff6bd728b17a24e163c9402775d9e6a365'\nerror: external command 'git' exited with code 1\n",
+      "data": {
+        "exponent": 14,
+        "rhs": "1-x",
+        "const": 1,
+        "coeff": -1
+      },
+      "failure_category": "PROCESS_ERROR",
+      "refutation_lean_file": null,
+      "refutation_verified": false,
+      "refutation_stdout": "",
+      "refutation_stderr": "",
+      "grounding": {
+        "status": "grounded",
+        "reason": "Local re-extraction and independent representation validation agree",
+        "extraction_method": "extract_f2q1_student_claims",
+        "validator": "local-source-v1",
+        "source_sha256": "63c87acb616fd0cea7419da741e63709df146012a6078656c35054a1a010a699",
+        "source_text": "x^57=1; x^14=1-x; x^7=-x.",
+        "source_start": 0,
+        "source_end": 25,
+        "payload_sha256": "c94fbb8908068879f3c6727773f3646f5f3560305bf8ef83bf20ffa99e0ba6a9",
+        "extraction_origins": [
+          "extract_f2q1_student_claims",
+          "generic_math"
+        ],
+        "generic_source_ids": [
+          "generic_math_8_16_relation"
+        ]
+      },
+      "formal_status": null
+    },
+    {
+      "id": "student_claim_2",
+      "problem_id": "ITA2025F2Q1",
+      "claim_type": "f2q1_student_power_reduction",
+      "raw_text": "x^7=-x",
+      "normalized_text": "powRem 7 = (0, -1)",
+      "lean_statement": "powRem 7 = (0, -1)",
+      "method": "norm_num [powRem]",
+      "status": "technical_error",
+      "compiled": false,
+      "lean_file": "/Users/LinMarcolino/Documents/confia-lean-auditor-dynamic/artifacts/student_claim_checks/20261112T030547_938569_student_claims/student_claim_check_2.lean",
+      "stdout": "",
+      "stderr": "info: mathlib: checking out revision '8f9d9cff6bd728b17a24e163c9402775d9e6a365'\nerror: external command 'git' exited with code 1\n",
+      "data": {
+        "exponent": 7,
+        "rhs": "-x",
+        "const": 0,
+        "coeff": -1
+      },
+      "failure_category": "PROCESS_ERROR",
+      "refutation_lean_file": null,
+      "refutation_verified": false,
+      "refutation_stdout": "",
+      "refutation_stderr": "",
+      "grounding": {
+        "status": "grounded",
+        "reason": "Local re-extraction and independent representation validation agree",
+        "extraction_method": "extract_f2q1_student_claims",
+        "validator": "local-source-v1",
+        "source_sha256": "63c87acb616fd0cea7419da741e63709df146012a6078656c35054a1a010a699",
+        "source_text": "x^57=1; x^14=1-x; x^7=-x.",
+        "source_start": 0,
+        "source_end": 25,
+        "payload_sha256": "9c810cde28024e2f9ad6c7726b99ac03fc00b7b3e4d46aa3083d6ead4184e76f",
+        "extraction_origins": [
+          "extract_f2q1_student_claims",
+          "generic_math"
+        ],
+        "generic_source_ids": [
+          "generic_math_18_24_relation"
+        ]
+      },
+      "formal_status": null
+    },
+    {
+      "id": "student_claim_3",
+      "problem_id": "ITA2025F2Q1",
+      "claim_type": "f2q1_student_final_answer",
+      "raw_text": "Logo a=1 e b=1.",
+      "normalized_text": "local final binding: {'a': 1, 'b': 1}",
+      "lean_statement": "candidateA = (1 : ℤ) ∧ candidateB = (1 : ℤ)",
+      "method": "norm_num [candidateA, candidateB]",
+      "status": "technical_error",
+      "compiled": false,
+      "lean_file": "/Users/LinMarcolino/Documents/confia-lean-auditor-dynamic/artifacts/student_claim_checks/20261112T030547_938569_student_claims/student_claim_check_3.lean",
+      "stdout": "",
+      "stderr": "info: mathlib: checking out revision '8f9d9cff6bd728b17a24e163c9402775d9e6a365'\nerror: external command 'git' exited with code 1\n",
+      "data": {
+        "a": 1,
+        "b": 1
+      },
+      "failure_category": "PROCESS_ERROR",
+      "refutation_lean_file": null,
+      "refutation_verified": false,
+      "refutation_stdout": "",
+      "refutation_stderr": "",
+      "grounding": {
+        "status": "grounded",
+        "reason": "Local re-extraction and independent representation validation agree",
+        "extraction_method": "extract_f2q1_student_claims",
+        "validator": "local-source-v1",
+        "source_sha256": "63c87acb616fd0cea7419da741e63709df146012a6078656c35054a1a010a699",
+        "source_text": "Logo a=1 e b=1.",
+        "source_start": 26,
+        "source_end": 41,
+        "payload_sha256": "0638d7631d15c0e81871ee56e56be452f75e43886fee887b09d1713e03a2f93d",
+        "extraction_origins": [
+          "extract_f2q1_student_claims",
+          "generic_math"
+        ],
+        "generic_source_ids": [
+          "generic_math_31_40_bindings"
+        ]
+      },
+      "formal_status": null
+    }
+  ]
+}

@@ -1,0 +1,68 @@
+{
+  "transcription_id": "tr_8a456e91a2b34ecabde5a1ef4534881d",
+  "submission_id": "sub_3feaa9e37d484aefa69e432bf22fb09f",
+  "created_at": "2026-11-25T02:15:55.042993Z",
+  "source": "manual",
+  "recognizer": null,
+  "recognizer_version": null,
+  "provider": null,
+  "recognizer_run_id": null,
+  "provenance": null,
+  "revision_number": 1,
+  "based_on_revision_number": null,
+  "reviewer_reference": "evaluator",
+  "reviewer_identity_verified": false,
+  "change_type": "initial_transcription",
+  "change_reason": null,
+  "segments": [
+    {
+      "segment_id": "seg-a",
+      "page_index": 0,
+      "order": 0,
+      "kind": "text",
+      "text": "Invertendo 731, obtenho 137. Portanto, 731 - 137 = 595.",
+      "latex": null,
+      "confidence": null,
+      "source_region": null,
+      "source_stroke_refs": null,
+      "tme_item_id": "a"
+    },
+    {
+      "segment_id": "seg-b",
+      "page_index": 0,
+      "order": 1,
+      "kind": "text",
+      "text": "O número original é 100a + 10b + c e o invertido é 100c + 10b + a. Subtraindo, os termos 10b se cancelam: (100a+10b+c)-(100c+10b+a)=99a-99c=99(a-c).",
+      "latex": null,
+      "confidence": null,
+      "source_region": null,
+      "source_stroke_refs": null,
+      "tme_item_id": "b"
+    },
+    {
+      "segment_id": "seg-c",
+      "page_index": 0,
+      "order": 2,
+      "kind": "text",
+      "text": "Como a-c pode assumir os valores de 1 a 8, os resultados são 99, 198, 297, 396, 495, 594 e 693.",
+      "latex": null,
+      "confidence": null,
+      "source_region": null,
+      "source_stroke_refs": null,
+      "tme_item_id": "c"
+    },
+    {
+      "segment_id": "seg-d",
+      "page_index": 0,
+      "order": 3,
+      "kind": "text",
+      "text": "Se o resultado é 594, então 99(a-c)=594, logo a-c=6. Os pares possíveis são (7,1), (8,2) e (9,3). Para cada par existem 10 escolhas para o algarismo b. Assim, existem 30 números.",
+      "latex": null,
+      "confidence": null,
+      "source_region": null,
+      "source_stroke_refs": null,
+      "tme_item_id": "d"
+    }
+  ],
+  "status": "NEEDS_REVIEW"
+}

@@ -64,7 +64,10 @@
   }
   async function load() {
     const user = window.ConfIAAuthUser;
-    if (!user || !["SCHOOL_MANAGER", "NETWORK_MANAGER"].includes(user.role)) return;
+    if (!user || !["SCHOOL_MANAGER", "NETWORK_MANAGER"].includes(user.role)) {
+      get("management-message").textContent = "Indicadores disponíveis em uma sessão institucional de gestão. A demonstração local não exibe dados de escolas ou turmas.";
+      return;
+    }
     const token = ++sequence;
     get("management-message").textContent = "Carregando indicadores…";
     get("management-table").replaceChildren();

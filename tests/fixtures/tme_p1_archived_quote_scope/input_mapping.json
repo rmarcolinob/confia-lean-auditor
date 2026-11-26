@@ -1,0 +1,30 @@
+{
+  "solution": {
+    "a": "Invertendo 731, obtenho 137. Portanto, 731 - 137 = 595.",
+    "b": "O original é 100a+10b+c e o invertido é 100c+10b+a. Subtraindo, os termos 10b se cancelam: (100a+10b+c)-(100c+10b+a)=99a-99c=99(a-c).",
+    "c": "Como a-c assume valores de 1 a 8, os resultados são 99, 198, 297, 396, 495, 594 e 693.",
+    "d": "Para o resultado 594, 99(a-c)=594, portanto a-c=6. Os pares são (7,1), (8,2) e (9,3). Há 10 escolhas para b em cada par. Logo, 30 números."
+  },
+  "segment_mapping": [
+    {
+      "item": "a",
+      "segment_id": "seg-0",
+      "page_index": 0
+    },
+    {
+      "item": "b",
+      "segment_id": "seg-1",
+      "page_index": 0
+    },
+    {
+      "item": "c",
+      "segment_id": "seg-2",
+      "page_index": 0
+    },
+    {
+      "item": "d",
+      "segment_id": "seg-3",
+      "page_index": 0
+    }
+  ]
+}

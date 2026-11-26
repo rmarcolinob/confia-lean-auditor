@@ -1,0 +1,24 @@
+{
+  "head": "d9538355c0a854e5a0b24edb5706ed80c43bf4be",
+  "files": {
+    "app/confia_lean_auditor/assessments/models.py": "ec9d5e20dbe90a62aa75e6fb5ee07a8e07a3945ea01aac31f125106fc5ad2de2",
+    "app/confia_lean_auditor/assessments/store.py": "2be08a1701979bd476d5e7881b75c2c90e6d28a683c8a91ca0665fdc702635d9",
+    "app/confia_lean_auditor/dynamic/router.py": "8e90a8881ceb333ccfd32324dcfc9851b840b55a6a8ad09499b1ba99c5932d41",
+    "app/confia_lean_auditor/static/dynamic.js": "347630f38cf5465fea57f33e70e2812ae5d06b276d82ea5757363aff1f85ed84",
+    "app/confia_lean_auditor/static/tme/index.html": "bcbca07c9f4578badd503ea105466be58cb373c3e39a52cd6de6bb11f55adb57",
+    "app/confia_lean_auditor/static/tme/tme.js": "e068b898da0645eb4d375f51df2d327518f03c0ad1bd2c6a6e45c95412a420c0",
+    "app/confia_lean_auditor/static/tme/workspace-report.js": "6d949b469aa42b0a89dcf8e76623acf930ced3fd5ad6374f7f453228f83abd6b",
+    "app/confia_lean_auditor/tme/home_summary.py": "d57dd7fa1325819808acc77be38f41dacd5072aa0b8f07d5f129c92542358d6a",
+    "app/confia_lean_auditor/tme/models.py": "7c77a20ce3753f905e75479b333bce5b62c0549c13ee50506a7feb7155aeede0",
+    "app/confia_lean_auditor/tme/router.py": "873611000bcddd540f2f212dc9a67b051e1016f1297884f0f0a19bc04dbb3237",
+    "app/confia_lean_auditor/tme/store.py": "f3fb808e7030f20be1fc457fadc4d1cbf86c6ff7a0ce0df1cb5791eecb7cff9a",
+    "tests/js/test_dynamic_dy3.cjs": "bc46559cd0b3b079ef5e06214509dbe8a2d39a8c21c0ac9516ada528f4eb0ebd",
+    "app/confia_lean_auditor/dynamic/human_decisions.py": "3a1f891b9d2043950bd20a3485cfa7ea2bca047a3caabbc7350bfa6875775400",
+    "app/confia_lean_auditor/dynamic/reconciliation.py": "a631acee5084c4d62cd6fcbb0cca5f2caf4860703e17243cebba1d65599c58b0",
+    "app/confia_lean_auditor/dynamic/reconciliation_models.py": "5fe5e5494297c25231c5df719cb94a157d19ba0d37b818212f7f388f95ac66b7",
+    "app/confia_lean_auditor/dynamic/reconciliation_service.py": "3fa6c76338dc9864e9c9b65a9ce1ecc31b6749ccdd532ccb9af3997fbfc5d1c9",
+    "docs/audits/CONFIA_DYNAMIC_DY5_RECONCILIATION_IMPLEMENTACAO_01.md": "4a43b37ae66e992af33828f9f07d6ab01d544e6f2df9a1e21432b884e1aef961",
+    "tests/js/test_dynamic_dy5.cjs": "79b27825d2f75fd8d5c3ade7ae94230704c1f3c7b03d02f0f159b0e3af6f2ad7",
+    "tests/test_dynamic_dy5.py": "1ea8b4751c743288608d3c205d23f184733b977e33bb3aef1d4659ff162bb61e"
+  }
+}

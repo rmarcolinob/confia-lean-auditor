@@ -1,0 +1,59 @@
+{
+  "branch": "codex/dec10-functional-integration",
+  "base_commit": "6739a66",
+  "policy": "semantic-b-minimal.v1",
+  "production_files": [
+    "app/confia_lean_auditor/student_claims/sufficiency_requirements.py",
+    "app/confia_lean_auditor/static/tme/workspace-report.js"
+  ],
+  "test_files": [
+    "tests/test_tme_archived_quote_scope.py",
+    "tests/js/test_tme_accepted_integration.cjs",
+    "tests/fixtures/tme_p1_archived_quote_scope/"
+  ],
+  "validation": {
+    "python_passed": 896,
+    "python_failed": 0,
+    "javascript_passed": 138,
+    "javascript_failed": 0,
+    "coverage": [
+      "13 respostas GPT arquivadas, sem alteração, no replay real offline",
+      "Reprodução das duas falhas com o escopo anterior",
+      "Nota 17/20 calculada pela pauta original após a correção",
+      "c.difference_domain not_met preservado por justificativa ausente",
+      "Controle identificado como sintético de lista completa: escopo anterior impede nota; corrigido permite 20/20",
+      "Retomada de d.middle_choices preserva decisões anteriores sem dupla adjudicação",
+      "Proveniência literal, bloqueio de item alheio/citação inventada e item alvo ausente",
+      "190 fixtures existentes de P1–P5; 15 cenários completos/parciais/incorretos com notas numéricas",
+      "Métodos alternativos e prova por absurdo; met/not_met/review/falha técnica; PautaEngine e replay ITA",
+      "Rótulo semântico de critério não atendido sem apresentar proposição verdadeira como refutada"
+    ],
+    "python_command": "PYTHONPATH=app python -m pytest -q tests/test_tme_archived_quote_scope.py tests/test_tme_minimal_functional.py tests/test_dec10_specialized.py tests/test_pauta_engine.py tests/test_tme2_p1_pauta_bridge.py tests/test_tme2_p2_pauta_bridge.py tests/test_tme2_p3_pauta_bridge.py tests/test_tme2_p4_pauta_bridge.py tests/test_tme2_p5_pauta_bridge.py tests/test_semantic_sufficiency.py tests/test_ita_real_fallback_replay.py",
+    "javascript_command": "node --test tests/js/test_tme*.cjs tests/js/test_question*.cjs"
+  },
+  "preserved": [
+    "Auditorias originais",
+    "Pautas e pesos",
+    "PautaEngine",
+    "Checkers",
+    "Lean",
+    "Prompt, schema e política do fallback mínimo",
+    "Decisões conclusivas anteriores"
+  ],
+  "paid_api_calls": 0,
+  "pilot_server_restarted": false,
+  "operational_status": {
+    "P1": "Regressões offline aprovadas; candidato ao congelamento para gold humano",
+    "P2": "Regressões offline aprovadas; candidato ao congelamento para gold humano",
+    "P3": "Regressões offline aprovadas; candidato ao congelamento para gold humano",
+    "P4": "Regressões offline aprovadas; candidato ao congelamento para gold humano",
+    "P5": "Regressões offline aprovadas; candidato ao congelamento para gold humano"
+  },
+  "known_remaining_technical_blockers": [],
+  "limitations": [
+    "O piloto precisa carregar este commit; a auditoria armazenada continua imutável, com seu resultado original.",
+    "Não houve nova avaliação GPT real. O resultado 17/20 decorre das respostas arquivadas, não de provider simulado.",
+    "A matriz P1–P5 usa fixtures e providers simulados explicitamente identificados; não mede acurácia contra gold humano.",
+    "review, falha técnica e evidência ausente continuam pendentes quando impedem decidir a nota. Não houve liberação geral de evidências entre itens."
+  ]
+}

@@ -1,0 +1,111 @@
+{
+  "schema": "r1-normalization-review.v1",
+  "sources": {
+    "random_solution_id": {
+      "path": "app/confia_lean_auditor/tme/registry.py",
+      "baseline_sha256": "73ccd28bb95f5979542eabcf37fde07655a045f7921ddee0af15edae295ec2e5",
+      "r1_sha256": "73ccd28bb95f5979542eabcf37fde07655a045f7921ddee0af15edae295ec2e5",
+      "identical": true
+    },
+    "verification_token_hash": {
+      "path": "app/confia_lean_auditor/claims/common/fact_results.py",
+      "baseline_sha256": "ae410ed4efe58dbaaa357093e0d56d51baf635b1d2305a7dac8f1d257d975f95",
+      "r1_sha256": "ae410ed4efe58dbaaa357093e0d56d51baf635b1d2305a7dac8f1d257d975f95",
+      "identical": true
+    },
+    "random_lean_directory": {
+      "path": "app/confia_lean_auditor/lean/student_claim_checkers/tme2_p4.py",
+      "baseline_sha256": "2d72ca00ee222d7a19a614ef3b2f782cf2143f6cd2dc76e17a0935b97f716d4d",
+      "r1_sha256": "2d72ca00ee222d7a19a614ef3b2f782cf2143f6cd2dc76e17a0935b97f716d4d",
+      "identical": true
+    }
+  },
+  "cases": [
+    {
+      "nodeid": "tests/test_common_claim_pipeline.py::test_common_catalog_preserves_real_pipeline_credit_and_attribution[True]",
+      "strict_traceback_equal": false,
+      "normalized_traceback_equal": true,
+      "verification_tokens_in_first_occurrence_order": {
+        "baseline": [],
+        "r1": []
+      },
+      "reason": "runtime timestamps and reproducibility manifest identities",
+      "raw_evidence": [
+        "baseline-results.json",
+        "r1-results.json",
+        "traceback-differences.diff"
+      ]
+    },
+    {
+      "nodeid": "tests/test_math_canonical_pipeline.py::test_shifted_f2q3_equation_keeps_full_credit_and_formal_checks",
+      "strict_traceback_equal": false,
+      "normalized_traceback_equal": true,
+      "verification_tokens_in_first_occurrence_order": {
+        "baseline": [],
+        "r1": []
+      },
+      "reason": "runtime timestamps and reproducibility manifest identities",
+      "raw_evidence": [
+        "baseline-results.json",
+        "r1-results.json",
+        "traceback-differences.diff"
+      ]
+    },
+    {
+      "nodeid": "tests/test_semantic_claims.py::test_semantic_math_is_checked_by_real_lean[2*((6-x)+x)-12-verified-6-student_lean]",
+      "strict_traceback_equal": false,
+      "normalized_traceback_equal": true,
+      "verification_tokens_in_first_occurrence_order": {
+        "baseline": [
+          "fe815ee2204933faa8f7",
+          "f03333de672fa7e9345d"
+        ],
+        "r1": [
+          "12046019f514c93c483d",
+          "817a5b99ce7494a8ac1d"
+        ]
+      },
+      "reason": "random TME solution_id is hashed by FactResultsBuilder; random UUID also names the Lean directory; consistent token renaming retains all reference relationships",
+      "raw_evidence": [
+        "baseline-results.json",
+        "r1-results.json",
+        "traceback-differences.diff"
+      ],
+      "same_baseline_repeat": {
+        "status": "FAIL",
+        "strict_traceback_changed_again": true,
+        "normalized_traceback_equal": true,
+        "evidence": "baseline-semantic-repeat-results.json"
+      }
+    },
+    {
+      "nodeid": "tests/test_semantic_claims.py::test_semantic_math_is_checked_by_real_lean[2*((6-x)+x)+1-12-refuted-0-student_lean]",
+      "strict_traceback_equal": false,
+      "normalized_traceback_equal": true,
+      "verification_tokens_in_first_occurrence_order": {
+        "baseline": [
+          "322350c05b546f766784",
+          "959c49a310e64e3fe532"
+        ],
+        "r1": [
+          "eb8ba65b52f5fee5549c",
+          "db2c0d5048569e3a0c7f"
+        ]
+      },
+      "reason": "random TME solution_id is hashed by FactResultsBuilder; random UUID also names the Lean directory; consistent token renaming retains all reference relationships",
+      "raw_evidence": [
+        "baseline-results.json",
+        "r1-results.json",
+        "traceback-differences.diff"
+      ],
+      "same_baseline_repeat": {
+        "status": "FAIL",
+        "strict_traceback_changed_again": true,
+        "normalized_traceback_equal": true,
+        "evidence": "baseline-semantic-repeat-results.json"
+      }
+    }
+  ],
+  "raw_artifacts_unchanged": true,
+  "scope": "Only analysis fingerprints are normalized. Source hashes, mathematical expressions, assertions, scores, statuses and reference relationships are retained."
+}

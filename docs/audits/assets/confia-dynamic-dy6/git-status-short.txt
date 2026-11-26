@@ -1,0 +1,11 @@
+ M app/confia_lean_auditor/assessments/models.py
+ M app/confia_lean_auditor/assessments/store.py
+ M app/confia_lean_auditor/dynamic/grading_context.py
+ M app/confia_lean_auditor/dynamic/router.py
+?? app/confia_lean_auditor/dynamic/assessment_router.py
+?? app/confia_lean_auditor/dynamic/assessment_service.py
+?? app/confia_lean_auditor/static/dynamic-assessment.js
+?? docs/audits/CONFIA_DYNAMIC_DY6_MULTIQUESTION_IMPLEMENTACAO_01.md
+?? docs/audits/assets/confia-dynamic-dy6/
+?? tests/js/test_dynamic_dy6.cjs
+?? tests/test_dynamic_dy6.py

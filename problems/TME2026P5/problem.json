@@ -1,0 +1,53 @@
+{
+  "problem_id": "TME2026P5",
+  "title": "TME² 2026 — Problema 5",
+  "max_score": 20,
+  "pauta_reference": "examples/pautas/tme2_problem5.v1.json",
+  "source": {
+    "document": "Segunda Fase TME² - Gabarito com pauta.pdf",
+    "sha256": "a2660f1c0761738a8b9232dc179feaea9538efb45102e1b2a9b991a3dd2ac384",
+    "pages": [
+      13,
+      14
+    ]
+  },
+  "statement_blocks": [
+    {
+      "type": "text",
+      "text": "Durante uma aula, o professor propôs o seguinte desafio: ele anuncia um número inteiro maior do que 1, e cada estudante escreve uma lista de números inteiros positivos cuja soma seja igual ao número anunciado. A pontuação de uma lista é o produto de todos os seus números. A ordem em que os números são escritos não importa."
+    },
+    {
+      "type": "text",
+      "text": "Por exemplo, se o professor anunciar o número 6, quatro listas possíveis são \\((6)\\), \\((1, 5)\\), \\((3, 3)\\) e \\((2, 2, 2)\\)."
+    },
+    {
+      "type": "text",
+      "text": "As pontuações dessas listas são, respectivamente, 6, 5, 9 e 8."
+    },
+    {
+      "type": "text",
+      "text": "(a) Ao anunciar o número 11, o professor pediu aos estudantes que encontrassem a maior pontuação possível. Qual é essa pontuação? Escreva uma lista que a obtenha.",
+      "item_id": "a"
+    },
+    {
+      "type": "text",
+      "text": "(b) Marina observou que, se em uma lista aparece um número \\(n\\), com \\(n \\geq 5\\), podemos substituí-lo pelos números 3 e \\(n-3\\). Explique por que a nova lista tem a mesma soma e uma pontuação maior do que a lista original.",
+      "item_id": "b"
+    },
+    {
+      "type": "text",
+      "text": "Na etapa final do desafio, o professor anunciou o número 2026."
+    },
+    {
+      "type": "text",
+      "text": "(c) Determine a maior pontuação que pode ser obtida.",
+      "item_id": "c"
+    },
+    {
+      "type": "text",
+      "text": "(d) Determine todas as listas que atingem a pontuação máxima. Essas listas possuem a mesma quantidade de números?",
+      "item_id": "d"
+    }
+  ],
+  "figures": []
+}

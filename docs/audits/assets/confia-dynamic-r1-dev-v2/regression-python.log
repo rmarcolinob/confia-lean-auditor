@@ -1,0 +1,1976 @@
+........................................................................ [  2%]
+........................................................................ [  4%]
+........................................................................ [  6%]
+.........................................s................FF............ [  9%]
+........................................s............................... [ 11%]
+........................................................................ [ 13%]
+........................................................................ [ 15%]
+........................................................................ [ 18%]
+........................................................................ [ 20%]
+...................................................FF...........FFFFFFFF [ 22%]
+F......FFFFFFF......F.FFFFFF......F.FFFFFF....FFFFFFF.....F.FFFFFFFF.... [ 25%]
+........................................................................ [ 27%]
+.....................s..........................F......................F [ 29%]
+.FFFFFFF.FFF.FFFFF.FFF....F..FF....F.FF.FFF............................. [ 31%]
+........................................................................ [ 34%]
+........................................................................ [ 36%]
+.sF........................FFFFFFFFFF................................... [ 38%]
+..............FF........................................................ [ 40%]
+..................................................FF.................... [ 43%]
+............................s........................................... [ 45%]
+.................F...................................................... [ 47%]
+........................................................................ [ 50%]
+........................................................................ [ 52%]
+.................sF................................sssss................ [ 54%]
+.......s................................................................ [ 56%]
+........................................................................ [ 59%]
+........................................................................ [ 61%]
+.......F.F.............................................................. [ 63%]
+....................................................................F... [ 66%]
+...........................F..................................ssssssssss [ 68%]
+sssssssssss............................................................. [ 70%]
+........................................................................ [ 72%]
+........................................................................ [ 75%]
+........................................................................ [ 77%]
+........................................................................ [ 79%]
+........................................................................ [ 81%]
+........................................................................ [ 84%]
+........................................................................ [ 86%]
+...............F........................................................ [ 88%]
+........................................................................ [ 91%]
+............................FF..............s......sssssssssss......ss.. [ 93%]
+........................................................................ [ 95%]
+........................................................................ [ 97%]
+..............................................F....F.............        [100%]
+=================================== FAILURES ===================================
+___ test_common_catalog_preserves_real_pipeline_credit_and_attribution[True] ___
+
+correct = True
+
+    @pytest.mark.parametrize('correct',[True,False])
+    def test_common_catalog_preserves_real_pipeline_credit_and_attribution(correct):
+        solution=Path('problems/ITA2025F2Q1/examples/correct_solution.txt').read_text() if correct else 'Portanto a=3 e b=2.'
+        response=execute_audit(AuditRequest(problem_id='ITA2025F2Q1',solution=solution))
+        directory=Path(response.artifact_dir)
+        catalog=MathClaimCatalog.model_validate_json((directory/'math_claims.json').read_text())
+        public=response.model_dump(mode='json')
+        assert 'math_claims' not in public and 'common_claims' not in public
+        assert json.loads((directory/'audit.json').read_text())==public
+        # Every pointer resolves to an actual existing legacy result; no proof output
+        # or score is reconstructed inside the common artifact.
+        for record in catalog.records:
+            for verification in record.verification_results:
+                node=public
+                for part in verification.artifact_ref.split('#/',1)[1].split('/'):
+                    node=node[int(part)] if isinstance(node,list) else node[part]
+                assert node is not None
+        final=next(i for i in response.rubric_assessment.items if i.id=='final_answer')
+        student=next(r for r in catalog.records if r.claim_type=='f2q1_student_final_answer')
+        assert student.provenance.origin==Origin.STUDENT_EXPLICIT
+        if correct:
+>           assert response.score==10 and response.verdict=='correto'
+E           AssertionError: assert (None == 10)
+E            +  where None = AuditResponse(problem_id='ITA2025F2Q1', score=None, max_score=10.0, verdict='inconclusivo', extracted_claims=ClaimExtr...ted_max_score=2.0, coverage=0.2, estimated_points=None, needs_review=True, unscorable_reason='ADJUDICATOR_UNAVAILABLE').score
+
+tests/test_common_claim_pipeline.py:34: AssertionError
+__ test_common_catalog_preserves_real_pipeline_credit_and_attribution[False] ___
+
+correct = False
+
+    @pytest.mark.parametrize('correct',[True,False])
+    def test_common_catalog_preserves_real_pipeline_credit_and_attribution(correct):
+        solution=Path('problems/ITA2025F2Q1/examples/correct_solution.txt').read_text() if correct else 'Portanto a=3 e b=2.'
+        response=execute_audit(AuditRequest(problem_id='ITA2025F2Q1',solution=solution))
+        directory=Path(response.artifact_dir)
+        catalog=MathClaimCatalog.model_validate_json((directory/'math_claims.json').read_text())
+        public=response.model_dump(mode='json')
+        assert 'math_claims' not in public and 'common_claims' not in public
+        assert json.loads((directory/'audit.json').read_text())==public
+        # Every pointer resolves to an actual existing legacy result; no proof output
+        # or score is reconstructed inside the common artifact.
+        for record in catalog.records:
+            for verification in record.verification_results:
+                node=public
+                for part in verification.artifact_ref.split('#/',1)[1].split('/'):
+                    node=node[int(part)] if isinstance(node,list) else node[part]
+                assert node is not None
+        final=next(i for i in response.rubric_assessment.items if i.id=='final_answer')
+        student=next(r for r in catalog.records if r.claim_type=='f2q1_student_final_answer')
+        assert student.provenance.origin==Origin.STUDENT_EXPLICIT
+        if correct:
+            assert response.score==10 and response.verdict=='correto'
+            assert final.points==2
+            aligned=[a for a in catalog.alignments if a.status=='aligned']
+            assert any(student.record_id in a.preferred_attribution_ids for a in aligned)
+            assert any(v.status=='verified' and v.attributed_to_student for v in student.verification_results)
+        else:
+            assert response.score is None and response.verdict=='inconclusivo'
+>           assert final.points==0 and final.mathematical_status=='refuted'
+E           AssertionError: assert (None == 0)
+E            +  where None = RubricItemResult(id='final_answer', description='Conclui corretamente a=-1 e b=3.', detected=False, points=None, max_p...t content differs from the reference; retain both origins', 'conflict': True}, 'needs_review': True, 'conflict': True}).points
+
+tests/test_common_claim_pipeline.py:41: AssertionError
+_________ test_written_method_reaches_real_lean[2*((6-x)+x)-verified] __________
+
+lhs = '2*((6-x)+x)', status = 'verified'
+
+    @pytest.mark.parametrize('lhs,status',[('2*((6-x)+x)','verified'),('2*((6-x)+x)+1','refuted')])
+    def test_written_method_reaches_real_lean(lhs,status):
+        text=f'APQR é um paralelogramo.\nSeu perímetro APQR é {lhs}=12.'
+        cs=[selection(),selection(('E002',),'b.perimeter_apqr','perimeter_apqr',lhs+'=12','math')]
+        result=run_shadow('TME2026P4',{'b':text},text,solution_id='lean',provider=provider(cs),use_lean=True)
+        fact=next(f for f in result.potential_bridge.auditor.facts if f.fact_id=='b.perimeter_apqr')
+>       assert fact.verification.status==status and fact.verification_source=='student_lean'
+E       AssertionError: assert ('technical_error' == 'verified'
+E         
+E         - verified
+E         + technical_error)
+
+tests/test_evidence_id_semantic.py:144: AssertionError
+_________ test_written_method_reaches_real_lean[2*((6-x)+x)+1-refuted] _________
+
+lhs = '2*((6-x)+x)+1', status = 'refuted'
+
+    @pytest.mark.parametrize('lhs,status',[('2*((6-x)+x)','verified'),('2*((6-x)+x)+1','refuted')])
+    def test_written_method_reaches_real_lean(lhs,status):
+        text=f'APQR é um paralelogramo.\nSeu perímetro APQR é {lhs}=12.'
+        cs=[selection(),selection(('E002',),'b.perimeter_apqr','perimeter_apqr',lhs+'=12','math')]
+        result=run_shadow('TME2026P4',{'b':text},text,solution_id='lean',provider=provider(cs),use_lean=True)
+        fact=next(f for f in result.potential_bridge.auditor.facts if f.fact_id=='b.perimeter_apqr')
+>       assert fact.verification.status==status and fact.verification_source=='student_lean'
+E       AssertionError: assert ('technical_error' == 'refuted'
+E         
+E         - refuted
+E         + technical_error)
+
+tests/test_evidence_id_semantic.py:144: AssertionError
+_ test_f2_correct_solution_has_full_operational_strong_lean_contract[ITA2025F2Q1] _
+
+problem_id = 'ITA2025F2Q1'
+
+    @pytest.mark.parametrize("problem_id", F2_PROBLEMS)
+    def test_f2_correct_solution_has_full_operational_strong_lean_contract(problem_id: str):
+        data = audit_solution(problem_id, read_example(problem_id, "correct_solution.txt"))
+    
+>       assert data["score"] == data["max_score"]
+E       assert None == 10.0
+
+tests/test_f2_strong_lean_suite.py:51: AssertionError
+_ test_f2_correct_solution_has_full_operational_strong_lean_contract[ITA2025F2Q3] _
+
+problem_id = 'ITA2025F2Q3'
+
+    @pytest.mark.parametrize("problem_id", F2_PROBLEMS)
+    def test_f2_correct_solution_has_full_operational_strong_lean_contract(problem_id: str):
+        data = audit_solution(problem_id, read_example(problem_id, "correct_solution.txt"))
+    
+>       assert data["score"] == data["max_score"]
+E       assert None == 10.0
+
+tests/test_f2_strong_lean_suite.py:51: AssertionError
+_ test_f2_correct_solution_has_full_operational_strong_lean_contract[ITA2025F2Q5] _
+
+problem_id = 'ITA2025F2Q5'
+
+    @pytest.mark.parametrize("problem_id", F2_PROBLEMS)
+    def test_f2_correct_solution_has_full_operational_strong_lean_contract(problem_id: str):
+        data = audit_solution(problem_id, read_example(problem_id, "correct_solution.txt"))
+    
+>       assert data["score"] == data["max_score"]
+E       assert None == 10.0
+
+tests/test_f2_strong_lean_suite.py:51: AssertionError
+_ test_f2_correct_solution_has_full_operational_strong_lean_contract[ITA2025F2Q6] _
+
+problem_id = 'ITA2025F2Q6'
+
+    @pytest.mark.parametrize("problem_id", F2_PROBLEMS)
+    def test_f2_correct_solution_has_full_operational_strong_lean_contract(problem_id: str):
+        data = audit_solution(problem_id, read_example(problem_id, "correct_solution.txt"))
+    
+>       assert data["score"] == data["max_score"]
+E       assert None == 10.0
+
+tests/test_f2_strong_lean_suite.py:51: AssertionError
+_ test_f2_correct_solution_has_full_operational_strong_lean_contract[ITA2025F2Q8] _
+
+problem_id = 'ITA2025F2Q8'
+
+    @pytest.mark.parametrize("problem_id", F2_PROBLEMS)
+    def test_f2_correct_solution_has_full_operational_strong_lean_contract(problem_id: str):
+        data = audit_solution(problem_id, read_example(problem_id, "correct_solution.txt"))
+    
+>       assert data["score"] == data["max_score"]
+E       assert None == 10.0
+
+tests/test_f2_strong_lean_suite.py:51: AssertionError
+___________ test_f2_wrong_answer_stays_below_full_score[ITA2025F2Q1] ___________
+
+problem_id = 'ITA2025F2Q1'
+
+    @pytest.mark.parametrize("problem_id", F2_PROBLEMS)
+    def test_f2_wrong_answer_stays_below_full_score(problem_id: str):
+        data = audit_solution(problem_id, read_example(problem_id, WRONG_EXAMPLES[problem_id]))
+    
+        decided_max = {"ITA2025F2Q1": 2, "ITA2025F2Q3": 5, "ITA2025F2Q5": 2,
+                       "ITA2025F2Q6": 2, "ITA2025F2Q8": 0}[problem_id]
+>       assert_incomplete(data, 0, decided_max)
+
+tests/test_f2_strong_lean_suite.py:67: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+data = {'artifact_dir': None, 'artifact_ref': None, 'coverage': 0.0, 'estimated_points': None, ...}
+subtotal = 0, decided_max = 2
+
+    def assert_incomplete(data, subtotal, decided_max):
+        assert_score_contract(data)
+        assert data["score"] is None
+        assert data["verdict"] == "inconclusivo"
+        assert any(item["points"] is None for item in data["rubric_assessment"]["items"])
+        assert data["rubric_assessment"]["evaluated_score"] == pytest.approx(subtotal)
+>       assert data["rubric_assessment"]["evaluated_max_score"] == pytest.approx(decided_max)
+E       AssertionError
+
+tests/audit_contract.py:60: AssertionError
+___________ test_f2_wrong_answer_stays_below_full_score[ITA2025F2Q3] ___________
+
+problem_id = 'ITA2025F2Q3'
+
+    @pytest.mark.parametrize("problem_id", F2_PROBLEMS)
+    def test_f2_wrong_answer_stays_below_full_score(problem_id: str):
+        data = audit_solution(problem_id, read_example(problem_id, WRONG_EXAMPLES[problem_id]))
+    
+        decided_max = {"ITA2025F2Q1": 2, "ITA2025F2Q3": 5, "ITA2025F2Q5": 2,
+                       "ITA2025F2Q6": 2, "ITA2025F2Q8": 0}[problem_id]
+>       assert_incomplete(data, 0, decided_max)
+
+tests/test_f2_strong_lean_suite.py:67: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+data = {'artifact_dir': None, 'artifact_ref': None, 'coverage': 0.0, 'estimated_points': None, ...}
+subtotal = 0, decided_max = 5
+
+    def assert_incomplete(data, subtotal, decided_max):
+        assert_score_contract(data)
+        assert data["score"] is None
+        assert data["verdict"] == "inconclusivo"
+        assert any(item["points"] is None for item in data["rubric_assessment"]["items"])
+        assert data["rubric_assessment"]["evaluated_score"] == pytest.approx(subtotal)
+>       assert data["rubric_assessment"]["evaluated_max_score"] == pytest.approx(decided_max)
+E       AssertionError
+
+tests/audit_contract.py:60: AssertionError
+___________ test_f2_wrong_answer_stays_below_full_score[ITA2025F2Q5] ___________
+
+problem_id = 'ITA2025F2Q5'
+
+    @pytest.mark.parametrize("problem_id", F2_PROBLEMS)
+    def test_f2_wrong_answer_stays_below_full_score(problem_id: str):
+        data = audit_solution(problem_id, read_example(problem_id, WRONG_EXAMPLES[problem_id]))
+    
+        decided_max = {"ITA2025F2Q1": 2, "ITA2025F2Q3": 5, "ITA2025F2Q5": 2,
+                       "ITA2025F2Q6": 2, "ITA2025F2Q8": 0}[problem_id]
+>       assert_incomplete(data, 0, decided_max)
+
+tests/test_f2_strong_lean_suite.py:67: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+data = {'artifact_dir': None, 'artifact_ref': None, 'coverage': 0.0, 'estimated_points': None, ...}
+subtotal = 0, decided_max = 2
+
+    def assert_incomplete(data, subtotal, decided_max):
+        assert_score_contract(data)
+        assert data["score"] is None
+        assert data["verdict"] == "inconclusivo"
+        assert any(item["points"] is None for item in data["rubric_assessment"]["items"])
+        assert data["rubric_assessment"]["evaluated_score"] == pytest.approx(subtotal)
+>       assert data["rubric_assessment"]["evaluated_max_score"] == pytest.approx(decided_max)
+E       AssertionError
+
+tests/audit_contract.py:60: AssertionError
+___________ test_f2_wrong_answer_stays_below_full_score[ITA2025F2Q6] ___________
+
+problem_id = 'ITA2025F2Q6'
+
+    @pytest.mark.parametrize("problem_id", F2_PROBLEMS)
+    def test_f2_wrong_answer_stays_below_full_score(problem_id: str):
+        data = audit_solution(problem_id, read_example(problem_id, WRONG_EXAMPLES[problem_id]))
+    
+        decided_max = {"ITA2025F2Q1": 2, "ITA2025F2Q3": 5, "ITA2025F2Q5": 2,
+                       "ITA2025F2Q6": 2, "ITA2025F2Q8": 0}[problem_id]
+>       assert_incomplete(data, 0, decided_max)
+
+tests/test_f2_strong_lean_suite.py:67: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+data = {'artifact_dir': None, 'artifact_ref': None, 'coverage': 0.0, 'estimated_points': None, ...}
+subtotal = 0, decided_max = 2
+
+    def assert_incomplete(data, subtotal, decided_max):
+        assert_score_contract(data)
+        assert data["score"] is None
+        assert data["verdict"] == "inconclusivo"
+        assert any(item["points"] is None for item in data["rubric_assessment"]["items"])
+        assert data["rubric_assessment"]["evaluated_score"] == pytest.approx(subtotal)
+>       assert data["rubric_assessment"]["evaluated_max_score"] == pytest.approx(decided_max)
+E       AssertionError
+
+tests/audit_contract.py:60: AssertionError
+____________ test_f2q1_correct_solution_includes_strong_certificate ____________
+
+    def test_f2q1_correct_solution_includes_strong_certificate():
+        response = client.post(
+            "/audit",
+            json={
+                "problem_id": "ITA2025F2Q1",
+                "solution": (
+                    "Como x^3=-1 e x^6=1, temos x^57=-1, x^14=x-1 e x^7=x. "
+                    "Logo o resto é (a+b)x-a. Comparando com 2x+1, obtemos "
+                    "a+b=2 e -a=1. Portanto, a=-1 e b=3."
+                ),
+            },
+        )
+    
+        assert response.status_code == 200
+        data = response.json()
+    
+>       assert data["score"] == 10.0
+E       assert None == 10.0
+
+tests/test_f2q1_strong_certificate.py:27: AssertionError
+___________ test_f2q1_wrong_solution_does_not_get_strong_certificate ___________
+
+    def test_f2q1_wrong_solution_does_not_get_strong_certificate():
+        response = client.post(
+            "/audit",
+            json={
+                "problem_id": "ITA2025F2Q1",
+                "solution": (
+                    "Como x^6=1, temos x^57=-1, x^14=1-x e x^7=x. "
+                    "Logo o resto é (a-b)x-a. Comparando com 2x+1, obtemos "
+                    "a+b=2 e a=1. Portanto, a=1 e b=1."
+                ),
+            },
+        )
+    
+        assert response.status_code == 200
+        data = response.json()
+    
+>       assert data["score"] == 0.0
+E       assert None == 0.0
+
+tests/test_f2q1_strong_certificate.py:48: AssertionError
+________________ test_f2q1_correct_solution_claims_are_verified ________________
+
+    def test_f2q1_correct_solution_claims_are_verified():
+        solution = (
+            "Como x^3=-1 e x^6=1, temos x^57=-1, x^14=x-1 e x^7=x. "
+            "Logo o resto é (a+b)x-a. Comparando com 2x+1, obtemos "
+            "a+b=2 e -a=1. Portanto, a=-1 e b=3."
+        )
+    
+        by_type = _checks_by_type(solution)
+    
+        assert len(by_type["f2q1_student_power_reduction"]) == 3
+>       assert all(c.status == "verified" for c in by_type["f2q1_student_power_reduction"])
+E       assert False
+E        +  where False = all(<generator object test_f2q1_correct_solution_claims_are_verified.<locals>.<genexpr> at 0x10bd33d60>)
+
+tests/test_f2q1_student_claim_checks.py:33: AssertionError
+___________________ test_f2q1_wrong_final_answer_is_rejected ___________________
+
+    def test_f2q1_wrong_final_answer_is_rejected():
+        solution = (
+            "Como x^3=-1 e x^6=1, temos x^57=-1, x^14=x-1 e x^7=x. "
+            "Logo o resto é (a+b)x-a. Comparando com 2x+1, obtemos "
+            "a+b=2 e -a=1. Portanto, a=1 e b=1."
+        )
+    
+        by_type = _checks_by_type(solution)
+    
+>       assert by_type["f2q1_student_final_answer"][0].status == "refuted"
+E       AssertionError: assert 'technical_error' == 'refuted'
+E         
+E         - refuted
+E         + technical_error
+
+tests/test_f2q1_student_claim_checks.py:48: AssertionError
+_________________ test_f2q1_wrong_power_reduction_is_rejected __________________
+
+    def test_f2q1_wrong_power_reduction_is_rejected():
+        solution = (
+            "Como x^6=1, temos x^57=-1, x^14=1-x e x^7=x. "
+            "Logo o resto é (a+b)x-a. Portanto, a=-1 e b=3."
+        )
+    
+        by_type = _checks_by_type(solution)
+    
+        power_checks = by_type["f2q1_student_power_reduction"]
+>       assert any(c.raw_text == "x^14=1-x" and c.status == "refuted" for c in power_checks)
+E       assert False
+E        +  where False = any(<generator object test_f2q1_wrong_power_reduction_is_rejected.<locals>.<genexpr> at 0x10b8a4e40>)
+
+tests/test_f2q1_student_claim_checks.py:60: AssertionError
+___________________ test_f2q1_wrong_reduced_form_is_rejected ___________________
+
+    def test_f2q1_wrong_reduced_form_is_rejected():
+        solution = (
+            "Como x^3=-1 e x^6=1, temos x^57=-1, x^14=x-1 e x^7=x. "
+            "Logo o resto é (a-b)x-a. Portanto, a=-1 e b=3."
+        )
+    
+        by_type = _checks_by_type(solution)
+    
+>       assert by_type["f2q1_student_reduced_form"][0].status == "refuted"
+E       AssertionError: assert 'technical_error' == 'refuted'
+E         
+E         - refuted
+E         + technical_error
+
+tests/test_f2q1_student_claim_checks.py:71: AssertionError
+________________ test_f2q1_wrong_coefficient_system_is_rejected ________________
+
+    def test_f2q1_wrong_coefficient_system_is_rejected():
+        solution = (
+            "Como x^3=-1 e x^6=1, temos x^57=-1, x^14=x-1 e x^7=x. "
+            "Logo o resto é (a+b)x-a. Comparando com 2x+1, obtemos "
+            "a+b=2 e a=1. Portanto, a=1 e b=1."
+        )
+    
+        by_type = _checks_by_type(solution)
+    
+>       assert by_type["f2q1_student_coefficient_system"][0].status == "refuted"
+E       AssertionError: assert 'technical_error' == 'refuted'
+E         
+E         - refuted
+E         + technical_error
+
+tests/test_f2q1_student_claim_checks.py:83: AssertionError
+____________ test_f2q3_correct_solution_includes_strong_certificate ____________
+
+    def test_f2q3_correct_solution_includes_strong_certificate():
+        response = client.post(
+            "/audit",
+            json={
+                "problem_id": "ITA2025F2Q3",
+                "solution": (
+                    "Das equações, obtemos cos beta - sin beta = 1/2. "
+                    "Logo sin beta = -(sqrt(7)+1)/4, cos beta = (1-sqrt(7))/4, "
+                    "sin alpha = -sqrt(7)/4 e cos alpha = -3/4. "
+                    "Esses valores satisfazem sen^2+cos^2=1. "
+                    "Assim, sin(alpha+beta)=sin alpha cos beta + cos alpha sin beta = "
+                    "(5+sqrt(7))/8. Portanto, resposta = (5+sqrt(7))/8."
+                ),
+            },
+        )
+    
+        assert response.status_code == 200
+        data = response.json()
+    
+>       assert data["score"] == 10.0
+E       assert None == 10.0
+
+tests/test_f2q3_strong_certificate.py:30: AssertionError
+_________ test_f2q3_wrong_solution_does_not_include_strong_certificate _________
+
+    def test_f2q3_wrong_solution_does_not_include_strong_certificate():
+        response = client.post(
+            "/audit",
+            json={
+                "problem_id": "ITA2025F2Q3",
+                "solution": (
+                    "Das equações, obtemos cos beta - sin beta = -1/2. "
+                    "Temos sin beta = (sqrt(7)+1)/4, cos beta = (sqrt(7)-1)/4, "
+                    "sin alpha = sqrt(7)/4 e cos alpha = 3/4. "
+                    "Assim, sin(alpha+beta)=1/2. Portanto, resposta = 1/2."
+                ),
+            },
+        )
+    
+        assert response.status_code == 200
+        data = response.json()
+    
+        assert (
+            "generated_strong_f2q3_claim"
+            not in data["lean_certificate"]["generated_theorems"]
+        )
+>       assert any(
+            item["student_check_adjusted"] is True
+            for item in data["rubric_assessment"]["items"]
+        )
+E       assert False
+E        +  where False = any(<generator object test_f2q3_wrong_solution_does_not_include_strong_certificate.<locals>.<genexpr> at 0x10bd336d0>)
+
+tests/test_f2q3_strong_certificate.py:77: AssertionError
+________________ test_f2q3_correct_solution_claims_are_verified ________________
+
+    def test_f2q3_correct_solution_claims_are_verified():
+        solution = (
+            "Das equações, obtemos cos beta - sin beta = 1/2. "
+            "Logo sin beta = -(sqrt(7)+1)/4, cos beta = (1-sqrt(7))/4, "
+            "sin alpha = -sqrt(7)/4 e cos alpha = -3/4. "
+            "Assim, sin(alpha+beta)=sin alpha cos beta + cos alpha sin beta = "
+            "(5+sqrt(7))/8. Portanto, resposta = (5+sqrt(7))/8."
+        )
+    
+        by_type = _checks_by_type(solution)
+    
+>       assert by_type["f2q3_student_beta_difference"][0].status == "verified"
+E       AssertionError: assert 'technical_error' == 'verified'
+E         
+E         - verified
+E         + technical_error
+
+tests/test_f2q3_student_claim_checks.py:34: AssertionError
+_________________ test_f2q3_wrong_beta_difference_is_rejected __________________
+
+    def test_f2q3_wrong_beta_difference_is_rejected():
+        solution = (
+            "Das equações, obtemos cos beta - sin beta = -1/2. "
+            "Portanto, resposta = (5+sqrt(7))/8."
+        )
+    
+        by_type = _checks_by_type(solution)
+    
+>       assert by_type["f2q3_student_beta_difference"][0].status == "refuted"
+E       AssertionError: assert 'technical_error' == 'refuted'
+E         
+E         - refuted
+E         + technical_error
+
+tests/test_f2q3_student_claim_checks.py:51: AssertionError
+_________________ test_f2q3_wrong_candidate_signs_are_rejected _________________
+
+    def test_f2q3_wrong_candidate_signs_are_rejected():
+        solution = (
+            "Temos sin beta = (sqrt(7)+1)/4, cos beta = (sqrt(7)-1)/4, "
+            "sin alpha = sqrt(7)/4 e cos alpha = 3/4. "
+            "Portanto, resposta = (5+sqrt(7))/8."
+        )
+    
+        by_type = _checks_by_type(solution)
+    
+>       assert all(
+            check.status == "refuted"
+            for check in by_type["f2q3_student_candidate_value"]
+        )
+E       assert False
+E        +  where False = all(<generator object test_f2q3_wrong_candidate_signs_are_rejected.<locals>.<genexpr> at 0x10b7ae3c0>)
+
+tests/test_f2q3_student_claim_checks.py:64: AssertionError
+__________________ test_f2q3_wrong_final_sin_sum_is_rejected ___________________
+
+    def test_f2q3_wrong_final_sin_sum_is_rejected():
+        solution = (
+            "Com a fórmula de adição, sin(alpha+beta)=1/2. "
+            "Portanto, resposta = 1/2."
+        )
+    
+        by_type = _checks_by_type(solution)
+    
+>       assert by_type["f2q3_student_final_sin_sum"][0].status == "refuted"
+E       AssertionError: assert 'technical_error' == 'refuted'
+E         
+E         - refuted
+E         + technical_error
+
+tests/test_f2q3_student_claim_checks.py:79: AssertionError
+_______________ test_f2q3_correct_final_answer_alone_is_verified _______________
+
+    def test_f2q3_correct_final_answer_alone_is_verified():
+        solution = "Portanto, resposta = (5+sqrt(7))/8."
+    
+        by_type = _checks_by_type(solution)
+    
+>       assert by_type["f2q3_student_final_answer"][0].status == "verified"
+E       AssertionError: assert 'technical_error' == 'verified'
+E         
+E         - verified
+E         + technical_error
+
+tests/test_f2q3_student_claim_checks.py:88: AssertionError
+____________ test_f2q5_correct_solution_includes_strong_certificate ____________
+
+    def test_f2q5_correct_solution_includes_strong_certificate():
+        response = client.post(
+            "/audit",
+            json={
+                "problem_id": "ITA2025F2Q5",
+                "solution": (
+                    "Temos log10(3^100)=100log10(3)=100*0,4771=47,7100. "
+                    "A mantissa é 0,7100. Além disso, log10(5)=0,6990 e "
+                    "log10(6)=0,7781, logo 0,6990<0,7100<0,7781. "
+                    "Portanto, o primeiro algarismo é 5."
+                ),
+            },
+        )
+    
+        assert response.status_code == 200
+        data = response.json()
+    
+>       assert data["score"] == 10.0
+E       assert None == 10.0
+
+tests/test_f2q5_strong_certificate.py:28: AssertionError
+_______ test_f2q5_wrong_final_digit_does_not_include_strong_certificate ________
+
+    def test_f2q5_wrong_final_digit_does_not_include_strong_certificate():
+        response = client.post(
+            "/audit",
+            json={
+                "problem_id": "ITA2025F2Q5",
+                "solution": (
+                    "Temos log10(3^100)=100log10(3)=100*0,4771=47,7100. "
+                    "A mantissa é 0,7100. Além disso, log10(5)=0,6990 e "
+                    "log10(6)=0,7781, logo 0,6990<0,7100<0,7781. "
+                    "Portanto, o primeiro algarismo é 6."
+                ),
+            },
+        )
+    
+        assert response.status_code == 200
+        data = response.json()
+    
+        assert (
+            "generated_strong_f2q5_claim"
+            not in data["lean_certificate"]["generated_theorems"]
+        )
+>       assert any(
+            item["student_check_adjusted"] is True
+            for item in data["rubric_assessment"]["items"]
+        )
+E       assert False
+E        +  where False = any(<generator object test_f2q5_wrong_final_digit_does_not_include_strong_certificate.<locals>.<genexpr> at 0x10bbb3f20>)
+
+tests/test_f2q5_strong_certificate.py:78: AssertionError
+________________ test_f2q5_correct_solution_claims_are_verified ________________
+
+    def test_f2q5_correct_solution_claims_are_verified():
+        solution = (
+            "Temos log10(3^100)=100log10(3)=100*0,4771=47,7100. "
+            "A mantissa é 0,7100. Além disso, log10(5)=0,6990 e "
+            "log10(6)=0,7781, logo 0,6990<0,7100<0,7781. "
+            "Portanto, o primeiro algarismo é 5."
+        )
+    
+        by_type = _checks_by_type(solution)
+    
+>       assert by_type["f2q5_student_log_power_decomposition"][0].status == "verified"
+E       AssertionError: assert 'technical_error' == 'verified'
+E         
+E         - verified
+E         + technical_error
+
+tests/test_f2q5_student_claim_checks.py:33: AssertionError
+_____________ test_f2q5_wrong_log_power_decomposition_is_rejected ______________
+
+    def test_f2q5_wrong_log_power_decomposition_is_rejected():
+        solution = (
+            "Temos log10(3^100)=100*0,4771=47,7000. "
+            "A mantissa é 0,7000. log10(5)=0,6990 e log10(6)=0,7781. "
+            "Portanto, o primeiro algarismo é 5."
+        )
+    
+        by_type = _checks_by_type(solution)
+    
+>       assert by_type["f2q5_student_log_power_decomposition"][0].status == "refuted"
+E       AssertionError: assert 'technical_error' == 'refuted'
+E         
+E         - refuted
+E         + technical_error
+
+tests/test_f2q5_student_claim_checks.py:49: AssertionError
+________________ test_f2q5_wrong_digit_log_bounds_are_rejected _________________
+
+    def test_f2q5_wrong_digit_log_bounds_are_rejected():
+        solution = (
+            "Temos log10(3^100)=47,7100. A mantissa é 0,7100. "
+            "Além disso, log10(5)=0,6900 e log10(6)=0,7781. "
+            "Portanto, o primeiro algarismo é 5."
+        )
+    
+        by_type = _checks_by_type(solution)
+    
+>       assert by_type["f2q5_student_digit_log_bounds"][0].status == "refuted"
+E       AssertionError: assert 'technical_error' == 'refuted'
+E         
+E         - refuted
+E         + technical_error
+
+tests/test_f2q5_student_claim_checks.py:64: AssertionError
+_________________ test_f2q5_wrong_between_bounds_are_rejected __________________
+
+    def test_f2q5_wrong_between_bounds_are_rejected():
+        solution = (
+            "Temos log10(3^100)=47,7100. A mantissa é 0,7100. "
+            "log10(5)=0,6990 e log10(6)=0,7781, mas escrevo "
+            "0,7100<0,6990<0,7781. Portanto, o primeiro algarismo é 5."
+        )
+    
+        by_type = _checks_by_type(solution)
+    
+>       assert by_type["f2q5_student_between_bounds"][0].status == "refuted"
+E       AssertionError: assert 'technical_error' == 'refuted'
+E         
+E         - refuted
+E         + technical_error
+
+tests/test_f2q5_student_claim_checks.py:76: AssertionError
+___________________ test_f2q5_wrong_final_digit_is_rejected ____________________
+
+    def test_f2q5_wrong_final_digit_is_rejected():
+        solution = (
+            "Temos log10(3^100)=47,7100. A mantissa é 0,7100. "
+            "log10(5)=0,6990 e log10(6)=0,7781, logo 0,6990<0,7100<0,7781. "
+            "Portanto, o primeiro algarismo é 6."
+        )
+    
+        by_type = _checks_by_type(solution)
+    
+>       assert by_type["f2q5_student_final_digit"][0].status == "refuted"
+E       AssertionError: assert 'technical_error' == 'refuted'
+E         
+E         - refuted
+E         + technical_error
+
+tests/test_f2q5_student_claim_checks.py:88: AssertionError
+____________ test_f2q6_correct_solution_includes_strong_certificate ____________
+
+    def test_f2q6_correct_solution_includes_strong_certificate():
+        response = client.post(
+            "/audit",
+            json={
+                "problem_id": "ITA2025F2Q6",
+                "solution": (
+                    "A quarta cara no n-esimo lançamento exige 3 caras nos n-1 primeiros "
+                    "lançamentos e cara no último. Assim P(N=n)=C(n-1,3)/2^n. "
+                    "A razão P(n+1)/P(n)=n/(2n-6). Ela é maior que 1 para n<6, "
+                    "igual a 1 em n=6 e menor que 1 para n>6. Portanto, n=6 e n=7."
+                ),
+            },
+        )
+    
+        assert response.status_code == 200
+        data = response.json()
+    
+        # P2 predates CAP-04: this wording omits maximizers_identification in extraction.
+        # Fail normally for any other regression; retain the expected 10-point contract below.
+        claims = {claim["type"] for claim in data["extracted_claims"]["claims"]}
+        if "maximizers_identification" not in claims:
+            assert data["score"] is None and data["verdict"] == "inconclusivo"
+            rubric = data["rubric_assessment"]
+>           assert rubric["evaluated_score"] == rubric["evaluated_max_score"] == 8
+E           assert 2.0 == 8
+
+tests/test_f2q6_strong_certificate.py:35: AssertionError
+___________ test_f2q6_wrong_solution_does_not_get_strong_certificate ___________
+
+    def test_f2q6_wrong_solution_does_not_get_strong_certificate():
+        response = client.post(
+            "/audit",
+            json={
+                "problem_id": "ITA2025F2Q6",
+                "solution": (
+                    "A probabilidade é P(N=n)=C(n,3)/2^n. "
+                    "A razão P(n+1)/P(n)=(n-1)/(2n). Portanto, n=7 e n=8."
+                ),
+            },
+        )
+    
+        assert response.status_code == 200
+        data = response.json()
+    
+        assert "generated_strong_f2q6_claim" not in data["lean_certificate"]["generated_theorems"]
+>       assert any(
+            item["student_check_adjusted"] is True
+            for item in data["rubric_assessment"]["items"]
+        )
+E       assert False
+E        +  where False = any(<generator object test_f2q6_wrong_solution_does_not_get_strong_certificate.<locals>.<genexpr> at 0x10bfab430>)
+
+tests/test_f2q6_strong_certificate.py:63: AssertionError
+________________ test_f2q6_correct_solution_claims_are_verified ________________
+
+    def test_f2q6_correct_solution_claims_are_verified():
+        solution = (
+            "A quarta cara no n-esimo lançamento exige 3 caras nos n-1 primeiros "
+            "lançamentos e cara no último. Assim P(N=n)=C(n-1,3)/2^n. "
+            "A razão P(n+1)/P(n)=n/(2n-6). Ela é maior que 1 para n<6, "
+            "igual a 1 em n=6 e menor que 1 para n>6. Portanto, n=6 e n=7."
+        )
+    
+        by_type = _checks_by_type(solution)
+    
+>       assert by_type["f2q6_student_probability_formula"][0].status == "verified"
+E       AssertionError: assert 'technical_error' == 'verified'
+E         
+E         - verified
+E         + technical_error
+
+tests/test_f2q6_student_claim_checks.py:33: AssertionError
+_______________ test_f2q6_wrong_probability_formula_is_rejected ________________
+
+    def test_f2q6_wrong_probability_formula_is_rejected():
+        solution = (
+            "A probabilidade é P(N=n)=C(n,3)/2^n. "
+            "A razão P(n+1)/P(n)=n/(2n-6). Portanto, n=6 e n=7."
+        )
+    
+        by_type = _checks_by_type(solution)
+    
+>       assert by_type["f2q6_student_probability_formula"][0].status == "refuted"
+E       AssertionError: assert 'technical_error' == 'refuted'
+E         
+E         - refuted
+E         + technical_error
+
+tests/test_f2q6_student_claim_checks.py:46: AssertionError
+__________________ test_f2q6_wrong_ratio_formula_is_rejected ___________________
+
+    def test_f2q6_wrong_ratio_formula_is_rejected():
+        solution = (
+            "Temos P(N=n)=C(n-1,3)/2^n. "
+            "A razão P(n+1)/P(n)=(n-1)/(2n). Portanto, n=6 e n=7."
+        )
+    
+        by_type = _checks_by_type(solution)
+    
+>       assert by_type["f2q6_student_probability_formula"][0].status == "verified"
+E       AssertionError: assert 'technical_error' == 'verified'
+E         
+E         - verified
+E         + technical_error
+
+tests/test_f2q6_student_claim_checks.py:59: AssertionError
+___________________ test_f2q6_wrong_final_answer_is_rejected ___________________
+
+    def test_f2q6_wrong_final_answer_is_rejected():
+        solution = (
+            "Temos P(N=n)=C(n-1,3)/2^n. "
+            "A razão P(n+1)/P(n)=n/(2n-6). Portanto, n=7 e n=8."
+        )
+    
+        by_type = _checks_by_type(solution)
+    
+>       assert by_type["f2q6_student_probability_formula"][0].status == "verified"
+E       AssertionError: assert 'technical_error' == 'verified'
+E         
+E         - verified
+E         + technical_error
+
+tests/test_f2q6_student_claim_checks.py:72: AssertionError
+________________ test_f2q6_single_maximizer_answer_is_rejected _________________
+
+    def test_f2q6_single_maximizer_answer_is_rejected():
+        solution = (
+            "Temos P(N=n)=C(n-1,3)/2^n. "
+            "A razão P(n+1)/P(n)=n/(2n-6). Portanto, n=6."
+        )
+    
+        by_type = _checks_by_type(solution)
+    
+>       assert by_type["f2q6_student_final_answer"][0].status == "refuted"
+E       AssertionError: assert 'technical_error' == 'refuted'
+E         
+E         - refuted
+E         + technical_error
+
+tests/test_f2q6_student_claim_checks.py:85: AssertionError
+____________ test_f2q8_correct_solution_includes_strong_certificate ____________
+
+    def test_f2q8_correct_solution_includes_strong_certificate():
+        data = audit_solution(read_example("correct_solution.txt"))
+    
+>       assert data["score"] == data["max_score"]
+E       assert None == 10.0
+
+tests/test_f2q8_strong_certificate.py:32: AssertionError
+______________ test_f2q8_correct_final_answer_and_pair_reduction _______________
+
+    def test_f2q8_correct_final_answer_and_pair_reduction():
+        solution = """
+        Aplicando diferenças sucessivas de colunas, obtemos det(A_k)=(-1)^(k-1)k.
+        Logo a soma é 1-2+3-4+...+2025.
+        Agrupando os pares, temos 2025 - 1012 = 1013.
+        Portanto, a resposta é 1013.
+        """
+    
+        by_type = _checks_by_type(solution, "pytest_f2q8_correct_final_pair_reduction")
+    
+>       assert by_type["f2q8_student_final_answer"].status == "verified"
+E       AssertionError: assert 'technical_error' == 'verified'
+E         
+E         - verified
+E         + technical_error
+
+tests/test_f2q8_student_claim_checks.py:23: AssertionError
+_______________ test_f2q8_wrong_final_answer_and_pair_reduction ________________
+
+    def test_f2q8_wrong_final_answer_and_pair_reduction():
+        solution = """
+        Aplicando diferenças sucessivas de colunas, obtemos det(A_k)=(-1)^(k-1)k.
+        Logo a soma é 1-2+3-4+...+2025.
+        Agrupando os pares, temos 2025 - 1012 = 1014.
+        Portanto, a resposta é 1014.
+        """
+    
+        by_type = _checks_by_type(solution, "pytest_f2q8_wrong_final_pair_reduction")
+    
+>       assert by_type["f2q8_student_final_answer"].status == "refuted"
+E       AssertionError: assert 'technical_error' == 'refuted'
+E         
+E         - refuted
+E         + technical_error
+
+tests/test_f2q8_student_claim_checks.py:41: AssertionError
+______________ test_f2q8_generic_arithmetic_equality_still_works _______________
+
+    def test_f2q8_generic_arithmetic_equality_still_works():
+        solution = """
+        O aluno faz uma conta auxiliar: 2025 - 1012 = 1013.
+        """
+    
+        by_type = _checks_by_type(solution, "pytest_f2q8_generic_arithmetic")
+    
+>       assert by_type["arithmetic_equality"].status == "verified"
+E       AssertionError: assert 'technical_error' == 'verified'
+E         
+E         - verified
+E         + technical_error
+
+tests/test_f2q8_student_claim_checks.py:54: AssertionError
+___________ test_f2q8_generic_wrong_arithmetic_equality_still_fails ____________
+
+    def test_f2q8_generic_wrong_arithmetic_equality_still_fails():
+        solution = """
+        O aluno faz uma conta auxiliar: 2025 - 1012 = 1014.
+        """
+    
+        by_type = _checks_by_type(solution, "pytest_f2q8_generic_wrong_arithmetic")
+    
+>       assert by_type["arithmetic_equality"].status == "refuted"
+E       AssertionError: assert 'technical_error' == 'refuted'
+E         
+E         - refuted
+E         + technical_error
+
+tests/test_f2q8_student_claim_checks.py:64: AssertionError
+_____________________ test_f2q8_wrong_formula_is_rejected ______________________
+
+    def test_f2q8_wrong_formula_is_rejected():
+        solution = """
+        Aplicando diferenças sucessivas de colunas, obtemos det(A_k)=(-1)^k k.
+        Portanto, a resposta é 1014.
+        """
+    
+        by_type = _checks_by_type(solution, "pytest_f2q8_wrong_det_formula")
+    
+>       assert by_type["f2q8_student_det_formula"].status == "refuted"
+E       AssertionError: assert 'technical_error' == 'refuted'
+E         
+E         - refuted
+E         + technical_error
+
+tests/test_f2q8_student_claim_checks.py:75: AssertionError
+____________________ test_f2q8_correct_formula_is_verified _____________________
+
+    def test_f2q8_correct_formula_is_verified():
+        solution = """
+        Aplicando diferenças sucessivas de colunas, obtemos det(A_k)=(-1)^(k-1)k.
+        Portanto, a resposta é 1013.
+        """
+    
+        by_type = _checks_by_type(solution, "pytest_f2q8_correct_det_formula")
+    
+>       assert by_type["f2q8_student_det_formula"].status == "verified"
+E       AssertionError: assert 'technical_error' == 'verified'
+E         
+E         - verified
+E         + technical_error
+
+tests/test_f2q8_student_claim_checks.py:86: AssertionError
+__________________ test_f2q8_correct_pair_count_but_wrong_rhs __________________
+
+    def test_f2q8_correct_pair_count_but_wrong_rhs():
+        solution = """
+        A soma alternada tem 1012 pares.
+        Agrupando os pares, temos 2025 - 1012 = 999.
+        Portanto, a resposta é 999.
+        """
+    
+        by_type = _checks_by_type(solution, "pytest_f2q8_pair_count_correct_rhs_wrong")
+    
+>       assert by_type["f2q8_student_pair_count"].status == "verified"
+E       AssertionError: assert 'technical_error' == 'verified'
+E         
+E         - verified
+E         + technical_error
+
+tests/test_f2q8_student_claim_checks.py:98: AssertionError
+______________ test_f2q8_wrong_pair_count_true_local_subtraction _______________
+
+    def test_f2q8_wrong_pair_count_true_local_subtraction():
+        solution = """
+        Existem 1013 pares.
+        Agrupando os pares, temos 2025 - 1013 = 1012.
+        Portanto, a resposta é 1012.
+        """
+    
+        by_type = _checks_by_type(solution, "pytest_f2q8_wrong_pair_count_true_subtraction")
+    
+>       assert by_type["f2q8_student_pair_count"].status == "refuted"
+E       AssertionError: assert 'technical_error' == 'refuted'
+E         
+E         - refuted
+E         + technical_error
+
+tests/test_f2q8_student_claim_checks.py:112: AssertionError
+__________ test_loader_schema_artificial_samples_and_optional_strokes __________
+
+    def test_loader_schema_artificial_samples_and_optional_strokes():
+        samples = load_samples(MANIFEST)
+        assert len(samples) == 5 and all(s.artificial for s in samples)
+        assert [s.sample_id for s in samples] == ["A-preservation", "B-sign", "C-exponent", "D-subscript", "E-missing"]
+        optional = samples[0].model_dump()
+        optional["input_strokes"] = None
+        assert RecognitionSample.model_validate(optional).input_strokes is None
+>       assert json.loads((ROOT / "sample.schema.json").read_text()) == RecognitionSample.model_json_schema()
+E       AssertionError: assert {'$defs': {'R...iption'], ...} == {'$defs': {'R...iption'], ...}
+E         
+E         Omitting 5 identical items, use -vv to show
+E         Differing items:
+E         {'$defs': {'RecognitionSegment': {'additionalProperties': False, 'properties': {'confidence': {'anyOf': [{...}, {...}]...'number'}, 'x': {'minimum': 0, 'title': 'X', 'type': 'number'}, ...}, 'required': ['x', 'y', 'width', 'height'], ...}}} != {'$defs': {'RecognitionSegment': {'additionalProperties': False, 'properties': {'confidence': {'anyOf': [{...}, {...}]...'number'}, 'x': {'minimum': 0, 'title': 'X', 'type': 'number'}, ...}, 'required': ['x', 'y', 'width', 'height'], ...}}}
+E         Use -v to get more diff
+
+tests/test_handwriting_recognition_benchmark.py:32: AssertionError
+____________ test_f2q1_correct_solution_scores_10_and_verifies_lean ____________
+
+    def test_f2q1_correct_solution_scores_10_and_verifies_lean():
+        data = audit_solution(read_example("correct_solution.txt"))
+    
+>       assert data["score"] == 10.0
+E       assert None == 10.0
+
+tests/test_ita2025f2q1_level1.py:47: AssertionError
+________________ test_f2q1_missing_reduced_form_scores_partial _________________
+
+    def test_f2q1_missing_reduced_form_scores_partial():
+        data = audit_solution(read_example("missing_reduced_form.txt"))
+    
+>       assert rubric_item_by_id(data, "power_reductions")["points"] == 3.0
+E       assert None == 3.0
+
+tests/test_ita2025f2q1_level1.py:82: AssertionError
+_____ test_f2q1_wrong_answer_keeps_undecided_criteria_and_decided_subtotal _____
+
+    def test_f2q1_wrong_answer_keeps_undecided_criteria_and_decided_subtotal():
+        data = audit_solution(read_example("wrong_answer.txt"))
+    
+>       assert_incomplete(data, 0, 2)
+
+tests/test_ita2025f2q1_level1.py:97: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+data = {'artifact_dir': None, 'artifact_ref': None, 'coverage': 0.0, 'estimated_points': None, ...}
+subtotal = 0, decided_max = 2
+
+    def assert_incomplete(data, subtotal, decided_max):
+        assert_score_contract(data)
+        assert data["score"] is None
+        assert data["verdict"] == "inconclusivo"
+        assert any(item["points"] is None for item in data["rubric_assessment"]["items"])
+        assert data["rubric_assessment"]["evaluated_score"] == pytest.approx(subtotal)
+>       assert data["rubric_assessment"]["evaluated_max_score"] == pytest.approx(decided_max)
+E       AssertionError
+
+tests/audit_contract.py:60: AssertionError
+____________ test_f2q3_correct_solution_scores_10_and_verifies_lean ____________
+
+    def test_f2q3_correct_solution_scores_10_and_verifies_lean():
+        data = audit_solution(read_example("correct_solution.txt"))
+    
+>       assert data["score"] == 10.0
+E       assert None == 10.0
+
+tests/test_ita2025f2q3_level1.py:47: AssertionError
+________________ test_f2q3_answer_only_scores_final_points_only ________________
+
+    def test_f2q3_answer_only_scores_final_points_only():
+        data = audit_solution(read_example("answer_only.txt"))
+    
+>       assert_incomplete(data, 2, 2)
+
+tests/test_ita2025f2q3_level1.py:78: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+data = {'artifact_dir': None, 'artifact_ref': None, 'coverage': 0.0, 'estimated_points': None, ...}
+subtotal = 2, decided_max = 2
+
+    def assert_incomplete(data, subtotal, decided_max):
+        assert_score_contract(data)
+        assert data["score"] is None
+        assert data["verdict"] == "inconclusivo"
+        assert any(item["points"] is None for item in data["rubric_assessment"]["items"])
+>       assert data["rubric_assessment"]["evaluated_score"] == pytest.approx(subtotal)
+E       AssertionError
+
+tests/audit_contract.py:59: AssertionError
+_______________ test_f2q3_partial_beta_difference_scores_partial _______________
+
+    def test_f2q3_partial_beta_difference_scores_partial():
+        data = audit_solution(read_example("partial_beta_difference.txt"))
+    
+>       assert_incomplete(data, 2, 2)
+
+tests/test_ita2025f2q3_level1.py:88: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+data = {'artifact_dir': None, 'artifact_ref': None, 'coverage': 0.0, 'estimated_points': None, ...}
+subtotal = 2, decided_max = 2
+
+    def assert_incomplete(data, subtotal, decided_max):
+        assert_score_contract(data)
+        assert data["score"] is None
+        assert data["verdict"] == "inconclusivo"
+        assert any(item["points"] is None for item in data["rubric_assessment"]["items"])
+>       assert data["rubric_assessment"]["evaluated_score"] == pytest.approx(subtotal)
+E       AssertionError
+
+tests/audit_contract.py:59: AssertionError
+_____ test_f2q3_wrong_answer_keeps_undecided_criteria_and_decided_subtotal _____
+
+    def test_f2q3_wrong_answer_keeps_undecided_criteria_and_decided_subtotal():
+        data = audit_solution(read_example("wrong_answer.txt"))
+    
+>       assert_incomplete(data, 0, 5)
+
+tests/test_ita2025f2q3_level1.py:102: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+data = {'artifact_dir': None, 'artifact_ref': None, 'coverage': 0.0, 'estimated_points': None, ...}
+subtotal = 0, decided_max = 5
+
+    def assert_incomplete(data, subtotal, decided_max):
+        assert_score_contract(data)
+        assert data["score"] is None
+        assert data["verdict"] == "inconclusivo"
+        assert any(item["points"] is None for item in data["rubric_assessment"]["items"])
+        assert data["rubric_assessment"]["evaluated_score"] == pytest.approx(subtotal)
+>       assert data["rubric_assessment"]["evaluated_max_score"] == pytest.approx(decided_max)
+E       AssertionError
+
+tests/audit_contract.py:60: AssertionError
+____________ test_f2q5_correct_solution_scores_10_and_verifies_lean ____________
+
+    def test_f2q5_correct_solution_scores_10_and_verifies_lean():
+        data = audit_solution(read_example("correct_solution.txt"))
+    
+>       assert data["score"] == 10.0
+E       assert None == 10.0
+
+tests/test_ita2025f2q5_level1.py:47: AssertionError
+___________________ test_f2q5_missing_bounds_scores_partial ____________________
+
+    def test_f2q5_missing_bounds_scores_partial():
+        data = audit_solution(read_example("missing_bounds.txt"))
+    
+>       assert rubric_item_by_id(data, "log_power_decomposition")["points"] == 2.0
+E       assert None == 2.0
+
+tests/test_ita2025f2q5_level1.py:81: AssertionError
+_____ test_f2q5_wrong_digit_keeps_undecided_criteria_and_decided_subtotal ______
+
+    def test_f2q5_wrong_digit_keeps_undecided_criteria_and_decided_subtotal():
+        data = audit_solution(read_example("wrong_digit.txt"))
+    
+>       assert_incomplete(data, 0, 2)
+
+tests/test_ita2025f2q5_level1.py:98: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+data = {'artifact_dir': None, 'artifact_ref': None, 'coverage': 0.0, 'estimated_points': None, ...}
+subtotal = 0, decided_max = 2
+
+    def assert_incomplete(data, subtotal, decided_max):
+        assert_score_contract(data)
+        assert data["score"] is None
+        assert data["verdict"] == "inconclusivo"
+        assert any(item["points"] is None for item in data["rubric_assessment"]["items"])
+        assert data["rubric_assessment"]["evaluated_score"] == pytest.approx(subtotal)
+>       assert data["rubric_assessment"]["evaluated_max_score"] == pytest.approx(decided_max)
+E       AssertionError
+
+tests/audit_contract.py:60: AssertionError
+____________ test_f2q6_correct_solution_scores_10_and_verifies_lean ____________
+
+    def test_f2q6_correct_solution_scores_10_and_verifies_lean():
+        data = audit_solution(read_example("correct_solution.txt"))
+    
+>       assert data["score"] == 10.0
+E       assert None == 10.0
+
+tests/test_ita2025f2q6_level1.py:47: AssertionError
+____________________ test_f2q6_missing_ratio_scores_partial ____________________
+
+    def test_f2q6_missing_ratio_scores_partial():
+        data = audit_solution(read_example("missing_ratio.txt"))
+    
+>       assert rubric_item_by_id(data, "probability_formula")["points"] == 3.0
+E       assert None == 3.0
+
+tests/test_ita2025f2q6_level1.py:81: AssertionError
+_____ test_f2q6_wrong_answer_keeps_undecided_criteria_and_decided_subtotal _____
+
+    def test_f2q6_wrong_answer_keeps_undecided_criteria_and_decided_subtotal():
+        data = audit_solution(read_example("wrong_answer.txt"))
+    
+>       assert_incomplete(data, 0, 2)
+
+tests/test_ita2025f2q6_level1.py:96: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+data = {'artifact_dir': None, 'artifact_ref': None, 'coverage': 0.0, 'estimated_points': None, ...}
+subtotal = 0, decided_max = 2
+
+    def assert_incomplete(data, subtotal, decided_max):
+        assert_score_contract(data)
+        assert data["score"] is None
+        assert data["verdict"] == "inconclusivo"
+        assert any(item["points"] is None for item in data["rubric_assessment"]["items"])
+        assert data["rubric_assessment"]["evaluated_score"] == pytest.approx(subtotal)
+>       assert data["rubric_assessment"]["evaluated_max_score"] == pytest.approx(decided_max)
+E       AssertionError
+
+tests/audit_contract.py:60: AssertionError
+____________ test_f2q8_correct_solution_scores_10_and_verifies_lean ____________
+
+    def test_f2q8_correct_solution_scores_10_and_verifies_lean():
+        data = audit_solution(read_example("correct_solution.txt"))
+    
+>       assert data["score"] == 10.0
+E       assert None == 10.0
+
+tests/test_ita2025f2q8_level1.py:47: AssertionError
+________________ test_f2q8_answer_only_scores_final_points_only ________________
+
+    def test_f2q8_answer_only_scores_final_points_only():
+        data = audit_solution(read_example("answer_only.txt"))
+    
+>       assert_incomplete(data, 1.5, 1.5)
+
+tests/test_ita2025f2q8_level1.py:75: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+data = {'artifact_dir': None, 'artifact_ref': None, 'coverage': 0.0, 'estimated_points': None, ...}
+subtotal = 1.5, decided_max = 1.5
+
+    def assert_incomplete(data, subtotal, decided_max):
+        assert_score_contract(data)
+        assert data["score"] is None
+        assert data["verdict"] == "inconclusivo"
+        assert any(item["points"] is None for item in data["rubric_assessment"]["items"])
+>       assert data["rubric_assessment"]["evaluated_score"] == pytest.approx(subtotal)
+E       AssertionError
+
+tests/audit_contract.py:59: AssertionError
+_____________ test_f2q8_missing_determinant_formula_scores_partial _____________
+
+    def test_f2q8_missing_determinant_formula_scores_partial():
+        data = audit_solution(read_example("missing_determinant_formula.txt"))
+    
+        assert rubric_item_by_id(data, "matrix_transformation")["points"] is None
+        assert rubric_item_by_id(data, "determinant_formula")["points"] is None
+>       assert rubric_item_by_id(data, "alternating_sum")["points"] == 2.0
+E       assert None == 2.0
+
+tests/test_ita2025f2q8_level1.py:87: AssertionError
+_________ test_q1_correct_solution_scores_10_and_verifies_formal_step __________
+
+    def test_q1_correct_solution_scores_10_and_verifies_formal_step():
+        data = audit_solution(read_example("correct_solution.txt"))
+    
+>       assert data["score"] == 10.0
+E       assert None == 10.0
+
+tests/test_ita2025q1_level2.py:52: AssertionError
+_________ test_q1_wrong_determinant_step_blocks_area_and_dependencies __________
+
+    def test_q1_wrong_determinant_step_blocks_area_and_dependencies():
+        data = audit_solution(read_example("wrong_determinant_step.txt"))
+    
+>       assert_incomplete(data, 3, 3)
+
+tests/test_ita2025q1_level2.py:69: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+data = {'artifact_dir': None, 'artifact_ref': None, 'coverage': 0.0, 'estimated_points': None, ...}
+subtotal = 3, decided_max = 3
+
+    def assert_incomplete(data, subtotal, decided_max):
+        assert_score_contract(data)
+        assert data["score"] is None
+        assert data["verdict"] == "inconclusivo"
+        assert any(item["points"] is None for item in data["rubric_assessment"]["items"])
+>       assert data["rubric_assessment"]["evaluated_score"] == pytest.approx(subtotal)
+E       AssertionError
+
+tests/audit_contract.py:59: AssertionError
+_________ test_q1_answer_only_preserves_subtotal_without_global_score __________
+
+    def test_q1_answer_only_preserves_subtotal_without_global_score():
+        data = audit_solution(read_example("answer_only.txt"))
+    
+>       assert_incomplete(data, 1, 1)
+
+tests/test_ita2025q1_level2.py:104: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+data = {'artifact_dir': None, 'artifact_ref': None, 'coverage': 0.0, 'estimated_points': None, ...}
+subtotal = 1, decided_max = 1
+
+    def assert_incomplete(data, subtotal, decided_max):
+        assert_score_contract(data)
+        assert data["score"] is None
+        assert data["verdict"] == "inconclusivo"
+        assert any(item["points"] is None for item in data["rubric_assessment"]["items"])
+>       assert data["rubric_assessment"]["evaluated_score"] == pytest.approx(subtotal)
+E       AssertionError
+
+tests/audit_contract.py:59: AssertionError
+_________ test_q3_correct_solution_scores_10_and_verifies_formal_step __________
+
+    def test_q3_correct_solution_scores_10_and_verifies_formal_step():
+        data = audit_solution(read_example("correct_solution.txt"))
+    
+>       assert data["score"] == 10.0
+E       assert None == 10.0
+
+tests/test_ita2025q3_level1.py:47: AssertionError
+__________________ test_q3_missing_parity_blocks_formal_chain __________________
+
+    def test_q3_missing_parity_blocks_formal_chain():
+        data = audit_solution(read_example("missing_parity.txt"))
+    
+>       assert rubric_item_by_id(data, "first_factor_exponent")["points"] == 2.0
+E       assert None == 2.0
+
+tests/test_ita2025q3_level1.py:93: AssertionError
+_____________ test_q4_correct_solution_scores_10_and_verifies_lean _____________
+
+    def test_q4_correct_solution_scores_10_and_verifies_lean():
+        data = audit_solution(read_example("correct_solution.txt"))
+    
+>       assert data["score"] == 10.0
+E       assert None == 10.0
+
+tests/test_ita2025q4_level1.py:47: AssertionError
+_____________ test_q5_correct_solution_scores_10_and_verifies_lean _____________
+
+    def test_q5_correct_solution_scores_10_and_verifies_lean():
+        data = audit_solution(read_example("correct_solution.txt"))
+    
+>       assert data["score"] == 10.0
+E       assert None == 10.0
+
+tests/test_ita2025q5_level1.py:47: AssertionError
+__________ test_q5_missing_difference_blocks_factorization_dependency __________
+
+    def test_q5_missing_difference_blocks_factorization_dependency():
+        data = audit_solution(read_example("missing_difference_relation.txt"))
+    
+        assert rubric_item_by_id(data, "difference_relation")["points"] is None
+>       assert rubric_item_by_id(data, "geometric_form")["points"] == 2.0
+E       assert None == 2.0
+
+tests/test_ita2025q5_level1.py:83: AssertionError
+_______________ test_q5_missing_factorization_blocks_formal_step _______________
+
+    def test_q5_missing_factorization_blocks_formal_step():
+        data = audit_solution(read_example("missing_factorization.txt"))
+    
+>       assert rubric_item_by_id(data, "difference_relation")["points"] == 3.0
+E       assert None == 3.0
+
+tests/test_ita2025q5_level1.py:97: AssertionError
+_____________ test_q8_correct_solution_scores_10_and_verifies_lean _____________
+
+    def test_q8_correct_solution_scores_10_and_verifies_lean():
+        data = audit_solution(read_example("correct_solution.txt"))
+    
+>       assert data["score"] == 10.0
+E       assert None == 10.0
+
+tests/test_ita2025q8_level1.py:47: AssertionError
+_______________ test_q8_answer_only_scores_interval_and_sum_only _______________
+
+    def test_q8_answer_only_scores_interval_and_sum_only():
+        data = audit_solution(read_example("answer_only.txt"))
+    
+>       assert_incomplete(data, 3.5, 3.5)
+
+tests/test_ita2025q8_level1.py:69: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+data = {'artifact_dir': None, 'artifact_ref': None, 'coverage': 0.2, 'estimated_points': None, ...}
+subtotal = 3.5, decided_max = 3.5
+
+    def assert_incomplete(data, subtotal, decided_max):
+        assert_score_contract(data)
+        assert data["score"] is None
+        assert data["verdict"] == "inconclusivo"
+        assert any(item["points"] is None for item in data["rubric_assessment"]["items"])
+>       assert data["rubric_assessment"]["evaluated_score"] == pytest.approx(subtotal)
+E       AssertionError
+
+tests/audit_contract.py:59: AssertionError
+_______________ test_q8_missing_sign_analysis_loses_sign_points ________________
+
+    def test_q8_missing_sign_analysis_loses_sign_points():
+        data = audit_solution(read_example("missing_sign_analysis.txt"))
+    
+>       assert rubric_item_by_id(data, "numerator_factorization")["points"] == 2.5
+E       assert None == 2.5
+
+tests/test_ita2025q8_level1.py:81: AssertionError
+________ test_shifted_f2q3_equation_keeps_full_credit_and_formal_checks ________
+
+    def test_shifted_f2q3_equation_keeps_full_credit_and_formal_checks():
+        original=Path('problems/ITA2025F2Q3/examples/correct_solution.txt').read_text()
+        solution=original.replace('cos beta - sen beta = 1/2','cos beta = sen beta + 1/2')
+        assert solution!=original
+        result=execute_audit(AuditRequest(problem_id='ITA2025F2Q3',solution=solution))
+>       assert result.score==10 and result.verdict=='correto'
+E       AssertionError: assert (None == 10)
+E        +  where None = AuditResponse(problem_id='ITA2025F2Q3', score=None, max_score=10.0, verdict='inconclusivo', extracted_claims=ClaimExtr...ted_max_score=0.0, coverage=0.0, estimated_points=None, needs_review=True, unscorable_reason='ADJUDICATOR_UNAVAILABLE').score
+
+tests/test_math_canonical_pipeline.py:15: AssertionError
+__________ test_mvp_correct_solutions_for_all_10_questions[ITA2025Q1] __________
+
+client = <starlette.testclient.TestClient object at 0x10b984730>
+problem_id = 'ITA2025Q1'
+
+    @pytest.mark.parametrize("problem_id", MVP_PROBLEM_IDS)
+    def test_mvp_correct_solutions_for_all_10_questions(client, problem_id: str):
+        data = audit_example(client, problem_id, "correct_solution.txt")
+    
+        assert_audit_contract(data, problem_id)
+>       assert data["score"] == data["max_score"]
+E       assert None == 10.0
+
+tests/test_mvp_ita_10_questions.py:111: AssertionError
+__________ test_mvp_correct_solutions_for_all_10_questions[ITA2025Q3] __________
+
+client = <starlette.testclient.TestClient object at 0x10bc91c40>
+problem_id = 'ITA2025Q3'
+
+    @pytest.mark.parametrize("problem_id", MVP_PROBLEM_IDS)
+    def test_mvp_correct_solutions_for_all_10_questions(client, problem_id: str):
+        data = audit_example(client, problem_id, "correct_solution.txt")
+    
+        assert_audit_contract(data, problem_id)
+>       assert data["score"] == data["max_score"]
+E       assert None == 10.0
+
+tests/test_mvp_ita_10_questions.py:111: AssertionError
+__________ test_mvp_correct_solutions_for_all_10_questions[ITA2025Q4] __________
+
+client = <starlette.testclient.TestClient object at 0x10be0d520>
+problem_id = 'ITA2025Q4'
+
+    @pytest.mark.parametrize("problem_id", MVP_PROBLEM_IDS)
+    def test_mvp_correct_solutions_for_all_10_questions(client, problem_id: str):
+        data = audit_example(client, problem_id, "correct_solution.txt")
+    
+        assert_audit_contract(data, problem_id)
+>       assert data["score"] == data["max_score"]
+E       assert None == 10.0
+
+tests/test_mvp_ita_10_questions.py:111: AssertionError
+__________ test_mvp_correct_solutions_for_all_10_questions[ITA2025Q5] __________
+
+client = <starlette.testclient.TestClient object at 0x10be55d90>
+problem_id = 'ITA2025Q5'
+
+    @pytest.mark.parametrize("problem_id", MVP_PROBLEM_IDS)
+    def test_mvp_correct_solutions_for_all_10_questions(client, problem_id: str):
+        data = audit_example(client, problem_id, "correct_solution.txt")
+    
+        assert_audit_contract(data, problem_id)
+>       assert data["score"] == data["max_score"]
+E       assert None == 10.0
+
+tests/test_mvp_ita_10_questions.py:111: AssertionError
+__________ test_mvp_correct_solutions_for_all_10_questions[ITA2025Q8] __________
+
+client = <starlette.testclient.TestClient object at 0x10bc4a2e0>
+problem_id = 'ITA2025Q8'
+
+    @pytest.mark.parametrize("problem_id", MVP_PROBLEM_IDS)
+    def test_mvp_correct_solutions_for_all_10_questions(client, problem_id: str):
+        data = audit_example(client, problem_id, "correct_solution.txt")
+    
+        assert_audit_contract(data, problem_id)
+>       assert data["score"] == data["max_score"]
+E       assert None == 10.0
+
+tests/test_mvp_ita_10_questions.py:111: AssertionError
+_________ test_mvp_correct_solutions_for_all_10_questions[ITA2025F2Q1] _________
+
+client = <starlette.testclient.TestClient object at 0x10c13f610>
+problem_id = 'ITA2025F2Q1'
+
+    @pytest.mark.parametrize("problem_id", MVP_PROBLEM_IDS)
+    def test_mvp_correct_solutions_for_all_10_questions(client, problem_id: str):
+        data = audit_example(client, problem_id, "correct_solution.txt")
+    
+        assert_audit_contract(data, problem_id)
+>       assert data["score"] == data["max_score"]
+E       assert None == 10.0
+
+tests/test_mvp_ita_10_questions.py:111: AssertionError
+_________ test_mvp_correct_solutions_for_all_10_questions[ITA2025F2Q3] _________
+
+client = <starlette.testclient.TestClient object at 0x10bebc250>
+problem_id = 'ITA2025F2Q3'
+
+    @pytest.mark.parametrize("problem_id", MVP_PROBLEM_IDS)
+    def test_mvp_correct_solutions_for_all_10_questions(client, problem_id: str):
+        data = audit_example(client, problem_id, "correct_solution.txt")
+    
+        assert_audit_contract(data, problem_id)
+>       assert data["score"] == data["max_score"]
+E       assert None == 10.0
+
+tests/test_mvp_ita_10_questions.py:111: AssertionError
+_________ test_mvp_correct_solutions_for_all_10_questions[ITA2025F2Q5] _________
+
+client = <starlette.testclient.TestClient object at 0x10bc94850>
+problem_id = 'ITA2025F2Q5'
+
+    @pytest.mark.parametrize("problem_id", MVP_PROBLEM_IDS)
+    def test_mvp_correct_solutions_for_all_10_questions(client, problem_id: str):
+        data = audit_example(client, problem_id, "correct_solution.txt")
+    
+        assert_audit_contract(data, problem_id)
+>       assert data["score"] == data["max_score"]
+E       assert None == 10.0
+
+tests/test_mvp_ita_10_questions.py:111: AssertionError
+_________ test_mvp_correct_solutions_for_all_10_questions[ITA2025F2Q6] _________
+
+client = <starlette.testclient.TestClient object at 0x10bf5fc70>
+problem_id = 'ITA2025F2Q6'
+
+    @pytest.mark.parametrize("problem_id", MVP_PROBLEM_IDS)
+    def test_mvp_correct_solutions_for_all_10_questions(client, problem_id: str):
+        data = audit_example(client, problem_id, "correct_solution.txt")
+    
+        assert_audit_contract(data, problem_id)
+>       assert data["score"] == data["max_score"]
+E       assert None == 10.0
+
+tests/test_mvp_ita_10_questions.py:111: AssertionError
+_________ test_mvp_correct_solutions_for_all_10_questions[ITA2025F2Q8] _________
+
+client = <starlette.testclient.TestClient object at 0x10bfc43d0>
+problem_id = 'ITA2025F2Q8'
+
+    @pytest.mark.parametrize("problem_id", MVP_PROBLEM_IDS)
+    def test_mvp_correct_solutions_for_all_10_questions(client, problem_id: str):
+        data = audit_example(client, problem_id, "correct_solution.txt")
+    
+        assert_audit_contract(data, problem_id)
+>       assert data["score"] == data["max_score"]
+E       assert None == 10.0
+
+tests/test_mvp_ita_10_questions.py:111: AssertionError
+__ test_existing_lean_checks_exact_written_proposition[2*((6-x)+x)-verified] ___
+
+lhs = '2*((6-x)+x)', expected = 'verified'
+
+    @pytest.mark.parametrize('lhs,expected',[('2*((6-x)+x)','verified'),('2*((6-x)+x)+1','refuted')])
+    def test_existing_lean_checks_exact_written_proposition(lhs,expected):
+        text=f'APQR é um paralelogramo. Seu perímetro APQR é {lhs}=12.'
+        cs=[candidate(text),candidate(text,'b.perimeter_apqr','perimeter_apqr',lhs+'=12','math')]
+        result=run_shadow('TME2026P4',{'b':text},text,solution_id='formal',provider=provider(cs),use_lean=True)
+        fact=next(f for f in result.potential_bridge.auditor.facts if f.fact_id=='b.perimeter_apqr')
+>       assert fact.verification.status==expected and fact.verification_source=='student_lean'
+E       AssertionError: assert ('technical_error' == 'verified'
+E         
+E         - verified
+E         + technical_error)
+
+tests/test_obligation_semantic.py:198: AssertionError
+__ test_existing_lean_checks_exact_written_proposition[2*((6-x)+x)+1-refuted] __
+
+lhs = '2*((6-x)+x)+1', expected = 'refuted'
+
+    @pytest.mark.parametrize('lhs,expected',[('2*((6-x)+x)','verified'),('2*((6-x)+x)+1','refuted')])
+    def test_existing_lean_checks_exact_written_proposition(lhs,expected):
+        text=f'APQR é um paralelogramo. Seu perímetro APQR é {lhs}=12.'
+        cs=[candidate(text),candidate(text,'b.perimeter_apqr','perimeter_apqr',lhs+'=12','math')]
+        result=run_shadow('TME2026P4',{'b':text},text,solution_id='formal',provider=provider(cs),use_lean=True)
+        fact=next(f for f in result.potential_bridge.auditor.facts if f.fact_id=='b.perimeter_apqr')
+>       assert fact.verification.status==expected and fact.verification_source=='student_lean'
+E       AssertionError: assert ('technical_error' == 'refuted'
+E         
+E         - refuted
+E         + technical_error)
+
+tests/test_obligation_semantic.py:198: AssertionError
+______________ test_f2q1_correct_solution_has_pedagogical_report _______________
+
+    def test_f2q1_correct_solution_has_pedagogical_report():
+        solution = read_f2q1_example("correct_solution.txt")
+        data = audit_f2q1(solution)
+    
+        assert isinstance(data["feedback"], str)
+        assert data["feedback"]
+    
+        report = data["pedagogical_report"]
+        text = report_text(report)
+    
+        # Validate the suggestion and attributable evidence, not words that used
+        # to appear only in the reference detector's synthetic descriptions.
+>       assert report["score"] == report["max_score"] == 10
+E       assert None == 10.0
+
+tests/test_pedagogical_report.py:50: AssertionError
+________ test_f2q1_wrong_solution_reports_incorrect_student_statements _________
+
+    def test_f2q1_wrong_solution_reports_incorrect_student_statements():
+        solution = (
+            "Como x^6=1, temos x^57=-1, x^14=1-x e x^7=x. "
+            "Logo o resto é (a-b)x-a. Comparando com 2x+1, obtemos "
+            "a+b=2 e a=1. Portanto, a=1 e b=1."
+        )
+    
+        data = audit_f2q1(solution)
+        report = data["pedagogical_report"]
+        text = report_text(report)
+        dense = compact(text)
+    
+>       assert "incorreta" in text
+E       assert 'incorreta' in '{"summary": "a avaliação é inconclusiva; não há evidência suficiente para uma nota global. parte das verificações for...-02", "coverage": 0.0, "estimated_points": null, "needs_review": true, "unscorable_reason": "adjudicator_unavailable"}'
+
+tests/test_pedagogical_report.py:73: AssertionError
+___ test_f2q3_explicit_answer_label_keeps_only_final_credit_with_real_engine ___
+
+    def test_f2q3_explicit_answer_label_keeps_only_final_credit_with_real_engine():
+        from fastapi.testclient import TestClient
+        from confia_lean_auditor.main import app
+        text='Portanto, resposta = (5+sqrt(7))/8.'
+        # The answer still requires the asset's existing formal microclaim.
+        assert assess('ITA2025F2Q3',text,verified=False).items[-1].points is None
+        assert all(i.points is None for i in assess('ITA2025F2Q3','Não podemos concluir: '+text).items)
+        response=TestClient(app).post('/audit',json={'problem_id':'ITA2025F2Q3','solution':text})
+        assert response.status_code==200,response.text
+        data=response.json();items=data['rubric_assessment']['items']
+>       assert [(i['id'],i['points']) for i in items]==[
+            ('beta_difference',None),('candidate_values',None),('final_sin_sum',None),('final_answer',2)]
+E       AssertionError: assert [('beta_diffe...nswer', None)] == [('beta_diffe...l_answer', 2)]
+E         
+E         At index 3 diff: ('final_answer', None) != ('final_answer', 2)
+E         Use -v to get more diff
+
+tests/test_positive_credit_evidence.py:339: AssertionError
+___ test_unsupported_legacy_wording_reaches_rubric_through_verified_student ____
+
+    def test_unsupported_legacy_wording_reaches_rubric_through_verified_student():
+        response = execute_audit(AuditRequest(problem_id='ITA2025F2Q1',
+            solution='Logo a vale -1 e b vale 3.'))
+        assert response.extracted_claims.claims == []
+        final = response.rubric_assessment.items[-1]
+        assert final.points == 2 and final.claim_id is None
+>       assert final.positive_evidence['student_bridge']['verification_basis'] == 'formal_lean_verified'
+E       AssertionError: assert 'deterministic_expected_value' == 'formal_lean_verified'
+E         
+E         - formal_lean_verified
+E         + deterministic_expected_value
+
+tests/test_rubric_bridge_pipeline.py:15: AssertionError
+_ test_semantic_math_is_checked_by_real_lean[2*((6-x)+x)-12-verified-6-student_lean] _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10d4fef10>
+lhs = '2*((6-x)+x)', rhs = '12', expected_status = 'verified', points = 6
+mechanism = 'student_lean'
+
+    @pytest.mark.parametrize('lhs,rhs,expected_status,points,mechanism', [('2*((6-x)+x)','12','verified',6,'student_lean'),('2*((6-x)+x)','13','refuted',0,'canonical_equivalence'),('2*((6-x)+x)+1','12','refuted',0,'student_lean')])
+    def test_semantic_math_is_checked_by_real_lean(monkeypatch,lhs,rhs,expected_status,points,mechanism):
+        text=f'APQR é um paralelogramo. Seu perímetro APQR é {lhs}={rhs}.'
+        provider(monkeypatch,[candidate(text,'apqr','parallelogram',kind='geometric_relation',item='b'),
+            candidate(text,'perimeter_apqr',f'{lhs}={rhs}',kind='value',item='b').model_copy(update={'candidate_id':'c2'})])
+        bridge,result=audit_tme('TME2026P4',{'b':text},use_lean=True)
+>       assert result.items[1].points_awarded==points
+E       AssertionError: assert None == 6
+E        +  where None = PautaDecision(item_id='b', scoring_strategy='max_of', max_points=Decimal('6'), points_awarded=None, known_points=Decim...4-1f3c7eec1c1243469d25f90370a831a1/real_check_1.lean'), conditional_on=None, reason='UPSTREAM_STATUS')), children=()))).points_awarded
+
+tests/test_semantic_claims.py:216: AssertionError
+_ test_semantic_math_is_checked_by_real_lean[2*((6-x)+x)+1-12-refuted-0-student_lean] _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10d701970>
+lhs = '2*((6-x)+x)+1', rhs = '12', expected_status = 'refuted', points = 0
+mechanism = 'student_lean'
+
+    @pytest.mark.parametrize('lhs,rhs,expected_status,points,mechanism', [('2*((6-x)+x)','12','verified',6,'student_lean'),('2*((6-x)+x)','13','refuted',0,'canonical_equivalence'),('2*((6-x)+x)+1','12','refuted',0,'student_lean')])
+    def test_semantic_math_is_checked_by_real_lean(monkeypatch,lhs,rhs,expected_status,points,mechanism):
+        text=f'APQR é um paralelogramo. Seu perímetro APQR é {lhs}={rhs}.'
+        provider(monkeypatch,[candidate(text,'apqr','parallelogram',kind='geometric_relation',item='b'),
+            candidate(text,'perimeter_apqr',f'{lhs}={rhs}',kind='value',item='b').model_copy(update={'candidate_id':'c2'})])
+        bridge,result=audit_tme('TME2026P4',{'b':text},use_lean=True)
+>       assert result.items[1].points_awarded==points
+E       AssertionError: assert None == 0
+E        +  where None = PautaDecision(item_id='b', scoring_strategy='max_of', max_points=Decimal('6'), points_awarded=None, known_points=Decim...4-ee219624e5bc4bff8a4f7ce1c854e66d/real_check_1.lean'), conditional_on=None, reason='UPSTREAM_STATUS')), children=()))).points_awarded
+
+tests/test_semantic_claims.py:216: AssertionError
+_______________ test_real_arithmetic_negation_and_verified_claim _______________
+
+tmp_path = PosixPath('/private/var/folders/4h/mld1ypt95nq1z3nm58k0k64m0000gn/T/pytest-of-LinMarcolino/pytest-3/test_real_arithmetic_negation_0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10dacc700>
+
+    def test_real_arithmetic_negation_and_verified_claim(tmp_path, monkeypatch):
+        module = import_module(CHECKERS[0][0])
+        monkeypatch.setattr(module, "CHECK_DIR", tmp_path)
+        for value, expected in (("5", "refuted"), ("4", "verified")):
+            claim = grounded_claim("ITA2025F2Q8", "arithmetic_equality", f"2+2={value}")
+            check = module.check_one_student_claim(claim, f"real-{value}", 0)
+>           assert check.status == expected, check
+E           AssertionError: StudentClaimCheck(id='student_claim_0', problem_id='ITA2025F2Q8', claim_type='arithmetic_equality', raw_text='2+2=5', ...rce_end': 5, 'payload_sha256': '67fdf0ae3c0fdf8df63779548939565157d3ed2f375f7967f1088c864c3e2837'}, formal_status=None)
+E           assert 'technical_error' == 'refuted'
+E             
+E             - refuted
+E             + technical_error
+
+tests/test_student_proof_semantics.py:143: AssertionError
+__ test_real_bridge_preserves_wrong_solution_and_runs_existing_lean_pipeline ___
+
+tmp_path = PosixPath('/private/var/folders/4h/mld1ypt95nq1z3nm58k0k64m0000gn/T/pytest-of-LinMarcolino/pytest-3/test_real_bridge_preserves_wro0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10dadc610>
+
+    def test_real_bridge_preserves_wrong_solution_and_runs_existing_lean_pipeline(tmp_path, monkeypatch):
+        monkeypatch.setenv("CONFIA_SUBMISSIONS_DIR", str(tmp_path / "submissions"))
+        monkeypatch.setenv("CONFIA_SUBMISSION_AUDITS_DIR", str(tmp_path / "audits"))
+        client = TestClient(main.app)
+        solution = "x^57=1; x^14=1-x; x^7=-x. Logo a=1 e b=1.\n2 + 2 = 5"
+        request_payload = payload()
+        sid, rev = source(client, values=[{"segment_id": "wrong", "page_index": 0, "order": 0,
+                                         "kind": "mixed", "text": solution}], request_payload=request_payload)
+        request = accept(client, sid, rev)
+        folder = submissions.store().root / sid
+        before = persisted_files(folder)
+        response = execute(client, sid, request)
+        assert response.status_code == 200, response.text
+        run = response.json()
+        assert run["status"] == "COMPLETED", run
+        internal = persisted_run(run)
+        assert Path(internal["artifact_dir"], "solution.txt").read_text() == solution
+        assert run["result"]["student_claim_checks"]
+>       assert any(item["status"] == "refuted" for item in run["result"]["student_claim_checks"])
+E       assert False
+E        +  where False = any(<generator object test_real_bridge_preserves_wrong_solution_and_runs_existing_lean_pipeline.<locals>.<genexpr> at 0x10dc13200>)
+
+tests/test_submission_audits.py:356: AssertionError
+______________ test_real_local_lean_status_certificates_preserved ______________
+
+offline = (<starlette.testclient.TestClient object at 0x10ded3730>, [], PosixPath('/private/var/folders/4h/mld1ypt95nq1z3nm58k0k64m0000gn/T/pytest-of-LinMarcolino/pytest-3/test_real_local_lean_status_ce0'))
+
+    def test_real_local_lean_status_certificates_preserved(offline):
+        client,_,_=offline
+        base,_,_,req=prepare(client,2,{'c':'pair_permutations: 4!=24\npair_orientations: 2^4=8'})
+        service=audits.service();service.tme_use_lean=True
+        sid=service.submissions.transcription_history(req['transcription_id']).transcription.submission_id
+        run=service.execute(sid,AuditRequest(**req))
+        assert run.status=='COMPLETED'
+        checks=[f.student_check for f in run.result.bridge.auditor.facts if f.student_check]
+>       assert {c['status'] for c in checks}=={'verified','refuted'}
+E       AssertionError: assert {'technical_error'} == {'refuted', 'verified'}
+E         
+E         Extra items in the left set:
+E         'technical_error'
+E         Extra items in the right set:
+E         'verified'
+E         'refuted'
+E         Use -v to get more diff
+
+tests/test_tme_accepted_integration.py:193: AssertionError
+__________ test_wrong_reasoning_correct_final_is_refuted_by_real_lean __________
+
+    def test_wrong_reasoning_correct_final_is_refuted_by_real_lean():
+        text='APQR é um paralelogramo.\nSeu perímetro APQR é 2*((6-x)+x)+1=12.'
+        j=judgment('b.perimeter_apqr',('E002',),extracted_mathematical_statements=[dict(subject='perimeter_apqr',
+            expression='2*((6-x)+x)+1=12',representation_kind='math',evidence_ids=['E002'])])
+        r=run(text,{'b.perimeter_apqr':j},items={'b':text},lean=True)
+        t=next(t for t in r.reconciliation if t['obligation_id']=='b.perimeter_apqr')
+>       assert t['decision']=='refuted' and t['evidence_tier']=='CONFLICT' and t['needs_review']
+E       AssertionError: assert ('technical_error' == 'refuted'
+E         
+E         - refuted
+E         + technical_error)
+
+tests/test_tme_hybrid_grader.py:132: AssertionError
+___________ test_real_formal_verified_is_preserved_and_not_semantic ____________
+
+    def test_real_formal_verified_is_preserved_and_not_semantic():
+        text='APQR é um paralelogramo.\nSeu perímetro APQR é 2*((6-x)+x)=12.'
+        j=judgment('b.perimeter_apqr',('E002',),extracted_mathematical_statements=[dict(subject='perimeter_apqr',
+            expression='2*((6-x)+x)=12',representation_kind='math',evidence_ids=['E002'])])
+        r=run(text,{'b.perimeter_apqr':j},items={'b':text},lean=True)
+        t=next(t for t in r.reconciliation if t['obligation_id']=='b.perimeter_apqr')
+>       assert t['decision']=='supported' and t['evidence_tier']=='FORMAL_VERIFIED'
+E       AssertionError: assert ('technical_error' == 'supported'
+E         
+E         - supported
+E         + technical_error)
+
+tests/test_tme_hybrid_grader.py:143: AssertionError
+____ test_central_product_vocabulary_is_preserved_without_contract_renames _____
+
+    def test_central_product_vocabulary_is_preserved_without_contract_renames():
+        source = '\n'.join((STATIC / path).read_text() for path in ('app.js', 'submissions/teacher.js', 'capture/tablet.js'))
+        for phrase in ('Análise ConfIA', 'Solução enviada', 'Transcrição', 'Transcrição conferida', 'Recebida pelo ConfIA',
+                       'Verificação formal com Lean', 'Critérios de avaliação', 'Número do envio'):
+>           assert phrase in source
+E           assert 'Verificação formal com Lean' in 'const problemSelect = document.querySelector("#problem-select");\nconst exampleSelect = document.querySelector("#exam...globalThis.addEventListener("orientationchange", () => requestAnimationFrame(renderCanvas));\n  initialize();\n})();\n'
+
+tests/test_ui_01_shell.py:151: AssertionError
+_ test_parent_statement_is_compact_and_sticky_through_notebook_and_submission __
+
+    def test_parent_statement_is_compact_and_sticky_through_notebook_and_submission():
+        html = CLIENT.get('/').text
+        page = Page(html)
+        assert page.ids['notebook-problem-context'][0] == 'section'
+        assert 'hidden' in page.ids['notebook-problem-context'][1]
+        toggle = page.ids['toggle-notebook-problem'][1]
+        assert toggle['type'] == 'button'
+        assert toggle['aria-expanded'] == 'true'
+        assert toggle['aria-controls'] == 'notebook-problem-body'
+        assert page.ids['notebook-math-message'][1]['role'] == 'status'
+        assert 'notebook-problem-title' not in page.ids
+        assert re.search(r'<p class="eyebrow">Questão <span id="notebook-problem-code"></span></p>', html)
+        assert html.index('id="resolution-title"') < html.index('id="notebook-problem-context"') < html.index('id="resolution-notebook"') < html.index('id="prepare-analysis"')
+        assert html.index('id="resolution-notebook"') < html.index('class="notebook-end"') < html.index('id="workspace-draft-persistence"') < html.index('id="workspace-submission-actions"') < html.index('id="workspace-recognition-actions"')
+        css = (STATIC / 'styles.css').read_text()
+        sticky = re.search(r'body\[data-resolution-active="true"\] #notebook-problem-context\s*\{([^}]*)\}', css)
+        assert sticky and 'position: sticky;' in sticky.group(1) and 'top: 0;' in sticky.group(1)
+        assert 'body[data-handwriting-focus="true"] #notebook-problem-context' not in css
+        assert '#notebook-problem-body { max-height:' in css
+>       assert 'position: sticky' not in (STATIC / 'capture/tablet.css').read_text().split('/* Embedded mode')[1]
+E       AssertionError: assert 'position: sticky' not in ' removes re...w: 1; }\n}\n'
+E         
+E         'position: sticky' is contained here:
+E           trols {
+E             position: sticky;
+E             top: calc(var(--pilot-dock-height, 0px) + 8px);
+E             z-index: calc(var(--z-sticky) - 1);
+E             background: var(--color-surface);...
+E         
+E         ...Full output truncated (26 lines hidden), use '-vv' to show
+
+tests/test_ui_02_workspace.py:108: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_common_claim_pipeline.py::test_common_catalog_preserves_real_pipeline_credit_and_attribution[True]
+FAILED tests/test_common_claim_pipeline.py::test_common_catalog_preserves_real_pipeline_credit_and_attribution[False]
+FAILED tests/test_evidence_id_semantic.py::test_written_method_reaches_real_lean[2*((6-x)+x)-verified]
+FAILED tests/test_evidence_id_semantic.py::test_written_method_reaches_real_lean[2*((6-x)+x)+1-refuted]
+FAILED tests/test_f2_strong_lean_suite.py::test_f2_correct_solution_has_full_operational_strong_lean_contract[ITA2025F2Q1]
+FAILED tests/test_f2_strong_lean_suite.py::test_f2_correct_solution_has_full_operational_strong_lean_contract[ITA2025F2Q3]
+FAILED tests/test_f2_strong_lean_suite.py::test_f2_correct_solution_has_full_operational_strong_lean_contract[ITA2025F2Q5]
+FAILED tests/test_f2_strong_lean_suite.py::test_f2_correct_solution_has_full_operational_strong_lean_contract[ITA2025F2Q6]
+FAILED tests/test_f2_strong_lean_suite.py::test_f2_correct_solution_has_full_operational_strong_lean_contract[ITA2025F2Q8]
+FAILED tests/test_f2_strong_lean_suite.py::test_f2_wrong_answer_stays_below_full_score[ITA2025F2Q1]
+FAILED tests/test_f2_strong_lean_suite.py::test_f2_wrong_answer_stays_below_full_score[ITA2025F2Q3]
+FAILED tests/test_f2_strong_lean_suite.py::test_f2_wrong_answer_stays_below_full_score[ITA2025F2Q5]
+FAILED tests/test_f2_strong_lean_suite.py::test_f2_wrong_answer_stays_below_full_score[ITA2025F2Q6]
+FAILED tests/test_f2q1_strong_certificate.py::test_f2q1_correct_solution_includes_strong_certificate
+FAILED tests/test_f2q1_strong_certificate.py::test_f2q1_wrong_solution_does_not_get_strong_certificate
+FAILED tests/test_f2q1_student_claim_checks.py::test_f2q1_correct_solution_claims_are_verified
+FAILED tests/test_f2q1_student_claim_checks.py::test_f2q1_wrong_final_answer_is_rejected
+FAILED tests/test_f2q1_student_claim_checks.py::test_f2q1_wrong_power_reduction_is_rejected
+FAILED tests/test_f2q1_student_claim_checks.py::test_f2q1_wrong_reduced_form_is_rejected
+FAILED tests/test_f2q1_student_claim_checks.py::test_f2q1_wrong_coefficient_system_is_rejected
+FAILED tests/test_f2q3_strong_certificate.py::test_f2q3_correct_solution_includes_strong_certificate
+FAILED tests/test_f2q3_strong_certificate.py::test_f2q3_wrong_solution_does_not_include_strong_certificate
+FAILED tests/test_f2q3_student_claim_checks.py::test_f2q3_correct_solution_claims_are_verified
+FAILED tests/test_f2q3_student_claim_checks.py::test_f2q3_wrong_beta_difference_is_rejected
+FAILED tests/test_f2q3_student_claim_checks.py::test_f2q3_wrong_candidate_signs_are_rejected
+FAILED tests/test_f2q3_student_claim_checks.py::test_f2q3_wrong_final_sin_sum_is_rejected
+FAILED tests/test_f2q3_student_claim_checks.py::test_f2q3_correct_final_answer_alone_is_verified
+FAILED tests/test_f2q5_strong_certificate.py::test_f2q5_correct_solution_includes_strong_certificate
+FAILED tests/test_f2q5_strong_certificate.py::test_f2q5_wrong_final_digit_does_not_include_strong_certificate
+FAILED tests/test_f2q5_student_claim_checks.py::test_f2q5_correct_solution_claims_are_verified
+FAILED tests/test_f2q5_student_claim_checks.py::test_f2q5_wrong_log_power_decomposition_is_rejected
+FAILED tests/test_f2q5_student_claim_checks.py::test_f2q5_wrong_digit_log_bounds_are_rejected
+FAILED tests/test_f2q5_student_claim_checks.py::test_f2q5_wrong_between_bounds_are_rejected
+FAILED tests/test_f2q5_student_claim_checks.py::test_f2q5_wrong_final_digit_is_rejected
+FAILED tests/test_f2q6_strong_certificate.py::test_f2q6_correct_solution_includes_strong_certificate
+FAILED tests/test_f2q6_strong_certificate.py::test_f2q6_wrong_solution_does_not_get_strong_certificate
+FAILED tests/test_f2q6_student_claim_checks.py::test_f2q6_correct_solution_claims_are_verified
+FAILED tests/test_f2q6_student_claim_checks.py::test_f2q6_wrong_probability_formula_is_rejected
+FAILED tests/test_f2q6_student_claim_checks.py::test_f2q6_wrong_ratio_formula_is_rejected
+FAILED tests/test_f2q6_student_claim_checks.py::test_f2q6_wrong_final_answer_is_rejected
+FAILED tests/test_f2q6_student_claim_checks.py::test_f2q6_single_maximizer_answer_is_rejected
+FAILED tests/test_f2q8_strong_certificate.py::test_f2q8_correct_solution_includes_strong_certificate
+FAILED tests/test_f2q8_student_claim_checks.py::test_f2q8_correct_final_answer_and_pair_reduction
+FAILED tests/test_f2q8_student_claim_checks.py::test_f2q8_wrong_final_answer_and_pair_reduction
+FAILED tests/test_f2q8_student_claim_checks.py::test_f2q8_generic_arithmetic_equality_still_works
+FAILED tests/test_f2q8_student_claim_checks.py::test_f2q8_generic_wrong_arithmetic_equality_still_fails
+FAILED tests/test_f2q8_student_claim_checks.py::test_f2q8_wrong_formula_is_rejected
+FAILED tests/test_f2q8_student_claim_checks.py::test_f2q8_correct_formula_is_verified
+FAILED tests/test_f2q8_student_claim_checks.py::test_f2q8_correct_pair_count_but_wrong_rhs
+FAILED tests/test_f2q8_student_claim_checks.py::test_f2q8_wrong_pair_count_true_local_subtraction
+FAILED tests/test_handwriting_recognition_benchmark.py::test_loader_schema_artificial_samples_and_optional_strokes
+FAILED tests/test_ita2025f2q1_level1.py::test_f2q1_correct_solution_scores_10_and_verifies_lean
+FAILED tests/test_ita2025f2q1_level1.py::test_f2q1_missing_reduced_form_scores_partial
+FAILED tests/test_ita2025f2q1_level1.py::test_f2q1_wrong_answer_keeps_undecided_criteria_and_decided_subtotal
+FAILED tests/test_ita2025f2q3_level1.py::test_f2q3_correct_solution_scores_10_and_verifies_lean
+FAILED tests/test_ita2025f2q3_level1.py::test_f2q3_answer_only_scores_final_points_only
+FAILED tests/test_ita2025f2q3_level1.py::test_f2q3_partial_beta_difference_scores_partial
+FAILED tests/test_ita2025f2q3_level1.py::test_f2q3_wrong_answer_keeps_undecided_criteria_and_decided_subtotal
+FAILED tests/test_ita2025f2q5_level1.py::test_f2q5_correct_solution_scores_10_and_verifies_lean
+FAILED tests/test_ita2025f2q5_level1.py::test_f2q5_missing_bounds_scores_partial
+FAILED tests/test_ita2025f2q5_level1.py::test_f2q5_wrong_digit_keeps_undecided_criteria_and_decided_subtotal
+FAILED tests/test_ita2025f2q6_level1.py::test_f2q6_correct_solution_scores_10_and_verifies_lean
+FAILED tests/test_ita2025f2q6_level1.py::test_f2q6_missing_ratio_scores_partial
+FAILED tests/test_ita2025f2q6_level1.py::test_f2q6_wrong_answer_keeps_undecided_criteria_and_decided_subtotal
+FAILED tests/test_ita2025f2q8_level1.py::test_f2q8_correct_solution_scores_10_and_verifies_lean
+FAILED tests/test_ita2025f2q8_level1.py::test_f2q8_answer_only_scores_final_points_only
+FAILED tests/test_ita2025f2q8_level1.py::test_f2q8_missing_determinant_formula_scores_partial
+FAILED tests/test_ita2025q1_level2.py::test_q1_correct_solution_scores_10_and_verifies_formal_step
+FAILED tests/test_ita2025q1_level2.py::test_q1_wrong_determinant_step_blocks_area_and_dependencies
+FAILED tests/test_ita2025q1_level2.py::test_q1_answer_only_preserves_subtotal_without_global_score
+FAILED tests/test_ita2025q3_level1.py::test_q3_correct_solution_scores_10_and_verifies_formal_step
+FAILED tests/test_ita2025q3_level1.py::test_q3_missing_parity_blocks_formal_chain
+FAILED tests/test_ita2025q4_level1.py::test_q4_correct_solution_scores_10_and_verifies_lean
+FAILED tests/test_ita2025q5_level1.py::test_q5_correct_solution_scores_10_and_verifies_lean
+FAILED tests/test_ita2025q5_level1.py::test_q5_missing_difference_blocks_factorization_dependency
+FAILED tests/test_ita2025q5_level1.py::test_q5_missing_factorization_blocks_formal_step
+FAILED tests/test_ita2025q8_level1.py::test_q8_correct_solution_scores_10_and_verifies_lean
+FAILED tests/test_ita2025q8_level1.py::test_q8_answer_only_scores_interval_and_sum_only
+FAILED tests/test_ita2025q8_level1.py::test_q8_missing_sign_analysis_loses_sign_points
+FAILED tests/test_math_canonical_pipeline.py::test_shifted_f2q3_equation_keeps_full_credit_and_formal_checks
+FAILED tests/test_mvp_ita_10_questions.py::test_mvp_correct_solutions_for_all_10_questions[ITA2025Q1]
+FAILED tests/test_mvp_ita_10_questions.py::test_mvp_correct_solutions_for_all_10_questions[ITA2025Q3]
+FAILED tests/test_mvp_ita_10_questions.py::test_mvp_correct_solutions_for_all_10_questions[ITA2025Q4]
+FAILED tests/test_mvp_ita_10_questions.py::test_mvp_correct_solutions_for_all_10_questions[ITA2025Q5]
+FAILED tests/test_mvp_ita_10_questions.py::test_mvp_correct_solutions_for_all_10_questions[ITA2025Q8]
+FAILED tests/test_mvp_ita_10_questions.py::test_mvp_correct_solutions_for_all_10_questions[ITA2025F2Q1]
+FAILED tests/test_mvp_ita_10_questions.py::test_mvp_correct_solutions_for_all_10_questions[ITA2025F2Q3]
+FAILED tests/test_mvp_ita_10_questions.py::test_mvp_correct_solutions_for_all_10_questions[ITA2025F2Q5]
+FAILED tests/test_mvp_ita_10_questions.py::test_mvp_correct_solutions_for_all_10_questions[ITA2025F2Q6]
+FAILED tests/test_mvp_ita_10_questions.py::test_mvp_correct_solutions_for_all_10_questions[ITA2025F2Q8]
+FAILED tests/test_obligation_semantic.py::test_existing_lean_checks_exact_written_proposition[2*((6-x)+x)-verified]
+FAILED tests/test_obligation_semantic.py::test_existing_lean_checks_exact_written_proposition[2*((6-x)+x)+1-refuted]
+FAILED tests/test_pedagogical_report.py::test_f2q1_correct_solution_has_pedagogical_report
+FAILED tests/test_pedagogical_report.py::test_f2q1_wrong_solution_reports_incorrect_student_statements
+FAILED tests/test_positive_credit_evidence.py::test_f2q3_explicit_answer_label_keeps_only_final_credit_with_real_engine
+FAILED tests/test_rubric_bridge_pipeline.py::test_unsupported_legacy_wording_reaches_rubric_through_verified_student
+FAILED tests/test_semantic_claims.py::test_semantic_math_is_checked_by_real_lean[2*((6-x)+x)-12-verified-6-student_lean]
+FAILED tests/test_semantic_claims.py::test_semantic_math_is_checked_by_real_lean[2*((6-x)+x)+1-12-refuted-0-student_lean]
+FAILED tests/test_student_proof_semantics.py::test_real_arithmetic_negation_and_verified_claim
+FAILED tests/test_submission_audits.py::test_real_bridge_preserves_wrong_solution_and_runs_existing_lean_pipeline
+FAILED tests/test_tme_accepted_integration.py::test_real_local_lean_status_certificates_preserved
+FAILED tests/test_tme_hybrid_grader.py::test_wrong_reasoning_correct_final_is_refuted_by_real_lean
+FAILED tests/test_tme_hybrid_grader.py::test_real_formal_verified_is_preserved_and_not_semantic
+FAILED tests/test_ui_01_shell.py::test_central_product_vocabulary_is_preserved_without_contract_renames
+FAILED tests/test_ui_02_workspace.py::test_parent_statement_is_compact_and_sticky_through_notebook_and_submission
+105 failed, 3009 passed, 47 skipped in 1041.69s (0:17:21)

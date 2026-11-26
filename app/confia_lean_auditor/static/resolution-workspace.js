@@ -288,8 +288,8 @@
   function renderExams() {
     const list = get("student-exam-list");
     list.replaceChildren();
-    if (!problems.length) { setCopy("student-exams-message", "Carregando catálogo de questões…"); return; }
-    const exams = availableExams.filter(exam => exam?.items?.every(item => problems.some(p => (p.problem_id || p.id) === item.problem_id)));
+    if (!problems.length && !availableExams.some(e=>e.assessment?.correction_mode==='DYNAMIC')) { setCopy("student-exams-message", "Carregando catálogo de questões…"); return; }
+    const exams = availableExams.filter(exam => exam?.assessment?.correction_mode==='DYNAMIC' || exam?.items?.every(item => problems.some(p => (p.problem_id || p.id) === item.problem_id)));
     setCopy("student-exams-message", exams.length ? "Escolha uma avaliação da sua turma." : "Nenhum exame disponível para sua turma no momento.");
     get("student-exams-message").className = exams.length ? "action-message" : "empty-state";
     for (const group of ["Disponíveis", "Agendados", "Enviados", "Encerrados"]) {
@@ -324,7 +324,9 @@
       && result.assessment_id === exam.assessment.assessment_id && result.item_id === item.assessment_item_id
       && result.problem_id === item.problem_id);
   }
+  let dynamicActivity = null;
   function renderExamDetail(exam) {
+    dynamicActivity?.dispose();dynamicActivity=null;
     setCopy("student-exams-message", "");
     setCopy("student-exam-title", exam.assessment.title);
     setCopy("student-exam-meta", `${exam.teacher_name} · ${exam.classroom_name} · ${formatDateTime(exam.assessment.opens_at)} até ${formatDateTime(exam.assessment.closes_at)}`);
@@ -332,6 +334,11 @@
     setCopy("student-exam-instructions", exam.assessment.instructions);
     const list = get("student-exam-items");
     list.replaceChildren();
+    if(exam.assessment.correction_mode==='DYNAMIC'){
+      setCopy('student-exam-progress','DYNAMIC · acompanhe as tentativas e a divulgação docente abaixo.');
+      dynamicActivity=window.ConfIADynamicStudent.create(list,exam.assessment.assessment_id);
+      return;
+    }
     for (const item of exam.items) {
       const card = appendTextElement(list, "article", "local-submission exam-item-card", "");
       appendTextElement(card, "h4", "", `Questão ${item.order} · ${item.problem_id}`);
@@ -384,7 +391,10 @@
     get("student-exams").setAttribute("aria-busy", "true");
     try {
       const response = await fetch("/assessments", { credentials: "same-origin", cache: "no-store" });
-      if (!response.ok) throw new Error("Não foi possível consultar as atividades da turma.");
+      if (!response.ok) {
+        const error = new Error("Não foi possível consultar as atividades da turma.");
+        error.status = response.status; throw error;
+      }
       const data = await response.json();
       if (request !== examsRequest) return;
       availableExams = Array.isArray(data) ? data.filter(exam => exam?.assessment && Array.isArray(exam.items)) : [];
@@ -401,7 +411,10 @@
           get("student-exam-list").hidden = false;
         }
       }
-    } catch (_) { if (request === examsRequest) setCopy("student-exams-message", "Não foi possível consultar os exames. Abra esta área novamente."); }
+    } catch (error) { if (request === examsRequest) setCopy("student-exams-message", error.status === 401
+      ? "As atividades da turma exigem uma sessão de aluno autenticada. Elas não estão disponíveis no modo de demonstração."
+      : error.status === 403 ? "Seu perfil não tem acesso às atividades desta turma."
+      : "Não foi possível consultar os exames. Abra esta área novamente."); }
     finally { if (request === examsRequest) get("student-exams").setAttribute("aria-busy", "false"); }
   }
   function enter(view) {

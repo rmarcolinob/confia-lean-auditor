@@ -1,0 +1,977 @@
+{
+  "engine_mode": "DYNAMIC",
+  "audit_run_id": "aud_e3bea497dc5c011ed2e61ae2e2010293eb8c2053fa1c9a48fccf0019b8dd89a5",
+  "submission_id": "sub_0de9e789d00440ae8eac35e0c3e0a052",
+  "problem_id": "dyn_2826d1f1d0304c0c88f42d06c523f18b",
+  "transcription_id": "tr_6ba51d1d7d9f44d1bbe1962da38c8b59",
+  "revision_number": 1,
+  "acceptance_id": "acc_b8ad7169fb4340ad9aceecb14440b446",
+  "source_hash": "006a661a2ec10a3e9bbd7ca5563cb1395d2147270fca7772114c6ebe5a235742",
+  "source": {
+    "submission_id": "sub_0de9e789d00440ae8eac35e0c3e0a052",
+    "problem_id": "dyn_2826d1f1d0304c0c88f42d06c523f18b",
+    "transcription_id": "tr_6ba51d1d7d9f44d1bbe1962da38c8b59",
+    "revision_number": 1,
+    "acceptance_id": "acc_b8ad7169fb4340ad9aceecb14440b446",
+    "accepted_at": "2026-11-12T03:41:19.087152Z",
+    "source_hash": "006a661a2ec10a3e9bbd7ca5563cb1395d2147270fca7772114c6ebe5a235742",
+    "solution_text": "Delta=(-14)^2-4*2*24=4; y=(14+sqrt(4))/4=4; y=(14-sqrt(4))/4=3; S={3,4}; 2*3^2-14*3+24=0; 2*4^2-14*4+24=0",
+    "provenance": {
+      "conversion_version": "segments-v1",
+      "original_artifacts": [
+        {
+          "filename": "snapshot.json",
+          "media_type": "application/json",
+          "sha256": "128cd1becbb5a67d19f66f9a65216e2bc0ec7ce19d24cab865b27ad526c6f52b",
+          "size_bytes": 306,
+          "page_id": null,
+          "page_index": null
+        }
+      ],
+      "revision": {
+        "transcription_id": "tr_6ba51d1d7d9f44d1bbe1962da38c8b59",
+        "submission_id": "sub_0de9e789d00440ae8eac35e0c3e0a052",
+        "created_at": "2026-11-12T03:41:19.069712Z",
+        "source": "manual",
+        "recognizer": null,
+        "recognizer_version": null,
+        "provider": null,
+        "recognizer_run_id": null,
+        "provenance": null,
+        "revision_number": 1,
+        "based_on_revision_number": null,
+        "reviewer_reference": "tme-demo-evaluator",
+        "reviewer_identity_verified": false,
+        "change_type": "initial_transcription",
+        "change_reason": null,
+        "segments": [
+          {
+            "segment_id": "text:0",
+            "page_index": 0,
+            "order": 0,
+            "kind": "text",
+            "text": "Delta=(-14)^2-4*2*24=4; y=(14+sqrt(4))/4=4; y=(14-sqrt(4))/4=3; S={3,4}; 2*3^2-14*3+24=0; 2*4^2-14*4+24=0",
+            "latex": null,
+            "confidence": null,
+            "source_region": null,
+            "source_stroke_refs": null
+          }
+        ],
+        "status": "NEEDS_REVIEW"
+      },
+      "acceptance": {
+        "acceptance_id": "acc_b8ad7169fb4340ad9aceecb14440b446",
+        "transcription_id": "tr_6ba51d1d7d9f44d1bbe1962da38c8b59",
+        "submission_id": "sub_0de9e789d00440ae8eac35e0c3e0a052",
+        "revision_number": 1,
+        "accepted_at": "2026-11-12T03:41:19.087152Z",
+        "reviewer_reference": "tme-demo-evaluator",
+        "reviewer_identity_verified": false,
+        "acceptance_note": null,
+        "meaning": "faithful_representation_of_manuscript_only",
+        "mathematical_validity_assessed": false,
+        "accepted_revision_sha256": "5f5d81e09fe6c742e46ef10bbedd309284cbdcc93c5fac219034a7e0df293612"
+      },
+      "acceptance_receipt": {
+        "acceptance_id": "acc_b8ad7169fb4340ad9aceecb14440b446",
+        "acceptance_sha256": "e16ed4d14ac2590e557ed47bf19017d698a8cf05e29139630d42d291737cafb6",
+        "accepted_revision_sha256": "5f5d81e09fe6c742e46ef10bbedd309284cbdcc93c5fac219034a7e0df293612",
+        "created_at": "2026-11-12T03:41:19.087152Z"
+      }
+    },
+    "warnings": [],
+    "dynamic_context": {
+      "engine_mode": "DYNAMIC",
+      "problem_id": "dyn_2826d1f1d0304c0c88f42d06c523f18b",
+      "package_id": "dpkg_b9353efd255c4e58ab4c7a05a79fde31",
+      "package_version": 3,
+      "package_sha256": "231d06caec18a60a3cb5d16eca89d0b7f97f8ed59dc4da747c09ae1c07faa1b3",
+      "statement_version": 1,
+      "statement_sha256": "22937b294288cb6a3b960be25c0bc74b812ea3c02c6fbcf39a8faa9ae05f7a36",
+      "preparation_id": "dprep_b466cb92c6ce4bb294dbd5f808edc2bc",
+      "preparation_version": 1,
+      "preparation_sha256": "1c74b7354d529ed0f4f236b4d6dc0aff2fdeed787886292d8b2f133bf80a4657",
+      "rubric_id": "drub_d2c16659402842749da6787724fcc5d1",
+      "rubric_version": 1,
+      "rubric_sha256": "99784ff219ffe4d191c2ba58fa48853e7d534156b15aeb828be783fc9b578cb8",
+      "allow_preparation_review": true,
+      "grader_version": "dynamic-grader.v1"
+    }
+  },
+  "created_at": "2026-11-12T03:41:19.110524Z",
+  "status": "COMPLETED",
+  "result": {
+    "engine_mode": "DYNAMIC",
+    "problem_id": "dyn_2826d1f1d0304c0c88f42d06c523f18b",
+    "context": {
+      "engine_mode": "DYNAMIC",
+      "problem_id": "dyn_2826d1f1d0304c0c88f42d06c523f18b",
+      "package_id": "dpkg_b9353efd255c4e58ab4c7a05a79fde31",
+      "package_version": 3,
+      "package_sha256": "231d06caec18a60a3cb5d16eca89d0b7f97f8ed59dc4da747c09ae1c07faa1b3",
+      "statement_version": 1,
+      "statement_sha256": "22937b294288cb6a3b960be25c0bc74b812ea3c02c6fbcf39a8faa9ae05f7a36",
+      "preparation_id": "dprep_b466cb92c6ce4bb294dbd5f808edc2bc",
+      "preparation_version": 1,
+      "preparation_sha256": "1c74b7354d529ed0f4f236b4d6dc0aff2fdeed787886292d8b2f133bf80a4657",
+      "rubric_id": "drub_d2c16659402842749da6787724fcc5d1",
+      "rubric_version": 1,
+      "rubric_sha256": "99784ff219ffe4d191c2ba58fa48853e7d534156b15aeb828be783fc9b578cb8",
+      "allow_preparation_review": true,
+      "grader_version": "dynamic-grader.v1"
+    },
+    "score": 6.0,
+    "suggested_score": 6.0,
+    "max_score": 10.0,
+    "review_required": false,
+    "verdict": "concluido",
+    "uncertainty": [],
+    "reviewed_components": [
+      "method",
+      "roots",
+      "check"
+    ],
+    "unreviewed_components": [],
+    "analysis": {
+      "transcription_version": "tr_6ba51d1d7d9f44d1bbe1962da38c8b59:1",
+      "source_sha256": "006a661a2ec10a3e9bbd7ca5563cb1395d2147270fca7772114c6ebe5a235742",
+      "segments": [
+        {
+          "segment_id": "text:0",
+          "page_index": 0,
+          "order": 0,
+          "kind": "text",
+          "text": "Delta=(-14)^2-4*2*24=4; y=(14+sqrt(4))/4=4; y=(14-sqrt(4))/4=3; S={3,4}; 2*3^2-14*3+24=0; 2*4^2-14*4+24=0",
+          "latex": null,
+          "confidence": null,
+          "source_region": null,
+          "source_stroke_refs": null
+        }
+      ],
+      "claims": [
+        {
+          "claim_id": "claim_1",
+          "start": 0,
+          "end": 22,
+          "text": "Delta=(-14)^2-4*2*24=4",
+          "normalized": "Delta=(-14)^2-4*2*24=4",
+          "claim_type": "ARITHMETIC",
+          "subject": "y",
+          "dependencies": [],
+          "polarity": "POSITIVE",
+          "adoption": "ADOPTED",
+          "fidelity": "FAITHFUL",
+          "strategy_context": "UNKNOWN_STRATEGY",
+          "verification_status": "VERIFIED",
+          "verification_detail": "Checagem exata e vínculo com a equação original; sem certificado Lean.",
+          "verifier": "dynamic-exact-polynomial.v1",
+          "components": [
+            {
+              "kind": "claim",
+              "status": "VERIFIED",
+              "verifier": "dynamic-exact-polynomial.v1"
+            }
+          ],
+          "values": [],
+          "verified_values": []
+        },
+        {
+          "claim_id": "claim_2",
+          "start": 24,
+          "end": 42,
+          "text": "y=(14+sqrt(4))/4=4",
+          "normalized": "y=(14+sqrt(4))/4=4",
+          "claim_type": "FORMULA",
+          "subject": "y",
+          "dependencies": [],
+          "polarity": "POSITIVE",
+          "adoption": "ADOPTED",
+          "fidelity": "FAITHFUL",
+          "strategy_context": "quadratic_formula",
+          "verification_status": "VERIFIED",
+          "verification_detail": "Checagem exata e vínculo com a equação original; sem certificado Lean.",
+          "verifier": "dynamic-exact-polynomial.v1",
+          "components": [
+            {
+              "kind": "claim",
+              "status": "VERIFIED",
+              "verifier": "dynamic-exact-polynomial.v1"
+            }
+          ],
+          "values": [
+            "4"
+          ],
+          "verified_values": [
+            "4"
+          ]
+        },
+        {
+          "claim_id": "claim_3",
+          "start": 44,
+          "end": 62,
+          "text": "y=(14-sqrt(4))/4=3",
+          "normalized": "y=(14-sqrt(4))/4=3",
+          "claim_type": "FORMULA",
+          "subject": "y",
+          "dependencies": [],
+          "polarity": "POSITIVE",
+          "adoption": "ADOPTED",
+          "fidelity": "FAITHFUL",
+          "strategy_context": "quadratic_formula",
+          "verification_status": "VERIFIED",
+          "verification_detail": "Checagem exata e vínculo com a equação original; sem certificado Lean.",
+          "verifier": "dynamic-exact-polynomial.v1",
+          "components": [
+            {
+              "kind": "claim",
+              "status": "VERIFIED",
+              "verifier": "dynamic-exact-polynomial.v1"
+            }
+          ],
+          "values": [
+            "3"
+          ],
+          "verified_values": [
+            "3"
+          ]
+        },
+        {
+          "claim_id": "claim_4",
+          "start": 64,
+          "end": 71,
+          "text": "S={3,4}",
+          "normalized": "S={3,4}",
+          "claim_type": "ROOTS",
+          "subject": "y",
+          "dependencies": [],
+          "polarity": "POSITIVE",
+          "adoption": "ADOPTED",
+          "fidelity": "FAITHFUL",
+          "strategy_context": "UNKNOWN_STRATEGY",
+          "verification_status": "VERIFIED",
+          "verification_detail": "Checagem exata e vínculo com a equação original; sem certificado Lean.",
+          "verifier": "dynamic-exact-polynomial.v1",
+          "components": [
+            {
+              "kind": "root_membership",
+              "value": "3",
+              "status": "VERIFIED"
+            },
+            {
+              "kind": "root_membership",
+              "value": "4",
+              "status": "VERIFIED"
+            },
+            {
+              "kind": "claim",
+              "status": "VERIFIED",
+              "verifier": "dynamic-exact-polynomial.v1"
+            }
+          ],
+          "values": [
+            "3",
+            "4"
+          ],
+          "verified_values": [
+            "3",
+            "4"
+          ]
+        },
+        {
+          "claim_id": "claim_5",
+          "start": 73,
+          "end": 88,
+          "text": "2*3^2-14*3+24=0",
+          "normalized": "2*3^2-14*3+24=0",
+          "claim_type": "SUBSTITUTION",
+          "subject": "y",
+          "dependencies": [],
+          "polarity": "POSITIVE",
+          "adoption": "ADOPTED",
+          "fidelity": "FAITHFUL",
+          "strategy_context": "UNKNOWN_STRATEGY",
+          "verification_status": "VERIFIED",
+          "verification_detail": "Checagem exata e vínculo com a equação original; sem certificado Lean.",
+          "verifier": "dynamic-exact-polynomial.v1",
+          "components": [
+            {
+              "kind": "claim",
+              "status": "VERIFIED",
+              "verifier": "dynamic-exact-polynomial.v1"
+            }
+          ],
+          "values": [
+            "3"
+          ],
+          "verified_values": [
+            "3"
+          ]
+        },
+        {
+          "claim_id": "claim_6",
+          "start": 90,
+          "end": 105,
+          "text": "2*4^2-14*4+24=0",
+          "normalized": "2*4^2-14*4+24=0",
+          "claim_type": "SUBSTITUTION",
+          "subject": "y",
+          "dependencies": [],
+          "polarity": "POSITIVE",
+          "adoption": "ADOPTED",
+          "fidelity": "FAITHFUL",
+          "strategy_context": "UNKNOWN_STRATEGY",
+          "verification_status": "VERIFIED",
+          "verification_detail": "Checagem exata e vínculo com a equação original; sem certificado Lean.",
+          "verifier": "dynamic-exact-polynomial.v1",
+          "components": [
+            {
+              "kind": "claim",
+              "status": "VERIFIED",
+              "verifier": "dynamic-exact-polynomial.v1"
+            }
+          ],
+          "values": [
+            "4"
+          ],
+          "verified_values": [
+            "4"
+          ]
+        }
+      ],
+      "strategy_status": "KNOWN_STRATEGY",
+      "strategy_candidate": "quadratic_formula",
+      "final_answer_candidates": [
+        "y=(14+sqrt(4))/4=4",
+        "y=(14-sqrt(4))/4=3",
+        "S={3,4}"
+      ],
+      "warnings": [],
+      "provenance": {
+        "grader": "dynamic-grader.v1",
+        "extractor": "source-grammar.v1",
+        "verifier": "dynamic-exact-polynomial.v1",
+        "model": null,
+        "llm_used": false,
+        "code_sha": "d9538355c0a854e5a0b24edb5706ed80c43bf4be",
+        "code_content_sha256": "2a18f5f72517a93f68df50a0e9507a8854754ee35033aa147ec1cbfc413cae97",
+        "policy": "exact-rubric-language.v1",
+        "preparation_verifier_plan": [
+          {
+            "claim_id": "factorization",
+            "capability": "SYMBOLIC_ALGEBRA",
+            "reason": "Identidade polinomial",
+            "available": true,
+            "requires_additional_input": false,
+            "status": "VERIFIED_WITHIN_SCOPE",
+            "detail": "Checagem exata executada: igualdade/conjunto completo confirmado.",
+            "scope": "Apenas expressão declarada, polinômio univariado racional; não certifica interpretação, hipóteses ou solução inteira.",
+            "verifier_version": "dynamic-exact-polynomial.v1",
+            "formal_status": "FORMAL_NOT_ATTEMPTED"
+          },
+          {
+            "claim_id": "roots",
+            "capability": "DETERMINISTIC",
+            "reason": "Divisão exata comprova todas as raízes",
+            "available": true,
+            "requires_additional_input": false,
+            "status": "VERIFIED_WITHIN_SCOPE",
+            "detail": "Checagem exata executada: igualdade/conjunto completo confirmado.",
+            "scope": "Apenas expressão declarada, polinômio univariado racional; não certifica interpretação, hipóteses ou solução inteira.",
+            "verifier_version": "dynamic-exact-polynomial.v1",
+            "formal_status": "FORMAL_NOT_ATTEMPTED"
+          }
+        ],
+        "selected_capabilities": [
+          "EXACT_ARITHMETIC",
+          "SYMBOLIC_ALGEBRA",
+          "DETERMINISTIC"
+        ],
+        "selection_reason": "Plano DY2 preservado como contexto; verificadores locais selecionados pela forma do claim. Lean, capacidades numéricas e resíduo semântico não executados."
+      }
+    },
+    "bindings": [
+      {
+        "criterion_id": "method",
+        "claim_id": "claim_2",
+        "binding_type": "method",
+        "evidence": "y=(14+sqrt(4))/4=4",
+        "diagnostic_confidence": "EXACT",
+        "status": "SUPPORTED"
+      },
+      {
+        "criterion_id": "method",
+        "claim_id": "claim_3",
+        "binding_type": "method",
+        "evidence": "y=(14-sqrt(4))/4=3",
+        "diagnostic_confidence": "EXACT",
+        "status": "SUPPORTED"
+      },
+      {
+        "criterion_id": "roots",
+        "claim_id": "claim_2",
+        "binding_type": "roots",
+        "evidence": "y=(14+sqrt(4))/4=4",
+        "diagnostic_confidence": "EXACT",
+        "status": "SUPPORTED"
+      },
+      {
+        "criterion_id": "roots",
+        "claim_id": "claim_3",
+        "binding_type": "roots",
+        "evidence": "y=(14-sqrt(4))/4=3",
+        "diagnostic_confidence": "EXACT",
+        "status": "SUPPORTED"
+      },
+      {
+        "criterion_id": "roots",
+        "claim_id": "claim_4",
+        "binding_type": "roots",
+        "evidence": "S={3,4}",
+        "diagnostic_confidence": "EXACT",
+        "status": "SUPPORTED"
+      },
+      {
+        "criterion_id": "check",
+        "claim_id": "claim_5",
+        "binding_type": "substitution",
+        "evidence": "2*3^2-14*3+24=0",
+        "diagnostic_confidence": "EXACT",
+        "status": "SUPPORTED"
+      },
+      {
+        "criterion_id": "check",
+        "claim_id": "claim_6",
+        "binding_type": "substitution",
+        "evidence": "2*4^2-14*4+24=0",
+        "diagnostic_confidence": "EXACT",
+        "status": "SUPPORTED"
+      }
+    ],
+    "decisions": [
+      {
+        "criterion_id": "method",
+        "description": "Justificar a resolução por transformações equivalentes.",
+        "max_points": "4",
+        "suggested_points": "0",
+        "automation": "AUTO_VETO",
+        "sufficiency": "NOT_SATISFIED",
+        "claim_ids": [
+          "claim_2",
+          "claim_3"
+        ],
+        "checker_results": [
+          {
+            "claim_id": "claim_2",
+            "status": "VERIFIED",
+            "detail": "Checagem exata e vínculo com a equação original; sem certificado Lean."
+          },
+          {
+            "claim_id": "claim_3",
+            "status": "VERIFIED",
+            "detail": "Checagem exata e vínculo com a equação original; sem certificado Lean."
+          }
+        ],
+        "evidence": [
+          "y=(14+sqrt(4))/4=4",
+          "y=(14-sqrt(4))/4=3"
+        ],
+        "explanation": "Justificar a resolução por transformações equivalentes. Evidências: claim_2, claim_3. COMPLETE: 4/4 pontos provisórios.",
+        "review_required": false,
+        "warnings": []
+      },
+      {
+        "criterion_id": "roots",
+        "description": "Obter todas as raízes reais. Crédito parcial proporcional às raízes corretas.",
+        "max_points": "3",
+        "suggested_points": "3",
+        "automation": "AUTO_AWARD",
+        "sufficiency": "COMPLETE",
+        "claim_ids": [
+          "claim_2",
+          "claim_3",
+          "claim_4"
+        ],
+        "checker_results": [
+          {
+            "claim_id": "claim_2",
+            "status": "VERIFIED",
+            "detail": "Checagem exata e vínculo com a equação original; sem certificado Lean."
+          },
+          {
+            "claim_id": "claim_3",
+            "status": "VERIFIED",
+            "detail": "Checagem exata e vínculo com a equação original; sem certificado Lean."
+          },
+          {
+            "claim_id": "claim_4",
+            "status": "VERIFIED",
+            "detail": "Checagem exata e vínculo com a equação original; sem certificado Lean."
+          }
+        ],
+        "evidence": [
+          "y=(14+sqrt(4))/4=4",
+          "y=(14-sqrt(4))/4=3",
+          "S={3,4}"
+        ],
+        "explanation": "Obter todas as raízes reais. Crédito parcial proporcional às raízes corretas. Evidências: claim_2, claim_3, claim_4. COMPLETE: 3/3 pontos provisórios.",
+        "review_required": false,
+        "warnings": []
+      },
+      {
+        "criterion_id": "check",
+        "description": "Verificar as raízes por substituição. Crédito parcial proporcional às raízes corretas.",
+        "max_points": "3",
+        "suggested_points": "3",
+        "automation": "AUTO_AWARD",
+        "sufficiency": "COMPLETE",
+        "claim_ids": [
+          "claim_5",
+          "claim_6"
+        ],
+        "checker_results": [
+          {
+            "claim_id": "claim_5",
+            "status": "VERIFIED",
+            "detail": "Checagem exata e vínculo com a equação original; sem certificado Lean."
+          },
+          {
+            "claim_id": "claim_6",
+            "status": "VERIFIED",
+            "detail": "Checagem exata e vínculo com a equação original; sem certificado Lean."
+          }
+        ],
+        "evidence": [
+          "2*3^2-14*3+24=0",
+          "2*4^2-14*4+24=0"
+        ],
+        "explanation": "Verificar as raízes por substituição. Crédito parcial proporcional às raízes corretas. Evidências: claim_5, claim_6. COMPLETE: 3/3 pontos provisórios.",
+        "review_required": false,
+        "warnings": []
+      }
+    ],
+    "events": [
+      {
+        "event_type": "dynamic_grading_started",
+        "event_id": "397ea48fcd2766660c2cb9ee4a9dcfffd84a8839b3f44578b9a1683680dc170b",
+        "transcription_version": "tr_6ba51d1d7d9f44d1bbe1962da38c8b59:1",
+        "package_id": "dpkg_b9353efd255c4e58ab4c7a05a79fde31",
+        "preparation_id": "dprep_b466cb92c6ce4bb294dbd5f808edc2bc",
+        "rubric_id": "drub_d2c16659402842749da6787724fcc5d1",
+        "created_at": "2026-11-12T03:41:19.119694+00:00"
+      },
+      {
+        "event_type": "student_claim_extracted",
+        "claim_id": "claim_1",
+        "event_id": "549474193f1e359522e25783281f77d464ad1bb279c3c7d090568b82a8eef079",
+        "transcription_version": "tr_6ba51d1d7d9f44d1bbe1962da38c8b59:1",
+        "package_id": "dpkg_b9353efd255c4e58ab4c7a05a79fde31",
+        "preparation_id": "dprep_b466cb92c6ce4bb294dbd5f808edc2bc",
+        "rubric_id": "drub_d2c16659402842749da6787724fcc5d1",
+        "created_at": "2026-11-12T03:41:19.119708+00:00"
+      },
+      {
+        "event_type": "dynamic_checker_completed",
+        "claim_id": "claim_1",
+        "status": "VERIFIED",
+        "event_id": "99db18796651ef114b7c4e15c16b1080f6bb3773c0589627920c98d60cc896ba",
+        "transcription_version": "tr_6ba51d1d7d9f44d1bbe1962da38c8b59:1",
+        "package_id": "dpkg_b9353efd255c4e58ab4c7a05a79fde31",
+        "preparation_id": "dprep_b466cb92c6ce4bb294dbd5f808edc2bc",
+        "rubric_id": "drub_d2c16659402842749da6787724fcc5d1",
+        "created_at": "2026-11-12T03:41:19.119717+00:00"
+      },
+      {
+        "event_type": "student_claim_extracted",
+        "claim_id": "claim_2",
+        "event_id": "5f444f5d4adf957f91f95b8ee23a740854a3bf4ef1dc0c8448d0637fbb951bb6",
+        "transcription_version": "tr_6ba51d1d7d9f44d1bbe1962da38c8b59:1",
+        "package_id": "dpkg_b9353efd255c4e58ab4c7a05a79fde31",
+        "preparation_id": "dprep_b466cb92c6ce4bb294dbd5f808edc2bc",
+        "rubric_id": "drub_d2c16659402842749da6787724fcc5d1",
+        "created_at": "2026-11-12T03:41:19.119724+00:00"
+      },
+      {
+        "event_type": "dynamic_checker_completed",
+        "claim_id": "claim_2",
+        "status": "VERIFIED",
+        "event_id": "520792161cd716416469f1ad44f2f246030a5c50a877ed2fc75e5a903d2168dd",
+        "transcription_version": "tr_6ba51d1d7d9f44d1bbe1962da38c8b59:1",
+        "package_id": "dpkg_b9353efd255c4e58ab4c7a05a79fde31",
+        "preparation_id": "dprep_b466cb92c6ce4bb294dbd5f808edc2bc",
+        "rubric_id": "drub_d2c16659402842749da6787724fcc5d1",
+        "created_at": "2026-11-12T03:41:19.119731+00:00"
+      },
+      {
+        "event_type": "student_claim_extracted",
+        "claim_id": "claim_3",
+        "event_id": "80490bbb69699a99b4b4557d645ccec4915c5ecb3142f49c3d342bf572623d7b",
+        "transcription_version": "tr_6ba51d1d7d9f44d1bbe1962da38c8b59:1",
+        "package_id": "dpkg_b9353efd255c4e58ab4c7a05a79fde31",
+        "preparation_id": "dprep_b466cb92c6ce4bb294dbd5f808edc2bc",
+        "rubric_id": "drub_d2c16659402842749da6787724fcc5d1",
+        "created_at": "2026-11-12T03:41:19.119737+00:00"
+      },
+      {
+        "event_type": "dynamic_checker_completed",
+        "claim_id": "claim_3",
+        "status": "VERIFIED",
+        "event_id": "6137ff387d9ab9d5c158e331b36e3ed9e7811fa23240515c454ee6b128dd87a1",
+        "transcription_version": "tr_6ba51d1d7d9f44d1bbe1962da38c8b59:1",
+        "package_id": "dpkg_b9353efd255c4e58ab4c7a05a79fde31",
+        "preparation_id": "dprep_b466cb92c6ce4bb294dbd5f808edc2bc",
+        "rubric_id": "drub_d2c16659402842749da6787724fcc5d1",
+        "created_at": "2026-11-12T03:41:19.119744+00:00"
+      },
+      {
+        "event_type": "student_claim_extracted",
+        "claim_id": "claim_4",
+        "event_id": "509837ba58acf5f309efceb0d138e80c962060207cfe3dc0360674fa0bcb74de",
+        "transcription_version": "tr_6ba51d1d7d9f44d1bbe1962da38c8b59:1",
+        "package_id": "dpkg_b9353efd255c4e58ab4c7a05a79fde31",
+        "preparation_id": "dprep_b466cb92c6ce4bb294dbd5f808edc2bc",
+        "rubric_id": "drub_d2c16659402842749da6787724fcc5d1",
+        "created_at": "2026-11-12T03:41:19.119750+00:00"
+      },
+      {
+        "event_type": "dynamic_checker_completed",
+        "claim_id": "claim_4",
+        "status": "VERIFIED",
+        "event_id": "21526aa5cbe1d5793c8985ee16bc1f0781ffb670ff1d8411bb67fca2390005af",
+        "transcription_version": "tr_6ba51d1d7d9f44d1bbe1962da38c8b59:1",
+        "package_id": "dpkg_b9353efd255c4e58ab4c7a05a79fde31",
+        "preparation_id": "dprep_b466cb92c6ce4bb294dbd5f808edc2bc",
+        "rubric_id": "drub_d2c16659402842749da6787724fcc5d1",
+        "created_at": "2026-11-12T03:41:19.119756+00:00"
+      },
+      {
+        "event_type": "student_claim_extracted",
+        "claim_id": "claim_5",
+        "event_id": "c9a41a09d4eac1f2d18bb268b55fec653026e784d6cf919cdf6041398b65f1d3",
+        "transcription_version": "tr_6ba51d1d7d9f44d1bbe1962da38c8b59:1",
+        "package_id": "dpkg_b9353efd255c4e58ab4c7a05a79fde31",
+        "preparation_id": "dprep_b466cb92c6ce4bb294dbd5f808edc2bc",
+        "rubric_id": "drub_d2c16659402842749da6787724fcc5d1",
+        "created_at": "2026-11-12T03:41:19.119763+00:00"
+      },
+      {
+        "event_type": "dynamic_checker_completed",
+        "claim_id": "claim_5",
+        "status": "VERIFIED",
+        "event_id": "fb994aa0030b33a96eecde7179128fb2025b8d2656cb92d39ff256135588cca3",
+        "transcription_version": "tr_6ba51d1d7d9f44d1bbe1962da38c8b59:1",
+        "package_id": "dpkg_b9353efd255c4e58ab4c7a05a79fde31",
+        "preparation_id": "dprep_b466cb92c6ce4bb294dbd5f808edc2bc",
+        "rubric_id": "drub_d2c16659402842749da6787724fcc5d1",
+        "created_at": "2026-11-12T03:41:19.119770+00:00"
+      },
+      {
+        "event_type": "student_claim_extracted",
+        "claim_id": "claim_6",
+        "event_id": "df95b14f897938c6997023cf6afee5905c8bd25ea17fc4a53aefa20ead1f8db5",
+        "transcription_version": "tr_6ba51d1d7d9f44d1bbe1962da38c8b59:1",
+        "package_id": "dpkg_b9353efd255c4e58ab4c7a05a79fde31",
+        "preparation_id": "dprep_b466cb92c6ce4bb294dbd5f808edc2bc",
+        "rubric_id": "drub_d2c16659402842749da6787724fcc5d1",
+        "created_at": "2026-11-12T03:41:19.119776+00:00"
+      },
+      {
+        "event_type": "dynamic_checker_completed",
+        "claim_id": "claim_6",
+        "status": "VERIFIED",
+        "event_id": "857ed0ea99d86a6b9880c74d8b7d6c35b26c9ce89fc9c35ae9b96d35f442eee0",
+        "transcription_version": "tr_6ba51d1d7d9f44d1bbe1962da38c8b59:1",
+        "package_id": "dpkg_b9353efd255c4e58ab4c7a05a79fde31",
+        "preparation_id": "dprep_b466cb92c6ce4bb294dbd5f808edc2bc",
+        "rubric_id": "drub_d2c16659402842749da6787724fcc5d1",
+        "created_at": "2026-11-12T03:41:19.119782+00:00"
+      },
+      {
+        "event_type": "rubric_binding_created",
+        "criterion_id": "method",
+        "claim_id": "claim_2",
+        "event_id": "7e7fc33964c3c68a6c29210be625f974181dc0dff70fd4af0feddd1bcba00a45",
+        "transcription_version": "tr_6ba51d1d7d9f44d1bbe1962da38c8b59:1",
+        "package_id": "dpkg_b9353efd255c4e58ab4c7a05a79fde31",
+        "preparation_id": "dprep_b466cb92c6ce4bb294dbd5f808edc2bc",
+        "rubric_id": "drub_d2c16659402842749da6787724fcc5d1",
+        "created_at": "2026-11-12T03:41:19.119789+00:00"
+      },
+      {
+        "event_type": "rubric_binding_created",
+        "criterion_id": "method",
+        "claim_id": "claim_3",
+        "event_id": "a8cc5f5220580d35b7a7bc10d30c9032db129d77d41845f7558604f143d48009",
+        "transcription_version": "tr_6ba51d1d7d9f44d1bbe1962da38c8b59:1",
+        "package_id": "dpkg_b9353efd255c4e58ab4c7a05a79fde31",
+        "preparation_id": "dprep_b466cb92c6ce4bb294dbd5f808edc2bc",
+        "rubric_id": "drub_d2c16659402842749da6787724fcc5d1",
+        "created_at": "2026-11-12T03:41:19.119795+00:00"
+      },
+      {
+        "event_type": "dynamic_rubric_decision",
+        "criterion_id": "method",
+        "description": "Justificar a resolução por transformações equivalentes.",
+        "max_points": "4",
+        "suggested_points": "4",
+        "automation": "AUTO_AWARD",
+        "sufficiency": "COMPLETE",
+        "claim_ids": [
+          "claim_2",
+          "claim_3"
+        ],
+        "checker_results": [
+          {
+            "claim_id": "claim_2",
+            "status": "VERIFIED",
+            "detail": "Checagem exata e vínculo com a equação original; sem certificado Lean."
+          },
+          {
+            "claim_id": "claim_3",
+            "status": "VERIFIED",
+            "detail": "Checagem exata e vínculo com a equação original; sem certificado Lean."
+          }
+        ],
+        "evidence": [
+          "y=(14+sqrt(4))/4=4",
+          "y=(14-sqrt(4))/4=3"
+        ],
+        "explanation": "Justificar a resolução por transformações equivalentes. Evidências: claim_2, claim_3. COMPLETE: 4/4 pontos provisórios.",
+        "review_required": false,
+        "warnings": [],
+        "event_id": "ae2f36f1bcaf2c2b61d11d6e9e224fd650c5010f50183c429d99dc452f2fa5db",
+        "transcription_version": "tr_6ba51d1d7d9f44d1bbe1962da38c8b59:1",
+        "package_id": "dpkg_b9353efd255c4e58ab4c7a05a79fde31",
+        "preparation_id": "dprep_b466cb92c6ce4bb294dbd5f808edc2bc",
+        "rubric_id": "drub_d2c16659402842749da6787724fcc5d1",
+        "created_at": "2026-11-12T03:41:19.119813+00:00"
+      },
+      {
+        "event_type": "rubric_binding_created",
+        "criterion_id": "roots",
+        "claim_id": "claim_2",
+        "event_id": "916c2204e10b04c979bd158d916be710f62856a9f55591d76d32b2c12c13cf16",
+        "transcription_version": "tr_6ba51d1d7d9f44d1bbe1962da38c8b59:1",
+        "package_id": "dpkg_b9353efd255c4e58ab4c7a05a79fde31",
+        "preparation_id": "dprep_b466cb92c6ce4bb294dbd5f808edc2bc",
+        "rubric_id": "drub_d2c16659402842749da6787724fcc5d1",
+        "created_at": "2026-11-12T03:41:19.119819+00:00"
+      },
+      {
+        "event_type": "rubric_binding_created",
+        "criterion_id": "roots",
+        "claim_id": "claim_3",
+        "event_id": "b0b5b5aac27698242b2bcec073cd5e866e30165b1e7e840b5b10ba5dc22ef80e",
+        "transcription_version": "tr_6ba51d1d7d9f44d1bbe1962da38c8b59:1",
+        "package_id": "dpkg_b9353efd255c4e58ab4c7a05a79fde31",
+        "preparation_id": "dprep_b466cb92c6ce4bb294dbd5f808edc2bc",
+        "rubric_id": "drub_d2c16659402842749da6787724fcc5d1",
+        "created_at": "2026-11-12T03:41:19.119826+00:00"
+      },
+      {
+        "event_type": "rubric_binding_created",
+        "criterion_id": "roots",
+        "claim_id": "claim_4",
+        "event_id": "2bb95dce9acc5eb4bf947bbc5c1d72bf0033df042dbda2396dd6f232f662e36a",
+        "transcription_version": "tr_6ba51d1d7d9f44d1bbe1962da38c8b59:1",
+        "package_id": "dpkg_b9353efd255c4e58ab4c7a05a79fde31",
+        "preparation_id": "dprep_b466cb92c6ce4bb294dbd5f808edc2bc",
+        "rubric_id": "drub_d2c16659402842749da6787724fcc5d1",
+        "created_at": "2026-11-12T03:41:19.119832+00:00"
+      },
+      {
+        "event_type": "dynamic_rubric_decision",
+        "criterion_id": "roots",
+        "description": "Obter todas as raízes reais. Crédito parcial proporcional às raízes corretas.",
+        "max_points": "3",
+        "suggested_points": "3",
+        "automation": "AUTO_AWARD",
+        "sufficiency": "COMPLETE",
+        "claim_ids": [
+          "claim_2",
+          "claim_3",
+          "claim_4"
+        ],
+        "checker_results": [
+          {
+            "claim_id": "claim_2",
+            "status": "VERIFIED",
+            "detail": "Checagem exata e vínculo com a equação original; sem certificado Lean."
+          },
+          {
+            "claim_id": "claim_3",
+            "status": "VERIFIED",
+            "detail": "Checagem exata e vínculo com a equação original; sem certificado Lean."
+          },
+          {
+            "claim_id": "claim_4",
+            "status": "VERIFIED",
+            "detail": "Checagem exata e vínculo com a equação original; sem certificado Lean."
+          }
+        ],
+        "evidence": [
+          "y=(14+sqrt(4))/4=4",
+          "y=(14-sqrt(4))/4=3",
+          "S={3,4}"
+        ],
+        "explanation": "Obter todas as raízes reais. Crédito parcial proporcional às raízes corretas. Evidências: claim_2, claim_3, claim_4. COMPLETE: 3/3 pontos provisórios.",
+        "review_required": false,
+        "warnings": [],
+        "event_id": "af956c9241c322433ea01837110d8abf6f8e4795c385091fba2e2b7e9a6d1093",
+        "transcription_version": "tr_6ba51d1d7d9f44d1bbe1962da38c8b59:1",
+        "package_id": "dpkg_b9353efd255c4e58ab4c7a05a79fde31",
+        "preparation_id": "dprep_b466cb92c6ce4bb294dbd5f808edc2bc",
+        "rubric_id": "drub_d2c16659402842749da6787724fcc5d1",
+        "created_at": "2026-11-12T03:41:19.119848+00:00"
+      },
+      {
+        "event_type": "rubric_binding_created",
+        "criterion_id": "check",
+        "claim_id": "claim_5",
+        "event_id": "3b7eda9de32fc39138ad675b7ea709b32ec1aeba38c2f6ec6b4cc37f00d1c01a",
+        "transcription_version": "tr_6ba51d1d7d9f44d1bbe1962da38c8b59:1",
+        "package_id": "dpkg_b9353efd255c4e58ab4c7a05a79fde31",
+        "preparation_id": "dprep_b466cb92c6ce4bb294dbd5f808edc2bc",
+        "rubric_id": "drub_d2c16659402842749da6787724fcc5d1",
+        "created_at": "2026-11-12T03:41:19.119855+00:00"
+      },
+      {
+        "event_type": "rubric_binding_created",
+        "criterion_id": "check",
+        "claim_id": "claim_6",
+        "event_id": "18b27dd054bb1fa15214e73439c2f482a7e7fbd62c06b91eff53d05d10930be4",
+        "transcription_version": "tr_6ba51d1d7d9f44d1bbe1962da38c8b59:1",
+        "package_id": "dpkg_b9353efd255c4e58ab4c7a05a79fde31",
+        "preparation_id": "dprep_b466cb92c6ce4bb294dbd5f808edc2bc",
+        "rubric_id": "drub_d2c16659402842749da6787724fcc5d1",
+        "created_at": "2026-11-12T03:41:19.119861+00:00"
+      },
+      {
+        "event_type": "dynamic_rubric_decision",
+        "criterion_id": "check",
+        "description": "Verificar as raízes por substituição. Crédito parcial proporcional às raízes corretas.",
+        "max_points": "3",
+        "suggested_points": "3",
+        "automation": "AUTO_AWARD",
+        "sufficiency": "COMPLETE",
+        "claim_ids": [
+          "claim_5",
+          "claim_6"
+        ],
+        "checker_results": [
+          {
+            "claim_id": "claim_5",
+            "status": "VERIFIED",
+            "detail": "Checagem exata e vínculo com a equação original; sem certificado Lean."
+          },
+          {
+            "claim_id": "claim_6",
+            "status": "VERIFIED",
+            "detail": "Checagem exata e vínculo com a equação original; sem certificado Lean."
+          }
+        ],
+        "evidence": [
+          "2*3^2-14*3+24=0",
+          "2*4^2-14*4+24=0"
+        ],
+        "explanation": "Verificar as raízes por substituição. Crédito parcial proporcional às raízes corretas. Evidências: claim_5, claim_6. COMPLETE: 3/3 pontos provisórios.",
+        "review_required": false,
+        "warnings": [],
+        "event_id": "3a96cabf3e8b2dde221753fe3d66532fcaf5febb133461db4000812588cb93e2",
+        "transcription_version": "tr_6ba51d1d7d9f44d1bbe1962da38c8b59:1",
+        "package_id": "dpkg_b9353efd255c4e58ab4c7a05a79fde31",
+        "preparation_id": "dprep_b466cb92c6ce4bb294dbd5f808edc2bc",
+        "rubric_id": "drub_d2c16659402842749da6787724fcc5d1",
+        "created_at": "2026-11-12T03:41:19.119875+00:00"
+      },
+      {
+        "event_type": "dynamic_grading_completed",
+        "event_id": "6a454a5037f3c26db5c4e3bf68697787c378587e0151bc2947d0cea4ceb449c7",
+        "transcription_version": "tr_6ba51d1d7d9f44d1bbe1962da38c8b59:1",
+        "package_id": "dpkg_b9353efd255c4e58ab4c7a05a79fde31",
+        "preparation_id": "dprep_b466cb92c6ce4bb294dbd5f808edc2bc",
+        "rubric_id": "drub_d2c16659402842749da6787724fcc5d1",
+        "created_at": "2026-11-12T03:41:19.119881+00:00"
+      }
+    ],
+    "rubric_assessment": {
+      "assessment_status": "complete",
+      "items": [
+        {
+          "id": "method",
+          "description": "Justificar a resolução por transformações equivalentes.",
+          "points": 0.0,
+          "max_points": 4.0,
+          "mathematical_status": "supported",
+          "verification_status": "verified_in_scope",
+          "evidence": "y=(14+sqrt(4))/4=4\ny=(14-sqrt(4))/4=3",
+          "assessment_note": "Justificar a resolução por transformações equivalentes. Evidências: claim_2, claim_3. COMPLETE: 4/4 pontos provisórios.",
+          "adjustment_notes": []
+        },
+        {
+          "id": "roots",
+          "description": "Obter todas as raízes reais. Crédito parcial proporcional às raízes corretas.",
+          "points": 3.0,
+          "max_points": 3.0,
+          "mathematical_status": "supported",
+          "verification_status": "verified_in_scope",
+          "evidence": "y=(14+sqrt(4))/4=4\ny=(14-sqrt(4))/4=3\nS={3,4}",
+          "assessment_note": "Obter todas as raízes reais. Crédito parcial proporcional às raízes corretas. Evidências: claim_2, claim_3, claim_4. COMPLETE: 3/3 pontos provisórios.",
+          "adjustment_notes": []
+        },
+        {
+          "id": "check",
+          "description": "Verificar as raízes por substituição. Crédito parcial proporcional às raízes corretas.",
+          "points": 3.0,
+          "max_points": 3.0,
+          "mathematical_status": "supported",
+          "verification_status": "verified_in_scope",
+          "evidence": "2*3^2-14*3+24=0\n2*4^2-14*4+24=0",
+          "assessment_note": "Verificar as raízes por substituição. Crédito parcial proporcional às raízes corretas. Evidências: claim_5, claim_6. COMPLETE: 3/3 pontos provisórios.",
+          "adjustment_notes": []
+        }
+      ]
+    },
+    "feedback": "Sugestão provisória calculada por critérios. Verificações exatas no escopo declarado; decisão final do professor.",
+    "artifact_dir": "/Users/LinMarcolino/Documents/confia-lean-auditor-dynamic/runtime/dy5-browser-final/audits/artifacts/aud_e3bea497dc5c011ed2e61ae2e2010293eb8c2053fa1c9a48fccf0019b8dd89a5-eff25c4174e046c2b9afa4a29e82a6a4",
+    "reproducibility": null
+  },
+  "result_sha256": "9515e3d6e76cf8d55478d5f20b5606c1413a770f26319ebd5cb50e9bece2791c",
+  "required_artifacts": [
+    {
+      "artifact_type": "export",
+      "relation_id": "audit.json",
+      "file": "/Users/LinMarcolino/Documents/confia-lean-auditor-dynamic/runtime/dy5-browser-final/audits/artifacts/aud_e3bea497dc5c011ed2e61ae2e2010293eb8c2053fa1c9a48fccf0019b8dd89a5-eff25c4174e046c2b9afa4a29e82a6a4/audit.json",
+      "sha256": "f404b5e6fad3a9039ab591ba927ea42299f2dc17f04dc0d8fc614223bdd7654d",
+      "byte_size": 31807
+    },
+    {
+      "artifact_type": "export",
+      "relation_id": "solution.txt",
+      "file": "/Users/LinMarcolino/Documents/confia-lean-auditor-dynamic/runtime/dy5-browser-final/audits/artifacts/aud_e3bea497dc5c011ed2e61ae2e2010293eb8c2053fa1c9a48fccf0019b8dd89a5-eff25c4174e046c2b9afa4a29e82a6a4/solution.txt",
+      "sha256": "0bb57ddaadb5d7fb4cfe9818e4f371cf233ee4e0cec08bd0ac170f2152c39ca1",
+      "byte_size": 105
+    },
+    {
+      "artifact_type": "export",
+      "relation_id": "analysis.json",
+      "file": "/Users/LinMarcolino/Documents/confia-lean-auditor-dynamic/runtime/dy5-browser-final/audits/artifacts/aud_e3bea497dc5c011ed2e61ae2e2010293eb8c2053fa1c9a48fccf0019b8dd89a5-eff25c4174e046c2b9afa4a29e82a6a4/analysis.json",
+      "sha256": "2cec2aca75289900a382fe94632c2e44bf75694cbf5eb5fa9661eb727badd479",
+      "byte_size": 7736
+    },
+    {
+      "artifact_type": "export",
+      "relation_id": "context.json",
+      "file": "/Users/LinMarcolino/Documents/confia-lean-auditor-dynamic/runtime/dy5-browser-final/audits/artifacts/aud_e3bea497dc5c011ed2e61ae2e2010293eb8c2053fa1c9a48fccf0019b8dd89a5-eff25c4174e046c2b9afa4a29e82a6a4/context.json",
+      "sha256": "9a1489ef442da3d79b85423b178e234906a324af65060932133625e9bf258a86",
+      "byte_size": 11821
+    }
+  ],
+  "artifact_manifest_sha256": "49c689cd5f94ddb11ad3cbf4a528c56c7a51d98db3cce18679c812fdea3fcb11",
+  "artifact_dir": "/Users/LinMarcolino/Documents/confia-lean-auditor-dynamic/runtime/dy5-browser-final/audits/artifacts/aud_e3bea497dc5c011ed2e61ae2e2010293eb8c2053fa1c9a48fccf0019b8dd89a5-eff25c4174e046c2b9afa4a29e82a6a4",
+  "auditor_version": "dynamic-grader.v1",
+  "execution_key": null,
+  "error_code": null,
+  "reproducibility_status": "legacy_unversioned",
+  "reproducibility_manifest_filename": null,
+  "reproducibility_manifest_sha256": null
+}

@@ -1,0 +1,233 @@
+[
+  {
+    "id": "a_complete",
+    "item": "a",
+    "text": "triangle_PBQ: equilateral\nPB: x\nBQ: x\nPQ: x\nperimeter_PBQ: 3*x\ntriangle_RQC: equilateral\nQC: 6-x\nQR: 6-x\nRC: 6-x\nperimeter_RQC: 3*(6-x)\nshaded_sum: 3*x+3*(6-x)=18",
+    "points": 4
+  },
+  {
+    "id": "a_only_pbq",
+    "item": "a",
+    "text": "triangle_PBQ: equilateral\nPB: x\nBQ: x\nPQ: x\nperimeter_PBQ: 3*x",
+    "points": 1
+  },
+  {
+    "id": "a_both_no_sum",
+    "item": "a",
+    "text": "triangle_PBQ: equilateral\nPB: x\nBQ: x\nPQ: x\nperimeter_PBQ: 3*x\ntriangle_RQC: equilateral\nQC: 6-x\nQR: 6-x\nRC: 6-x\nperimeter_RQC: 3*(6-x)",
+    "points": 2
+  },
+  {
+    "id": "a_bare_18",
+    "item": "a",
+    "text": "18",
+    "points": 0
+  },
+  {
+    "id": "a_equivalent",
+    "item": "a",
+    "text": "triangle_PBQ: equilateral\nPB: x\nBQ: x\nPQ: x\nperimeter_PBQ: 3*x\ntriangle_RQC: equilateral\nQC: 6-x\nQR: 6-x\nRC: 6-x\nperimeter_RQC: 18-3*x\nshaded_sum: 3*x+(18-3*x)=18",
+    "points": 4
+  },
+  {
+    "id": "a_wrong_sign",
+    "item": "a",
+    "text": "triangle_PBQ: equilateral\nPB: x\nBQ: x\nPQ: x\nperimeter_PBQ: 3*x\ntriangle_RQC: equilateral\nQC: 6-x\nQR: 6-x\nRC: 6-x\nperimeter_RQC: 3*(6-x)\nshaded_sum: 3*x-3*(6-x)=18",
+    "points": 2
+  },
+  {
+    "id": "a_wrong_perimeter",
+    "item": "a",
+    "text": "triangle_PBQ: equilateral\nPB: x\nBQ: x\nPQ: x\nperimeter_PBQ: 4*x\ntriangle_RQC: equilateral\nQC: 6-x\nQR: 6-x\nRC: 6-x\nperimeter_RQC: 3*(6-x)\nshaded_sum: 3*x+3*(6-x)=18",
+    "points": 3
+  },
+  {
+    "id": "a_no_geometry",
+    "item": "a",
+    "text": "perimeter_PBQ: 3x\nperimeter_RQC: 3(6-x)\nshaded_sum: 3*x+3*(6-x)=18",
+    "points": 2
+  },
+  {
+    "id": "a_sum_tautology",
+    "item": "a",
+    "text": "shaded_sum: 18=18",
+    "points": 0
+  },
+  {
+    "id": "b_official",
+    "item": "b",
+    "text": "AP: 6-x\nQR: 6-x\nPQ: x\nAR: x\nperimeter_APQR: (6-x)+x+(6-x)+x=12",
+    "points": 6,
+    "selected_path": "b.official_metric_path"
+  },
+  {
+    "id": "b_parallelogram",
+    "item": "b",
+    "text": "APQR: parallelogram\nperimeter_APQR: 2*((6-x)+x)=12",
+    "points": 6,
+    "selected_path": "b.parallelogram_path"
+  },
+  {
+    "id": "b_bare_12",
+    "item": "b",
+    "text": "12",
+    "points": 0
+  },
+  {
+    "id": "b_partial",
+    "item": "b",
+    "text": "AP: 6-x\nQR: 6-x\nPQ: -x\nAR: -x",
+    "points": 2
+  },
+  {
+    "id": "b_reordered",
+    "item": "b",
+    "text": "RA: x\nQR: 6-x\nPQ: x\nAP: 6-x\nperimeter_APQR: (6-x)+x+(6-x)+x=12",
+    "points": 6
+  },
+  {
+    "id": "b_rejected",
+    "item": "b",
+    "text": "Tentativa descartada:\nAPQR: parallelogram\nperimeter_APQR: 2*((6-x)+x)=12",
+    "points": 0
+  },
+  {
+    "id": "b_keyword_only",
+    "item": "b",
+    "text": "APQR: parallelogram",
+    "points": 0
+  },
+  {
+    "id": "b_doubled",
+    "item": "b",
+    "text": "APQR: parallelogram\nperimeter_APQR: 2*x+2*(6-x)=12",
+    "points": 6,
+    "selected_path": "b.parallelogram_path"
+  },
+  {
+    "id": "b_wrong_ap",
+    "item": "b",
+    "text": "AP: x\nQR: 6-x\nPQ: x\nAR: x\nperimeter_APQR: (6-x)+x+(6-x)+x=12",
+    "points": 4
+  },
+  {
+    "id": "b_both_paths",
+    "item": "b",
+    "text": "AP: 6-x\nQR: 6-x\nPQ: x\nAR: x\nperimeter_APQR: (6-x)+x+(6-x)+x=12\nAPQR: parallelogram",
+    "points": 6
+  },
+  {
+    "id": "c_complete",
+    "item": "c",
+    "text": "perimeter_PBQ: 3*x\nperimeter_RQC: 3*(6-x)\nperimeter_APQR: 12\nexclude_12: (3*x)^2+(3*(6-x))^2=12^2\nh_plus_c: h+c=18\npythagoras: h^2=c^2+12^2\nh: 13\nc: 5\nshaded_lengths: {3*x,3*(6-x)}={5,13}\nx_candidates: {5/3,13/3}",
+    "points": 10
+  },
+  {
+    "id": "c_cases",
+    "item": "c",
+    "text": "perimeter_PBQ: 3*x\nperimeter_RQC: 3*(6-x)\nperimeter_APQR: 12\nexclude_12: (3*x)^2+(3*(6-x))^2=12^2\ncase_3x: (3*x)^2=(3*(6-x))^2+12^2\ncase_3x_root: 13/3\ncase_other: (3*(6-x))^2=(3*x)^2+12^2\ncase_other_root: 5/3\nx_candidates: {13/3,5/3}",
+    "points": 10
+  },
+  {
+    "id": "c_cases_reversed",
+    "item": "c",
+    "text": "perimeter_PBQ: 3*x\nperimeter_RQC: 3*(6-x)\nperimeter_APQR: 12\nexclude_12: (3*x)^2+(3*(6-x))^2=12^2\nx_candidates: {13/3,5/3}\ncase_other_root: 5/3\ncase_other: (3*(6-x))^2=(3*x)^2+12^2\ncase_3x_root: 13/3\ncase_3x: (3*x)^2=(3*(6-x))^2+12^2",
+    "points": 10
+  },
+  {
+    "id": "c_only_c1",
+    "item": "c",
+    "text": "perimeter_PBQ: 3*x\nperimeter_RQC: 3*(6-x)\nperimeter_APQR: 12",
+    "points": 2
+  },
+  {
+    "id": "c_c1_c2",
+    "item": "c",
+    "text": "perimeter_PBQ: 3*x\nperimeter_RQC: 3*(6-x)\nperimeter_APQR: 12\nexclude_12: (3*x)^2+(3*(6-x))^2=12^2",
+    "points": 4
+  },
+  {
+    "id": "c_relations_no_resolution",
+    "item": "c",
+    "text": "perimeter_PBQ: 3*x\nperimeter_RQC: 3*(6-x)\nperimeter_APQR: 12\nexclude_12: (3*x)^2+(3*(6-x))^2=12^2\nh_plus_c: h+c=18\npythagoras: h^2=c^2+12^2",
+    "points": 6
+  },
+  {
+    "id": "c_only_values",
+    "item": "c",
+    "text": "h: 13\nc: 5",
+    "points": 2
+  },
+  {
+    "id": "c_only_roots",
+    "item": "c",
+    "text": "x_candidates: {5/3,13/3}",
+    "points": 0
+  },
+  {
+    "id": "c_local_error",
+    "item": "c",
+    "text": "perimeter_PBQ: 3*x\nperimeter_RQC: 3*(6-x)\nperimeter_APQR: 12\nexclude_12: (3*x)^2+(3*(6-x))^2=12^2\nh_plus_c: h+c=18\npythagoras: h^2=c^2+12^2\nh: 12\nc: 5\nshaded_lengths: {3*x,3*(6-x)}={5,13}\nx_candidates: {5/3,13/3}",
+    "points": 8
+  },
+  {
+    "id": "c_rejected_conclusion",
+    "item": "c",
+    "text": "perimeter_PBQ: 3*x\nperimeter_RQC: 3*(6-x)\nperimeter_APQR: 12\nexclude_12: (3*x)^2+(3*(6-x))^2=12^2\nh_plus_c: h+c=18\npythagoras: h^2=c^2+12^2\nh: 13\nc: 5\n\nTentativa descartada:\nshaded_lengths: {3*x,3*(6-x)}={5,13}\nx_candidates: {5/3,13/3}",
+    "points": 8
+  },
+  {
+    "id": "c_one_root",
+    "item": "c",
+    "text": "perimeter_PBQ: 3*x\nperimeter_RQC: 3*(6-x)\nperimeter_APQR: 12\nexclude_12: (3*x)^2+(3*(6-x))^2=12^2\nh_plus_c: h+c=18\npythagoras: h^2=c^2+12^2\nh: 13\nc: 5\nshaded_lengths: {3*x,3*(6-x)}={5,13}\nx_candidates: {5/3}",
+    "points": 8
+  },
+  {
+    "id": "c_wrong_roots",
+    "item": "c",
+    "text": "perimeter_PBQ: 3*x\nperimeter_RQC: 3*(6-x)\nperimeter_APQR: 12\nexclude_12: (3*x)^2+(3*(6-x))^2=12^2\nh_plus_c: h+c=18\npythagoras: h^2=c^2+12^2\nh: 13\nc: 5\nshaded_lengths: {3*x,3*(6-x)}={5,13}\nx_candidates: {2,4}",
+    "points": 8
+  },
+  {
+    "id": "c_exact_rationals",
+    "item": "c",
+    "text": "perimeter_PBQ: 3*x\nperimeter_RQC: 3*(6-x)\nperimeter_APQR: 12\nexclude_12: (3*x)^2+(3*(6-x))^2=12^2\nh_plus_c: h+c=18\npythagoras: h^2=c^2+12^2\nh: 13\nc: 5\nshaded_lengths: {3*x,3*(6-x)}={5,13}\nx_candidates: {26/6,10/6}",
+    "points": 10
+  },
+  {
+    "id": "c_rounded_roots",
+    "item": "c",
+    "text": "perimeter_PBQ: 3*x\nperimeter_RQC: 3*(6-x)\nperimeter_APQR: 12\nexclude_12: (3*x)^2+(3*(6-x))^2=12^2\nh_plus_c: h+c=18\npythagoras: h^2=c^2+12^2\nh: 13\nc: 5\nshaded_lengths: {3*x,3*(6-x)}={5,13}\nx_candidates: {1.667,4.333}",
+    "points": 8
+  },
+  {
+    "id": "c_no_exclusion",
+    "item": "c",
+    "text": "perimeter_PBQ: 3*x\nperimeter_RQC: 3*(6-x)\nperimeter_APQR: 12\nh_plus_c: h+c=18\npythagoras: h^2=c^2+12^2\nh: 13\nc: 5\nshaded_lengths: {3*x,3*(6-x)}={5,13}\nx_candidates: {5/3,13/3}",
+    "points": 8
+  },
+  {
+    "id": "c_unrelated_exclusion",
+    "item": "c",
+    "text": "perimeter_PBQ: 3*x\nperimeter_RQC: 3*(6-x)\nperimeter_APQR: 12\nexclude_12: 0=1\nh_plus_c: h+c=18\npythagoras: h^2=c^2+12^2\nh: 13\nc: 5\nshaded_lengths: {3*x,3*(6-x)}={5,13}\nx_candidates: {5/3,13/3}",
+    "points": 8
+  },
+  {
+    "id": "c_incomplete_cases",
+    "item": "c",
+    "text": "perimeter_PBQ: 3*x\nperimeter_RQC: 3*(6-x)\nperimeter_APQR: 12\nexclude_12: (3*x)^2+(3*(6-x))^2=12^2\ncase_3x: (3*x)^2=(3*(6-x))^2+144\ncase_3x_root: 13/3\nx_candidates: {13/3}",
+    "points": 4
+  },
+  {
+    "id": "c_x_two",
+    "item": "c",
+    "text": "perimeter_PBQ: 3*x\nperimeter_RQC: 3*(6-x)\nperimeter_APQR: 12\nexclude_12: (3*x)^2+(3*(6-x))^2=12^2\nh_plus_c: h+c=18\npythagoras: h^2=c^2+12^2\nh: 13\nc: 5\nshaded_lengths: {3*x,3*(6-x)}={5,13}\nx_candidates: {2}",
+    "points": 8
+  },
+  {
+    "id": "c_bad_assignment",
+    "item": "c",
+    "text": "perimeter_PBQ: 3*x\nperimeter_RQC: 3*(6-x)\nperimeter_APQR: 12\nexclude_12: (3*x)^2+(3*(6-x))^2=12^2\nh_plus_c: h+c=18\npythagoras: h^2=c^2+12^2\nh: 13\nc: 5\nshaded_lengths: {3*x,3*(6-x)}={6,12}\nx_candidates: {5/3,13/3}",
+    "points": 8
+  }
+]

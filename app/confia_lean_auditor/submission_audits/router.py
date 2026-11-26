@@ -81,6 +81,15 @@ def get_run(audit_run_id: str, response: Response,
     return public_operation(service().get, audit_run_id)
 
 
+@router.get("/submission-audits/{audit_run_id}/diagnostics", response_model=dict)
+def get_diagnostics(audit_run_id: str, response: Response,
+                    _record=Depends(teacher_audit_access)):
+    """Derived TME review explanation; preserve the historical GET/result DTO."""
+    from confia_lean_auditor.tme.review_diagnostics import diagnose_run
+    response.headers["Cache-Control"] = "no-store"
+    return guarded(lambda: public_response(diagnose_run(service().get(audit_run_id))))
+
+
 @router.get("/submission-audits/{audit_run_id}/reproducibility", response_model=PublicReproducibilityMetadata)
 def get_reproducibility(audit_run_id: str, response: Response,
                         _record=Depends(teacher_audit_access)):

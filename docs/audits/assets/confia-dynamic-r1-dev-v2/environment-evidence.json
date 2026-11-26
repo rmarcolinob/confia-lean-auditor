@@ -1,0 +1,35 @@
+{
+  "examples": [
+    {
+      "artifact": "artifacts/runs/20261113T030357_453771/audit.json",
+      "artifact_sha256": "2c0a3e219e1e93e4a1e356a0b87f0068bcec002e7cc40361091cc7a8aab59a55",
+      "problem_id": "ITA2025F2Q1",
+      "status": "lean_error",
+      "exit_code": 1,
+      "stderr": "info: mathlib: checking out revision '8f9d9cff6bd728b17a24e163c9402775d9e6a365'\nerror: external command 'git' exited with code 1\n",
+      "unscorable_reason": "ADJUDICATOR_UNAVAILABLE"
+    },
+    {
+      "artifact": "artifacts/runs/20261113T030343_990130/audit.json",
+      "artifact_sha256": "56c75b703e400edf331dada86bcb5db0d58b10a266fb75e1b1e1e3eeef318793",
+      "problem_id": "ITA2025F2Q1",
+      "status": "lean_error",
+      "exit_code": 1,
+      "stderr": "info: mathlib: checking out revision '8f9d9cff6bd728b17a24e163c9402775d9e6a365'\nerror: external command 'git' exited with code 1\n",
+      "unscorable_reason": "ADJUDICATOR_UNAVAILABLE"
+    },
+    {
+      "artifact": "artifacts/runs/20261113T030324_469499/audit.json",
+      "artifact_sha256": "8e46c5b42cc5a65dfd48cae5321e7d568950c75d69bdcec8f72055d0086c12c7",
+      "problem_id": "ITA2025F2Q3",
+      "status": "lean_error",
+      "exit_code": 1,
+      "stderr": "info: mathlib: checking out revision '8f9d9cff6bd728b17a24e163c9402775d9e6a365'\nerror: external command 'git' exited with code 1\n",
+      "unscorable_reason": "ADJUDICATOR_UNAVAILABLE"
+    }
+  ],
+  "Mathlib_repair_attempted": false,
+  "baseline_formal_probe_log": "baseline-environment-probe.log",
+  "baseline_nonlean_probe_log": "baseline-nonlean-probe.log",
+  "HOLDOUT_executed": false
+}

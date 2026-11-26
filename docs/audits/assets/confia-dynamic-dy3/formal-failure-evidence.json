@@ -1,0 +1,68 @@
+[
+  {
+    "run": "20261112T023507_955469",
+    "checks": [
+      {
+        "id": "student_claim_0",
+        "status": "technical_error",
+        "compiled": false,
+        "failure_category": "PROCESS_ERROR",
+        "stderr": "info: mathlib: checking out revision '8f9d9cff6bd728b17a24e163c9402775d9e6a365'\nerror: external command 'git' exited with code 1\n"
+      },
+      {
+        "id": "student_claim_1",
+        "status": "technical_error",
+        "compiled": false,
+        "failure_category": "PROCESS_ERROR",
+        "stderr": "info: mathlib: checking out revision '8f9d9cff6bd728b17a24e163c9402775d9e6a365'\nerror: external command 'git' exited with code 1\n"
+      },
+      {
+        "id": "student_claim_2",
+        "status": "technical_error",
+        "compiled": false,
+        "failure_category": "PROCESS_ERROR",
+        "stderr": "info: mathlib: checking out revision '8f9d9cff6bd728b17a24e163c9402775d9e6a365'\nerror: external command 'git' exited with code 1\n"
+      },
+      {
+        "id": "student_claim_3",
+        "status": "technical_error",
+        "compiled": false,
+        "failure_category": "PROCESS_ERROR",
+        "stderr": "info: mathlib: checking out revision '8f9d9cff6bd728b17a24e163c9402775d9e6a365'\nerror: external command 'git' exited with code 1\n"
+      }
+    ]
+  },
+  {
+    "run": "20261112T022755_240230",
+    "checks": [
+      {
+        "id": "student_claim_0",
+        "status": "technical_error",
+        "compiled": false,
+        "failure_category": "PROCESS_ERROR",
+        "stderr": "info: mathlib: checking out revision '8f9d9cff6bd728b17a24e163c9402775d9e6a365'\nerror: external command 'git' exited with code 1\n"
+      },
+      {
+        "id": "student_claim_1",
+        "status": "technical_error",
+        "compiled": false,
+        "failure_category": "PROCESS_ERROR",
+        "stderr": "info: mathlib: checking out revision '8f9d9cff6bd728b17a24e163c9402775d9e6a365'\nerror: external command 'git' exited with code 1\n"
+      },
+      {
+        "id": "student_claim_2",
+        "status": "technical_error",
+        "compiled": false,
+        "failure_category": "PROCESS_ERROR",
+        "stderr": "info: mathlib: checking out revision '8f9d9cff6bd728b17a24e163c9402775d9e6a365'\nerror: external command 'git' exited with code 1\n"
+      },
+      {
+        "id": "student_claim_3",
+        "status": "technical_error",
+        "compiled": false,
+        "failure_category": "PROCESS_ERROR",
+        "stderr": "info: mathlib: checking out revision '8f9d9cff6bd728b17a24e163c9402775d9e6a365'\nerror: external command 'git' exited with code 1\n"
+      }
+    ]
+  }
+]

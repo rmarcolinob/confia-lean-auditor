@@ -1,0 +1,152 @@
+Browser tab: 5, Title: "ConfIA — Confiabilidade e Explicabilidade", URL: "http://127.0.0.1:8769/tme?case_id=case_5755f03dc4264342b8c2da180bfd7ca0".
+1 AXWebArea ConfIA — Confiabilidade e Explicabilidade, URL: 127.0.0.1:8769/tme?case_id=case_5755f03dc4264342b8c2da180bfd7ca0
+	2 link Description: Ir para conteúdo, Value: 127.0.0.1:8769/tme?case_id=case_5755f03dc4264342b8c2da180bfd7ca0#main
+	3 container
+		4 text ConfIA Plataforma de
+		5 text correção assistida
+		6 button (collapsed) Description: Perfil do avaliador, ID: evaluator-avatar, Secondary Actions: Expand
+	7 container app
+		8 container
+			9 button Voltar para fila
+			10 heading Prova DY3-S1, Value: 1
+				11 text Prova DY3-S1
+			12 text Aguardando decisão Questão 1 · 1 questão disponível · DY3 Quadrática · Resolução textual
+			13 container Questões disponíveis desta prova
+				14 button Q1 · Questão atual
+			15 content list Progresso da correção
+				16 text Entrada
+				17 text Transcrição
+				18 text Análise
+				19 text Decisão
+		20 container
+			21 heading Enunciado, Value: 2
+				22 text Enunciado
+			23 button (collapsed) Ver enunciado completo, Secondary Actions: Expand
+			24 text Resolva no conjunto dos reais: 2y² - 14y + 24 = 0.
+		25 container
+			26 container solution-pane
+				27 container
+					28 heading Solução do participante, Value: 2
+						29 text Solução do participante
+					30 button (collapsed) Description: Expandir solução, Secondary Actions: Expand
+				31 tab group Visualização da solução
+					32 tab (selectable, settable, boolean) Original, Value: 0, ID: tab-original
+					33 tab (selectable, settable, boolean) Transcrição, Value: 0, ID: tab-transcript
+					34 tab (selected, settable, boolean) Comparar, Value: 1, ID: tab-compare
+				35 container Description: Comparar, ID: solution-views
+					153 container Original
+						154 text y²-7y+12=0; (y-3)(y-4)=0; S={3,4}; 2*3^2-14*3+24=0; 2*4^2-14*4+24=0
+					149 container Transcrição
+						150 button Editar
+						151 container Transcrição da página 1
+							152 text y²-7y+12=0; (y-3)(y-4)=0; S={3,4}; 2*3^2-14*3+24=0; 2*4^2-14*4+24=0
+				38 button (collapsed) Originais e histórico, Secondary Actions: Expand
+					39 text Originais e histórico
+			40 splitter Description: Redimensionar solução e análise, Help: Arraste ou use as setas. Home: 45%; End: 70%; duplo clique: 60%., Value: 60
+			41 container Description: Análise ConfIA, ID: analysis-pane
+				42 container
+					43 heading ANÁLISE CONFIA, Value: 2
+						44 text ANÁLISE CONFIA
+					45 button (expanded) Recolher análise, Secondary Actions: Collapse
+					46 container analysis-content
+						47 container Resultado sugerido
+							48 text Sugestão ConfIA
+							49 text 10 / 10
+							50 text Revisão Necessária
+							51 text Revisão necessária · sugestão provisória
+							52 text Modo: Correção dinâmica
+							53 text Preparação com revisão necessária; execução explicitamente permitida, resultado provisório.
+						54 container Cobertura da análise
+							55 heading Cobertura da análise, Value: 3
+								56 text Cobertura da análise
+							57 text 3/3 critérios decididos
+							58 text 3 critérios · 3 decididos · 0 claims formalmente verificados · 0 indeterminados
+						59 container Revisão independente
+							137 container
+								138 button (expanded) Revisão independente · Concordância: 3/3 critérios, Secondary Actions: Collapse
+									139 text Revisão independente · Concordância: 3/3 critérios
+								140 text A revisão não altera a sugestão original nem a decisão do professor. Revisão necessária. Divergências e incertezas permanecem pendentes.
+								141 button (collapsed) Justificar a resolução por transformações equivalentes. · Grader: 4 · Reviewer: 4, Secondary Actions: Expand
+									142 text Justificar a resolução por transformações equivalentes. · Grader: 4 · Reviewer: 4
+								143 button (collapsed) Secondary Actions: Expand, Obter todas as raízes reais. Crédito parcial proporcional às raízes corretas. · Grader: 3 · Reviewer: 3
+									144 text Obter todas as raízes reais. Crédito parcial proporcional às raízes corretas. · Grader: 3 · Reviewer: 3
+								145 button (collapsed) Secondary Actions: Expand, Verificar as raízes por substituição. Crédito parcial proporcional às raízes corretas. · Grader: 3 · Reviewer: 3
+									146 text Verificar as raízes por substituição. Crédito parcial proporcional às raízes corretas. · Grader: 3 · Reviewer: 3
+								147 text Preparação mantém avisos de revisão docente. Concordância não é prova matemática nem certificação.
+							62 button Solicitar nova revisão independente
+						63 button (collapsed) Evidências e verificações da resolução, Secondary Actions: Expand
+							64 text Evidências e verificações da resolução
+						65 container
+							66 heading Critérios de correção, Value: 3
+								67 text Critérios de correção
+							68 button (collapsed) Sustentado Critério 1 4 / 4 Justificar a resolução por transformações equivalentes., Secondary Actions: Expand
+								69 image Sustentado
+								70 text Critério 1
+								71 text 4 / 4
+								72 text Justificar a resolução por transformações equivalentes.
+							73 button (collapsed) Secondary Actions: Expand, Sustentado Critério 2 3 / 3 Obter todas as raízes reais. Crédito parcial proporcional às raízes corretas.
+								74 image Sustentado
+								75 text Critério 2
+								76 text 3 / 3
+								77 text Obter todas as raízes reais. Crédito parcial proporcional às raízes corretas.
+							78 button (collapsed) Secondary Actions: Expand, Sustentado Critério 3 3 / 3 Verificar as raízes por substituição. Crédito parcial proporcional às raízes corretas.
+								79 image Sustentado
+								80 text Critério 3
+								81 text 3 / 3
+								82 text Verificar as raízes por substituição. Crédito parcial proporcional às raízes corretas.
+						83 container
+							84 heading Passos identificados, Value: 3
+								85 text Passos identificados
+							86 checkbox Description: Passo 1: y²-7y+12=0. Verificado no escopo, Value: 1
+								87 text 01
+								88 text y²-7y+12=0
+								89 image Sustentado
+							90 checkbox Description: Passo 2: (y-3)(y-4)=0. Verificado no escopo, Value: 0
+								91 text 02
+								92 text (y-3)(y-4)=0
+								93 image Sustentado
+							94 checkbox Description: Passo 3: S={3,4}. Verificado no escopo, Value: 0
+								95 text 03
+								96 text S={3,4}
+								97 image Sustentado
+							98 checkbox Description: Passo 4: 2*3^2-14*3+24=0. Verificado no escopo, Value: 0
+								99 text 04
+								100 text 2*3^2-14*3+24=0
+								101 image Sustentado
+							102 checkbox Description: Passo 5: 2*4^2-14*4+24=0. Verificado no escopo, Value: 0
+								103 text 05
+								104 text 2*4^2-14*4+24=0
+								105 image Sustentado
+							106 text y²-7y+12=0
+							107 text Verificado no escopo
+							108 text Trecho preservado: caracteres 0–10 da transcrição aceita.
+						109 container
+							110 heading Verificação matemática, Value: 3
+								111 text Verificação matemática
+							112 text 0 claims verificados formalmente 5 não formalizados 0 falhas técnicas
+							113 button (collapsed) Detalhes da verificação, Secondary Actions: Expand
+								114 text Detalhes da verificação
+						115 button (collapsed) Resumo e evidências da análise, Secondary Actions: Expand
+							116 text Resumo e evidências da análise
+						117 button (collapsed) Detalhes técnicos, Secondary Actions: Expand
+							118 text Detalhes técnicos
+		119 container Description: Decisão do avaliador, ID: evaluator-decision
+			120 heading Decisão do avaliador, Value: 2
+				121 text Decisão do avaliador
+			122 text Sugestão ConfIA
+			123 text 10 / 10
+			124 container
+				125 text Pontuação final
+				126 stepper (settable) Pontuação final
+				127 button Usar sugestão
+				128 button Ajustar
+				129 button (collapsed) Adicionar observação, Secondary Actions: Expand
+					130 text Adicionar observação
+				131 button Finalizar correção
+	132 container Description: Navegação principal, ID: home-bottom-nav
+		133 button Início
+		134 button Fila
+		135 button Nova
+		136 button Resultados
+
+The focused UI element is 34 tab (selected, settable, boolean) Comparar, Value: 1, ID: tab-compare

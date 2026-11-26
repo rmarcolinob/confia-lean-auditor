@@ -1,0 +1,152 @@
+{
+  "dataset_id": "ITA2025F2Q5_S003_L04",
+  "problem_id": "ITA2025F2Q5",
+  "criterion_id": "mantissa_between_bounds",
+  "kind": "positive",
+  "payload": {
+    "problem": {
+      "statement": "Usando as aproximações log10 2 = 0,3010, log10 3 = 0,4771 e log10 7 = 0,8450, determine o primeiro algarismo, da esquerda para a direita, do resultado de 3^100."
+    },
+    "solution_text": "Como o que importa é o primeiro algarismo, escrevo 3^100 separando a potência de 10 que dá a ordem de grandeza da parte que sobra, porque o primeiro algarismo sai dessa parte que sobra.\n\nlog 3^100 = 100 · log 3 = 100 · 0,4771 = 47,71\n\nEntão 3^100 = 10^47,71 = 10^47 · 10^0,71.\n\nO fator 10^0,71 está entre 1 e 10, e a parte inteira dele é exatamente o primeiro algarismo de 3^100. Resta saber entre quais algarismos ele cai.\n\nDos logaritmos dados tiro:\nlog 5 = log(10/2) = 1 − log 2 = 1 − 0,3010 = 0,6990\nlog 6 = log(2·3) = log 2 + log 3 = 0,3010 + 0,4771 = 0,7781\n\nConfiro a segunda conta: 0,3010 + 0,4771 = 0,7781, ok. Essa comparação decide o resto, então vale a pena ter a certeza.\n\nComo 10^x é crescente e 0,6990 < 0,71 < 0,7781, tenho\n10^0,6990 < 10^0,71 < 10^0,7781,\nou seja, 5 < 10^0,71 < 6.\n\nLogo 10^0,71 fica entre 5 e 6, e sua parte inteira é 5. Portanto\n3^100 = 10^47 · 10^071 com 5 < 10^0,71 < 6,\n\nO primeiro algarismo de 3^100, da esquerda para a direita, é 5.",
+    "pending_criteria": [
+      {
+        "id": "mantissa_between_bounds",
+        "description": "Compara 0,6990 < 0,7100 < 0,7781.",
+        "max_points": 2.0,
+        "allowed_points": [
+          0.0,
+          2.0
+        ],
+        "input_status": "indeterminate",
+        "verification_status": "partial",
+        "coded_requirements": [
+          {
+            "description": "ordered mantissa bounds",
+            "relation_alternatives": []
+          }
+        ],
+        "expected_bindings": null,
+        "conclusion_only": false,
+        "required_microclaims": [
+          {
+            "description": "A mantissa 0,7100 satisfaz 0,6990 < 0,7100 < 0,7781.",
+            "status": "verified_by_lean",
+            "origin": "generated_reference",
+            "does_not_prove_student_attribution": true
+          }
+        ],
+        "existing_evidence": [],
+        "grounded_claims": [
+          {
+            "text": "Como 10^x é crescente e 0,6990 < 0,71 < 0,7781, tenho\n10^0,6990 < 10^0,71 < 10^0,7781,\nou seja, 5 < 10^0,71 < 6.",
+            "math_claim_record_id": "student:student_claim_3",
+            "source_span": {
+              "start": 686,
+              "end": 798
+            },
+            "semantic_role": "unknown",
+            "canonical_form": null,
+            "alignment": [],
+            "verification": [
+              {
+                "status": "verified",
+                "formal_status": "verified",
+                "compiled": true,
+                "refutation_verified": false
+              }
+            ]
+          }
+        ],
+        "grounded_claims_omitted": 0,
+        "candidate_student_checks": [
+          {
+            "id": "student_claim_3",
+            "problem_id": "ITA2025F2Q5",
+            "claim_type": "f2q5_student_between_bounds",
+            "raw_text": "0.6990<0.71<0.7781",
+            "normalized_text": "between: 6990 < 7100 < 7781",
+            "lean_statement": "log5Scaled = (6990 : ℤ) ∧ mantissaScaled = (7100 : ℤ) ∧ log6Scaled = (7781 : ℤ) ∧ (6990 : ℤ) < (7100 : ℤ) ∧ (7100 : ℤ) < (7781 : ℤ)",
+            "method": "norm_num [log5Scaled, log6Scaled, mantissaScaled, log2Scaled, log3Scaled, scale]",
+            "status": "verified",
+            "compiled": true,
+            "lean_file": "/Users/LinMarcolino/Documents/confia-lean-auditor/artifacts/runs/20261029T211233_881697/student_claim_checks/student_check_3_lean_file.lean",
+            "stdout": "",
+            "stderr": "",
+            "data": {
+              "left_scaled": 6990,
+              "middle_scaled": 7100,
+              "right_scaled": 7781
+            },
+            "failure_category": null,
+            "refutation_lean_file": null,
+            "refutation_verified": false,
+            "refutation_stdout": "",
+            "refutation_stderr": "",
+            "grounding": {
+              "status": "grounded",
+              "reason": "Local re-extraction and independent representation validation agree",
+              "extraction_method": "extract_f2q5_student_claims",
+              "validator": "local-source-v1",
+              "source_sha256": "78ca6e9ab52921f7d5520accb06d612352548b322e984b6521dc0ad4c786c194",
+              "source_text": "Como 10^x é crescente e 0,6990 < 0,71 < 0,7781, tenho\n10^0,6990 < 10^0,71 < 10^0,7781,\nou seja, 5 < 10^0,71 < 6.",
+              "source_start": 686,
+              "source_end": 798,
+              "payload_sha256": "e1f2445d14e45cd45c6d0f44ea1009f6cca80bdd31e54a90fddf07d3a691bc51",
+              "extraction_origins": [
+                "extract_f2q5_student_claims",
+                "generic_math"
+              ],
+              "generic_source_ids": [
+                "generic_math_708_732_relation"
+              ]
+            },
+            "formal_status": "verified"
+          }
+        ],
+        "student_checks": [
+          {
+            "claim_type": "f2q5_student_between_bounds",
+            "raw_text": "0.6990<0.71<0.7781",
+            "status": "verified",
+            "formal_status": "verified",
+            "compiled": true,
+            "failure_category": null,
+            "refutation_verified": false
+          }
+        ],
+        "candidate_evidence": [
+          {
+            "source_start": 686,
+            "source_end": 798,
+            "source_text": "Como 10^x é crescente e 0,6990 < 0,71 < 0,7781, tenho\n10^0,6990 < 10^0,71 < 10^0,7781,\nou seja, 5 < 10^0,71 < 6.",
+            "source_kind": "grounded_claim",
+            "grounding_status": "grounded",
+            "claim_id": "student_claim_3",
+            "verification_status": "verified",
+            "evidence_id": "E4_1"
+          },
+          {
+            "source_start": 565,
+            "source_end": 684,
+            "source_text": "Confiro a segunda conta: 0,3010 + 0,4771 = 0,7781, ok. Essa comparação decide o resto, então vale a pena ter a certeza.",
+            "source_kind": "local_context",
+            "grounding_status": "grounded",
+            "verification_status": "not_checked",
+            "evidence_id": "E4_2"
+          }
+        ]
+      }
+    ]
+  },
+  "proposal": {
+    "mantissa_between_bounds": {
+      "decision": "award",
+      "suggested_points": 2,
+      "evidence_ids": [
+        "E4_1"
+      ],
+      "reason_code": "SATISFIES_CRITERION",
+      "rationale": "A evidência citada satisfaz o critério da pauta: «Compara 0,6990 < 0,7100 < 0,7781.»."
+    }
+  }
+}

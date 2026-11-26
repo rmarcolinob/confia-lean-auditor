@@ -1,0 +1,12 @@
+{
+  "python": "3.9.6",
+  "dependencies": {
+    "pydantic": "2.13.5",
+    "fastapi": "0.128.8",
+    "pytest": "8.4.2",
+    "httpx": "0.28.1",
+    "uvicorn": "0.39.0"
+  },
+  "runtime": "worktree-local .venv",
+  "external_worktrees_used": false
+}

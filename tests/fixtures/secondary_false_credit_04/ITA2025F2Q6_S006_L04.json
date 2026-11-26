@@ -1,0 +1,61 @@
+{
+  "dataset_id": "ITA2025F2Q6_S006_L04",
+  "problem_id": "ITA2025F2Q6",
+  "criterion_id": "final_answer",
+  "kind": "positive",
+  "payload": {
+    "problem": {
+      "statement": "Uma moeda não viciada é lançada n vezes. Encontre os valores de n que maximizam a probabilidade de sair cara pela quarta vez exatamente no enésimo lançamento."
+    },
+    "solution_text": "Para n >= 4, P(n) = C(n-1,3)*(1/2)^n pois o último é cara e há três anteriores. Registre-se que a soma de tais probabilidades para todo n é 1, fato alheio ao cálculo. A razão P(n+1)/P(n) = n/(2(n-3)). Segue que para n<6 cresce, em n=6 vale 1 e para n>6 decresce. Donde a probabilidade máxima ocorre em n=6 e n=7. Os valores de n que maximizam a probabilidade de sair cara pela quarta vez exatamente no enésimo lançamento são seis e sete.",
+    "pending_criteria": [
+      {
+        "id": "final_answer",
+        "description": "Conclui corretamente que os valores maximizantes são n=6 e n=7.",
+        "max_points": 2.0,
+        "allowed_points": [
+          0.0,
+          2.0
+        ],
+        "input_status": "indeterminate",
+        "verification_status": "partial",
+        "coded_requirements": [
+          {
+            "description": "maximizers conclusion",
+            "relation_alternatives": []
+          }
+        ],
+        "expected_bindings": null,
+        "conclusion_only": false,
+        "required_microclaims": [],
+        "existing_evidence": [],
+        "grounded_claims": [],
+        "grounded_claims_omitted": 0,
+        "candidate_student_checks": [],
+        "student_checks": [],
+        "candidate_evidence": [
+          {
+            "source_start": 0,
+            "source_end": 437,
+            "source_text": "Para n >= 4, P(n) = C(n-1,3)*(1/2)^n pois o último é cara e há três anteriores. Registre-se que a soma de tais probabilidades para todo n é 1, fato alheio ao cálculo. A razão P(n+1)/P(n) = n/(2(n-3)). Segue que para n<6 cresce, em n=6 vale 1 e para n>6 decresce. Donde a probabilidade máxima ocorre em n=6 e n=7. Os valores de n que maximizam a probabilidade de sair cara pela quarta vez exatamente no enésimo lançamento são seis e sete.",
+            "source_kind": "local_context",
+            "grounding_status": "grounded",
+            "verification_status": "not_checked",
+            "evidence_id": "E4_1"
+          }
+        ]
+      }
+    ]
+  },
+  "proposal": {
+    "final_answer": {
+      "decision": "award",
+      "suggested_points": 2,
+      "evidence_ids": [
+        "E4_1"
+      ],
+      "reason_code": "SATISFIES_CRITERION",
+      "rationale": "A evidência citada satisfaz o critério da pauta: «Conclui corretamente que os valores maximizantes são n=6 e n=7.»."
+    }
+  }
+}

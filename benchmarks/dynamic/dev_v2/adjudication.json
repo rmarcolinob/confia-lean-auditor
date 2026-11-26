@@ -1,0 +1,31 @@
+{
+  "schema_version": "benchmark-adjudication.v1",
+  "status": "BENCHMARK_ADJUDICATION_REQUIRED",
+  "policy": {
+    "automatic_gold_edit": false,
+    "automatic_rubric_edit": false,
+    "exclude_from_unambiguous_metrics": true,
+    "selection_before_baseline": true,
+    "future_action": "Two human raters, blind to outputs, resolve method/conclusion independence; approve a new version with rationale, retaining original gold."
+  },
+  "historical_references_only": [
+    {
+      "logical_case_id": "SYN-009-Qy",
+      "criterion_id": "method",
+      "source": "CONFIA_DYNAMIC_DY7_HOLDOUT_FORENSIC_01.md",
+      "executed_in_R1": false
+    },
+    {
+      "logical_case_id": "SYN-009-Qz",
+      "criterion_id": "method",
+      "source": "CONFIA_DYNAMIC_DY7_HOLDOUT_FORENSIC_01.md",
+      "executed_in_R1": false
+    }
+  ],
+  "DEV_V2_case_ids": [
+    "adjudication-1",
+    "adjudication-2",
+    "adjudication-3",
+    "adjudication-4"
+  ]
+}

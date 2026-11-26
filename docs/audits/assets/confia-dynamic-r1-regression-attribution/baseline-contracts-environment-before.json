@@ -1,0 +1,156 @@
+{
+  "python_executable": "/Users/LinMarcolino/Documents/confia-lean-auditor-dynamic/.venv/bin/python",
+  "python_version": "3.9.6 (default, Oct 19 2026, 19:18:13) \n[Clang 21.0.0 (clang-2100.4.1.1)]",
+  "cwd": "/private/tmp/confia-r1-attribution-baseline-5aa7344",
+  "path": "/opt/homebrew/bin:/opt/homebrew/sbin:/Users/LinMarcolino/.elan/bin:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/pkg/env/global/bin:/Library/TeX/texbin:/opt/homebrew/bin:/Applications/ChatGPT.app/Contents/Resources/codex-cli/codex-path:/Users/LinMarcolino/.codex/tmp/arg0-macos/codex-arg0vPwx2n:/Users/LinMarcolino/.cache/codex-runtimes/codex-primary-runtime/dependencies/bin/override:/opt/homebrew/sbin:/Users/LinMarcolino/.elan/bin:/Users/LinMarcolino/.cache/codex-runtimes/codex-primary-runtime/dependencies/bin/fallback:/Applications/ChatGPT.app/Contents/Resources:/Applications/ChatGPT.app/Contents/Resources/codex-cli/CodexCLI.app/Contents/MacOS",
+  "pythonhashseed": "0",
+  "packages": [
+    [
+      "Pygments",
+      "2.21.0"
+    ],
+    [
+      "annotated-doc",
+      "0.0.5"
+    ],
+    [
+      "annotated-types",
+      "0.7.0"
+    ],
+    [
+      "anyio",
+      "4.12.1"
+    ],
+    [
+      "certifi",
+      "2026.10.23"
+    ],
+    [
+      "click",
+      "8.1.8"
+    ],
+    [
+      "confia-lean-auditor",
+      "0.1.0"
+    ],
+    [
+      "confia-lean-auditor",
+      "0.1.0"
+    ],
+    [
+      "distro",
+      "1.9.0"
+    ],
+    [
+      "exceptiongroup",
+      "1.3.1"
+    ],
+    [
+      "fastapi",
+      "0.128.8"
+    ],
+    [
+      "h11",
+      "0.16.0"
+    ],
+    [
+      "httpcore",
+      "1.0.9"
+    ],
+    [
+      "httpx",
+      "0.28.1"
+    ],
+    [
+      "idna",
+      "3.20"
+    ],
+    [
+      "iniconfig",
+      "2.1.0"
+    ],
+    [
+      "jiter",
+      "0.16.0"
+    ],
+    [
+      "openai",
+      "2.48.0"
+    ],
+    [
+      "packaging",
+      "26.3"
+    ],
+    [
+      "pillow",
+      "11.3.0"
+    ],
+    [
+      "pip",
+      "26.0.1"
+    ],
+    [
+      "pluggy",
+      "1.6.0"
+    ],
+    [
+      "pydantic",
+      "2.13.5"
+    ],
+    [
+      "pydantic_core",
+      "2.46.5"
+    ],
+    [
+      "pypdfium2",
+      "4.30.0"
+    ],
+    [
+      "pytest",
+      "8.4.2"
+    ],
+    [
+      "setuptools",
+      "58.0.4"
+    ],
+    [
+      "sniffio",
+      "1.3.1"
+    ],
+    [
+      "starlette",
+      "0.49.3"
+    ],
+    [
+      "tomli",
+      "2.5.0"
+    ],
+    [
+      "tqdm",
+      "4.70.1"
+    ],
+    [
+      "typing-inspection",
+      "0.4.2"
+    ],
+    [
+      "typing_extensions",
+      "4.16.0"
+    ],
+    [
+      "uvicorn",
+      "0.39.0"
+    ]
+  ],
+  "mathlib_head": "ab19bac90981b27f5380941f4b36617e738358c9",
+  "mathlib_status_sha256": "0dbfbfef4e2af1cf3494b1b5012ea9f6cf6d42300ff3e56143205ed1069a2d2a",
+  "mathlib_diff_sha256": "b69a6103bf35b0dcb0ec849a8961ef4aeb2a3851e1c126d704396ea7982277a9",
+  "lake_realpath": "/Users/LinMarcolino/Documents/confia-lean-auditor-dynamic/.lake",
+  "lean_inputs": {
+    "lean-toolchain": "db7bb24b756d745bbde83fe92718b51bd3625dae3701ba0f598d0eedcd3f3028",
+    "lakefile.toml": "1a256e6f5f182586c3e0f3d78e02cac3cf3cf22f11088382790351a3455ca5aa",
+    "lake-manifest.json": "670c704b256c73ce48046b838bf9562b92bf128a2f0239f521e2f9ec404f6219"
+  },
+  "grader_file": "/private/tmp/confia-r1-attribution-baseline-5aa7344/app/confia_lean_auditor/dynamic/grader.py",
+  "grader_sha256": "17af5d6d0163cbd1c9bcce9b258615dba7ea226a8e0f9d3f871a868a9b5746e7"
+}

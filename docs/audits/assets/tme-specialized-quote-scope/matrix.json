@@ -1,0 +1,493 @@
+{
+  "mode": "SYNTHETIC_INTEGRATION_CONTROLS_EXISTING_FIXTURES",
+  "paid_api_calls": 0,
+  "note": "Providers simulados identificados nos testes. Os cenários partial/false substituem um único item da solução completa. Não são respostas históricas nem medidas de acurácia GPT. O replay separado da auditoria real usa apenas as respostas arquivadas e resulta em 17/20.",
+  "matrix": [
+    {
+      "problem": "TME2026P1",
+      "kind": "false",
+      "complete_fixtures": [
+        "a_complete",
+        "b_complete",
+        "c_complete",
+        "d_complete"
+      ],
+      "substituted_fixture": "a_single_arithmetic_error",
+      "score": 19.0,
+      "items": [
+        {
+          "id": "a",
+          "points": "2",
+          "status": "decided"
+        },
+        {
+          "id": "b",
+          "points": "5",
+          "status": "decided"
+        },
+        {
+          "id": "c",
+          "points": "6",
+          "status": "decided"
+        },
+        {
+          "id": "d",
+          "points": "6",
+          "status": "decided"
+        }
+      ],
+      "pending_scoring_items": [],
+      "simulated_provider_calls": 0
+    },
+    {
+      "problem": "TME2026P1",
+      "kind": "full",
+      "complete_fixtures": [
+        "a_complete",
+        "b_complete",
+        "c_complete",
+        "d_complete"
+      ],
+      "substituted_fixture": null,
+      "score": 20.0,
+      "items": [
+        {
+          "id": "a",
+          "points": "3",
+          "status": "decided"
+        },
+        {
+          "id": "b",
+          "points": "5",
+          "status": "decided"
+        },
+        {
+          "id": "c",
+          "points": "6",
+          "status": "decided"
+        },
+        {
+          "id": "d",
+          "points": "6",
+          "status": "decided"
+        }
+      ],
+      "pending_scoring_items": [],
+      "simulated_provider_calls": 0
+    },
+    {
+      "problem": "TME2026P1",
+      "kind": "partial",
+      "complete_fixtures": [
+        "a_complete",
+        "b_complete",
+        "c_complete",
+        "d_complete"
+      ],
+      "substituted_fixture": "a_only_inverse",
+      "score": 18.0,
+      "items": [
+        {
+          "id": "a",
+          "points": "1",
+          "status": "decided"
+        },
+        {
+          "id": "b",
+          "points": "5",
+          "status": "decided"
+        },
+        {
+          "id": "c",
+          "points": "6",
+          "status": "decided"
+        },
+        {
+          "id": "d",
+          "points": "6",
+          "status": "decided"
+        }
+      ],
+      "pending_scoring_items": [],
+      "simulated_provider_calls": 1
+    },
+    {
+      "problem": "TME2026P2",
+      "kind": "false",
+      "complete_fixtures": [
+        "a_text_complete",
+        "b_complete",
+        "c_complete"
+      ],
+      "substituted_fixture": "b_false_center",
+      "score": 13.0,
+      "items": [
+        {
+          "id": "a",
+          "points": "5",
+          "status": "decided"
+        },
+        {
+          "id": "b",
+          "points": "0",
+          "status": "decided"
+        },
+        {
+          "id": "c",
+          "points": "8",
+          "status": "decided"
+        }
+      ],
+      "pending_scoring_items": [],
+      "simulated_provider_calls": 5
+    },
+    {
+      "problem": "TME2026P2",
+      "kind": "full",
+      "complete_fixtures": [
+        "a_text_complete",
+        "b_complete",
+        "c_complete"
+      ],
+      "substituted_fixture": null,
+      "score": 20.0,
+      "items": [
+        {
+          "id": "a",
+          "points": "5",
+          "status": "decided"
+        },
+        {
+          "id": "b",
+          "points": "7",
+          "status": "decided"
+        },
+        {
+          "id": "c",
+          "points": "8",
+          "status": "decided"
+        }
+      ],
+      "pending_scoring_items": [],
+      "simulated_provider_calls": 0
+    },
+    {
+      "problem": "TME2026P2",
+      "kind": "partial",
+      "complete_fixtures": [
+        "a_text_complete",
+        "b_complete",
+        "c_complete"
+      ],
+      "substituted_fixture": "a_pairs_only",
+      "score": 18.0,
+      "items": [
+        {
+          "id": "a",
+          "points": "3",
+          "status": "decided"
+        },
+        {
+          "id": "b",
+          "points": "7",
+          "status": "decided"
+        },
+        {
+          "id": "c",
+          "points": "8",
+          "status": "decided"
+        }
+      ],
+      "pending_scoring_items": [],
+      "simulated_provider_calls": 3
+    },
+    {
+      "problem": "TME2026P3",
+      "kind": "false",
+      "complete_fixtures": [
+        "a_complete",
+        "b_official",
+        "c_complete"
+      ],
+      "substituted_fixture": "a_wrong_probability",
+      "score": 18.0,
+      "items": [
+        {
+          "id": "a",
+          "points": "2",
+          "status": "decided"
+        },
+        {
+          "id": "b",
+          "points": "8",
+          "status": "decided"
+        },
+        {
+          "id": "c",
+          "points": "8",
+          "status": "decided"
+        }
+      ],
+      "pending_scoring_items": [],
+      "simulated_provider_calls": 0
+    },
+    {
+      "problem": "TME2026P3",
+      "kind": "full",
+      "complete_fixtures": [
+        "a_complete",
+        "b_official",
+        "c_complete"
+      ],
+      "substituted_fixture": null,
+      "score": 20.0,
+      "items": [
+        {
+          "id": "a",
+          "points": "4",
+          "status": "decided"
+        },
+        {
+          "id": "b",
+          "points": "8",
+          "status": "decided"
+        },
+        {
+          "id": "c",
+          "points": "8",
+          "status": "decided"
+        }
+      ],
+      "pending_scoring_items": [],
+      "simulated_provider_calls": 0
+    },
+    {
+      "problem": "TME2026P3",
+      "kind": "partial",
+      "complete_fixtures": [
+        "a_complete",
+        "b_official",
+        "c_complete"
+      ],
+      "substituted_fixture": "a_answer_only",
+      "score": 18.0,
+      "items": [
+        {
+          "id": "a",
+          "points": "2",
+          "status": "decided"
+        },
+        {
+          "id": "b",
+          "points": "8",
+          "status": "decided"
+        },
+        {
+          "id": "c",
+          "points": "8",
+          "status": "decided"
+        }
+      ],
+      "pending_scoring_items": [],
+      "simulated_provider_calls": 1
+    },
+    {
+      "problem": "TME2026P4",
+      "kind": "false",
+      "complete_fixtures": [
+        "a_complete",
+        "b_official",
+        "c_complete"
+      ],
+      "substituted_fixture": "a_wrong_perimeter",
+      "score": 19.0,
+      "items": [
+        {
+          "id": "a",
+          "points": "3",
+          "status": "decided"
+        },
+        {
+          "id": "b",
+          "points": "6",
+          "status": "decided"
+        },
+        {
+          "id": "c",
+          "points": "10",
+          "status": "decided"
+        }
+      ],
+      "pending_scoring_items": [],
+      "simulated_provider_calls": 0
+    },
+    {
+      "problem": "TME2026P4",
+      "kind": "full",
+      "complete_fixtures": [
+        "a_complete",
+        "b_official",
+        "c_complete"
+      ],
+      "substituted_fixture": null,
+      "score": 20.0,
+      "items": [
+        {
+          "id": "a",
+          "points": "4",
+          "status": "decided"
+        },
+        {
+          "id": "b",
+          "points": "6",
+          "status": "decided"
+        },
+        {
+          "id": "c",
+          "points": "10",
+          "status": "decided"
+        }
+      ],
+      "pending_scoring_items": [],
+      "simulated_provider_calls": 0
+    },
+    {
+      "problem": "TME2026P4",
+      "kind": "partial",
+      "complete_fixtures": [
+        "a_complete",
+        "b_official",
+        "c_complete"
+      ],
+      "substituted_fixture": "b_partial",
+      "score": 16.0,
+      "items": [
+        {
+          "id": "a",
+          "points": "4",
+          "status": "decided"
+        },
+        {
+          "id": "b",
+          "points": "2",
+          "status": "decided"
+        },
+        {
+          "id": "c",
+          "points": "10",
+          "status": "decided"
+        }
+      ],
+      "pending_scoring_items": [],
+      "simulated_provider_calls": 2
+    },
+    {
+      "problem": "TME2026P5",
+      "kind": "false",
+      "complete_fixtures": [
+        "a_complete",
+        "b_complete",
+        "c_complete",
+        "d_complete"
+      ],
+      "substituted_fixture": "a_false_product",
+      "score": 16.0,
+      "items": [
+        {
+          "id": "a",
+          "points": "2",
+          "status": "decided"
+        },
+        {
+          "id": "b",
+          "points": "4",
+          "status": "decided"
+        },
+        {
+          "id": "c",
+          "points": "6",
+          "status": "decided"
+        },
+        {
+          "id": "d",
+          "points": "4",
+          "status": "decided"
+        }
+      ],
+      "pending_scoring_items": [],
+      "simulated_provider_calls": 2
+    },
+    {
+      "problem": "TME2026P5",
+      "kind": "full",
+      "complete_fixtures": [
+        "a_complete",
+        "b_complete",
+        "c_complete",
+        "d_complete"
+      ],
+      "substituted_fixture": null,
+      "score": 20.0,
+      "items": [
+        {
+          "id": "a",
+          "points": "6",
+          "status": "decided"
+        },
+        {
+          "id": "b",
+          "points": "4",
+          "status": "decided"
+        },
+        {
+          "id": "c",
+          "points": "6",
+          "status": "decided"
+        },
+        {
+          "id": "d",
+          "points": "4",
+          "status": "decided"
+        }
+      ],
+      "pending_scoring_items": [],
+      "simulated_provider_calls": 0
+    },
+    {
+      "problem": "TME2026P5",
+      "kind": "partial",
+      "complete_fixtures": [
+        "a_complete",
+        "b_complete",
+        "c_complete",
+        "d_complete"
+      ],
+      "substituted_fixture": "a_list_only",
+      "score": 16.0,
+      "items": [
+        {
+          "id": "a",
+          "points": "2",
+          "status": "decided"
+        },
+        {
+          "id": "b",
+          "points": "4",
+          "status": "decided"
+        },
+        {
+          "id": "c",
+          "points": "6",
+          "status": "decided"
+        },
+        {
+          "id": "d",
+          "points": "4",
+          "status": "decided"
+        }
+      ],
+      "pending_scoring_items": [],
+      "simulated_provider_calls": 3
+    }
+  ]
+}

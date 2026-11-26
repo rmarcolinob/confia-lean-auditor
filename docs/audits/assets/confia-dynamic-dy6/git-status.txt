@@ -1,0 +1,37 @@
+ M app/confia_lean_auditor/assessments/models.py
+ M app/confia_lean_auditor/assessments/store.py
+ M app/confia_lean_auditor/dynamic/grading_context.py
+ M app/confia_lean_auditor/dynamic/human_decisions.py
+ M app/confia_lean_auditor/dynamic/reconciliation_service.py
+ M app/confia_lean_auditor/dynamic/review_service.py
+ M app/confia_lean_auditor/dynamic/router.py
+ M app/confia_lean_auditor/static/dynamic.js
+ M app/confia_lean_auditor/static/tme/correction-workspace.js
+ M app/confia_lean_auditor/static/tme/full-exam.js
+ M app/confia_lean_auditor/static/tme/index.html
+ M app/confia_lean_auditor/static/tme/tme.js
+ M app/confia_lean_auditor/static/tme/workspace-report.js
+ M app/confia_lean_auditor/submission_audits/schemas.py
+ M app/confia_lean_auditor/submission_audits/service.py
+ M app/confia_lean_auditor/submissions/schemas.py
+ M app/confia_lean_auditor/submissions/store.py
+ M app/confia_lean_auditor/tme/correction_engine.py
+ M app/confia_lean_auditor/tme/exam_models.py
+ M app/confia_lean_auditor/tme/exam_router.py
+ M app/confia_lean_auditor/tme/exam_store.py
+ M app/confia_lean_auditor/tme/finalization.py
+ M app/confia_lean_auditor/tme/home_summary.py
+ M app/confia_lean_auditor/tme/human_decisions.py
+ M app/confia_lean_auditor/tme/question_review.py
+ M app/confia_lean_auditor/tme/store.py
+?? app/confia_lean_auditor/dynamic/assessment_router.py
+?? app/confia_lean_auditor/dynamic/assessment_service.py
+?? app/confia_lean_auditor/dynamic/feedback.py
+?? app/confia_lean_auditor/dynamic/product_adapter.py
+?? app/confia_lean_auditor/dynamic/solution_input.py
+?? app/confia_lean_auditor/static/dynamic-assessment.js
+?? docs/audits/CONFIA_DYNAMIC_DY6_MULTIQUESTION_IMPLEMENTACAO_01.md
+?? docs/audits/assets/confia-dynamic-dy6/
+?? docs/integration/
+?? tests/js/test_dynamic_dy6.cjs
+?? tests/test_dynamic_dy6.py

@@ -1,0 +1,361 @@
+{
+  "schema_version": "pauta.v1",
+  "problem_id": "TME2026P2",
+  "title": "TME² 2026 — Problema 2",
+  "max_score": 20,
+  "unresolved_policy": "withhold",
+  "obligations": [
+    {
+      "id": "a.pair_sum",
+      "description": "Pares opostos de soma 10 para centro 5.",
+      "accepted_origins": [
+        "deterministic",
+        "student_lean"
+      ]
+    },
+    {
+      "id": "a.line_sum",
+      "description": "Soma comum 15 para centro 5.",
+      "accepted_origins": [
+        "deterministic",
+        "student_lean"
+      ]
+    },
+    {
+      "id": "a.pairs",
+      "description": "Quatro pares opostos corretos, sem impor orientação ou ordem.",
+      "accepted_origins": [
+        "deterministic",
+        "student_lean"
+      ]
+    },
+    {
+      "id": "a.placement",
+      "description": "Colocação completa, equilibrada, centro 5 e números 1–9 uma vez.",
+      "accepted_origins": [
+        "deterministic",
+        "student_lean"
+      ]
+    },
+    {
+      "id": "a.complete_configuration",
+      "description": "Preenchimento completo válido autoriza 5/5, mesmo sem explicação textual.",
+      "accepted_origins": [
+        "deterministic",
+        "student_lean"
+      ]
+    },
+    {
+      "id": "b.balance_relation",
+      "description": "Relação de contagem 4S=45+3x.",
+      "accepted_origins": [
+        "deterministic",
+        "student_lean"
+      ]
+    },
+    {
+      "id": "b.sum_formula",
+      "description": "Isola S=(45+3x)/4.",
+      "accepted_origins": [
+        "deterministic",
+        "student_lean"
+      ]
+    },
+    {
+      "id": "b.integral_sum",
+      "description": "b.integral_sum",
+      "accepted_origins": [
+        "deterministic",
+        "student_lean"
+      ]
+    },
+    {
+      "id": "b.modular_condition",
+      "description": "b.modular_condition",
+      "accepted_origins": [
+        "deterministic",
+        "student_lean"
+      ]
+    },
+    {
+      "id": "b.centers",
+      "description": "Inteireza e argumento matemático identificam exatamente os centros 1,5,9.",
+      "accepted_origins": [
+        "deterministic",
+        "student_lean"
+      ]
+    },
+    {
+      "id": "b.admissible_center",
+      "description": "b.admissible_center",
+      "accepted_origins": [
+        "deterministic",
+        "student_lean"
+      ]
+    },
+    {
+      "id": "b.center_sums",
+      "description": "Associa centros e somas: (1,12),(5,15),(9,18).",
+      "accepted_origins": [
+        "deterministic",
+        "student_lean"
+      ]
+    },
+    {
+      "id": "b.sum_at_five",
+      "description": "b.sum_at_five",
+      "accepted_origins": [
+        "deterministic",
+        "student_lean"
+      ]
+    },
+    {
+      "id": "b.realizable_1",
+      "description": "b.realizable_1",
+      "accepted_origins": [
+        "deterministic",
+        "student_lean"
+      ]
+    },
+    {
+      "id": "b.realizable_5",
+      "description": "b.realizable_5",
+      "accepted_origins": [
+        "deterministic",
+        "student_lean"
+      ]
+    },
+    {
+      "id": "b.realizable_9",
+      "description": "b.realizable_9",
+      "accepted_origins": [
+        "deterministic",
+        "student_lean"
+      ]
+    },
+    {
+      "id": "c.max_center",
+      "description": "Centro máximo 9.",
+      "accepted_origins": [
+        "deterministic",
+        "student_lean"
+      ]
+    },
+    {
+      "id": "c.max_sum",
+      "description": "Maior soma comum 18.",
+      "accepted_origins": [
+        "deterministic",
+        "student_lean"
+      ]
+    },
+    {
+      "id": "c.pairs",
+      "description": "Quatro pares de soma 9, usando os números externos uma vez.",
+      "accepted_origins": [
+        "deterministic",
+        "student_lean"
+      ]
+    },
+    {
+      "id": "c.pair_permutations",
+      "description": "24 distribuições dos quatro pares nas quatro linhas distintas.",
+      "accepted_origins": [
+        "deterministic",
+        "student_lean"
+      ]
+    },
+    {
+      "id": "c.pair_orientations",
+      "description": "16 orientações independentes dos quatro pares.",
+      "accepted_origins": [
+        "deterministic",
+        "student_lean"
+      ]
+    },
+    {
+      "id": "c.total",
+      "description": "Total de 384 preenchimentos.",
+      "accepted_origins": [
+        "deterministic",
+        "student_lean"
+      ]
+    },
+    {
+      "id": "c.counting_product",
+      "description": "Contagem equivalente explícita como produto 24×16.",
+      "accepted_origins": [
+        "deterministic",
+        "student_lean"
+      ]
+    }
+  ],
+  "items": [
+    {
+      "id": "a",
+      "max_points": 5,
+      "scoring_strategy": "max_of",
+      "children": [
+        {
+          "id": "a.complete_configuration_path",
+          "max_points": 5,
+          "scoring_strategy": "all_of",
+          "obligation_ids": [
+            "a.complete_configuration"
+          ]
+        },
+        {
+          "id": "a.obligation_path",
+          "max_points": 5,
+          "scoring_strategy": "additive",
+          "children": [
+            {
+              "id": "a.rule",
+              "max_points": 1,
+              "scoring_strategy": "any_of",
+              "obligation_ids": [
+                "a.pair_sum",
+                "a.line_sum"
+              ]
+            },
+            {
+              "id": "a.four_pairs",
+              "max_points": 2,
+              "scoring_strategy": "all_of",
+              "obligation_ids": [
+                "a.pairs"
+              ]
+            },
+            {
+              "id": "a.placed_pairs",
+              "max_points": 2,
+              "scoring_strategy": "all_of",
+              "obligation_ids": [
+                "a.placement"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b",
+      "max_points": 7,
+      "scoring_strategy": "additive",
+      "children": [
+        {
+          "id": "b.relation",
+          "max_points": 2,
+          "scoring_strategy": "all_of",
+          "obligation_ids": [
+            "b.balance_relation"
+          ]
+        },
+        {
+          "id": "b.formula",
+          "max_points": 1,
+          "scoring_strategy": "all_of",
+          "obligation_ids": [
+            "b.sum_formula"
+          ]
+        },
+        {
+          "id": "b.integral_centers",
+          "max_points": 2,
+          "scoring_strategy": "all_of",
+          "obligation_ids": [
+            "b.centers"
+          ]
+        },
+        {
+          "id": "b.sums",
+          "max_points": 1,
+          "scoring_strategy": "all_of",
+          "obligation_ids": [
+            "b.center_sums"
+          ]
+        },
+        {
+          "id": "b.realizability",
+          "max_points": 1,
+          "scoring_strategy": "all_of",
+          "obligation_ids": [
+            "b.realizable_1",
+            "b.realizable_5",
+            "b.realizable_9"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "c",
+      "max_points": 8,
+      "scoring_strategy": "additive",
+      "children": [
+        {
+          "id": "c.maximum",
+          "max_points": 1,
+          "scoring_strategy": "all_of",
+          "obligation_ids": [
+            "c.max_center",
+            "c.max_sum"
+          ]
+        },
+        {
+          "id": "c.max_pairs",
+          "max_points": 2,
+          "scoring_strategy": "all_of",
+          "obligation_ids": [
+            "c.pairs"
+          ]
+        },
+        {
+          "id": "c.counting",
+          "max_points": 5,
+          "scoring_strategy": "max_of",
+          "children": [
+            {
+              "id": "c.factorized_count_path",
+              "max_points": 5,
+              "scoring_strategy": "additive",
+              "children": [
+                {
+                  "id": "c.distributions",
+                  "max_points": 2,
+                  "scoring_strategy": "all_of",
+                  "obligation_ids": [
+                    "c.pair_permutations"
+                  ]
+                },
+                {
+                  "id": "c.orientations",
+                  "max_points": 2,
+                  "scoring_strategy": "all_of",
+                  "obligation_ids": [
+                    "c.pair_orientations"
+                  ]
+                },
+                {
+                  "id": "c.conclusion",
+                  "max_points": 1,
+                  "scoring_strategy": "all_of",
+                  "obligation_ids": [
+                    "c.total"
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "c.direct_product_path",
+              "max_points": 5,
+              "scoring_strategy": "all_of",
+              "obligation_ids": [
+                "c.counting_product"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

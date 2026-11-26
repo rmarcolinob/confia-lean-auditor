@@ -1,0 +1,47 @@
+{
+  "problem_id": "ITA2025F2Q1",
+  "score": null,
+  "max_score": 10,
+  "verdict": "inconclusivo",
+  "rubric_assessment": {
+    "score": null, "max_score": 10, "assessment_status": "partial", "evaluated_score": 7, "evaluated_max_score": 7,
+    "items": [
+      {"id": "initial", "description": "Identifica a relação inicial", "points": 2, "max_points": 2, "detected": true,
+       "mathematical_status": "supported", "verification_status": "available", "evidence": "A solução estabelece x = 2.", "claim_id": "extracted_1"},
+      {"id": "development", "description": "Desenvolve os cálculos intermediários", "points": 3, "max_points": 3, "detected": true,
+       "mathematical_status": "supported", "verification_status": "available", "evidence": "A solução desenvolve y = x + 1."},
+      {"id": "pending", "description": "Justifica a etapa final", "points": null, "max_points": 3, "detected": false,
+       "mathematical_status": "indeterminate", "verification_status": "technical_error", "evidence": "A solução afirma z = 4 sem concluir a justificativa.",
+       "assessment_note": "A verificação não foi concluída; a evidência disponível não permite decidir este critério."},
+      {"id": "conclusion", "description": "Apresenta a conclusão parcial", "points": 2, "max_points": 2, "detected": true,
+       "mathematical_status": "supported", "verification_status": "available", "evidence": "A solução registra y = 3."}
+    ]
+  },
+  "pedagogical_report": {
+    "summary": "A solução desenvolve os passos iniciais; a etapa final permanece indeterminada.",
+    "result": "inconclusivo", "score": null, "max_score": 10, "verdict": "inconclusivo", "reliability": "parcial",
+    "assessment_status": "partial", "verification_status": "technical_error", "evaluated_score": 7, "evaluated_max_score": 7,
+    "evidence_items": [{"id": "initial", "title": "Relação inicial", "result": "correta", "evidence": "A solução estabelece x = 2.", "explanation": "A relação inicial sustenta o desenvolvimento.", "reliability": "alta"}],
+    "attention_points": ["Confira a justificativa da etapa final."]
+  },
+  "extracted_claims": {"problem_id": "ITA2025F2Q1", "claims": [
+    {"id": "extracted_1", "type": "relation", "text": "Relação inicial x = 2", "evidence": "A solução estabelece x = 2.", "confidence": 0.9}
+  ]},
+  "student_claims": [
+    {"id": "claim_1", "raw_text": "2 + 2 = 4", "normalized_text": "2 + 2 = 4"},
+    {"id": "claim_2", "raw_text": "z = 4", "normalized_text": "z = 4"},
+    {"id": "claim_3", "raw_text": "y = x + 1", "normalized_text": "y = x + 1"}
+  ],
+  "student_claim_checks": [
+    {"id": "claim_1", "raw_text": "2 + 2 = 4", "status": "verified", "compiled": true, "lean_file": "claim_1.lean"},
+    {"id": "claim_2", "raw_text": "z = 4", "status": "technical_error", "compiled": false, "failure_category": "TIMEOUT", "lean_file": null},
+    {"id": "claim_3", "raw_text": "y = x + 1", "status": "unverified", "compiled": false, "lean_file": null}
+  ],
+  "formal_steps": [
+    {"id": "step_1", "type": "equality", "description": "Igualdade aritmética selecionada", "evidence": "2 + 2 = 4", "lhs": "2+2", "rhs": "4", "lean_method": "norm_num", "lean_file": "step_1.lean", "status": "verified", "compiled": true, "exit_code": 0}
+  ],
+  "microclaims": [],
+  "lean_certificate": {"status": "unverified", "compiled": false, "exit_code": 1, "uses_forbidden_token": false, "forbidden_tokens_found": [], "lean_file": "Attempt.lean"},
+  "feedback": "Relatório explicativo existente.",
+  "reproducibility": null
+}

@@ -1,0 +1,3 @@
+Browser tab: 3, Title: "ConfIA — Confiabilidade e Explicabilidade", URL: "http://127.0.0.1:8768/tme?view=new&mode=dynamic&problem_id=dyn_a6b75db34857448da1d9797268b87fbb".
+There has been no change in the accessibility tree.
+The focused UI element is 77 text entry area (settable) Description: Critério c1_metodo_justificativa: descrição, Value: Atribuir até 2 pontos à escolha e justificativa de um método matemático válido, incluindo fatoração, fórmula quadrática ou equivalente. A execução dos cálculos é pontuada separadamente no critério seguinte. O enunciado já explicita o domínio real.

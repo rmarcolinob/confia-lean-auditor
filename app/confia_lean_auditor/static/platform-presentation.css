@@ -1,0 +1,83 @@
+/* TME components own cards, icons, type and hero geometry. These rules adapt
+   only the entry/student/management layouts; the approved Teacher is untouched. */
+body[data-platform-profile]:not([data-platform-profile=""]) { background: var(--confia-bg); color: var(--confia-text); }
+body[data-platform-profile]:not([data-platform-profile=""]) #confia-surface > .institutional-header,
+body[data-platform-profile]:not([data-platform-profile=""]) .shell-sidebar,
+body[data-platform-profile="platform"] .page-heading,
+body[data-platform-profile][data-platform-view="home"]:not([data-platform-profile=""]) .page-heading { display: none; }
+body[data-platform-profile]:not([data-platform-profile=""]) #confia-surface .app-layout { display: block; width: 100%; max-width: var(--confia-content-max); margin: auto; }
+body[data-platform-profile]:not([data-platform-profile=""]) #app-root { padding: 12px 24px 32px; }
+body[data-platform-profile][data-platform-view="home"]:not([data-platform-profile=""]) #app-root { padding: 0; }
+#platform-header { display: flex; position: relative; }
+#platform-header[hidden] { display: none; }
+#platform-header .home-brand { flex-shrink: 0; }
+#platform-header .home-brand span { max-width: 170px; }
+#platform-header .home-bottom-nav { display: flex; position: static; margin-left: auto; }
+#platform-header .home-bottom-nav[hidden] { display: none; }
+.platform-dashboard { margin: 0; }
+.platform-dashboard .home-action { width: 100%; text-decoration: none; }
+.platform-dashboard button { margin-bottom: 0; }
+.platform-dashboard .home-primary { color: white; }
+.platform-dashboard .home-action strong { color: var(--confia-navy); }
+.platform-dashboard .home-quick { row-gap: 18px; }
+.platform-dashboard .home-hero h1 { margin: 8px 0 10px; }
+.platform-dashboard .home-action:disabled { opacity: .65; cursor: default; transform: none; }
+.platform-dashboard .home-action:disabled .home-action-caption { color: var(--confia-muted); }
+.platform-dashboard .student-enrollment { margin-top: 12px; color: var(--confia-muted) !important; font-size: var(--confia-font-caption); font-weight: 400; }
+.platform-entry .home-banner { grid-template-columns: minmax(0,1fr) 240px; gap: 32px; min-height: 214px; }
+.platform-entry .home-intro { max-width: 640px; }
+.platform-entry .home-hero h1 { max-width: none; }
+.platform-session-note { grid-column: 1 / -1; display: flex; align-items: center; gap: 14px; padding: 16px 20px; background: var(--confia-blue-light); border-radius: var(--confia-radius-md); color: var(--confia-navy); }
+.platform-session-note p { margin: 4px 0 0; color: var(--confia-muted); font-size: var(--confia-font-body); }
+.platform-panel-grid { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 24px; }
+.platform-panel { padding: 24px; background: var(--confia-surface); border: 1px solid var(--confia-border); border-radius: var(--confia-radius); box-shadow: var(--confia-shadow); }
+.platform-panel > .home-icon { width: 40px; height: 40px; padding: 8px; background: var(--confia-blue-light); color: var(--confia-blue); border-radius: var(--confia-radius-sm); }
+.platform-panel h2 { font-size: var(--confia-font-section); margin: 16px 0 10px; color: var(--confia-navy); }
+.platform-panel p { color: var(--confia-muted); line-height: 1.6; }
+body[data-platform-profile="management"] #management-overview { margin: 0 24px 24px; padding: 24px; }
+body[data-platform-profile="management"][data-platform-view="overview"] #management-overview { margin: 0; }
+body[data-platform-profile="management"] .macro-grid { grid-template-columns: repeat(4,minmax(0,1fr)); gap: 16px; }
+body[data-platform-profile="management"] .macro-card { min-width: 0; min-height: 112px; padding: 20px; background: var(--confia-blue-light); box-shadow: none !important; }
+body[data-platform-profile="management"] .macro-card:nth-child(4n+2) { background: var(--confia-yellow-light); }
+body[data-platform-profile="management"] .macro-card:nth-child(4n+3) { background: var(--confia-green-light); }
+body[data-platform-profile="management"] .macro-card:nth-child(4n) { background: var(--confia-rose-light); }
+body[data-platform-profile="management"] .macro-card strong { font-size: var(--confia-font-value); color: var(--confia-navy); overflow-wrap: anywhere; }
+body[data-platform-profile="management"] .management-table :is(th,td) { padding: 14px 12px; }
+body[data-platform-profile="management"] #management-message { padding: 16px; background: var(--confia-blue-light); border-radius: var(--confia-radius-sm); color: var(--confia-muted); }
+body[data-platform-profile="student"] .tutoria-module { border-top: 1px solid var(--confia-border); border-radius: var(--confia-radius); }
+body[data-platform-profile="student"] .tutoria-module .tutoria-icon { background: var(--confia-blue-light); color: var(--confia-blue); border-radius: var(--confia-radius-sm); }
+body[data-platform-profile="student"] .tutoria-navigation a { border-radius: var(--confia-radius-sm); }
+body[data-platform-profile="student"] #tutoria-content .tutoria-featured { border-top: 1px solid var(--confia-border); }
+/* Existing notebook sizing, toolbar offsets and assistant reservation stay intact. */
+body[data-platform-profile="student"][data-resolution-active="true"] #platform-header { min-height: 56px; padding-block: 8px; }
+body[data-platform-profile="student"][data-resolution-active="true"] #platform-navigation { display: none; }
+body[data-platform-profile="student"][data-resolution-active="true"] #app-root { padding: 8px 16px 24px; }
+body[data-platform-profile]:not([data-platform-profile=""]) .institutional-footer { max-width: var(--confia-content-max); }
+@media (max-width:1099px) {
+  body[data-platform-profile="management"] .macro-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
+  .platform-entry .home-illustration { position: static; width: 100%; opacity: .85; }
+}
+@media (max-width:767px) {
+  #platform-header { flex-wrap: wrap; }
+  #platform-header .home-avatar { margin-left: auto; }
+  #platform-header .home-bottom-nav { order: 3; width: 100%; display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); height: auto; padding: 8px 0 0; background: transparent; box-shadow: none; border-top: 1px solid var(--confia-border); }
+  #platform-header .home-bottom-nav button { min-height: 44px; margin: 0; }
+  body[data-platform-profile="management"] #platform-navigation { grid-template-columns: repeat(2,minmax(0,1fr)); }
+  .platform-dashboard .home-quick { grid-template-columns: repeat(2,minmax(0,1fr)); gap: 10px; }
+  .platform-dashboard .home-action { min-height: 144px; padding: 14px; }
+  .platform-entry .home-quick { grid-template-columns: 1fr; }
+  .platform-entry .home-action { min-height: 116px; display: grid; grid-template-columns: 36px 1fr 16px; gap: 6px 14px; align-items: center; }
+  .platform-entry .home-action > .home-icon:first-child { grid-row: 1 / 3; }
+  .platform-entry .home-action strong, .platform-entry .home-action-caption { grid-column: 2; margin: 0; }
+  .platform-entry .home-action > .home-icon:last-child { grid-column: 3; grid-row: 1 / 3; }
+  .platform-entry .home-banner { min-height: 0; }
+  .platform-entry .home-illustration { display: none; }
+  .platform-session-note { margin: 20px 0; align-items: flex-start; }
+  .platform-panel-grid { grid-template-columns: 1fr; gap: 16px; }
+  body[data-platform-profile]:not([data-platform-profile=""]) #app-root { padding: 8px 20px 24px; }
+  body[data-platform-profile][data-platform-view="home"]:not([data-platform-profile=""]) #app-root { padding: 0; }
+  body[data-platform-profile="management"] #management-overview { margin: 0 20px 24px; padding: 18px; }
+}
+@media (max-width:767px) {
+  #platform-header .home-brand span { max-width: 138px; font-size: var(--confia-font-caption); }
+}

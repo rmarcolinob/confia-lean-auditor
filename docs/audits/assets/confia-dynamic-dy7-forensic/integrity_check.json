@@ -1,0 +1,25 @@
+{
+  "historical_files_checked": 2227,
+  "changed_historical_files": [],
+  "application_sha256": "a55f5f0fd58257e1fe926c4c5e6367f71d5664712f85ddeda9c9cc1fa0c17cd6",
+  "cases_per_profile": 8,
+  "criteria_per_profile": 24,
+  "paired_profile_points_and_gates_identical": true,
+  "missed_credit_criteria_per_profile": 12,
+  "under_credit_points_per_profile": 34,
+  "code_or_gold_mutated": false,
+  "provider_calls": 0,
+  "grader_reruns": 0,
+  "Lean_runs": 0,
+  "diagnostics": "Read-only shape/regex and independent_limit on original persisted evidence; no alternative solutions or point proposals generated.",
+  "outputs_sha256": {
+    "docs/audits/CONFIA_DYNAMIC_DY7_HOLDOUT_FORENSIC_01.md": "bd9ddbd7f04f813359f8aedf2dc52791ed93f24c7973bcea7eddf7fcffff86c0",
+    "docs/audits/assets/confia-dynamic-dy7-forensic/cases.csv": "2db12625b002c2ee0cec7afd1a369accdd39d4d53bcb87a4aeedbdc9a73d64b2",
+    "docs/audits/assets/confia-dynamic-dy7-forensic/criteria.csv": "310a716105f2c9e515b49d9e995c8e5a21f94d1d4b8553e2c15348852a82027d",
+    "docs/audits/assets/confia-dynamic-dy7-forensic/criteria_all_profiles.csv": "3471d1824cd50233703c2fab22d4415a9ce4eec9b48247490761dcf9484535d1",
+    "docs/audits/assets/confia-dynamic-dy7-forensic/dy7_holdout_forensic.json": "cd2eae5eff3d02f52f7f0cf25a6a196aab381cf5bb2151319138ab8b6ae523c0",
+    "docs/audits/assets/confia-dynamic-dy7-forensic/evidence_snapshots.json": "fa47377820bc196cf20c3b069e028e8ea02155dba259cb12f3e71d78c9fc9c06",
+    "docs/audits/assets/confia-dynamic-dy7-forensic/freeze_manifest.json": "d00cd83d2da9d1cd5f6bce3b4e1e80f10a5ced4d1978f10c4a1f30ebc5c4e55e",
+    "docs/audits/assets/confia-dynamic-dy7-forensic/root_causes.csv": "54a99c786392fe8036d64fe0c1ff7f76ca0207b68c8def480ac76cb8b6acd3a2"
+  }
+}

@@ -1,0 +1,123 @@
+Browser tab: 4, Title: "ConfIA — Confiabilidade e Explicabilidade", URL: "http://127.0.0.1:8769/tme?case_id=case_83f3912fa2634a7c9a9d8cf5b2e10419".
+1 AXWebArea ConfIA — Confiabilidade e Explicabilidade, URL: 127.0.0.1:8769/tme?case_id=case_83f3912fa2634a7c9a9d8cf5b2e10419
+	2 link Description: Ir para conteúdo, Value: 127.0.0.1:8769/tme?case_id=case_83f3912fa2634a7c9a9d8cf5b2e10419#main
+	3 container
+		4 text ConfIA Plataforma de
+		5 text correção assistida
+		6 button (collapsed) Description: Perfil do avaliador, ID: evaluator-avatar, Secondary Actions: Expand
+	7 container app
+		8 container
+			9 button Voltar para fila
+			10 heading Prova DY3-S3, Value: 1
+				11 text Prova DY3-S3
+			12 text Aguardando decisão Questão 1 · 1 questão disponível · DY3 Quadrática · Resolução textual
+			13 container Questões disponíveis desta prova
+				14 button Q1 · Questão atual
+			15 content list Progresso da correção
+				16 text Entrada
+				17 text Transcrição
+				18 text Análise
+				19 text Decisão
+		20 container
+			21 heading Enunciado, Value: 2
+				22 text Enunciado
+			23 button (collapsed) Ver enunciado completo, Secondary Actions: Expand
+			24 text Resolva no conjunto dos reais: 2y² - 14y + 24 = 0.
+		25 container
+			26 container solution-pane
+				27 container
+					28 heading Solução do participante, Value: 2
+						29 text Solução do participante
+					30 button (collapsed) Description: Expandir solução, Secondary Actions: Expand
+				31 tab group Visualização da solução
+					32 tab (selected, settable, boolean) Original, Value: 1, ID: tab-original
+					33 tab (selectable, settable, boolean) Transcrição, Value: 0, ID: tab-transcript
+					34 tab (selectable, settable, boolean) Comparar, Value: 0, ID: tab-compare
+				35 container Description: Original, ID: solution-views
+					36 container Original
+						37 text y²-7y+12=0; y=3
+				38 button (collapsed) Originais e histórico, Secondary Actions: Expand
+					39 text Originais e histórico
+			40 splitter Description: Redimensionar solução e análise, Help: Arraste ou use as setas. Home: 45%; End: 70%; duplo clique: 60%., Value: 60
+			41 container Description: Análise ConfIA, ID: analysis-pane
+				42 container
+					43 heading ANÁLISE CONFIA, Value: 2
+						44 text ANÁLISE CONFIA
+					45 button (expanded) Recolher análise, Secondary Actions: Collapse
+					46 container analysis-content
+						47 container Resultado sugerido
+							48 text Sugestão ConfIA
+							49 text 1,5 / 10
+							50 text Revisão Necessária
+							51 text Revisão necessária · sugestão provisória
+							52 text Modo: Correção dinâmica
+							53 text Preparação com revisão necessária; execução explicitamente permitida, resultado provisório.
+						54 container Cobertura da análise
+							55 heading Cobertura da análise, Value: 3
+								56 text Cobertura da análise
+							57 text 1/3 critérios decididos
+							58 text 3 critérios · 1 decididos · 0 claims formalmente verificados · 2 indeterminados
+						59 button (collapsed) Evidências e verificações da resolução, Secondary Actions: Expand
+							60 text Evidências e verificações da resolução
+						61 container
+							62 heading Critérios de correção, Value: 3
+								63 text Critérios de correção
+							64 button (collapsed) Indeterminado Critério 1 Indeterminado Justificar a resolução por transformações equivalentes., Secondary Actions: Expand
+								65 image Indeterminado
+								66 text Critério 1
+								67 text Indeterminado
+								68 text Justificar a resolução por transformações equivalentes.
+							69 button (collapsed) Secondary Actions: Expand, Sustentado Critério 2 1,5 / 3 Obter todas as raízes reais. Crédito parcial proporcional às raízes corretas.
+								70 image Sustentado
+								71 text Critério 2
+								72 text 1,5 / 3
+								73 text Obter todas as raízes reais. Crédito parcial proporcional às raízes corretas.
+							74 button (collapsed) Secondary Actions: Expand, Indeterminado Critério 3 Indeterminado Verificar as raízes por substituição. Crédito parcial proporcional às raízes corretas.
+								75 image Indeterminado
+								76 text Critério 3
+								77 text Indeterminado
+								78 text Verificar as raízes por substituição. Crédito parcial proporcional às raízes corretas.
+						79 container
+							80 heading Passos identificados, Value: 3
+								81 text Passos identificados
+							82 checkbox Description: Passo 1: y²-7y+12=0. Verificado no escopo, Value: 1
+								83 text 01
+								84 text y²-7y+12=0
+								85 image Sustentado
+							86 checkbox Description: Passo 2: y=3. Verificado no escopo, Value: 0
+								87 text 02
+								88 text y=3
+								89 image Sustentado
+							90 text y²-7y+12=0
+							91 text Verificado no escopo
+							92 text Trecho preservado: caracteres 0–10 da transcrição aceita.
+						93 container
+							94 heading Verificação matemática, Value: 3
+								95 text Verificação matemática
+							96 text 0 claims verificados formalmente 2 não formalizados 0 falhas técnicas
+							97 button (collapsed) Detalhes da verificação, Secondary Actions: Expand
+								98 text Detalhes da verificação
+						99 button (collapsed) Resumo e evidências da análise, Secondary Actions: Expand
+							100 text Resumo e evidências da análise
+						101 button (collapsed) Detalhes técnicos, Secondary Actions: Expand
+							102 text Detalhes técnicos
+		103 container Description: Decisão do avaliador, ID: evaluator-decision
+			104 heading Decisão do avaliador, Value: 2
+				105 text Decisão do avaliador
+			106 text Sugestão ConfIA
+			107 text 1,5 / 10
+			108 container
+				109 text Pontuação final
+				110 stepper (settable) Pontuação final
+				111 button Usar sugestão
+				112 button Ajustar
+				113 button (collapsed) Adicionar observação, Secondary Actions: Expand
+					114 text Adicionar observação
+				115 button Finalizar correção
+	116 container Description: Navegação principal, ID: home-bottom-nav
+		117 button Início
+		118 button Fila
+		119 button Nova
+		120 button Resultados
+
+The focused UI element is 1 AXWebArea ConfIA — Confiabilidade e Explicabilidade, URL: 127.0.0.1:8769/tme?case_id=case_83f3912fa2634a7c9a9d8cf5b2e10419

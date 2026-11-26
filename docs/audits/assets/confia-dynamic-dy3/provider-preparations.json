@@ -1,0 +1,627 @@
+[
+  {
+    "problem_id": "dyn_52d5ae37c2ce47cf9969761ef97d1dcd",
+    "status": "REVIEW_REQUIRED",
+    "preparation_id": "dprep_ea8a84ba40aa4841be65b402ce0b31b1",
+    "proposal": {
+      "mathematical_domain": "Equações quadráticas, álgebra elementar, números reais.",
+      "normalized_problem": "Resolver a equação quadrática 2y² - 14y + 24 = 0 no conjunto dos números reais.",
+      "data": [
+        "2y² - 14y + 24 = 0"
+      ],
+      "assumptions": [
+        {
+          "text": "A variável y é real.",
+          "source": "INFERRED"
+        }
+      ],
+      "objects": [
+        {
+          "name": "y",
+          "domain": "Reais",
+          "constraints": []
+        }
+      ],
+      "target": "Encontrar todos os valores reais de y que satisfazem 2y² - 14y + 24 = 0.",
+      "expects_unique_result": false,
+      "candidate_reference_solutions": [
+        {
+          "solution_id": "main_factorization",
+          "strategy_id": "factorization",
+          "strategy_label": "Fatoração da equação quadrática",
+          "claims": [
+            {
+              "claim_id": "clm1_main_factorization",
+              "text": "Divida ambos os lados da equação por 2 para simplificar.",
+              "normalized_form": "y² - 7y + 12 = 0",
+              "claim_type": "EQUIVALENCE",
+              "dependencies": [],
+              "mathematical_objects": [
+                "y"
+              ],
+              "proposed_verifier": "EXACT_ARITHMETIC",
+              "verifier_reason": "Simplificação algébrica.",
+              "formalizability_candidate": true,
+              "check": {
+                "kind": "EQUALITY",
+                "left": "2y^2 - 14y + 24",
+                "right": "2*(y^2 - 7y + 12)",
+                "variable": "y",
+                "values": []
+              }
+            },
+            {
+              "claim_id": "clm2_main_factorization",
+              "text": "Fatore o polinômio: y² - 7y + 12 = (y - 3)(y - 4)",
+              "normalized_form": "y^2 - 7y + 12 = (y-3)*(y-4)",
+              "claim_type": "EQUALITY",
+              "dependencies": [
+                "clm1_main_factorization"
+              ],
+              "mathematical_objects": [
+                "y"
+              ],
+              "proposed_verifier": "SYMBOLIC_ALGEBRA",
+              "verifier_reason": "Fatoração de polinômios de segundo grau.",
+              "formalizability_candidate": true,
+              "check": {
+                "kind": "EQUALITY",
+                "left": "y^2 - 7y + 12",
+                "right": "(y-3)*(y-4)",
+                "variable": "y",
+                "values": []
+              }
+            },
+            {
+              "claim_id": "clm3_main_factorization",
+              "text": "As soluções são y = 3 e y = 4.",
+              "normalized_form": "y = 3 \\text{ ou } y = 4",
+              "claim_type": "ROOT_SET",
+              "dependencies": [
+                "clm2_main_factorization"
+              ],
+              "mathematical_objects": [
+                "y"
+              ],
+              "proposed_verifier": "FINITE_ENUMERATION",
+              "verifier_reason": "Raízes lineares após fatoração.",
+              "formalizability_candidate": true,
+              "check": {
+                "kind": "ROOT_SET",
+                "left": "2y^2 - 14y + 24",
+                "right": "0",
+                "variable": "y",
+                "values": [
+                  "3",
+                  "4"
+                ]
+              }
+            }
+          ],
+          "final_result": {
+            "kind": "ROOT_SET",
+            "text": "As soluções reais são y = 3 ou y = 4.",
+            "values": [
+              "3",
+              "4"
+            ],
+            "supporting_claim_ids": [
+              "clm3_main_factorization"
+            ]
+          },
+          "uncertainties": []
+        },
+        {
+          "solution_id": "alternative_bhaskara",
+          "strategy_id": "bhaskara_formula",
+          "strategy_label": "Fórmula de Bhaskara (quadrática)",
+          "claims": [
+            {
+              "claim_id": "clm1_bhaskara_formula",
+              "text": "A equação geral é 2y² - 14y + 24 = 0, com a = 2, b = -14, c = 24.",
+              "normalized_form": "a = 2, b = -14, c = 24",
+              "claim_type": "IDENTIFICATION",
+              "dependencies": [],
+              "mathematical_objects": [
+                "y"
+              ],
+              "proposed_verifier": "DETERMINISTIC",
+              "verifier_reason": "Identificação de coeficientes.",
+              "formalizability_candidate": true,
+              "check": {
+                "kind": "NONE",
+                "left": "",
+                "right": "",
+                "variable": "",
+                "values": []
+              }
+            },
+            {
+              "claim_id": "clm2_bhaskara_formula",
+              "text": "O discriminante é Δ = b² - 4ac = (-14)² - 4*2*24 = 196 - 192 = 4.",
+              "normalized_form": "Delta = 4",
+              "claim_type": "EQUALITY",
+              "dependencies": [
+                "clm1_bhaskara_formula"
+              ],
+              "mathematical_objects": [
+                "y"
+              ],
+              "proposed_verifier": "EXACT_ARITHMETIC",
+              "verifier_reason": "Cálculo do discriminante.",
+              "formalizability_candidate": true,
+              "check": {
+                "kind": "EQUALITY",
+                "left": "(-14)^2 - 4*2*24",
+                "right": "4",
+                "variable": "",
+                "values": []
+              }
+            },
+            {
+              "claim_id": "clm3_bhaskara_formula",
+              "text": "As soluções são y = [14 ± sqrt(4)]/4 = (14 ± 2)/4 ⇒ y = 16/4 = 4 ou y = 12/4 = 3.",
+              "normalized_form": "y = 4 \\text{ ou } y = 3",
+              "claim_type": "ROOT_SET",
+              "dependencies": [
+                "clm2_bhaskara_formula"
+              ],
+              "mathematical_objects": [
+                "y"
+              ],
+              "proposed_verifier": "FINITE_ENUMERATION",
+              "verifier_reason": "Resolução direta pelo método de Bhaskara.",
+              "formalizability_candidate": true,
+              "check": {
+                "kind": "ROOT_SET",
+                "left": "2y^2 - 14y + 24",
+                "right": "0",
+                "variable": "y",
+                "values": [
+                  "3",
+                  "4"
+                ]
+              }
+            }
+          ],
+          "final_result": {
+            "kind": "ROOT_SET",
+            "text": "As soluções reais são y = 3 ou y = 4.",
+            "values": [
+              "3",
+              "4"
+            ],
+            "supporting_claim_ids": [
+              "clm3_bhaskara_formula"
+            ]
+          },
+          "uncertainties": []
+        }
+      ],
+      "alternative_strategies": [
+        {
+          "strategy_id": "factorization",
+          "description": "Fatorar o polinômio após simplificação para obter as raízes.",
+          "expected_key_claim_ids": [
+            "clm1_main_factorization",
+            "clm2_main_factorization",
+            "clm3_main_factorization"
+          ]
+        },
+        {
+          "strategy_id": "bhaskara_formula",
+          "description": "Usar a fórmula de Bhaskara para calcular as raízes da equação quadrática.",
+          "expected_key_claim_ids": [
+            "clm1_bhaskara_formula",
+            "clm2_bhaskara_formula",
+            "clm3_bhaskara_formula"
+          ]
+        }
+      ],
+      "warnings": [
+        {
+          "code": "INFERRED_DOMAIN",
+          "message": "Supõe-se que a incógnita y varia nos reais, pois não foi especificado explicitamente no enunciado.",
+          "requires_review": true
+        }
+      ],
+      "uncertainties": []
+    },
+    "analysis": {
+      "verifier_plan": [
+        {
+          "claim_id": "clm1_main_factorization",
+          "capability": "SYMBOLIC_ALGEBRA",
+          "reason": "Simplificação algébrica.",
+          "available": true,
+          "requires_additional_input": false,
+          "status": "VERIFIED_WITHIN_SCOPE",
+          "detail": "Checagem exata executada: igualdade/conjunto completo confirmado.",
+          "scope": "Apenas expressão declarada, polinômio univariado racional; não certifica interpretação, hipóteses ou solução inteira.",
+          "verifier_version": "dynamic-exact-polynomial.v1",
+          "formal_status": "FORMAL_NOT_ATTEMPTED"
+        },
+        {
+          "claim_id": "clm2_main_factorization",
+          "capability": "SYMBOLIC_ALGEBRA",
+          "reason": "Fatoração de polinômios de segundo grau.",
+          "available": true,
+          "requires_additional_input": false,
+          "status": "VERIFIED_WITHIN_SCOPE",
+          "detail": "Checagem exata executada: igualdade/conjunto completo confirmado.",
+          "scope": "Apenas expressão declarada, polinômio univariado racional; não certifica interpretação, hipóteses ou solução inteira.",
+          "verifier_version": "dynamic-exact-polynomial.v1",
+          "formal_status": "FORMAL_NOT_ATTEMPTED"
+        },
+        {
+          "claim_id": "clm3_main_factorization",
+          "capability": "DETERMINISTIC",
+          "reason": "Raízes lineares após fatoração.",
+          "available": true,
+          "requires_additional_input": false,
+          "status": "VERIFIED_WITHIN_SCOPE",
+          "detail": "Checagem exata executada: igualdade/conjunto completo confirmado.",
+          "scope": "Apenas expressão declarada, polinômio univariado racional; não certifica interpretação, hipóteses ou solução inteira.",
+          "verifier_version": "dynamic-exact-polynomial.v1",
+          "formal_status": "FORMAL_NOT_ATTEMPTED"
+        },
+        {
+          "claim_id": "clm1_bhaskara_formula",
+          "capability": "DETERMINISTIC",
+          "reason": "Identificação de coeficientes.",
+          "available": true,
+          "requires_additional_input": true,
+          "status": "UNVERIFIED",
+          "detail": "Verificação não executada: capacidade ou expressão fora do escopo DY2.",
+          "scope": "Apenas expressão declarada, polinômio univariado racional; não certifica interpretação, hipóteses ou solução inteira.",
+          "verifier_version": "dynamic-exact-polynomial.v1",
+          "formal_status": "FORMAL_NOT_ATTEMPTED"
+        },
+        {
+          "claim_id": "clm2_bhaskara_formula",
+          "capability": "EXACT_ARITHMETIC",
+          "reason": "Cálculo do discriminante.",
+          "available": true,
+          "requires_additional_input": false,
+          "status": "VERIFIED_WITHIN_SCOPE",
+          "detail": "Checagem exata executada: igualdade/conjunto completo confirmado.",
+          "scope": "Apenas expressão declarada, polinômio univariado racional; não certifica interpretação, hipóteses ou solução inteira.",
+          "verifier_version": "dynamic-exact-polynomial.v1",
+          "formal_status": "FORMAL_NOT_ATTEMPTED"
+        },
+        {
+          "claim_id": "clm3_bhaskara_formula",
+          "capability": "DETERMINISTIC",
+          "reason": "Resolução direta pelo método de Bhaskara.",
+          "available": true,
+          "requires_additional_input": false,
+          "status": "VERIFIED_WITHIN_SCOPE",
+          "detail": "Checagem exata executada: igualdade/conjunto completo confirmado.",
+          "scope": "Apenas expressão declarada, polinômio univariado racional; não certifica interpretação, hipóteses ou solução inteira.",
+          "verifier_version": "dynamic-exact-polynomial.v1",
+          "formal_status": "FORMAL_NOT_ATTEMPTED"
+        }
+      ],
+      "candidate_checks": [
+        {
+          "solution_id": "main_factorization",
+          "status": "VERIFIED_WITHIN_SCOPE",
+          "final_result_verified": true
+        },
+        {
+          "solution_id": "alternative_bhaskara",
+          "status": "PARTIALLY_VERIFIED",
+          "final_result_verified": true
+        }
+      ],
+      "strategy_checks": [
+        {
+          "strategy_id": "factorization",
+          "status": "VERIFIED_WITHIN_SCOPE",
+          "limitation": "Somente claims declarados; legitimidade pedagógica e interpretação requerem revisão."
+        },
+        {
+          "strategy_id": "bhaskara_formula",
+          "status": "PARTIALLY_VERIFIED",
+          "limitation": "Somente claims declarados; legitimidade pedagógica e interpretação requerem revisão."
+        }
+      ],
+      "warnings": [
+        {
+          "code": "INFERRED_DOMAIN",
+          "message": "Supõe-se que a incógnita y varia nos reais, pois não foi especificado explicitamente no enunciado.",
+          "requires_review": true
+        },
+        {
+          "code": "INFERRED_ASSUMPTION",
+          "message": "Há hipótese inferida; confirme ou reformule o enunciado.",
+          "requires_review": true
+        },
+        {
+          "code": "SCOPE_LIMIT",
+          "message": "Apenas expressão declarada, polinômio univariado racional; não certifica interpretação, hipóteses ou solução inteira. Lean: FORMAL_NOT_ATTEMPTED.",
+          "requires_review": false
+        }
+      ],
+      "trust_state": "HUMAN_REVIEW_REQUIRED",
+      "automatic_correction_allowed": false
+    },
+    "provenance": {
+      "provenance": {
+        "provider": "openai",
+        "requested_model": "gpt-4.1",
+        "returned_model": "gpt-4.1-2025-04-14",
+        "reasoning_effort": null,
+        "prompt_version": "dynamic-dy2.v1:prepare",
+        "schema_version": "PreparationProposal.v1",
+        "input_sha256": "64eeeb29a77fcda6232c326f3a5bb4dd7204d46266fc01fdd6777e9f1f417f8f",
+        "output_sha256": "fd7a50ae089f2053c1a418d6749dbd9dfac3d15d0573cb1cfed51574d12cbf25",
+        "response_id": "resp_0ae6bfecc951b06d016af524cb1ad487d18e86760ae71d4a81",
+        "created_at": "2026-11-12T02:30:42.298848Z",
+        "code_sha": "d1c3485ffa50bb95fd5d27a0082b8bdd21bc804d",
+        "code_content_sha256": "b92f5728cded1975524d9346d19d703685df0f960772e9e545b16b78388376f4",
+        "max_output_tokens": 10000,
+        "raw_output": "{\"mathematical_domain\":\"Equações quadráticas, álgebra elementar, números reais.\",\"normalized_problem\":\"Resolver a equação quadrática 2y² - 14y + 24 = 0 no conjunto dos números reais.\",\"data\":[\"2y² - 14y + 24 = 0\"],\"assumptions\":[{\"text\":\"A variável y é real.\",\"source\":\"INFERRED\"}],\"objects\":[{\"name\":\"y\",\"domain\":\"Reais\",\"constraints\":[]}],\"target\":\"Encontrar todos os valores reais de y que satisfazem 2y² - 14y + 24 = 0.\",\"expects_unique_result\":false,\"candidate_reference_solutions\":[{\"solution_id\":\"main_factorization\",\"strategy_id\":\"factorization\",\"strategy_label\":\"Fatoração da equação quadrática\",\"claims\":[{\"claim_id\":\"clm1_main_factorization\",\"text\":\"Divida ambos os lados da equação por 2 para simplificar.\",\"normalized_form\":\"y² - 7y + 12 = 0\",\"claim_type\":\"EQUIVALENCE\",\"dependencies\":[],\"mathematical_objects\":[\"y\"],\"proposed_verifier\":\"EXACT_ARITHMETIC\",\"verifier_reason\":\"Simplificação algébrica.\",\"formalizability_candidate\":true,\"check\":{\"kind\":\"EQUALITY\",\"left\":\"2y^2 - 14y + 24\",\"right\":\"2*(y^2 - 7y + 12)\",\"variable\":\"y\",\"values\":[]}},{\"claim_id\":\"clm2_main_factorization\",\"text\":\"Fatore o polinômio: y² - 7y + 12 = (y - 3)(y - 4)\",\"normalized_form\":\"y^2 - 7y + 12 = (y-3)*(y-4)\",\"claim_type\":\"EQUALITY\",\"dependencies\":[\"clm1_main_factorization\"],\"mathematical_objects\":[\"y\"],\"proposed_verifier\":\"SYMBOLIC_ALGEBRA\",\"verifier_reason\":\"Fatoração de polinômios de segundo grau.\",\"formalizability_candidate\":true,\"check\":{\"kind\":\"EQUALITY\",\"left\":\"y^2 - 7y + 12\",\"right\":\"(y-3)*(y-4)\",\"variable\":\"y\",\"values\":[]}},{\"claim_id\":\"clm3_main_factorization\",\"text\":\"As soluções são y = 3 e y = 4.\",\"normalized_form\":\"y = 3 \\\\text{ ou } y = 4\",\"claim_type\":\"ROOT_SET\",\"dependencies\":[\"clm2_main_factorization\"],\"mathematical_objects\":[\"y\"],\"proposed_verifier\":\"FINITE_ENUMERATION\",\"verifier_reason\":\"Raízes lineares após fatoração.\",\"formalizability_candidate\":true,\"check\":{\"kind\":\"ROOT_SET\",\"left\":\"2y^2 - 14y + 24\",\"right\":\"0\",\"variable\":\"y\",\"values\":[\"3\",\"4\"]}}],\"final_result\":{\"kind\":\"ROOT_SET\",\"text\":\"As soluções reais são y = 3 ou y = 4.\",\"values\":[\"3\",\"4\"],\"supporting_claim_ids\":[\"clm3_main_factorization\"]},\"uncertainties\":[]} ,{\"solution_id\":\"alternative_bhaskara\",\"strategy_id\":\"bhaskara_formula\",\"strategy_label\":\"Fórmula de Bhaskara (quadrática)\",\"claims\":[{\"claim_id\":\"clm1_bhaskara_formula\",\"text\":\"A equação geral é 2y² - 14y + 24 = 0, com a = 2, b = -14, c = 24.\",\"normalized_form\":\"a = 2, b = -14, c = 24\",\"claim_type\":\"IDENTIFICATION\",\"dependencies\":[],\"mathematical_objects\":[\"y\"],\"proposed_verifier\":\"DETERMINISTIC\",\"verifier_reason\":\"Identificação de coeficientes.\",\"formalizability_candidate\":true,\"check\":{\"kind\":\"NONE\",\"left\":\"\",\"right\":\"\",\"variable\":\"\",\"values\":[]}},{\"claim_id\":\"clm2_bhaskara_formula\",\"text\":\"O discriminante é Δ = b² - 4ac = (-14)² - 4*2*24 = 196 - 192 = 4.\",\"normalized_form\":\"Delta = 4\",\"claim_type\":\"EQUALITY\",\"dependencies\":[\"clm1_bhaskara_formula\"],\"mathematical_objects\":[\"y\"],\"proposed_verifier\":\"EXACT_ARITHMETIC\",\"verifier_reason\":\"Cálculo do discriminante.\",\"formalizability_candidate\":true,\"check\":{\"kind\":\"EQUALITY\",\"left\":\"(-14)^2 - 4*2*24\",\"right\":\"4\",\"variable\":\"\",\"values\":[]}},{\"claim_id\":\"clm3_bhaskara_formula\",\"text\":\"As soluções são y = [14 ± sqrt(4)]/4 = (14 ± 2)/4 ⇒ y = 16/4 = 4 ou y = 12/4 = 3.\",\"normalized_form\":\"y = 4 \\\\text{ ou } y = 3\",\"claim_type\":\"ROOT_SET\",\"dependencies\":[\"clm2_bhaskara_formula\"],\"mathematical_objects\":[\"y\"],\"proposed_verifier\":\"FINITE_ENUMERATION\",\"verifier_reason\":\"Resolução direta pelo método de Bhaskara.\",\"formalizability_candidate\":true,\"check\":{\"kind\":\"ROOT_SET\",\"left\":\"2y^2 - 14y + 24\",\"right\":\"0\",\"variable\":\"y\",\"values\":[\"3\",\"4\"]}}],\"final_result\":{\"kind\":\"ROOT_SET\",\"text\":\"As soluções reais são y = 3 ou y = 4.\",\"values\":[\"3\",\"4\"],\"supporting_claim_ids\":[\"clm3_bhaskara_formula\"]},\"uncertainties\":[]}],\"alternative_strategies\":[{\"strategy_id\":\"factorization\",\"description\":\"Fatorar o polinômio após simplificação para obter as raízes.\",\"expected_key_claim_ids\":[\"clm1_main_factorization\",\"clm2_main_factorization\",\"clm3_main_factorization\"]},{\"strategy_id\":\"bhaskara_formula\",\"description\":\"Usar a fórmula de Bhaskara para calcular as raízes da equação quadrática.\",\"expected_key_claim_ids\":[\"clm1_bhaskara_formula\",\"clm2_bhaskara_formula\",\"clm3_bhaskara_formula\"]}],\"warnings\":[{\"code\":\"INFERRED_DOMAIN\",\"message\":\"Supõe-se que a incógnita y varia nos reais, pois não foi especificado explicitamente no enunciado.\",\"requires_review\":true}],\"uncertainties\":[]}"
+      }
+    }
+  },
+  {
+    "problem_id": "dyn_c1bbe46c219345619241ece724b0049e",
+    "status": "REVIEW_REQUIRED",
+    "preparation_id": "dprep_cee0f199ebd54165964cd08694912d4e",
+    "proposal": {
+      "mathematical_domain": "Equações Lineares; Números Reais.",
+      "normalized_problem": "Resolva a equação linear 3z + 6 = 0 no conjunto dos números reais.",
+      "data": [
+        "Equação: 3z + 6 = 0",
+        "Variável: z",
+        "Domínio: Reais"
+      ],
+      "assumptions": [
+        {
+          "text": "A variável z pertence ao conjunto dos números reais.",
+          "source": "EXPLICIT"
+        }
+      ],
+      "objects": [
+        {
+          "name": "z",
+          "domain": "ℝ",
+          "constraints": []
+        }
+      ],
+      "target": "Encontrar todos os valores reais de z que satisfazem 3z + 6 = 0.",
+      "expects_unique_result": true,
+      "candidate_reference_solutions": [
+        {
+          "solution_id": "cand_1",
+          "strategy_id": "lin_sol_1",
+          "strategy_label": "Isolamento da variável",
+          "claims": [
+            {
+              "claim_id": "claim_1",
+              "text": "Subtraindo 6 dos dois lados da equação: 3z + 6 - 6 = 0 - 6",
+              "normalized_form": "3z = -6",
+              "claim_type": "Algebraic step",
+              "dependencies": [],
+              "mathematical_objects": [
+                "z"
+              ],
+              "proposed_verifier": "EXACT_ARITHMETIC",
+              "verifier_reason": "Etapa algébrica elementar de subtração de ambos os lados.",
+              "formalizability_candidate": true,
+              "check": {
+                "kind": "EQUALITY",
+                "left": "3z + 6 - 6",
+                "right": "0 - 6",
+                "variable": "",
+                "values": []
+              }
+            },
+            {
+              "claim_id": "claim_2",
+              "text": "Dividindo ambos os lados por 3: 3z / 3 = (-6) / 3",
+              "normalized_form": "z = -2",
+              "claim_type": "Algebraic step",
+              "dependencies": [
+                "claim_1"
+              ],
+              "mathematical_objects": [
+                "z"
+              ],
+              "proposed_verifier": "EXACT_ARITHMETIC",
+              "verifier_reason": "Divisão elementar para isolar a variável.",
+              "formalizability_candidate": true,
+              "check": {
+                "kind": "EQUALITY",
+                "left": "3z / 3",
+                "right": "(-6) / 3",
+                "variable": "",
+                "values": []
+              }
+            }
+          ],
+          "final_result": {
+            "kind": "ROOT_SET",
+            "text": "A solução real da equação é z = -2.",
+            "values": [
+              "-2"
+            ],
+            "supporting_claim_ids": [
+              "claim_2"
+            ]
+          },
+          "uncertainties": []
+        },
+        {
+          "solution_id": "cand_2",
+          "strategy_id": "lin_sol_alt",
+          "strategy_label": "Uso direto de propriedades das equações lineares",
+          "claims": [
+            {
+              "claim_id": "claim_3",
+              "text": "Para uma equação ax + b = 0, a solução é x = -b/a. Aplicando a 3z + 6 = 0: z = -6/3 = -2.",
+              "normalized_form": "z = -6/3 = -2",
+              "claim_type": "Formula application",
+              "dependencies": [],
+              "mathematical_objects": [
+                "z"
+              ],
+              "proposed_verifier": "EXACT_ARITHMETIC",
+              "verifier_reason": "Aplicação direta da fórmula geral de equações lineares.",
+              "formalizability_candidate": true,
+              "check": {
+                "kind": "EQUALITY",
+                "left": "z",
+                "right": "-6/3",
+                "variable": "",
+                "values": []
+              }
+            }
+          ],
+          "final_result": {
+            "kind": "ROOT_SET",
+            "text": "A única solução real é z = -2.",
+            "values": [
+              "-2"
+            ],
+            "supporting_claim_ids": [
+              "claim_3"
+            ]
+          },
+          "uncertainties": []
+        }
+      ],
+      "alternative_strategies": [
+        {
+          "strategy_id": "lin_sol_1",
+          "description": "Resolução algébrica tradicional: isolar a variável por subtração e divisão.",
+          "expected_key_claim_ids": [
+            "claim_1",
+            "claim_2"
+          ]
+        },
+        {
+          "strategy_id": "lin_sol_alt",
+          "description": "Aplicação direta da fórmula de solução de equações lineares do 1º grau.",
+          "expected_key_claim_ids": [
+            "claim_3"
+          ]
+        }
+      ],
+      "warnings": [],
+      "uncertainties": []
+    },
+    "analysis": {
+      "verifier_plan": [
+        {
+          "claim_id": "claim_1",
+          "capability": "SYMBOLIC_ALGEBRA",
+          "reason": "Etapa algébrica elementar de subtração de ambos os lados.",
+          "available": true,
+          "requires_additional_input": false,
+          "status": "CONTRADICTED",
+          "detail": "Checagem exata executada: afirmação contradita.",
+          "scope": "Apenas expressão declarada, polinômio univariado racional; não certifica interpretação, hipóteses ou solução inteira.",
+          "verifier_version": "dynamic-exact-polynomial.v1",
+          "formal_status": "FORMAL_NOT_ATTEMPTED"
+        },
+        {
+          "claim_id": "claim_2",
+          "capability": "SYMBOLIC_ALGEBRA",
+          "reason": "Divisão elementar para isolar a variável.",
+          "available": true,
+          "requires_additional_input": false,
+          "status": "CONTRADICTED",
+          "detail": "Checagem exata executada: afirmação contradita.",
+          "scope": "Apenas expressão declarada, polinômio univariado racional; não certifica interpretação, hipóteses ou solução inteira.",
+          "verifier_version": "dynamic-exact-polynomial.v1",
+          "formal_status": "FORMAL_NOT_ATTEMPTED"
+        },
+        {
+          "claim_id": "claim_3",
+          "capability": "SYMBOLIC_ALGEBRA",
+          "reason": "Aplicação direta da fórmula geral de equações lineares.",
+          "available": true,
+          "requires_additional_input": false,
+          "status": "CONTRADICTED",
+          "detail": "Checagem exata executada: afirmação contradita.",
+          "scope": "Apenas expressão declarada, polinômio univariado racional; não certifica interpretação, hipóteses ou solução inteira.",
+          "verifier_version": "dynamic-exact-polynomial.v1",
+          "formal_status": "FORMAL_NOT_ATTEMPTED"
+        }
+      ],
+      "candidate_checks": [
+        {
+          "solution_id": "cand_1",
+          "status": "CONTRADICTED",
+          "final_result_verified": false
+        },
+        {
+          "solution_id": "cand_2",
+          "status": "CONTRADICTED",
+          "final_result_verified": false
+        }
+      ],
+      "strategy_checks": [
+        {
+          "strategy_id": "lin_sol_1",
+          "status": "CONTRADICTED",
+          "limitation": "Somente claims declarados; legitimidade pedagógica e interpretação requerem revisão."
+        },
+        {
+          "strategy_id": "lin_sol_alt",
+          "status": "CONTRADICTED",
+          "limitation": "Somente claims declarados; legitimidade pedagógica e interpretação requerem revisão."
+        }
+      ],
+      "warnings": [
+        {
+          "code": "CONTRADICTED_CLAIM",
+          "message": "Claim contradito na solução cand_1",
+          "requires_review": true
+        },
+        {
+          "code": "FINAL_RESULT_UNVERIFIED",
+          "message": "Resultado final não corroborado pelos claims verificados: cand_1",
+          "requires_review": true
+        },
+        {
+          "code": "CONTRADICTED_CLAIM",
+          "message": "Claim contradito na solução cand_2",
+          "requires_review": true
+        },
+        {
+          "code": "FINAL_RESULT_UNVERIFIED",
+          "message": "Resultado final não corroborado pelos claims verificados: cand_2",
+          "requires_review": true
+        },
+        {
+          "code": "SCOPE_LIMIT",
+          "message": "Apenas expressão declarada, polinômio univariado racional; não certifica interpretação, hipóteses ou solução inteira. Lean: FORMAL_NOT_ATTEMPTED.",
+          "requires_review": false
+        }
+      ],
+      "trust_state": "HUMAN_REVIEW_REQUIRED",
+      "automatic_correction_allowed": false
+    },
+    "provenance": {
+      "provenance": {
+        "provider": "openai",
+        "requested_model": "gpt-4.1",
+        "returned_model": "gpt-4.1-2025-04-14",
+        "reasoning_effort": null,
+        "prompt_version": "dynamic-dy2.v1:prepare",
+        "schema_version": "PreparationProposal.v1",
+        "input_sha256": "b4ca720e167c783da28fa87620909f1ad3e1dffe43f9113d67a628f1e211c232",
+        "output_sha256": "3947f3995524739014cc4b041a8b5327cc4875c504d49751205a5337dd67d59b",
+        "response_id": "resp_0c1c7caf9fbc8904016af524d2baac87d1bfd5a31f808fde43",
+        "created_at": "2026-11-12T02:30:49.330420Z",
+        "code_sha": "d1c3485ffa50bb95fd5d27a0082b8bdd21bc804d",
+        "code_content_sha256": "b92f5728cded1975524d9346d19d703685df0f960772e9e545b16b78388376f4",
+        "max_output_tokens": 10000,
+        "raw_output": "{\n  \"mathematical_domain\": \"Equações Lineares; Números Reais.\",\n  \"normalized_problem\": \"Resolva a equação linear 3z + 6 = 0 no conjunto dos números reais.\",\n  \"data\": [\n    \"Equação: 3z + 6 = 0\",\n    \"Variável: z\",\n    \"Domínio: Reais\"\n  ],\n  \"assumptions\": [\n    {\n      \"text\": \"A variável z pertence ao conjunto dos números reais.\",\n      \"source\": \"EXPLICIT\"\n    }\n  ],\n  \"objects\": [\n    {\n      \"name\": \"z\",\n      \"domain\": \"ℝ\",\n      \"constraints\": []\n    }\n  ],\n  \"target\": \"Encontrar todos os valores reais de z que satisfazem 3z + 6 = 0.\",\n  \"expects_unique_result\": true,\n  \"candidate_reference_solutions\": [\n    {\n      \"solution_id\": \"cand_1\",\n      \"strategy_id\": \"lin_sol_1\",\n      \"strategy_label\": \"Isolamento da variável\",\n      \"claims\": [\n        {\n          \"claim_id\": \"claim_1\",\n          \"text\": \"Subtraindo 6 dos dois lados da equação: 3z + 6 - 6 = 0 - 6\",\n          \"normalized_form\": \"3z = -6\",\n          \"claim_type\": \"Algebraic step\",\n          \"dependencies\": [],\n          \"mathematical_objects\": [\"z\"],\n          \"proposed_verifier\": \"EXACT_ARITHMETIC\",\n          \"verifier_reason\": \"Etapa algébrica elementar de subtração de ambos os lados.\",\n          \"formalizability_candidate\": true,\n          \"check\": {\n            \"kind\": \"EQUALITY\",\n            \"left\": \"3z + 6 - 6\",\n            \"right\": \"0 - 6\",\n            \"variable\": \"\",\n            \"values\": []\n          }\n        },\n        {\n          \"claim_id\": \"claim_2\",\n          \"text\": \"Dividindo ambos os lados por 3: 3z / 3 = (-6) / 3\",\n          \"normalized_form\": \"z = -2\",\n          \"claim_type\": \"Algebraic step\",\n          \"dependencies\": [\"claim_1\"],\n          \"mathematical_objects\": [\"z\"],\n          \"proposed_verifier\": \"EXACT_ARITHMETIC\",\n          \"verifier_reason\": \"Divisão elementar para isolar a variável.\",\n          \"formalizability_candidate\": true,\n          \"check\": {\n            \"kind\": \"EQUALITY\",\n            \"left\": \"3z / 3\",\n            \"right\": \"(-6) / 3\",\n            \"variable\": \"\",\n            \"values\": []\n          }\n        }\n      ],\n      \"final_result\": {\n        \"kind\": \"ROOT_SET\",\n        \"text\": \"A solução real da equação é z = -2.\",\n        \"values\": [\"-2\"],\n        \"supporting_claim_ids\": [\"claim_2\"]\n      },\n      \"uncertainties\": []\n    },\n    {\n      \"solution_id\": \"cand_2\",\n      \"strategy_id\": \"lin_sol_alt\",\n      \"strategy_label\": \"Uso direto de propriedades das equações lineares\",\n      \"claims\": [\n        {\n          \"claim_id\": \"claim_3\",\n          \"text\": \"Para uma equação ax + b = 0, a solução é x = -b/a. Aplicando a 3z + 6 = 0: z = -6/3 = -2.\",\n          \"normalized_form\": \"z = -6/3 = -2\",\n          \"claim_type\": \"Formula application\",\n          \"dependencies\": [],\n          \"mathematical_objects\": [\"z\"],\n          \"proposed_verifier\": \"EXACT_ARITHMETIC\",\n          \"verifier_reason\": \"Aplicação direta da fórmula geral de equações lineares.\",\n          \"formalizability_candidate\": true,\n          \"check\": {\n            \"kind\": \"EQUALITY\",\n            \"left\": \"z\",\n            \"right\": \"-6/3\",\n            \"variable\": \"\",\n            \"values\": []\n          }\n        }\n      ],\n      \"final_result\": {\n        \"kind\": \"ROOT_SET\",\n        \"text\": \"A única solução real é z = -2.\",\n        \"values\": [\"-2\"],\n        \"supporting_claim_ids\": [\"claim_3\"]\n      },\n      \"uncertainties\": []\n    }\n  ],\n  \"alternative_strategies\": [\n    {\n      \"strategy_id\": \"lin_sol_1\",\n      \"description\": \"Resolução algébrica tradicional: isolar a variável por subtração e divisão.\",\n      \"expected_key_claim_ids\": [\"claim_1\", \"claim_2\"]\n    },\n    {\n      \"strategy_id\": \"lin_sol_alt\",\n      \"description\": \"Aplicação direta da fórmula de solução de equações lineares do 1º grau.\",\n      \"expected_key_claim_ids\": [\"claim_3\"]\n    }\n  ],\n  \"warnings\": [],\n  \"uncertainties\": []\n}"
+      }
+    }
+  }
+]

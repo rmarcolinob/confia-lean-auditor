@@ -62,9 +62,12 @@ def allow_legacy_teacher_read() -> bool:
 
 def authorize_submission_record(user: AuthUser | None, record, *, student_write=False):
     if user is None and not auth_enabled():
+        if record.source == "self_study": raise HTTPException(401, "Estudo autônomo exige autenticação.")
         return record
     if user is None:
         raise HTTPException(401, "Autenticação necessária.")
+    if record.source == "self_study" and (user.role != Role.STUDENT or record.submitted_by_user_id != user.user_id):
+        raise HTTPException(403, "Estudo autônomo privado do aluno.")
     if user.role == Role.STUDENT:
         if record.submitted_by_user_id != user.user_id:
             raise HTTPException(403, "Acesso não autorizado.")
@@ -73,7 +76,8 @@ def authorize_submission_record(user: AuthUser | None, record, *, student_write=
         legacy = (not all((record.network_id, record.school_id, record.classroom_id))
                   and allow_legacy_teacher_read()
                   and (record.tenant_id is None or record.tenant_id == user.tenant_id))
-        if not (institutional_store().teacher_can_view(user, record) or legacy):
+        tme_owned = bool(record.tme_case_id and record.submitted_by_user_id == user.user_id)
+        if not (tme_owned or institutional_store().teacher_can_view(user, record) or legacy):
             raise HTTPException(403, "Acesso não autorizado.")
     else:
         raise HTTPException(403, "Acesso não autorizado.")
@@ -82,16 +86,16 @@ def authorize_submission_record(user: AuthUser | None, record, *, student_write=
 
 def visible_submissions(user: Optional[AuthUser], records):
     if not auth_enabled():
-        return records
+        return [r for r in records if r.source != "self_study"]
     if user.role == Role.STUDENT:
         return [record for record in records if record.submitted_by_user_id == user.user_id]
     if user.role == Role.TEACHER:
         from confia_lean_auditor.institutional.store import institutional_store
         institutions = institutional_store()
-        return [record for record in records if institutions.teacher_can_view(user, record)
+        return [record for record in records if record.source != "self_study" and (institutions.teacher_can_view(user, record)
                 or (not all((record.network_id, record.school_id, record.classroom_id))
                     and allow_legacy_teacher_read()
-                    and (record.tenant_id is None or record.tenant_id == user.tenant_id))]
+                    and (record.tenant_id is None or record.tenant_id == user.tenant_id)))]
     raise HTTPException(403, "Acesso não autorizado.")
 
 
@@ -108,23 +112,61 @@ def _record_for_access(submission_id: str):
         raise HTTPException(409, "Integridade da submissão inválida.") from None
 
 
+def _legacy_private_source_guard(submission_id, *, invalid_status=409):
+    from confia_lean_auditor.submissions.router import store
+    try:record=store().get_record(submission_id)
+    except FileNotFoundError:return
+    except (ValueError,OSError):raise HTTPException(invalid_status, "Integridade da submissão inválida.") from None
+    if record.source == "self_study":
+        raise HTTPException(401, "Estudo autônomo exige autenticação.")
+
+
 def submission_access(submission_id: str, user: Optional[AuthUser] = Depends(
         require_any_role(Role.STUDENT, Role.TEACHER))):
     if not auth_enabled():
+        # Legacy metadata reads use 422; writes keep the integrity-conflict 409.
+        _legacy_private_source_guard(submission_id, invalid_status=422)
         return None
     return authorize_submission_record(user, _record_for_access(submission_id))
+
+
+def _school_write_gateway(record):
+    if record.source == "self_study":
+        raise HTTPException(403, "Use o fluxo de estudo para preservar autoria e versões.")
+    if record.assessment_id and record.tme_case_id:
+        from confia_lean_auditor.assessments.store import assessment_store
+        if assessment_store().get(record.assessment_id).assessment.school_policy:
+            raise HTTPException(403, "Use o fluxo da atividade para preservar versões, prazos e autoria.")
 
 
 def student_submission_access(submission_id: str, user: Optional[AuthUser] = Depends(
         require_role(Role.STUDENT))):
     if not auth_enabled():
+        _legacy_private_source_guard(submission_id)
         return None
-    return authorize_submission_record(user, _record_for_access(submission_id), student_write=True)
+    record = _record_for_access(submission_id)
+    _school_write_gateway(record)
+    return authorize_submission_record(user, record, student_write=True)
+
+
+def recognition_write_access(submission_id: str, user: Optional[AuthUser] = Depends(
+        require_any_role(Role.STUDENT, Role.TEACHER))):
+    if not auth_enabled():
+        _legacy_private_source_guard(submission_id)
+        return None
+    record = _record_for_access(submission_id)
+    if user.role == Role.STUDENT:
+        _school_write_gateway(record)
+        return authorize_submission_record(user, record, student_write=True)
+    if record.tme_case_id and record.submitted_by_user_id == user.user_id:
+        return record
+    raise HTTPException(403, "Acesso não autorizado.")
 
 
 def teacher_submission_access(submission_id: str, user: Optional[AuthUser] = Depends(
         require_role(Role.TEACHER))):
     if not auth_enabled():
+        _legacy_private_source_guard(submission_id)
         return None
     return authorize_submission_record(user, _record_for_access(submission_id))
 
@@ -132,6 +174,11 @@ def teacher_submission_access(submission_id: str, user: Optional[AuthUser] = Dep
 def teacher_transcription_access(transcription_id: str, user: Optional[AuthUser] = Depends(
         require_role(Role.TEACHER))):
     if not auth_enabled():
+        from confia_lean_auditor.submissions.router import store
+        try:legacy_history=store().transcription_history(transcription_id)
+        except FileNotFoundError:return None
+        except (ValueError,OSError):raise HTTPException(409, "Integridade da transcrição inválida.") from None
+        _legacy_private_source_guard(legacy_history.transcription.submission_id)
         return None
     from confia_lean_auditor.submissions.router import store
     from confia_lean_auditor.submissions.store import TranscriptionIntegrityConflict

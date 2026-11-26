@@ -64,7 +64,7 @@ class Node {
   querySelector(selector) { return this.querySelectorAll(selector)[0] || null; }
 }
 
-function renderer({ missing = false, failingLegacy = false } = {}) {
+function renderer({ missing = false, failingLegacy = false, quiet = false } = {}) {
   const root = path.join(__dirname, "../../app/confia_lean_auditor/static/capture");
   const document = {
     compatMode: "CSS1Compat",
@@ -86,7 +86,8 @@ function renderer({ missing = false, failingLegacy = false } = {}) {
     const element = new Node("div");
     const message = new Node("p");
     element.textContent = text;
-    context.ConfiaProblemMath.render(element, message, presentation);
+    if (quiet) context.ConfiaProblemMath.renderContent(element, text, presentation);
+    else context.ConfiaProblemMath.render(element, message, presentation);
     return { element, message };
   };
 }
@@ -309,4 +310,50 @@ test("missing KaTeX preserves the original curated statement with a readable mes
   const { element, message } = renderer({ missing: true })(entry.source_statement, { problemId: entry.problem_id, registry: presentations });
   assert.equal(element.textContent, entry.source_statement);
   assert.equal(message.hidden, false);
+});
+
+
+test("workspace F2Q3 uses the existing canonical presentation, including sen, fractions and Greek letters", () => {
+  const source = JSON.parse(fs.readFileSync(path.join(__dirname, "../../problems/ITA2025F2Q3/problem.json"), "utf8")).statement;
+  const entry = presentations.find(p => p.problem_id === "ITA2025F2Q3");
+  const {element} = renderer({quiet:true})(source,{problemId:entry.problem_id,registry:presentations});
+  assert.equal(source,entry.source_statement);
+  assert.deepEqual(annotations(element),entry.segments.filter(s=>s.type==='math').map(s=>s.content));
+  const visible=element.childNodes.map(n=>n.querySelector('.katex-html')?.textContent||n.textContent).join('');
+  for(const symbol of ['α','β','π','sen','cos']) assert.ok(visible.includes(symbol));
+  assert.doesNotMatch(visible,/alpha|beta|pi\/2|\\operatorname|\\frac/);
+  assert.ok(element.querySelector('.mfrac'));
+  assert.ok(element.querySelector('math')); // accessible MathML remains available
+});
+
+test("quiet mixed math keeps ordinary prose and display/inline rendering",()=>{
+  const {element}=renderer({quiet:true})(String.raw`Antes \(\alpha+\beta\) e \[\frac{\pi}{2}\] depois.`);
+  assert.equal(element.querySelectorAll('.katex').length,2);
+  assert.equal(element.querySelectorAll('.katex-display').length,1);
+  assert.equal(element.childNodes[0].textContent,'Antes ');
+  assert.equal(element.childNodes.at(-1).textContent,' depois.');
+});
+
+test("quiet failures are literal fallback without a red technical tooltip; later math still renders",()=>{
+  const {element}=renderer({quiet:true})(String.raw`Antes $\frac{1}$ depois $x^2$.`);
+  assert.equal(element.querySelector('.katex-error'),null);
+  assert.ok(element.textContent.includes(String.raw`\frac{1}`));
+  assert.equal(element.querySelectorAll('.katex').length,1);
+  const source='Dados $x^2$';
+  assert.equal(renderer({quiet:true,missing:true})(source).element.textContent,source);
+});
+
+test("quiet content preserves HTML-like prose and does not normalize ordinary words",()=>{
+  const source='A apresentação sensata usa alpha beta pi/2 <img src=x onerror=alert(1)>.';
+  const {element}=renderer({quiet:true})(source);
+  assert.equal(element.textContent,source);
+  assert.equal(element.querySelector('img'),null);
+});
+
+test("structured math supports explicit display without changing registry content",()=>{
+  const registry=[{problem_id:'display',source_statement:'Original',display_version:1,segments:[{type:'math',content:String.raw`\sin(\alpha+\beta)=\frac{1}{4}`,display:true}]}];
+  const before=JSON.stringify(registry);
+  const {element}=renderer({quiet:true})('Original',{problemId:'display',registry});
+  assert.ok(element.querySelector('.katex-display'));
+  assert.equal(JSON.stringify(registry),before);
 });

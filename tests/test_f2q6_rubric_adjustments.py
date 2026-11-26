@@ -53,7 +53,7 @@ def _base_rubric() -> RubricAssessment:
 
 
 def _refuted_check(claim_type: str, raw_text: str) -> StudentClaimCheck:
-    return StudentClaimCheck(
+    check = StudentClaimCheck(
         id="student_claim_0",
         problem_id="ITA2025F2Q6",
         claim_type=claim_type,  # type: ignore[arg-type]
@@ -70,6 +70,9 @@ def _refuted_check(claim_type: str, raw_text: str) -> StudentClaimCheck:
         stderr="",
         data={},
     )
+
+    from claim_fixtures import bind_check
+    return bind_check(check, raw_text)
 
 
 def _verified_check(claim_type: str, raw_text: str) -> StudentClaimCheck:
@@ -137,7 +140,7 @@ def test_f2q6_failed_final_answer_zeros_final_answer_item_only():
 
     adjusted = apply_f2q6_student_claim_adjustments(
         rubric,
-        [_refuted_check("f2q6_student_final_answer", "n=7,8")],
+        [_refuted_check("f2q6_student_final_answer", "Portanto n=7 e n=8")],
     )
 
     by_id = {item.id: item for item in adjusted.items}
@@ -145,7 +148,7 @@ def test_f2q6_failed_final_answer_zeros_final_answer_item_only():
     assert adjusted.score == 8.0
     assert by_id["final_answer"].points == 0.0
     assert by_id["final_answer"].student_check_adjusted is True
-    assert "n=7,8" in by_id["final_answer"].adjustment_notes[0]
+    assert "Portanto n=7 e n=8" in by_id["final_answer"].adjustment_notes[0]
 
     assert by_id["probability_formula"].points == 3.0
     assert by_id["ratio_comparison"].points == 3.0

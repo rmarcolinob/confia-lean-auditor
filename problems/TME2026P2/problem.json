@@ -1,0 +1,85 @@
+{
+  "problem_id": "TME2026P2",
+  "title": "TME² 2026 — Problema 2",
+  "max_score": 20,
+  "pauta_reference": "examples/pautas/tme2_problem2.v1.json",
+  "source": {
+    "document": "Segunda Fase TME² - Gabarito com pauta.pdf",
+    "sha256": "a2660f1c0761738a8b9232dc179feaea9538efb45102e1b2a9b991a3dd2ac384",
+    "pages": [
+      4,
+      5
+    ]
+  },
+  "statement_blocks": [
+    {
+      "type": "text",
+      "text": "A figura é formada por nove círculos: um círculo central e oito círculos ao seu redor. Quatro linhas retas passam pelo círculo central, e cada uma delas contém exatamente três círculos."
+    },
+    {
+      "type": "figure",
+      "figure_id": "circulos"
+    },
+    {
+      "type": "text",
+      "text": "Os números de 1 a 9 devem ser escritos nos círculos, sem repetição. Um preenchimento é chamado de equilibrado quando a soma dos três números é a mesma nas quatro linhas."
+    },
+    {
+      "type": "text",
+      "text": "Dois preenchimentos são considerados diferentes quando pelo menos um dos círculos contém números diferentes."
+    },
+    {
+      "type": "text",
+      "text": "(a) O número 5 já foi escrito no círculo central. Complete a figura de modo que o preenchimento seja equilibrado.",
+      "item_id": "a"
+    },
+    {
+      "type": "figure",
+      "figure_id": "item-a"
+    },
+    {
+      "type": "text",
+      "text": "(b) Quais números podem ocupar o círculo central em um preenchimento equilibrado? Para cada um deles, determine a soma comum das quatro linhas.",
+      "item_id": "b"
+    },
+    {
+      "type": "text",
+      "text": "(c) Quantos preenchimentos equilibrados possuem a maior soma comum possível?",
+      "item_id": "c"
+    }
+  ],
+  "figures": [
+    {
+      "id": "circulos",
+      "src": "/static/problem-assets/TME2026P2/circulos.png",
+      "alt": "Nove círculos: X ao centro; A, B, C, D, E, F, G e H ao redor, em sentido horário, a partir do topo. Retas A–X–E, B–X–F, C–X–G e D–X–H.",
+      "width": 320,
+      "height": 317,
+      "source_page": 4,
+      "source_crop_pixels": [
+        405,
+        178,
+        725,
+        495
+      ],
+      "source_render_height": 1600,
+      "sha256": "b55883f42cc005745aa206c81aa7f88ef2139943f682633757461c3f5d4c4ee5"
+    },
+    {
+      "id": "item-a",
+      "src": "/static/problem-assets/TME2026P2/item-a.png",
+      "alt": "Figura do item (a): 5 no círculo central e oito círculos externos vazios, ligados pelas quatro retas.",
+      "width": 316,
+      "height": 317,
+      "source_page": 4,
+      "source_crop_pixels": [
+        55,
+        711,
+        371,
+        1028
+      ],
+      "source_render_height": 1600,
+      "sha256": "56dda632fbf2005a077d6146b07e0fd8beaec523cec84f9c02d27869f605179a"
+    }
+  ]
+}

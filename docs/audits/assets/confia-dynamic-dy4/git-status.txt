@@ -1,0 +1,13 @@
+ M app/confia_lean_auditor/dynamic/router.py
+ M app/confia_lean_auditor/static/tme/index.html
+ M app/confia_lean_auditor/static/tme/tme.js
+ M app/confia_lean_auditor/static/tme/workspace-report.js
+?? app/confia_lean_auditor/dynamic/review_comparison.py
+?? app/confia_lean_auditor/dynamic/review_models.py
+?? app/confia_lean_auditor/dynamic/review_provider.py
+?? app/confia_lean_auditor/dynamic/review_service.py
+?? app/confia_lean_auditor/dynamic/reviewer.py
+?? docs/audits/CONFIA_DYNAMIC_DY4_INDEPENDENT_REVIEWER_IMPLEMENTACAO_01.md
+?? docs/audits/assets/confia-dynamic-dy4/
+?? tests/js/test_dynamic_dy4.cjs
+?? tests/test_dynamic_dy4.py

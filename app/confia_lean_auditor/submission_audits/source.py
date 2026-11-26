@@ -44,7 +44,7 @@ def build_source(submission, revision, acceptance, receipt):
         transcription_id=revision.transcription_id, revision_number=revision.revision_number,
         acceptance_id=acceptance.acceptance_id, accepted_at=acceptance.accepted_at,
         source_hash="0" * 64, solution_text=solution, warnings=warnings,
-        provenance=AuditProvenance(original_artifacts=[submission.snapshot, *submission.page_images],
+        provenance=AuditProvenance(original_artifacts=[submission.snapshot, *(submission.scan_originals or submission.page_images)],
                                    revision=revision, acceptance=acceptance, acceptance_receipt=receipt),
     )
     return source.model_copy(update={"source_hash": source_digest(source)})

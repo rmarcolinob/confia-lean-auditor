@@ -17,7 +17,25 @@ def assert_score_contract(data):
         assert item["mathematical_status"] in {"supported", "refuted"}
     for item in pending:
         assert item["mathematical_status"] == "indeterminate"
-    if pending:
+    if data.get("scoring_policy") == "SCORE-POLICY-02":
+        assert data["score"] == rubric["score"]
+        assert data["evaluated_score"] == pytest.approx(subtotal)
+        assert data["coverage"] == pytest.approx(decided_max / data["max_score"])
+        for item in items:
+            assert item["verified_points"] == item["points"]
+        if data["score"] is None:
+            assert data["unscorable_reason"] and data["needs_review"]
+            assert data["verdict"] == "inconclusivo"
+        else:
+            assert all(i["suggested_points"] in {0, i["max_points"]} for i in items)
+            assert data["score"] == pytest.approx(sum(i["suggested_points"] for i in items))
+            assert data["estimated_points"] == pytest.approx(data["score"] - subtotal)
+            for item in pending:
+                assert item["scoring_basis"] == "secondary_adjudication"
+                assert item["scoring_evidence"] and item["scoring_rationale"]
+            if pending:
+                assert data["needs_review"]
+    elif pending:
         assert data["score"] is None and rubric["score"] is None
         assert data["verdict"] == "inconclusivo"
         assert rubric["assessment_status"] in {"partial", "indeterminate"}

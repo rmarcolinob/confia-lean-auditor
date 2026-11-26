@@ -12,6 +12,7 @@
       "tutoria/trails": ["Trilhas · TutorIA", "Conheça percursos de aprendizagem por tema."],
       "tutoria/progress": ["Meu progresso · TutorIA", "Uma visão do acompanhamento da aprendizagem."],
       "tutoria/attempts": ["Minhas atividades · TutorIA", "Retome suas tentativas de prática."],
+      study: ["Estudo autônomo", "Receba orientações matemáticas progressivas, sem nota."],
       exams: ["Exames", "Acesse atividades disponibilizadas para sua turma."],
       resolve: ["TutorIA", "Escolha uma questão e resolva no Caderno de Resolução ConfIA."],
       feedback: ["Feedback", "Consulte a análise atual da resolução nesta sessão."],
@@ -68,6 +69,7 @@
     visible("tutoria-root", profile === "student" && (view === "tutoria" || view.startsWith("tutoria/")));
     if (profile === "student") window.ConfIAWorkspace?.enter(view);
     window.ConfIATutoria?.show(profile === "student" ? view : "");
+    window.ConfIASelfStudy?.show(profile === "student" ? view : "");
     visible("student-home", profile === "student" && view === "home");
     visible("student-exams", profile === "student" && view === "exams" && !window.ConfIAWorkspace?.examSelected);
     visible("student-workspace", profile === "student" && (view === "resolve" || view === "tutoria/practice" || (view === "exams" && window.ConfIAWorkspace?.examSelected)));
@@ -85,14 +87,37 @@
       visible("teacher-text-prototype", false);
     }
     visible("management-home", profile === "management" && view === "home");
-    visible("management-overview", profile === "management" && view === "overview");
-    if (profile === "management" && view === "overview") window.ConfIAManagement?.load();
+    visible("management-overview", profile === "management" && ["home", "overview"].includes(view));
+    if (profile === "management" && ["home", "overview"].includes(view)) window.ConfIAManagement?.load();
+    window.ConfIATeacherPresentation?.show(profile, view);
+    window.ConfIAPlatformPresentation?.show(profile, view);
     document.title = `ConfIA — ${config.views[view][0]}`;
     window.ConfIATutoriaAssistant?.sync();
-    if (focus) title.focus();
+    if (focus) (view === "home" ? document.querySelector(`#${profile}-home h1`) || title : title).focus();
   }
 
+  // The platform entry is a neutral presentation route, never a granted role.
+  function platformHome({focus = true, historyMode = "push"} = {}) {
+    if (authMode && !authenticatedProfile) return false;
+    if (window.ConfIATeacher?.canLeave() === false) {
+      history.replaceState(null, "", `#${current.profile}/${current.view}`);
+      document.querySelector("#manuscript-message").focus();
+      return false;
+    }
+    current = {profile: "platform", view: "home"};
+    for (const profile of Object.values(profiles)) visible(profile.area, false);
+    refreshStudent();
+    window.ConfIATutoria?.show("");
+    window.ConfIATeacherPresentation?.show("platform", "home");
+    window.ConfIAPlatformPresentation.show("platform", "home");
+    window.ConfIATutoriaAssistant?.sync();
+    document.title = "ConfIA — Matemática com confiança";
+    if (location.hash !== "#platform/home") history[historyMode === "replace" ? "replaceState" : "pushState"](null, "", "#platform/home");
+    if (focus) document.querySelector("#platform-home h1")?.focus();
+    return true;
+  }
   function navigate(profile, view, { focus = true, historyMode = "push" } = {}) {
+    if (profile === "platform" && view === "home" && window.ConfIAPlatformPresentation) return platformHome({focus, historyMode});
     if (authMode && !authenticatedProfile) return false;
     if (authMode && profile !== authenticatedProfile) { profile = authenticatedProfile; view = "home"; }
     if (authMode && profile === "student" && view === "resolve") view = "tutoria/practice";
@@ -127,6 +152,10 @@
       history.pushState(null, "", `#${profile}/home`);
     },
   };
+  // Cross-page teacher links preserve the existing unsaved-edit guard.
+  for (const link of document.querySelectorAll("[data-teacher-workspace]")) link.addEventListener("click", event => {
+    if ((authMode && authenticatedProfile !== "teacher") || window.ConfIATeacher?.canLeave() === false) event.preventDefault();
+  });
   for (const link of links) link.addEventListener("click", event => {
     if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
     event.preventDefault();
@@ -148,6 +177,7 @@
     const [hashProfile, ...parts] = location.hash.slice(1).split("/");
     const hashView = parts.join("/");
     const fromCapture = new URLSearchParams(location.search).get("area") === "teacher";
+    if ((!location.hash || location.hash === "#platform/home") && !fromCapture && window.ConfIAPlatformPresentation) { platformHome({focus:false, historyMode:"replace"}); return; }
     const initialView = authMode && authenticatedProfile === "management" ? "overview" : "home";
     navigate(hashProfile || (authMode ? authenticatedProfile : (fromCapture ? "teacher" : "student")),
       hashView || (!authMode && fromCapture ? "submissions" : initialView),
@@ -163,6 +193,8 @@
       if (!authenticatedProfile) { location.replace("/"); return; }
       window.ConfIAAuthProfile = authenticatedProfile;
       window.ConfIAAuthUser = authenticatedUser;
+      const sessionBadge = document.querySelector(".header-context .badge");
+      if (sessionBadge) sessionBadge.textContent = "Sessão institucional";
       if (authenticatedProfile === "student") document.querySelector("#student-home-name").textContent = authenticatedUser.display_name;
       document.querySelector(".brand").setAttribute("href", `#${authenticatedProfile}/home`);
       document.querySelector("#demo-profile-label").remove();
@@ -195,5 +227,9 @@
         }).catch(() => { document.querySelector("#student-institutional-context").textContent = "Escola e turma indisponíveis nesta sessão."; window.ConfIATutoria?.updateContext(); });
       initialNavigation();
     }).catch(() => { location.replace("/"); });
-  } else initialNavigation();
+  } else {
+    const contextLabel = document.querySelector("#student-institutional-context");
+    if (contextLabel) contextLabel.textContent = "Demonstração local · escola e turma exigem sessão autenticada.";
+    initialNavigation();
+  }
 })();

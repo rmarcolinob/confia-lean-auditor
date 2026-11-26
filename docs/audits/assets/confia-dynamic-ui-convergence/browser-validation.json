@@ -1,0 +1,45 @@
+{
+  "validated_at": "2026-11-12T02:02:10.088769+00:00",
+  "url": "http://127.0.0.1:8768/tme?view=new&mode=dynamic&problem_id=dyn_a6b75db34857448da1d9797268b87fbb",
+  "problem_id": "dyn_a6b75db34857448da1d9797268b87fbb",
+  "document_revision": 7,
+  "mode": "DYNAMIC",
+  "package": {
+    "problem_id": "dyn_a6b75db34857448da1d9797268b87fbb",
+    "package_id": "dpkg_e3f1365bc67642c79d000e448a805db3",
+    "package_version": 4,
+    "statement_version": 1,
+    "statement_sha256": "c5114aef2091a0e9e0247ea4d2f616032b4e95bf9d735c1ffef2a9fda23754f6",
+    "rubric_id": "drub_a55e83e53f924c709dbbbb9e58b049ca",
+    "rubric_version": 2,
+    "rubric_sha256": "4882628d04d9b380934df296b2c565e55fa94ed179bda3fa2b9dd41bd0a7ab05",
+    "package_sha256": "4e502ac5b9d3d239d07764575ba02c1b7edc87f9dbfea1e68d327b534918a265"
+  },
+  "rubric_history": [
+    {
+      "version": 1,
+      "status": "DRAFT_AI"
+    },
+    {
+      "version": 2,
+      "status": "APPROVED"
+    }
+  ],
+  "preparation_id": "dprep_9f4c9e68f9154305b2b293ce91b01855",
+  "preparation_status": "REVIEW_REQUIRED",
+  "provider": "openai",
+  "model": "gpt-4.1-2025-04-14",
+  "warnings_acknowledged": true,
+  "correction_available": false,
+  "browser_observations": {
+    "home_preserved": true,
+    "specialized_assessment_selected": "TME² — 2ª Fase 2026",
+    "created_prepared_suggested_edited_approved": true,
+    "navigated_home_queue_results": true,
+    "resumed_saved_preparation": true,
+    "legacy_sidebar_visible": false,
+    "management_visible": false,
+    "technical_statuses_visible_in_main_content": false
+  },
+  "limit": "Technical demo, no student solution or grading. Provider warnings remain evidence and may themselves be incorrect."
+}

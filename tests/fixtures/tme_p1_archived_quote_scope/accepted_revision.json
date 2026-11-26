@@ -1,0 +1,68 @@
+{
+  "transcription_id": "tr_3ca0ce726b2049bcab93170e09fb6d1e",
+  "submission_id": "sub_f1e495a4d1d34113a13990b946eb0147",
+  "created_at": "2026-11-25T17:19:04.512465Z",
+  "source": "manual",
+  "recognizer": null,
+  "recognizer_version": null,
+  "provider": null,
+  "recognizer_run_id": null,
+  "provenance": null,
+  "revision_number": 1,
+  "based_on_revision_number": null,
+  "reviewer_reference": "evaluator",
+  "reviewer_identity_verified": false,
+  "change_type": "initial_transcription",
+  "change_reason": null,
+  "segments": [
+    {
+      "segment_id": "seg-0",
+      "page_index": 0,
+      "order": 0,
+      "kind": "text",
+      "text": "Invertendo 731, obtenho 137. Portanto, 731 - 137 = 595.",
+      "latex": null,
+      "confidence": null,
+      "source_region": null,
+      "source_stroke_refs": null,
+      "tme_item_id": "a"
+    },
+    {
+      "segment_id": "seg-1",
+      "page_index": 0,
+      "order": 1,
+      "kind": "text",
+      "text": "O original é 100a+10b+c e o invertido é 100c+10b+a. Subtraindo, os termos 10b se cancelam: (100a+10b+c)-(100c+10b+a)=99a-99c=99(a-c).",
+      "latex": null,
+      "confidence": null,
+      "source_region": null,
+      "source_stroke_refs": null,
+      "tme_item_id": "b"
+    },
+    {
+      "segment_id": "seg-2",
+      "page_index": 0,
+      "order": 2,
+      "kind": "text",
+      "text": "Como a-c assume valores de 1 a 8, os resultados são 99, 198, 297, 396, 495, 594 e 693.",
+      "latex": null,
+      "confidence": null,
+      "source_region": null,
+      "source_stroke_refs": null,
+      "tme_item_id": "c"
+    },
+    {
+      "segment_id": "seg-3",
+      "page_index": 0,
+      "order": 3,
+      "kind": "text",
+      "text": "Para o resultado 594, 99(a-c)=594, portanto a-c=6. Os pares são (7,1), (8,2) e (9,3). Há 10 escolhas para b em cada par. Logo, 30 números.",
+      "latex": null,
+      "confidence": null,
+      "source_region": null,
+      "source_stroke_refs": null,
+      "tme_item_id": "d"
+    }
+  ],
+  "status": "NEEDS_REVIEW"
+}

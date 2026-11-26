@@ -1,0 +1,68 @@
+{
+  "dataset_id": "ITA2025F2Q1_S002_L04",
+  "problem_id": "ITA2025F2Q1",
+  "criterion_id": "reduced_polynomial_form",
+  "kind": "false_award",
+  "payload": {
+    "problem": {
+      "statement": "Encontre os valores reais a e b tais que o polinômio p(x)=x^57+a x^14+b x^7+1, ao ser dividido por x^2-x+1, deixe resto 2x+1."
+    },
+    "solution_text": "p(x) = x⁵⁷ + a x¹⁴ + b x⁷ +1\nresto da divisão por x² -x +1 é 2x +1 → p(x) ≡ 2x +1 mod x² -x +1\nx² = -x -1\nx³ = x * x² = x(-x -1) = -x² -x = -(-x -1) -x = x +1 -x =1\nx⁵⁷ = (x³)^19 =1^19=1\nx⁷ = x^(6+1) = (x³)^2 *x =1 *x =x\nx¹⁴ = (x³)^4 *x² =1 * (-x -1) = -x -1\nsubstitui:1 +a(-x -1) +b x +1 = (-a +b)x + (2 -a)\nigualar coeficientes:\n-a +b =2\n2 -a =1 → a=1, então b=3\n(1,3)",
+    "pending_criteria": [
+      {
+        "id": "reduced_polynomial_form",
+        "description": "Obtém o resto geral p(x) ≡ (a+b)x - a.",
+        "max_points": 3.0,
+        "allowed_points": [
+          0.0,
+          3.0
+        ],
+        "input_status": "indeterminate",
+        "verification_status": "partial",
+        "coded_requirements": [
+          {
+            "description": "identified remainder",
+            "relation_alternatives": []
+          }
+        ],
+        "expected_bindings": null,
+        "conclusion_only": false,
+        "required_microclaims": [
+          {
+            "description": "O resto geral de p(x) é (a+b)x-a.",
+            "status": "no_textual_evidence",
+            "origin": "generated_reference",
+            "does_not_prove_student_attribution": true
+          }
+        ],
+        "existing_evidence": [],
+        "grounded_claims": [],
+        "grounded_claims_omitted": 0,
+        "candidate_student_checks": [],
+        "student_checks": [],
+        "candidate_evidence": [
+          {
+            "source_start": 0,
+            "source_end": 370,
+            "source_text": "p(x) = x⁵⁷ + a x¹⁴ + b x⁷ +1\nresto da divisão por x² -x +1 é 2x +1 → p(x) ≡ 2x +1 mod x² -x +1\nx² = -x -1\nx³ = x * x² = x(-x -1) = -x² -x = -(-x -1) -x = x +1 -x =1\nx⁵⁷ = (x³)^19 =1^19=1\nx⁷ = x^(6+1) = (x³)^2 *x =1 *x =x\nx¹⁴ = (x³)^4 *x² =1 * (-x -1) = -x -1\nsubstitui:1 +a(-x -1) +b x +1 = (-a +b)x + (2 -a)\nigualar coeficientes:\n-a +b =2\n2 -a =1 → a=1, então b=3\n(1,3)",
+            "source_kind": "local_context",
+            "grounding_status": "grounded",
+            "verification_status": "not_checked",
+            "evidence_id": "E2_1"
+          }
+        ]
+      }
+    ]
+  },
+  "proposal": {
+    "reduced_polynomial_form": {
+      "decision": "award",
+      "suggested_points": 3,
+      "evidence_ids": [
+        "E2_1"
+      ],
+      "reason_code": "SATISFIES_CRITERION",
+      "rationale": "A evidência citada satisfaz o critério da pauta: «Obtém o resto geral p(x) ≡ (a+b)x - a.»."
+    }
+  }
+}

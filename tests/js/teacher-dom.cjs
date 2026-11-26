@@ -19,7 +19,7 @@ const revision = { transcription_id: transcriptionId, submission_id: id, created
 const summary = { transcription: { transcription_id: transcriptionId, submission_id: id, created_at: revision.created_at, source: "manual", recognizer: null, recognizer_version: null }, latest_revision: revision };
 const history = { transcription: summary.transcription, revisions: [revision], acceptances: [] };
 const { element, descendants, flush, deferred } = require("./ui-dom.cjs");
-function page(transport, search = "") {
+function page(transport, search = "", { realReport = false } = {}) {
   const elements = new Map(), calls = [];
   const get = (selector) => {
     if (!elements.has(selector)) elements.set(selector, element("control"));
@@ -40,6 +40,13 @@ function page(transport, search = "") {
     katex: { render(latex, target) { target.textContent = `rendered:${latex}`; } },
   };
   vm.runInNewContext(recognitionView, context);
+  if (realReport) {
+    vm.runInNewContext(fs.readFileSync(path.join(__dirname, '../../app/confia_lean_auditor/static/audit-view.js'), 'utf8'), context);
+    const render = context.window.ConfIAReport.render;
+    context.window.ConfIAReport.render = (data, target, options) => {
+      reports.push({ data, target, options }); return render(data, target, options);
+    };
+  }
   vm.runInNewContext(fs.readFileSync(path.join(__dirname, "../../app/confia_lean_auditor/static/submissions/decisions.js"), "utf8"), context);
   vm.runInNewContext(source, context);
   return { get, calls, logs, reports, window: context.window };
