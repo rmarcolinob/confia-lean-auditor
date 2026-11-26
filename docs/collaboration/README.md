@@ -35,6 +35,17 @@ Python mínimo declarado: 3.9. Ambiente observado da RC1: Python 3.9.6, macOS/ar
 
 Lean: 4.28.0; Lake: 5.0.0-src+7e01a1b; Mathlib: `8f9d9cff6bd728b17a24e163c9402775d9e6a365`. Provisionar o toolchain e as dependências dos manifests. Não executar `lake update` para reproduzir RC1. O cache `.lake` não acompanha o Git; falha de instalação não é refutação matemática. Node foi validado em v24.15.0. O frontend principal é estático, sem instalação do projeto de vídeo.
 
+Com o gerenciador `elan` instalado, na raiz do clone, prepare as verificações formais do SPECIALIZED:
+
+```sh
+elan toolchain install leanprover/lean4:v4.28.0
+lake exe cache get
+lake build
+git diff --exit-code -- lean-toolchain lakefile.toml lake-manifest.json
+```
+
+Esses comandos podem baixar dependências e consumir tempo de compilação; não chamam providers de correção. Preserve os manifests rastreados. O servidor pode iniciar antes desse provisionamento, mas isso não comprova disponibilidade das verificações Lean. A validação do clone nesta consolidação instalou o Python e iniciou o servidor; a regressão formal usou o cache local já provisionado, sem reconstrução integral da Mathlib nesse clone.
+
 O piloto usa `runtime/pilot-dec10`; `--data-dir CAMINHO` permite isolamento adicional. O launcher é local, demonstrativo, sem autenticação institucional. Consultar os documentos de autenticação em `docs/` antes do provisionamento institucional; não publicar o launcher de demonstração na rede. Os controles existentes continuam no servidor.
 
 Providers são opt-in. Preparação automática DYNAMIC: `CONFIA_DYNAMIC_LLM_ENABLED`, `CONFIA_DYNAMIC_MODEL` (padrão configurado `gpt-4.1`), `CONFIA_DYNAMIC_REASONING_EFFORT`. Avaliação semântica compartilhada: `CONFIA_SEMANTIC_LLM_ENABLED`, `CONFIA_SEMANTIC_MODEL` (padrão configurado `gpt-6.1-sol`), `CONFIA_SEMANTIC_REASONING_EFFORT` (padrão `medium`). Identificadores configurados não garantem disponibilidade nem imutabilidade remota. Fornecer credenciais por mecanismo externo, nunca pelo Git.
