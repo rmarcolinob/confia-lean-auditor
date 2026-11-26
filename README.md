@@ -2,10 +2,10 @@
 
 Plataforma experimental de correção matemática, resolução assistida e acompanhamento pedagógico. Backend Python/FastAPI, frontend HTML/CSS/JavaScript e verificações formais locais com Lean.
 
-| Frente | Situação em 25/11/2026 | Referência |
+| Frente | Situação em 26/11/2026 | Referência |
 | --- | --- | --- |
 | SPECIALIZED | RC1 experimental congelada; avaliação independente com gold humano pendente | Tag `SPECIALIZED-TME2-RC1` |
-| DYNAMIC | Fluxo integrado de questões inéditas, rubricas, Grader, Reviewer e Reconciliation; desenvolvimento e validação continuam | Branch `codex/dynamic-development` |
+| DYNAMIC | Professor, atividade institucional do aluno e estudo autônomo integrados; feedback público restrito da I6+6B; validação independente pendente | Branch `codex/dynamic-development` |
 | Interface | Professor baseado no TME²; entrada, Aluno e Gestão harmonizados | Branch `codex/interface-review` |
 | Colaboração | Instalação, limites, inventário e orientações para revisão | Branch `codex/collaboration-handoff` |
 
@@ -16,7 +16,7 @@ A `main` permanece preservada. As branches de trabalho não significam aprovaç�
 ```sh
 git clone https://github.com/rmarcolinob/confia-lean-auditor.git
 cd confia-lean-auditor
-git switch --track origin/codex/collaboration-handoff
+git switch --track origin/codex/dynamic-development
 python3 -m venv .venv
 .venv/bin/python -m pip install -e .
 env -u OPENAI_API_KEY CONFIA_SEMANTIC_LLM_ENABLED=0 CONFIA_DYNAMIC_LLM_ENABLED=0 \
@@ -26,6 +26,8 @@ env -u OPENAI_API_KEY CONFIA_SEMANTIC_LLM_ENABLED=0 CONFIA_DYNAMIC_LLM_ENABLED=0
 Instalar dependências pode acessar a rede. O launcher inicia **demonstração local em 127.0.0.1**, com armazenamento próprio e sem habilitar providers pagos. Não é implantação institucional. Critérios que dependem de inferência podem permanecer pendentes com providers desabilitados; não são convertidos em zero.
 
 Entrada: `http://127.0.0.1:8010/`. Professor: `/#teacher/home`; Aluno: `/#student/home`; Gestão: `/#management/home`; correção: `/tme`. Selecionar um módulo não concede permissões institucionais. Ver [operação do piloto](docs/PILOTO_10_DEZEMBRO.md) e [guia de colaboração](docs/collaboration/README.md).
+
+**Estudo autônomo e atividades institucionais exigem sessão autenticada.** O launcher acima desabilita autenticação e não serve para testar esses fluxos. Para eles, use o [ambiente autenticado de desenvolvimento](docs/collaboration/README.md#dynamic-com-sessão-autenticada). O [estado atual do DYNAMIC](docs/collaboration/DYNAMIC_STATUS.md) reúne os três contextos e as limitações; o [relatório de consolidação I6+6B](docs/audits/CONFIA_DYNAMIC_INTERVENCOES_6_6B_CONSOLIDACAO.md) registra revisão, testes e prontidão experimental.
 
 ## Evidência e reprodução
 

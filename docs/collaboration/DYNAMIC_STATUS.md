@@ -1,6 +1,16 @@
-# DYNAMIC — base de desenvolvimento, não versão concluída
+# DYNAMIC — estado experimental após I6 e 6B
 
 Esta branch parte da RC1 integrada e da documentação de colaboração. Não modifica o snapshot SPECIALIZED nem acrescenta regras matemáticas. Seu propósito é permitir evolução revisada do DYNAMIC, separadamente da candidata congelada.
+
+Atualização: 26/11/2026. Público principal: anos finais do Ensino Fundamental e Ensino Médio. Os três contextos usam o mesmo núcleo; parecer semântico não equivale a prova Lean. O estudo autônomo não executa Lean nem aplica PautaEngine; não é um segundo corretor SPECIALIZED.
+
+| Contexto | Entrada e política | Serviços e interface |
+| --- | --- | --- |
+| Professor corrigindo atividade | Rubrica aprovada, fontes e leituras conferidas, crédito parcial/dependências, reconciliação e adjudicação humana | `dynamic/assessment_service.py`, `dynamic/product_adapter.py`, workspace TME compartilhado, `static/dynamic-assessment.js` |
+| Aluno em atividade institucional | Versões fixadas, matrícula, tentativas e divulgação conforme política docente; listas e provas distintas | `dynamic/school_service.py`, `dynamic/school_router.py`, `static/dynamic-student.js` |
+| Estudo autônomo do aluno | Enunciado próprio/catálogo, texto ou fotografia/PDF, critérios provisórios formativos, novas tentativas; sem nota escolar | `dynamic/study_{capture,service,feedback,router,models}.py`, `static/dynamic-self-study.js` |
+
+I1–I3 implementaram reconciliação/proveniência, adjudicação e níveis aprovados de crédito/dependências. I4 integrou manuscritos do professor; I5 integrou atividades institucionais do aluno. I6+6B acrescentam estudo autônomo e a fronteira pública `self-study-feedback.v2`. Os registros detalhados estão no [relatório de consolidação](../audits/CONFIA_DYNAMIC_INTERVENCOES_6_6B_CONSOLIDACAO.md), que remete às evidências históricas sem reescrevê-las.
 
 ## O que existe
 
@@ -34,4 +44,10 @@ Há ensaios reais antigos de providers sobre poucas soluções sintéticas (por 
 
 O Grader semântico chama o provider para critérios pendentes e o Reviewer semântico para os critérios de sua revisão, sequencialmente. Isso pode elevar custo e latência; não há benchmark representativo que autorize promessa de escala. Não alterar essa política sem um estudo específico e revisão.
 
-Regressões existentes: `tests/test_dynamic_*.py`, `tests/test_dec10_integration.py` e testes JS de assessment/workspace. Nesta organização, o conjunto dirigido que inclui integração DYNAMIC, R1, diagnósticos e autorização passou com 152 testes Python; navegação/apresentação/caderno passaram com 45 testes JS. Não se declara toda a suíte DYNAMIC reexecutada. Estado: **piloto funcional em desenvolvimento, sem validação independente de eficácia**.
+## Feedback, limites e candidata
+
+A API e o histórico SELF_STUDY expõem uma projeção qualitativa: títulos internos, pesos e pareceres livres ficam privados. Níveis 2–3 usam um repertório controlado de conceitos/pistas; nível 4 exige consentimento e admite etapas estruturadas, sem prova de sua correção matemática. Conteúdo incompatível é rejeitado e registrado privadamente, com orientação segura pública. Parcialidade não apaga erro identificado; discordância sobre o erro aparece como incerteza. A [6B](../audits/CONFIA_DYNAMIC_INTERVENCAO_6B_FEEDBACK.md) especifica os contratos e suas limitações.
+
+Os três contraexemplos são permanentes em `tests/test_dynamic_self_study_feedback_policy.py`. A revisão I6 registrou 739 testes Python e 613 JS; a 6B registrou 769 Python, dois skips por DEV ausente e 614 JS. Resultados da repetição para publicação, comandos, cobertura ausente e ocorrência P3 estão no [relatório de consolidação](../audits/CONFIA_DYNAMIC_INTERVENCOES_6_6B_CONSOLIDACAO.md). Não confundir esses testes simulados com gold humano ou avaliação de aprendizagem.
+
+O código pode servir de base para preparar uma candidata experimental `DYNAMIC-RC1`, exclusivamente para testes supervisionados. Ainda é necessário fixar ambiente/modelos/prompts e hashes num manifesto próprio, definir amostra e orçamento, executar um smoke autorizado de OCR/LLM reais e registrar limitações. Nenhuma tag DYNAMIC-RC1 é criada nesta consolidação. Não há autorização para correção autônoma oficial de avaliações escolares.
