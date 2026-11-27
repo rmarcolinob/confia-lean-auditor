@@ -134,6 +134,8 @@ test('authenticated shell locks navigation to the server role and exposes logout
   assert.equal(student.get('#demo-profile-label').isConnected, false);
   assert.equal(student.get('.sidebar-note').isConnected, false);
   assert(student.calls.some(call => call.url === '/auth/me'));
+  assert.equal(student.calls.filter(call => call.url === '/problems').length, 1);
+  assert(student.calls.findIndex(call => call.url === '/auth/me') < student.calls.findIndex(call => call.url === '/problems'));
   student.location.hash = '#student/resolve'; await student.events.hashchange();
   assert.equal(student.location.hash, '#student/tutoria/practice');
   student.location.hash = '#student/feedback'; await student.events.hashchange();
@@ -150,6 +152,7 @@ test('authenticated shell locks navigation to the server role and exposes logout
 
   const teacher = await page({ hash: '#teacher/submissions', authRole: 'TEACHER' });
   assert.equal(teacher.location.hash, '#teacher/submissions');
+  assert.equal(teacher.calls.filter(call => call.url === '/problems').length, 1);
   assert.deepEqual(teacher.menus.filter(menu => menu.isConnected).map(menu => menu.dataset.profileMenu), ['teacher']);
   assert(teacher.links.some(link => link.isConnected && /^#teacher\//.test(link.getAttribute('href'))));
   assert(teacher.links.filter(link => link.isConnected).every(link => !/^#(student|management)\//.test(link.getAttribute('href'))));
@@ -158,6 +161,7 @@ test('authenticated shell locks navigation to the server role and exposes logout
   teacher.location.hash = '#student/resolve'; await teacher.events.hashchange();
   assert.equal(teacher.location.hash, '#teacher/home');
   const manager = await page({ authRole: 'SCHOOL_MANAGER' });
+  assert.equal(manager.calls.filter(call => call.url === '/problems').length, 0);
   assert.equal(manager.location.hash, '#management/overview');
   assert.deepEqual(manager.menus.filter(menu => menu.isConnected).map(menu => menu.dataset.profileMenu), ['management']);
   assert(manager.links.some(link => link.isConnected && /^#management\//.test(link.getAttribute('href'))));
