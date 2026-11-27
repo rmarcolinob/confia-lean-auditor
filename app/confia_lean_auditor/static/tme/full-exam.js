@@ -19,9 +19,10 @@
       const ticket = ++generation;
       const box = Views.Page(options.assessmentId?"DYNAMIC · Enviar resoluções":"Nova correção", "Selecione a atividade e envie as páginas das resoluções.");
       const content = n("div"); content.append(Views.Loading()); box.append(content); show(box);
+      if(options.assessmentId){const back=n('a','Voltar à avaliação','tme-button secondary');back.href=`/tme?view=new&mode=dynamic&assessment_id=${encodeURIComponent(options.assessmentId)}&step=send`;box.heading.append(back);}
       let assessments;
       try { assessments = await api("/tme/assessments"); }
-      catch (_) { if(ticket===generation) content.replaceChildren(Views.ErrorState("Não foi possível carregar as avaliações.", newCorrection)); return; }
+      catch (_) { if(ticket===generation) content.replaceChildren(Views.ErrorState("Não foi possível carregar as avaliações.", ()=>newCorrection(options))); return; }
       if(ticket!==generation)return;
       if(options.assessmentId) assessments=assessments.filter(d=>d.assessment.assessment_id===options.assessmentId && d.assessment.correction_mode==='DYNAMIC');
       content.replaceChildren();
@@ -75,6 +76,7 @@
       form.append(field("Avaliação",select),field("Código pseudônimo do participante / prova",code),row(generate),n("p","Não informe nome, CPF, e-mail ou matrícula. A identificação civil fica com a organização.","muted"),field("PDF ou imagens da prova",files),n("p","Até 50 páginas. O original é preservado; o recebimento não depende do reconhecimento da escrita.","muted"),selected,error,row(submit));
       if(!assessments.length){form.prepend(Views.Empty("Nenhuma avaliação disponível. Configure uma avaliação para este avaliador."));submit.disabled=true;}
       content.append(form);
+      if(options.assessmentId)form.prepend(n('p','Envie somente a prova de um participante por vez. A associação das páginas às questões é manual e deve ser conferida. Nenhum OCR será corrigido sem sua confirmação.'));
       if(!options.assessmentId)content.append(row(btn("Corrigir questão avulsa / escrita digital",()=>{if(!busy)return legacy();},"secondary")));
     }
 
@@ -193,12 +195,15 @@
         const originals=row();
         for(const asset of detail.submission.original_documents){const link=n("a",`Original ${originals.children.length+1}`,"tme-button secondary");link.href=assetURL(examId,asset.asset_id);link.target="_blank";link.rel="noopener";originals.append(link);}
         box.append(intro,originals,row(btn("Resumo da correção",()=>summary(examId),"secondary")));
+        if(detail.assessment.assessment.correction_mode==='DYNAMIC'){
+          const back=n('a','Voltar às correções DYNAMIC','tme-button secondary');back.href=`/tme?view=new&mode=dynamic&assessment_id=${encodeURIComponent(detail.assessment.assessment.assessment_id)}&step=results`;box.heading.append(back);
+        }
         if(question)return await openQuestion(question.question_attempt,detail,question);
         const grid=n("div",undefined,"scan-grid");detail.submission.pages.forEach(page=>grid.append(pageCard(examId,page)));box.append(grid);
         const mapping=n("section",undefined,"tme-panel"),status=message(detail.submission.pages.length?"Uma página pode ser associada a mais de uma questão.":"Soluções textuais preservadas por questão.");mapping.append(n("h2",detail.submission.pages.length?"Questões e páginas":"Questões"),status);
         let dirty=false,busy=false;const checks=[];const openButtons=[];
         for(const attempt of detail.question_attempts){
-          const group=n("fieldset",undefined,"card");group.append(n("legend",`Q${attempt.question_order} · ${attempt.problem_id} · máximo ${attempt.max_score}`));
+          const group=n("fieldset",undefined,"card");group.append(n("legend",detail.assessment.assessment.correction_mode==='DYNAMIC'?`Questão ${attempt.question_order} · ${attempt.max_score} pontos`:`Q${attempt.question_order} · ${attempt.problem_id} · máximo ${attempt.max_score}`));
           const choices=row();
           for(const page of detail.submission.pages){const input=n("input");input.type="checkbox";input.checked=detail.mapping.bindings.some(b=>b.question_attempt_id===attempt.case_id&&b.exam_page_id===page.exam_page_id);input.dataset.attempt=attempt.case_id;input.dataset.page=page.exam_page_id;input.addEventListener("change",()=>{dirty=true;status.textContent="Associação alterada. Salve antes de abrir a questão.";});checks.push(input);choices.append(field(`Página ${page.page_number}`,input));}
           const go=btn(`Abrir Q${attempt.question_order}`,()=>{if(dirty){status.textContent="Salve as associações antes de abrir a questão.";return;}return openExam(examId,attempt.case_id);},"secondary");openButtons.push(go);group.append(choices,row(go));mapping.append(group);

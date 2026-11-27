@@ -234,6 +234,8 @@
   }
   function renderQuestion(data, host, options={}) {
     const report=n("div",null,"workspace-report"), fmt=v=>v==null?"Não determinada":String(v).replace(".",",");
+    const simplified=options.simplified&&data.engine_mode==='DYNAMIC';
+    const audit=n('details');audit.append(n('summary','Auditoria e evidências'));
     const summary=n("section",null,"review-outcome");summary.setAttribute("aria-label","Resultado sugerido");
     summary.append(n("span",data.stale?"Sugestão ConfIA anterior":"Sugestão ConfIA","quiet-label"),
       n("p",data.suggested_score==null?"Pontuação não determinada":`${fmt(data.suggested_score)} / ${fmt(data.max_score)}`,"review-score"),
@@ -251,22 +253,26 @@
       if(!data.independent_review?.phase_a)reviewer.append(n("p","Revisão indisponível ou não concluída."));
       reconciliation.append(n("summary","Resultado da Reconciliation"),n("p",`Nota automática: ${fmt(data.suggested_score)}`));
       for(const item of data.reconciliation?.criteria||[])reconciliation.append(n("p",`${item.criterion_id}: ${item.status} — ${item.reason}`));
-      opinions.append(grader,reviewer,reconciliation);report.append(opinions);
+      opinions.append(grader,reviewer,reconciliation);(simplified?audit:report).append(opinions);
     }
-    if(data.reconciliation)report.append(n("p",`Primeira análise: ${fmt(data.grader_suggested_score)} · Sugestão reconciliada: ${fmt(data.suggested_score)} · Perfil: ${data.policy_profile}`));
+    if(data.reconciliation)(simplified?audit:report).append(n("p",`Primeira análise: ${fmt(data.grader_suggested_score)} · Sugestão reconciliada: ${fmt(data.suggested_score)} · Perfil: ${data.policy_profile}`));
+    if(simplified&&!data.reconciliation&&!data.stale&&!options.historical&&(data.workflow_actions||[]).length){
+      const resume=n('button','Concluir correção','tme-button');resume.type='button';resume.disabled=Boolean(options.workflowDisabled);resume.addEventListener('click',()=>options.onComplete?.());report.append(resume,n('p','Conclua as verificações pendentes antes de decidir a nota.'));
+    }
     if(!data.stale && !options.historical)for(const action of data.workflow_actions||[]){
-      const button=n("button",action.label,"secondary");button.type="button";button.disabled=Boolean(options.workflowDisabled);button.addEventListener("click",()=>options.onWorkflow?.(action));report.append(button);
+      const button=n("button",action.label,"secondary");button.type="button";button.disabled=Boolean(options.workflowDisabled);button.addEventListener("click",()=>options.onWorkflow?.(action));(simplified?audit:report).append(button);
     }
     for(const reason of [...new Set([...(data.review_reasons||[]),...(data.warnings||[])])])report.append(n("p",reason,"formal-warning"));
     const evidence=Object.fromEntries((data.evidences||[]).map(e=>[e.evidence_id,e]));
     const checks=Object.fromEntries((data.checker_summary||[]).map(c=>[c.checker_id,c]));
-    const section=n("section",null,"dense-criteria");section.append(n("h3","Critérios da pauta"));
+    const section=n("section",null,"dense-criteria");section.append(n("h3",simplified?"Critérios de correção":"Critérios da pauta"));
     const show=(item,container,top=false)=>{
       const row=n("details",null,"audit-criterion");row.open=top;row.dataset.criterionId=item.rubric_item_id;row.dataset.mathematicalStatus=item.status;
       const heading=n("summary");heading.append(statusIcon(item.display_status),n("span",item.label,"criterion-label"),
         n("strong",`${fmt(item.suggested_points)} / ${fmt(item.max_points)}`,"criterion-score"));
       row.append(heading,n("p",item.status_label,"criterion-verification"));
       if(item.reason)row.append(n("p",item.reason));
+      if(simplified&&item.grader_explanation)row.append(n('p',item.grader_explanation));
       if(item.review_required)row.append(n("p",item.known_points==null?"Revisão necessária. Confira as evidências e o motivo antes de homologar.":`Revisão necessária. Pontos confirmados: ${fmt(item.known_points)}; possíveis: ${fmt(item.possible_points)}.`));
       if(item.carry_forward_applied)row.append(n("p","Crédito pela continuidade coerente do raciocínio anterior."));
       for(const id of item.evidence_ids||[]){
@@ -296,9 +302,9 @@
       n("p",`Análise: ${data.audit_run_id}`),n("p",`Transcrição: versão ${data.revision_number} · ${data.transcription_version_id}`),
       n("p",`Motor: ${data.engine_mode} · ${data.engine_version}`),
       n("p",`Início: ${data.started_at?new Date(data.started_at).toLocaleString("pt-BR"):"não registrado"} · conclusão: ${data.completed_at?new Date(data.completed_at).toLocaleString("pt-BR"):"não registrada"}`),
-      n("p",data.engine_config?.use_lean===false?"Execução configurada com verificações determinísticas, sem Lean.":"Execução com verificações determinísticas e Lean quando aplicável."),
+      n("p",data.engine_mode==='DYNAMIC'?"Avaliação dinâmica. Parecer semântico não constitui prova Lean; consulte as verificações efetivamente registradas.":data.engine_config?.use_lean===false?"Execução configurada com verificações determinísticas, sem Lean.":"Execução com verificações determinísticas e Lean quando aplicável."),
       n("pre",JSON.stringify(data,root.ConfIAReport.publicTechnicalValue,2)));
-    report.append(details);host.replaceChildren(report);
+    if(simplified){audit.append(details);report.append(audit);}else report.append(details);host.replaceChildren(report);
   }
   root.ConfiaWorkspaceReport = { render, renderQuestion };
 })(window);

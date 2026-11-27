@@ -34,3 +34,18 @@
 .dynamic-workflow > .tme-new-form > label:has(textarea) { grid-column: 1 / -1; }
 .dynamic-workflow > .tme-new-form > button { justify-self: start; }
 .dynamic-workflow > .tme-new-form > h2 { margin-top: 0; }
+
+/* Teacher entry uses the approved TME panels and tokens. */
+.dynamic-main-actions { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:16px; margin-bottom:24px; }
+#confia-preparation .dynamic-action { display:flex; flex-direction:column; gap:10px; text-align:left; margin:0; padding:24px; font:inherit; cursor:pointer; color:var(--confia-text); }
+.dynamic-action strong { font-size:1.1rem; }
+.dynamic-action span { color:var(--confia-muted); line-height:1.5; }
+.dynamic-action[aria-pressed=true] { border-color:var(--confia-blue); box-shadow:inset 0 3px var(--confia-blue); }
+.dynamic-availability { margin:16px 0; padding:12px 20px; border-left:3px solid var(--confia-yellow); background:var(--confia-surface); }
+.dynamic-availability p { margin:8px 0; font-size:.9rem; color:var(--confia-muted); }
+.dynamic-assessment-card { border-bottom:1px solid var(--confia-border); padding:20px 0; }
+.dynamic-assessment-card h3 { margin:0 0 12px; }
+.dynamic-content pre { white-space:pre-wrap; overflow-wrap:anywhere; max-height:400px; overflow:auto; font-size:.8rem; }
+#confia-preparation select { max-width:100%; padding:12px; border:1px solid var(--confia-border); border-radius:var(--confia-radius-sm); background:var(--confia-surface); color:var(--confia-text); font:inherit; }
+.dynamic-main-actions button:focus-visible { outline:3px solid var(--confia-blue); outline-offset:3px; }
+@media(max-width:760px) { .dynamic-main-actions { grid-template-columns:1fr; gap:10px; } #confia-preparation .dynamic-action { padding:18px; } }

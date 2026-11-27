@@ -93,3 +93,7 @@ Para a consolidação I6+6B, consulte os comandos e resultados atuais no [relat�
 Rian pode clonar o remoto, ler este guia e os três históricos de interface (`a5d2461`, `1545955`, `8c17274`), executar a regressão offline e abrir uma branch a partir da `main` integrada. O código atual das duas frentes já tem ancestralidade comum na RC1; as novas branches separam **trabalho futuro**, não apagam o histórico compartilhado.
 
 Prioridades DYNAMIC: avaliação independente por domínio e critério; comportamento fora do parser exato; qualidade de rubricas e citações; divergências e revisão humana; custo/latência; integração de captura sem confundir OCR e correção matemática. Prioridades de interface: revisão desktop/mobile e acessibilidade, preservando caderno, TutorIA, dados reais de gestão e permissões. Não há nova implementação dessas tarefas nesta organização.
+
+## DYNAMIC docente simplificado
+
+O fluxo de cadastro, envio de provas digitalizadas e consulta de correções está descrito no [guia de implementação e validação](DYNAMIC_TEACHER_SIMPLIFIED.md), incluindo ambiente sintético autenticado, limites e evidências visuais. O guia distingue a proposta em revisão na branch própria da versão integrada na main.
