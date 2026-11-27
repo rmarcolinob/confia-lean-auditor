@@ -1,0 +1,97 @@
+{
+  "classification": "REAL_LEAN_WITH_DISABLED_PROVIDER_THEN_EXPLICIT_SIMULATED_POLICY_ONLY",
+  "source": "A quarta cara no n-esimo lançamento exige 3 caras nos n-1 primeiros lançamentos e cara no último. Assim P(N=n)=C(n-1,3)/2^n. A razão P(n+1)/P(n)=n/(2n-6). Ela é maior que 1 para n<6, igual a 1 em n=6 e menor que 1 para n>6. Portanto, n=6 e n=7.",
+  "disabled_score": null,
+  "disabled_trace": {
+    "probability_formula": {
+      "decision": "review",
+      "error_type": "RuntimeError",
+      "error_stage": "semantic_fallback",
+      "policy": "semantic-b-minimal.v1",
+      "formal_certification": false,
+      "evidence": [
+        {
+          "source_start": 98,
+          "source_end": 124,
+          "source_text": "Assim P(N=n)=C(n-1,3)/2^n."
+        },
+        {
+          "source_start": 98,
+          "source_end": 124,
+          "source_text": "Assim P(N=n)=C(n-1,3)/2^n."
+        }
+      ],
+      "full_solution_supplied": true
+    },
+    "ratio_comparison": {
+      "decision": "review",
+      "error_type": "RuntimeError",
+      "error_stage": "semantic_fallback",
+      "policy": "semantic-b-minimal.v1",
+      "formal_certification": false,
+      "evidence": [
+        {
+          "source_start": 125,
+          "source_end": 154,
+          "source_text": "A razão P(n+1)/P(n)=n/(2n-6)."
+        },
+        {
+          "source_start": 125,
+          "source_end": 154,
+          "source_text": "A razão P(n+1)/P(n)=n/(2n-6)."
+        }
+      ],
+      "full_solution_supplied": true
+    },
+    "maximizers_identification": {
+      "decision": "review",
+      "error_type": "RuntimeError",
+      "error_stage": "semantic_fallback",
+      "policy": "semantic-b-minimal.v1",
+      "formal_certification": false,
+      "evidence": [
+        {
+          "source_start": 125,
+          "source_end": 154,
+          "source_text": "A razão P(n+1)/P(n)=n/(2n-6)."
+        },
+        {
+          "source_start": 125,
+          "source_end": 154,
+          "source_text": "A razão P(n+1)/P(n)=n/(2n-6)."
+        }
+      ],
+      "full_solution_supplied": true
+    }
+  },
+  "checks": [
+    {
+      "type": "f2q6_student_probability_formula",
+      "status": "verified"
+    },
+    {
+      "type": "f2q6_student_ratio_formula",
+      "status": "verified"
+    },
+    {
+      "type": "f2q6_student_final_answer",
+      "status": "verified"
+    }
+  ],
+  "reference_certificate": "verified",
+  "generated_theorems": [],
+  "simulated_calls": [
+    "probability_formula",
+    "ratio_comparison",
+    "maximizers_identification"
+  ],
+  "simulated_score": 10.0,
+  "simulated_points": {
+    "probability_formula": 3.0,
+    "ratio_comparison": 3.0,
+    "maximizers_identification": 2.0,
+    "final_answer": 2.0
+  },
+  "source_sha256": "715f5a8157e87bf8ae54771aee930f0eebaadf101ad65ffd1b64022795c17761",
+  "interpretation": "Lean verificou apenas os contratos dos três checks existentes; não é prova global da modelagem probabilística. As três decisões posteriores são simuladas."
+}

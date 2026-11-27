@@ -99,13 +99,17 @@ def _payload(claim):
     return {k:_field(claim,k) for k in ("problem_id", "claim_type", "data")}
 
 
-def _math_fragment(text, expression):
+def _math_fragment(text, expression, *, allow_equality_rhs=False):
     """Require a complete math fragment, never a prefix such as k in k+1."""
     t, expr = normalized(text), compact(expression)
-    pattern = r"(?<![\w+*/^=-])" + r"\s*".join(re.escape(ch) for ch in expr)
+    boundary = r"(?<![\w+*/^-])" if allow_equality_rhs else r"(?<![\w+*/^=-])"
+    pattern = boundary + r"\s*".join(re.escape(ch) for ch in expr)
     for match in re.finditer(pattern, t):
         prefix=t[:match.start()].rstrip()
-        if prefix and prefix[-1] in "+*/^=-":
+        rhs = allow_equality_rhs and prefix.endswith("=")
+        if rhs and prefix[:-1].rstrip().endswith(("<", ">", "!", "=")):
+            continue
+        if prefix and prefix[-1] in "+*/^=-" and not rhs:
             continue
         tail=t[match.end():].lstrip()
         if tail and (tail[0] in "+*/^=<>-([" or re.match(r"[.,]\d|\d", tail)):
@@ -157,7 +161,11 @@ def representation_matches(kind, data, source):
         if kind == "f2q1_student_reduced_form":
             forms = {"correct":"(a+b)x-a", "wrong_const_sign":"(a+b)x+a", "wrong_coeff_minus":"(a-b)x-a", "wrong_coeff_swapped_minus":"(b-a)x-a"}
             formula = data["formula_text"].replace("*", "")
-            return formula == forms.get(data["form_kind"]) and _math_fragment(source.replace("*", ""), formula)
+            # A complete written RHS is evidence of the student's expression,
+            # including in a longer equality chain. This grants no truth or
+            # credit; existing attribution gates and checkers still decide it.
+            return formula == forms.get(data["form_kind"]) and _math_fragment(
+                source.replace("*", ""), formula, allow_equality_rhs=True)
         if kind == "f2q1_student_coefficient_system":
             lhs = {"candidateA + candidateB":"a+b", "candidateB + candidateA":"b+a"}.get(data["sum_lhs"])
             a = {"neg_a":"-a", "a":"a"}.get(data["a_equation_kind"])
