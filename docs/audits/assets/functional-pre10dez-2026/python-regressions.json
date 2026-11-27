@@ -1,0 +1,727 @@
+{
+  "collected": 3650,
+  "counts": {
+    "passed": 3595,
+    "skipped": 52,
+    "failed": 2,
+    "xfailed": 1
+  },
+  "skips": [
+    {
+      "test": "tests.test_claim_fidelity::test_smoke_mismatch_offline_without_rewriting_artifacts",
+      "type": "pytest.skip",
+      "reason": "Original smoke artifact is local; the portable source fixture is tested separately"
+    },
+    {
+      "test": "tests.test_common_math_claims::test_legacy_public_response_shape_has_no_common_layer_fields",
+      "type": "pytest.skip",
+      "reason": "Local historical artifact"
+    },
+    {
+      "test": "tests.test_f2q6_strong_certificate::test_f2q6_correct_solution_includes_strong_certificate",
+      "type": "pytest.xfail",
+      "reason": "P2 preexistente: maximizers_identification ausente nesta formulação; subtotal 8/8, sem nota global"
+    },
+    {
+      "test": "tests.test_generic_student_math::test_priority_saved_texts_without_reauditing_or_rewriting_artifacts",
+      "type": "pytest.skip",
+      "reason": "Local replay artifacts; portable cases above cover the syntax"
+    },
+    {
+      "test": "tests.test_math_canonical::test_historical_common_record_without_new_fields_remains_readable_and_projectable",
+      "type": "pytest.skip",
+      "reason": "Local historical artifact"
+    },
+    {
+      "test": "tests.test_positive_credit_evidence::test_historical_response_roundtrip_keeps_hash_shape",
+      "type": "pytest.skip",
+      "reason": "Historical smoke artifact is local"
+    },
+    {
+      "test": "tests.test_rubric_bridge::test_saved_f2q1_v2_proof_replay_recovers_only_the_final_criterion",
+      "type": "pytest.skip",
+      "reason": "Local V2 artifact; equivalent portable regression is tested above"
+    },
+    {
+      "test": "tests.test_scope_boundary::test_p5_02_exact_frozen_units_keep_ids_text_and_real_origin",
+      "type": "pytest.skip",
+      "reason": "Frozen DEV artifact unavailable; never load another dataset"
+    },
+    {
+      "test": "tests.test_scope_boundary_replay::test_p5_02_removes_scope_credit_without_erasing_legitimate_d_proofs",
+      "type": "pytest.skip",
+      "reason": "Frozen DEV outputs unavailable; never substitute another split"
+    },
+    {
+      "test": "tests.test_scope_boundary_replay::test_original_contract_failures_and_timeout_remain_closed[TME2026P1_12]",
+      "type": "pytest.skip",
+      "reason": "Frozen DEV outputs unavailable; never substitute another split"
+    },
+    {
+      "test": "tests.test_scope_boundary_replay::test_original_contract_failures_and_timeout_remain_closed[TME2026P4_19]",
+      "type": "pytest.skip",
+      "reason": "Frozen DEV outputs unavailable; never substitute another split"
+    },
+    {
+      "test": "tests.test_scope_boundary_replay::test_original_contract_failures_and_timeout_remain_closed[TME2026P2_10]",
+      "type": "pytest.skip",
+      "reason": "Frozen DEV outputs unavailable; never substitute another split"
+    },
+    {
+      "test": "tests.test_score_policy::test_f2q5_original_text_regression",
+      "type": "pytest.skip",
+      "reason": "Local synthetic corpus fixture unavailable"
+    },
+    {
+      "test": "tests.test_sufficiency_dev_regressions::test_known_dev_failure_is_eliminated_in_actual_shadow[TME2026P1_06:d.total_thirty]",
+      "type": "pytest.skip",
+      "reason": "Actual independent gate shadow has not run yet"
+    },
+    {
+      "test": "tests.test_sufficiency_dev_regressions::test_known_dev_failure_is_eliminated_in_actual_shadow[TME2026P1_13:d.middle_choices]",
+      "type": "pytest.skip",
+      "reason": "Actual independent gate shadow has not run yet"
+    },
+    {
+      "test": "tests.test_sufficiency_dev_regressions::test_known_dev_failure_is_eliminated_in_actual_shadow[TME2026P1_13:d.total_thirty]",
+      "type": "pytest.skip",
+      "reason": "Actual independent gate shadow has not run yet"
+    },
+    {
+      "test": "tests.test_sufficiency_dev_regressions::test_known_dev_failure_is_eliminated_in_actual_shadow[TME2026P2_01:c.pair_orientations]",
+      "type": "pytest.skip",
+      "reason": "Actual independent gate shadow has not run yet"
+    },
+    {
+      "test": "tests.test_sufficiency_dev_regressions::test_known_dev_failure_is_eliminated_in_actual_shadow[TME2026P2_01:c.counting_product]",
+      "type": "pytest.skip",
+      "reason": "Actual independent gate shadow has not run yet"
+    },
+    {
+      "test": "tests.test_sufficiency_dev_regressions::test_known_dev_failure_is_eliminated_in_actual_shadow[TME2026P2_08:c.pair_orientations]",
+      "type": "pytest.skip",
+      "reason": "Actual independent gate shadow has not run yet"
+    },
+    {
+      "test": "tests.test_sufficiency_dev_regressions::test_known_dev_failure_is_eliminated_in_actual_shadow[TME2026P2_08:c.counting_product]",
+      "type": "pytest.skip",
+      "reason": "Actual independent gate shadow has not run yet"
+    },
+    {
+      "test": "tests.test_sufficiency_dev_regressions::test_known_dev_failure_is_eliminated_in_actual_shadow[TME2026P2_01:c.total]",
+      "type": "pytest.skip",
+      "reason": "Actual independent gate shadow has not run yet"
+    },
+    {
+      "test": "tests.test_sufficiency_dev_regressions::test_known_dev_failure_is_eliminated_in_actual_shadow[TME2026P2_01:b.realizable_5]",
+      "type": "pytest.skip",
+      "reason": "Actual independent gate shadow has not run yet"
+    },
+    {
+      "test": "tests.test_sufficiency_dev_regressions::test_known_dev_failure_is_eliminated_in_actual_shadow[TME2026P2_01:b.realizable_9]",
+      "type": "pytest.skip",
+      "reason": "Actual independent gate shadow has not run yet"
+    },
+    {
+      "test": "tests.test_sufficiency_dev_regressions::test_known_dev_failure_is_eliminated_in_actual_shadow[TME2026P2_18:b.realizable_5]",
+      "type": "pytest.skip",
+      "reason": "Actual independent gate shadow has not run yet"
+    },
+    {
+      "test": "tests.test_sufficiency_dev_regressions::test_known_dev_failure_is_eliminated_in_actual_shadow[TME2026P2_18:b.realizable_9]",
+      "type": "pytest.skip",
+      "reason": "Actual independent gate shadow has not run yet"
+    },
+    {
+      "test": "tests.test_sufficiency_dev_regressions::test_known_dev_failure_is_eliminated_in_actual_shadow[TME2026P4_16:c.x_candidates]",
+      "type": "pytest.skip",
+      "reason": "Actual independent gate shadow has not run yet"
+    },
+    {
+      "test": "tests.test_sufficiency_dev_regressions::test_known_dev_failure_is_eliminated_in_actual_shadow[TME2026P4_16:c.case_other]",
+      "type": "pytest.skip",
+      "reason": "Actual independent gate shadow has not run yet"
+    },
+    {
+      "test": "tests.test_sufficiency_dev_regressions::test_known_dev_failure_is_eliminated_in_actual_shadow[TME2026P4_16:c.case_other_root]",
+      "type": "pytest.skip",
+      "reason": "Actual independent gate shadow has not run yet"
+    },
+    {
+      "test": "tests.test_sufficiency_dev_regressions::test_known_dev_failure_is_eliminated_in_actual_shadow[TME2026P4_21:c.exclude_12]",
+      "type": "pytest.skip",
+      "reason": "Actual independent gate shadow has not run yet"
+    },
+    {
+      "test": "tests.test_sufficiency_dev_regressions::test_known_dev_failure_is_eliminated_in_actual_shadow[TME2026P4_21:c.pythagoras]",
+      "type": "pytest.skip",
+      "reason": "Actual independent gate shadow has not run yet"
+    },
+    {
+      "test": "tests.test_sufficiency_dev_regressions::test_known_dev_failure_is_eliminated_in_actual_shadow[TME2026P4_21:c.case_3x]",
+      "type": "pytest.skip",
+      "reason": "Actual independent gate shadow has not run yet"
+    },
+    {
+      "test": "tests.test_sufficiency_dev_regressions::test_known_dev_failure_is_eliminated_in_actual_shadow[TME2026P4_21:c.case_other]",
+      "type": "pytest.skip",
+      "reason": "Actual independent gate shadow has not run yet"
+    },
+    {
+      "test": "tests.test_sufficiency_dev_regressions::test_known_dev_failure_is_eliminated_in_actual_shadow[TME2026P5_09:a.candidate]",
+      "type": "pytest.skip",
+      "reason": "Actual independent gate shadow has not run yet"
+    },
+    {
+      "test": "tests.test_sufficiency_dev_regressions::test_known_dev_failure_is_eliminated_in_actual_shadow[TME2026P5_22:a.candidate]",
+      "type": "pytest.skip",
+      "reason": "Actual independent gate shadow has not run yet"
+    },
+    {
+      "test": "tests.test_tme_model_ablation::test_plan_has_identical_payloads_contracts_and_only_model_difference",
+      "type": "pytest.skip",
+      "reason": "Frozen local DEV pack unavailable; never replace with another dataset"
+    },
+    {
+      "test": "tests.test_tme_model_ablation::test_entire_selection_rejected_before_any_provider[selection0]",
+      "type": "pytest.skip",
+      "reason": "Frozen local DEV pack unavailable; never replace with another dataset"
+    },
+    {
+      "test": "tests.test_tme_model_ablation::test_entire_selection_rejected_before_any_provider[selection1]",
+      "type": "pytest.skip",
+      "reason": "Frozen local DEV pack unavailable; never replace with another dataset"
+    },
+    {
+      "test": "tests.test_tme_model_ablation::test_entire_selection_rejected_before_any_provider[selection2]",
+      "type": "pytest.skip",
+      "reason": "Frozen local DEV pack unavailable; never replace with another dataset"
+    },
+    {
+      "test": "tests.test_tme_model_ablation::test_modified_dev_manifest_is_rejected_before_sources",
+      "type": "pytest.skip",
+      "reason": "Frozen local DEV pack unavailable; never replace with another dataset"
+    },
+    {
+      "test": "tests.test_tme_model_ablation::test_dry_run_cli_has_no_key_client_or_network",
+      "type": "pytest.skip",
+      "reason": "Frozen local DEV pack unavailable; never replace with another dataset"
+    },
+    {
+      "test": "tests.test_tme_model_ablation::test_dev_plan_loads_exactly_25_frozen_cases_without_providers",
+      "type": "pytest.skip",
+      "reason": "Frozen local DEV pack unavailable; never replace with another dataset"
+    },
+    {
+      "test": "tests.test_tme_model_ablation::test_fresh_both_stages_same_model_and_independent_arms",
+      "type": "pytest.skip",
+      "reason": "Frozen local DEV pack unavailable; never replace with another dataset"
+    },
+    {
+      "test": "tests.test_tme_model_ablation::test_no_positive_candidates_skips_gate_and_preserves_audit",
+      "type": "pytest.skip",
+      "reason": "Frozen local DEV pack unavailable; never replace with another dataset"
+    },
+    {
+      "test": "tests.test_tme_model_ablation::test_failed_first_provider_never_reuses_old_judgments",
+      "type": "pytest.skip",
+      "reason": "Frozen local DEV pack unavailable; never replace with another dataset"
+    },
+    {
+      "test": "tests.test_tme_model_ablation::test_changed_config_plan_is_rejected_before_provider",
+      "type": "pytest.skip",
+      "reason": "Frozen local DEV pack unavailable; never replace with another dataset"
+    },
+    {
+      "test": "tests.test_tme_model_ablation::test_live_cli_requires_clean_checkout_and_never_overwrites",
+      "type": "pytest.skip",
+      "reason": "Frozen local DEV pack unavailable; never replace with another dataset"
+    },
+    {
+      "test": "tests.test_tme_model_compat::test_real_smoke_dry_run_separates_semantic_hashes_from_transport",
+      "type": "pytest.skip",
+      "reason": "Frozen local DEV pack unavailable"
+    },
+    {
+      "test": "tests.test_tme_model_compat::test_transport_builder_does_not_weaken_holdout_guard",
+      "type": "pytest.skip",
+      "reason": "Frozen local DEV pack unavailable"
+    },
+    {
+      "test": "tests.test_tme_review_diagnostics::test_local_p1_to_p5_records_and_artifacts_are_unchanged[1-aud_1eb247481575591afe015612b9bcab6b98943d338347f5ce36da598eabaa019e-4]",
+      "type": "pytest.skip",
+      "reason": "Local pilot audit unavailable; portable P1 and synthetic regressions still run"
+    },
+    {
+      "test": "tests.test_tme_review_diagnostics::test_local_p1_to_p5_records_and_artifacts_are_unchanged[2-aud_6f7e8d0a116941fe22164444b60ecbd0c71e1e227c4a6c244528fafc5eed1808-2]",
+      "type": "pytest.skip",
+      "reason": "Local pilot audit unavailable; portable P1 and synthetic regressions still run"
+    },
+    {
+      "test": "tests.test_tme_review_diagnostics::test_local_p1_to_p5_records_and_artifacts_are_unchanged[3-aud_b78d47c5651567e96939a38cd3ac76b1ead85eb9e5cde1a308360ae687067ee6-1]",
+      "type": "pytest.skip",
+      "reason": "Local pilot audit unavailable; portable P1 and synthetic regressions still run"
+    },
+    {
+      "test": "tests.test_tme_review_diagnostics::test_local_p1_to_p5_records_and_artifacts_are_unchanged[4-aud_00e84780b3c5556e82c092d34fbc66f8af67da2b398b1860da19b88366433bb2-5]",
+      "type": "pytest.skip",
+      "reason": "Local pilot audit unavailable; portable P1 and synthetic regressions still run"
+    },
+    {
+      "test": "tests.test_tme_review_diagnostics::test_local_p1_to_p5_records_and_artifacts_are_unchanged[5-aud_e840502ea785c0ff3469e187a2f2d53831f8a9eba6f281ac9805103b0d230c93-5]",
+      "type": "pytest.skip",
+      "reason": "Local pilot audit unavailable; portable P1 and synthetic regressions still run"
+    }
+  ],
+  "failures": [
+    {
+      "test": "tests.test_common_claim_pipeline::test_common_catalog_preserves_real_pipeline_credit_and_attribution[True]",
+      "message": "AssertionError: assert (None == 10)\n +  where None = AuditResponse(problem_id='ITA2025F2Q1', score=None, max_score=10.0, verdict='inconclusivo', extracted_claims=ClaimExtr...ted_max_score=2.0, coverage=0.2, estimated_points=None, needs_review=True, unscorable_reason='ADJUDICATOR_UNAVAILABLE').score",
+      "detail": "correct = True\n\n    @pytest.mark.parametrize('correct',[True,False])\n    def test_common_catalog_preserves_real_pipeline_credit_and_attribution(correct):\n        solution=Path('problems/ITA2025F2Q1/examples/correct_solution.txt').read_text() if correct else 'Portanto a=3 e b=2.'\n        response=execute_audit(AuditRequest(problem_id='ITA2025F2Q1',solution=solution))\n        directory=Path(response.artifact_dir)\n        catalog=MathClaimCatalog.model_validate_json((directory/'math_claims.json').read_text())\n        public=response.model_dump(mode='json')\n        assert 'math_claims' not in public and 'common_claims' not in public\n        assert json.loads((directory/'audit.json').read_text())==public\n        # Every pointer resolves to an actual existing legacy result; no proof output\n        # or score is reconstructed inside the common artifact.\n        for record in catalog.records:\n            for verification in record.verification_results:\n                node=public\n                for part in verification.artifact_ref.split('#/',1)[1].split('/'):\n                    node=node[int(part)] if isinstance(node,list) else node[part]\n                assert node is not None\n        final=next(i for i in response.rubric_assessment.items if i.id=='final_answer')\n        student=next(r for r in catalog.records if r.claim_type=='f2q1_student_final_answer')\n        assert student.provenance.origin==Origin.STUDENT_EXPLICIT\n        if correct:\n>           assert response.score==10 and response.verdict=='correto'\nE           AssertionError: assert (None == 10)\nE            +  where None = AuditResponse(problem_id='ITA2025F2Q1', score=None, max_score=10.0, verdict='inconclusivo', extracted_claims=ClaimExtr...ted_max_score=2.0, coverage=0.2, estimated_points=None, needs_review=True, unscorable_reason='ADJUDICATOR_UNAVAILABLE').score\n\ntests/test_common_claim_pipeline.py:34: AssertionError"
+    },
+    {
+      "test": "tests.test_common_claim_pipeline::test_common_catalog_preserves_real_pipeline_credit_and_attribution[False]",
+      "message": "AssertionError: assert (None == 0)\n +  where None = RubricItemResult(id='final_answer', description='Conclui corretamente a=-1 e b=3.', detected=False, points=None, max_p...t content differs from the reference; retain both origins', 'conflict': True}, 'needs_review': True, 'conflict': True}).points",
+      "detail": "correct = False\n\n    @pytest.mark.parametrize('correct',[True,False])\n    def test_common_catalog_preserves_real_pipeline_credit_and_attribution(correct):\n        solution=Path('problems/ITA2025F2Q1/examples/correct_solution.txt').read_text() if correct else 'Portanto a=3 e b=2.'\n        response=execute_audit(AuditRequest(problem_id='ITA2025F2Q1',solution=solution))\n        directory=Path(response.artifact_dir)\n        catalog=MathClaimCatalog.model_validate_json((directory/'math_claims.json').read_text())\n        public=response.model_dump(mode='json')\n        assert 'math_claims' not in public and 'common_claims' not in public\n        assert json.loads((directory/'audit.json').read_text())==public\n        # Every pointer resolves to an actual existing legacy result; no proof output\n        # or score is reconstructed inside the common artifact.\n        for record in catalog.records:\n            for verification in record.verification_results:\n                node=public\n                for part in verification.artifact_ref.split('#/',1)[1].split('/'):\n                    node=node[int(part)] if isinstance(node,list) else node[part]\n                assert node is not None\n        final=next(i for i in response.rubric_assessment.items if i.id=='final_answer')\n        student=next(r for r in catalog.records if r.claim_type=='f2q1_student_final_answer')\n        assert student.provenance.origin==Origin.STUDENT_EXPLICIT\n        if correct:\n            assert response.score==10 and response.verdict=='correto'\n            assert final.points==2\n            aligned=[a for a in catalog.alignments if a.status=='aligned']\n            assert any(student.record_id in a.preferred_attribution_ids for a in aligned)\n            assert any(v.status=='verified' and v.attributed_to_student for v in student.verification_results)\n        else:\n            assert response.score is None and response.verdict=='inconclusivo'\n>           assert final.points==0 and final.mathematical_status=='refuted'\nE           AssertionError: assert (None == 0)\nE            +  where None = RubricItemResult(id='final_answer', description='Conclui corretamente a=-1 e b=3.', detected=False, points=None, max_p...t content differs from the reference; retain both origins', 'conflict': True}, 'needs_review': True, 'conflict': True}).points\n\ntests/test_common_claim_pipeline.py:41: AssertionError"
+    }
+  ],
+  "per_file": {
+    "tests.test_assessments": {
+      "passed": 7
+    },
+    "tests.test_audit_math_canonicalization": {
+      "passed": 46
+    },
+    "tests.test_cap04_global_semantics": {
+      "passed": 51
+    },
+    "tests.test_cap04_integrity_regressions": {
+      "passed": 27
+    },
+    "tests.test_cap04_parity": {
+      "passed": 27
+    },
+    "tests.test_capture_contracts": {
+      "passed": 15
+    },
+    "tests.test_capture_static": {
+      "passed": 12
+    },
+    "tests.test_claim_alignment_obligations": {
+      "passed": 43
+    },
+    "tests.test_claim_fidelity": {
+      "passed": 45,
+      "skipped": 1
+    },
+    "tests.test_common_claim_pipeline": {
+      "failed": 2
+    },
+    "tests.test_common_math_claims": {
+      "passed": 62,
+      "skipped": 1
+    },
+    "tests.test_core_auth": {
+      "passed": 6
+    },
+    "tests.test_core_institutional": {
+      "passed": 5
+    },
+    "tests.test_dec10_integration": {
+      "passed": 14
+    },
+    "tests.test_dec10_specialized": {
+      "passed": 7
+    },
+    "tests.test_demo_december_operations": {
+      "passed": 5
+    },
+    "tests.test_dynamic_credit_dependencies": {
+      "passed": 46
+    },
+    "tests.test_dynamic_dy1": {
+      "passed": 21
+    },
+    "tests.test_dynamic_dy2": {
+      "passed": 47
+    },
+    "tests.test_dynamic_dy3": {
+      "passed": 36
+    },
+    "tests.test_dynamic_dy4": {
+      "passed": 34
+    },
+    "tests.test_dynamic_dy5": {
+      "passed": 42
+    },
+    "tests.test_dynamic_dy6": {
+      "passed": 14
+    },
+    "tests.test_dynamic_dy7": {
+      "passed": 20
+    },
+    "tests.test_dynamic_handwriting": {
+      "passed": 8
+    },
+    "tests.test_dynamic_human_adjudication": {
+      "passed": 25
+    },
+    "tests.test_dynamic_r1": {
+      "passed": 92
+    },
+    "tests.test_dynamic_school": {
+      "passed": 8
+    },
+    "tests.test_dynamic_self_study": {
+      "passed": 14
+    },
+    "tests.test_dynamic_self_study_feedback_policy": {
+      "passed": 30
+    },
+    "tests.test_dynamic_semantic_consistency": {
+      "passed": 26
+    },
+    "tests.test_dynamic_teacher_simplified": {
+      "passed": 2
+    },
+    "tests.test_evaluator_architecture": {
+      "passed": 1
+    },
+    "tests.test_evidence_id_semantic": {
+      "passed": 53
+    },
+    "tests.test_f2_strong_lean_suite": {
+      "passed": 10
+    },
+    "tests.test_f2q1_rubric_adjustments": {
+      "passed": 5
+    },
+    "tests.test_f2q1_strong_certificate": {
+      "passed": 2
+    },
+    "tests.test_f2q1_student_claim_checks": {
+      "passed": 5
+    },
+    "tests.test_f2q3_rubric_adjustments": {
+      "passed": 6
+    },
+    "tests.test_f2q3_strong_certificate": {
+      "passed": 3
+    },
+    "tests.test_f2q3_student_claim_checks": {
+      "passed": 5
+    },
+    "tests.test_f2q5_rubric_adjustments": {
+      "passed": 6
+    },
+    "tests.test_f2q5_strong_certificate": {
+      "passed": 3
+    },
+    "tests.test_f2q5_student_claim_checks": {
+      "passed": 5
+    },
+    "tests.test_f2q6_rubric_adjustments": {
+      "passed": 4
+    },
+    "tests.test_f2q6_strong_certificate": {
+      "xfailed": 1,
+      "passed": 1
+    },
+    "tests.test_f2q6_student_claim_checks": {
+      "passed": 5
+    },
+    "tests.test_f2q8_rubric_adjustments": {
+      "passed": 5
+    },
+    "tests.test_f2q8_strong_certificate": {
+      "passed": 2
+    },
+    "tests.test_f2q8_student_claim_checks": {
+      "passed": 9
+    },
+    "tests.test_generic_student_math": {
+      "passed": 96,
+      "skipped": 1
+    },
+    "tests.test_generic_student_math_pipeline": {
+      "passed": 1
+    },
+    "tests.test_gov01_public_api": {
+      "passed": 25
+    },
+    "tests.test_handwriting_recognition_benchmark": {
+      "passed": 15
+    },
+    "tests.test_hmer_audit_parity": {
+      "passed": 8
+    },
+    "tests.test_ita2025f2q1_level1": {
+      "passed": 4
+    },
+    "tests.test_ita2025f2q3_level1": {
+      "passed": 4
+    },
+    "tests.test_ita2025f2q5_level1": {
+      "passed": 4
+    },
+    "tests.test_ita2025f2q6_level1": {
+      "passed": 4
+    },
+    "tests.test_ita2025f2q8_level1": {
+      "passed": 4
+    },
+    "tests.test_ita2025q1_level2": {
+      "passed": 7
+    },
+    "tests.test_ita2025q3_level1": {
+      "passed": 4
+    },
+    "tests.test_ita2025q4_level1": {
+      "passed": 2
+    },
+    "tests.test_ita2025q4_level2": {
+      "passed": 3
+    },
+    "tests.test_ita2025q5_level1": {
+      "passed": 5
+    },
+    "tests.test_ita2025q8_level1": {
+      "passed": 4
+    },
+    "tests.test_ita_real_fallback_replay": {
+      "passed": 14
+    },
+    "tests.test_level1_f2_suite_regressions": {
+      "passed": 7
+    },
+    "tests.test_math_canonical": {
+      "passed": 166,
+      "skipped": 1
+    },
+    "tests.test_math_canonical_pipeline": {
+      "passed": 1
+    },
+    "tests.test_mathpix_strokes": {
+      "passed": 24
+    },
+    "tests.test_mvp_ita_10_questions": {
+      "passed": 30
+    },
+    "tests.test_obligation_semantic": {
+      "passed": 34
+    },
+    "tests.test_official_mathpix_flow": {
+      "passed": 3
+    },
+    "tests.test_pauta_engine": {
+      "passed": 100
+    },
+    "tests.test_pedagogical_report": {
+      "passed": 4
+    },
+    "tests.test_positive_credit_evidence": {
+      "passed": 107,
+      "skipped": 1
+    },
+    "tests.test_problem_assets_contracts": {
+      "passed": 2
+    },
+    "tests.test_problem_assets_validation": {
+      "passed": 3
+    },
+    "tests.test_problem_router_coverage": {
+      "passed": 3
+    },
+    "tests.test_public_audit_boundary": {
+      "passed": 45
+    },
+    "tests.test_rc1_smoke_budget": {
+      "passed": 10
+    },
+    "tests.test_recognition": {
+      "passed": 33
+    },
+    "tests.test_recognition_invariants": {
+      "passed": 52
+    },
+    "tests.test_recognition_preview": {
+      "passed": 4
+    },
+    "tests.test_recognition_preview_auth": {
+      "passed": 2
+    },
+    "tests.test_reproducibility": {
+      "passed": 53
+    },
+    "tests.test_rubric_bridge": {
+      "passed": 22,
+      "skipped": 1
+    },
+    "tests.test_rubric_bridge_pipeline": {
+      "passed": 1
+    },
+    "tests.test_scope_boundary": {
+      "passed": 32,
+      "skipped": 1
+    },
+    "tests.test_scope_boundary_replay": {
+      "skipped": 4,
+      "passed": 1
+    },
+    "tests.test_score_policy": {
+      "passed": 23,
+      "skipped": 1
+    },
+    "tests.test_score_policy_api": {
+      "passed": 6
+    },
+    "tests.test_secondary_adjudicator_contract": {
+      "passed": 58
+    },
+    "tests.test_secondary_evidence_ids": {
+      "passed": 36
+    },
+    "tests.test_secondary_false_credit": {
+      "passed": 48
+    },
+    "tests.test_secondary_live_contract": {
+      "passed": 29
+    },
+    "tests.test_semantic_claims": {
+      "passed": 50
+    },
+    "tests.test_semantic_sufficiency": {
+      "passed": 36
+    },
+    "tests.test_static_ui": {
+      "passed": 6
+    },
+    "tests.test_student_proof_semantics": {
+      "passed": 79
+    },
+    "tests.test_submission_audits": {
+      "passed": 31
+    },
+    "tests.test_submissions": {
+      "passed": 30
+    },
+    "tests.test_submissions_ui": {
+      "passed": 3
+    },
+    "tests.test_sufficiency_dev_regressions": {
+      "passed": 1,
+      "skipped": 21
+    },
+    "tests.test_teacher_decisions": {
+      "passed": 55
+    },
+    "tests.test_tme2_p1_pauta_bridge": {
+      "passed": 74
+    },
+    "tests.test_tme2_p2_pauta_bridge": {
+      "passed": 125
+    },
+    "tests.test_tme2_p3_pauta_bridge": {
+      "passed": 70
+    },
+    "tests.test_tme2_p4_pauta_bridge": {
+      "passed": 89
+    },
+    "tests.test_tme2_p5_pauta_bridge": {
+      "passed": 130
+    },
+    "tests.test_tme_accepted_integration": {
+      "passed": 47
+    },
+    "tests.test_tme_archived_quote_scope": {
+      "passed": 8
+    },
+    "tests.test_tme_audit_view": {
+      "passed": 3
+    },
+    "tests.test_tme_certification": {
+      "passed": 23
+    },
+    "tests.test_tme_demo_auth": {
+      "passed": 14
+    },
+    "tests.test_tme_finalization": {
+      "passed": 9
+    },
+    "tests.test_tme_full_exam": {
+      "passed": 14
+    },
+    "tests.test_tme_home_summary": {
+      "passed": 18
+    },
+    "tests.test_tme_human_confirmation": {
+      "passed": 23
+    },
+    "tests.test_tme_hybrid_grader": {
+      "passed": 55
+    },
+    "tests.test_tme_minimal_functional": {
+      "passed": 243
+    },
+    "tests.test_tme_model_ablation": {
+      "passed": 10,
+      "skipped": 12
+    },
+    "tests.test_tme_model_compat": {
+      "passed": 6,
+      "skipped": 2
+    },
+    "tests.test_tme_navigation": {
+      "passed": 5
+    },
+    "tests.test_tme_photo_errors": {
+      "passed": 17
+    },
+    "tests.test_tme_pilot": {
+      "passed": 18
+    },
+    "tests.test_tme_problem_catalog": {
+      "passed": 24
+    },
+    "tests.test_tme_question_audit": {
+      "passed": 9
+    },
+    "tests.test_tme_reanalysis": {
+      "passed": 5
+    },
+    "tests.test_tme_review_diagnostics": {
+      "passed": 21,
+      "skipped": 5
+    },
+    "tests.test_tme_review_workspace": {
+      "passed": 8
+    },
+    "tests.test_tme_synthetic_demo": {
+      "passed": 13
+    },
+    "tests.test_transcriptions": {
+      "passed": 79
+    },
+    "tests.test_tutoria_chat_demo": {
+      "passed": 5
+    },
+    "tests.test_tutoria_demo": {
+      "passed": 3
+    },
+    "tests.test_ui_01_shell": {
+      "passed": 8
+    },
+    "tests.test_ui_02_workspace": {
+      "passed": 6
+    },
+    "tests.test_ui_03_teacher_workflow": {
+      "passed": 5
+    },
+    "tests.test_ui_p0_accessibility": {
+      "passed": 4
+    },
+    "tests.test_ux_pro_01": {
+      "passed": 3
+    }
+  }
+}

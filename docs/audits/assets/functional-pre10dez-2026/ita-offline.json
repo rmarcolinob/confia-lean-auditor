@@ -1,0 +1,953 @@
+[
+  {
+    "variant": "correct_solution",
+    "solution": "Como x^2 - x + 1 = 0, temos x^2 = x - 1.\n\nMultiplicando por x, obtemos x^3 = x^2 - x = (x - 1) - x = -1.\nLogo, x^6 = 1.\n\nAssim, podemos reduzir os expoentes módulo 6:\nx^57 = x^3 = -1,\nx^14 = x^2 = x - 1,\nx^7 = x.\n\nPortanto,\np(x) = x^57 + a x^14 + b x^7 + 1\ndeixa o mesmo resto que\n-1 + a(x - 1) + bx + 1.\n\nLogo, o resto é\n(a+b)x - a.\n\nComo o resto pedido é 2x+1, devemos ter\na+b = 2\ne\n-a = 1.\n\nDa segunda equação, a = -1.\nSubstituindo na primeira, b = 3.\n\nPortanto, a = -1 e b = 3.\n",
+    "score": 10.0,
+    "needs_review": false,
+    "verdict": "correto",
+    "items": [
+      {
+        "id": "power_reductions",
+        "points": 3.0,
+        "max_points": 3.0,
+        "mathematical_status": "supported",
+        "scoring_basis": "first_pass",
+        "evidence": "Assim, podemos reduzir os expoentes módulo 6:\nx^57 = x^3 = -1,\nx^14 = x^2 = x - 1,\nx^7 = x.",
+        "rationale": null,
+        "review_required": null
+      },
+      {
+        "id": "reduced_polynomial_form",
+        "points": 3.0,
+        "max_points": 3.0,
+        "mathematical_status": "supported",
+        "scoring_basis": "first_pass",
+        "evidence": "Logo, o resto é\n(a+b)x - a.",
+        "rationale": null,
+        "review_required": null
+      },
+      {
+        "id": "coefficient_system",
+        "points": 2.0,
+        "max_points": 2.0,
+        "mathematical_status": "supported",
+        "scoring_basis": "first_pass",
+        "evidence": "Como o resto pedido é 2x+1, devemos ter\na+b = 2\ne\n-a = 1.",
+        "rationale": null,
+        "review_required": null
+      },
+      {
+        "id": "final_answer",
+        "points": 2.0,
+        "max_points": 2.0,
+        "mathematical_status": "supported",
+        "scoring_basis": "first_pass",
+        "evidence": "Portanto, a = -1 e b = 3.",
+        "rationale": null,
+        "review_required": null
+      }
+    ],
+    "generated_reference_certificate": {
+      "status": "verified",
+      "verification_scope": "generated_reference",
+      "compiled": true,
+      "exit_code": 0,
+      "generated_theorems": [
+        "power_reductions",
+        "reduced_polynomial_form",
+        "coefficient_system_solution",
+        "target_remainder",
+        "final_answer",
+        "generated_strong_f2q1_claim"
+      ]
+    },
+    "student_checks": [
+      {
+        "claim_type": "f2q1_student_power_reduction",
+        "raw_text": "x^57=-1",
+        "lean_statement": "powRem 57 = (-1, 0)",
+        "status": "verified",
+        "formal_status": "verified",
+        "failure_category": null,
+        "grounding": {
+          "status": "grounded",
+          "reason": "Local re-extraction and independent representation validation agree",
+          "extraction_method": "extract_f2q1_student_claims",
+          "validator": "local-source-v1",
+          "source_sha256": "121558291e4b28600f9a8431084411cb89a1d17a0fe83fe264ef390f982dbda1",
+          "source_text": "Assim, podemos reduzir os expoentes módulo 6:\nx^57 = x^3 = -1,\nx^14 = x^2 = x - 1,\nx^7 = x.",
+          "source_start": 121,
+          "source_end": 212,
+          "payload_sha256": "8b1104115bc6d522e09809ba698a4ac7d6177c10ba8bfdc8a0f2929f37dced14"
+        }
+      },
+      {
+        "claim_type": "f2q1_student_power_reduction",
+        "raw_text": "x^14=x-1",
+        "lean_statement": "powRem 14 = (-1, 1)",
+        "status": "verified",
+        "formal_status": "verified",
+        "failure_category": null,
+        "grounding": {
+          "status": "grounded",
+          "reason": "Local re-extraction and independent representation validation agree",
+          "extraction_method": "extract_f2q1_student_claims",
+          "validator": "local-source-v1",
+          "source_sha256": "121558291e4b28600f9a8431084411cb89a1d17a0fe83fe264ef390f982dbda1",
+          "source_text": "Assim, podemos reduzir os expoentes módulo 6:\nx^57 = x^3 = -1,\nx^14 = x^2 = x - 1,\nx^7 = x.",
+          "source_start": 121,
+          "source_end": 212,
+          "payload_sha256": "12e5140833b886f078a7438242422943962ada666a1c7f3012be316dc38840c2"
+        }
+      },
+      {
+        "claim_type": "f2q1_student_power_reduction",
+        "raw_text": "x^7=x",
+        "lean_statement": "powRem 7 = (0, 1)",
+        "status": "verified",
+        "formal_status": "verified",
+        "failure_category": null,
+        "grounding": {
+          "status": "grounded",
+          "reason": "Local re-extraction and independent representation validation agree",
+          "extraction_method": "extract_f2q1_student_claims",
+          "validator": "local-source-v1",
+          "source_sha256": "121558291e4b28600f9a8431084411cb89a1d17a0fe83fe264ef390f982dbda1",
+          "source_text": "Assim, podemos reduzir os expoentes módulo 6:\nx^57 = x^3 = -1,\nx^14 = x^2 = x - 1,\nx^7 = x.",
+          "source_start": 121,
+          "source_end": 212,
+          "payload_sha256": "e860b7ddbb46bb0c4812f1652ca23999f25d8afd5ebf8fb14436d6b940067fa2",
+          "extraction_origins": [
+            "extract_f2q1_student_claims",
+            "generic_math"
+          ],
+          "generic_source_ids": [
+            "generic_math_204_211_relation"
+          ]
+        }
+      },
+      {
+        "claim_type": "f2q1_student_reduced_form",
+        "raw_text": "(a+b)x-a",
+        "lean_statement": "∀ a b : ℤ, remainderConst a b = -a ∧ remainderXCoeff a b = a + b",
+        "status": "verified",
+        "formal_status": "verified",
+        "failure_category": null,
+        "grounding": {
+          "status": "grounded",
+          "reason": "Local re-extraction and independent representation validation agree",
+          "extraction_method": "extract_f2q1_student_claims",
+          "validator": "local-source-v1",
+          "source_sha256": "121558291e4b28600f9a8431084411cb89a1d17a0fe83fe264ef390f982dbda1",
+          "source_text": "Logo, o resto é\n(a+b)x - a.",
+          "source_start": 306,
+          "source_end": 333,
+          "payload_sha256": "d4fb7232b2623fe432752b72576b3ac0320eb4d634e330ec404951045aca9ddf",
+          "extraction_origins": [
+            "extract_f2q1_student_claims",
+            "generic_math"
+          ],
+          "generic_source_ids": [
+            "generic_math_314_332_value"
+          ]
+        }
+      },
+      {
+        "claim_type": "f2q1_student_coefficient_system",
+        "raw_text": "a+b=2; -a=1",
+        "lean_statement": "candidateA + candidateB = (2 : ℤ) ∧ -candidateA = (1 : ℤ)",
+        "status": "verified",
+        "formal_status": "verified",
+        "failure_category": null,
+        "grounding": {
+          "status": "grounded",
+          "reason": "Local re-extraction and independent representation validation agree",
+          "extraction_method": "extract_f2q1_student_claims",
+          "validator": "local-source-v1",
+          "source_sha256": "121558291e4b28600f9a8431084411cb89a1d17a0fe83fe264ef390f982dbda1",
+          "source_text": "Como o resto pedido é 2x+1, devemos ter\na+b = 2\ne\n-a = 1.",
+          "source_start": 335,
+          "source_end": 392,
+          "payload_sha256": "f59b0bba1e2843cc1ea919fa3aede0caf00c687f8528cf3d6f173cc458961470"
+        }
+      },
+      {
+        "claim_type": "f2q1_student_final_answer",
+        "raw_text": "Portanto, a = -1 e b = 3.",
+        "lean_statement": "candidateA = (-1 : ℤ) ∧ candidateB = (3 : ℤ)",
+        "status": "verified",
+        "formal_status": "verified",
+        "failure_category": null,
+        "grounding": {
+          "status": "grounded",
+          "reason": "Local re-extraction and independent representation validation agree",
+          "extraction_method": "extract_f2q1_student_claims",
+          "validator": "local-source-v1",
+          "source_sha256": "121558291e4b28600f9a8431084411cb89a1d17a0fe83fe264ef390f982dbda1",
+          "source_text": "Portanto, a = -1 e b = 3.",
+          "source_start": 456,
+          "source_end": 481,
+          "payload_sha256": "be23a67b116730b90830716d3d44324f7827e93f0736dfdb193d77e09a843c73",
+          "extraction_origins": [
+            "extract_f2q1_student_claims",
+            "generic_math"
+          ],
+          "generic_source_ids": [
+            "generic_math_466_480_bindings"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "variant": "answer_only",
+    "solution": "Os valores são a = -1 e b = 3.\n",
+    "score": null,
+    "needs_review": true,
+    "verdict": "inconclusivo",
+    "items": [
+      {
+        "id": "power_reductions",
+        "points": null,
+        "max_points": 3.0,
+        "mathematical_status": "indeterminate",
+        "scoring_basis": "unscorable",
+        "evidence": null,
+        "rationale": null,
+        "review_required": null
+      },
+      {
+        "id": "reduced_polynomial_form",
+        "points": null,
+        "max_points": 3.0,
+        "mathematical_status": "indeterminate",
+        "scoring_basis": "unscorable",
+        "evidence": null,
+        "rationale": null,
+        "review_required": null
+      },
+      {
+        "id": "coefficient_system",
+        "points": null,
+        "max_points": 2.0,
+        "mathematical_status": "indeterminate",
+        "scoring_basis": "unscorable",
+        "evidence": null,
+        "rationale": null,
+        "review_required": null
+      },
+      {
+        "id": "final_answer",
+        "points": 2.0,
+        "max_points": 2.0,
+        "mathematical_status": "supported",
+        "scoring_basis": "first_pass",
+        "evidence": "Os valores são a = -1 e b = 3.",
+        "rationale": null,
+        "review_required": null
+      }
+    ],
+    "generated_reference_certificate": {
+      "status": "verified",
+      "verification_scope": "generated_reference",
+      "compiled": true,
+      "exit_code": 0,
+      "generated_theorems": []
+    },
+    "student_checks": [
+      {
+        "claim_type": "f2q1_student_final_answer",
+        "raw_text": "Os valores são a = -1 e b = 3.",
+        "lean_statement": "candidateA = (-1 : ℤ) ∧ candidateB = (3 : ℤ)",
+        "status": "verified",
+        "formal_status": "verified",
+        "failure_category": null,
+        "grounding": {
+          "status": "grounded",
+          "reason": "Local re-extraction and independent representation validation agree",
+          "extraction_method": "extract_f2q1_student_claims",
+          "validator": "local-source-v1",
+          "source_sha256": "97d877e8b4fcd9fc01141622de21b568d118a11615ff253ddfbb3b1b0dabc86f",
+          "source_text": "Os valores são a = -1 e b = 3.",
+          "source_start": 0,
+          "source_end": 30,
+          "payload_sha256": "be23a67b116730b90830716d3d44324f7827e93f0736dfdb193d77e09a843c73",
+          "extraction_origins": [
+            "extract_f2q1_student_claims",
+            "generic_math"
+          ],
+          "generic_source_ids": [
+            "generic_math_15_29_bindings"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "variant": "missing_reduced_form",
+    "solution": "Como x^2 - x + 1 = 0, temos x^3 = -1 e x^6 = 1.\n\nAssim:\nx^57 = x^3 = -1,\nx^14 = x^2 = x - 1,\nx^7 = x.\n\nPortanto, os valores são a = -1 e b = 3.\n",
+    "score": null,
+    "needs_review": true,
+    "verdict": "inconclusivo",
+    "items": [
+      {
+        "id": "power_reductions",
+        "points": 3.0,
+        "max_points": 3.0,
+        "mathematical_status": "supported",
+        "scoring_basis": "first_pass",
+        "evidence": "Assim:\nx^57 = x^3 = -1,\nx^14 = x^2 = x - 1,\nx^7 = x.",
+        "rationale": null,
+        "review_required": null
+      },
+      {
+        "id": "reduced_polynomial_form",
+        "points": null,
+        "max_points": 3.0,
+        "mathematical_status": "indeterminate",
+        "scoring_basis": "unscorable",
+        "evidence": null,
+        "rationale": null,
+        "review_required": null
+      },
+      {
+        "id": "coefficient_system",
+        "points": null,
+        "max_points": 2.0,
+        "mathematical_status": "indeterminate",
+        "scoring_basis": "unscorable",
+        "evidence": null,
+        "rationale": null,
+        "review_required": null
+      },
+      {
+        "id": "final_answer",
+        "points": 2.0,
+        "max_points": 2.0,
+        "mathematical_status": "supported",
+        "scoring_basis": "first_pass",
+        "evidence": "Portanto, os valores são a = -1 e b = 3.",
+        "rationale": null,
+        "review_required": null
+      }
+    ],
+    "generated_reference_certificate": {
+      "status": "verified",
+      "verification_scope": "generated_reference",
+      "compiled": true,
+      "exit_code": 0,
+      "generated_theorems": [
+        "power_reductions"
+      ]
+    },
+    "student_checks": [
+      {
+        "claim_type": "f2q1_student_power_reduction",
+        "raw_text": "x^57=-1",
+        "lean_statement": "powRem 57 = (-1, 0)",
+        "status": "verified",
+        "formal_status": "verified",
+        "failure_category": null,
+        "grounding": {
+          "status": "grounded",
+          "reason": "Local re-extraction and independent representation validation agree",
+          "extraction_method": "extract_f2q1_student_claims",
+          "validator": "local-source-v1",
+          "source_sha256": "233685d9e19026b0f68e53d679add630828d49ef530e7e8983045cd8f9e7548d",
+          "source_text": "Assim:\nx^57 = x^3 = -1,\nx^14 = x^2 = x - 1,\nx^7 = x.",
+          "source_start": 49,
+          "source_end": 101,
+          "payload_sha256": "8b1104115bc6d522e09809ba698a4ac7d6177c10ba8bfdc8a0f2929f37dced14"
+        }
+      },
+      {
+        "claim_type": "f2q1_student_power_reduction",
+        "raw_text": "x^14=x-1",
+        "lean_statement": "powRem 14 = (-1, 1)",
+        "status": "verified",
+        "formal_status": "verified",
+        "failure_category": null,
+        "grounding": {
+          "status": "grounded",
+          "reason": "Local re-extraction and independent representation validation agree",
+          "extraction_method": "extract_f2q1_student_claims",
+          "validator": "local-source-v1",
+          "source_sha256": "233685d9e19026b0f68e53d679add630828d49ef530e7e8983045cd8f9e7548d",
+          "source_text": "Assim:\nx^57 = x^3 = -1,\nx^14 = x^2 = x - 1,\nx^7 = x.",
+          "source_start": 49,
+          "source_end": 101,
+          "payload_sha256": "12e5140833b886f078a7438242422943962ada666a1c7f3012be316dc38840c2"
+        }
+      },
+      {
+        "claim_type": "f2q1_student_power_reduction",
+        "raw_text": "x^7=x",
+        "lean_statement": "powRem 7 = (0, 1)",
+        "status": "verified",
+        "formal_status": "verified",
+        "failure_category": null,
+        "grounding": {
+          "status": "grounded",
+          "reason": "Local re-extraction and independent representation validation agree",
+          "extraction_method": "extract_f2q1_student_claims",
+          "validator": "local-source-v1",
+          "source_sha256": "233685d9e19026b0f68e53d679add630828d49ef530e7e8983045cd8f9e7548d",
+          "source_text": "Assim:\nx^57 = x^3 = -1,\nx^14 = x^2 = x - 1,\nx^7 = x.",
+          "source_start": 49,
+          "source_end": 101,
+          "payload_sha256": "e860b7ddbb46bb0c4812f1652ca23999f25d8afd5ebf8fb14436d6b940067fa2",
+          "extraction_origins": [
+            "extract_f2q1_student_claims",
+            "generic_math"
+          ],
+          "generic_source_ids": [
+            "generic_math_93_100_relation"
+          ]
+        }
+      },
+      {
+        "claim_type": "f2q1_student_final_answer",
+        "raw_text": "Portanto, os valores são a = -1 e b = 3.",
+        "lean_statement": "candidateA = (-1 : ℤ) ∧ candidateB = (3 : ℤ)",
+        "status": "verified",
+        "formal_status": "verified",
+        "failure_category": null,
+        "grounding": {
+          "status": "grounded",
+          "reason": "Local re-extraction and independent representation validation agree",
+          "extraction_method": "extract_f2q1_student_claims",
+          "validator": "local-source-v1",
+          "source_sha256": "233685d9e19026b0f68e53d679add630828d49ef530e7e8983045cd8f9e7548d",
+          "source_text": "Portanto, os valores são a = -1 e b = 3.",
+          "source_start": 103,
+          "source_end": 143,
+          "payload_sha256": "be23a67b116730b90830716d3d44324f7827e93f0736dfdb193d77e09a843c73",
+          "extraction_origins": [
+            "extract_f2q1_student_claims",
+            "generic_math"
+          ],
+          "generic_source_ids": [
+            "generic_math_128_142_bindings"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "variant": "wrong_answer",
+    "solution": "Como o resto é 2x+1, concluo que a = 1 e b = 1.\n",
+    "score": null,
+    "needs_review": true,
+    "verdict": "inconclusivo",
+    "items": [
+      {
+        "id": "power_reductions",
+        "points": null,
+        "max_points": 3.0,
+        "mathematical_status": "indeterminate",
+        "scoring_basis": "unscorable",
+        "evidence": null,
+        "rationale": null,
+        "review_required": null
+      },
+      {
+        "id": "reduced_polynomial_form",
+        "points": null,
+        "max_points": 3.0,
+        "mathematical_status": "indeterminate",
+        "scoring_basis": "unscorable",
+        "evidence": null,
+        "rationale": null,
+        "review_required": null
+      },
+      {
+        "id": "coefficient_system",
+        "points": null,
+        "max_points": 2.0,
+        "mathematical_status": "indeterminate",
+        "scoring_basis": "unscorable",
+        "evidence": null,
+        "rationale": null,
+        "review_required": null
+      },
+      {
+        "id": "final_answer",
+        "points": 0.0,
+        "max_points": 2.0,
+        "mathematical_status": "refuted",
+        "scoring_basis": "first_pass",
+        "evidence": null,
+        "rationale": null,
+        "review_required": null
+      }
+    ],
+    "generated_reference_certificate": {
+      "status": "verified",
+      "verification_scope": "generated_reference",
+      "compiled": true,
+      "exit_code": 0,
+      "generated_theorems": []
+    },
+    "student_checks": [
+      {
+        "claim_type": "f2q1_student_final_answer",
+        "raw_text": "Como o resto é 2x+1, concluo que a = 1 e b = 1.",
+        "lean_statement": "candidateA = (1 : ℤ) ∧ candidateB = (1 : ℤ)",
+        "status": "refuted",
+        "formal_status": "refuted",
+        "failure_category": null,
+        "grounding": {
+          "status": "grounded",
+          "reason": "Local re-extraction and independent representation validation agree",
+          "extraction_method": "extract_f2q1_student_claims",
+          "validator": "local-source-v1",
+          "source_sha256": "b55898835293399f1f73e7be1cea2b45c739bd80426673a5a0892db375edb23f",
+          "source_text": "Como o resto é 2x+1, concluo que a = 1 e b = 1.",
+          "source_start": 0,
+          "source_end": 47,
+          "payload_sha256": "0638d7631d15c0e81871ee56e56be452f75e43886fee887b09d1713e03a2f93d",
+          "extraction_origins": [
+            "extract_f2q1_student_claims",
+            "generic_math"
+          ],
+          "generic_source_ids": [
+            "generic_math_33_46_bindings"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "variant": "hypothesis",
+    "solution": "Suponha que Os valores são a = -1 e b = 3.\n",
+    "score": null,
+    "needs_review": true,
+    "verdict": "inconclusivo",
+    "items": [
+      {
+        "id": "power_reductions",
+        "points": null,
+        "max_points": 3.0,
+        "mathematical_status": "indeterminate",
+        "scoring_basis": "unscorable",
+        "evidence": null,
+        "rationale": null,
+        "review_required": null
+      },
+      {
+        "id": "reduced_polynomial_form",
+        "points": null,
+        "max_points": 3.0,
+        "mathematical_status": "indeterminate",
+        "scoring_basis": "unscorable",
+        "evidence": null,
+        "rationale": null,
+        "review_required": null
+      },
+      {
+        "id": "coefficient_system",
+        "points": null,
+        "max_points": 2.0,
+        "mathematical_status": "indeterminate",
+        "scoring_basis": "unscorable",
+        "evidence": null,
+        "rationale": null,
+        "review_required": null
+      },
+      {
+        "id": "final_answer",
+        "points": null,
+        "max_points": 2.0,
+        "mathematical_status": "indeterminate",
+        "scoring_basis": "unscorable",
+        "evidence": null,
+        "rationale": null,
+        "review_required": null
+      }
+    ],
+    "generated_reference_certificate": {
+      "status": "verified",
+      "verification_scope": "generated_reference",
+      "compiled": true,
+      "exit_code": 0,
+      "generated_theorems": []
+    },
+    "student_checks": []
+  },
+  {
+    "variant": "quotation",
+    "solution": "Citação não adotada: Os valores são a = -1 e b = 3.\n",
+    "score": null,
+    "needs_review": true,
+    "verdict": "inconclusivo",
+    "items": [
+      {
+        "id": "power_reductions",
+        "points": null,
+        "max_points": 3.0,
+        "mathematical_status": "indeterminate",
+        "scoring_basis": "unscorable",
+        "evidence": null,
+        "rationale": null,
+        "review_required": null
+      },
+      {
+        "id": "reduced_polynomial_form",
+        "points": null,
+        "max_points": 3.0,
+        "mathematical_status": "indeterminate",
+        "scoring_basis": "unscorable",
+        "evidence": null,
+        "rationale": null,
+        "review_required": null
+      },
+      {
+        "id": "coefficient_system",
+        "points": null,
+        "max_points": 2.0,
+        "mathematical_status": "indeterminate",
+        "scoring_basis": "unscorable",
+        "evidence": null,
+        "rationale": null,
+        "review_required": null
+      },
+      {
+        "id": "final_answer",
+        "points": null,
+        "max_points": 2.0,
+        "mathematical_status": "indeterminate",
+        "scoring_basis": "unscorable",
+        "evidence": null,
+        "rationale": null,
+        "review_required": null
+      }
+    ],
+    "generated_reference_certificate": {
+      "status": "verified",
+      "verification_scope": "generated_reference",
+      "compiled": true,
+      "exit_code": 0,
+      "generated_theorems": []
+    },
+    "student_checks": []
+  },
+  {
+    "variant": "retracted",
+    "solution": "Tentativa descartada: Os valores são a = -1 e b = 3.\n",
+    "score": null,
+    "needs_review": true,
+    "verdict": "inconclusivo",
+    "items": [
+      {
+        "id": "power_reductions",
+        "points": null,
+        "max_points": 3.0,
+        "mathematical_status": "indeterminate",
+        "scoring_basis": "unscorable",
+        "evidence": null,
+        "rationale": null,
+        "review_required": null
+      },
+      {
+        "id": "reduced_polynomial_form",
+        "points": null,
+        "max_points": 3.0,
+        "mathematical_status": "indeterminate",
+        "scoring_basis": "unscorable",
+        "evidence": null,
+        "rationale": null,
+        "review_required": null
+      },
+      {
+        "id": "coefficient_system",
+        "points": null,
+        "max_points": 2.0,
+        "mathematical_status": "indeterminate",
+        "scoring_basis": "unscorable",
+        "evidence": null,
+        "rationale": null,
+        "review_required": null
+      },
+      {
+        "id": "final_answer",
+        "points": null,
+        "max_points": 2.0,
+        "mathematical_status": "indeterminate",
+        "scoring_basis": "unscorable",
+        "evidence": null,
+        "rationale": null,
+        "review_required": null
+      }
+    ],
+    "generated_reference_certificate": {
+      "status": "verified",
+      "verification_scope": "generated_reference",
+      "compiled": true,
+      "exit_code": 0,
+      "generated_theorems": []
+    },
+    "student_checks": []
+  },
+  {
+    "variant": "false_equation",
+    "solution": "x^57=1. O resto é (a+b)x+(a+2). Portanto a=-1 e b=3.",
+    "score": null,
+    "needs_review": true,
+    "verdict": "inconclusivo",
+    "items": [
+      {
+        "id": "power_reductions",
+        "points": 0.0,
+        "max_points": 3.0,
+        "mathematical_status": "refuted",
+        "scoring_basis": "first_pass",
+        "evidence": null,
+        "rationale": null,
+        "review_required": null
+      },
+      {
+        "id": "reduced_polynomial_form",
+        "points": null,
+        "max_points": 3.0,
+        "mathematical_status": "indeterminate",
+        "scoring_basis": "unscorable",
+        "evidence": null,
+        "rationale": null,
+        "review_required": null
+      },
+      {
+        "id": "coefficient_system",
+        "points": null,
+        "max_points": 2.0,
+        "mathematical_status": "indeterminate",
+        "scoring_basis": "unscorable",
+        "evidence": null,
+        "rationale": null,
+        "review_required": null
+      },
+      {
+        "id": "final_answer",
+        "points": 2.0,
+        "max_points": 2.0,
+        "mathematical_status": "supported",
+        "scoring_basis": "first_pass",
+        "evidence": "Portanto a=-1 e b=3.",
+        "rationale": null,
+        "review_required": null
+      }
+    ],
+    "generated_reference_certificate": {
+      "status": "verified",
+      "verification_scope": "generated_reference",
+      "compiled": true,
+      "exit_code": 0,
+      "generated_theorems": []
+    },
+    "student_checks": [
+      {
+        "claim_type": "f2q1_student_power_reduction",
+        "raw_text": "x^57=1",
+        "lean_statement": "powRem 57 = (1, 0)",
+        "status": "refuted",
+        "formal_status": "refuted",
+        "failure_category": null,
+        "grounding": {
+          "status": "grounded",
+          "reason": "Local re-extraction and independent representation validation agree",
+          "extraction_method": "extract_f2q1_student_claims",
+          "validator": "local-source-v1",
+          "source_sha256": "c3a55c9d7fa2dc3266a63205b87e6f0678ab82c2802567458299b83fd01e87db",
+          "source_text": "x^57=1.",
+          "source_start": 0,
+          "source_end": 7,
+          "payload_sha256": "7b6af8173334f9e2ac882a006cd519bc2b51b548a11c13a82a328b5b1c8489aa",
+          "extraction_origins": [
+            "extract_f2q1_student_claims",
+            "generic_math"
+          ],
+          "generic_source_ids": [
+            "generic_math_0_6_relation"
+          ]
+        }
+      },
+      {
+        "claim_type": "f2q1_student_final_answer",
+        "raw_text": "Portanto a=-1 e b=3.",
+        "lean_statement": "candidateA = (-1 : ℤ) ∧ candidateB = (3 : ℤ)",
+        "status": "verified",
+        "formal_status": "verified",
+        "failure_category": null,
+        "grounding": {
+          "status": "grounded",
+          "reason": "Local re-extraction and independent representation validation agree",
+          "extraction_method": "extract_f2q1_student_claims",
+          "validator": "local-source-v1",
+          "source_sha256": "c3a55c9d7fa2dc3266a63205b87e6f0678ab82c2802567458299b83fd01e87db",
+          "source_text": "Portanto a=-1 e b=3.",
+          "source_start": 32,
+          "source_end": 52,
+          "payload_sha256": "be23a67b116730b90830716d3d44324f7827e93f0736dfdb193d77e09a843c73",
+          "extraction_origins": [
+            "extract_f2q1_student_claims",
+            "generic_math"
+          ],
+          "generic_source_ids": [
+            "generic_math_41_51_bindings"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "variant": "alternative_modular",
+    "solution": "No anel quociente por x²-x+1, temos x²=x-1 e x³=-1. Como 57=3*19, x^57=(-1)^19=-1. Como x^6=1, x^14=x^2=x-1 e x^7=x. Assim p(x) ≡ -1+a(x-1)+bx+1 = (a+b)x-a. Comparando com 2x+1: -a=1 e a+b=2. Logo a=-1 e b=3.",
+    "score": null,
+    "needs_review": true,
+    "verdict": "inconclusivo",
+    "items": [
+      {
+        "id": "power_reductions",
+        "points": null,
+        "max_points": 3.0,
+        "mathematical_status": "indeterminate",
+        "scoring_basis": "unscorable",
+        "evidence": null,
+        "rationale": null,
+        "review_required": null
+      },
+      {
+        "id": "reduced_polynomial_form",
+        "points": null,
+        "max_points": 3.0,
+        "mathematical_status": "indeterminate",
+        "scoring_basis": "unscorable",
+        "evidence": null,
+        "rationale": null,
+        "review_required": null
+      },
+      {
+        "id": "coefficient_system",
+        "points": null,
+        "max_points": 2.0,
+        "mathematical_status": "indeterminate",
+        "scoring_basis": "unscorable",
+        "evidence": null,
+        "rationale": null,
+        "review_required": null
+      },
+      {
+        "id": "final_answer",
+        "points": 2.0,
+        "max_points": 2.0,
+        "mathematical_status": "supported",
+        "scoring_basis": "first_pass",
+        "evidence": "Logo a=-1 e b=3.",
+        "rationale": null,
+        "review_required": null
+      }
+    ],
+    "generated_reference_certificate": {
+      "status": "verified",
+      "verification_scope": "generated_reference",
+      "compiled": true,
+      "exit_code": 0,
+      "generated_theorems": []
+    },
+    "student_checks": [
+      {
+        "claim_type": "f2q1_student_power_reduction",
+        "raw_text": "x^14=x-1",
+        "lean_statement": "",
+        "status": "unverified",
+        "formal_status": null,
+        "failure_category": "CLAIM_NOT_GROUNDED",
+        "grounding": {
+          "status": "unresolved",
+          "reason": "Original source binding missing or inconsistent with structured claim",
+          "extraction_method": "extract_f2q1_student_claims",
+          "validator": "local-source-v1",
+          "source_sha256": "30d2ef86e7b5d7cb7cf15ec939ce7e3fc8bdf0ef7965d1e53f0d8d87f28d5072"
+        }
+      },
+      {
+        "claim_type": "f2q1_student_power_reduction",
+        "raw_text": "x^7=x",
+        "lean_statement": "powRem 7 = (0, 1)",
+        "status": "verified",
+        "formal_status": "verified",
+        "failure_category": null,
+        "grounding": {
+          "status": "grounded",
+          "reason": "Local re-extraction and independent representation validation agree",
+          "extraction_method": "extract_f2q1_student_claims",
+          "validator": "local-source-v1",
+          "source_sha256": "30d2ef86e7b5d7cb7cf15ec939ce7e3fc8bdf0ef7965d1e53f0d8d87f28d5072",
+          "source_text": "Como x^6=1, x^14=x^2=x-1 e x^7=x.",
+          "source_start": 83,
+          "source_end": 116,
+          "payload_sha256": "e860b7ddbb46bb0c4812f1652ca23999f25d8afd5ebf8fb14436d6b940067fa2"
+        }
+      },
+      {
+        "claim_type": "f2q1_student_reduced_form",
+        "raw_text": "(a+b)x-a",
+        "lean_statement": "",
+        "status": "unverified",
+        "formal_status": null,
+        "failure_category": "CLAIM_NOT_GROUNDED",
+        "grounding": {
+          "status": "unresolved",
+          "reason": "Original source binding missing or inconsistent with structured claim",
+          "extraction_method": "extract_f2q1_student_claims",
+          "validator": "local-source-v1",
+          "source_sha256": "30d2ef86e7b5d7cb7cf15ec939ce7e3fc8bdf0ef7965d1e53f0d8d87f28d5072"
+        }
+      },
+      {
+        "claim_type": "f2q1_student_coefficient_system",
+        "raw_text": "a+b=2; -a=1",
+        "lean_statement": "candidateA + candidateB = (2 : ℤ) ∧ -candidateA = (1 : ℤ)",
+        "status": "verified",
+        "formal_status": "verified",
+        "failure_category": null,
+        "grounding": {
+          "status": "grounded",
+          "reason": "Local re-extraction and independent representation validation agree",
+          "extraction_method": "extract_f2q1_student_claims",
+          "validator": "local-source-v1",
+          "source_sha256": "30d2ef86e7b5d7cb7cf15ec939ce7e3fc8bdf0ef7965d1e53f0d8d87f28d5072",
+          "source_text": "Comparando com 2x+1: -a=1 e a+b=2.",
+          "source_start": 157,
+          "source_end": 191,
+          "payload_sha256": "f59b0bba1e2843cc1ea919fa3aede0caf00c687f8528cf3d6f173cc458961470"
+        }
+      },
+      {
+        "claim_type": "f2q1_student_final_answer",
+        "raw_text": "Logo a=-1 e b=3.",
+        "lean_statement": "candidateA = (-1 : ℤ) ∧ candidateB = (3 : ℤ)",
+        "status": "verified",
+        "formal_status": "verified",
+        "failure_category": null,
+        "grounding": {
+          "status": "grounded",
+          "reason": "Local re-extraction and independent representation validation agree",
+          "extraction_method": "extract_f2q1_student_claims",
+          "validator": "local-source-v1",
+          "source_sha256": "30d2ef86e7b5d7cb7cf15ec939ce7e3fc8bdf0ef7965d1e53f0d8d87f28d5072",
+          "source_text": "Logo a=-1 e b=3.",
+          "source_start": 192,
+          "source_end": 208,
+          "payload_sha256": "be23a67b116730b90830716d3d44324f7827e93f0736dfdb193d77e09a843c73",
+          "extraction_origins": [
+            "extract_f2q1_student_claims",
+            "generic_math"
+          ],
+          "generic_source_ids": [
+            "generic_math_197_207_bindings"
+          ]
+        }
+      }
+    ]
+  }
+]

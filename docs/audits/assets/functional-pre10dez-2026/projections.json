@@ -1,0 +1,33 @@
+{
+  "home": {
+    "period": "all",
+    "counts": {
+      "pending": 0,
+      "inconclusive": 0,
+      "finalized": 0,
+      "in_progress": 0
+    },
+    "priority_cases": [],
+    "exam_progress": [],
+    "generated_at": "2026-11-27T14:58:37.112848Z"
+  },
+  "management": {
+    "number_of_schools": 1,
+    "number_of_classrooms": 2,
+    "number_of_students": 2,
+    "number_of_teachers": 1,
+    "submissions_count": 1,
+    "transcriptions_count": 1,
+    "recognition_success_count": 0,
+    "recognition_failure_count": 0,
+    "audit_runs_count": 1,
+    "completed_audits": 1,
+    "inconclusive_audits": 0,
+    "decisions_finalized_count": 0,
+    "decisions_released_count": 0,
+    "override_count": 0
+  },
+  "manager_catalog_status": 403,
+  "full_exam_case_count": 5,
+  "tme_human_decision_count": 2
+}

@@ -1,0 +1,144 @@
+{
+  "remote": "https://github.com/rmarcolinob/confia-lean-auditor.git",
+  "remote_public": true,
+  "branch_heads": {
+    "main": "97c84bb432dd751878d532adeab35bb4e57a24dc",
+    "origin/main": "923bf3acbd9994af9662bcdff6b18eac1b6d4df9",
+    "codex/dynamic-development": "fc6f271ab4f484f48609ddde67faa84b0ac690ca",
+    "codex/interface-review": "03cba8ba40b8827836ce250c6911cb3410f68ced",
+    "codex/dec10-functional-integration": "c03403fe5b83d9db9df172882bd69af3dfa2d027",
+    "codex/dynamic-teacher-simplified": "566887b166af4f471fc3aed4adacc055fca00ad6",
+    "codex/main-consolidation-dec10": "deefca456392abe9b9c46db91202ae2bbd2fa586",
+    "codex/audit-functional-pre10dez-2026": "923bf3acbd9994af9662bcdff6b18eac1b6d4df9"
+  },
+  "worktrees": [
+    {
+      "worktree": "confia-lean-auditor",
+      "HEAD": "1b3daea41ba4ce31c0cfd35dd07907da3d03669f",
+      "branch": "refs/heads/feat/tme-dual-input"
+    },
+    {
+      "worktree": "confia-r1-attribution-baseline-5aa7344",
+      "HEAD": "5aa7344e5904305a414688741f83aafc7d610200",
+      "detached": "",
+      "prunable": "gitdir file points to non-existent location"
+    },
+    {
+      "worktree": "confia-dynamic-docente-preview",
+      "HEAD": "566887b166af4f471fc3aed4adacc055fca00ad6",
+      "detached": ""
+    },
+    {
+      "worktree": "confia-lean-auditor-dynamic",
+      "HEAD": "5aa7344e5904305a414688741f83aafc7d610200",
+      "branch": "refs/heads/feat/dynamic-correction"
+    },
+    {
+      "worktree": "confia-lean-auditor-leanstrong-aug",
+      "HEAD": "8f50835f939110105eb20b8ae6fd6a78bbaa2649",
+      "detached": ""
+    },
+    {
+      "worktree": "confia-lean-auditor-research-archive",
+      "HEAD": "18538f667c47d21e1575df5dde77085b1dbfda43",
+      "branch": "refs/heads/archive/research-artifacts-2026-11"
+    },
+    {
+      "worktree": "confia-lean-auditor-semantic-formal-b",
+      "HEAD": "47ed3c031abe431a9a35ee3045242390319ecdc8",
+      "branch": "refs/heads/experiment/semantic-formal-b"
+    },
+    {
+      "worktree": "confia-lean-auditor-semantic-formal-b-f2-complete",
+      "HEAD": "47ed3c031abe431a9a35ee3045242390319ecdc8",
+      "branch": "refs/heads/experiment/semantic-formal-b-f2-complete"
+    },
+    {
+      "worktree": "confia-lean-auditor-semantic-formal-b-f2-policy-ab-01",
+      "HEAD": "47ed3c031abe431a9a35ee3045242390319ecdc8",
+      "branch": "refs/heads/experiment/semantic-formal-b-f2-policy-ab-01"
+    },
+    {
+      "worktree": "confia-lean-auditor-specialized-math-assessment-c1",
+      "HEAD": "47ed3c031abe431a9a35ee3045242390319ecdc8",
+      "branch": "refs/heads/experiment/specialized-math-assessment-c1"
+    },
+    {
+      "worktree": "confia-lean-auditor-specialized-semantic-c2",
+      "HEAD": "47ed3c031abe431a9a35ee3045242390319ecdc8",
+      "branch": "refs/heads/experiment/specialized-semantic-providers-c2"
+    },
+    {
+      "worktree": "confia-lean-auditor-tme-december-integration",
+      "HEAD": "cb1df6e381fd0214092f33afe554ce506da68c78",
+      "branch": "refs/heads/feat/tme-december-integration"
+    },
+    {
+      "worktree": "confia-lean-auditor-tme-semantic-formal-c1",
+      "HEAD": "34732d445ff1e885a7156278ad4bb81c1fed25b2",
+      "branch": "refs/heads/experiment/tme-semantic-formal-c1"
+    },
+    {
+      "worktree": "confia-lean-auditor-tme-semantic-formal-p2",
+      "HEAD": "1165dbf62f854d6d40c0cc5f2bb6fcb02ca381e9",
+      "branch": "refs/heads/experiment/tme-semantic-formal-p2"
+    },
+    {
+      "worktree": "confia-lean-auditor-tme-semantic-formal-p3",
+      "HEAD": "f9794167403f02b26d6f690d4f1dcb479a66b34a",
+      "branch": "refs/heads/experiment/tme-semantic-formal-p3"
+    },
+    {
+      "worktree": "confia-audit-pre10dez",
+      "HEAD": "923bf3acbd9994af9662bcdff6b18eac1b6d4df9",
+      "branch": "refs/heads/codex/audit-functional-pre10dez-2026"
+    },
+    {
+      "worktree": "confia-collaboration",
+      "HEAD": "9eb8d096bce50727cdbc0bd978c6ee5e327c07d9",
+      "branch": "refs/heads/codex/collaboration-handoff"
+    },
+    {
+      "worktree": "confia-dec10-integration",
+      "HEAD": "c03403fe5b83d9db9df172882bd69af3dfa2d027",
+      "branch": "refs/heads/codex/dec10-functional-integration"
+    },
+    {
+      "worktree": "confia-dynamic-development",
+      "HEAD": "fc6f271ab4f484f48609ddde67faa84b0ac690ca",
+      "branch": "refs/heads/codex/dynamic-development"
+    },
+    {
+      "worktree": "confia-dynamic-teacher-simplified",
+      "HEAD": "566887b166af4f471fc3aed4adacc055fca00ad6",
+      "branch": "refs/heads/codex/dynamic-teacher-simplified"
+    },
+    {
+      "worktree": "confia-interface-review",
+      "HEAD": "03cba8ba40b8827836ce250c6911cb3410f68ced",
+      "branch": "refs/heads/codex/interface-review"
+    },
+    {
+      "worktree": "confia-interface-video",
+      "HEAD": "7a6366faf59251a45842879541dce09f7b66ae2a",
+      "branch": "refs/heads/codex/interface-video"
+    },
+    {
+      "worktree": "confia-main-consolidation",
+      "HEAD": "deefca456392abe9b9c46db91202ae2bbd2fa586",
+      "branch": "refs/heads/codex/main-consolidation-dec10"
+    },
+    {
+      "worktree": "tme-semantic-understanding-01",
+      "HEAD": "30260b398dd8b5b5b3e52bb97bece37c3100a448",
+      "branch": "refs/heads/codex/tme-semantic-understanding-01"
+    },
+    {
+      "worktree": "confia-main-preview",
+      "HEAD": "97c84bb432dd751878d532adeab35bb4e57a24dc",
+      "detached": ""
+    }
+  ],
+  "changes": "Only new audit documentation/evidence; production tracked diff empty.",
+  "note": "Main local is behind origin/main; audit fixed to authorized remote SHA, without moving local main."
+}

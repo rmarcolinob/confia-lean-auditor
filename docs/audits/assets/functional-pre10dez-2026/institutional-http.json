@@ -1,0 +1,62 @@
+{
+  "before_approval_attempt": 409,
+  "pre_release_result": null,
+  "submitted_status": "TECHNICAL_ERROR",
+  "automatic": {
+    "suggested_score": null,
+    "status": "COMPLETED",
+    "audit_run_id": "aud_fc4856c7c4271ee575ae08be16fb2934fef50d04d3e164202dfc9dc3379647fa",
+    "reconciled_score": null,
+    "technical_uncertainty": true
+  },
+  "final_human_score": "10",
+  "before_explicit_release": null,
+  "student_release_denied": 403,
+  "released_result": {
+    "released_at": "2026-11-27T14:45:20.999776+00:00",
+    "released_by": "usr_b55f954fd38c490f92f750ecb024608f",
+    "final_total": "10",
+    "max_total": "10.0",
+    "questions": [
+      {
+        "order": 1,
+        "final_points": "10",
+        "max_points": "10.0"
+      }
+    ],
+    "teacher_feedback": "As operações preservam a igualdade. Confira a substituição na equação original."
+  },
+  "isolation": {
+    "other_student": 404,
+    "other_school_teacher": 403,
+    "student_workspace": 403,
+    "anonymous": 401,
+    "manager_other_school": 403
+  },
+  "management": {
+    "number_of_schools": 1,
+    "number_of_classrooms": 2,
+    "number_of_students": 2,
+    "number_of_teachers": 1,
+    "submissions_count": 1,
+    "transcriptions_count": 1,
+    "recognition_success_count": 0,
+    "recognition_failure_count": 0,
+    "audit_runs_count": 1,
+    "completed_audits": 1,
+    "inconclusive_audits": 0,
+    "decisions_finalized_count": 0,
+    "decisions_released_count": 0,
+    "override_count": 0
+  },
+  "persisted_tme_human_decisions": 1,
+  "persisted_generic_teacher_decisions": 0,
+  "audit_bytes_preserved": true,
+  "idempotent_same_attempt": true,
+  "seed": {
+    "assessment_id": "asmt_788cb390595fd455cdbad1ab429b0505",
+    "attempt_id": "exam_5d70b2e167ee70a53b35affbb7bdb496",
+    "case_id": "case_a9759ac0a7119dc7ec2334f8c40fe7b2",
+    "problem_id": "dyn_a09bc81afeff4b53bf0859af94377de8"
+  }
+}

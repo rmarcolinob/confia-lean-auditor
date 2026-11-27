@@ -1,0 +1,74 @@
+{
+  "classification": "REAL_LEAN_LEGACY_REGRESSION_EXPECTED_FAILURE",
+  "test": "tests/test_f2q6_strong_certificate.py::test_f2q6_correct_solution_includes_strong_certificate",
+  "scoring_policy": "SCORE-POLICY-02",
+  "score": null,
+  "evaluated_score": 8.0,
+  "evaluated_max_score": 8.0,
+  "items": [
+    {
+      "id": "probability_formula",
+      "points": 3.0,
+      "max_points": 3.0,
+      "mathematical_status": "supported",
+      "evidence": "Assim P(N=n)=C(n-1,3)/2^n."
+    },
+    {
+      "id": "ratio_comparison",
+      "points": 3.0,
+      "max_points": 3.0,
+      "mathematical_status": "supported",
+      "evidence": "A razão P(n+1)/P(n)=n/(2n-6). | Ela é maior que 1 para n<6, igual a 1 em n=6 e menor que 1 para n>6."
+    },
+    {
+      "id": "maximizers_identification",
+      "points": null,
+      "max_points": 2.0,
+      "mathematical_status": "indeterminate",
+      "evidence": null
+    },
+    {
+      "id": "final_answer",
+      "points": 2.0,
+      "max_points": 2.0,
+      "mathematical_status": "supported",
+      "evidence": "Portanto, n=6 e n=7."
+    }
+  ],
+  "extracted_claim_types": [
+    "probability_formula",
+    "ratio_comparison",
+    "final_answer"
+  ],
+  "checks": [
+    {
+      "claim_type": "f2q6_student_probability_formula",
+      "raw_text": "c(n-1.3)/2^n",
+      "status": "verified",
+      "lean_statement": "(10 : ℤ) * (64 : ℤ) = (10 : ℤ) * (64 : ℤ) ∧ (20 : ℤ) * (128 : ℤ) = (20 : ℤ) * (128 : ℤ)"
+    },
+    {
+      "claim_type": "f2q6_student_ratio_formula",
+      "raw_text": "n/(2n-6)",
+      "status": "verified",
+      "lean_statement": "((4 : ℤ)) * ((2 : ℤ) * (4 : ℤ) - 6) = ((4 : ℤ)) * ((2 : ℤ) * (4 : ℤ) - 6) ∧ ((5 : ℤ)) * ((2 : ℤ) * (5 : ℤ) - 6) = ((5 : ℤ)) * ((2 : ℤ) * (5 : ℤ) - 6) ∧ ((6 : ℤ)) * ((2 : ℤ) * (6 : ℤ) - 6) = ((6 : ℤ)) * ((2 : ℤ) * (6 : ℤ) - 6) ∧ ((7 : ℤ)) * ((2 : ℤ) * (7 : ℤ) - 6) = ((7 : ℤ)) * ((2 : ℤ) * (7 : ℤ) - 6) ∧ ((8 : ℤ)) * ((2 : ℤ) * (8 : ℤ) - 6) = ((8 : ℤ)) * ((2 : ℤ) * (8 : ℤ) - 6) ∧ ((9 : ℤ)) * ((2 : ℤ) * (9 : ℤ) - 6) = ((9 : ℤ)) * ((2 : ℤ) * (9 : ℤ) - 6)"
+    },
+    {
+      "claim_type": "f2q6_student_final_answer",
+      "raw_text": "n=6,7",
+      "status": "verified",
+      "lean_statement": "candidateN1 = (6 : ℕ) ∧ candidateN2 = (7 : ℕ) ∧ (2 : ℕ) = (2 : ℕ)"
+    }
+  ],
+  "certificate": {
+    "status": "verified",
+    "verification_scope": "generated_reference",
+    "compiled": true,
+    "generated_theorems": [
+      "probability_values",
+      "ratio_comparison"
+    ]
+  },
+  "raw_artifact_sha256": "e3e5c04e50880c76e3afd8ae65099d13921dcb553861605b4d27fff4da1cbc6e",
+  "limitation": "Legacy policy reproduction only; current semantic fallback for F2Q6 not independently evaluated here."
+}
