@@ -35,14 +35,17 @@ class Failure(ValueError):
 
 class Budget:
     def __init__(self):
-        self.deadline = time.monotonic() + MAX_SECONDS
+        # Bound CPU spent by this parser, not time descheduled by the OS or
+        # spent in another request. Wall-clock pauses could change a repeated
+        # source projection and falsely signal tampering of unchanged claims.
+        self.deadline = time.thread_time() + MAX_SECONDS
         self.nodes = 0
 
     def tick(self, depth=0):
         self.nodes += 1
         if self.nodes > MAX_NODES or depth > MAX_DEPTH:
             raise Failure('unsupported', 'AST complexity limit')
-        if time.monotonic() > self.deadline:
+        if time.thread_time() > self.deadline:
             raise Failure('unsupported', 'Canonicalization time budget')
 
     def rational(self, value):
