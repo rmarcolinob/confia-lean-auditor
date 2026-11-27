@@ -716,10 +716,14 @@ auditButton.addEventListener("click", handleStudentPrimaryAction);
 teacherAuditButton.addEventListener("click", auditTeacherSubmission);
 
 updateStudentAction();
-loadProblems().catch((error) => {
-  problemCatalogState = "error";
-  console.error("ConfIA: carregamento de questões", error);
-  renderError("Não foi possível carregar as questões. Atualize a página e tente novamente.");
-  setStatus("Questões indisponíveis", "error");
-  if (typeof window !== "undefined") window.ConfIATutoria?.catalogChanged([], true);
-});
+function initializeProblemCatalog() {
+  return loadProblems().catch((error) => {
+    problemCatalogState = "error";
+    console.error("ConfIA: carregamento de questões", error);
+    renderError("Não foi possível carregar as questões. Atualize a página e tente novamente.");
+    setStatus("Questões indisponíveis", "error");
+    if (typeof window !== "undefined") window.ConfIATutoria?.catalogChanged([], true);
+  });
+}
+// Institutional permissions are known only after the shell resolves /auth/me.
+if (!document.body?.classList?.contains("auth-enabled")) initializeProblemCatalog();
