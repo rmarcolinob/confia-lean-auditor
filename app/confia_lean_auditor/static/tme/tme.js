@@ -16,14 +16,14 @@
     const query = new URLSearchParams(window.location.search || "");
     if(query.get("case_id")) return {view:"workspace",caseId:query.get("case_id")};
     if(query.get("exam_submission_id")) return {view:"workspace",examId:query.get("exam_submission_id"),attemptId:query.get("question_attempt_id")};
-    const params={};for(const key of ["search","question","status","source","origin","sample","exam","page","mode","problem_id","assessment_id"]) if(query.get(key))params[key]=query.get(key);
+    const params={};for(const key of ["search","question","status","source","origin","sample","exam","page","mode","problem_id","assessment_id","step"]) if(query.get(key))params[key]=query.get(key);
     return {view:viewNames[query.get("view")] || "home",params};
   }
   function writeRoute(view, params={}, caseId=null, replace=false) {
     const query=new URLSearchParams();
     if(params.exam_submission_id){query.set("exam_submission_id",params.exam_submission_id);if(params.question_attempt_id)query.set("question_attempt_id",params.question_attempt_id);}
     else if(caseId) query.set("case_id",caseId);
-    else { if(view!=="home")query.set("view",view==="cases"?"queue":view);for(const key of ["search","question","status","source","origin","sample","exam","page","mode","problem_id","assessment_id"])if(params[key]&&!(key==="page"&&String(params[key])==="1"))query.set(key,params[key]); }
+    else { if(view!=="home")query.set("view",view==="cases"?"queue":view);for(const key of ["search","question","status","source","origin","sample","exam","page","mode","problem_id","assessment_id","step"])if(params[key]&&!(key==="page"&&String(params[key])==="1"))query.set(key,params[key]); }
     const url="/tme"+(query.toString()?`?${query}`:"");
     const changed=url!==currentURL;
     if(changed || replace)window.history?.[replace?"replaceState":"pushState"]?.({tme:true,origin:returnTo},"",url);
@@ -41,7 +41,7 @@
     if(view==="cases"||view==="exams"){
       state.filters[view]=params ? {...params} : {...(state.filters[view]||{})};
       params=state.filters[view];
-    }else params=view==="new" ? {mode:params?.mode,problem_id:params?.problem_id,assessment_id:params?.assessment_id} : {};
+    }else params=view==="new" ? {mode:params?.mode,problem_id:params?.problem_id,assessment_id:params?.assessment_id,step:params?.step} : {};
     if(record && !writeRoute(view,params) && state.view===view && state.navigationPending)return state.navigationPending;
     fullExam?.cancel(); preparation?.cancel(); preparation=null;
     window.scrollTo(0,0);document.querySelector("#main")?.scrollTo?.(0,0);
@@ -249,12 +249,12 @@
       return newSingleCase();
     }
     if(params.mode==="dynamic") {
-      const page=Views.Page("Nova atividade ou prova","Crie questões inéditas e prepare rubricas com o ConfIA.");
+      const page=Views.Page("DYNAMIC · Avaliações e listas","Cadastre a avaliação, envie as respostas e acompanhe a correção.");
       page.heading.append(btn("Voltar às opções",()=>navigate("new"),"tme-button secondary"));
       const host=node("div");host.id="confia-preparation";page.append(host);show(page);
       if(!params.problem_id && window.ConfIADynamicAssessment){
-        preparation=window.ConfIADynamicAssessment.create({host,setBusy:value=>{state.busy=value;},onSelect:id=>writeRoute("new",{mode:"dynamic",assessment_id:id}),onOpenExam:id=>openExam(id).catch(showError),onUpload:id=>{preparation?.cancel();preparation=null;return fullExam.newCorrection({assessmentId:id});}});
-        return preparation.load(params.assessment_id);
+        preparation=window.ConfIADynamicAssessment.create({host,simplified:true,setBusy:value=>{state.busy=value;},onSelect:(id,step)=>writeRoute("new",{mode:"dynamic",assessment_id:id,step}),onOpenExam:id=>openExam(id).catch(showError),onUpload:id=>{preparation?.cancel();preparation=null;return fullExam.newCorrection({assessmentId:id});}});
+        return preparation.load(params.assessment_id,params.step);
       }
       preparation=window.ConfIADynamic.create({host,setBusy:value=>{state.busy=value;},
         onSelect:id=>writeRoute("new",{mode:"dynamic",problem_id:id}),onOpenAttempt:id=>openCase(id).catch(showError)});
@@ -355,6 +355,15 @@
     try { await loadCaseData(c); if (generation === state.generation) await renderCorrection(); }
     catch (_) { if (generation === state.generation) show(context(c,0),note("Não foi possível carregar a solução. Seus dados permanecem preservados."),actions(btn("Tentar novamente",()=>openCase(caseId).catch(showError)))); }
   }
+  async function completeDynamic(c,run) {
+    if(state.busy||savedFinalized(c))return;
+    const saved=local(c);state.busy=true;
+    try {await window.ConfIADynamicCorrection.complete({caseId:c.case_id,run,api,post});saved.loaded=false;state.message='Correção atualizada. Confira as sugestões e eventuais pendências antes de confirmar.';}
+    catch(e){saved.loaded=false;state.message='Correção ainda pendente. '+e.message;}
+    finally{state.busy=false;}
+    if(state.current===c)await renderCorrection();
+  }
+  function savedFinalized(c){return Boolean(local(c).examReview?.exam_finalized);}
   async function reviewDynamic(c,run) {
     if(state.busy || run.stale || !c.dynamic_context)return;
     const saved=local(c);state.busy=true;saved.reviewError="";saved.reviewPending=true;
@@ -672,7 +681,7 @@
     if (saved.processing === "audit") analysisBody.appendChild(loading("Analisando matemática · executando verificações…"));
     if(c.exam_submission_id){
       const onOriginal=e=>{const index=saved.examPages.findIndex(p=>p.exam_page_id===e.exam_page_id);if(index<0)return;saved.page=index;setTab("original");drawer(false);solution.scrollIntoView({block:"start",behavior:"smooth"});};
-      if(run){const report=node("div");window.ConfiaWorkspaceReport.renderQuestion(run,report,{onOriginal,decisionPanel:humanDecisionPanel(c,saved,run),workflowDisabled:state.busy||saved.examReview.exam_finalized,onWorkflow:async action=>{if(state.busy)return;state.busy=true;try{await post("/"+action.route.map(encodeURIComponent).join("/"),action.body||{execution_key:window.crypto.randomUUID()});saved.loaded=false;}catch(e){state.message=e.message;}finally{state.busy=false;}await renderCorrection();}});analysisBody.append(report);}
+      if(run){const report=node("div");window.ConfiaWorkspaceReport.renderQuestion(run,report,{onOriginal,simplified:Boolean(c.dynamic_context),onComplete:()=>completeDynamic(c,run),decisionPanel:humanDecisionPanel(c,saved,run),workflowDisabled:state.busy||saved.examReview.exam_finalized,onWorkflow:async action=>{if(state.busy)return;state.busy=true;try{await post("/"+action.route.map(encodeURIComponent).join("/"),action.body||{execution_key:window.crypto.randomUUID()});saved.loaded=false;}catch(e){state.message=e.message;}finally{state.busy=false;}await renderCorrection();}});analysisBody.append(report);}
       const comparison=saved.examReview.audit_comparison;
       const previousAudit=saved.examReview.previous_audit || (saved.audits||[]).find(r=>r.stale);
       const scoreText=(value,max)=>value==null?"não determinada":`${String(value).replace(".",",")} / ${max}`;
@@ -840,6 +849,8 @@
         saved.auditRequestKey ||= window.crypto.randomUUID();request.execution_key=saved.auditRequestKey;
       }
       const run = await post(`/tme/cases/${c.case_id}/audits`, request);
+      if(c.dynamic_context && c.exam_submission_id && window.ConfIADynamicCorrection)
+        await window.ConfIADynamicCorrection.complete({caseId:c.case_id,run,api,post});
       if(c.exam_submission_id || !c.dynamic_context) delete saved.auditRequestKey;
       if(c.exam_submission_id) saved.loaded=false;
       saved.audits = [run, ...(saved.audits || []).filter(r => r.audit_run_id !== run.audit_run_id)]; state.message = run.stale ? "A leitura mudou durante a análise. O resultado foi preservado no histórico; reanalise a versão atual." : run.status === "COMPLETED" ? (incomplete(c, run) ? incompleteMessage : "Análise concluída.") : reanalysis ? "Não foi possível concluir a reanálise." : "Não foi possível concluir a análise matemática.";

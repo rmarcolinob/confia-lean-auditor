@@ -15,7 +15,7 @@
     TEACHER:"Professor", TECHNICAL_DEMO:"Demonstração técnica", EXPLICIT:"explícita", INFERRED:"inferida"
   };
   const readable = value => String(value || "").replace(/\b[A-Z][A-Z_]+\b/g, code => labels[code] || code);
-  function create({host:panel,onSelect=()=>{},setBusy=()=>{},onOpenAttempt=()=>{},assessmentOnly=false}) {
+  function create({host:panel,onSelect=()=>{},setBusy=()=>{},onOpenAttempt=()=>{},assessmentOnly=false,simplified=false}) {
   let disposed=false, creation, selectionGeneration=0;
 
   let detail, list, message, busy = false, loadGeneration = 0;
@@ -111,24 +111,31 @@
     const rubric = doc.rubrics.filter(r => r.statement_version === statement.version_number).slice(-1)[0];
     const context = n("nav", null, "dynamic-context"); context.setAttribute("aria-label", "Etapas da preparação");
     const question = n("section", null, "tme-panel dynamic-question");
-    append(question, n("h2", statement.title || "Questão sem título"), n("p", `Enunciado V${statement.version_number} · ${money(statement.max_score)} pontos`));
+    append(question, n("h2", statement.title || "Questão sem título"), n("p", simplified?`${money(statement.max_score)} pontos`:`Enunciado V${statement.version_number} · ${money(statement.max_score)} pontos`));
     append(detail, context, question);
     if (doc.actor_notice) question.appendChild(n("p", doc.actor_notice, "prototype-note"));
     question.appendChild(n("p", statement.statement, "dynamic-statement"));
-    detail.appendChild(n("p", "Soluções candidatas precisam de revisão docente. A sugestão de pontuação exige uma rubrica aprovada e continua sujeita à decisão docente."));
+    detail.appendChild(n("p", simplified?"Informe os critérios de pontuação ou solicite uma sugestão. Confira e aprove a rubrica antes de corrigir respostas.":"Soluções candidatas precisam de revisão docente. A sugestão de pontuação exige uma rubrica aprovada e continua sujeita à decisão docente."));
     const preparationSection=renderPreparation(doc);
     const editStatement = n("details"); append(editStatement, n("summary", "Criar nova versão do enunciado"), statementForm(doc)); question.appendChild(editStatement);
     const section = n("section", null, "tme-panel dynamic-rubric"), rows = n("div"), total = n("p"), heading = n("h3", rubric?.generation ? "Rubrica sugerida pela IA · revisão docente" : "Rubrica fornecida pelo professor");
-    const state = n("p", rubric ? `Rubrica V${rubric.version_number} · ` : "Sem rubrica para este enunciado.");
+    const state = n("p", rubric ? simplified?'Rubrica · ':`Rubrica V${rubric.version_number} · ` : "Sem rubrica para este enunciado.");
     if(rubric)state.appendChild(statusBadge(rubric.status));
     const prep = doc.current_preparation;
     const reason = input("Motivo da nova sugestão (opcional)"); reason.maxLength = 1000;
-    const ai = button(rubric?.generation ? "Rejeitar e gerar nova sugestão" : "Gerar rubrica sugerida", () => perform(() => saved(`/dynamic/problems/${pid}/rubric-suggestion`,
-      {expected_revision: doc.revision, preparation_id: prep.preparation_id, reason: reason.value || null}, "POST",
-      "Sugestão da IA salva. Leia os avisos, edite se necessário e aprove explicitamente."), "Gerando e revisando a rubrica…"));
-    ai.disabled = !doc.automatic_suggestion_available || !prep || !["READY_FOR_REVIEW", "REVIEW_REQUIRED"].includes(prep.status);
+    const ai = button(rubric?.generation ? "Rejeitar e gerar nova sugestão" : "Gerar rubrica sugerida", () => perform(async()=>{
+      let current=doc;
+      if(simplified && (!prep || !["READY_FOR_REVIEW","REVIEW_REQUIRED"].includes(prep.status))) {
+        current=await request(`/dynamic/problems/${pid}/preparations`,{expected_revision:doc.revision});
+        renderDocument(current); // Keep the persisted revision even if suggestion fails next.
+        if(!["READY_FOR_REVIEW","REVIEW_REQUIRED"].includes(current.current_preparation?.status)){throw new Error('A sugestão automática não pôde ser preparada. Sua rubrica manual continua disponível.');}
+      }
+      await saved(`/dynamic/problems/${pid}/rubric-suggestion`,
+        {expected_revision:current.revision,preparation_id:current.current_preparation.preparation_id,reason:reason.value||null},'POST','Sugestão da IA salva. Leia os avisos, edite se necessário e aprove explicitamente.');
+    }, "Gerando e revisando a rubrica…"));
+    ai.disabled = !doc.automatic_suggestion_available || (!simplified && (!prep || !["READY_FOR_REVIEW", "REVIEW_REQUIRED"].includes(prep.status))) || Boolean(prep&&["PENDING","RUNNING"].includes(prep.status));
     const unavailable = n("p", !doc.automatic_suggestion_available ? "Preparação com IA indisponível nesta instalação. A rubrica manual continua disponível."
-      : !prep ? "Prepare o enunciado atual para gerar uma sugestão." : "A sugestão não ativa a rubrica. A aprovação continua sendo sua decisão.");
+      : !prep&&!simplified ? "Prepare o enunciado atual para gerar uma sugestão." : "A sugestão não ativa a rubrica. A aprovação continua sendo sua decisão.");
     const warnings = rubric?.review_warnings || [];
     const acknowledgement = input("Li os avisos e assumo a revisão docente", "", "checkbox");
     const requiresAcknowledgement = warnings.some(w => w.requires_review);
@@ -146,7 +153,7 @@
     acknowledgement.addEventListener("change", () => update());
     let dirty = !rubric, nextId = 1, replaceWithTeacher = false; const editors = [];
     const usedIds = new Set(doc.rubrics.flatMap(version => version.criteria.map(c => c.criterion_id)));
-    const save = button(rubric ? "Salvar como nova versão da rubrica" : "Salvar rascunho da rubrica", () => {
+    const save = button(simplified?"Salvar critérios":rubric ? "Salvar como nova versão da rubrica" : "Salvar rascunho da rubrica", () => {
       const payload = read();
       if (!valid()) { message.textContent = "A soma dos critérios deve ser igual ao valor total. Confira também os textos."; return; }
       return perform(() => saved(`/dynamic/problems/${pid}/rubrics${rubric ? `/${rubric.rubric_id}` : ""}`,
@@ -164,7 +171,7 @@
       && editors.every(row=>row.levels.every(l=>l.description.value.trim()&&cents(l.points.value)>0&&cents(l.points.value)<cents(row.points.value))
         && row.links.every(l=>l.target.value&&l.target.value!==row.id&&(!l.kind.value||l.condition.value.trim())&&(!l.minimum.value||l.kind.value!=="MATHEMATICAL"||cents(l.minimum.value)>0))
         && new Set(row.links.map(l=>l.target.value)).size===row.links.length)
-      && (!editors.length || editors.reduce((sum, row) => sum + cents(row.points.value), 0) === cents(statement.max_score)); }
+      && (!editors.length ? !simplified : editors.reduce((sum, row) => sum + cents(row.points.value), 0) === cents(statement.max_score)); }
     function update() {
       for(const row of editors)for(const link of row.links){
         const selected=link.target.value||link.initial;
@@ -258,6 +265,11 @@
       history.appendChild(block);
     }
     detail.appendChild(history);
+    if(simplified){
+      detail.removeChild(context);
+      const audit=n('details');append(audit,n('summary','Auditoria e evidências'),preparationSection,history,editStatement);
+      detail.appendChild(audit);
+    }
     for(const [title,target] of [["Questão",question],["Preparação",preparationSection],["Rubrica",section],["Histórico",history]])
       context.appendChild(button(title,()=>{target.scrollIntoView({behavior:"smooth",block:"start"});target.tabIndex=-1;target.focus();}));
     if(doc.current_configuration && !assessmentOnly) {
@@ -335,7 +347,8 @@
     creation=n("section",null,"tme-panel dynamic-creation");
     append(creation,n("h2","Dados da atividade"),n("p","Cadastre o enunciado e os pontos. Forneça sua rubrica ou gere uma sugestão para aprovar. Avaliações sem verificação exata são identificadas como semânticas e passam por revisão e reconciliação."),statementForm());
     const resume=n("details",null,"tme-panel dynamic-resume");append(resume,n("summary","Retomar preparação"),list);
-    append(panel,button("Nova questão",newQuestion),resume,message,creation,detail);
+    if(simplified)append(panel,message,creation,detail);
+    else append(panel,button("Nova questão",newQuestion),resume,message,creation,detail);
     try {
       await refreshList();
       if(generation===loadGeneration && !disposed && problemId)await selectProblem(problemId);

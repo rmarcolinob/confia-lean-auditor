@@ -47,6 +47,19 @@ def list_problems(actor=Depends(teacher_actor)):
     return guarded(dynamic_store().list, actor)
 
 
+@router.get("/capabilities")
+def teacher_capabilities(actor=Depends(teacher_actor)):
+    """Configuration presence only; never probe paid providers or expose secrets."""
+    from confia_lean_auditor.recognition.registry import configured_registry
+    return dict(
+        rubric_suggestion_configured=provider_available(),
+        semantic_evaluation_configured=bool(os.getenv("CONFIA_SEMANTIC_LLM_ENABLED") == "1"
+                                          and os.getenv("OPENAI_API_KEY")),
+        handwriting_recognition_configured="mathpix_image" in configured_registry().providers(),
+        configuration_only=True,
+    )
+
+
 @router.post("/problems", status_code=201)
 def create_problem(body: CreateProblem, actor=Depends(teacher_actor)):
     reference = None

@@ -16,15 +16,15 @@ function documentValue(status=null,rubric=false) {
   rubrics:rubric?[{rubric_id:rid,version_number:1,statement_version:1,status:'DRAFT_AI',generation:{},review_warnings:[warning],
    criteria:[{criterion_id:'c1',title:'Método equivalente',description:'Aceita fatoração ou fórmula.',max_points:'10',order:1}]}]:[]};
 }
-async function page(initial,mutation) {
+async function page(initial,mutation,simplified=false) {
  let current=initial;const panel=element('section'),calls=[],window={};
  const fetch=async(url,options)=>{const body=options?.body?JSON.parse(options.body):null;calls.push({url,body});
   if(body){const result=await mutation(url,body);if(result.error)return {ok:false,json:async()=>({detail:result.error})};current=result;}
   return {ok:true,json:async()=>url==='/dynamic/problems'?[current]:current};};
  vm.runInNewContext(source,{window,document:{querySelector:()=>panel,createElement:element},fetch,Set,Number,String,Error,Math});
- await window.ConfIADynamic.create({host:panel}).load();
+ await window.ConfIADynamic.create({host:panel,simplified}).load(simplified?pid:null);
  const nodes=()=>descendants(panel),button=text=>nodes().find(n=>n.tag==='button'&&n.textContent===text);
- await button(`Equação DY2 · Enunciado V${initial.statements.at(-1).version_number}`).click();return {panel,nodes,button,calls};
+ if(!simplified)await button(`Equação DY2 · Enunciado V${initial.statements.at(-1).version_number}`).click();return {panel,nodes,button,calls};
 }
 
 test('prepare shows loading, real request and checked evidence with no automatic rubric or approval',async()=>{
@@ -74,4 +74,33 @@ test('historical preparation after statement change is visible but cannot enable
 test('provider failure surfaces error with no phantom draft',async()=>{
  const ui=await page(documentValue('READY_FOR_REVIEW'),async()=>({error:{message:'Saída inválida; recarregue.'}}));
  await ui.button('Gerar rubrica sugerida').click();assert.match(ui.panel.textContent,/Saída inválida/);assert(!ui.panel.textContent.includes('DRAFT_AI'));
+});
+
+
+test('simplified rubric prepares behind the scenes, then suggests without approving or publishing',async()=>{
+ const ui=await page(documentValue(),async(url,body)=>{
+  if(url.endsWith('/preparations'))return documentValue('REVIEW_REQUIRED');
+  assert(url.endsWith('/rubric-suggestion'));assert.equal(body.preparation_id,prepId);
+  return documentValue('REVIEW_REQUIRED',true);
+ },true);
+ assert(ui.button('Gerar rubrica sugerida'));await ui.button('Gerar rubrica sugerida').click();
+ const writes=ui.calls.filter(c=>c.body);assert.equal(writes.length,2);
+ assert(writes[0].url.endsWith('/preparations'));assert(writes[1].url.endsWith('/rubric-suggestion'));
+ assert.match(ui.panel.textContent,/Sugestão da IA/);assert.equal(ui.button('Aprovar rubrica').disabled,true);
+ const title=ui.nodes().find(n=>n.name==='Critério c1: título');title.value='Critério revisado';await title.emit('input');
+ assert.equal(ui.button('Aprovar rubrica').disabled,true);assert(ui.button('Salvar critérios'));
+ await ui.button('Fornecer minha própria rubrica').click();assert.equal(ui.button('Salvar critérios').disabled,true);
+ assert(!ui.calls.some(c=>/approve|activate|publish/.test(c.url)));
+});
+
+test('failed suggestion after automatic preparation retains current revision for a safe retry',async()=>{
+ let prepared=0,suggestions=0;
+ const ui=await page(documentValue(),async(url,body)=>{
+  if(url.endsWith('/preparations')){prepared++;return documentValue('REVIEW_REQUIRED');}
+  assert.equal(body.expected_revision,4);suggestions++;
+  return suggestions===1?{error:'Provider temporariamente indisponível'}:documentValue('REVIEW_REQUIRED',true);
+ },true);
+ await ui.button('Gerar rubrica sugerida').click();assert.match(ui.panel.textContent,/Provider temporariamente indisponível/);
+ await ui.button('Gerar rubrica sugerida').click();assert.equal(prepared,1);assert.equal(suggestions,2);
+ assert.match(ui.panel.textContent,/Sugestão da IA/);assert(!ui.calls.some(c=>c.url.endsWith('/approve')));
 });
