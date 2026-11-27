@@ -109,7 +109,7 @@ def test_complexity_limits_fail_closed(text):
 def test_time_budget_is_checked_without_a_simplifier_or_wall_clock_flakiness(monkeypatch):
     from confia_lean_auditor.core.math_canonical import parser
     calls=iter([0,1])
-    monkeypatch.setattr(parser.time,'monotonic',lambda:next(calls,1))
+    monkeypatch.setattr(parser.time,'thread_time',lambda:next(calls,1))
     assert parse_math('x+1').status=='unsupported'
 
 

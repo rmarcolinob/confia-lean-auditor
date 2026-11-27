@@ -2,6 +2,7 @@ from contextlib import contextmanager
 from datetime import datetime, timezone
 import fcntl
 import json
+import logging
 import os
 from pathlib import Path
 import re
@@ -15,6 +16,23 @@ from .artifacts import capture_manifest, validate_manifest
 from .schemas import AuditRun, AuditRunView, AuditSource
 from .errors import AuditConflict, UnacceptedSource, SourceIntegrityError, ResultIntegrityError, RevisionConflict
 from .source import build_source, canonical_hash, convert_segments, source_digest
+
+
+logger = logging.getLogger(__name__)
+
+
+def _failure_location(exc):
+    """Code location only: no exception message, source text or local values."""
+    location = "external"
+    frame = exc.__traceback__
+    while frame is not None:
+        try:
+            relative = Path(frame.tb_frame.f_code.co_filename).relative_to(Path(__file__).parent.parent)
+            location = f"{relative.as_posix()}:{frame.tb_lineno}"
+        except ValueError:
+            pass
+        frame = frame.tb_next
+    return location
 
 
 class AuditService:
@@ -212,6 +230,7 @@ class AuditService:
                     raise SourceIntegrityError()
                 return self.view(existing)
             created_at = datetime.now(timezone.utc)
+            stage = "engine"
             try:
                 if source.dynamic_context is not None:
                     from confia_lean_auditor.dynamic.grading_context import audit_dynamic
@@ -226,12 +245,17 @@ class AuditService:
                         problem_id=source.problem_id, solution=source.solution_text)))
                 if result.problem_id != source.problem_id:
                     raise ValueError("engine returned another problem")
+                stage = "capture_manifest"
                 manifest = capture_manifest(result)
+                stage = "validate_artifacts"
                 self._validate_artifacts(result, manifest)
+                stage = "hash_result"
                 manifest_hash = canonical_sha256([item.model_dump(mode="json") for item in manifest])
                 result_hash = model_sha256(result)
                 status, error_code = "COMPLETED", None
             except Exception as exc:
+                logger.error("Audit execution failed: stage=%s type=%s location=%s",
+                             stage, type(exc).__name__, _failure_location(exc))
                 # Pipeline diagnostics can contain student content. Persist
                 # only the failure category, never a fictitious result.
                 result, result_hash, status, error_code = None, None, "FAILED", "AUDITOR_FAILED"
