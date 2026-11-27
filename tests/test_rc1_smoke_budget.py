@@ -65,3 +65,26 @@ def test_financial_cap_blocks_before_transport_even_with_calls_remaining(tmp_pat
     gate=m.BudgetGate(tmp_path);gate.used=m.Decimal('5.90');calls=[]
     with pytest.raises(m.StopSmoke):gate.send(lambda *a,**k:calls.append(1),None,request())
     assert not calls and gate.counts['grader']==0 and gate.used==m.Decimal('5.90')
+
+
+def test_text_only_plan_removes_ocr_without_changing_original_plan():
+    p=m.plan(text_only=True)
+    assert p['api_calls']==0 and p['max_calls']==21
+    assert p['limits']['ocr']==0 and p['maximum_reserved_usd']=='5.24'
+    assert m.plan()['limits']['ocr']==1 and m.plan()['max_calls']==22
+
+
+def test_text_only_gate_refuses_ocr_before_transport(tmp_path):
+    gate=m.BudgetGate(tmp_path,text_only=True);calls=[]
+    req=httpx.Request('POST','https://api.mathpix.com/v3/text',json={'src':'synthetic'})
+    with pytest.raises(m.StopSmoke):gate.send(lambda *a,**k:calls.append(1),None,req)
+    assert not calls and gate.used==0 and gate.counts['ocr']==0
+    assert gate.halted
+
+
+def test_text_only_gate_preserves_semantic_receipts(tmp_path):
+    gate=m.BudgetGate(tmp_path,text_only=True)
+    assert gate.send(response,None,request()).json()['id']=='synthetic'
+    rows=[json.loads(line) for line in gate.ledger.read_text().splitlines()]
+    assert rows[0]['text_only'] and rows[0]['limits']['ocr']==0
+    assert rows[2]['group']=='grader' and rows[2]['usage']['input_tokens']==100

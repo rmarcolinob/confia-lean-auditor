@@ -1,0 +1,14 @@
+[
+  {
+    "sample_id": "D01",
+    "school_stage": "1ª série do Ensino Médio",
+    "statement": "Para f(x)=2x-5, calcule f(4), mostrando a substituição.",
+    "solution": "Substituo x por 4: f(4)=2×4-5=3."
+  },
+  {
+    "sample_id": "D02",
+    "school_stage": "1ª série do Ensino Médio",
+    "statement": "R$1000 são aplicados a juros compostos de 10% ao mês por dois meses. Determine o montante.",
+    "solution": "Somando 10% duas vezes ao capital inicial obtenho 1200 reais."
+  }
+]
