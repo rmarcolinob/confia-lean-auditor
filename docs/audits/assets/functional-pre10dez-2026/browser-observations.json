@@ -1,0 +1,83 @@
+{
+  "method": "CUA browser, actual local ASGI server, authenticated synthetic accounts; no engine stubs or OCR",
+  "base_url": "http://127.0.0.1:8876",
+  "events": [
+    {
+      "scenario": "teacher_login_keyboard",
+      "observed": "Selected Professor; password + Enter navigated directly to /#teacher/home.",
+      "status": "PASS"
+    },
+    {
+      "scenario": "student_login_keyboard",
+      "observed": "Selected Aluno; password + Enter navigated directly to /#student/home.",
+      "status": "PASS"
+    },
+    {
+      "scenario": "manager_login_keyboard",
+      "observed": "Selected Gestão; password + Enter navigated directly to /#management/home.",
+      "status": "PASS"
+    },
+    {
+      "scenario": "teacher_manual_registration",
+      "observed": "Created formativa list, question and 2-point manual rubric in browser. Approve disabled until explicit warning acknowledgment. Saved draft then approved immutable version; activation separate from student publication.",
+      "status": "PASS"
+    },
+    {
+      "scenario": "teacher_typed_workflow",
+      "observed": "Received synthetic 22 cm perimeter answer; Grader→Reviewer→Reconciliation automatically ran. Provider unavailable: pending score and technical error, explicit human adjudication to 2/2 with justifications, finalization confirmation and persisted reopening after reload.",
+      "status": "PASS"
+    },
+    {
+      "scenario": "institutional_student",
+      "observed": "Opened published activity and attempt 1; saw 10/10 explicitly confirmed and released by teacher. Earlier withholding and unauthorized release checked over HTTP.",
+      "status": "PASS"
+    },
+    {
+      "scenario": "self_study",
+      "observed": "Entered new pencils problem; confirmed reading; preparation failed explicitly because provider OFF. No score displayed. Cannot validate progressive semantic feedback live.",
+      "status": "BLOCKED_PROVIDER_OFF"
+    },
+    {
+      "scenario": "tutoria",
+      "observed": "Opened actual notebook iframe and tools, switched to text, submitted partial complex-number reasoning; feedback labelled demonstrative and explicitly no automatic analysis.",
+      "status": "PARTIAL"
+    },
+    {
+      "scenario": "management",
+      "observed": "Persisted counts 1 submission/1 audit/1 transcription; finalized/released decisions 0 despite stored and released TME/DYNAMIC human decision.",
+      "status": "FAIL_P2"
+    },
+    {
+      "scenario": "management_shell",
+      "observed": "Console loadProblems error; manager request to problem catalog is not authorized; dashboards still render.",
+      "status": "FAIL_P3"
+    },
+    {
+      "scenario": "platform_return",
+      "observed": "Student and manager menu return worked; unauthorized modules disabled. Manager activated home link with Enter.",
+      "status": "PASS"
+    },
+    {
+      "scenario": "specialized_navigation",
+      "observed": "Teacher menu opened prepared catalog ITA/TME; actual engine runs tested separately over HTTP/direct service.",
+      "status": "PARTIAL"
+    },
+    {
+      "scenario": "brand",
+      "observed": "Aluno/Gestão show static ConfIA. Teacher header remains link to teacher/home, does not return to platform.",
+      "status": "OBSERVED"
+    },
+    {
+      "scenario": "session",
+      "observed": "Page reload preserved authentication and finalized teacher decision.",
+      "status": "PASS"
+    }
+  ],
+  "not_tested": [
+    "Physical pen/palm rejection",
+    "OCR integration (out of scope)",
+    "Paid/real semantic provider",
+    "Browser-driven SPECIALIZED full proof/report (HTTP engine tested instead)",
+    "Mobile viewport in this audit"
+  ]
+}

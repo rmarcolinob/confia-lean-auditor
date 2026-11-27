@@ -1,0 +1,16 @@
+[
+  {
+    "artifact_type": "student_proof",
+    "recorded_sha256": "1a9fcc532d0a09c3541fd21682c622a7edac8cb1e48731455688bd8f60a9e5e3",
+    "actual_sha256": "d67e2e944994496c8d8ec76eed0cf9f09679448d584b532bebf941852a37f5ed",
+    "bytes": 7,
+    "source": "changed"
+  },
+  {
+    "artifact_type": "refutation",
+    "recorded_sha256": "30920025eea4ec927d434098a4a886335f57b4cf41433fdf0735b4869f689fea",
+    "actual_sha256": "30920025eea4ec927d434098a4a886335f57b4cf41433fdf0735b4869f689fea",
+    "bytes": 100,
+    "source": "import Mathlib\n\ntheorem real_check_1_refutation : \u00ac ((((2 : \u2124) ^ 4)=(8 : \u2124))) := by\n  norm_num\n"
+  }
+]

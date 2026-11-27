@@ -1,0 +1,67 @@
+{
+  "classification": "MOCK_ONLY_ROUTING_WITH_RECORDED_REAL_CHECKS",
+  "solution": "No anel quociente por x²-x+1, temos x²=x-1 e x³=-1. Como 57=3*19, x^57=(-1)^19=-1. Como x^6=1, x^14=x^2=x-1 e x^7=x. Assim p(x) ≡ -1+a(x-1)+bx+1 = (a+b)x-a. Comparando com 2x+1: -a=1 e a+b=2. Logo a=-1 e b=3.",
+  "provider_called_for": [
+    "power_reductions",
+    "coefficient_system"
+  ],
+  "remainder_candidate_evidence": [
+    {
+      "source_start": 0,
+      "source_end": 51,
+      "source_text": "No anel quociente por x²-x+1, temos x²=x-1 e x³=-1.",
+      "source_kind": "bounded_context",
+      "grounding_status": "grounded",
+      "verification_status": "not_checked",
+      "evidence_id": "E2_1"
+    }
+  ],
+  "remainder_decision": {
+    "decision": "review",
+    "reason": "no_eligible_evidence"
+  },
+  "score": null,
+  "items": [
+    {
+      "id": "power_reductions",
+      "points": 3.0
+    },
+    {
+      "id": "reduced_polynomial_form",
+      "points": null
+    },
+    {
+      "id": "coefficient_system",
+      "points": 2.0
+    },
+    {
+      "id": "final_answer",
+      "points": 2.0
+    }
+  ],
+  "source_record_unchanged": true,
+  "cause_probes": {
+    "formula_as_rhs_is_bound": false,
+    "formula_after_colon_is_bound": true,
+    "retrieval_query": "Obtém o resto geral p(x) ≡ (a+b)x - a. reduced polynomial form identified remainder",
+    "query_terms": [
+      "form",
+      "geral",
+      "identi",
+      "polyno",
+      "reduce",
+      "remain",
+      "resto"
+    ],
+    "source_terms": [
+      "anel",
+      "assim",
+      "compar",
+      "logo",
+      "quocie",
+      "temos"
+    ],
+    "lexical_overlap": [],
+    "note": "Contraste sintático apenas; nenhum parecer matemático nem fonte persistida foi alterado."
+  }
+}

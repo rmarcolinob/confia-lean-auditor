@@ -1,0 +1,10 @@
+{
+  "fresh_process_resume": true,
+  "idempotent_audit": true,
+  "old_stale": true,
+  "old_bytes_preserved": true,
+  "new_revision": 2,
+  "old_score": 10.0,
+  "new_score": null,
+  "two_audit_ids_distinct": true
+}

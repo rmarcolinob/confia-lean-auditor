@@ -1,0 +1,18 @@
+[
+  {
+    "fact_id": "c.pair_permutations",
+    "status": "verified",
+    "lean_statement": "(((Nat.factorial 4 : ℕ) : ℤ)=(24 : ℤ))",
+    "formal_status": "verified",
+    "source": "import Mathlib\n\ntheorem real_check_0 : (((Nat.factorial 4 : ℕ) : ℤ)=(24 : ℤ)) := by\n  norm_num\n",
+    "sha256": "1a9fcc532d0a09c3541fd21682c622a7edac8cb1e48731455688bd8f60a9e5e3"
+  },
+  {
+    "fact_id": "c.pair_orientations",
+    "status": "refuted",
+    "lean_statement": "(((2 : ℤ) ^ 4)=(8 : ℤ))",
+    "formal_status": "refuted",
+    "source": "import Mathlib\n\ntheorem real_check_1_refutation : ¬ ((((2 : ℤ) ^ 4)=(8 : ℤ))) := by\n  norm_num\n",
+    "sha256": "30920025eea4ec927d434098a4a886335f57b4cf41433fdf0735b4869f689fea"
+  }
+]

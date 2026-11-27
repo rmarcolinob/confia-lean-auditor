@@ -1,0 +1,93 @@
+{
+  "initial_runs": [
+    {
+      "artifact": "artifacts/runs/20261127T144250_879443/audit.json",
+      "sha256": "9c11d03e5b3387f983c7852b229c15aaa487692df5bf5b62cab47d0ca3dab129",
+      "score": null,
+      "checks": [
+        {
+          "claim_type": "f2q1_student_power_reduction",
+          "status": "technical_error",
+          "failure_category": "MISSING_MODULE",
+          "diagnostics": {
+            "stdout": "<AUDIT_WORKTREE>/artifacts/student_claim_checks/20261127T144250_879443_student_claims/student_claim_check_0.lean:1:0: error: unknown module prefix 'ConfiaLeanAuditor'\n\nNo directory 'ConfiaLeanAuditor' or file 'ConfiaLeanAuditor.olean' in the search path entries:\n<AUDIT_WORKTREE>/.lake/packages/Cli/.lake/build/lib/lean\n<AUDIT_WORKTREE>/.lake/packages/batteries/.lake/build/lib/lean\n<AUDIT_WORKTREE>/.lake/packages/Qq/.lake/build/lib/lean\n<AUDIT_WORKTREE>/.lake/packages/aesop/.lake/build/lib/lean\n<AUDIT_WORKTREE>/.lake/packages/proofwidgets/.lake/build/lib/lean\n<AUDIT_WORKTREE>/.lake/packages/importGraph/.lake/build/lib/lean\n<AUDIT_WORKTREE>/.lake/packages/LeanSearchClient/.lake/build/lib/lean\n<AUDIT_WORKTREE>/.lake/packages/plausible/.lake/build/lib/lean\n<AUDIT_WORKTREE>/.lake/packages/mathlib/.lake/build/lib/lean\n<AUDIT_WORKTREE>/.lake/build/lib/lean\n<USER_HOME>/.elan/toolchains/leanprover--lean4---v4.28.0/lib/lean\n<USER_HOME>/.elan/toolchains/leanprover--lean4---v4.28.0/lib/lean\n"
+          }
+        },
+        {
+          "claim_type": "f2q1_student_power_reduction",
+          "status": "technical_error",
+          "failure_category": "MISSING_MODULE",
+          "diagnostics": {
+            "stdout": "<AUDIT_WORKTREE>/artifacts/student_claim_checks/20261127T144250_879443_student_claims/student_claim_check_1.lean:1:0: error: unknown module prefix 'ConfiaLeanAuditor'\n\nNo directory 'ConfiaLeanAuditor' or file 'ConfiaLeanAuditor.olean' in the search path entries:\n<AUDIT_WORKTREE>/.lake/packages/Cli/.lake/build/lib/lean\n<AUDIT_WORKTREE>/.lake/packages/batteries/.lake/build/lib/lean\n<AUDIT_WORKTREE>/.lake/packages/Qq/.lake/build/lib/lean\n<AUDIT_WORKTREE>/.lake/packages/aesop/.lake/build/lib/lean\n<AUDIT_WORKTREE>/.lake/packages/proofwidgets/.lake/build/lib/lean\n<AUDIT_WORKTREE>/.lake/packages/importGraph/.lake/build/lib/lean\n<AUDIT_WORKTREE>/.lake/packages/LeanSearchClient/.lake/build/lib/lean\n<AUDIT_WORKTREE>/.lake/packages/plausible/.lake/build/lib/lean\n<AUDIT_WORKTREE>/.lake/packages/mathlib/.lake/build/lib/lean\n<AUDIT_WORKTREE>/.lake/build/lib/lean\n<USER_HOME>/.elan/toolchains/leanprover--lean4---v4.28.0/lib/lean\n<USER_HOME>/.elan/toolchains/leanprover--lean4---v4.28.0/lib/lean\n"
+          }
+        },
+        {
+          "claim_type": "f2q1_student_power_reduction",
+          "status": "technical_error",
+          "failure_category": "MISSING_MODULE",
+          "diagnostics": {
+            "stdout": "<AUDIT_WORKTREE>/artifacts/student_claim_checks/20261127T144250_879443_student_claims/student_claim_check_2.lean:1:0: error: unknown module prefix 'ConfiaLeanAuditor'\n\nNo directory 'ConfiaLeanAuditor' or file 'ConfiaLeanAuditor.olean' in the search path entries:\n<AUDIT_WORKTREE>/.lake/packages/Cli/.lake/build/lib/lean\n<AUDIT_WORKTREE>/.lake/packages/batteries/.lake/build/lib/lean\n<AUDIT_WORKTREE>/.lake/packages/Qq/.lake/build/lib/lean\n<AUDIT_WORKTREE>/.lake/packages/aesop/.lake/build/lib/lean\n<AUDIT_WORKTREE>/.lake/packages/proofwidgets/.lake/build/lib/lean\n<AUDIT_WORKTREE>/.lake/packages/importGraph/.lake/build/lib/lean\n<AUDIT_WORKTREE>/.lake/packages/LeanSearchClient/.lake/build/lib/lean\n<AUDIT_WORKTREE>/.lake/packages/plausible/.lake/build/lib/lean\n<AUDIT_WORKTREE>/.lake/packages/mathlib/.lake/build/lib/lean\n<AUDIT_WORKTREE>/.lake/build/lib/lean\n<USER_HOME>/.elan/toolchains/leanprover--lean4---v4.28.0/lib/lean\n<USER_HOME>/.elan/toolchains/leanprover--lean4---v4.28.0/lib/lean\n"
+          }
+        },
+        {
+          "claim_type": "f2q1_student_reduced_form",
+          "status": "technical_error",
+          "failure_category": "MISSING_MODULE",
+          "diagnostics": {
+            "stdout": "<AUDIT_WORKTREE>/artifacts/student_claim_checks/20261127T144250_879443_student_claims/student_claim_check_3.lean:1:0: error: unknown module prefix 'ConfiaLeanAuditor'\n\nNo directory 'ConfiaLeanAuditor' or file 'ConfiaLeanAuditor.olean' in the search path entries:\n<AUDIT_WORKTREE>/.lake/packages/Cli/.lake/build/lib/lean\n<AUDIT_WORKTREE>/.lake/packages/batteries/.lake/build/lib/lean\n<AUDIT_WORKTREE>/.lake/packages/Qq/.lake/build/lib/lean\n<AUDIT_WORKTREE>/.lake/packages/aesop/.lake/build/lib/lean\n<AUDIT_WORKTREE>/.lake/packages/proofwidgets/.lake/build/lib/lean\n<AUDIT_WORKTREE>/.lake/packages/importGraph/.lake/build/lib/lean\n<AUDIT_WORKTREE>/.lake/packages/LeanSearchClient/.lake/build/lib/lean\n<AUDIT_WORKTREE>/.lake/packages/plausible/.lake/build/lib/lean\n<AUDIT_WORKTREE>/.lake/packages/mathlib/.lake/build/lib/lean\n<AUDIT_WORKTREE>/.lake/build/lib/lean\n<USER_HOME>/.elan/toolchains/leanprover--lean4---v4.28.0/lib/lean\n<USER_HOME>/.elan/toolchains/leanprover--lean4---v4.28.0/lib/lean\n"
+          }
+        },
+        {
+          "claim_type": "f2q1_student_coefficient_system",
+          "status": "technical_error",
+          "failure_category": "MISSING_MODULE",
+          "diagnostics": {
+            "stdout": "<AUDIT_WORKTREE>/artifacts/student_claim_checks/20261127T144250_879443_student_claims/student_claim_check_4.lean:1:0: error: unknown module prefix 'ConfiaLeanAuditor'\n\nNo directory 'ConfiaLeanAuditor' or file 'ConfiaLeanAuditor.olean' in the search path entries:\n<AUDIT_WORKTREE>/.lake/packages/Cli/.lake/build/lib/lean\n<AUDIT_WORKTREE>/.lake/packages/batteries/.lake/build/lib/lean\n<AUDIT_WORKTREE>/.lake/packages/Qq/.lake/build/lib/lean\n<AUDIT_WORKTREE>/.lake/packages/aesop/.lake/build/lib/lean\n<AUDIT_WORKTREE>/.lake/packages/proofwidgets/.lake/build/lib/lean\n<AUDIT_WORKTREE>/.lake/packages/importGraph/.lake/build/lib/lean\n<AUDIT_WORKTREE>/.lake/packages/LeanSearchClient/.lake/build/lib/lean\n<AUDIT_WORKTREE>/.lake/packages/plausible/.lake/build/lib/lean\n<AUDIT_WORKTREE>/.lake/packages/mathlib/.lake/build/lib/lean\n<AUDIT_WORKTREE>/.lake/build/lib/lean\n<USER_HOME>/.elan/toolchains/leanprover--lean4---v4.28.0/lib/lean\n<USER_HOME>/.elan/toolchains/leanprover--lean4---v4.28.0/lib/lean\n"
+          }
+        },
+        {
+          "claim_type": "f2q1_student_final_answer",
+          "status": "technical_error",
+          "failure_category": "MISSING_MODULE",
+          "diagnostics": {
+            "stdout": "<AUDIT_WORKTREE>/artifacts/student_claim_checks/20261127T144250_879443_student_claims/student_claim_check_5.lean:1:0: error: unknown module prefix 'ConfiaLeanAuditor'\n\nNo directory 'ConfiaLeanAuditor' or file 'ConfiaLeanAuditor.olean' in the search path entries:\n<AUDIT_WORKTREE>/.lake/packages/Cli/.lake/build/lib/lean\n<AUDIT_WORKTREE>/.lake/packages/batteries/.lake/build/lib/lean\n<AUDIT_WORKTREE>/.lake/packages/Qq/.lake/build/lib/lean\n<AUDIT_WORKTREE>/.lake/packages/aesop/.lake/build/lib/lean\n<AUDIT_WORKTREE>/.lake/packages/proofwidgets/.lake/build/lib/lean\n<AUDIT_WORKTREE>/.lake/packages/importGraph/.lake/build/lib/lean\n<AUDIT_WORKTREE>/.lake/packages/LeanSearchClient/.lake/build/lib/lean\n<AUDIT_WORKTREE>/.lake/packages/plausible/.lake/build/lib/lean\n<AUDIT_WORKTREE>/.lake/packages/mathlib/.lake/build/lib/lean\n<AUDIT_WORKTREE>/.lake/build/lib/lean\n<USER_HOME>/.elan/toolchains/leanprover--lean4---v4.28.0/lib/lean\n<USER_HOME>/.elan/toolchains/leanprover--lean4---v4.28.0/lib/lean\n"
+          }
+        }
+      ]
+    },
+    {
+      "artifact": "artifacts/runs/20261127T144302_880892/audit.json",
+      "sha256": "4f8a0c41f8102c8fd69517313efdd163b256426024278de6c6ff9186fa73c59c",
+      "score": null,
+      "checks": [
+        {
+          "claim_type": "f2q1_student_final_answer",
+          "status": "technical_error",
+          "failure_category": "MISSING_MODULE",
+          "diagnostics": {
+            "stdout": "<AUDIT_WORKTREE>/artifacts/student_claim_checks/20261127T144302_880892_student_claims/student_claim_check_0.lean:1:0: error: unknown module prefix 'ConfiaLeanAuditor'\n\nNo directory 'ConfiaLeanAuditor' or file 'ConfiaLeanAuditor.olean' in the search path entries:\n<AUDIT_WORKTREE>/.lake/packages/Cli/.lake/build/lib/lean\n<AUDIT_WORKTREE>/.lake/packages/batteries/.lake/build/lib/lean\n<AUDIT_WORKTREE>/.lake/packages/Qq/.lake/build/lib/lean\n<AUDIT_WORKTREE>/.lake/packages/aesop/.lake/build/lib/lean\n<AUDIT_WORKTREE>/.lake/packages/proofwidgets/.lake/build/lib/lean\n<AUDIT_WORKTREE>/.lake/packages/importGraph/.lake/build/lib/lean\n<AUDIT_WORKTREE>/.lake/packages/LeanSearchClient/.lake/build/lib/lean\n<AUDIT_WORKTREE>/.lake/packages/plausible/.lake/build/lib/lean\n<AUDIT_WORKTREE>/.lake/packages/mathlib/.lake/build/lib/lean\n<AUDIT_WORKTREE>/.lake/build/lib/lean\n<USER_HOME>/.elan/toolchains/leanprover--lean4---v4.28.0/lib/lean\n<USER_HOME>/.elan/toolchains/leanprover--lean4---v4.28.0/lib/lean\n"
+          }
+        }
+      ]
+    }
+  ],
+  "retest": {
+    "name": "common_pipeline_failure",
+    "command": [
+      "<VALIDATED_PYTHON>",
+      "-m",
+      "pytest",
+      "-q",
+      "-rs",
+      "tests/test_common_claim_pipeline.py::test_common_catalog_preserves_real_pipeline_credit_and_attribution",
+      "--basetemp=runtime/audit-pre10dez/pytest_common",
+      "--junitxml=runtime/audit-pre10dez/common_pipeline_failure.xml"
+    ],
+    "exit_code": 0,
+    "seconds": 124.79,
+    "sha256": "04f8bf0abfee01d55da4c322a7d788bf169a0f333ebd0c6a8b9bf63e896b91ef"
+  },
+  "retest_counts": {
+    "passed": 2
+  }
+}

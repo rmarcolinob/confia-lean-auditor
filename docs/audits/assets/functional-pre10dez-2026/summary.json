@@ -1,0 +1,781 @@
+{
+  "schema": "confia-functional-audit.v1",
+  "date": "2026-11-27",
+  "timezone": "America/Fortaleza",
+  "baseline": "923bf3acbd9994af9662bcdff6b18eac1b6d4df9",
+  "branch": "codex/audit-functional-pre10dez-2026",
+  "paid_calls": 0,
+  "ocr": "OUT_OF_SCOPE",
+  "runs": {
+    "python_full": {
+      "name": "python_full",
+      "command": [
+        "<VALIDATED_PYTHON>",
+        "-m",
+        "pytest",
+        "-q",
+        "-rs",
+        "--junitxml=runtime/audit-pre10dez/python_full.xml",
+        "--basetemp=runtime/audit-pre10dez/pytest_full"
+      ],
+      "exit_code": 1,
+      "seconds": 5662.66,
+      "sha256": "382d68a1541fb8a30f48bafcb3c8c2e576a4162d0c2ae8ee67d32c2b885cdeb6"
+    },
+    "javascript": {
+      "name": "javascript",
+      "command": [
+        "node",
+        "--test",
+        "tests/js/capture-dom.cjs",
+        "tests/js/exam-fixture.cjs",
+        "tests/js/teacher-dom.cjs",
+        "tests/js/test_assessments_ui.cjs",
+        "tests/js/test_audit_view.cjs",
+        "tests/js/test_auth_login.cjs",
+        "tests/js/test_capture_persistence_ui.cjs",
+        "tests/js/test_certification.cjs",
+        "tests/js/test_core_institutional_management.cjs",
+        "tests/js/test_correction_workspace.cjs",
+        "tests/js/test_dynamic_dy1.cjs",
+        "tests/js/test_dynamic_dy2.cjs",
+        "tests/js/test_dynamic_dy3.cjs",
+        "tests/js/test_dynamic_dy4.cjs",
+        "tests/js/test_dynamic_dy5.cjs",
+        "tests/js/test_dynamic_dy6.cjs",
+        "tests/js/test_dynamic_dy7.cjs",
+        "tests/js/test_dynamic_handwriting.cjs",
+        "tests/js/test_dynamic_human_adjudication.cjs",
+        "tests/js/test_dynamic_self_study.cjs",
+        "tests/js/test_dynamic_student.cjs",
+        "tests/js/test_dynamic_teacher_simplified.cjs",
+        "tests/js/test_dynamic_ui_convergence.cjs",
+        "tests/js/test_finalization.cjs",
+        "tests/js/test_full_exam.cjs",
+        "tests/js/test_human_confirmation.cjs",
+        "tests/js/test_ink_canvas.cjs",
+        "tests/js/test_ink_model.cjs",
+        "tests/js/test_mathpix_capture_ui.cjs",
+        "tests/js/test_platform_navigation.cjs",
+        "tests/js/test_platform_presentation.cjs",
+        "tests/js/test_problem_math.cjs",
+        "tests/js/test_question_audit.cjs",
+        "tests/js/test_question_reanalysis.cjs",
+        "tests/js/test_recognition_math_view.cjs",
+        "tests/js/test_recognition_preview_ui.cjs",
+        "tests/js/test_reproducibility.cjs",
+        "tests/js/test_review_workspace.cjs",
+        "tests/js/test_student_tutor_exams.cjs",
+        "tests/js/test_submission_audits.cjs",
+        "tests/js/test_submission_client.cjs",
+        "tests/js/test_teacher_decisions.cjs",
+        "tests/js/test_teacher_exam_context.cjs",
+        "tests/js/test_teacher_presentation.cjs",
+        "tests/js/test_teacher_submissions.cjs",
+        "tests/js/test_teacher_transcription_view.cjs",
+        "tests/js/test_tme_accepted_integration.cjs",
+        "tests/js/test_tme_home.cjs",
+        "tests/js/test_tme_mac_01.cjs",
+        "tests/js/test_tme_navigation.cjs",
+        "tests/js/test_tme_notebook_figures.cjs",
+        "tests/js/test_tme_pilot_ui.cjs",
+        "tests/js/test_tme_problem_catalog.cjs",
+        "tests/js/test_tme_problem_selector.cjs",
+        "tests/js/test_tme_scan.cjs",
+        "tests/js/test_tme_synthetic_demo.cjs",
+        "tests/js/test_tme_workspace_01.cjs",
+        "tests/js/test_tme_workspace_01b.cjs",
+        "tests/js/test_tme_workspace_01c.cjs",
+        "tests/js/test_tme_workspace_01d.cjs",
+        "tests/js/test_tme_workspace_02.cjs",
+        "tests/js/test_tme_workspace_03.cjs",
+        "tests/js/test_tutoria_assistant.cjs",
+        "tests/js/test_tutoria_chat.cjs",
+        "tests/js/test_tutoria_demo.cjs",
+        "tests/js/test_ui_01_shell.cjs",
+        "tests/js/test_ui_02_workspace.cjs",
+        "tests/js/test_ui_03_teacher_workflow.cjs",
+        "tests/js/test_ui_p0_context.cjs",
+        "tests/js/tme-dom.cjs",
+        "tests/js/ui-dom.cjs",
+        "tests/js/workspace-dom.cjs"
+      ],
+      "exit_code": 0,
+      "seconds": 3.12,
+      "sha256": "d7eb1824af25690b4edbcab1b444fca7e417d2d6627d14c2c8dbd45fb80705ee"
+    },
+    "lake_build": {
+      "name": "lake_build",
+      "command": [
+        "lake",
+        "build"
+      ],
+      "exit_code": 0,
+      "seconds": 84.48,
+      "sha256": "4d49df1694b2224b423435c3aed6535365541d56279c7af66e8462ed043bb2cc"
+    },
+    "lean_certificates": {
+      "name": "lean_certificates",
+      "command": [
+        "<VALIDATED_PYTHON>",
+        "-m",
+        "pytest",
+        "-q",
+        "-rs",
+        "tests/test_tme_accepted_integration.py::test_real_local_lean_status_certificates_preserved",
+        "--basetemp=runtime/audit-pre10dez/pytest_cert",
+        "--junitxml=runtime/audit-pre10dez/lean_certificates.xml"
+      ],
+      "exit_code": 0,
+      "seconds": 34.99,
+      "sha256": "929bcc117c3ff9c79dbe426085bd7af860ec9704072872d182d88d0022612098"
+    },
+    "common_pipeline_failure": {
+      "name": "common_pipeline_failure",
+      "command": [
+        "<VALIDATED_PYTHON>",
+        "-m",
+        "pytest",
+        "-q",
+        "-rs",
+        "tests/test_common_claim_pipeline.py::test_common_catalog_preserves_real_pipeline_credit_and_attribution",
+        "--basetemp=runtime/audit-pre10dez/pytest_common",
+        "--junitxml=runtime/audit-pre10dez/common_pipeline_failure.xml"
+      ],
+      "exit_code": 0,
+      "seconds": 124.79,
+      "sha256": "04f8bf0abfee01d55da4c322a7d788bf169a0f333ebd0c6a8b9bf63e896b91ef"
+    },
+    "archived_p1": {
+      "name": "archived_p1",
+      "command": [
+        "<VALIDATED_PYTHON>",
+        "-m",
+        "pytest",
+        "-q",
+        "-rs",
+        "tests/test_tme_archived_quote_scope.py",
+        "tests/test_tme_review_diagnostics.py",
+        "--basetemp=runtime/audit-pre10dez/pytest_p1",
+        "--junitxml=runtime/audit-pre10dez/archived_p1.xml"
+      ],
+      "exit_code": 0,
+      "seconds": 3.49,
+      "sha256": "eb001de08fb5ee3db743f3fb6f84e4c59f332ad676adbed05c5890db76a1c6d5"
+    },
+    "textual": {
+      "name": "textual",
+      "command": [
+        "<VALIDATED_PYTHON>",
+        "docs/audits/assets/functional-pre10dez-2026/probe_textual.py"
+      ],
+      "exit_code": 0,
+      "seconds": 27.96,
+      "sha256": "409cf96a4b1db30d2869c303574559170ac339b060c3c951415b5fb5d53cec97"
+    },
+    "specialized": {
+      "name": "specialized",
+      "command": [
+        "<VALIDATED_PYTHON>",
+        "docs/audits/assets/functional-pre10dez-2026/probe_specialized.py"
+      ],
+      "exit_code": 0,
+      "seconds": 44.33,
+      "sha256": "d9e72a715dd28632e4f626d0dfc7d6a5a79d0c62170464f290487110faa06675"
+    },
+    "ita": {
+      "name": "ita",
+      "command": [
+        "<VALIDATED_PYTHON>",
+        "docs/audits/assets/functional-pre10dez-2026/probe_ita.py"
+      ],
+      "exit_code": 0,
+      "seconds": 251.03,
+      "sha256": "f0084f5233bad37663bf99381c2bbdf57f77b360233eff55c75b158de100c549"
+    },
+    "ita_alternative": {
+      "name": "ita_alternative",
+      "command": [
+        "<VALIDATED_PYTHON>",
+        "docs/audits/assets/functional-pre10dez-2026/probe_ita.py",
+        "alternative_modular"
+      ],
+      "exit_code": 0,
+      "seconds": 52.72,
+      "sha256": "5bdbd74dba840c7398a83b731f2cf5c65a7f8fc8c03dca7230456d7aa24e2849"
+    },
+    "ita_routing_cause": {
+      "name": "ita_routing_cause",
+      "command": [
+        "<VALIDATED_PYTHON>",
+        "docs/audits/assets/functional-pre10dez-2026/probe_ita_routing.py"
+      ],
+      "exit_code": 0,
+      "seconds": 1.43,
+      "sha256": "ae1f5392ef3c2e92122d62d7ce738cf53f218b9d2e0f2765c0725a7cbf73ec28"
+    },
+    "school_v2": {
+      "name": "school_v2",
+      "command": [
+        "<VALIDATED_PYTHON>",
+        "docs/audits/assets/functional-pre10dez-2026/probe_school.py"
+      ],
+      "exit_code": 0,
+      "seconds": 9.5,
+      "sha256": "38e3d99ce74be43780265c1beebaaeb4dbd4a34dde5e64c1d8f830888dfea439"
+    },
+    "resume_create_v3": {
+      "name": "resume_create_v3",
+      "command": [
+        "<VALIDATED_PYTHON>",
+        "docs/audits/assets/functional-pre10dez-2026/probe_resume.py",
+        "create"
+      ],
+      "exit_code": 0,
+      "seconds": 2.93,
+      "sha256": "c54d16e53d193eca50bb03af0f800786f3f255521d8636f3a7725f53d4f34e71"
+    },
+    "resume_continue_v3": {
+      "name": "resume_continue_v3",
+      "command": [
+        "<VALIDATED_PYTHON>",
+        "docs/audits/assets/functional-pre10dez-2026/probe_resume.py",
+        "resume"
+      ],
+      "exit_code": 0,
+      "seconds": 3.25,
+      "sha256": "b5c3ad26648ae23c814d83786b4e5c2bf4acf552a127601f44582037e700a90b"
+    },
+    "projections": {
+      "name": "projections",
+      "command": [
+        "<VALIDATED_PYTHON>",
+        "docs/audits/assets/functional-pre10dez-2026/probe_projections.py"
+      ],
+      "exit_code": 0,
+      "seconds": 2.3,
+      "sha256": "22d19f34ef59c6ff94873b29ad79edce78a14f3be823147af68d6f9f9140c7e3"
+    }
+  },
+  "python": {
+    "passed": 3595,
+    "skipped": 52,
+    "failed": 2,
+    "xfailed": 1
+  },
+  "python_skips": [
+    {
+      "test": "tests.test_claim_fidelity::test_smoke_mismatch_offline_without_rewriting_artifacts",
+      "type": "pytest.skip",
+      "reason": "Original smoke artifact is local; the portable source fixture is tested separately"
+    },
+    {
+      "test": "tests.test_common_math_claims::test_legacy_public_response_shape_has_no_common_layer_fields",
+      "type": "pytest.skip",
+      "reason": "Local historical artifact"
+    },
+    {
+      "test": "tests.test_f2q6_strong_certificate::test_f2q6_correct_solution_includes_strong_certificate",
+      "type": "pytest.xfail",
+      "reason": "P2 preexistente: maximizers_identification ausente nesta formulação; subtotal 8/8, sem nota global"
+    },
+    {
+      "test": "tests.test_generic_student_math::test_priority_saved_texts_without_reauditing_or_rewriting_artifacts",
+      "type": "pytest.skip",
+      "reason": "Local replay artifacts; portable cases above cover the syntax"
+    },
+    {
+      "test": "tests.test_math_canonical::test_historical_common_record_without_new_fields_remains_readable_and_projectable",
+      "type": "pytest.skip",
+      "reason": "Local historical artifact"
+    },
+    {
+      "test": "tests.test_positive_credit_evidence::test_historical_response_roundtrip_keeps_hash_shape",
+      "type": "pytest.skip",
+      "reason": "Historical smoke artifact is local"
+    },
+    {
+      "test": "tests.test_rubric_bridge::test_saved_f2q1_v2_proof_replay_recovers_only_the_final_criterion",
+      "type": "pytest.skip",
+      "reason": "Local V2 artifact; equivalent portable regression is tested above"
+    },
+    {
+      "test": "tests.test_scope_boundary::test_p5_02_exact_frozen_units_keep_ids_text_and_real_origin",
+      "type": "pytest.skip",
+      "reason": "Frozen DEV artifact unavailable; never load another dataset"
+    },
+    {
+      "test": "tests.test_scope_boundary_replay::test_p5_02_removes_scope_credit_without_erasing_legitimate_d_proofs",
+      "type": "pytest.skip",
+      "reason": "Frozen DEV outputs unavailable; never substitute another split"
+    },
+    {
+      "test": "tests.test_scope_boundary_replay::test_original_contract_failures_and_timeout_remain_closed[TME2026P1_12]",
+      "type": "pytest.skip",
+      "reason": "Frozen DEV outputs unavailable; never substitute another split"
+    },
+    {
+      "test": "tests.test_scope_boundary_replay::test_original_contract_failures_and_timeout_remain_closed[TME2026P4_19]",
+      "type": "pytest.skip",
+      "reason": "Frozen DEV outputs unavailable; never substitute another split"
+    },
+    {
+      "test": "tests.test_scope_boundary_replay::test_original_contract_failures_and_timeout_remain_closed[TME2026P2_10]",
+      "type": "pytest.skip",
+      "reason": "Frozen DEV outputs unavailable; never substitute another split"
+    },
+    {
+      "test": "tests.test_score_policy::test_f2q5_original_text_regression",
+      "type": "pytest.skip",
+      "reason": "Local synthetic corpus fixture unavailable"
+    },
+    {
+      "test": "tests.test_sufficiency_dev_regressions::test_known_dev_failure_is_eliminated_in_actual_shadow[TME2026P1_06:d.total_thirty]",
+      "type": "pytest.skip",
+      "reason": "Actual independent gate shadow has not run yet"
+    },
+    {
+      "test": "tests.test_sufficiency_dev_regressions::test_known_dev_failure_is_eliminated_in_actual_shadow[TME2026P1_13:d.middle_choices]",
+      "type": "pytest.skip",
+      "reason": "Actual independent gate shadow has not run yet"
+    },
+    {
+      "test": "tests.test_sufficiency_dev_regressions::test_known_dev_failure_is_eliminated_in_actual_shadow[TME2026P1_13:d.total_thirty]",
+      "type": "pytest.skip",
+      "reason": "Actual independent gate shadow has not run yet"
+    },
+    {
+      "test": "tests.test_sufficiency_dev_regressions::test_known_dev_failure_is_eliminated_in_actual_shadow[TME2026P2_01:c.pair_orientations]",
+      "type": "pytest.skip",
+      "reason": "Actual independent gate shadow has not run yet"
+    },
+    {
+      "test": "tests.test_sufficiency_dev_regressions::test_known_dev_failure_is_eliminated_in_actual_shadow[TME2026P2_01:c.counting_product]",
+      "type": "pytest.skip",
+      "reason": "Actual independent gate shadow has not run yet"
+    },
+    {
+      "test": "tests.test_sufficiency_dev_regressions::test_known_dev_failure_is_eliminated_in_actual_shadow[TME2026P2_08:c.pair_orientations]",
+      "type": "pytest.skip",
+      "reason": "Actual independent gate shadow has not run yet"
+    },
+    {
+      "test": "tests.test_sufficiency_dev_regressions::test_known_dev_failure_is_eliminated_in_actual_shadow[TME2026P2_08:c.counting_product]",
+      "type": "pytest.skip",
+      "reason": "Actual independent gate shadow has not run yet"
+    },
+    {
+      "test": "tests.test_sufficiency_dev_regressions::test_known_dev_failure_is_eliminated_in_actual_shadow[TME2026P2_01:c.total]",
+      "type": "pytest.skip",
+      "reason": "Actual independent gate shadow has not run yet"
+    },
+    {
+      "test": "tests.test_sufficiency_dev_regressions::test_known_dev_failure_is_eliminated_in_actual_shadow[TME2026P2_01:b.realizable_5]",
+      "type": "pytest.skip",
+      "reason": "Actual independent gate shadow has not run yet"
+    },
+    {
+      "test": "tests.test_sufficiency_dev_regressions::test_known_dev_failure_is_eliminated_in_actual_shadow[TME2026P2_01:b.realizable_9]",
+      "type": "pytest.skip",
+      "reason": "Actual independent gate shadow has not run yet"
+    },
+    {
+      "test": "tests.test_sufficiency_dev_regressions::test_known_dev_failure_is_eliminated_in_actual_shadow[TME2026P2_18:b.realizable_5]",
+      "type": "pytest.skip",
+      "reason": "Actual independent gate shadow has not run yet"
+    },
+    {
+      "test": "tests.test_sufficiency_dev_regressions::test_known_dev_failure_is_eliminated_in_actual_shadow[TME2026P2_18:b.realizable_9]",
+      "type": "pytest.skip",
+      "reason": "Actual independent gate shadow has not run yet"
+    },
+    {
+      "test": "tests.test_sufficiency_dev_regressions::test_known_dev_failure_is_eliminated_in_actual_shadow[TME2026P4_16:c.x_candidates]",
+      "type": "pytest.skip",
+      "reason": "Actual independent gate shadow has not run yet"
+    },
+    {
+      "test": "tests.test_sufficiency_dev_regressions::test_known_dev_failure_is_eliminated_in_actual_shadow[TME2026P4_16:c.case_other]",
+      "type": "pytest.skip",
+      "reason": "Actual independent gate shadow has not run yet"
+    },
+    {
+      "test": "tests.test_sufficiency_dev_regressions::test_known_dev_failure_is_eliminated_in_actual_shadow[TME2026P4_16:c.case_other_root]",
+      "type": "pytest.skip",
+      "reason": "Actual independent gate shadow has not run yet"
+    },
+    {
+      "test": "tests.test_sufficiency_dev_regressions::test_known_dev_failure_is_eliminated_in_actual_shadow[TME2026P4_21:c.exclude_12]",
+      "type": "pytest.skip",
+      "reason": "Actual independent gate shadow has not run yet"
+    },
+    {
+      "test": "tests.test_sufficiency_dev_regressions::test_known_dev_failure_is_eliminated_in_actual_shadow[TME2026P4_21:c.pythagoras]",
+      "type": "pytest.skip",
+      "reason": "Actual independent gate shadow has not run yet"
+    },
+    {
+      "test": "tests.test_sufficiency_dev_regressions::test_known_dev_failure_is_eliminated_in_actual_shadow[TME2026P4_21:c.case_3x]",
+      "type": "pytest.skip",
+      "reason": "Actual independent gate shadow has not run yet"
+    },
+    {
+      "test": "tests.test_sufficiency_dev_regressions::test_known_dev_failure_is_eliminated_in_actual_shadow[TME2026P4_21:c.case_other]",
+      "type": "pytest.skip",
+      "reason": "Actual independent gate shadow has not run yet"
+    },
+    {
+      "test": "tests.test_sufficiency_dev_regressions::test_known_dev_failure_is_eliminated_in_actual_shadow[TME2026P5_09:a.candidate]",
+      "type": "pytest.skip",
+      "reason": "Actual independent gate shadow has not run yet"
+    },
+    {
+      "test": "tests.test_sufficiency_dev_regressions::test_known_dev_failure_is_eliminated_in_actual_shadow[TME2026P5_22:a.candidate]",
+      "type": "pytest.skip",
+      "reason": "Actual independent gate shadow has not run yet"
+    },
+    {
+      "test": "tests.test_tme_model_ablation::test_plan_has_identical_payloads_contracts_and_only_model_difference",
+      "type": "pytest.skip",
+      "reason": "Frozen local DEV pack unavailable; never replace with another dataset"
+    },
+    {
+      "test": "tests.test_tme_model_ablation::test_entire_selection_rejected_before_any_provider[selection0]",
+      "type": "pytest.skip",
+      "reason": "Frozen local DEV pack unavailable; never replace with another dataset"
+    },
+    {
+      "test": "tests.test_tme_model_ablation::test_entire_selection_rejected_before_any_provider[selection1]",
+      "type": "pytest.skip",
+      "reason": "Frozen local DEV pack unavailable; never replace with another dataset"
+    },
+    {
+      "test": "tests.test_tme_model_ablation::test_entire_selection_rejected_before_any_provider[selection2]",
+      "type": "pytest.skip",
+      "reason": "Frozen local DEV pack unavailable; never replace with another dataset"
+    },
+    {
+      "test": "tests.test_tme_model_ablation::test_modified_dev_manifest_is_rejected_before_sources",
+      "type": "pytest.skip",
+      "reason": "Frozen local DEV pack unavailable; never replace with another dataset"
+    },
+    {
+      "test": "tests.test_tme_model_ablation::test_dry_run_cli_has_no_key_client_or_network",
+      "type": "pytest.skip",
+      "reason": "Frozen local DEV pack unavailable; never replace with another dataset"
+    },
+    {
+      "test": "tests.test_tme_model_ablation::test_dev_plan_loads_exactly_25_frozen_cases_without_providers",
+      "type": "pytest.skip",
+      "reason": "Frozen local DEV pack unavailable; never replace with another dataset"
+    },
+    {
+      "test": "tests.test_tme_model_ablation::test_fresh_both_stages_same_model_and_independent_arms",
+      "type": "pytest.skip",
+      "reason": "Frozen local DEV pack unavailable; never replace with another dataset"
+    },
+    {
+      "test": "tests.test_tme_model_ablation::test_no_positive_candidates_skips_gate_and_preserves_audit",
+      "type": "pytest.skip",
+      "reason": "Frozen local DEV pack unavailable; never replace with another dataset"
+    },
+    {
+      "test": "tests.test_tme_model_ablation::test_failed_first_provider_never_reuses_old_judgments",
+      "type": "pytest.skip",
+      "reason": "Frozen local DEV pack unavailable; never replace with another dataset"
+    },
+    {
+      "test": "tests.test_tme_model_ablation::test_changed_config_plan_is_rejected_before_provider",
+      "type": "pytest.skip",
+      "reason": "Frozen local DEV pack unavailable; never replace with another dataset"
+    },
+    {
+      "test": "tests.test_tme_model_ablation::test_live_cli_requires_clean_checkout_and_never_overwrites",
+      "type": "pytest.skip",
+      "reason": "Frozen local DEV pack unavailable; never replace with another dataset"
+    },
+    {
+      "test": "tests.test_tme_model_compat::test_real_smoke_dry_run_separates_semantic_hashes_from_transport",
+      "type": "pytest.skip",
+      "reason": "Frozen local DEV pack unavailable"
+    },
+    {
+      "test": "tests.test_tme_model_compat::test_transport_builder_does_not_weaken_holdout_guard",
+      "type": "pytest.skip",
+      "reason": "Frozen local DEV pack unavailable"
+    },
+    {
+      "test": "tests.test_tme_review_diagnostics::test_local_p1_to_p5_records_and_artifacts_are_unchanged[1-aud_1eb247481575591afe015612b9bcab6b98943d338347f5ce36da598eabaa019e-4]",
+      "type": "pytest.skip",
+      "reason": "Local pilot audit unavailable; portable P1 and synthetic regressions still run"
+    },
+    {
+      "test": "tests.test_tme_review_diagnostics::test_local_p1_to_p5_records_and_artifacts_are_unchanged[2-aud_6f7e8d0a116941fe22164444b60ecbd0c71e1e227c4a6c244528fafc5eed1808-2]",
+      "type": "pytest.skip",
+      "reason": "Local pilot audit unavailable; portable P1 and synthetic regressions still run"
+    },
+    {
+      "test": "tests.test_tme_review_diagnostics::test_local_p1_to_p5_records_and_artifacts_are_unchanged[3-aud_b78d47c5651567e96939a38cd3ac76b1ead85eb9e5cde1a308360ae687067ee6-1]",
+      "type": "pytest.skip",
+      "reason": "Local pilot audit unavailable; portable P1 and synthetic regressions still run"
+    },
+    {
+      "test": "tests.test_tme_review_diagnostics::test_local_p1_to_p5_records_and_artifacts_are_unchanged[4-aud_00e84780b3c5556e82c092d34fbc66f8af67da2b398b1860da19b88366433bb2-5]",
+      "type": "pytest.skip",
+      "reason": "Local pilot audit unavailable; portable P1 and synthetic regressions still run"
+    },
+    {
+      "test": "tests.test_tme_review_diagnostics::test_local_p1_to_p5_records_and_artifacts_are_unchanged[5-aud_e840502ea785c0ff3469e187a2f2d53831f8a9eba6f281ac9805103b0d230c93-5]",
+      "type": "pytest.skip",
+      "reason": "Local pilot audit unavailable; portable P1 and synthetic regressions still run"
+    }
+  ],
+  "javascript": {
+    "passed": 631,
+    "failed": 0,
+    "skipped": 0
+  },
+  "targeted": {
+    "lean_certificates": {
+      "passed": 1
+    },
+    "common_pipeline_failure": {
+      "passed": 2
+    },
+    "archived_p1": {
+      "passed": 29,
+      "skipped": 5
+    }
+  },
+  "retests_not_additional_independent_cases": true,
+  "initial_environment_failures": {
+    "tests": [
+      "test_common_catalog_preserves_real_pipeline_credit_and_attribution[True]",
+      "test_common_catalog_preserves_real_pipeline_credit_and_attribution[False]"
+    ],
+    "cause": "Local ConfiaLeanAuditor.olean absent before lake build; unknown module prefix.",
+    "after_build": "Both passed; initial full-suite failure retained."
+  },
+  "scenarios": {
+    "tme_cases": 33,
+    "tme_lean_in_batch": false,
+    "ita_cases": 9,
+    "ita_lean_real": true,
+    "dynamic_cases": 28,
+    "dynamic_reconciled_scores_available_offline": 0,
+    "provider_semantic_accuracy": "NOT_VALIDATED_LIVE",
+    "human_finalization": "REAL_HTTP_AND_BROWSER_SYNTHETIC_INPUT",
+    "mathematical_gold": "NOT_EXECUTED"
+  },
+  "findings": [
+    {
+      "id": "AUD-04",
+      "severity": "P2",
+      "title": "Known legacy F2Q6 maximizer extraction gap reproduced as xfail",
+      "evidence": "ita-f2q6-known-xfail.json"
+    },
+    {
+      "id": "AUD-03",
+      "severity": "P1",
+      "title": "ITA explicit reduced form excluded from semantic eligibility",
+      "evidence": "ita-routing.json"
+    },
+    {
+      "id": "AUD-01",
+      "severity": "P2",
+      "title": "Management omits TME/DYNAMIC finalized and released human decisions",
+      "evidence": "institutional-http.json"
+    },
+    {
+      "id": "AUD-02",
+      "severity": "P3",
+      "title": "Management shell requests unauthorized problem catalog",
+      "evidence": "browser-observations.json"
+    }
+  ],
+  "verdict": {
+    "demo": "GO_RESTRICTED_SUPERVISED_OFFLINE",
+    "general_automatic_dynamic": "NO_GO_PROVIDER_OFF",
+    "autonomous_school_grading": "NOT_VALIDATED_NO_GO"
+  },
+  "known_gaps": [
+    "Live semantic/OCR accuracy not tested; OCR out of scope",
+    "Independent solutions/gold protocol proposed, not run",
+    "Prior P3 intermittent failure cause not declared solved",
+    "Skipped local pilot/DEV artifacts are not validation passes",
+    "Mobile viewport and physical pen not tested",
+    "Browser SPECIALIZED catalog tested; full audit tested over HTTP/service"
+  ],
+  "browser_server_shutdown": {
+    "signal": "SIGTERM",
+    "expected_exit": -15,
+    "graceful_shutdown_observed": true
+  },
+  "scientific_tag": {
+    "name": "SPECIALIZED-TME2-RC1",
+    "object": "0c64e318a26e21f71fe3097c66ee17a5206dd8a3",
+    "commit": "c03403fe5b83d9db9df172882bd69af3dfa2d027",
+    "changed": false
+  },
+  "auxiliary_runs_not_product_regressions": {
+    "collection": {
+      "name": "collection",
+      "command": [
+        "<VALIDATED_PYTHON>",
+        "-m",
+        "pytest",
+        "--collect-only",
+        "-q"
+      ],
+      "exit_code": 2,
+      "seconds": 19.15,
+      "sha256": "5867cae4bb9de8679ccf89d49109078101fda05affc93b311a338b95a519b789"
+    },
+    "collection_tests": {
+      "name": "collection_tests",
+      "command": [
+        "<VALIDATED_PYTHON>",
+        "-m",
+        "pytest",
+        "tests",
+        "--collect-only",
+        "-q"
+      ],
+      "exit_code": 0,
+      "seconds": 8.9,
+      "sha256": "1c07ab677a633802e9fe9018eafb5132cc3826e5992d866ead808988faea511e"
+    },
+    "school": {
+      "name": "school",
+      "command": [
+        "<VALIDATED_PYTHON>",
+        "docs/audits/assets/functional-pre10dez-2026/probe_school.py"
+      ],
+      "exit_code": 1,
+      "seconds": 13.8,
+      "sha256": "d3011c81334ccaef2cc83ef7c36e1de471661e5c4c582a4220e1cd3e9ff779dc"
+    },
+    "resume_create": {
+      "name": "resume_create",
+      "command": [
+        "<VALIDATED_PYTHON>",
+        "docs/audits/assets/functional-pre10dez-2026/probe_resume.py",
+        "create"
+      ],
+      "exit_code": 1,
+      "seconds": 2.42,
+      "sha256": "f0c12e982b251d4e81ad5440dfe9ad4b9664090260c8c46812d49607a09068c2"
+    },
+    "resume_continue": {
+      "name": "resume_continue",
+      "command": [
+        "<VALIDATED_PYTHON>",
+        "docs/audits/assets/functional-pre10dez-2026/probe_resume.py",
+        "resume"
+      ],
+      "exit_code": 1,
+      "seconds": 2.58,
+      "sha256": "948fd9f2320b3051bee619992ef630fe896257f03bd39b0c50f4e55cb47c2d8a"
+    },
+    "resume_create_v2": {
+      "name": "resume_create_v2",
+      "command": [
+        "<VALIDATED_PYTHON>",
+        "docs/audits/assets/functional-pre10dez-2026/probe_resume.py",
+        "create"
+      ],
+      "exit_code": 0,
+      "seconds": 2.98,
+      "sha256": "c54d16e53d193eca50bb03af0f800786f3f255521d8636f3a7725f53d4f34e71"
+    },
+    "resume_continue_v2": {
+      "name": "resume_continue_v2",
+      "command": [
+        "<VALIDATED_PYTHON>",
+        "docs/audits/assets/functional-pre10dez-2026/probe_resume.py",
+        "resume"
+      ],
+      "exit_code": 1,
+      "seconds": 2.63,
+      "sha256": "50ddbacfc727211273e8f66f689bc54e67ea686d0f19b44f11d82ea85d1e8a31"
+    },
+    "browser_server": {
+      "name": "browser_server",
+      "command": [
+        "<VALIDATED_PYTHON>",
+        "runtime/audit-pre10dez/serve.py"
+      ],
+      "exit_code": 1,
+      "seconds": 2.15,
+      "sha256": "3187dc56c962d23d1e4ae6790ead79e967260c828971a60c212eddd9e6c17836"
+    },
+    "browser_server_authorized": {
+      "name": "browser_server_authorized",
+      "command": [
+        "<VALIDATED_PYTHON>",
+        "runtime/audit-pre10dez/serve.py"
+      ],
+      "exit_code": -15,
+      "seconds": 1185.02,
+      "sha256": "416ce13bb77def7c1c28cc1badc6dbe65dbd5f68cdb8af6a9d8ed65038504f74"
+    }
+  },
+  "evidence_sha256": {
+    "docs/audits/assets/functional-pre10dez-2026/browser-complete-human-workflow.jpg": "de43e43c226857ae084df2458f8d3f5a80b9d9c0f733ddeb854b45cc570f927c",
+    "docs/audits/assets/functional-pre10dez-2026/browser-observations.json": "826278c5acf77a3aa545e9d890264555c41ac0d98cbe4ce16ff50ca3319cc7e6",
+    "docs/audits/assets/functional-pre10dez-2026/dynamic-offline.json": "c19a5f3402d680430365d9ce6ed064d6bd5d4196d869a6b6970367106776724c",
+    "docs/audits/assets/functional-pre10dez-2026/environment-failures.json": "70428f249d728b50d13408213c3f6de84742f21f524e2b3d80f7838bec364a96",
+    "docs/audits/assets/functional-pre10dez-2026/environment.json": "9d6310f771feaa985be94ae51b0353bc5cf3bf525eeee35a224a864b2b8d7de6",
+    "docs/audits/assets/functional-pre10dez-2026/institutional-http.json": "96b4586cfb7a656777848a935e5c4d1fc2fc5b4a266bcb2b848a28dbcae9c9c7",
+    "docs/audits/assets/functional-pre10dez-2026/inventory.json": "46e572426063c35eaa5ca52c09e884eacaff69d99b4fa5e9ae61491d59836ad0",
+    "docs/audits/assets/functional-pre10dez-2026/ita-f2q6-known-xfail.json": "82b52ffe26e8dba1b7bc17bba5870517eb929e572142630d927431bd333f399c",
+    "docs/audits/assets/functional-pre10dez-2026/ita-offline.json": "78a8ef38c65a6d8d47ccfa02ba2055bf0ad03f0508253ecaca49221dc4ca9f63",
+    "docs/audits/assets/functional-pre10dez-2026/ita-routing.json": "37c90cb290272d1e5a580edc0834c3b6964ca8e6361c18334b0bacf87453a3a5",
+    "docs/audits/assets/functional-pre10dez-2026/lean-certificates.json": "457b0bb21a308a061892eacdb195a0b4bd5eec97ece38fb212d783916808a3be",
+    "docs/audits/assets/functional-pre10dez-2026/lean-verified-propositions.json": "2d0ce3c1ea44a76ed2b39ec136caa1682f540d0b10bf4bf805bda327e19f15ca",
+    "docs/audits/assets/functional-pre10dez-2026/management-missing-decisions.jpg": "4cd4366dfae0262e32c88b907e310a6a52a1c79dfa3a21006b2bdb59f1e5860c",
+    "docs/audits/assets/functional-pre10dez-2026/platform-login.jpg": "a11f4689b95321315a6e5444d28fae7451b34902ec7adedf5e9633bdc51cf426",
+    "docs/audits/assets/functional-pre10dez-2026/probe_ita.py": "5ebf700db6500afbd34df3c89e0390831810677f07ef0590816d198ff2aa751f",
+    "docs/audits/assets/functional-pre10dez-2026/probe_ita_routing.py": "6a8110ef0ae8f4e6b1fcaab5d819f7b6e62a9ad55df1ab54f9c66c82d1e7de70",
+    "docs/audits/assets/functional-pre10dez-2026/probe_projections.py": "5ea0550d3e97837d9a1770c5114fb13f388a1c8a6038dee7757610f7f7a6ad04",
+    "docs/audits/assets/functional-pre10dez-2026/probe_resume.py": "fa5173f3f0252d34cb54608d9ba76e127902c337484c6ee7239d58875d2b0b5d",
+    "docs/audits/assets/functional-pre10dez-2026/probe_school.py": "dca1d03cc79214c7d2fc32aff4fc6e8819ce9d9c5abbcdce5fc68699c56be5c6",
+    "docs/audits/assets/functional-pre10dez-2026/probe_specialized.py": "63a5e08fea7220340a5b16eb7ab9409ac5ce0e88c4544a8e58276aca5f52e787",
+    "docs/audits/assets/functional-pre10dez-2026/probe_textual.py": "f6f1836ee7670021793dbfc1508813971b9cb9149fb9fce290d9d1b6441d99d9",
+    "docs/audits/assets/functional-pre10dez-2026/projections.json": "c4e5ddf730cc832f8eec9e04ccc07ce0e7627417969c6af46fe1af78f3f04ca6",
+    "docs/audits/assets/functional-pre10dez-2026/python-regressions.json": "f3277603d75f87c1f29aa99adb138b6d7ce6349af6df2ee5f529e151c92b61f2",
+    "docs/audits/assets/functional-pre10dez-2026/resume-http.json": "fc0eb5eaa9c0c65869a5162d635f0deeabd12d9d22f587da76e78947a1431ce3",
+    "docs/audits/assets/functional-pre10dez-2026/rubric-explicit-approval.jpg": "a0d510a41db1adaf043257db3016311f1be47daafa73a9fedd7b930689379e97",
+    "docs/audits/assets/functional-pre10dez-2026/run_offline.py": "af9cf681b0b597a73099f9775792a24bb11a80ebefd6a8901221ecfda62e6a6f",
+    "docs/audits/assets/functional-pre10dez-2026/serve_synthetic.py": "c744dd8c97cfe0742a6695a0fcde9a8b3deff083299ad202be75aa67c521db17",
+    "docs/audits/assets/functional-pre10dez-2026/source-hashes.json": "2754ece0e26ad5a3c8c075c2e55dcd3bd355b924828bedf7cadfb233de44f490",
+    "docs/audits/assets/functional-pre10dez-2026/specialized-offline.json": "49587bf2cf71b3398da19c9be882c21bd0251e6a7616b70bbf9482063b3c5eb4",
+    "docs/audits/assets/functional-pre10dez-2026/student-home.jpg": "23511d1e59766a4ad55e707e8f8bc04afa1a9d27593f9429edba9f3b8a0cb06b",
+    "docs/audits/assets/functional-pre10dez-2026/student-released-result.jpg": "1cdbb0e9a78dfae90ac22209251e30ed7263d65eb97db12fcc3cd61a031b2630",
+    "docs/audits/assets/functional-pre10dez-2026/study-provider-off.jpg": "be1afb717336b8fc1cb1cd57ba060d1889bcbccad29bb56108ec2c56d108d4be",
+    "docs/audits/assets/functional-pre10dez-2026/teacher-dynamic.jpg": "77ad6a1afb728bba8ecdfb72a22c7328054f03c9bffc38dbd91fb3a4a1a88cbb",
+    "docs/audits/assets/functional-pre10dez-2026/teacher-human-final.jpg": "34352a3b56d83916e4faf39275c24cee44ecb619999d81e5d9e950dbec593789",
+    "docs/audits/assets/functional-pre10dez-2026/teacher-technical-pending.jpg": "7c25976b7614749654763f4251db07feeaf6062e09f2be32a593cf46f65d1f11",
+    "docs/audits/assets/functional-pre10dez-2026/tutoria-demo-labelled.jpg": "3c099446b77a56925ae5cdfd6b0b231c8fc9b704d82c8973a48d0045fa54539b",
+    "docs/audits/assets/functional-pre10dez-2026/tutoria-text-feedback.jpg": "cf810f13ebd9103981c5207e26ca8e858e1cae6a879430ac31807385d796aa42",
+    "docs/audits/assets/functional-pre10dez-2026/verify_evidence.py": "c9a40136bca3fcfb8bb7277c62bfb2d27e4b9bffdd8fd549e4f4e7b097df1625",
+    "docs/audits/CONFIA_AUDITORIA_FUNCIONAL_PRE_10DEZ_2026.md": "e5d3ab8946109e5339c39a11d0d5452137a89a2861ebb1c0a301fc9d7c96f12b"
+  },
+  "skip_groups": {
+    "independent_gate_shadow_not_executed": 21,
+    "frozen_DEV_unavailable": 19,
+    "historical_or_pilot_local_artifacts_unavailable": 11,
+    "local_synthetic_corpus_unavailable": 1
+  },
+  "historical_unvalidated_risk": {
+    "known_DEV_cases": 21,
+    "false_credit": 15,
+    "false_attribution": 6,
+    "current_elimination_not_demonstrated": true,
+    "source": "tests/test_sufficiency_dev_regressions.py"
+  },
+  "python_warnings": {
+    "count": 2,
+    "reason": "record_property incompatible with junit_family xunit2; test reporting warning"
+  }
+}

@@ -1,0 +1,110 @@
+{
+  "baseline": "923bf3acbd9994af9662bcdff6b18eac1b6d4df9",
+  "branch": "codex/audit-functional-pre10dez-2026",
+  "python": "3.9.6 (default, Oct 19 2026, 19:18:13) \n[Clang 21.0.0 (clang-2100.4.1.1)]",
+  "os": "macOS-27.2.1-arm64-arm-64bit",
+  "node": "v24.15.0",
+  "lean": "Lean (version 4.28.0, arm64-apple-darwin24.6.0, commit 7e01a1bf5c70fc6167d49c345d3bf80596e9a79b, Release)",
+  "lake": "Lake version 5.0.0-src+7e01a1b (Lean version 4.28.0)",
+  "mathlib": "8f9d9cff6bd728b17a24e163c9402775d9e6a365",
+  "scientific_tag_object": "0c64e318a26e21f71fe3097c66ee17a5206dd8a3",
+  "scientific_tag_commit": "c03403fe5b83d9db9df172882bd69af3dfa2d027",
+  "packages": {
+    "anyio": "4.12.1",
+    "exceptiongroup": "1.3.1",
+    "starlette": "0.49.3",
+    "pydantic_core": "2.46.4",
+    "setuptools": "82.0.1",
+    "wheel": "0.47.0",
+    "tomli": "2.4.1",
+    "packaging": "26.2",
+    "click": "8.1.8",
+    "httpcore": "1.0.9",
+    "openai": "2.44.0",
+    "pypdfium2": "4.30.0",
+    "certifi": "2026.6.17",
+    "tqdm": "4.68.3",
+    "jiter": "0.16.0",
+    "h11": "0.16.0",
+    "sniffio": "1.3.1",
+    "Pygments": "2.20.0",
+    "fastapi": "0.128.8",
+    "pytest": "8.4.2",
+    "uvicorn": "0.39.0",
+    "pip": "26.0.1",
+    "distro": "1.9.0",
+    "pluggy": "1.6.0",
+    "pydantic": "2.13.4",
+    "httpx": "0.28.1",
+    "typing_extensions": "4.16.0",
+    "pillow": "11.3.0",
+    "iniconfig": "2.1.0",
+    "idna": "3.18",
+    "typing-inspection": "0.4.2",
+    "confia-lean-auditor": "0.1.0",
+    "annotated-types": "0.7.0",
+    "annotated-doc": "0.0.4"
+  },
+  "file_sha256": {
+    "pyproject.toml": "9cc46c96d49acdd066d4219687f78f0652a293a3a8562ceff376a1a717b49587",
+    "lean-toolchain": "db7bb24b756d745bbde83fe92718b51bd3625dae3701ba0f598d0eedcd3f3028",
+    "lake-manifest.json": "670c704b256c73ce48046b838bf9562b92bf128a2f0239f521e2f9ec404f6219",
+    ".github/workflows/lean_action_ci.yml": "b7d3b27232d4bbfe518701b2f97ae2c674d9e2670e0eaaabbeec2ee6070ff5df",
+    ".github/workflows/python_tests.yml": "0cabcf9894665a652824c2e83719a48b14716808ce7dd09dabd2263634da8a2d",
+    "docs/audits/assets/dynamic-rc1/python-constraints.txt": "21569c4a81a69c031249b46cb1c352a4414073e3824383e0ba21d52d9a6a6650"
+  },
+  "provider_flags": {
+    "CONFIA_DYNAMIC_LLM_ENABLED": "0",
+    "CONFIA_SEMANTIC_LLM_ENABLED": "0",
+    "CONFIA_ENABLE_LLM_FORMAL_STEPS": "0"
+  },
+  "secrets": "API/provider keys removed from audit subprocess environment; no values recorded",
+  "isolation": "New worktree, synthetic stores under ignored runtime/audit-pre10dez. Copied Lean package cache, no lake update.",
+  "constraints_differences": [],
+  "tme_auditor_fingerprint": "tme-integration.v1:a54c44a716319560c0c586ba85ad9603b18d399e8632cbacbcd314e3443ed001",
+  "pautas": {
+    "TME2026P1": {
+      "pauta_version": "pauta.v1",
+      "pauta_sha256": "76887c541019255a3ac4522e13debaff32aa739a604198e4e35a52e0b0ecd0bf"
+    },
+    "TME2026P2": {
+      "pauta_version": "pauta.v1",
+      "pauta_sha256": "548eaf14d73475bb04a6a34aafecd9c28b32beff46945f9fa470fa613d85ee87"
+    },
+    "TME2026P3": {
+      "pauta_version": "pauta.v1",
+      "pauta_sha256": "6cfa27451c7760b1f0520154d473679bed86506d52191dd5c85fa663106e58f0"
+    },
+    "TME2026P4": {
+      "pauta_version": "pauta.v1",
+      "pauta_sha256": "334bb73129a8abfff6d73999aa2bbb73632fca2bd2dfe0a7025fcb5b39510ed6"
+    },
+    "TME2026P5": {
+      "pauta_version": "pauta.v1",
+      "pauta_sha256": "39c4abc64e3fecd7caeba87216824dca0e3b29ff756b7f918ebf30d064a5aa1d"
+    }
+  },
+  "dynamic_context_versions": {
+    "semantic_policy": "dynamic-semantic.v1",
+    "package_version": 3,
+    "statement_version": 1,
+    "preparation_version": 1,
+    "rubric_version": 1,
+    "grader_version": "dynamic-grader.r1"
+  },
+  "provider_configuration": {
+    "semantic": {
+      "model": "gpt-6.1-sol",
+      "reasoning_effort": "medium",
+      "enabled_in_audit": false,
+      "model_actually_used": null
+    },
+    "dynamic_preparation": {
+      "model": "gpt-4.1",
+      "reasoning_effort": null,
+      "enabled_in_audit": false,
+      "model_actually_used": null
+    }
+  },
+  "mathlib_tracked_worktree_clean": true
+}
