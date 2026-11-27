@@ -59,7 +59,7 @@ def _base_rubric() -> RubricAssessment:
 
 
 def _refuted_check(claim_type: str, raw_text: str) -> StudentClaimCheck:
-    return StudentClaimCheck(
+    check = StudentClaimCheck(
         id="student_claim_0",
         problem_id="ITA2025F2Q8",
         claim_type=claim_type,  # type: ignore[arg-type]
@@ -76,6 +76,9 @@ def _refuted_check(claim_type: str, raw_text: str) -> StudentClaimCheck:
         stderr="",
         data={},
     )
+
+    from claim_fixtures import bind_check
+    return bind_check(check, raw_text)
 
 
 def _verified_check(claim_type: str, raw_text: str) -> StudentClaimCheck:
@@ -141,7 +144,7 @@ def test_f2q8_failed_pair_reduction_zeros_final_answer_item():
 
     adjusted = apply_f2q8_student_claim_adjustments(
         rubric,
-        [_refuted_check("f2q8_student_pair_reduction", "2025 - 1012 = 1014")],
+        [_refuted_check("f2q8_student_pair_reduction", "Agrupando os pares, 2025 - 1012 = 1014")],
     )
 
     by_id = {item.id: item for item in adjusted.items}

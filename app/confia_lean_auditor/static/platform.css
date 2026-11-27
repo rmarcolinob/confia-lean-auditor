@@ -1,0 +1,42 @@
+/* Shared presentation adapter. Load after tme-theme.css and the existing page
+   styles. The TME tokens own the palette; notebook geometry remains untouched. */
+:root {
+  --color-primary: var(--confia-blue);
+  --color-primary-strong: var(--confia-navy);
+  --color-background: var(--confia-bg);
+  --color-surface: var(--confia-surface);
+  --color-surface-subtle: var(--confia-blue-light);
+  --color-text: var(--confia-text);
+  --color-text-muted: var(--confia-muted);
+  --color-border: var(--confia-border);
+  --color-info: var(--confia-blue-dark);
+  --color-focus: var(--confia-blue-dark);
+  --color-success: var(--confia-green-ink);
+  --color-warning: var(--confia-yellow-ink);
+  --color-danger: var(--confia-rose-ink);
+  --radius-card: var(--confia-radius);
+  --shadow-card: var(--confia-shadow);
+}
+#confia-surface { background: var(--confia-bg); min-height: 100vh; }
+#confia-surface .brand-strip, #confia-surface .brand-mark { display: none; }
+#confia-surface .institutional-header {
+  max-width: var(--confia-content-max); min-height: 82px; padding-block: 16px;
+}
+#confia-surface .brand-name { color: var(--confia-navy); font-size: var(--confia-font-brand); font-weight: 800; letter-spacing: -1.4px; }
+#confia-surface .subtitle { color: var(--confia-muted); }
+#confia-surface .app-layout { max-width: var(--confia-content-max); }
+#confia-surface :is(.card,.prototype-panel,.shell-sidebar,.macro-card) {
+  border-color: var(--confia-border); border-radius: var(--confia-radius); box-shadow: var(--confia-shadow);
+}
+#confia-surface :is(.button-primary,.primary-action) { background: var(--confia-blue); color: var(--confia-surface); border-color: var(--confia-blue); }
+#confia-surface :is(.button-primary,.primary-action):hover { background: var(--confia-blue-dark); }
+.platform-session-status { max-width: var(--confia-content-max); margin: 0 auto 16px; padding: 0 20px; color: var(--confia-muted); font-size: var(--confia-font-body); }
+.home-avatar .home-session-menu { position: absolute; right: 0; top: 45px; z-index: 50; width: 220px; padding: 16px; background: var(--confia-surface); border: 1px solid var(--confia-border); border-radius: var(--confia-radius-md); box-shadow: var(--confia-shadow); }
+.home-avatar .home-session-menu p { position: static; width: auto; margin: 0 0 12px; padding: 0; border: 0; box-shadow: none; background: transparent; }
+
+.home-brand { text-decoration: none; }
+.home-session-menu nav { display: grid; gap: 4px; }
+.home-session-menu nav + nav { border-top: 1px solid var(--confia-border); margin-top: 8px; padding-top: 8px; }
+.home-session-menu a, .home-session-menu button { display: block; min-height: 40px; padding: 8px; color: var(--confia-navy); font-size: var(--confia-font-body); text-decoration: none; border-radius: var(--confia-radius-sm); }
+.home-session-menu a:hover { background: var(--confia-blue-light); }
+.home-avatar .home-session-menu { width: min(280px,calc(100vw - 40px)); max-height: calc(100dvh - 100px); overflow: auto; }

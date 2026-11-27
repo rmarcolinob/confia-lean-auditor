@@ -1,0 +1,3 @@
+SHA inicial: 5de838563ab3ae21c04c675b7edbd446ff844a79
+info: mathlib: cloning https://github.com/leanprover-community/mathlib4
+error: external command 'git' exited with code 128

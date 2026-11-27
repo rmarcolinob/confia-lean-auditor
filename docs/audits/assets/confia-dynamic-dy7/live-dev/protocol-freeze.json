@@ -1,0 +1,7 @@
+{
+  "spec_sha256": "8a31db7a1e099a9c05e69c49ed9634377e70987a54fbe43bcb4a773c4766b550",
+  "harness_sha256": "fa44df4abfe508a353b879a7d54a9c187afb825ef29c378aa67d67712f8638a2",
+  "frozen_at": "2026-11-12T21:08:49.557953+00:00",
+  "live": true,
+  "dataset_version": "dy7-live-dev-01"
+}

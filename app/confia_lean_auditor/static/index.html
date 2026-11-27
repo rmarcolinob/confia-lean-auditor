@@ -8,9 +8,16 @@
     <link rel="stylesheet" href="/static/design-system.css?v=ux-pro-01">
     <link rel="stylesheet" href="/static/styles.css?v=ux-pro-01">
     <link rel="stylesheet" href="/static/submissions/teacher.css?v=ux-pro-01">
+    <link rel="stylesheet" href="/static/audit-view.css?v=audit-01">
     <link rel="stylesheet" href="/static/tutoria.css?v=tutoria-contextual-final-01">
     <link rel="stylesheet" href="/static/tutoria-chat.css?v=tutoria-contextual-final-01">
     <link rel="stylesheet" href="/static/tutoria-assistant.css?v=tutoria-contextual-final-01">
+    <link rel="stylesheet" href="/static/tme/tme-theme.css?v=platform-01">
+    <link rel="stylesheet" href="/static/platform.css?v=teacher-02">
+    <link id="teacher-home-styles" rel="stylesheet" href="/static/tme/home.css?v=teacher-02" media="not all">
+    <link rel="stylesheet" href="/static/teacher-presentation.css?v=teacher-02">
+    <link id="platform-home-styles" rel="stylesheet" href="/static/tme/home.css?v=teacher-02" media="not all">
+    <link rel="stylesheet" href="/static/platform-presentation.css?v=platform-03">
   </head>
   <body>
     <div id="confia-surface">
@@ -22,6 +29,37 @@
       <span class="strip-green"></span>
     </div>
 
+    <header id="teacher-modern-header" class="home-header" hidden>
+      <a class="home-brand" href="#teacher/home" data-shell-link><strong>ConfIA</strong><span>Área do professor<br>Correção assistida</span></a>
+      <details class="home-avatar"><summary id="teacher-avatar" aria-label="Perfil e recursos do professor"></summary><div class="home-session-menu">
+        <p id="teacher-modern-session">Área do professor</p>
+        <nav aria-label="Recursos docentes">
+          <a href="#platform/home" data-shell-link>Início da plataforma</a>
+          <a href="#teacher/exams" data-shell-link>Atividades da turma</a>
+          <a href="#teacher/students" data-shell-link>Alunos e turmas</a>
+          <a href="#teacher/submissions" data-shell-link>Soluções recebidas</a>
+          <a href="#teacher/transcriptions" data-shell-link>Transcrições</a>
+          <a href="#teacher/analysis" data-shell-link>Análise e devolutivas</a>
+          <a href="#teacher/text" data-shell-link>Demonstração textual local</a>
+        </nav>
+        <nav id="teacher-demo-profiles" aria-label="Módulos de demonstração">
+          <a href="#student/home" data-shell-link>Área do Aluno</a>
+          <a href="#management/home" data-shell-link>Área da Gestão</a>
+        </nav>
+        <button id="teacher-modern-logout" type="button" hidden>Encerrar sessão</button>
+      </div></details>
+    </header>
+    <nav id="teacher-bottom-nav" class="home-bottom-nav" aria-label="Navegação do Professor" hidden></nav>
+    <header id="platform-header" class="home-header" hidden>
+      <div class="home-brand"><strong>ConfIA</strong><span id="platform-brand-context">Matemática com confiança</span></div>
+      <nav id="platform-navigation" class="home-bottom-nav" aria-label="Navegação do módulo"></nav>
+      <details class="home-avatar"><summary id="platform-avatar" aria-label="Sessão e navegação geral"></summary>
+        <div class="home-session-menu"><p id="platform-session"></p>
+          <nav aria-label="Navegação geral"><a href="#platform/home" data-shell-link>Início da plataforma</a></nav>
+          <button id="platform-logout" type="button" hidden>Encerrar sessão</button>
+        </div>
+      </details>
+    </header>
     <header class="institutional-header">
       <a class="brand" href="#student/home" data-shell-link aria-label="ConfIA — início">
         <span class="brand-mark" aria-hidden="true">C<span>IA</span></span>
@@ -48,13 +86,17 @@
           <div data-profile-menu="student">
             <a href="#student/home" data-shell-link aria-current="page">Início</a>
             <a href="#student/tutoria" data-shell-link>TutorIA</a>
+            <a href="#student/study" data-shell-link>Estudo autônomo</a>
             <a href="#student/exams" data-shell-link>Exames</a>
             <a href="#student/submissions" data-shell-link>Minhas submissões</a>
           </div>
           <div data-profile-menu="teacher" hidden>
             <a href="#teacher/home" data-shell-link>Início</a>
+            <a href="/tme" data-teacher-workspace>Central de correções</a>
+            <a href="/tme?view=new&amp;mode=specialized" data-teacher-workspace>SPECIALIZED · Preparadas</a>
+            <a href="/tme?view=new&amp;mode=dynamic" data-teacher-workspace>DYNAMIC · Inéditas</a>
             <a href="#teacher/students" data-shell-link>Alunos</a>
-            <a href="#teacher/exams" data-shell-link>Exames</a>
+            <a href="#teacher/exams" data-shell-link>Atividades da turma</a>
             <a href="#teacher/submissions" data-shell-link>Soluções recebidas</a>
             <a href="#teacher/transcriptions" data-shell-link>Transcrições</a>
             <a href="#teacher/analysis" data-shell-link>Correção / Análise ConfIA</a>
@@ -73,6 +115,7 @@
           <h1 id="page-title" class="page-title" tabindex="-1">Início</h1>
           <p id="page-description" class="page-description">Um espaço para resolver, compreender e conferir sua solução matemática.</p>
         </div>
+      <section id="platform-home" aria-label="Início da plataforma" hidden></section>
       <section id="student-area" class="tab-panel is-active" aria-label="Área do Aluno">
         <section id="student-home" class="home-panel">
           <div class="welcome-card card">
@@ -90,6 +133,7 @@
           <nav id="tutoria-navigation" class="tutoria-navigation" aria-label="Navegação do TutorIA"></nav>
           <div id="tutoria-content"></div>
         </section>
+        <section id="student-self-study" aria-label="Estudo autônomo sem nota" hidden></section>
         <section id="student-exams" class="card" aria-label="Exames disponíveis" hidden>
           <h2>Exames da sua turma</h2>
           <p>Atividades disponibilizadas para sua turma. Escolha uma para abrir o caderno.</p>
@@ -289,14 +333,7 @@
           </div>
           <p id="teacher-context-message" role="status" aria-live="polite"></p>
         </section>
-        <section id="teacher-home" class="home-panel" hidden>
-          <div class="welcome-card card"><p class="eyebrow">Acompanhamento da solução</p><h2>Da solução recebida à decisão do professor</h2><p>Confira o manuscrito e a transcrição, consulte a sugestão da Análise ConfIA e registre sua decisão. Finalize e libere o resultado ao aluno quando estiver pronto.</p><a class="button button-primary" href="#teacher/submissions" data-shell-link>Abrir soluções recebidas →</a></div>
-          <div class="home-grid">
-            <article class="card"><h2>Soluções recebidas</h2><p>Consulte manuscritos enviados pelo caderno e seus arquivos originais.</p><a class="button button-secondary" href="#teacher/submissions" data-shell-link>Consultar soluções</a></article>
-            <article class="card"><h2>Transcrições</h2><p>Confira a leitura junto ao original, preservando o que o aluno escreveu.</p><a class="button button-secondary" href="#teacher/transcriptions" data-shell-link>Conferir transcrições</a></article>
-            <article class="card"><h2>Análise ConfIA</h2><p>Consulte a análise da solução e registre a pontuação final do professor.</p><a class="button button-secondary" href="#teacher/analysis" data-shell-link>Consultar análise e decisão</a></article>
-          </div>
-        </section>
+        <section id="teacher-home" aria-label="Início do Professor" hidden></section>
         <section id="teacher-exams" class="card" hidden>
           <h2>Exames da turma</h2>
           <p id="teacher-exams-message" role="status" aria-live="polite">Selecione uma escola e uma turma.</p>
@@ -456,17 +493,23 @@
     <script src="/static/capture/vendor/katex-0.18.9/contrib/auto-render.min.js"></script>
     <script src="/static/capture/problem-math.js?v=p2-ui-01"></script>
     <script src="/static/recognition-view.js?v=teacher-transcription-02"></script>
-    <script src="/static/app.js?v=tutoria-demo-01"></script>
+    <script src="/static/audit-view.js?v=audit-01"></script>
+    <script src="/static/app.js?v=audit-01"></script>
+    <script src="/static/dynamic-student.js?v=school-1"></script>
+    <script src="/static/dynamic-self-study.js?v=study-1"></script>
     <script src="/static/resolution-workspace.js?v=tutoria-contextual-final-01"></script>
     <script src="/static/submissions/decisions.js?v=ux-pro-01"></script>
-    <script src="/static/submissions/teacher.js?v=ux-pro-01"></script>
+    <script src="/static/submissions/teacher.js?v=audit-01"></script>
     <script src="/static/assessments.js?v=ux-pro-01"></script>
-    <script src="/static/management.js?v=p2-dec-01"></script>
+    <script src="/static/management.js?v=platform-03"></script>
     <script src="/static/demo/tutoria-demo-data.js?v=tutoria-contextual-final-01"></script>
     <script src="/static/demo/tutoria-chat-demo.js?v=tutoria-contextual-final-01"></script>
     <script src="/static/tutoria-chat.js?v=tutoria-contextual-final-01"></script>
     <script src="/static/tutoria.js?v=tutoria-contextual-final-01"></script>
     <script src="/static/tutoria-assistant.js?v=tutoria-contextual-final-01"></script>
-    <script src="/static/shell.js?v=tutoria-contextual-final-01"></script>
+    <script src="/static/tme/home.js?v=platform-03"></script>
+    <script src="/static/platform-presentation.js?v=platform-03"></script>
+    <script src="/static/teacher-presentation.js?v=teacher-02"></script>
+    <script src="/static/shell.js?v=platform-03"></script>
   </body>
 </html>

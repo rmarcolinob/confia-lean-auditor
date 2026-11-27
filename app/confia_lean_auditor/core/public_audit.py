@@ -203,6 +203,10 @@ def audit_exception_response(error):
         status = error.status_code
         if status == 404:
             code, message = "AUDIT_RESOURCE_NOT_FOUND", "Questão ou análise não encontrada."
+        elif status == 409 and error.detail == "Integridade da submissão inválida.":
+            # The access guard can reject metadata before the audit router runs.
+            from confia_lean_auditor.submission_audits.errors import SourceIntegrityError
+            code, message = SourceIntegrityError.code, SourceIntegrityError.message
     logger.warning("Audit public failure: status=%s code=%s", status, code)
     return public_error_response(status, code, message, include_message=True)
 

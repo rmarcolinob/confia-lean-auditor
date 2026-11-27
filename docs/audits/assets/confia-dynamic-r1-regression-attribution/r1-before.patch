@@ -1,0 +1,220 @@
+diff --git a/app/confia_lean_auditor/dynamic/grader.py b/app/confia_lean_auditor/dynamic/grader.py
+index 9a0ba10..645a490 100644
+--- a/app/confia_lean_auditor/dynamic/grader.py
++++ b/app/confia_lean_auditor/dynamic/grader.py
+@@ -16,6 +16,9 @@ from math import isqrt
+ from pathlib import Path
+ from datetime import datetime, timezone
+ from .verification import polynomial, add, VERSION
++from .substitution import substitution_operation
++from .method_sufficiency import method_coverage, is_factorization, is_restatement, PARTIAL_METHOD_SUFFIX
++from .versions import GRADER_VERSION, EXTRACTOR_VERSION, NORMALIZATION_VERSION, SUFFICIENCY_VERSION
+ from confia_lean_auditor.submissions.integrity import canonical_sha256
+ from confia_lean_auditor.core.paths import get_repo_root
+ from .grading_models import (
+@@ -115,6 +118,9 @@ def criterion_policy(criterion):
+     if criterion.notes.strip() or criterion.teacher_guidance.strip():
+         return None, False
+     text = " ".join(plain(criterion.description).strip().rstrip(".").split())
++    method_partial = text.endswith(PARTIAL_METHOD_SUFFIX)
++    if method_partial:
++        text = text[:-len(PARTIAL_METHOD_SUFFIX)].rstrip(".")
+     suffix = " credito parcial proporcional as raizes corretas"
+     partial = text.endswith(suffix)
+     if partial:
+@@ -128,6 +134,8 @@ def criterion_policy(criterion):
+         "simplificar a equacao por uma transformacao equivalente": "transformation",
+         "verificar as raizes por substituicao": "substitution",
+     }.get(text)
++    if method_partial:
++        return (policy, True) if policy == "method" and not partial else (None, False)
+     return (
+         (None, False)
+         if partial and policy not in {"roots", "substitution"}
+@@ -155,6 +163,7 @@ def extract(solution, equation, checker=None):
+         elif re.search(r"\b(nao|incerto)\b|\?", plain(text)):
+             adoption = "AMBIGUOUS"
+         claim = StudentClaim(
++            schema_version="student-claim.r1",
+             claim_id=f"claim_{len(claims)+1}",
+             start=start,
+             end=start + len(text),
+@@ -170,7 +179,13 @@ def extract(solution, equation, checker=None):
+         try:
+             answer = re.fullmatch(r"(?:S|" + re.escape(var) + r")=\{([^{}]+)\}", s)
+             single = re.fullmatch(re.escape(var) + r"=([-+]?\d+(?:/\d+)?)", s)
+-            if answer or single:
++            operation = substitution_operation(text, equation, norm, exact)
++            if operation:
++                claim.claim_type = "SUBSTITUTION"
++                claim.substitution = operation
++                claim.values = [operation["substituted_value"]] if operation["verifies_root"] else []
++                valid = operation["evaluation_verified"]
++            elif answer or single:
+                 values = [
+                     exact(v) for v in (answer[1].split(",") if answer else [single[1]])
+                 ]
+@@ -222,18 +237,9 @@ def extract(solution, equation, checker=None):
+                         raise ValueError("restated identity is not development")
+                     claim.claim_type = "TRANSFORMATION"
+                     claim.strategy_context = (
+-                        "factorization"
+-                        if re.search(
+-                            r"\([^()]*"
+-                            + re.escape(var)
+-                            + r"[^()]*\)\*?\([^()]*"
+-                            + re.escape(var)
+-                            + r"[^()]*\)",
+-                            s,
+-                        )
+-                        else "equivalent_transformations"
++                        "factorization" if is_factorization(s, var) else "equivalent_transformations"
+                     )
+-                    if s == norm(left + "=" + right):
++                    if is_restatement(s, norm(left + "=" + right), var):
+                         claim.claim_type = "RESTATEMENT"
+                 else:
+                     parts = (
+@@ -245,15 +251,6 @@ def extract(solution, equation, checker=None):
+                         raise ValueError("missing equation")
+                     valid = all(exact(x) == exact(parts[0]) for x in parts)
+                     claim.claim_type = "ARITHMETIC"
+-                    for root in roots:
+-                        if (
+-                            shape(parts[0])
+-                            == shape(norm(left).replace(var, f"({root})"))
+-                            and len(parts) == 2
+-                            and exact(parts[1]) == exact(right)
+-                        ):
+-                            claim.claim_type = "SUBSTITUTION"
+-                            claim.values = [str(root)]
+             else:
+                 raise ValueError("unsupported")
+             claim.verification_status = "VERIFIED" if valid else "REFUTED"
+@@ -313,6 +310,8 @@ class DynamicSolutionGrader:
+         self.checker = checker
+ 
+     def grade(self, source, statement, rubric, preparation, context, artifact_dir):
++        if context.grader_version != GRADER_VERSION:
++            raise ValueError("Historical grader context cannot execute under a different engine version.")
+         equation = None
+         try:
+             equation = problem_equation(statement.statement)
+@@ -438,40 +437,16 @@ class DynamicSolutionGrader:
+                     elif bad and not supplied:
+                         suff = "NOT_SATISFIED"
+                         auto = "AUTO_VETO"
+-                elif valid:
+-                    formula_values = {
+-                        Fraction(v)
+-                        for c in valid
+-                        if c.claim_type == "FORMULA"
+-                        for v in c.values
+-                    }
+-                    factored = any(c.strategy_context == "factorization" for c in valid)
+-                    complete = (
+-                        policy == "transformation"
+-                        or formula_values == roots
+-                        or (
+-                            factored
+-                            and any(
+-                                c.claim_type == "ROOTS"
+-                                and set(map(Fraction, c.values)) == roots
+-                                and c.verification_status == "VERIFIED"
+-                                for c in answers
+-                            )
+-                        )
+-                        or (
+-                            max(equation[3]) == 1
+-                            and any(
+-                                c.verification_status == "VERIFIED" for c in answers
+-                            )
+-                        )
+-                    )
+-                    if complete and not bad:
+-                        points = criterion.max_points
+-                        suff = "COMPLETE"
++                else:
++                    coverage, suff = method_coverage(policy, partial, evidence, answers, roots)
++                    if coverage:
++                        points = criterion.max_points if coverage == 1 else (
++                            criterion.max_points * Decimal(coverage.numerator)
++                            / Decimal(coverage.denominator)
++                        ).quantize(Decimal(".01"), rounding=ROUND_DOWN)
+                         auto = "AUTO_AWARD"
+-                elif bad:
+-                    suff = "NOT_SATISFIED"
+-                    auto = "AUTO_VETO"
++                    elif suff == "NOT_SATISFIED":
++                        auto = "AUTO_VETO"
+             prior = {d.criterion_id: d for d in decisions}
+             if criterion.dependencies and any(
+                 dep not in prior or prior[dep].sufficiency != "COMPLETE"
+@@ -595,14 +570,15 @@ class DynamicSolutionGrader:
+             final_answer_candidates=[c.text for c in answers],
+             warnings=warnings,
+             provenance={
+-                "grader": "dynamic-grader.v1",
+-                "extractor": "source-grammar.v1",
++                "grader": GRADER_VERSION,
++                "extractor": EXTRACTOR_VERSION,
++                "normalization": NORMALIZATION_VERSION,
+                 "verifier": VERSION,
+                 "model": None,
+                 "llm_used": False,
+                 "code_sha": code_sha,
+                 "code_content_sha256": code_hash,
+-                "policy": "exact-rubric-language.v1",
++                "policy": SUFFICIENCY_VERSION,
+                 "preparation_verifier_plan": [
+                     p.model_dump(mode="json")
+                     for p in preparation.analysis.verifier_plan
+diff --git a/app/confia_lean_auditor/dynamic/grading_models.py b/app/confia_lean_auditor/dynamic/grading_models.py
+index 002b8e3..1ba5737 100644
+--- a/app/confia_lean_auditor/dynamic/grading_models.py
++++ b/app/confia_lean_auditor/dynamic/grading_models.py
+@@ -1,8 +1,9 @@
+ """DY3 evidence contracts. No model-supplied score or implicit approval."""
+ 
+-from typing import Literal
++from typing import Literal, Optional
+ from decimal import Decimal
+-from pydantic import Field, model_validator
++from pydantic import Field, model_validator, model_serializer
++from .versions import GRADER_VERSION
+ from confia_lean_auditor.submissions.schemas import SubmissionModel, Sha256
+ 
+ 
+@@ -21,10 +22,12 @@ class DynamicGradingContext(SubmissionModel):
+     rubric_version: int
+     rubric_sha256: Sha256
+     allow_preparation_review: bool = False
+-    grader_version: Literal["dynamic-grader.v1"] = "dynamic-grader.v1"
++    grader_version: Literal["dynamic-grader.v1", "dynamic-grader.r1-substitution", "dynamic-grader.r1"] = GRADER_VERSION
+ 
+ 
+ class StudentClaim(SubmissionModel):
++    schema_version: Literal["student-claim.v1", "student-claim.r1"] = "student-claim.v1"
++    substitution: Optional[dict] = None
+     claim_id: str
+     start: int = Field(ge=0)
+     end: int = Field(gt=0)
+@@ -49,6 +52,18 @@ class StudentClaim(SubmissionModel):
+     verified_values: list[str] = Field(default_factory=list)
+ 
+ 
++    @model_serializer(mode="wrap")
++    def preserve_legacy_wire_shape(self, handler):
++        # Historical audit/review receipts hash their serialized models. Merely
++        # reading v1 evidence must not add new default keys to those receipts.
++        result = handler(self)
++        if self.schema_version == "student-claim.v1":
++            result.pop("schema_version", None)
++            if self.substitution is None:
++                result.pop("substitution", None)
++        return result
++
++
+ class RubricBinding(SubmissionModel):
+     criterion_id: str
+     claim_id: str

@@ -1,0 +1,2634 @@
+{
+  "schema": "r1-paired-comparison.v1",
+  "rows": [
+    {
+      "nodeid": "tests/test_common_claim_pipeline.py::test_common_catalog_preserves_real_pipeline_credit_and_attribution[True]",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "same_assertion_fingerprint": false,
+      "same_full_traceback_fingerprint": false,
+      "same_attribution_traceback_fingerprint": true,
+      "baseline_attribution_fingerprint": "93a896ae6a85b61c8bb7705f4ec6ff94303379abb6a83a05c58ea24ddca5ccc0",
+      "r1_attribution_fingerprint": "93a896ae6a85b61c8bb7705f4ec6ff94303379abb6a83a05c58ea24ddca5ccc0",
+      "same_lean_environment_fingerprints": true,
+      "baseline_assertion_fingerprint": "dd914e67d534ce377bfe9152f230c1cadab443eb9a02724c5da0b6c9c948e727",
+      "r1_assertion_fingerprint": "00c95e803a80effb553d14a605f90434e146f8b84d6fff410140b3d1f4c28fb3",
+      "baseline_traceback_fingerprint": "1207d050aeed0abea5692c2cf98ccc6725ae07c1a6381299147dae37c292964a",
+      "r1_traceback_fingerprint": "7f95e712ac3ce5668608563b2d67115915ad6ea5e2df8439a9b65a1886e68350",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_common_claim_pipeline.py",
+        "line": 34
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_common_claim_pipeline.py",
+        "line": 34
+      },
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE"
+    },
+    {
+      "nodeid": "tests/test_common_claim_pipeline.py::test_common_catalog_preserves_real_pipeline_credit_and_attribution[False]",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "same_assertion_fingerprint": true,
+      "same_full_traceback_fingerprint": true,
+      "same_attribution_traceback_fingerprint": true,
+      "baseline_attribution_fingerprint": "0fc878b6e31b4b210f09f2b806c7b98424acca09abbe3e5dd54f7a4950d995ed",
+      "r1_attribution_fingerprint": "0fc878b6e31b4b210f09f2b806c7b98424acca09abbe3e5dd54f7a4950d995ed",
+      "same_lean_environment_fingerprints": true,
+      "baseline_assertion_fingerprint": "ca9062136dcbe3cdab68796f2926af79a1229ae89944dfaef79b05b2a7f025d2",
+      "r1_assertion_fingerprint": "ca9062136dcbe3cdab68796f2926af79a1229ae89944dfaef79b05b2a7f025d2",
+      "baseline_traceback_fingerprint": "0fc878b6e31b4b210f09f2b806c7b98424acca09abbe3e5dd54f7a4950d995ed",
+      "r1_traceback_fingerprint": "0fc878b6e31b4b210f09f2b806c7b98424acca09abbe3e5dd54f7a4950d995ed",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_common_claim_pipeline.py",
+        "line": 41
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_common_claim_pipeline.py",
+        "line": 41
+      },
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE"
+    },
+    {
+      "nodeid": "tests/test_evidence_id_semantic.py::test_written_method_reaches_real_lean[2*((6-x)+x)-verified]",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "same_assertion_fingerprint": true,
+      "same_full_traceback_fingerprint": true,
+      "same_attribution_traceback_fingerprint": true,
+      "baseline_attribution_fingerprint": "8baa9c3a8f1bd5b568fa08cea28cc5814050269f76a8829d6fa665c402f2355f",
+      "r1_attribution_fingerprint": "8baa9c3a8f1bd5b568fa08cea28cc5814050269f76a8829d6fa665c402f2355f",
+      "same_lean_environment_fingerprints": true,
+      "baseline_assertion_fingerprint": "72864cbbf17b18968332b12834cccc67f75ab587b19fe1202896b42d158eae7a",
+      "r1_assertion_fingerprint": "72864cbbf17b18968332b12834cccc67f75ab587b19fe1202896b42d158eae7a",
+      "baseline_traceback_fingerprint": "8baa9c3a8f1bd5b568fa08cea28cc5814050269f76a8829d6fa665c402f2355f",
+      "r1_traceback_fingerprint": "8baa9c3a8f1bd5b568fa08cea28cc5814050269f76a8829d6fa665c402f2355f",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_evidence_id_semantic.py",
+        "line": 144
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_evidence_id_semantic.py",
+        "line": 144
+      },
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE"
+    },
+    {
+      "nodeid": "tests/test_evidence_id_semantic.py::test_written_method_reaches_real_lean[2*((6-x)+x)+1-refuted]",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "same_assertion_fingerprint": true,
+      "same_full_traceback_fingerprint": true,
+      "same_attribution_traceback_fingerprint": true,
+      "baseline_attribution_fingerprint": "b6ee8faaf5b2f7349e3343ce7ea3f576282f267991f4dcd458170f6eb0faac72",
+      "r1_attribution_fingerprint": "b6ee8faaf5b2f7349e3343ce7ea3f576282f267991f4dcd458170f6eb0faac72",
+      "same_lean_environment_fingerprints": true,
+      "baseline_assertion_fingerprint": "6b1fe4651585e4123b2e3ec0592114968e0c28889c99e0d33fa5e6a3831bd113",
+      "r1_assertion_fingerprint": "6b1fe4651585e4123b2e3ec0592114968e0c28889c99e0d33fa5e6a3831bd113",
+      "baseline_traceback_fingerprint": "b6ee8faaf5b2f7349e3343ce7ea3f576282f267991f4dcd458170f6eb0faac72",
+      "r1_traceback_fingerprint": "b6ee8faaf5b2f7349e3343ce7ea3f576282f267991f4dcd458170f6eb0faac72",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_evidence_id_semantic.py",
+        "line": 144
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_evidence_id_semantic.py",
+        "line": 144
+      },
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE"
+    },
+    {
+      "nodeid": "tests/test_f2_strong_lean_suite.py::test_f2_correct_solution_has_full_operational_strong_lean_contract[ITA2025F2Q1]",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "same_assertion_fingerprint": true,
+      "same_full_traceback_fingerprint": true,
+      "same_attribution_traceback_fingerprint": true,
+      "baseline_attribution_fingerprint": "8c7ff60beece5bc542cb4660b70772461d885510f1e02bfda77aea0fa01b1a7a",
+      "r1_attribution_fingerprint": "8c7ff60beece5bc542cb4660b70772461d885510f1e02bfda77aea0fa01b1a7a",
+      "same_lean_environment_fingerprints": true,
+      "baseline_assertion_fingerprint": "fee37c01ccda1e1101cc3d5e2653d8562210738b85a576634dd2b45dd2b77983",
+      "r1_assertion_fingerprint": "fee37c01ccda1e1101cc3d5e2653d8562210738b85a576634dd2b45dd2b77983",
+      "baseline_traceback_fingerprint": "8c7ff60beece5bc542cb4660b70772461d885510f1e02bfda77aea0fa01b1a7a",
+      "r1_traceback_fingerprint": "8c7ff60beece5bc542cb4660b70772461d885510f1e02bfda77aea0fa01b1a7a",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_f2_strong_lean_suite.py",
+        "line": 51
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_f2_strong_lean_suite.py",
+        "line": 51
+      },
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE"
+    },
+    {
+      "nodeid": "tests/test_f2_strong_lean_suite.py::test_f2_correct_solution_has_full_operational_strong_lean_contract[ITA2025F2Q3]",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "same_assertion_fingerprint": true,
+      "same_full_traceback_fingerprint": true,
+      "same_attribution_traceback_fingerprint": true,
+      "baseline_attribution_fingerprint": "cd9904ff733b36aac594cb215e25c1b4bfa2730af1057cb121fa827cae77db5d",
+      "r1_attribution_fingerprint": "cd9904ff733b36aac594cb215e25c1b4bfa2730af1057cb121fa827cae77db5d",
+      "same_lean_environment_fingerprints": true,
+      "baseline_assertion_fingerprint": "fee37c01ccda1e1101cc3d5e2653d8562210738b85a576634dd2b45dd2b77983",
+      "r1_assertion_fingerprint": "fee37c01ccda1e1101cc3d5e2653d8562210738b85a576634dd2b45dd2b77983",
+      "baseline_traceback_fingerprint": "cd9904ff733b36aac594cb215e25c1b4bfa2730af1057cb121fa827cae77db5d",
+      "r1_traceback_fingerprint": "cd9904ff733b36aac594cb215e25c1b4bfa2730af1057cb121fa827cae77db5d",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_f2_strong_lean_suite.py",
+        "line": 51
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_f2_strong_lean_suite.py",
+        "line": 51
+      },
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE"
+    },
+    {
+      "nodeid": "tests/test_f2_strong_lean_suite.py::test_f2_correct_solution_has_full_operational_strong_lean_contract[ITA2025F2Q5]",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "same_assertion_fingerprint": true,
+      "same_full_traceback_fingerprint": true,
+      "same_attribution_traceback_fingerprint": true,
+      "baseline_attribution_fingerprint": "2b08abf2f3fe1c5a61b7182acf611cddaabc207930d5f929fee0f6c433c2819c",
+      "r1_attribution_fingerprint": "2b08abf2f3fe1c5a61b7182acf611cddaabc207930d5f929fee0f6c433c2819c",
+      "same_lean_environment_fingerprints": true,
+      "baseline_assertion_fingerprint": "fee37c01ccda1e1101cc3d5e2653d8562210738b85a576634dd2b45dd2b77983",
+      "r1_assertion_fingerprint": "fee37c01ccda1e1101cc3d5e2653d8562210738b85a576634dd2b45dd2b77983",
+      "baseline_traceback_fingerprint": "2b08abf2f3fe1c5a61b7182acf611cddaabc207930d5f929fee0f6c433c2819c",
+      "r1_traceback_fingerprint": "2b08abf2f3fe1c5a61b7182acf611cddaabc207930d5f929fee0f6c433c2819c",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_f2_strong_lean_suite.py",
+        "line": 51
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_f2_strong_lean_suite.py",
+        "line": 51
+      },
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE"
+    },
+    {
+      "nodeid": "tests/test_f2_strong_lean_suite.py::test_f2_correct_solution_has_full_operational_strong_lean_contract[ITA2025F2Q6]",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "same_assertion_fingerprint": true,
+      "same_full_traceback_fingerprint": true,
+      "same_attribution_traceback_fingerprint": true,
+      "baseline_attribution_fingerprint": "33fe760bb68594f48f24d6dc30dc6286c8b340cf38684019274e5a8fe4ab6317",
+      "r1_attribution_fingerprint": "33fe760bb68594f48f24d6dc30dc6286c8b340cf38684019274e5a8fe4ab6317",
+      "same_lean_environment_fingerprints": true,
+      "baseline_assertion_fingerprint": "fee37c01ccda1e1101cc3d5e2653d8562210738b85a576634dd2b45dd2b77983",
+      "r1_assertion_fingerprint": "fee37c01ccda1e1101cc3d5e2653d8562210738b85a576634dd2b45dd2b77983",
+      "baseline_traceback_fingerprint": "33fe760bb68594f48f24d6dc30dc6286c8b340cf38684019274e5a8fe4ab6317",
+      "r1_traceback_fingerprint": "33fe760bb68594f48f24d6dc30dc6286c8b340cf38684019274e5a8fe4ab6317",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_f2_strong_lean_suite.py",
+        "line": 51
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_f2_strong_lean_suite.py",
+        "line": 51
+      },
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE"
+    },
+    {
+      "nodeid": "tests/test_f2_strong_lean_suite.py::test_f2_correct_solution_has_full_operational_strong_lean_contract[ITA2025F2Q8]",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "same_assertion_fingerprint": true,
+      "same_full_traceback_fingerprint": true,
+      "same_attribution_traceback_fingerprint": true,
+      "baseline_attribution_fingerprint": "9dad00f17afac9e5af48d08d4c59496ccdc2f7ed3269e07aa8f13c5416b7d7ef",
+      "r1_attribution_fingerprint": "9dad00f17afac9e5af48d08d4c59496ccdc2f7ed3269e07aa8f13c5416b7d7ef",
+      "same_lean_environment_fingerprints": true,
+      "baseline_assertion_fingerprint": "fee37c01ccda1e1101cc3d5e2653d8562210738b85a576634dd2b45dd2b77983",
+      "r1_assertion_fingerprint": "fee37c01ccda1e1101cc3d5e2653d8562210738b85a576634dd2b45dd2b77983",
+      "baseline_traceback_fingerprint": "9dad00f17afac9e5af48d08d4c59496ccdc2f7ed3269e07aa8f13c5416b7d7ef",
+      "r1_traceback_fingerprint": "9dad00f17afac9e5af48d08d4c59496ccdc2f7ed3269e07aa8f13c5416b7d7ef",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_f2_strong_lean_suite.py",
+        "line": 51
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_f2_strong_lean_suite.py",
+        "line": 51
+      },
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE"
+    },
+    {
+      "nodeid": "tests/test_f2_strong_lean_suite.py::test_f2_wrong_answer_stays_below_full_score[ITA2025F2Q1]",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "same_assertion_fingerprint": true,
+      "same_full_traceback_fingerprint": true,
+      "same_attribution_traceback_fingerprint": true,
+      "baseline_attribution_fingerprint": "34248a78c0210ecc990f1520ea90968903da19a3a10072c92d859475209e6014",
+      "r1_attribution_fingerprint": "34248a78c0210ecc990f1520ea90968903da19a3a10072c92d859475209e6014",
+      "same_lean_environment_fingerprints": true,
+      "baseline_assertion_fingerprint": "11349113707a832093f49a16143afc51a496bb114dec1d23824093820a4f2072",
+      "r1_assertion_fingerprint": "11349113707a832093f49a16143afc51a496bb114dec1d23824093820a4f2072",
+      "baseline_traceback_fingerprint": "34248a78c0210ecc990f1520ea90968903da19a3a10072c92d859475209e6014",
+      "r1_traceback_fingerprint": "34248a78c0210ecc990f1520ea90968903da19a3a10072c92d859475209e6014",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/audit_contract.py",
+        "line": 60
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/audit_contract.py",
+        "line": 60
+      },
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE"
+    },
+    {
+      "nodeid": "tests/test_f2_strong_lean_suite.py::test_f2_wrong_answer_stays_below_full_score[ITA2025F2Q3]",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "same_assertion_fingerprint": true,
+      "same_full_traceback_fingerprint": true,
+      "same_attribution_traceback_fingerprint": true,
+      "baseline_attribution_fingerprint": "211eefb5895e29a477a1d5e68a74078edcd3f48a58d015c5d2bf8e90765bd468",
+      "r1_attribution_fingerprint": "211eefb5895e29a477a1d5e68a74078edcd3f48a58d015c5d2bf8e90765bd468",
+      "same_lean_environment_fingerprints": true,
+      "baseline_assertion_fingerprint": "11349113707a832093f49a16143afc51a496bb114dec1d23824093820a4f2072",
+      "r1_assertion_fingerprint": "11349113707a832093f49a16143afc51a496bb114dec1d23824093820a4f2072",
+      "baseline_traceback_fingerprint": "211eefb5895e29a477a1d5e68a74078edcd3f48a58d015c5d2bf8e90765bd468",
+      "r1_traceback_fingerprint": "211eefb5895e29a477a1d5e68a74078edcd3f48a58d015c5d2bf8e90765bd468",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/audit_contract.py",
+        "line": 60
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/audit_contract.py",
+        "line": 60
+      },
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE"
+    },
+    {
+      "nodeid": "tests/test_f2_strong_lean_suite.py::test_f2_wrong_answer_stays_below_full_score[ITA2025F2Q5]",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "same_assertion_fingerprint": true,
+      "same_full_traceback_fingerprint": true,
+      "same_attribution_traceback_fingerprint": true,
+      "baseline_attribution_fingerprint": "4fd2da916c62caa6266d77cd1df24282968056ce81b76327488ab8b37b85a32e",
+      "r1_attribution_fingerprint": "4fd2da916c62caa6266d77cd1df24282968056ce81b76327488ab8b37b85a32e",
+      "same_lean_environment_fingerprints": true,
+      "baseline_assertion_fingerprint": "11349113707a832093f49a16143afc51a496bb114dec1d23824093820a4f2072",
+      "r1_assertion_fingerprint": "11349113707a832093f49a16143afc51a496bb114dec1d23824093820a4f2072",
+      "baseline_traceback_fingerprint": "4fd2da916c62caa6266d77cd1df24282968056ce81b76327488ab8b37b85a32e",
+      "r1_traceback_fingerprint": "4fd2da916c62caa6266d77cd1df24282968056ce81b76327488ab8b37b85a32e",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/audit_contract.py",
+        "line": 60
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/audit_contract.py",
+        "line": 60
+      },
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE"
+    },
+    {
+      "nodeid": "tests/test_f2_strong_lean_suite.py::test_f2_wrong_answer_stays_below_full_score[ITA2025F2Q6]",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "same_assertion_fingerprint": true,
+      "same_full_traceback_fingerprint": true,
+      "same_attribution_traceback_fingerprint": true,
+      "baseline_attribution_fingerprint": "de6af3196823c59f022eba7b09e9ad311967e6031d480b34a6d10ab60487e928",
+      "r1_attribution_fingerprint": "de6af3196823c59f022eba7b09e9ad311967e6031d480b34a6d10ab60487e928",
+      "same_lean_environment_fingerprints": true,
+      "baseline_assertion_fingerprint": "11349113707a832093f49a16143afc51a496bb114dec1d23824093820a4f2072",
+      "r1_assertion_fingerprint": "11349113707a832093f49a16143afc51a496bb114dec1d23824093820a4f2072",
+      "baseline_traceback_fingerprint": "de6af3196823c59f022eba7b09e9ad311967e6031d480b34a6d10ab60487e928",
+      "r1_traceback_fingerprint": "de6af3196823c59f022eba7b09e9ad311967e6031d480b34a6d10ab60487e928",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/audit_contract.py",
+        "line": 60
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/audit_contract.py",
+        "line": 60
+      },
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE"
+    },
+    {
+      "nodeid": "tests/test_f2q1_strong_certificate.py::test_f2q1_correct_solution_includes_strong_certificate",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "same_assertion_fingerprint": true,
+      "same_full_traceback_fingerprint": true,
+      "same_attribution_traceback_fingerprint": true,
+      "baseline_attribution_fingerprint": "710ba9b328b7357499d8bd9f14bc16fbe0081ad4fa84cd3ab9123fdc11a7b926",
+      "r1_attribution_fingerprint": "710ba9b328b7357499d8bd9f14bc16fbe0081ad4fa84cd3ab9123fdc11a7b926",
+      "same_lean_environment_fingerprints": true,
+      "baseline_assertion_fingerprint": "5472405c3caef61fa005ddce28f03d81acec77fa9b7696ac67457edd3914e4ab",
+      "r1_assertion_fingerprint": "5472405c3caef61fa005ddce28f03d81acec77fa9b7696ac67457edd3914e4ab",
+      "baseline_traceback_fingerprint": "710ba9b328b7357499d8bd9f14bc16fbe0081ad4fa84cd3ab9123fdc11a7b926",
+      "r1_traceback_fingerprint": "710ba9b328b7357499d8bd9f14bc16fbe0081ad4fa84cd3ab9123fdc11a7b926",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_f2q1_strong_certificate.py",
+        "line": 27
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_f2q1_strong_certificate.py",
+        "line": 27
+      },
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE"
+    },
+    {
+      "nodeid": "tests/test_f2q1_strong_certificate.py::test_f2q1_wrong_solution_does_not_get_strong_certificate",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "same_assertion_fingerprint": true,
+      "same_full_traceback_fingerprint": true,
+      "same_attribution_traceback_fingerprint": true,
+      "baseline_attribution_fingerprint": "7c92542e1701dbc3250c6ab3288e59d777ec119f68dbbf1fa116c257e18ce5fb",
+      "r1_attribution_fingerprint": "7c92542e1701dbc3250c6ab3288e59d777ec119f68dbbf1fa116c257e18ce5fb",
+      "same_lean_environment_fingerprints": true,
+      "baseline_assertion_fingerprint": "d13352811acdd27617b264dd4adc05bab312d2c884ebbe3d862cba6addba8176",
+      "r1_assertion_fingerprint": "d13352811acdd27617b264dd4adc05bab312d2c884ebbe3d862cba6addba8176",
+      "baseline_traceback_fingerprint": "7c92542e1701dbc3250c6ab3288e59d777ec119f68dbbf1fa116c257e18ce5fb",
+      "r1_traceback_fingerprint": "7c92542e1701dbc3250c6ab3288e59d777ec119f68dbbf1fa116c257e18ce5fb",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_f2q1_strong_certificate.py",
+        "line": 48
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_f2q1_strong_certificate.py",
+        "line": 48
+      },
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE"
+    },
+    {
+      "nodeid": "tests/test_f2q1_student_claim_checks.py::test_f2q1_correct_solution_claims_are_verified",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "same_assertion_fingerprint": true,
+      "same_full_traceback_fingerprint": true,
+      "same_attribution_traceback_fingerprint": true,
+      "baseline_attribution_fingerprint": "286060bfee66e401513dc46042ce340a8c7823aaed2d1b6012bf34ff08829814",
+      "r1_attribution_fingerprint": "286060bfee66e401513dc46042ce340a8c7823aaed2d1b6012bf34ff08829814",
+      "same_lean_environment_fingerprints": true,
+      "baseline_assertion_fingerprint": "0f2968fac48715326994e18b1fa46d14f110089ada65f53240608268ebd661a8",
+      "r1_assertion_fingerprint": "0f2968fac48715326994e18b1fa46d14f110089ada65f53240608268ebd661a8",
+      "baseline_traceback_fingerprint": "286060bfee66e401513dc46042ce340a8c7823aaed2d1b6012bf34ff08829814",
+      "r1_traceback_fingerprint": "286060bfee66e401513dc46042ce340a8c7823aaed2d1b6012bf34ff08829814",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_f2q1_student_claim_checks.py",
+        "line": 33
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_f2q1_student_claim_checks.py",
+        "line": 33
+      },
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE"
+    },
+    {
+      "nodeid": "tests/test_f2q1_student_claim_checks.py::test_f2q1_wrong_final_answer_is_rejected",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "same_assertion_fingerprint": true,
+      "same_full_traceback_fingerprint": true,
+      "same_attribution_traceback_fingerprint": true,
+      "baseline_attribution_fingerprint": "aa565b8c0132411c9b0471df7542802bd0884abc323d90b705a36fb2f80eb336",
+      "r1_attribution_fingerprint": "aa565b8c0132411c9b0471df7542802bd0884abc323d90b705a36fb2f80eb336",
+      "same_lean_environment_fingerprints": true,
+      "baseline_assertion_fingerprint": "da7c5a36820e3a9ee6ade1ee8a5ce19145044c0266fc05fd568f8f33771e80b9",
+      "r1_assertion_fingerprint": "da7c5a36820e3a9ee6ade1ee8a5ce19145044c0266fc05fd568f8f33771e80b9",
+      "baseline_traceback_fingerprint": "aa565b8c0132411c9b0471df7542802bd0884abc323d90b705a36fb2f80eb336",
+      "r1_traceback_fingerprint": "aa565b8c0132411c9b0471df7542802bd0884abc323d90b705a36fb2f80eb336",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_f2q1_student_claim_checks.py",
+        "line": 48
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_f2q1_student_claim_checks.py",
+        "line": 48
+      },
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE"
+    },
+    {
+      "nodeid": "tests/test_f2q1_student_claim_checks.py::test_f2q1_wrong_power_reduction_is_rejected",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "same_assertion_fingerprint": true,
+      "same_full_traceback_fingerprint": true,
+      "same_attribution_traceback_fingerprint": true,
+      "baseline_attribution_fingerprint": "9658865702ae52a3b128ee6d16cb8c8a104cf205ebc70185e143f760f6fc8a3d",
+      "r1_attribution_fingerprint": "9658865702ae52a3b128ee6d16cb8c8a104cf205ebc70185e143f760f6fc8a3d",
+      "same_lean_environment_fingerprints": true,
+      "baseline_assertion_fingerprint": "0e8e707d07810586a5fafb32cbf60e8ce4bfbc7378f2680e56651627360c8af0",
+      "r1_assertion_fingerprint": "0e8e707d07810586a5fafb32cbf60e8ce4bfbc7378f2680e56651627360c8af0",
+      "baseline_traceback_fingerprint": "9658865702ae52a3b128ee6d16cb8c8a104cf205ebc70185e143f760f6fc8a3d",
+      "r1_traceback_fingerprint": "9658865702ae52a3b128ee6d16cb8c8a104cf205ebc70185e143f760f6fc8a3d",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_f2q1_student_claim_checks.py",
+        "line": 60
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_f2q1_student_claim_checks.py",
+        "line": 60
+      },
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE"
+    },
+    {
+      "nodeid": "tests/test_f2q1_student_claim_checks.py::test_f2q1_wrong_reduced_form_is_rejected",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "same_assertion_fingerprint": true,
+      "same_full_traceback_fingerprint": true,
+      "same_attribution_traceback_fingerprint": true,
+      "baseline_attribution_fingerprint": "b908686b86a665ab2a3e32a84450085a6673c5d99673564657853e1b4639d219",
+      "r1_attribution_fingerprint": "b908686b86a665ab2a3e32a84450085a6673c5d99673564657853e1b4639d219",
+      "same_lean_environment_fingerprints": true,
+      "baseline_assertion_fingerprint": "5d7240b92fcfd0715ff9dda56ee8e82c7c12f76e916e1cfb2c9dc485dd81dde1",
+      "r1_assertion_fingerprint": "5d7240b92fcfd0715ff9dda56ee8e82c7c12f76e916e1cfb2c9dc485dd81dde1",
+      "baseline_traceback_fingerprint": "b908686b86a665ab2a3e32a84450085a6673c5d99673564657853e1b4639d219",
+      "r1_traceback_fingerprint": "b908686b86a665ab2a3e32a84450085a6673c5d99673564657853e1b4639d219",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_f2q1_student_claim_checks.py",
+        "line": 71
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_f2q1_student_claim_checks.py",
+        "line": 71
+      },
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE"
+    },
+    {
+      "nodeid": "tests/test_f2q1_student_claim_checks.py::test_f2q1_wrong_coefficient_system_is_rejected",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "same_assertion_fingerprint": true,
+      "same_full_traceback_fingerprint": true,
+      "same_attribution_traceback_fingerprint": true,
+      "baseline_attribution_fingerprint": "071468e3a2bd85e07877e24f3afb8def8c94bcee28ce32e8ebbaa9f89196049b",
+      "r1_attribution_fingerprint": "071468e3a2bd85e07877e24f3afb8def8c94bcee28ce32e8ebbaa9f89196049b",
+      "same_lean_environment_fingerprints": true,
+      "baseline_assertion_fingerprint": "bd93103cb021d44199dee795716901aad1fe28d8c3060d8f680dbf0d7809ccdf",
+      "r1_assertion_fingerprint": "bd93103cb021d44199dee795716901aad1fe28d8c3060d8f680dbf0d7809ccdf",
+      "baseline_traceback_fingerprint": "071468e3a2bd85e07877e24f3afb8def8c94bcee28ce32e8ebbaa9f89196049b",
+      "r1_traceback_fingerprint": "071468e3a2bd85e07877e24f3afb8def8c94bcee28ce32e8ebbaa9f89196049b",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_f2q1_student_claim_checks.py",
+        "line": 83
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_f2q1_student_claim_checks.py",
+        "line": 83
+      },
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE"
+    },
+    {
+      "nodeid": "tests/test_f2q3_strong_certificate.py::test_f2q3_correct_solution_includes_strong_certificate",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "same_assertion_fingerprint": true,
+      "same_full_traceback_fingerprint": true,
+      "same_attribution_traceback_fingerprint": true,
+      "baseline_attribution_fingerprint": "8fceefa00921d3e1d7730c4c0d300ef079505c749ef8e7b3ed85c653b2440624",
+      "r1_attribution_fingerprint": "8fceefa00921d3e1d7730c4c0d300ef079505c749ef8e7b3ed85c653b2440624",
+      "same_lean_environment_fingerprints": true,
+      "baseline_assertion_fingerprint": "1f0aa95428938a68765bd96cb2561ec0d91f82197379dcaec20754e4f3dc960e",
+      "r1_assertion_fingerprint": "1f0aa95428938a68765bd96cb2561ec0d91f82197379dcaec20754e4f3dc960e",
+      "baseline_traceback_fingerprint": "8fceefa00921d3e1d7730c4c0d300ef079505c749ef8e7b3ed85c653b2440624",
+      "r1_traceback_fingerprint": "8fceefa00921d3e1d7730c4c0d300ef079505c749ef8e7b3ed85c653b2440624",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_f2q3_strong_certificate.py",
+        "line": 30
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_f2q3_strong_certificate.py",
+        "line": 30
+      },
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE"
+    },
+    {
+      "nodeid": "tests/test_f2q3_strong_certificate.py::test_f2q3_wrong_solution_does_not_include_strong_certificate",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "same_assertion_fingerprint": true,
+      "same_full_traceback_fingerprint": true,
+      "same_attribution_traceback_fingerprint": true,
+      "baseline_attribution_fingerprint": "7ff3a682da8384a72df6e03bde60f9e427789f04ce4b6d1e138ef88bd131a93f",
+      "r1_attribution_fingerprint": "7ff3a682da8384a72df6e03bde60f9e427789f04ce4b6d1e138ef88bd131a93f",
+      "same_lean_environment_fingerprints": true,
+      "baseline_assertion_fingerprint": "0648fbe771d2b93b91e5c86279214517d52c3aa5cdf64a6247babdd566aefc48",
+      "r1_assertion_fingerprint": "0648fbe771d2b93b91e5c86279214517d52c3aa5cdf64a6247babdd566aefc48",
+      "baseline_traceback_fingerprint": "7ff3a682da8384a72df6e03bde60f9e427789f04ce4b6d1e138ef88bd131a93f",
+      "r1_traceback_fingerprint": "7ff3a682da8384a72df6e03bde60f9e427789f04ce4b6d1e138ef88bd131a93f",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_f2q3_strong_certificate.py",
+        "line": 77
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_f2q3_strong_certificate.py",
+        "line": 77
+      },
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE"
+    },
+    {
+      "nodeid": "tests/test_f2q3_student_claim_checks.py::test_f2q3_correct_solution_claims_are_verified",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "same_assertion_fingerprint": true,
+      "same_full_traceback_fingerprint": true,
+      "same_attribution_traceback_fingerprint": true,
+      "baseline_attribution_fingerprint": "1148463afe9609c22481b65916636507e72ff325029976d312e5c903eb449bb8",
+      "r1_attribution_fingerprint": "1148463afe9609c22481b65916636507e72ff325029976d312e5c903eb449bb8",
+      "same_lean_environment_fingerprints": true,
+      "baseline_assertion_fingerprint": "63ef0d82b6f360cc981b6156c64a8845a73045f03510aa1a7af327fc9d8ec78a",
+      "r1_assertion_fingerprint": "63ef0d82b6f360cc981b6156c64a8845a73045f03510aa1a7af327fc9d8ec78a",
+      "baseline_traceback_fingerprint": "1148463afe9609c22481b65916636507e72ff325029976d312e5c903eb449bb8",
+      "r1_traceback_fingerprint": "1148463afe9609c22481b65916636507e72ff325029976d312e5c903eb449bb8",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_f2q3_student_claim_checks.py",
+        "line": 34
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_f2q3_student_claim_checks.py",
+        "line": 34
+      },
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE"
+    },
+    {
+      "nodeid": "tests/test_f2q3_student_claim_checks.py::test_f2q3_wrong_beta_difference_is_rejected",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "same_assertion_fingerprint": true,
+      "same_full_traceback_fingerprint": true,
+      "same_attribution_traceback_fingerprint": true,
+      "baseline_attribution_fingerprint": "415307081f51b55cf1252f4d1e18a8f6c950a603105c2739e259a66d479829cb",
+      "r1_attribution_fingerprint": "415307081f51b55cf1252f4d1e18a8f6c950a603105c2739e259a66d479829cb",
+      "same_lean_environment_fingerprints": true,
+      "baseline_assertion_fingerprint": "e7e41b4140fb7f884631be93d24d6687bb587911a0c06ea5f24dfcc29c260c03",
+      "r1_assertion_fingerprint": "e7e41b4140fb7f884631be93d24d6687bb587911a0c06ea5f24dfcc29c260c03",
+      "baseline_traceback_fingerprint": "415307081f51b55cf1252f4d1e18a8f6c950a603105c2739e259a66d479829cb",
+      "r1_traceback_fingerprint": "415307081f51b55cf1252f4d1e18a8f6c950a603105c2739e259a66d479829cb",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_f2q3_student_claim_checks.py",
+        "line": 51
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_f2q3_student_claim_checks.py",
+        "line": 51
+      },
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE"
+    },
+    {
+      "nodeid": "tests/test_f2q3_student_claim_checks.py::test_f2q3_wrong_candidate_signs_are_rejected",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "same_assertion_fingerprint": true,
+      "same_full_traceback_fingerprint": true,
+      "same_attribution_traceback_fingerprint": true,
+      "baseline_attribution_fingerprint": "c6533c0140cefc914a88f8b84fd6ef80ebb172ecba5dd0e8b984c0fb2847b49d",
+      "r1_attribution_fingerprint": "c6533c0140cefc914a88f8b84fd6ef80ebb172ecba5dd0e8b984c0fb2847b49d",
+      "same_lean_environment_fingerprints": true,
+      "baseline_assertion_fingerprint": "08d152bf6dbd8dcc4a0b53e36a0094c179cbf4d736fcdc37a08e190117b05431",
+      "r1_assertion_fingerprint": "08d152bf6dbd8dcc4a0b53e36a0094c179cbf4d736fcdc37a08e190117b05431",
+      "baseline_traceback_fingerprint": "c6533c0140cefc914a88f8b84fd6ef80ebb172ecba5dd0e8b984c0fb2847b49d",
+      "r1_traceback_fingerprint": "c6533c0140cefc914a88f8b84fd6ef80ebb172ecba5dd0e8b984c0fb2847b49d",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_f2q3_student_claim_checks.py",
+        "line": 64
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_f2q3_student_claim_checks.py",
+        "line": 64
+      },
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE"
+    },
+    {
+      "nodeid": "tests/test_f2q3_student_claim_checks.py::test_f2q3_wrong_final_sin_sum_is_rejected",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "same_assertion_fingerprint": true,
+      "same_full_traceback_fingerprint": true,
+      "same_attribution_traceback_fingerprint": true,
+      "baseline_attribution_fingerprint": "63eff386088a7b299023b5fda3b5bc80b3f9ac8c9bad7c1c664b16cedd0f31f4",
+      "r1_attribution_fingerprint": "63eff386088a7b299023b5fda3b5bc80b3f9ac8c9bad7c1c664b16cedd0f31f4",
+      "same_lean_environment_fingerprints": true,
+      "baseline_assertion_fingerprint": "eb1995e7b8a65b1b5e6b010b1d6d20b9f782ab3ffa1bd201e8e12b1962842859",
+      "r1_assertion_fingerprint": "eb1995e7b8a65b1b5e6b010b1d6d20b9f782ab3ffa1bd201e8e12b1962842859",
+      "baseline_traceback_fingerprint": "63eff386088a7b299023b5fda3b5bc80b3f9ac8c9bad7c1c664b16cedd0f31f4",
+      "r1_traceback_fingerprint": "63eff386088a7b299023b5fda3b5bc80b3f9ac8c9bad7c1c664b16cedd0f31f4",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_f2q3_student_claim_checks.py",
+        "line": 79
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_f2q3_student_claim_checks.py",
+        "line": 79
+      },
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE"
+    },
+    {
+      "nodeid": "tests/test_f2q3_student_claim_checks.py::test_f2q3_correct_final_answer_alone_is_verified",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "same_assertion_fingerprint": true,
+      "same_full_traceback_fingerprint": true,
+      "same_attribution_traceback_fingerprint": true,
+      "baseline_attribution_fingerprint": "d5bec8af78ab846e011df5f443de899a4340ce9a70ae74f3c1a20a0848ec5aee",
+      "r1_attribution_fingerprint": "d5bec8af78ab846e011df5f443de899a4340ce9a70ae74f3c1a20a0848ec5aee",
+      "same_lean_environment_fingerprints": true,
+      "baseline_assertion_fingerprint": "80938575d08f071e24e9bd891d151ff64ea87b03c9fa3151e72c4ac613bb6ba7",
+      "r1_assertion_fingerprint": "80938575d08f071e24e9bd891d151ff64ea87b03c9fa3151e72c4ac613bb6ba7",
+      "baseline_traceback_fingerprint": "d5bec8af78ab846e011df5f443de899a4340ce9a70ae74f3c1a20a0848ec5aee",
+      "r1_traceback_fingerprint": "d5bec8af78ab846e011df5f443de899a4340ce9a70ae74f3c1a20a0848ec5aee",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_f2q3_student_claim_checks.py",
+        "line": 88
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_f2q3_student_claim_checks.py",
+        "line": 88
+      },
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE"
+    },
+    {
+      "nodeid": "tests/test_f2q5_strong_certificate.py::test_f2q5_correct_solution_includes_strong_certificate",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "same_assertion_fingerprint": true,
+      "same_full_traceback_fingerprint": true,
+      "same_attribution_traceback_fingerprint": true,
+      "baseline_attribution_fingerprint": "6deaffab103c5907d5fdaaec489ff95db0d8784a170d44be176bc797cc08ac5b",
+      "r1_attribution_fingerprint": "6deaffab103c5907d5fdaaec489ff95db0d8784a170d44be176bc797cc08ac5b",
+      "same_lean_environment_fingerprints": true,
+      "baseline_assertion_fingerprint": "505b885cf8a0687392e34071e791715bf591d837dd0f3708ce53e881e54147eb",
+      "r1_assertion_fingerprint": "505b885cf8a0687392e34071e791715bf591d837dd0f3708ce53e881e54147eb",
+      "baseline_traceback_fingerprint": "6deaffab103c5907d5fdaaec489ff95db0d8784a170d44be176bc797cc08ac5b",
+      "r1_traceback_fingerprint": "6deaffab103c5907d5fdaaec489ff95db0d8784a170d44be176bc797cc08ac5b",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_f2q5_strong_certificate.py",
+        "line": 28
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_f2q5_strong_certificate.py",
+        "line": 28
+      },
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE"
+    },
+    {
+      "nodeid": "tests/test_f2q5_strong_certificate.py::test_f2q5_wrong_final_digit_does_not_include_strong_certificate",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "same_assertion_fingerprint": true,
+      "same_full_traceback_fingerprint": true,
+      "same_attribution_traceback_fingerprint": true,
+      "baseline_attribution_fingerprint": "39a5189c3dafa9e1942bb0b970d2f45aab9ec62d546ef5712d438fda5fcb8c8a",
+      "r1_attribution_fingerprint": "39a5189c3dafa9e1942bb0b970d2f45aab9ec62d546ef5712d438fda5fcb8c8a",
+      "same_lean_environment_fingerprints": true,
+      "baseline_assertion_fingerprint": "6ee8ac45bb5d7b97f97f10a0afb82071528edb657ec23ec67e5379033eb4f0b4",
+      "r1_assertion_fingerprint": "6ee8ac45bb5d7b97f97f10a0afb82071528edb657ec23ec67e5379033eb4f0b4",
+      "baseline_traceback_fingerprint": "39a5189c3dafa9e1942bb0b970d2f45aab9ec62d546ef5712d438fda5fcb8c8a",
+      "r1_traceback_fingerprint": "39a5189c3dafa9e1942bb0b970d2f45aab9ec62d546ef5712d438fda5fcb8c8a",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_f2q5_strong_certificate.py",
+        "line": 78
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_f2q5_strong_certificate.py",
+        "line": 78
+      },
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE"
+    },
+    {
+      "nodeid": "tests/test_f2q5_student_claim_checks.py::test_f2q5_correct_solution_claims_are_verified",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "same_assertion_fingerprint": true,
+      "same_full_traceback_fingerprint": true,
+      "same_attribution_traceback_fingerprint": true,
+      "baseline_attribution_fingerprint": "80ce76ccff2dceeafd2f4d64ca7f519a19a81f68045c0364610c2b24185acb77",
+      "r1_attribution_fingerprint": "80ce76ccff2dceeafd2f4d64ca7f519a19a81f68045c0364610c2b24185acb77",
+      "same_lean_environment_fingerprints": true,
+      "baseline_assertion_fingerprint": "7d5af95039c4a6f2accb373a6f5535292ba78b4b4ffae0fff71da2143fd37b04",
+      "r1_assertion_fingerprint": "7d5af95039c4a6f2accb373a6f5535292ba78b4b4ffae0fff71da2143fd37b04",
+      "baseline_traceback_fingerprint": "80ce76ccff2dceeafd2f4d64ca7f519a19a81f68045c0364610c2b24185acb77",
+      "r1_traceback_fingerprint": "80ce76ccff2dceeafd2f4d64ca7f519a19a81f68045c0364610c2b24185acb77",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_f2q5_student_claim_checks.py",
+        "line": 33
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_f2q5_student_claim_checks.py",
+        "line": 33
+      },
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE"
+    },
+    {
+      "nodeid": "tests/test_f2q5_student_claim_checks.py::test_f2q5_wrong_log_power_decomposition_is_rejected",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "same_assertion_fingerprint": true,
+      "same_full_traceback_fingerprint": true,
+      "same_attribution_traceback_fingerprint": true,
+      "baseline_attribution_fingerprint": "bab2cffc9141f430d7c69487f79d20599b57a2a8c72057c1de6f05b946034326",
+      "r1_attribution_fingerprint": "bab2cffc9141f430d7c69487f79d20599b57a2a8c72057c1de6f05b946034326",
+      "same_lean_environment_fingerprints": true,
+      "baseline_assertion_fingerprint": "6f4bdec8465bf44b528f812350cd0302660c267a3c0e6c6676da9abe88af5a99",
+      "r1_assertion_fingerprint": "6f4bdec8465bf44b528f812350cd0302660c267a3c0e6c6676da9abe88af5a99",
+      "baseline_traceback_fingerprint": "bab2cffc9141f430d7c69487f79d20599b57a2a8c72057c1de6f05b946034326",
+      "r1_traceback_fingerprint": "bab2cffc9141f430d7c69487f79d20599b57a2a8c72057c1de6f05b946034326",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_f2q5_student_claim_checks.py",
+        "line": 49
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_f2q5_student_claim_checks.py",
+        "line": 49
+      },
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE"
+    },
+    {
+      "nodeid": "tests/test_f2q5_student_claim_checks.py::test_f2q5_wrong_digit_log_bounds_are_rejected",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "same_assertion_fingerprint": true,
+      "same_full_traceback_fingerprint": true,
+      "same_attribution_traceback_fingerprint": true,
+      "baseline_attribution_fingerprint": "8dddc0288f7e45712321b9c7b622d23a26e937879c1ef6677147ec0a16b76011",
+      "r1_attribution_fingerprint": "8dddc0288f7e45712321b9c7b622d23a26e937879c1ef6677147ec0a16b76011",
+      "same_lean_environment_fingerprints": true,
+      "baseline_assertion_fingerprint": "67c9bd11ed3cde94201d1a84e23d2528fff0efb527c566a07aa540a569801cf4",
+      "r1_assertion_fingerprint": "67c9bd11ed3cde94201d1a84e23d2528fff0efb527c566a07aa540a569801cf4",
+      "baseline_traceback_fingerprint": "8dddc0288f7e45712321b9c7b622d23a26e937879c1ef6677147ec0a16b76011",
+      "r1_traceback_fingerprint": "8dddc0288f7e45712321b9c7b622d23a26e937879c1ef6677147ec0a16b76011",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_f2q5_student_claim_checks.py",
+        "line": 64
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_f2q5_student_claim_checks.py",
+        "line": 64
+      },
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE"
+    },
+    {
+      "nodeid": "tests/test_f2q5_student_claim_checks.py::test_f2q5_wrong_between_bounds_are_rejected",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "same_assertion_fingerprint": true,
+      "same_full_traceback_fingerprint": true,
+      "same_attribution_traceback_fingerprint": true,
+      "baseline_attribution_fingerprint": "b78789a48f63c72bd6fbb13898934089920ea336fe482bcf859bf62f7fd79b1f",
+      "r1_attribution_fingerprint": "b78789a48f63c72bd6fbb13898934089920ea336fe482bcf859bf62f7fd79b1f",
+      "same_lean_environment_fingerprints": true,
+      "baseline_assertion_fingerprint": "e90e932ca80a390a42294630b2892c288bf5da5840aa5261e3108a7c391e3623",
+      "r1_assertion_fingerprint": "e90e932ca80a390a42294630b2892c288bf5da5840aa5261e3108a7c391e3623",
+      "baseline_traceback_fingerprint": "b78789a48f63c72bd6fbb13898934089920ea336fe482bcf859bf62f7fd79b1f",
+      "r1_traceback_fingerprint": "b78789a48f63c72bd6fbb13898934089920ea336fe482bcf859bf62f7fd79b1f",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_f2q5_student_claim_checks.py",
+        "line": 76
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_f2q5_student_claim_checks.py",
+        "line": 76
+      },
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE"
+    },
+    {
+      "nodeid": "tests/test_f2q5_student_claim_checks.py::test_f2q5_wrong_final_digit_is_rejected",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "same_assertion_fingerprint": true,
+      "same_full_traceback_fingerprint": true,
+      "same_attribution_traceback_fingerprint": true,
+      "baseline_attribution_fingerprint": "d557db4d249516438295b53aef4373d419fc7154fc63cb5ae0931e7610bd7182",
+      "r1_attribution_fingerprint": "d557db4d249516438295b53aef4373d419fc7154fc63cb5ae0931e7610bd7182",
+      "same_lean_environment_fingerprints": true,
+      "baseline_assertion_fingerprint": "41b9f616b379cfa088e59b0d7508d0503f907ccb43364c7c740aa8b7c19e3853",
+      "r1_assertion_fingerprint": "41b9f616b379cfa088e59b0d7508d0503f907ccb43364c7c740aa8b7c19e3853",
+      "baseline_traceback_fingerprint": "d557db4d249516438295b53aef4373d419fc7154fc63cb5ae0931e7610bd7182",
+      "r1_traceback_fingerprint": "d557db4d249516438295b53aef4373d419fc7154fc63cb5ae0931e7610bd7182",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_f2q5_student_claim_checks.py",
+        "line": 88
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_f2q5_student_claim_checks.py",
+        "line": 88
+      },
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE"
+    },
+    {
+      "nodeid": "tests/test_f2q6_strong_certificate.py::test_f2q6_correct_solution_includes_strong_certificate",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "same_assertion_fingerprint": true,
+      "same_full_traceback_fingerprint": true,
+      "same_attribution_traceback_fingerprint": true,
+      "baseline_attribution_fingerprint": "106869126005046221b2858ff9c97dde96c3ba90163ec7f037f321e4d5e24426",
+      "r1_attribution_fingerprint": "106869126005046221b2858ff9c97dde96c3ba90163ec7f037f321e4d5e24426",
+      "same_lean_environment_fingerprints": true,
+      "baseline_assertion_fingerprint": "8a791f08857cbebf93195107b63c46b31a02af41017bf8d4edc03d4ea3513c1c",
+      "r1_assertion_fingerprint": "8a791f08857cbebf93195107b63c46b31a02af41017bf8d4edc03d4ea3513c1c",
+      "baseline_traceback_fingerprint": "106869126005046221b2858ff9c97dde96c3ba90163ec7f037f321e4d5e24426",
+      "r1_traceback_fingerprint": "106869126005046221b2858ff9c97dde96c3ba90163ec7f037f321e4d5e24426",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_f2q6_strong_certificate.py",
+        "line": 35
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_f2q6_strong_certificate.py",
+        "line": 35
+      },
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE"
+    },
+    {
+      "nodeid": "tests/test_f2q6_strong_certificate.py::test_f2q6_wrong_solution_does_not_get_strong_certificate",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "same_assertion_fingerprint": true,
+      "same_full_traceback_fingerprint": true,
+      "same_attribution_traceback_fingerprint": true,
+      "baseline_attribution_fingerprint": "1656bf7267349e8b1f771e92406320c280d5a21b7a845a00e0274ecd3bd925dd",
+      "r1_attribution_fingerprint": "1656bf7267349e8b1f771e92406320c280d5a21b7a845a00e0274ecd3bd925dd",
+      "same_lean_environment_fingerprints": true,
+      "baseline_assertion_fingerprint": "de8238a1d20ee8d6da47d70579691b14bbfcf5635d86dc682066037e5557981e",
+      "r1_assertion_fingerprint": "de8238a1d20ee8d6da47d70579691b14bbfcf5635d86dc682066037e5557981e",
+      "baseline_traceback_fingerprint": "1656bf7267349e8b1f771e92406320c280d5a21b7a845a00e0274ecd3bd925dd",
+      "r1_traceback_fingerprint": "1656bf7267349e8b1f771e92406320c280d5a21b7a845a00e0274ecd3bd925dd",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_f2q6_strong_certificate.py",
+        "line": 63
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_f2q6_strong_certificate.py",
+        "line": 63
+      },
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE"
+    },
+    {
+      "nodeid": "tests/test_f2q6_student_claim_checks.py::test_f2q6_correct_solution_claims_are_verified",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "same_assertion_fingerprint": true,
+      "same_full_traceback_fingerprint": true,
+      "same_attribution_traceback_fingerprint": true,
+      "baseline_attribution_fingerprint": "4db802fb16b50a7920c610a768156ef2f9926c36d1b4c6db61bc7f468680dcfb",
+      "r1_attribution_fingerprint": "4db802fb16b50a7920c610a768156ef2f9926c36d1b4c6db61bc7f468680dcfb",
+      "same_lean_environment_fingerprints": true,
+      "baseline_assertion_fingerprint": "be195adc75470afa5fa7696461c421a4c0500c050983ad410ae6524473473489",
+      "r1_assertion_fingerprint": "be195adc75470afa5fa7696461c421a4c0500c050983ad410ae6524473473489",
+      "baseline_traceback_fingerprint": "4db802fb16b50a7920c610a768156ef2f9926c36d1b4c6db61bc7f468680dcfb",
+      "r1_traceback_fingerprint": "4db802fb16b50a7920c610a768156ef2f9926c36d1b4c6db61bc7f468680dcfb",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_f2q6_student_claim_checks.py",
+        "line": 33
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_f2q6_student_claim_checks.py",
+        "line": 33
+      },
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE"
+    },
+    {
+      "nodeid": "tests/test_f2q6_student_claim_checks.py::test_f2q6_wrong_probability_formula_is_rejected",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "same_assertion_fingerprint": true,
+      "same_full_traceback_fingerprint": true,
+      "same_attribution_traceback_fingerprint": true,
+      "baseline_attribution_fingerprint": "dbbbab5d44760aa4b27a9261f413f6b2eb13a2a7a0b7e4b9c9c55d50f146dacc",
+      "r1_attribution_fingerprint": "dbbbab5d44760aa4b27a9261f413f6b2eb13a2a7a0b7e4b9c9c55d50f146dacc",
+      "same_lean_environment_fingerprints": true,
+      "baseline_assertion_fingerprint": "9230e3dc24cd959e26f99243333fecf59ffb670acaec96b59a88ad91f71a4733",
+      "r1_assertion_fingerprint": "9230e3dc24cd959e26f99243333fecf59ffb670acaec96b59a88ad91f71a4733",
+      "baseline_traceback_fingerprint": "dbbbab5d44760aa4b27a9261f413f6b2eb13a2a7a0b7e4b9c9c55d50f146dacc",
+      "r1_traceback_fingerprint": "dbbbab5d44760aa4b27a9261f413f6b2eb13a2a7a0b7e4b9c9c55d50f146dacc",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_f2q6_student_claim_checks.py",
+        "line": 46
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_f2q6_student_claim_checks.py",
+        "line": 46
+      },
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE"
+    },
+    {
+      "nodeid": "tests/test_f2q6_student_claim_checks.py::test_f2q6_wrong_ratio_formula_is_rejected",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "same_assertion_fingerprint": true,
+      "same_full_traceback_fingerprint": true,
+      "same_attribution_traceback_fingerprint": true,
+      "baseline_attribution_fingerprint": "7d80ea1a88924e1c6f35dbad8e8b896749b25eee4e45eb821589b60896507389",
+      "r1_attribution_fingerprint": "7d80ea1a88924e1c6f35dbad8e8b896749b25eee4e45eb821589b60896507389",
+      "same_lean_environment_fingerprints": true,
+      "baseline_assertion_fingerprint": "9aa31dacf959d4d7474239173d4d207dbf7285c96027746dacb64c4fced538b4",
+      "r1_assertion_fingerprint": "9aa31dacf959d4d7474239173d4d207dbf7285c96027746dacb64c4fced538b4",
+      "baseline_traceback_fingerprint": "7d80ea1a88924e1c6f35dbad8e8b896749b25eee4e45eb821589b60896507389",
+      "r1_traceback_fingerprint": "7d80ea1a88924e1c6f35dbad8e8b896749b25eee4e45eb821589b60896507389",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_f2q6_student_claim_checks.py",
+        "line": 59
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_f2q6_student_claim_checks.py",
+        "line": 59
+      },
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE"
+    },
+    {
+      "nodeid": "tests/test_f2q6_student_claim_checks.py::test_f2q6_wrong_final_answer_is_rejected",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "same_assertion_fingerprint": true,
+      "same_full_traceback_fingerprint": true,
+      "same_attribution_traceback_fingerprint": true,
+      "baseline_attribution_fingerprint": "0494e864d95458084a470025972bf6e1d48394e1650b14bc4bb6e7a999991ff7",
+      "r1_attribution_fingerprint": "0494e864d95458084a470025972bf6e1d48394e1650b14bc4bb6e7a999991ff7",
+      "same_lean_environment_fingerprints": true,
+      "baseline_assertion_fingerprint": "91c00390b6c327bfdab851861ccdbc1fcd8c1a56bbc2da0178f0aebcf7963b75",
+      "r1_assertion_fingerprint": "91c00390b6c327bfdab851861ccdbc1fcd8c1a56bbc2da0178f0aebcf7963b75",
+      "baseline_traceback_fingerprint": "0494e864d95458084a470025972bf6e1d48394e1650b14bc4bb6e7a999991ff7",
+      "r1_traceback_fingerprint": "0494e864d95458084a470025972bf6e1d48394e1650b14bc4bb6e7a999991ff7",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_f2q6_student_claim_checks.py",
+        "line": 72
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_f2q6_student_claim_checks.py",
+        "line": 72
+      },
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE"
+    },
+    {
+      "nodeid": "tests/test_f2q6_student_claim_checks.py::test_f2q6_single_maximizer_answer_is_rejected",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "same_assertion_fingerprint": true,
+      "same_full_traceback_fingerprint": true,
+      "same_attribution_traceback_fingerprint": true,
+      "baseline_attribution_fingerprint": "81bafdc96502a1ead78b307f1f4354906f3fd85fd81ee0e4186d5e7aed8238c0",
+      "r1_attribution_fingerprint": "81bafdc96502a1ead78b307f1f4354906f3fd85fd81ee0e4186d5e7aed8238c0",
+      "same_lean_environment_fingerprints": true,
+      "baseline_assertion_fingerprint": "ad15de504b0db029674c14cb8eff1625ddc0f7d3fd7e926afc0f390edf848b97",
+      "r1_assertion_fingerprint": "ad15de504b0db029674c14cb8eff1625ddc0f7d3fd7e926afc0f390edf848b97",
+      "baseline_traceback_fingerprint": "81bafdc96502a1ead78b307f1f4354906f3fd85fd81ee0e4186d5e7aed8238c0",
+      "r1_traceback_fingerprint": "81bafdc96502a1ead78b307f1f4354906f3fd85fd81ee0e4186d5e7aed8238c0",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_f2q6_student_claim_checks.py",
+        "line": 85
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_f2q6_student_claim_checks.py",
+        "line": 85
+      },
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE"
+    },
+    {
+      "nodeid": "tests/test_f2q8_strong_certificate.py::test_f2q8_correct_solution_includes_strong_certificate",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "same_assertion_fingerprint": true,
+      "same_full_traceback_fingerprint": true,
+      "same_attribution_traceback_fingerprint": true,
+      "baseline_attribution_fingerprint": "2c04a6e27e73ae770aabf016ce55be49d9d0df06d7bba77846b698fac6ecf1b3",
+      "r1_attribution_fingerprint": "2c04a6e27e73ae770aabf016ce55be49d9d0df06d7bba77846b698fac6ecf1b3",
+      "same_lean_environment_fingerprints": true,
+      "baseline_assertion_fingerprint": "cf2859d99786137a5881a6784faf7fa32855df8582d4ffb819dccdf4ea078611",
+      "r1_assertion_fingerprint": "cf2859d99786137a5881a6784faf7fa32855df8582d4ffb819dccdf4ea078611",
+      "baseline_traceback_fingerprint": "2c04a6e27e73ae770aabf016ce55be49d9d0df06d7bba77846b698fac6ecf1b3",
+      "r1_traceback_fingerprint": "2c04a6e27e73ae770aabf016ce55be49d9d0df06d7bba77846b698fac6ecf1b3",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_f2q8_strong_certificate.py",
+        "line": 32
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_f2q8_strong_certificate.py",
+        "line": 32
+      },
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE"
+    },
+    {
+      "nodeid": "tests/test_f2q8_student_claim_checks.py::test_f2q8_correct_final_answer_and_pair_reduction",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "same_assertion_fingerprint": true,
+      "same_full_traceback_fingerprint": true,
+      "same_attribution_traceback_fingerprint": true,
+      "baseline_attribution_fingerprint": "494eddcf7f2465d0221c2863f4fe96887c01f1150d8552096102088bda05af8f",
+      "r1_attribution_fingerprint": "494eddcf7f2465d0221c2863f4fe96887c01f1150d8552096102088bda05af8f",
+      "same_lean_environment_fingerprints": true,
+      "baseline_assertion_fingerprint": "adce3acce1f7bf2d99daddcc2682e7e98ef347b5382ec908c8ca53bfbeb4a8ae",
+      "r1_assertion_fingerprint": "adce3acce1f7bf2d99daddcc2682e7e98ef347b5382ec908c8ca53bfbeb4a8ae",
+      "baseline_traceback_fingerprint": "494eddcf7f2465d0221c2863f4fe96887c01f1150d8552096102088bda05af8f",
+      "r1_traceback_fingerprint": "494eddcf7f2465d0221c2863f4fe96887c01f1150d8552096102088bda05af8f",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_f2q8_student_claim_checks.py",
+        "line": 23
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_f2q8_student_claim_checks.py",
+        "line": 23
+      },
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE"
+    },
+    {
+      "nodeid": "tests/test_f2q8_student_claim_checks.py::test_f2q8_wrong_final_answer_and_pair_reduction",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "same_assertion_fingerprint": true,
+      "same_full_traceback_fingerprint": true,
+      "same_attribution_traceback_fingerprint": true,
+      "baseline_attribution_fingerprint": "33ce10d786cf9770d12e429fc425faf57b9fc4fba0f2c607eefc3c561cafcbbb",
+      "r1_attribution_fingerprint": "33ce10d786cf9770d12e429fc425faf57b9fc4fba0f2c607eefc3c561cafcbbb",
+      "same_lean_environment_fingerprints": true,
+      "baseline_assertion_fingerprint": "2e8bfb7afaeddf398827330e163afc2868f0ead1c672a2fcecb7554766310eb2",
+      "r1_assertion_fingerprint": "2e8bfb7afaeddf398827330e163afc2868f0ead1c672a2fcecb7554766310eb2",
+      "baseline_traceback_fingerprint": "33ce10d786cf9770d12e429fc425faf57b9fc4fba0f2c607eefc3c561cafcbbb",
+      "r1_traceback_fingerprint": "33ce10d786cf9770d12e429fc425faf57b9fc4fba0f2c607eefc3c561cafcbbb",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_f2q8_student_claim_checks.py",
+        "line": 41
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_f2q8_student_claim_checks.py",
+        "line": 41
+      },
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE"
+    },
+    {
+      "nodeid": "tests/test_f2q8_student_claim_checks.py::test_f2q8_generic_arithmetic_equality_still_works",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "same_assertion_fingerprint": true,
+      "same_full_traceback_fingerprint": true,
+      "same_attribution_traceback_fingerprint": true,
+      "baseline_attribution_fingerprint": "b638d2db5e1475648151dc7f8f189e7594599f3ce9cf7c322a387a6ad7e12a3d",
+      "r1_attribution_fingerprint": "b638d2db5e1475648151dc7f8f189e7594599f3ce9cf7c322a387a6ad7e12a3d",
+      "same_lean_environment_fingerprints": true,
+      "baseline_assertion_fingerprint": "9c2558bba0e37731f6ab14fa443540ba1f04b60dc0aad334bd124283d4d216ac",
+      "r1_assertion_fingerprint": "9c2558bba0e37731f6ab14fa443540ba1f04b60dc0aad334bd124283d4d216ac",
+      "baseline_traceback_fingerprint": "b638d2db5e1475648151dc7f8f189e7594599f3ce9cf7c322a387a6ad7e12a3d",
+      "r1_traceback_fingerprint": "b638d2db5e1475648151dc7f8f189e7594599f3ce9cf7c322a387a6ad7e12a3d",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_f2q8_student_claim_checks.py",
+        "line": 54
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_f2q8_student_claim_checks.py",
+        "line": 54
+      },
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE"
+    },
+    {
+      "nodeid": "tests/test_f2q8_student_claim_checks.py::test_f2q8_generic_wrong_arithmetic_equality_still_fails",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "same_assertion_fingerprint": true,
+      "same_full_traceback_fingerprint": true,
+      "same_attribution_traceback_fingerprint": true,
+      "baseline_attribution_fingerprint": "86b7953318786bb6875eb361978a381445dc57d9f5eeb873583f945eda8c25ac",
+      "r1_attribution_fingerprint": "86b7953318786bb6875eb361978a381445dc57d9f5eeb873583f945eda8c25ac",
+      "same_lean_environment_fingerprints": true,
+      "baseline_assertion_fingerprint": "4df3517e846866776641a829aafeecfa83722b41abb17ee975d84f45c755655a",
+      "r1_assertion_fingerprint": "4df3517e846866776641a829aafeecfa83722b41abb17ee975d84f45c755655a",
+      "baseline_traceback_fingerprint": "86b7953318786bb6875eb361978a381445dc57d9f5eeb873583f945eda8c25ac",
+      "r1_traceback_fingerprint": "86b7953318786bb6875eb361978a381445dc57d9f5eeb873583f945eda8c25ac",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_f2q8_student_claim_checks.py",
+        "line": 64
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_f2q8_student_claim_checks.py",
+        "line": 64
+      },
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE"
+    },
+    {
+      "nodeid": "tests/test_f2q8_student_claim_checks.py::test_f2q8_wrong_formula_is_rejected",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "same_assertion_fingerprint": true,
+      "same_full_traceback_fingerprint": true,
+      "same_attribution_traceback_fingerprint": true,
+      "baseline_attribution_fingerprint": "292d14547815cde048671dfaaccfbd961b1c806b8523c25d14147de00d3739e3",
+      "r1_attribution_fingerprint": "292d14547815cde048671dfaaccfbd961b1c806b8523c25d14147de00d3739e3",
+      "same_lean_environment_fingerprints": true,
+      "baseline_assertion_fingerprint": "2c895117e7c8759d6aead4021e2564c77d014a4f83a081fd731a9a8731ef70f6",
+      "r1_assertion_fingerprint": "2c895117e7c8759d6aead4021e2564c77d014a4f83a081fd731a9a8731ef70f6",
+      "baseline_traceback_fingerprint": "292d14547815cde048671dfaaccfbd961b1c806b8523c25d14147de00d3739e3",
+      "r1_traceback_fingerprint": "292d14547815cde048671dfaaccfbd961b1c806b8523c25d14147de00d3739e3",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_f2q8_student_claim_checks.py",
+        "line": 75
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_f2q8_student_claim_checks.py",
+        "line": 75
+      },
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE"
+    },
+    {
+      "nodeid": "tests/test_f2q8_student_claim_checks.py::test_f2q8_correct_formula_is_verified",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "same_assertion_fingerprint": true,
+      "same_full_traceback_fingerprint": true,
+      "same_attribution_traceback_fingerprint": true,
+      "baseline_attribution_fingerprint": "7b173bc73070762d730551206f9474cd5a4888b09febec712ba124316af00f43",
+      "r1_attribution_fingerprint": "7b173bc73070762d730551206f9474cd5a4888b09febec712ba124316af00f43",
+      "same_lean_environment_fingerprints": true,
+      "baseline_assertion_fingerprint": "318e6c6236d2492b714eee0b5a6f7baa945ff7759e278826ff8b38de38f52601",
+      "r1_assertion_fingerprint": "318e6c6236d2492b714eee0b5a6f7baa945ff7759e278826ff8b38de38f52601",
+      "baseline_traceback_fingerprint": "7b173bc73070762d730551206f9474cd5a4888b09febec712ba124316af00f43",
+      "r1_traceback_fingerprint": "7b173bc73070762d730551206f9474cd5a4888b09febec712ba124316af00f43",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_f2q8_student_claim_checks.py",
+        "line": 86
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_f2q8_student_claim_checks.py",
+        "line": 86
+      },
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE"
+    },
+    {
+      "nodeid": "tests/test_f2q8_student_claim_checks.py::test_f2q8_correct_pair_count_but_wrong_rhs",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "same_assertion_fingerprint": true,
+      "same_full_traceback_fingerprint": true,
+      "same_attribution_traceback_fingerprint": true,
+      "baseline_attribution_fingerprint": "5d0ec767e1af4c80897f5b5cbdc0092d7e1e0dc3c496bbaca1625db7a70720ef",
+      "r1_attribution_fingerprint": "5d0ec767e1af4c80897f5b5cbdc0092d7e1e0dc3c496bbaca1625db7a70720ef",
+      "same_lean_environment_fingerprints": true,
+      "baseline_assertion_fingerprint": "02cfdf36143cff8bd52a257c4d8913e87e6e2cfb453b1b4a84579a2e6620d0e8",
+      "r1_assertion_fingerprint": "02cfdf36143cff8bd52a257c4d8913e87e6e2cfb453b1b4a84579a2e6620d0e8",
+      "baseline_traceback_fingerprint": "5d0ec767e1af4c80897f5b5cbdc0092d7e1e0dc3c496bbaca1625db7a70720ef",
+      "r1_traceback_fingerprint": "5d0ec767e1af4c80897f5b5cbdc0092d7e1e0dc3c496bbaca1625db7a70720ef",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_f2q8_student_claim_checks.py",
+        "line": 98
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_f2q8_student_claim_checks.py",
+        "line": 98
+      },
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE"
+    },
+    {
+      "nodeid": "tests/test_f2q8_student_claim_checks.py::test_f2q8_wrong_pair_count_true_local_subtraction",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "same_assertion_fingerprint": true,
+      "same_full_traceback_fingerprint": true,
+      "same_attribution_traceback_fingerprint": true,
+      "baseline_attribution_fingerprint": "b871c86a6596d851b99569bc41dc1263a771dbd7ac865f991d228820f4d74d63",
+      "r1_attribution_fingerprint": "b871c86a6596d851b99569bc41dc1263a771dbd7ac865f991d228820f4d74d63",
+      "same_lean_environment_fingerprints": true,
+      "baseline_assertion_fingerprint": "a0815e1813c1c1569e3c87d3a2d715077bf10b9701c6a871f787b1e69c563a2d",
+      "r1_assertion_fingerprint": "a0815e1813c1c1569e3c87d3a2d715077bf10b9701c6a871f787b1e69c563a2d",
+      "baseline_traceback_fingerprint": "b871c86a6596d851b99569bc41dc1263a771dbd7ac865f991d228820f4d74d63",
+      "r1_traceback_fingerprint": "b871c86a6596d851b99569bc41dc1263a771dbd7ac865f991d228820f4d74d63",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_f2q8_student_claim_checks.py",
+        "line": 112
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_f2q8_student_claim_checks.py",
+        "line": 112
+      },
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE"
+    },
+    {
+      "nodeid": "tests/test_handwriting_recognition_benchmark.py::test_loader_schema_artificial_samples_and_optional_strokes",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "same_assertion_fingerprint": true,
+      "same_full_traceback_fingerprint": true,
+      "same_attribution_traceback_fingerprint": true,
+      "baseline_attribution_fingerprint": "286320a6f068852ba602f6192f3b1f9d7b547993369ad57e550fa32547448a1c",
+      "r1_attribution_fingerprint": "286320a6f068852ba602f6192f3b1f9d7b547993369ad57e550fa32547448a1c",
+      "same_lean_environment_fingerprints": true,
+      "baseline_assertion_fingerprint": "2688ddffeca47970d0c6fbe4d13ce50cdb38d47764e32a8cc934daeddbb40693",
+      "r1_assertion_fingerprint": "2688ddffeca47970d0c6fbe4d13ce50cdb38d47764e32a8cc934daeddbb40693",
+      "baseline_traceback_fingerprint": "286320a6f068852ba602f6192f3b1f9d7b547993369ad57e550fa32547448a1c",
+      "r1_traceback_fingerprint": "286320a6f068852ba602f6192f3b1f9d7b547993369ad57e550fa32547448a1c",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_handwriting_recognition_benchmark.py",
+        "line": 32
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_handwriting_recognition_benchmark.py",
+        "line": 32
+      },
+      "cause": "PREEXISTING_SCHEMA_PAGE_LIMIT_3_VS_50"
+    },
+    {
+      "nodeid": "tests/test_ita2025f2q1_level1.py::test_f2q1_correct_solution_scores_10_and_verifies_lean",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "same_assertion_fingerprint": true,
+      "same_full_traceback_fingerprint": true,
+      "same_attribution_traceback_fingerprint": true,
+      "baseline_attribution_fingerprint": "0ef763acda8a17e095da285eea75f91ae11c1e24c7e1a5fe0bdaef05e5abb400",
+      "r1_attribution_fingerprint": "0ef763acda8a17e095da285eea75f91ae11c1e24c7e1a5fe0bdaef05e5abb400",
+      "same_lean_environment_fingerprints": true,
+      "baseline_assertion_fingerprint": "6ce6be3b2129081117994108af67aa6c0937a0bd54bab95f535b1ffd23963f87",
+      "r1_assertion_fingerprint": "6ce6be3b2129081117994108af67aa6c0937a0bd54bab95f535b1ffd23963f87",
+      "baseline_traceback_fingerprint": "0ef763acda8a17e095da285eea75f91ae11c1e24c7e1a5fe0bdaef05e5abb400",
+      "r1_traceback_fingerprint": "0ef763acda8a17e095da285eea75f91ae11c1e24c7e1a5fe0bdaef05e5abb400",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_ita2025f2q1_level1.py",
+        "line": 47
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_ita2025f2q1_level1.py",
+        "line": 47
+      },
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE"
+    },
+    {
+      "nodeid": "tests/test_ita2025f2q1_level1.py::test_f2q1_missing_reduced_form_scores_partial",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "same_assertion_fingerprint": true,
+      "same_full_traceback_fingerprint": true,
+      "same_attribution_traceback_fingerprint": true,
+      "baseline_attribution_fingerprint": "232b85cfd61ffbff493471796ac4f3ae1fcb67646652a44436078cb3e2300ff0",
+      "r1_attribution_fingerprint": "232b85cfd61ffbff493471796ac4f3ae1fcb67646652a44436078cb3e2300ff0",
+      "same_lean_environment_fingerprints": true,
+      "baseline_assertion_fingerprint": "3ec5b2805f5dd09823e76934a530015704e84cc24a3ff4bdd254b478c25bdb31",
+      "r1_assertion_fingerprint": "3ec5b2805f5dd09823e76934a530015704e84cc24a3ff4bdd254b478c25bdb31",
+      "baseline_traceback_fingerprint": "232b85cfd61ffbff493471796ac4f3ae1fcb67646652a44436078cb3e2300ff0",
+      "r1_traceback_fingerprint": "232b85cfd61ffbff493471796ac4f3ae1fcb67646652a44436078cb3e2300ff0",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_ita2025f2q1_level1.py",
+        "line": 82
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_ita2025f2q1_level1.py",
+        "line": 82
+      },
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE"
+    },
+    {
+      "nodeid": "tests/test_ita2025f2q1_level1.py::test_f2q1_wrong_answer_keeps_undecided_criteria_and_decided_subtotal",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "same_assertion_fingerprint": true,
+      "same_full_traceback_fingerprint": true,
+      "same_attribution_traceback_fingerprint": true,
+      "baseline_attribution_fingerprint": "e47333d9beb9fb9831eb867a47e483502757036cf76170e1531ea868666e2031",
+      "r1_attribution_fingerprint": "e47333d9beb9fb9831eb867a47e483502757036cf76170e1531ea868666e2031",
+      "same_lean_environment_fingerprints": true,
+      "baseline_assertion_fingerprint": "11349113707a832093f49a16143afc51a496bb114dec1d23824093820a4f2072",
+      "r1_assertion_fingerprint": "11349113707a832093f49a16143afc51a496bb114dec1d23824093820a4f2072",
+      "baseline_traceback_fingerprint": "e47333d9beb9fb9831eb867a47e483502757036cf76170e1531ea868666e2031",
+      "r1_traceback_fingerprint": "e47333d9beb9fb9831eb867a47e483502757036cf76170e1531ea868666e2031",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/audit_contract.py",
+        "line": 60
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/audit_contract.py",
+        "line": 60
+      },
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE"
+    },
+    {
+      "nodeid": "tests/test_ita2025f2q3_level1.py::test_f2q3_correct_solution_scores_10_and_verifies_lean",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "same_assertion_fingerprint": true,
+      "same_full_traceback_fingerprint": true,
+      "same_attribution_traceback_fingerprint": true,
+      "baseline_attribution_fingerprint": "ec4fcfc214e7afbe607f80408ec66f8151525016e016fd36dd474fc541877da7",
+      "r1_attribution_fingerprint": "ec4fcfc214e7afbe607f80408ec66f8151525016e016fd36dd474fc541877da7",
+      "same_lean_environment_fingerprints": true,
+      "baseline_assertion_fingerprint": "407b7f4b45c9432827a9cf0072390c0b4ed9c3fdc2c54943edd845287aefdd58",
+      "r1_assertion_fingerprint": "407b7f4b45c9432827a9cf0072390c0b4ed9c3fdc2c54943edd845287aefdd58",
+      "baseline_traceback_fingerprint": "ec4fcfc214e7afbe607f80408ec66f8151525016e016fd36dd474fc541877da7",
+      "r1_traceback_fingerprint": "ec4fcfc214e7afbe607f80408ec66f8151525016e016fd36dd474fc541877da7",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_ita2025f2q3_level1.py",
+        "line": 47
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_ita2025f2q3_level1.py",
+        "line": 47
+      },
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE"
+    },
+    {
+      "nodeid": "tests/test_ita2025f2q3_level1.py::test_f2q3_answer_only_scores_final_points_only",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "same_assertion_fingerprint": true,
+      "same_full_traceback_fingerprint": true,
+      "same_attribution_traceback_fingerprint": true,
+      "baseline_attribution_fingerprint": "08667136b5e1a91d581a794baed409c97a96b367c2dfc9271e2f8992955e1618",
+      "r1_attribution_fingerprint": "08667136b5e1a91d581a794baed409c97a96b367c2dfc9271e2f8992955e1618",
+      "same_lean_environment_fingerprints": true,
+      "baseline_assertion_fingerprint": "6a335fd9ebabd4139e64c5c6956684e231668353aef81381c8e80ec5926d29b6",
+      "r1_assertion_fingerprint": "6a335fd9ebabd4139e64c5c6956684e231668353aef81381c8e80ec5926d29b6",
+      "baseline_traceback_fingerprint": "08667136b5e1a91d581a794baed409c97a96b367c2dfc9271e2f8992955e1618",
+      "r1_traceback_fingerprint": "08667136b5e1a91d581a794baed409c97a96b367c2dfc9271e2f8992955e1618",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/audit_contract.py",
+        "line": 59
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/audit_contract.py",
+        "line": 59
+      },
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE"
+    },
+    {
+      "nodeid": "tests/test_ita2025f2q3_level1.py::test_f2q3_partial_beta_difference_scores_partial",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "same_assertion_fingerprint": true,
+      "same_full_traceback_fingerprint": true,
+      "same_attribution_traceback_fingerprint": true,
+      "baseline_attribution_fingerprint": "2c41d1b3aefe3f103eab5fdd41ed4f0b1a334651e7b3163d2ce7c56ad5f47cdd",
+      "r1_attribution_fingerprint": "2c41d1b3aefe3f103eab5fdd41ed4f0b1a334651e7b3163d2ce7c56ad5f47cdd",
+      "same_lean_environment_fingerprints": true,
+      "baseline_assertion_fingerprint": "6a335fd9ebabd4139e64c5c6956684e231668353aef81381c8e80ec5926d29b6",
+      "r1_assertion_fingerprint": "6a335fd9ebabd4139e64c5c6956684e231668353aef81381c8e80ec5926d29b6",
+      "baseline_traceback_fingerprint": "2c41d1b3aefe3f103eab5fdd41ed4f0b1a334651e7b3163d2ce7c56ad5f47cdd",
+      "r1_traceback_fingerprint": "2c41d1b3aefe3f103eab5fdd41ed4f0b1a334651e7b3163d2ce7c56ad5f47cdd",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/audit_contract.py",
+        "line": 59
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/audit_contract.py",
+        "line": 59
+      },
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE"
+    },
+    {
+      "nodeid": "tests/test_ita2025f2q3_level1.py::test_f2q3_wrong_answer_keeps_undecided_criteria_and_decided_subtotal",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "same_assertion_fingerprint": true,
+      "same_full_traceback_fingerprint": true,
+      "same_attribution_traceback_fingerprint": true,
+      "baseline_attribution_fingerprint": "ab30567d1a5e5514485aa18ae07458ac48f9d7aec67e2220f18c5acb348ead9e",
+      "r1_attribution_fingerprint": "ab30567d1a5e5514485aa18ae07458ac48f9d7aec67e2220f18c5acb348ead9e",
+      "same_lean_environment_fingerprints": true,
+      "baseline_assertion_fingerprint": "11349113707a832093f49a16143afc51a496bb114dec1d23824093820a4f2072",
+      "r1_assertion_fingerprint": "11349113707a832093f49a16143afc51a496bb114dec1d23824093820a4f2072",
+      "baseline_traceback_fingerprint": "ab30567d1a5e5514485aa18ae07458ac48f9d7aec67e2220f18c5acb348ead9e",
+      "r1_traceback_fingerprint": "ab30567d1a5e5514485aa18ae07458ac48f9d7aec67e2220f18c5acb348ead9e",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/audit_contract.py",
+        "line": 60
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/audit_contract.py",
+        "line": 60
+      },
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE"
+    },
+    {
+      "nodeid": "tests/test_ita2025f2q5_level1.py::test_f2q5_correct_solution_scores_10_and_verifies_lean",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "same_assertion_fingerprint": true,
+      "same_full_traceback_fingerprint": true,
+      "same_attribution_traceback_fingerprint": true,
+      "baseline_attribution_fingerprint": "a2ad078c406137b474f33a15ee844a04231eae280ef3a13410bae429194b1c68",
+      "r1_attribution_fingerprint": "a2ad078c406137b474f33a15ee844a04231eae280ef3a13410bae429194b1c68",
+      "same_lean_environment_fingerprints": true,
+      "baseline_assertion_fingerprint": "bc5bc4ba5a3ce396a8b97f5e80a2742d1fbfe7f6731b1a932a6ff3257129737b",
+      "r1_assertion_fingerprint": "bc5bc4ba5a3ce396a8b97f5e80a2742d1fbfe7f6731b1a932a6ff3257129737b",
+      "baseline_traceback_fingerprint": "a2ad078c406137b474f33a15ee844a04231eae280ef3a13410bae429194b1c68",
+      "r1_traceback_fingerprint": "a2ad078c406137b474f33a15ee844a04231eae280ef3a13410bae429194b1c68",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_ita2025f2q5_level1.py",
+        "line": 47
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_ita2025f2q5_level1.py",
+        "line": 47
+      },
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE"
+    },
+    {
+      "nodeid": "tests/test_ita2025f2q5_level1.py::test_f2q5_missing_bounds_scores_partial",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "same_assertion_fingerprint": true,
+      "same_full_traceback_fingerprint": true,
+      "same_attribution_traceback_fingerprint": true,
+      "baseline_attribution_fingerprint": "3be30e78b5f2c8638a26ac199746e138a4329726b2b92879fb52a6f16704eb29",
+      "r1_attribution_fingerprint": "3be30e78b5f2c8638a26ac199746e138a4329726b2b92879fb52a6f16704eb29",
+      "same_lean_environment_fingerprints": true,
+      "baseline_assertion_fingerprint": "7c384355589453ad82bf8371a2e3c75d051e947ff012753e070cb0d999cda2ba",
+      "r1_assertion_fingerprint": "7c384355589453ad82bf8371a2e3c75d051e947ff012753e070cb0d999cda2ba",
+      "baseline_traceback_fingerprint": "3be30e78b5f2c8638a26ac199746e138a4329726b2b92879fb52a6f16704eb29",
+      "r1_traceback_fingerprint": "3be30e78b5f2c8638a26ac199746e138a4329726b2b92879fb52a6f16704eb29",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_ita2025f2q5_level1.py",
+        "line": 81
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_ita2025f2q5_level1.py",
+        "line": 81
+      },
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE"
+    },
+    {
+      "nodeid": "tests/test_ita2025f2q5_level1.py::test_f2q5_wrong_digit_keeps_undecided_criteria_and_decided_subtotal",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "same_assertion_fingerprint": true,
+      "same_full_traceback_fingerprint": true,
+      "same_attribution_traceback_fingerprint": true,
+      "baseline_attribution_fingerprint": "764b8e4d5da73dc18d79af87bb45d9cb37468a52b9c48d4787c33016ebab9a1c",
+      "r1_attribution_fingerprint": "764b8e4d5da73dc18d79af87bb45d9cb37468a52b9c48d4787c33016ebab9a1c",
+      "same_lean_environment_fingerprints": true,
+      "baseline_assertion_fingerprint": "11349113707a832093f49a16143afc51a496bb114dec1d23824093820a4f2072",
+      "r1_assertion_fingerprint": "11349113707a832093f49a16143afc51a496bb114dec1d23824093820a4f2072",
+      "baseline_traceback_fingerprint": "764b8e4d5da73dc18d79af87bb45d9cb37468a52b9c48d4787c33016ebab9a1c",
+      "r1_traceback_fingerprint": "764b8e4d5da73dc18d79af87bb45d9cb37468a52b9c48d4787c33016ebab9a1c",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/audit_contract.py",
+        "line": 60
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/audit_contract.py",
+        "line": 60
+      },
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE"
+    },
+    {
+      "nodeid": "tests/test_ita2025f2q6_level1.py::test_f2q6_correct_solution_scores_10_and_verifies_lean",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "same_assertion_fingerprint": true,
+      "same_full_traceback_fingerprint": true,
+      "same_attribution_traceback_fingerprint": true,
+      "baseline_attribution_fingerprint": "dfed1f0e06b8599cf3d50c56f9035c3a3c6b66f54ff96f1103c54a5ce0a27d93",
+      "r1_attribution_fingerprint": "dfed1f0e06b8599cf3d50c56f9035c3a3c6b66f54ff96f1103c54a5ce0a27d93",
+      "same_lean_environment_fingerprints": true,
+      "baseline_assertion_fingerprint": "56a4b8945822740d27f8f332f7f142b15d0b66476c848014bccb19a2fb735cc3",
+      "r1_assertion_fingerprint": "56a4b8945822740d27f8f332f7f142b15d0b66476c848014bccb19a2fb735cc3",
+      "baseline_traceback_fingerprint": "dfed1f0e06b8599cf3d50c56f9035c3a3c6b66f54ff96f1103c54a5ce0a27d93",
+      "r1_traceback_fingerprint": "dfed1f0e06b8599cf3d50c56f9035c3a3c6b66f54ff96f1103c54a5ce0a27d93",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_ita2025f2q6_level1.py",
+        "line": 47
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_ita2025f2q6_level1.py",
+        "line": 47
+      },
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE"
+    },
+    {
+      "nodeid": "tests/test_ita2025f2q6_level1.py::test_f2q6_missing_ratio_scores_partial",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "same_assertion_fingerprint": true,
+      "same_full_traceback_fingerprint": true,
+      "same_attribution_traceback_fingerprint": true,
+      "baseline_attribution_fingerprint": "d0cd9cf420f3941d80bc6d0cd89ec516f095aacc400aa47f973b12379668a26a",
+      "r1_attribution_fingerprint": "d0cd9cf420f3941d80bc6d0cd89ec516f095aacc400aa47f973b12379668a26a",
+      "same_lean_environment_fingerprints": true,
+      "baseline_assertion_fingerprint": "f0c878afb0e6b683167b3b86e35e85d8f89d1c26ac09b099cda083b610064ef1",
+      "r1_assertion_fingerprint": "f0c878afb0e6b683167b3b86e35e85d8f89d1c26ac09b099cda083b610064ef1",
+      "baseline_traceback_fingerprint": "d0cd9cf420f3941d80bc6d0cd89ec516f095aacc400aa47f973b12379668a26a",
+      "r1_traceback_fingerprint": "d0cd9cf420f3941d80bc6d0cd89ec516f095aacc400aa47f973b12379668a26a",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_ita2025f2q6_level1.py",
+        "line": 81
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_ita2025f2q6_level1.py",
+        "line": 81
+      },
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE"
+    },
+    {
+      "nodeid": "tests/test_ita2025f2q6_level1.py::test_f2q6_wrong_answer_keeps_undecided_criteria_and_decided_subtotal",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "same_assertion_fingerprint": true,
+      "same_full_traceback_fingerprint": true,
+      "same_attribution_traceback_fingerprint": true,
+      "baseline_attribution_fingerprint": "653ba6c49c9a0674fe936da2e52f5a34d39e10e493fd5787344331d279f43d57",
+      "r1_attribution_fingerprint": "653ba6c49c9a0674fe936da2e52f5a34d39e10e493fd5787344331d279f43d57",
+      "same_lean_environment_fingerprints": true,
+      "baseline_assertion_fingerprint": "11349113707a832093f49a16143afc51a496bb114dec1d23824093820a4f2072",
+      "r1_assertion_fingerprint": "11349113707a832093f49a16143afc51a496bb114dec1d23824093820a4f2072",
+      "baseline_traceback_fingerprint": "653ba6c49c9a0674fe936da2e52f5a34d39e10e493fd5787344331d279f43d57",
+      "r1_traceback_fingerprint": "653ba6c49c9a0674fe936da2e52f5a34d39e10e493fd5787344331d279f43d57",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/audit_contract.py",
+        "line": 60
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/audit_contract.py",
+        "line": 60
+      },
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE"
+    },
+    {
+      "nodeid": "tests/test_ita2025f2q8_level1.py::test_f2q8_correct_solution_scores_10_and_verifies_lean",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "same_assertion_fingerprint": true,
+      "same_full_traceback_fingerprint": true,
+      "same_attribution_traceback_fingerprint": true,
+      "baseline_attribution_fingerprint": "9ea599e504a52d914d0ca48b57e315404001a8e833752a16e173bc20e9d456ed",
+      "r1_attribution_fingerprint": "9ea599e504a52d914d0ca48b57e315404001a8e833752a16e173bc20e9d456ed",
+      "same_lean_environment_fingerprints": true,
+      "baseline_assertion_fingerprint": "30792aae6016c9515e693aff011246410b575f2a5420eff84e47fe5be2cdc986",
+      "r1_assertion_fingerprint": "30792aae6016c9515e693aff011246410b575f2a5420eff84e47fe5be2cdc986",
+      "baseline_traceback_fingerprint": "9ea599e504a52d914d0ca48b57e315404001a8e833752a16e173bc20e9d456ed",
+      "r1_traceback_fingerprint": "9ea599e504a52d914d0ca48b57e315404001a8e833752a16e173bc20e9d456ed",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_ita2025f2q8_level1.py",
+        "line": 47
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_ita2025f2q8_level1.py",
+        "line": 47
+      },
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE"
+    },
+    {
+      "nodeid": "tests/test_ita2025f2q8_level1.py::test_f2q8_answer_only_scores_final_points_only",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "same_assertion_fingerprint": true,
+      "same_full_traceback_fingerprint": true,
+      "same_attribution_traceback_fingerprint": true,
+      "baseline_attribution_fingerprint": "1c8af2c1f96029fc33a4a5ef199abdf58fbfc7fc5f16069b4346ed85d9628f09",
+      "r1_attribution_fingerprint": "1c8af2c1f96029fc33a4a5ef199abdf58fbfc7fc5f16069b4346ed85d9628f09",
+      "same_lean_environment_fingerprints": true,
+      "baseline_assertion_fingerprint": "6a335fd9ebabd4139e64c5c6956684e231668353aef81381c8e80ec5926d29b6",
+      "r1_assertion_fingerprint": "6a335fd9ebabd4139e64c5c6956684e231668353aef81381c8e80ec5926d29b6",
+      "baseline_traceback_fingerprint": "1c8af2c1f96029fc33a4a5ef199abdf58fbfc7fc5f16069b4346ed85d9628f09",
+      "r1_traceback_fingerprint": "1c8af2c1f96029fc33a4a5ef199abdf58fbfc7fc5f16069b4346ed85d9628f09",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/audit_contract.py",
+        "line": 59
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/audit_contract.py",
+        "line": 59
+      },
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE"
+    },
+    {
+      "nodeid": "tests/test_ita2025f2q8_level1.py::test_f2q8_missing_determinant_formula_scores_partial",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "same_assertion_fingerprint": true,
+      "same_full_traceback_fingerprint": true,
+      "same_attribution_traceback_fingerprint": true,
+      "baseline_attribution_fingerprint": "53a9f9c3a829a83ebb94202e501efea333135fc29ca41a4944d5ac00f8526585",
+      "r1_attribution_fingerprint": "53a9f9c3a829a83ebb94202e501efea333135fc29ca41a4944d5ac00f8526585",
+      "same_lean_environment_fingerprints": true,
+      "baseline_assertion_fingerprint": "47e0ef1296083f1c967e4d932358777c74029d0313340a2f82ced7ebf80c7d59",
+      "r1_assertion_fingerprint": "47e0ef1296083f1c967e4d932358777c74029d0313340a2f82ced7ebf80c7d59",
+      "baseline_traceback_fingerprint": "53a9f9c3a829a83ebb94202e501efea333135fc29ca41a4944d5ac00f8526585",
+      "r1_traceback_fingerprint": "53a9f9c3a829a83ebb94202e501efea333135fc29ca41a4944d5ac00f8526585",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_ita2025f2q8_level1.py",
+        "line": 87
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_ita2025f2q8_level1.py",
+        "line": 87
+      },
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE"
+    },
+    {
+      "nodeid": "tests/test_ita2025q1_level2.py::test_q1_correct_solution_scores_10_and_verifies_formal_step",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "same_assertion_fingerprint": true,
+      "same_full_traceback_fingerprint": true,
+      "same_attribution_traceback_fingerprint": true,
+      "baseline_attribution_fingerprint": "2e1e5276159b3774e1aed1d94310bd52c4865ef36c14d3c328c7ae854ff6069a",
+      "r1_attribution_fingerprint": "2e1e5276159b3774e1aed1d94310bd52c4865ef36c14d3c328c7ae854ff6069a",
+      "same_lean_environment_fingerprints": true,
+      "baseline_assertion_fingerprint": "f4f7b52e06a994c8df4181135b497e614cc7b7680ac94cf0d25765b5b83a2d42",
+      "r1_assertion_fingerprint": "f4f7b52e06a994c8df4181135b497e614cc7b7680ac94cf0d25765b5b83a2d42",
+      "baseline_traceback_fingerprint": "2e1e5276159b3774e1aed1d94310bd52c4865ef36c14d3c328c7ae854ff6069a",
+      "r1_traceback_fingerprint": "2e1e5276159b3774e1aed1d94310bd52c4865ef36c14d3c328c7ae854ff6069a",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_ita2025q1_level2.py",
+        "line": 52
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_ita2025q1_level2.py",
+        "line": 52
+      },
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE"
+    },
+    {
+      "nodeid": "tests/test_ita2025q1_level2.py::test_q1_wrong_determinant_step_blocks_area_and_dependencies",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "same_assertion_fingerprint": true,
+      "same_full_traceback_fingerprint": true,
+      "same_attribution_traceback_fingerprint": true,
+      "baseline_attribution_fingerprint": "31d09c80d0b4af8263805ed3921d2e3d279161999876c5960f93b3d6d3025302",
+      "r1_attribution_fingerprint": "31d09c80d0b4af8263805ed3921d2e3d279161999876c5960f93b3d6d3025302",
+      "same_lean_environment_fingerprints": true,
+      "baseline_assertion_fingerprint": "6a335fd9ebabd4139e64c5c6956684e231668353aef81381c8e80ec5926d29b6",
+      "r1_assertion_fingerprint": "6a335fd9ebabd4139e64c5c6956684e231668353aef81381c8e80ec5926d29b6",
+      "baseline_traceback_fingerprint": "31d09c80d0b4af8263805ed3921d2e3d279161999876c5960f93b3d6d3025302",
+      "r1_traceback_fingerprint": "31d09c80d0b4af8263805ed3921d2e3d279161999876c5960f93b3d6d3025302",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/audit_contract.py",
+        "line": 59
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/audit_contract.py",
+        "line": 59
+      },
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE"
+    },
+    {
+      "nodeid": "tests/test_ita2025q1_level2.py::test_q1_answer_only_preserves_subtotal_without_global_score",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "same_assertion_fingerprint": true,
+      "same_full_traceback_fingerprint": true,
+      "same_attribution_traceback_fingerprint": true,
+      "baseline_attribution_fingerprint": "6e4cbbb39ed552dc60303add4491b2f707e76b9d70b1c7050a54a7451ce8ce12",
+      "r1_attribution_fingerprint": "6e4cbbb39ed552dc60303add4491b2f707e76b9d70b1c7050a54a7451ce8ce12",
+      "same_lean_environment_fingerprints": true,
+      "baseline_assertion_fingerprint": "6a335fd9ebabd4139e64c5c6956684e231668353aef81381c8e80ec5926d29b6",
+      "r1_assertion_fingerprint": "6a335fd9ebabd4139e64c5c6956684e231668353aef81381c8e80ec5926d29b6",
+      "baseline_traceback_fingerprint": "6e4cbbb39ed552dc60303add4491b2f707e76b9d70b1c7050a54a7451ce8ce12",
+      "r1_traceback_fingerprint": "6e4cbbb39ed552dc60303add4491b2f707e76b9d70b1c7050a54a7451ce8ce12",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/audit_contract.py",
+        "line": 59
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/audit_contract.py",
+        "line": 59
+      },
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE"
+    },
+    {
+      "nodeid": "tests/test_ita2025q3_level1.py::test_q3_correct_solution_scores_10_and_verifies_formal_step",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "same_assertion_fingerprint": true,
+      "same_full_traceback_fingerprint": true,
+      "same_attribution_traceback_fingerprint": true,
+      "baseline_attribution_fingerprint": "f60f765f2e32bcdd01ca5d8b35f40c9fb0608351c8c9cd7c15ca8db616bdf122",
+      "r1_attribution_fingerprint": "f60f765f2e32bcdd01ca5d8b35f40c9fb0608351c8c9cd7c15ca8db616bdf122",
+      "same_lean_environment_fingerprints": true,
+      "baseline_assertion_fingerprint": "7c49b155aad893956112bbc5c249da9595e8547f6937974c1f99029c2c75ae80",
+      "r1_assertion_fingerprint": "7c49b155aad893956112bbc5c249da9595e8547f6937974c1f99029c2c75ae80",
+      "baseline_traceback_fingerprint": "f60f765f2e32bcdd01ca5d8b35f40c9fb0608351c8c9cd7c15ca8db616bdf122",
+      "r1_traceback_fingerprint": "f60f765f2e32bcdd01ca5d8b35f40c9fb0608351c8c9cd7c15ca8db616bdf122",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_ita2025q3_level1.py",
+        "line": 47
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_ita2025q3_level1.py",
+        "line": 47
+      },
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE"
+    },
+    {
+      "nodeid": "tests/test_ita2025q3_level1.py::test_q3_missing_parity_blocks_formal_chain",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "same_assertion_fingerprint": true,
+      "same_full_traceback_fingerprint": true,
+      "same_attribution_traceback_fingerprint": true,
+      "baseline_attribution_fingerprint": "1861a119d6fc88ecbbb71dbfd998966fcb4b099f26bf8242b87b6b2deff22ad5",
+      "r1_attribution_fingerprint": "1861a119d6fc88ecbbb71dbfd998966fcb4b099f26bf8242b87b6b2deff22ad5",
+      "same_lean_environment_fingerprints": true,
+      "baseline_assertion_fingerprint": "4fd12ab8d728c1714f2f90ffc4d9bb309b668b5261839ecf4f613cc3c1bd6380",
+      "r1_assertion_fingerprint": "4fd12ab8d728c1714f2f90ffc4d9bb309b668b5261839ecf4f613cc3c1bd6380",
+      "baseline_traceback_fingerprint": "1861a119d6fc88ecbbb71dbfd998966fcb4b099f26bf8242b87b6b2deff22ad5",
+      "r1_traceback_fingerprint": "1861a119d6fc88ecbbb71dbfd998966fcb4b099f26bf8242b87b6b2deff22ad5",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_ita2025q3_level1.py",
+        "line": 93
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_ita2025q3_level1.py",
+        "line": 93
+      },
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE"
+    },
+    {
+      "nodeid": "tests/test_ita2025q4_level1.py::test_q4_correct_solution_scores_10_and_verifies_lean",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "same_assertion_fingerprint": true,
+      "same_full_traceback_fingerprint": true,
+      "same_attribution_traceback_fingerprint": true,
+      "baseline_attribution_fingerprint": "35e1466ff21d32680a41132563bd48d0d47602cc3dadbe242910cb3ad71ab738",
+      "r1_attribution_fingerprint": "35e1466ff21d32680a41132563bd48d0d47602cc3dadbe242910cb3ad71ab738",
+      "same_lean_environment_fingerprints": true,
+      "baseline_assertion_fingerprint": "e896b3b6ebb4eff36cbf59887d70e22c4c0d6f17d37902b387e477a4bc701040",
+      "r1_assertion_fingerprint": "e896b3b6ebb4eff36cbf59887d70e22c4c0d6f17d37902b387e477a4bc701040",
+      "baseline_traceback_fingerprint": "35e1466ff21d32680a41132563bd48d0d47602cc3dadbe242910cb3ad71ab738",
+      "r1_traceback_fingerprint": "35e1466ff21d32680a41132563bd48d0d47602cc3dadbe242910cb3ad71ab738",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_ita2025q4_level1.py",
+        "line": 47
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_ita2025q4_level1.py",
+        "line": 47
+      },
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE"
+    },
+    {
+      "nodeid": "tests/test_ita2025q5_level1.py::test_q5_correct_solution_scores_10_and_verifies_lean",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "same_assertion_fingerprint": true,
+      "same_full_traceback_fingerprint": true,
+      "same_attribution_traceback_fingerprint": true,
+      "baseline_attribution_fingerprint": "d7bc5fd11ca628f9db65ed55f0b6238afb2162432779539321d07657c86bbe6f",
+      "r1_attribution_fingerprint": "d7bc5fd11ca628f9db65ed55f0b6238afb2162432779539321d07657c86bbe6f",
+      "same_lean_environment_fingerprints": true,
+      "baseline_assertion_fingerprint": "45d3c23655c86ab129d7728cb424d61cee32d56e90d0476c4f2fa737616f6372",
+      "r1_assertion_fingerprint": "45d3c23655c86ab129d7728cb424d61cee32d56e90d0476c4f2fa737616f6372",
+      "baseline_traceback_fingerprint": "d7bc5fd11ca628f9db65ed55f0b6238afb2162432779539321d07657c86bbe6f",
+      "r1_traceback_fingerprint": "d7bc5fd11ca628f9db65ed55f0b6238afb2162432779539321d07657c86bbe6f",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_ita2025q5_level1.py",
+        "line": 47
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_ita2025q5_level1.py",
+        "line": 47
+      },
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE"
+    },
+    {
+      "nodeid": "tests/test_ita2025q5_level1.py::test_q5_missing_difference_blocks_factorization_dependency",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "same_assertion_fingerprint": true,
+      "same_full_traceback_fingerprint": true,
+      "same_attribution_traceback_fingerprint": true,
+      "baseline_attribution_fingerprint": "72f629fdacd322809e3c2a6bb04d7923cf2cd426a88e4cfeb9e8723366a2792f",
+      "r1_attribution_fingerprint": "72f629fdacd322809e3c2a6bb04d7923cf2cd426a88e4cfeb9e8723366a2792f",
+      "same_lean_environment_fingerprints": true,
+      "baseline_assertion_fingerprint": "c1880aeafa5d64e26d98a78088556e4a77efa338dbe4ebd1ed022b4c03706312",
+      "r1_assertion_fingerprint": "c1880aeafa5d64e26d98a78088556e4a77efa338dbe4ebd1ed022b4c03706312",
+      "baseline_traceback_fingerprint": "72f629fdacd322809e3c2a6bb04d7923cf2cd426a88e4cfeb9e8723366a2792f",
+      "r1_traceback_fingerprint": "72f629fdacd322809e3c2a6bb04d7923cf2cd426a88e4cfeb9e8723366a2792f",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_ita2025q5_level1.py",
+        "line": 83
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_ita2025q5_level1.py",
+        "line": 83
+      },
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE"
+    },
+    {
+      "nodeid": "tests/test_ita2025q5_level1.py::test_q5_missing_factorization_blocks_formal_step",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "same_assertion_fingerprint": true,
+      "same_full_traceback_fingerprint": true,
+      "same_attribution_traceback_fingerprint": true,
+      "baseline_attribution_fingerprint": "ea0317a027a803a442a4eee1692a8727dbd163c56d739933e74b8c01896a4b44",
+      "r1_attribution_fingerprint": "ea0317a027a803a442a4eee1692a8727dbd163c56d739933e74b8c01896a4b44",
+      "same_lean_environment_fingerprints": true,
+      "baseline_assertion_fingerprint": "f330b225888747d0aa836c1c340dcb09f6decc851f13f81c0ab32065e40dd192",
+      "r1_assertion_fingerprint": "f330b225888747d0aa836c1c340dcb09f6decc851f13f81c0ab32065e40dd192",
+      "baseline_traceback_fingerprint": "ea0317a027a803a442a4eee1692a8727dbd163c56d739933e74b8c01896a4b44",
+      "r1_traceback_fingerprint": "ea0317a027a803a442a4eee1692a8727dbd163c56d739933e74b8c01896a4b44",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_ita2025q5_level1.py",
+        "line": 97
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_ita2025q5_level1.py",
+        "line": 97
+      },
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE"
+    },
+    {
+      "nodeid": "tests/test_ita2025q8_level1.py::test_q8_correct_solution_scores_10_and_verifies_lean",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "same_assertion_fingerprint": true,
+      "same_full_traceback_fingerprint": true,
+      "same_attribution_traceback_fingerprint": true,
+      "baseline_attribution_fingerprint": "17791a81915f7ba4f18d76ba4f4cdaea3f15aab36d37bade926556b43d1db73b",
+      "r1_attribution_fingerprint": "17791a81915f7ba4f18d76ba4f4cdaea3f15aab36d37bade926556b43d1db73b",
+      "same_lean_environment_fingerprints": true,
+      "baseline_assertion_fingerprint": "b4457d929fa91ef187443579a108e5625add514cf27575a8994d9ccfc759d221",
+      "r1_assertion_fingerprint": "b4457d929fa91ef187443579a108e5625add514cf27575a8994d9ccfc759d221",
+      "baseline_traceback_fingerprint": "17791a81915f7ba4f18d76ba4f4cdaea3f15aab36d37bade926556b43d1db73b",
+      "r1_traceback_fingerprint": "17791a81915f7ba4f18d76ba4f4cdaea3f15aab36d37bade926556b43d1db73b",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_ita2025q8_level1.py",
+        "line": 47
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_ita2025q8_level1.py",
+        "line": 47
+      },
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE"
+    },
+    {
+      "nodeid": "tests/test_ita2025q8_level1.py::test_q8_answer_only_scores_interval_and_sum_only",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "same_assertion_fingerprint": true,
+      "same_full_traceback_fingerprint": true,
+      "same_attribution_traceback_fingerprint": true,
+      "baseline_attribution_fingerprint": "12c01c9769457a32c5c4d39a6f15c4cbcfd3cd590c3c9b06aa185b584b88b1b1",
+      "r1_attribution_fingerprint": "12c01c9769457a32c5c4d39a6f15c4cbcfd3cd590c3c9b06aa185b584b88b1b1",
+      "same_lean_environment_fingerprints": true,
+      "baseline_assertion_fingerprint": "6a335fd9ebabd4139e64c5c6956684e231668353aef81381c8e80ec5926d29b6",
+      "r1_assertion_fingerprint": "6a335fd9ebabd4139e64c5c6956684e231668353aef81381c8e80ec5926d29b6",
+      "baseline_traceback_fingerprint": "12c01c9769457a32c5c4d39a6f15c4cbcfd3cd590c3c9b06aa185b584b88b1b1",
+      "r1_traceback_fingerprint": "12c01c9769457a32c5c4d39a6f15c4cbcfd3cd590c3c9b06aa185b584b88b1b1",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/audit_contract.py",
+        "line": 59
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/audit_contract.py",
+        "line": 59
+      },
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE"
+    },
+    {
+      "nodeid": "tests/test_ita2025q8_level1.py::test_q8_missing_sign_analysis_loses_sign_points",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "same_assertion_fingerprint": true,
+      "same_full_traceback_fingerprint": true,
+      "same_attribution_traceback_fingerprint": true,
+      "baseline_attribution_fingerprint": "2f26e84e67df20571bcbbc70bda069f084fd080d39932ca395432cfd66ee80f6",
+      "r1_attribution_fingerprint": "2f26e84e67df20571bcbbc70bda069f084fd080d39932ca395432cfd66ee80f6",
+      "same_lean_environment_fingerprints": true,
+      "baseline_assertion_fingerprint": "5af4375efd9256eb0522e5689e85570a0751f6405f159bd7c4b4dd9e2bc9ee19",
+      "r1_assertion_fingerprint": "5af4375efd9256eb0522e5689e85570a0751f6405f159bd7c4b4dd9e2bc9ee19",
+      "baseline_traceback_fingerprint": "2f26e84e67df20571bcbbc70bda069f084fd080d39932ca395432cfd66ee80f6",
+      "r1_traceback_fingerprint": "2f26e84e67df20571bcbbc70bda069f084fd080d39932ca395432cfd66ee80f6",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_ita2025q8_level1.py",
+        "line": 81
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_ita2025q8_level1.py",
+        "line": 81
+      },
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE"
+    },
+    {
+      "nodeid": "tests/test_math_canonical_pipeline.py::test_shifted_f2q3_equation_keeps_full_credit_and_formal_checks",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "same_assertion_fingerprint": false,
+      "same_full_traceback_fingerprint": false,
+      "same_attribution_traceback_fingerprint": true,
+      "baseline_attribution_fingerprint": "2197897efb4b2a3faf516de6c04325922147c7db9eb0906a935c610004d9c08e",
+      "r1_attribution_fingerprint": "2197897efb4b2a3faf516de6c04325922147c7db9eb0906a935c610004d9c08e",
+      "same_lean_environment_fingerprints": true,
+      "baseline_assertion_fingerprint": "1ff368733545d208d4316410e5d2ecc3fe6fbe4c2611c28981048726a166dff2",
+      "r1_assertion_fingerprint": "65f8105a694025eaeeac150506dfefe5fc347bcec49abd833917c0def0dee6e8",
+      "baseline_traceback_fingerprint": "160306f04e6661aca455c0d00d7e84f7142a7b2e3a6cc234ce5cc02488aaf4cc",
+      "r1_traceback_fingerprint": "4b3a8a55edc05748dee258b877e0e01d8c7f8a35b341d2a91003bf60cab17758",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_math_canonical_pipeline.py",
+        "line": 15
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_math_canonical_pipeline.py",
+        "line": 15
+      },
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE"
+    },
+    {
+      "nodeid": "tests/test_mvp_ita_10_questions.py::test_mvp_correct_solutions_for_all_10_questions[ITA2025Q1]",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "same_assertion_fingerprint": true,
+      "same_full_traceback_fingerprint": true,
+      "same_attribution_traceback_fingerprint": true,
+      "baseline_attribution_fingerprint": "e727c5e06b06bf98fc33444d790106f81abe35c85a761cca00499548a2880f0a",
+      "r1_attribution_fingerprint": "e727c5e06b06bf98fc33444d790106f81abe35c85a761cca00499548a2880f0a",
+      "same_lean_environment_fingerprints": true,
+      "baseline_assertion_fingerprint": "a28504a121fdd4afc60dc4566afdebecb38d02be13c7422c78e6e45606d80a69",
+      "r1_assertion_fingerprint": "a28504a121fdd4afc60dc4566afdebecb38d02be13c7422c78e6e45606d80a69",
+      "baseline_traceback_fingerprint": "e727c5e06b06bf98fc33444d790106f81abe35c85a761cca00499548a2880f0a",
+      "r1_traceback_fingerprint": "e727c5e06b06bf98fc33444d790106f81abe35c85a761cca00499548a2880f0a",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_mvp_ita_10_questions.py",
+        "line": 111
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_mvp_ita_10_questions.py",
+        "line": 111
+      },
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE"
+    },
+    {
+      "nodeid": "tests/test_mvp_ita_10_questions.py::test_mvp_correct_solutions_for_all_10_questions[ITA2025Q3]",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "same_assertion_fingerprint": true,
+      "same_full_traceback_fingerprint": true,
+      "same_attribution_traceback_fingerprint": true,
+      "baseline_attribution_fingerprint": "0914bead9ed97d781cc83ca5cd348ee6cf5dbfcf1e56ff6897d772488255a227",
+      "r1_attribution_fingerprint": "0914bead9ed97d781cc83ca5cd348ee6cf5dbfcf1e56ff6897d772488255a227",
+      "same_lean_environment_fingerprints": true,
+      "baseline_assertion_fingerprint": "a28504a121fdd4afc60dc4566afdebecb38d02be13c7422c78e6e45606d80a69",
+      "r1_assertion_fingerprint": "a28504a121fdd4afc60dc4566afdebecb38d02be13c7422c78e6e45606d80a69",
+      "baseline_traceback_fingerprint": "0914bead9ed97d781cc83ca5cd348ee6cf5dbfcf1e56ff6897d772488255a227",
+      "r1_traceback_fingerprint": "0914bead9ed97d781cc83ca5cd348ee6cf5dbfcf1e56ff6897d772488255a227",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_mvp_ita_10_questions.py",
+        "line": 111
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_mvp_ita_10_questions.py",
+        "line": 111
+      },
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE"
+    },
+    {
+      "nodeid": "tests/test_mvp_ita_10_questions.py::test_mvp_correct_solutions_for_all_10_questions[ITA2025Q4]",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "same_assertion_fingerprint": true,
+      "same_full_traceback_fingerprint": true,
+      "same_attribution_traceback_fingerprint": true,
+      "baseline_attribution_fingerprint": "e584510d88e59f97c5e540307cb94395503fc694ee962a12ef75776405c2c847",
+      "r1_attribution_fingerprint": "e584510d88e59f97c5e540307cb94395503fc694ee962a12ef75776405c2c847",
+      "same_lean_environment_fingerprints": true,
+      "baseline_assertion_fingerprint": "a28504a121fdd4afc60dc4566afdebecb38d02be13c7422c78e6e45606d80a69",
+      "r1_assertion_fingerprint": "a28504a121fdd4afc60dc4566afdebecb38d02be13c7422c78e6e45606d80a69",
+      "baseline_traceback_fingerprint": "e584510d88e59f97c5e540307cb94395503fc694ee962a12ef75776405c2c847",
+      "r1_traceback_fingerprint": "e584510d88e59f97c5e540307cb94395503fc694ee962a12ef75776405c2c847",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_mvp_ita_10_questions.py",
+        "line": 111
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_mvp_ita_10_questions.py",
+        "line": 111
+      },
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE"
+    },
+    {
+      "nodeid": "tests/test_mvp_ita_10_questions.py::test_mvp_correct_solutions_for_all_10_questions[ITA2025Q5]",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "same_assertion_fingerprint": true,
+      "same_full_traceback_fingerprint": true,
+      "same_attribution_traceback_fingerprint": true,
+      "baseline_attribution_fingerprint": "507a2fdbed1726f6cb6239b9deae57aef3731d3827caffe66fd9f60a931e7430",
+      "r1_attribution_fingerprint": "507a2fdbed1726f6cb6239b9deae57aef3731d3827caffe66fd9f60a931e7430",
+      "same_lean_environment_fingerprints": true,
+      "baseline_assertion_fingerprint": "a28504a121fdd4afc60dc4566afdebecb38d02be13c7422c78e6e45606d80a69",
+      "r1_assertion_fingerprint": "a28504a121fdd4afc60dc4566afdebecb38d02be13c7422c78e6e45606d80a69",
+      "baseline_traceback_fingerprint": "507a2fdbed1726f6cb6239b9deae57aef3731d3827caffe66fd9f60a931e7430",
+      "r1_traceback_fingerprint": "507a2fdbed1726f6cb6239b9deae57aef3731d3827caffe66fd9f60a931e7430",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_mvp_ita_10_questions.py",
+        "line": 111
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_mvp_ita_10_questions.py",
+        "line": 111
+      },
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE"
+    },
+    {
+      "nodeid": "tests/test_mvp_ita_10_questions.py::test_mvp_correct_solutions_for_all_10_questions[ITA2025Q8]",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "same_assertion_fingerprint": true,
+      "same_full_traceback_fingerprint": true,
+      "same_attribution_traceback_fingerprint": true,
+      "baseline_attribution_fingerprint": "54f47e5e67b459fb1025a3e432d96e0d4456cced09fdae919eedb5c4b1a01299",
+      "r1_attribution_fingerprint": "54f47e5e67b459fb1025a3e432d96e0d4456cced09fdae919eedb5c4b1a01299",
+      "same_lean_environment_fingerprints": true,
+      "baseline_assertion_fingerprint": "a28504a121fdd4afc60dc4566afdebecb38d02be13c7422c78e6e45606d80a69",
+      "r1_assertion_fingerprint": "a28504a121fdd4afc60dc4566afdebecb38d02be13c7422c78e6e45606d80a69",
+      "baseline_traceback_fingerprint": "54f47e5e67b459fb1025a3e432d96e0d4456cced09fdae919eedb5c4b1a01299",
+      "r1_traceback_fingerprint": "54f47e5e67b459fb1025a3e432d96e0d4456cced09fdae919eedb5c4b1a01299",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_mvp_ita_10_questions.py",
+        "line": 111
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_mvp_ita_10_questions.py",
+        "line": 111
+      },
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE"
+    },
+    {
+      "nodeid": "tests/test_mvp_ita_10_questions.py::test_mvp_correct_solutions_for_all_10_questions[ITA2025F2Q1]",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "same_assertion_fingerprint": true,
+      "same_full_traceback_fingerprint": true,
+      "same_attribution_traceback_fingerprint": true,
+      "baseline_attribution_fingerprint": "9dbe4746fb61d79e2c498a9b709df1c91525f3d75a6b2cbbe1a372fe7ebe4d51",
+      "r1_attribution_fingerprint": "9dbe4746fb61d79e2c498a9b709df1c91525f3d75a6b2cbbe1a372fe7ebe4d51",
+      "same_lean_environment_fingerprints": true,
+      "baseline_assertion_fingerprint": "a28504a121fdd4afc60dc4566afdebecb38d02be13c7422c78e6e45606d80a69",
+      "r1_assertion_fingerprint": "a28504a121fdd4afc60dc4566afdebecb38d02be13c7422c78e6e45606d80a69",
+      "baseline_traceback_fingerprint": "9dbe4746fb61d79e2c498a9b709df1c91525f3d75a6b2cbbe1a372fe7ebe4d51",
+      "r1_traceback_fingerprint": "9dbe4746fb61d79e2c498a9b709df1c91525f3d75a6b2cbbe1a372fe7ebe4d51",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_mvp_ita_10_questions.py",
+        "line": 111
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_mvp_ita_10_questions.py",
+        "line": 111
+      },
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE"
+    },
+    {
+      "nodeid": "tests/test_mvp_ita_10_questions.py::test_mvp_correct_solutions_for_all_10_questions[ITA2025F2Q3]",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "same_assertion_fingerprint": true,
+      "same_full_traceback_fingerprint": true,
+      "same_attribution_traceback_fingerprint": true,
+      "baseline_attribution_fingerprint": "3cb300ccdc8093437d5f1f40217a5597d193f1d91cebb82d15463b2578abe2ab",
+      "r1_attribution_fingerprint": "3cb300ccdc8093437d5f1f40217a5597d193f1d91cebb82d15463b2578abe2ab",
+      "same_lean_environment_fingerprints": true,
+      "baseline_assertion_fingerprint": "a28504a121fdd4afc60dc4566afdebecb38d02be13c7422c78e6e45606d80a69",
+      "r1_assertion_fingerprint": "a28504a121fdd4afc60dc4566afdebecb38d02be13c7422c78e6e45606d80a69",
+      "baseline_traceback_fingerprint": "3cb300ccdc8093437d5f1f40217a5597d193f1d91cebb82d15463b2578abe2ab",
+      "r1_traceback_fingerprint": "3cb300ccdc8093437d5f1f40217a5597d193f1d91cebb82d15463b2578abe2ab",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_mvp_ita_10_questions.py",
+        "line": 111
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_mvp_ita_10_questions.py",
+        "line": 111
+      },
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE"
+    },
+    {
+      "nodeid": "tests/test_mvp_ita_10_questions.py::test_mvp_correct_solutions_for_all_10_questions[ITA2025F2Q5]",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "same_assertion_fingerprint": true,
+      "same_full_traceback_fingerprint": true,
+      "same_attribution_traceback_fingerprint": true,
+      "baseline_attribution_fingerprint": "ff807a21032642a210ff4438c1d11b51d7ebdd9916225284047a0bd460e0546f",
+      "r1_attribution_fingerprint": "ff807a21032642a210ff4438c1d11b51d7ebdd9916225284047a0bd460e0546f",
+      "same_lean_environment_fingerprints": true,
+      "baseline_assertion_fingerprint": "a28504a121fdd4afc60dc4566afdebecb38d02be13c7422c78e6e45606d80a69",
+      "r1_assertion_fingerprint": "a28504a121fdd4afc60dc4566afdebecb38d02be13c7422c78e6e45606d80a69",
+      "baseline_traceback_fingerprint": "ff807a21032642a210ff4438c1d11b51d7ebdd9916225284047a0bd460e0546f",
+      "r1_traceback_fingerprint": "ff807a21032642a210ff4438c1d11b51d7ebdd9916225284047a0bd460e0546f",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_mvp_ita_10_questions.py",
+        "line": 111
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_mvp_ita_10_questions.py",
+        "line": 111
+      },
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE"
+    },
+    {
+      "nodeid": "tests/test_mvp_ita_10_questions.py::test_mvp_correct_solutions_for_all_10_questions[ITA2025F2Q6]",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "same_assertion_fingerprint": true,
+      "same_full_traceback_fingerprint": true,
+      "same_attribution_traceback_fingerprint": true,
+      "baseline_attribution_fingerprint": "52567b6dc59bb9cb5cf5089b4a326d9eb05781806ea12bb621177a163754df6d",
+      "r1_attribution_fingerprint": "52567b6dc59bb9cb5cf5089b4a326d9eb05781806ea12bb621177a163754df6d",
+      "same_lean_environment_fingerprints": true,
+      "baseline_assertion_fingerprint": "a28504a121fdd4afc60dc4566afdebecb38d02be13c7422c78e6e45606d80a69",
+      "r1_assertion_fingerprint": "a28504a121fdd4afc60dc4566afdebecb38d02be13c7422c78e6e45606d80a69",
+      "baseline_traceback_fingerprint": "52567b6dc59bb9cb5cf5089b4a326d9eb05781806ea12bb621177a163754df6d",
+      "r1_traceback_fingerprint": "52567b6dc59bb9cb5cf5089b4a326d9eb05781806ea12bb621177a163754df6d",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_mvp_ita_10_questions.py",
+        "line": 111
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_mvp_ita_10_questions.py",
+        "line": 111
+      },
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE"
+    },
+    {
+      "nodeid": "tests/test_mvp_ita_10_questions.py::test_mvp_correct_solutions_for_all_10_questions[ITA2025F2Q8]",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "same_assertion_fingerprint": true,
+      "same_full_traceback_fingerprint": true,
+      "same_attribution_traceback_fingerprint": true,
+      "baseline_attribution_fingerprint": "990edb8b090484b61d7c13abda7338502d6717ae17ce493338e7c54f2cccfbd8",
+      "r1_attribution_fingerprint": "990edb8b090484b61d7c13abda7338502d6717ae17ce493338e7c54f2cccfbd8",
+      "same_lean_environment_fingerprints": true,
+      "baseline_assertion_fingerprint": "a28504a121fdd4afc60dc4566afdebecb38d02be13c7422c78e6e45606d80a69",
+      "r1_assertion_fingerprint": "a28504a121fdd4afc60dc4566afdebecb38d02be13c7422c78e6e45606d80a69",
+      "baseline_traceback_fingerprint": "990edb8b090484b61d7c13abda7338502d6717ae17ce493338e7c54f2cccfbd8",
+      "r1_traceback_fingerprint": "990edb8b090484b61d7c13abda7338502d6717ae17ce493338e7c54f2cccfbd8",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_mvp_ita_10_questions.py",
+        "line": 111
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_mvp_ita_10_questions.py",
+        "line": 111
+      },
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE"
+    },
+    {
+      "nodeid": "tests/test_obligation_semantic.py::test_existing_lean_checks_exact_written_proposition[2*((6-x)+x)-verified]",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "same_assertion_fingerprint": true,
+      "same_full_traceback_fingerprint": true,
+      "same_attribution_traceback_fingerprint": true,
+      "baseline_attribution_fingerprint": "e058dba802ecad4e2246d1238790e2168cb7567c5ea6503f05cf416554599e72",
+      "r1_attribution_fingerprint": "e058dba802ecad4e2246d1238790e2168cb7567c5ea6503f05cf416554599e72",
+      "same_lean_environment_fingerprints": true,
+      "baseline_assertion_fingerprint": "ded95e503cc62341b163b7bb649f533a1856c0ed63fc57b7347f2df1cd479e02",
+      "r1_assertion_fingerprint": "ded95e503cc62341b163b7bb649f533a1856c0ed63fc57b7347f2df1cd479e02",
+      "baseline_traceback_fingerprint": "e058dba802ecad4e2246d1238790e2168cb7567c5ea6503f05cf416554599e72",
+      "r1_traceback_fingerprint": "e058dba802ecad4e2246d1238790e2168cb7567c5ea6503f05cf416554599e72",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_obligation_semantic.py",
+        "line": 198
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_obligation_semantic.py",
+        "line": 198
+      },
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE"
+    },
+    {
+      "nodeid": "tests/test_obligation_semantic.py::test_existing_lean_checks_exact_written_proposition[2*((6-x)+x)+1-refuted]",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "same_assertion_fingerprint": true,
+      "same_full_traceback_fingerprint": true,
+      "same_attribution_traceback_fingerprint": true,
+      "baseline_attribution_fingerprint": "a192a8e20f1e6406cef4447a90ec3b19c952b36599ef325a6311159b85dad4b6",
+      "r1_attribution_fingerprint": "a192a8e20f1e6406cef4447a90ec3b19c952b36599ef325a6311159b85dad4b6",
+      "same_lean_environment_fingerprints": true,
+      "baseline_assertion_fingerprint": "bbe1ea85308e77b9b74e5a0590781fba41bca07f2f938278ff3588c38edafb4b",
+      "r1_assertion_fingerprint": "bbe1ea85308e77b9b74e5a0590781fba41bca07f2f938278ff3588c38edafb4b",
+      "baseline_traceback_fingerprint": "a192a8e20f1e6406cef4447a90ec3b19c952b36599ef325a6311159b85dad4b6",
+      "r1_traceback_fingerprint": "a192a8e20f1e6406cef4447a90ec3b19c952b36599ef325a6311159b85dad4b6",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_obligation_semantic.py",
+        "line": 198
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_obligation_semantic.py",
+        "line": 198
+      },
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE"
+    },
+    {
+      "nodeid": "tests/test_pedagogical_report.py::test_f2q1_correct_solution_has_pedagogical_report",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "same_assertion_fingerprint": true,
+      "same_full_traceback_fingerprint": true,
+      "same_attribution_traceback_fingerprint": true,
+      "baseline_attribution_fingerprint": "47ed135dde91f48d9f361c2feec9cef25d85dd9412eb73f73bfa8df4948334d5",
+      "r1_attribution_fingerprint": "47ed135dde91f48d9f361c2feec9cef25d85dd9412eb73f73bfa8df4948334d5",
+      "same_lean_environment_fingerprints": true,
+      "baseline_assertion_fingerprint": "c4d384698d3f2b48868363b6134e7886a64e3c9ad82cf808652c8b3e7b8c7dfe",
+      "r1_assertion_fingerprint": "c4d384698d3f2b48868363b6134e7886a64e3c9ad82cf808652c8b3e7b8c7dfe",
+      "baseline_traceback_fingerprint": "47ed135dde91f48d9f361c2feec9cef25d85dd9412eb73f73bfa8df4948334d5",
+      "r1_traceback_fingerprint": "47ed135dde91f48d9f361c2feec9cef25d85dd9412eb73f73bfa8df4948334d5",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_pedagogical_report.py",
+        "line": 50
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_pedagogical_report.py",
+        "line": 50
+      },
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE"
+    },
+    {
+      "nodeid": "tests/test_pedagogical_report.py::test_f2q1_wrong_solution_reports_incorrect_student_statements",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "same_assertion_fingerprint": true,
+      "same_full_traceback_fingerprint": true,
+      "same_attribution_traceback_fingerprint": true,
+      "baseline_attribution_fingerprint": "a795069b6d1ca45b5ead44971e96955e3d6d03ae201eba346769b2c5072cc8fa",
+      "r1_attribution_fingerprint": "a795069b6d1ca45b5ead44971e96955e3d6d03ae201eba346769b2c5072cc8fa",
+      "same_lean_environment_fingerprints": true,
+      "baseline_assertion_fingerprint": "b72f2809a25f5cdf4f56785b883a44af87112ac62d89a89009914d9165dece37",
+      "r1_assertion_fingerprint": "b72f2809a25f5cdf4f56785b883a44af87112ac62d89a89009914d9165dece37",
+      "baseline_traceback_fingerprint": "a795069b6d1ca45b5ead44971e96955e3d6d03ae201eba346769b2c5072cc8fa",
+      "r1_traceback_fingerprint": "a795069b6d1ca45b5ead44971e96955e3d6d03ae201eba346769b2c5072cc8fa",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_pedagogical_report.py",
+        "line": 73
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_pedagogical_report.py",
+        "line": 73
+      },
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE"
+    },
+    {
+      "nodeid": "tests/test_positive_credit_evidence.py::test_f2q3_explicit_answer_label_keeps_only_final_credit_with_real_engine",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "same_assertion_fingerprint": true,
+      "same_full_traceback_fingerprint": true,
+      "same_attribution_traceback_fingerprint": true,
+      "baseline_attribution_fingerprint": "3f4c438039c23db6652e789457e097c1dad108ff125775d8b0c693e7654e230a",
+      "r1_attribution_fingerprint": "3f4c438039c23db6652e789457e097c1dad108ff125775d8b0c693e7654e230a",
+      "same_lean_environment_fingerprints": true,
+      "baseline_assertion_fingerprint": "1ffbcc65de8d520a13d07bd35b6415c5a10f9e8fae5c2995425d9a5ea66e5441",
+      "r1_assertion_fingerprint": "1ffbcc65de8d520a13d07bd35b6415c5a10f9e8fae5c2995425d9a5ea66e5441",
+      "baseline_traceback_fingerprint": "3f4c438039c23db6652e789457e097c1dad108ff125775d8b0c693e7654e230a",
+      "r1_traceback_fingerprint": "3f4c438039c23db6652e789457e097c1dad108ff125775d8b0c693e7654e230a",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_positive_credit_evidence.py",
+        "line": 339
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_positive_credit_evidence.py",
+        "line": 339
+      },
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE"
+    },
+    {
+      "nodeid": "tests/test_rubric_bridge_pipeline.py::test_unsupported_legacy_wording_reaches_rubric_through_verified_student",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "same_assertion_fingerprint": true,
+      "same_full_traceback_fingerprint": true,
+      "same_attribution_traceback_fingerprint": true,
+      "baseline_attribution_fingerprint": "754171eaf988ba320e7e37430a2fb5c748e5b8cbacf77a3c23af8297bc590320",
+      "r1_attribution_fingerprint": "754171eaf988ba320e7e37430a2fb5c748e5b8cbacf77a3c23af8297bc590320",
+      "same_lean_environment_fingerprints": true,
+      "baseline_assertion_fingerprint": "0cb99325c9b8388609205c840f0cd879400d04959d5ae0c90eee36a14c134be3",
+      "r1_assertion_fingerprint": "0cb99325c9b8388609205c840f0cd879400d04959d5ae0c90eee36a14c134be3",
+      "baseline_traceback_fingerprint": "754171eaf988ba320e7e37430a2fb5c748e5b8cbacf77a3c23af8297bc590320",
+      "r1_traceback_fingerprint": "754171eaf988ba320e7e37430a2fb5c748e5b8cbacf77a3c23af8297bc590320",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_rubric_bridge_pipeline.py",
+        "line": 15
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_rubric_bridge_pipeline.py",
+        "line": 15
+      },
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE"
+    },
+    {
+      "nodeid": "tests/test_semantic_claims.py::test_semantic_math_is_checked_by_real_lean[2*((6-x)+x)-12-verified-6-student_lean]",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "same_assertion_fingerprint": false,
+      "same_full_traceback_fingerprint": false,
+      "same_attribution_traceback_fingerprint": true,
+      "baseline_attribution_fingerprint": "4429f9be095ddf7bf09a5134a22a3c8286998e660d6198315ae8abf7307852c6",
+      "r1_attribution_fingerprint": "4429f9be095ddf7bf09a5134a22a3c8286998e660d6198315ae8abf7307852c6",
+      "same_lean_environment_fingerprints": true,
+      "baseline_assertion_fingerprint": "adafc4e76197d8e304c3461a0dca09c217f403c8b280053e92d24e631d51c51b",
+      "r1_assertion_fingerprint": "cf3b760f24fbd362c7e4803fef9a3e66910b720cb33d4a7b1eda7361a84e8dca",
+      "baseline_traceback_fingerprint": "45d093d4aa090b5aca3a21e8bba18acb37754911dd5a7107e9b000df7845d46b",
+      "r1_traceback_fingerprint": "c0bb4463546720827069de668dae12dcdb41ffe835516e96ee90fa5263376d16",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_semantic_claims.py",
+        "line": 216
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_semantic_claims.py",
+        "line": 216
+      },
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE"
+    },
+    {
+      "nodeid": "tests/test_semantic_claims.py::test_semantic_math_is_checked_by_real_lean[2*((6-x)+x)+1-12-refuted-0-student_lean]",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "same_assertion_fingerprint": false,
+      "same_full_traceback_fingerprint": false,
+      "same_attribution_traceback_fingerprint": true,
+      "baseline_attribution_fingerprint": "0a6db08c97ad410d93ceb3ac5254379099368013b9c40ad655137c3e35a59b52",
+      "r1_attribution_fingerprint": "0a6db08c97ad410d93ceb3ac5254379099368013b9c40ad655137c3e35a59b52",
+      "same_lean_environment_fingerprints": true,
+      "baseline_assertion_fingerprint": "40da5b5d8fece03f9730c92b1c51de2e8dcbb3f55bb1c1a91e3a763abe9fdcd0",
+      "r1_assertion_fingerprint": "94a29c9b43d44009a85631e8221cef32b4fb29eec1ae97fbf05a61b338212b95",
+      "baseline_traceback_fingerprint": "77cd49131adfe807993a352a30a242a0bd7081f34968ed6524be9d7d05466e84",
+      "r1_traceback_fingerprint": "5b6ddf916648e7e7126ed945fadadd877d2a0003bd039f1a008633f0877aa006",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_semantic_claims.py",
+        "line": 216
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_semantic_claims.py",
+        "line": 216
+      },
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE"
+    },
+    {
+      "nodeid": "tests/test_student_proof_semantics.py::test_real_arithmetic_negation_and_verified_claim",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "same_assertion_fingerprint": true,
+      "same_full_traceback_fingerprint": true,
+      "same_attribution_traceback_fingerprint": true,
+      "baseline_attribution_fingerprint": "9efaab23fbe70002d4bc7578953befcf961321d873d76a870cf48f0cd1fc5903",
+      "r1_attribution_fingerprint": "9efaab23fbe70002d4bc7578953befcf961321d873d76a870cf48f0cd1fc5903",
+      "same_lean_environment_fingerprints": true,
+      "baseline_assertion_fingerprint": "a1539235f1e5b7ae4a0774bfa00b1ab05d227a521b459b937e4002f1075a04cc",
+      "r1_assertion_fingerprint": "a1539235f1e5b7ae4a0774bfa00b1ab05d227a521b459b937e4002f1075a04cc",
+      "baseline_traceback_fingerprint": "9efaab23fbe70002d4bc7578953befcf961321d873d76a870cf48f0cd1fc5903",
+      "r1_traceback_fingerprint": "9efaab23fbe70002d4bc7578953befcf961321d873d76a870cf48f0cd1fc5903",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_student_proof_semantics.py",
+        "line": 143
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_student_proof_semantics.py",
+        "line": 143
+      },
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE"
+    },
+    {
+      "nodeid": "tests/test_submission_audits.py::test_real_bridge_preserves_wrong_solution_and_runs_existing_lean_pipeline",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "same_assertion_fingerprint": true,
+      "same_full_traceback_fingerprint": true,
+      "same_attribution_traceback_fingerprint": true,
+      "baseline_attribution_fingerprint": "315c41659d04ca0aeebab619d98244187d49627e5d0bc46deef1ecfd15137edb",
+      "r1_attribution_fingerprint": "315c41659d04ca0aeebab619d98244187d49627e5d0bc46deef1ecfd15137edb",
+      "same_lean_environment_fingerprints": true,
+      "baseline_assertion_fingerprint": "262ea6d872f26d96bb0c0ee3e283ffd64d84f416a2b831c8a514bac93cddde77",
+      "r1_assertion_fingerprint": "262ea6d872f26d96bb0c0ee3e283ffd64d84f416a2b831c8a514bac93cddde77",
+      "baseline_traceback_fingerprint": "315c41659d04ca0aeebab619d98244187d49627e5d0bc46deef1ecfd15137edb",
+      "r1_traceback_fingerprint": "315c41659d04ca0aeebab619d98244187d49627e5d0bc46deef1ecfd15137edb",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_submission_audits.py",
+        "line": 356
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_submission_audits.py",
+        "line": 356
+      },
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE"
+    },
+    {
+      "nodeid": "tests/test_tme_accepted_integration.py::test_real_local_lean_status_certificates_preserved",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "same_assertion_fingerprint": true,
+      "same_full_traceback_fingerprint": true,
+      "same_attribution_traceback_fingerprint": true,
+      "baseline_attribution_fingerprint": "5dc43073059a01319bb95518d2e4a2fe6c30558e4e577d1862445d39638a5988",
+      "r1_attribution_fingerprint": "5dc43073059a01319bb95518d2e4a2fe6c30558e4e577d1862445d39638a5988",
+      "same_lean_environment_fingerprints": true,
+      "baseline_assertion_fingerprint": "a5c26eb09b634530cb28a0007a27ec8bbdbd5d786871ddedbb96a51cb158f6a6",
+      "r1_assertion_fingerprint": "a5c26eb09b634530cb28a0007a27ec8bbdbd5d786871ddedbb96a51cb158f6a6",
+      "baseline_traceback_fingerprint": "5dc43073059a01319bb95518d2e4a2fe6c30558e4e577d1862445d39638a5988",
+      "r1_traceback_fingerprint": "5dc43073059a01319bb95518d2e4a2fe6c30558e4e577d1862445d39638a5988",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_tme_accepted_integration.py",
+        "line": 193
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_tme_accepted_integration.py",
+        "line": 193
+      },
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE"
+    },
+    {
+      "nodeid": "tests/test_tme_hybrid_grader.py::test_wrong_reasoning_correct_final_is_refuted_by_real_lean",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "same_assertion_fingerprint": true,
+      "same_full_traceback_fingerprint": true,
+      "same_attribution_traceback_fingerprint": true,
+      "baseline_attribution_fingerprint": "5f8104eb64dc251fd914bc1651f8ad9063ba51a433da1bc06fcfa3a668829985",
+      "r1_attribution_fingerprint": "5f8104eb64dc251fd914bc1651f8ad9063ba51a433da1bc06fcfa3a668829985",
+      "same_lean_environment_fingerprints": true,
+      "baseline_assertion_fingerprint": "06a0390b4bb3b07ab9b4b9798a7ef770840fee4ae62fcaef33c03a15a529d991",
+      "r1_assertion_fingerprint": "06a0390b4bb3b07ab9b4b9798a7ef770840fee4ae62fcaef33c03a15a529d991",
+      "baseline_traceback_fingerprint": "5f8104eb64dc251fd914bc1651f8ad9063ba51a433da1bc06fcfa3a668829985",
+      "r1_traceback_fingerprint": "5f8104eb64dc251fd914bc1651f8ad9063ba51a433da1bc06fcfa3a668829985",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_tme_hybrid_grader.py",
+        "line": 132
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_tme_hybrid_grader.py",
+        "line": 132
+      },
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE"
+    },
+    {
+      "nodeid": "tests/test_tme_hybrid_grader.py::test_real_formal_verified_is_preserved_and_not_semantic",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "same_assertion_fingerprint": true,
+      "same_full_traceback_fingerprint": true,
+      "same_attribution_traceback_fingerprint": true,
+      "baseline_attribution_fingerprint": "bba0a01068358bdf3e702348f70b122549d3209d9850550f41f3595a08b49cd3",
+      "r1_attribution_fingerprint": "bba0a01068358bdf3e702348f70b122549d3209d9850550f41f3595a08b49cd3",
+      "same_lean_environment_fingerprints": true,
+      "baseline_assertion_fingerprint": "9ecd063ac91a5df088644910a0403e3fa93b875abe1fda646ccdf1f04720c3ef",
+      "r1_assertion_fingerprint": "9ecd063ac91a5df088644910a0403e3fa93b875abe1fda646ccdf1f04720c3ef",
+      "baseline_traceback_fingerprint": "bba0a01068358bdf3e702348f70b122549d3209d9850550f41f3595a08b49cd3",
+      "r1_traceback_fingerprint": "bba0a01068358bdf3e702348f70b122549d3209d9850550f41f3595a08b49cd3",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_tme_hybrid_grader.py",
+        "line": 143
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_tme_hybrid_grader.py",
+        "line": 143
+      },
+      "cause": "PREEXISTING_MATHLIB_CHECKOUT_FAILURE"
+    },
+    {
+      "nodeid": "tests/test_ui_01_shell.py::test_central_product_vocabulary_is_preserved_without_contract_renames",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "same_assertion_fingerprint": true,
+      "same_full_traceback_fingerprint": true,
+      "same_attribution_traceback_fingerprint": true,
+      "baseline_attribution_fingerprint": "c49f47aa2f74577483bba1849b940429a9d193e1b1059bddff2c8004ac4ef2a6",
+      "r1_attribution_fingerprint": "c49f47aa2f74577483bba1849b940429a9d193e1b1059bddff2c8004ac4ef2a6",
+      "same_lean_environment_fingerprints": true,
+      "baseline_assertion_fingerprint": "f40d6d2009ff45066e550232cef31274009fe63c0ec852eb369b8a81876d286e",
+      "r1_assertion_fingerprint": "f40d6d2009ff45066e550232cef31274009fe63c0ec852eb369b8a81876d286e",
+      "baseline_traceback_fingerprint": "c49f47aa2f74577483bba1849b940429a9d193e1b1059bddff2c8004ac4ef2a6",
+      "r1_traceback_fingerprint": "c49f47aa2f74577483bba1849b940429a9d193e1b1059bddff2c8004ac4ef2a6",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_ui_01_shell.py",
+        "line": 151
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_ui_01_shell.py",
+        "line": 151
+      },
+      "cause": "PREEXISTING_UI_LABEL_EXPECTATION"
+    },
+    {
+      "nodeid": "tests/test_ui_02_workspace.py::test_parent_statement_is_compact_and_sticky_through_notebook_and_submission",
+      "baseline_status": "FAIL",
+      "r1_status": "FAIL",
+      "classification": "FAIL_BOTH_SAME_FINGERPRINT",
+      "same_assertion_fingerprint": true,
+      "same_full_traceback_fingerprint": true,
+      "same_attribution_traceback_fingerprint": true,
+      "baseline_attribution_fingerprint": "e91a9b799e6025b6aad8b8fe66280bd572357c126bdee200a3c439e3a93af9ec",
+      "r1_attribution_fingerprint": "e91a9b799e6025b6aad8b8fe66280bd572357c126bdee200a3c439e3a93af9ec",
+      "same_lean_environment_fingerprints": true,
+      "baseline_assertion_fingerprint": "29dc93d16d18b1b7ec04eb71d0cb688bae5dcf9457b5c7abfb264a55712f5cdd",
+      "r1_assertion_fingerprint": "29dc93d16d18b1b7ec04eb71d0cb688bae5dcf9457b5c7abfb264a55712f5cdd",
+      "baseline_traceback_fingerprint": "e91a9b799e6025b6aad8b8fe66280bd572357c126bdee200a3c439e3a93af9ec",
+      "r1_traceback_fingerprint": "e91a9b799e6025b6aad8b8fe66280bd572357c126bdee200a3c439e3a93af9ec",
+      "baseline_failure_site": {
+        "path": "<REPO>/tests/test_ui_02_workspace.py",
+        "line": 108
+      },
+      "r1_failure_site": {
+        "path": "<REPO>/tests/test_ui_02_workspace.py",
+        "line": 108
+      },
+      "cause": "PREEXISTING_UI_STICKY_EXPECTATION"
+    }
+  ],
+  "counts": {
+    "FAIL_BOTH_SAME_FINGERPRINT": 105
+  },
+  "PASS_BASELINE_FAIL_R1": []
+}

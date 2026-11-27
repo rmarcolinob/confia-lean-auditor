@@ -1,0 +1,27 @@
+ M app/confia_lean_auditor/dynamic/models.py
+ M app/confia_lean_auditor/dynamic/router.py
+ M app/confia_lean_auditor/dynamic/store.py
+ M app/confia_lean_auditor/static/dynamic.css
+ M app/confia_lean_auditor/static/dynamic.js
+ M app/confia_lean_auditor/static/index.html
+ M app/confia_lean_auditor/static/shell.js
+ M app/confia_lean_auditor/static/tme/index.html
+ M app/confia_lean_auditor/static/tme/tme.js
+ M tests/js/test_dynamic_dy1.cjs
+ M tests/js/test_full_exam.cjs
+ M tests/js/test_tme_navigation.cjs
+ M tests/js/test_tme_problem_catalog.cjs
+ M tests/js/test_tme_problem_selector.cjs
+ M tests/js/tme-dom.cjs
+ M tests/test_dynamic_dy1.py
+?? app/confia_lean_auditor/dynamic/preparation.py
+?? app/confia_lean_auditor/dynamic/preparation_models.py
+?? app/confia_lean_auditor/dynamic/provider.py
+?? app/confia_lean_auditor/dynamic/verification.py
+?? docs/audits/CONFIA_DYNAMIC_DY2_PREPARATION_IMPLEMENTACAO_01.md
+?? docs/audits/CONFIA_DYNAMIC_UI_CONVERGENCE_01.md
+?? docs/audits/assets/confia-dynamic-dy2/
+?? docs/audits/assets/confia-dynamic-ui-convergence/
+?? tests/js/test_dynamic_dy2.cjs
+?? tests/js/test_dynamic_ui_convergence.cjs
+?? tests/test_dynamic_dy2.py

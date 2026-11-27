@@ -1,0 +1,9 @@
+logical_case_id,case_id,statement,domain,solution_type,gold_score,G0_score,G1_raw_score,G1_validated_score,G2_score,HumanDecision_score,HumanDecision_id,max_score,review_required,automation_state,technical_failures
+SYN-009-Qy,case_7c0af2663b8a81ccfb097c40bf26bc70,Resolva no conjunto dos reais: 2*y^2-14*y+24=0.,equations,local_error,7.0,1.5,10.0,,1.5,7.0,hdec_eefd7122084f4a8a9aecd5296a896797,10.0,True,"[""REVIEW_ONLY""]",0
+SYN-009-Qz,case_489927cb5c52173dd9912c07bc9cd1fb,Resolva no conjunto dos reais: 1*z^2-1*z+-2=0.,equations,local_error,7.0,1.5,10.0,,1.5,7.0,hdec_1b3fb0b0fef94553b3ff36caf2b582b1,10.0,True,"[""REVIEW_ONLY""]",0
+SYN-010-Qy,case_05f52e32fb9763c20da9d9c23cb5919e,Resolva no conjunto dos reais: 2*y^2-14*y+24=0.,equations,correct_standard,10.0,3.0,10.0,,3.0,10.0,hdec_25b2ec99bd1b496487d2c90872e9ab59,10.0,True,"[""REVIEW_ONLY""]",0
+SYN-010-Qz,case_83187b16e77122e3ecf4a49f89693074,Resolva no conjunto dos reais: 1*z^2-1*z+-2=0.,equations,correct_standard,10.0,3.0,10.0,,3.0,10.0,hdec_fb7ab0eaa6a54e038f4c17e77dd88419,10.0,True,"[""REVIEW_ONLY""]",0
+SYN-011-Qy,case_0e3a11d802773f759ffb73e9d8215e4d,Resolva no conjunto dos reais: 2*y^2-14*y+24=0.,equations,partial,4.5,3.0,10.0,,3.0,4.5,hdec_c0f6ef7fffac4d41be64323f70bf7261,10.0,True,"[""REVIEW_ONLY""]",0
+SYN-011-Qz,case_a3d7eaf27195d183495c6bca961f3f72,Resolva no conjunto dos reais: 1*z^2-1*z+-2=0.,equations,partial,4.5,3.0,10.0,,3.0,4.5,hdec_4288b402b3884facb0053c07d5b62de6,10.0,True,"[""REVIEW_ONLY""]",0
+SYN-012-Qy,case_e2ceb12f3705717d27d0da666f167449,Resolva no conjunto dos reais: 2*y^2-14*y+24=0.,equations,correct_alternative,10.0,7.0,10.0,,7.0,10.0,hdec_ebad689061874e9ab5a8f08699cac4a6,10.0,True,"[""REVIEW_ONLY""]",0
+SYN-012-Qz,case_cec960e9e62d34a1ec083c52179e8b83,Resolva no conjunto dos reais: 1*z^2-1*z+-2=0.,equations,correct_alternative,10.0,7.0,10.0,,7.0,10.0,hdec_6e34b52305ff4b5c961cdc02a4672d48,10.0,True,"[""REVIEW_ONLY""]",0

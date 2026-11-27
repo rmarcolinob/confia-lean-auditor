@@ -1,0 +1,121 @@
+........................................................................ [ 22%]
+........................................................................ [ 45%]
+........................................................................ [ 68%]
+........................................................................ [ 91%]
+...................F.......                                              [100%]
+=================================== FAILURES ===================================
+____ test_generic_audit_started_before_finalization_cannot_publish_after_it ____
+
+exam = (<starlette.testclient.TestClient object at 0x10ea1ecd0>, PosixPath('/private/var/folders/4h/mld1ypt95nq1z3nm58k0k64m0...161b29e05bb5dcf8a7f20', 'created_at': '2026-11-12T03:53:32.524243Z', 'created_by_user_id': 'tme-demo-evaluator', ...}])
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10e74f0d0>
+
+    def test_generic_audit_started_before_finalization_cannot_publish_after_it(exam,monkeypatch):
+        from threading import Event
+        from confia_lean_auditor.tme import accepted_audit
+        from confia_lean_auditor.submission_audits.router import service
+        from confia_lean_auditor.submission_audits.schemas import AuditRequest
+        from confia_lean_auditor.submissions.store import SubmissionConflict
+        client,_,eid,cases=exam;versions,_,_=populate(exam)
+        request=AuditRequest(**request_for(client,cases[0]['case_id'],versions[0]))
+        original=accepted_audit.audit_accepted_tme_transcription
+        started,release=Event(),Event()
+        def slow(*args):
+            started.set();assert release.wait(30)
+            return original(*args)
+        monkeypatch.setattr(accepted_audit,'audit_accepted_tme_transcription',slow)
+        with ThreadPoolExecutor(max_workers=1) as pool:
+            pending=pool.submit(service().execute,versions[0]['submission_id'],request)
+            try:
+                assert started.wait(10)
+                f=finalize(client,eid)
+            finally:release.set()
+>           with pytest.raises(SubmissionConflict):pending.result(timeout=30)
+
+tests/test_tme_finalization.py:216: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/concurrent/futures/_base.py:445: in result
+    return self.__get_result()
+/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/concurrent/futures/_base.py:390: in __get_result
+    raise self._exception
+/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/concurrent/futures/thread.py:52: in run
+    result = self.fn(*self.args, **self.kwargs)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <confia_lean_auditor.submission_audits.service.AuditService object at 0x10eda3b20>
+submission_id = 'sub_603b7e9bb1598d7c35d5f904e7e04f5a'
+request = AuditRequest(transcription_id='tr_d5d99db1887d4094b404519b7711ac18', revision_number=1, acceptance_id='acc_cf10eb906690494d99cb3ed58afd020f', execution_key='e83ce9d5dbe04e2782a28a2cfeb1499d')
+
+    def execute(self, submission_id, request, *, question_context=None, question_event_builder=None):
+        with self.submissions._locked():
+            source = self._source(submission_id, request)
+            self.submissions.assert_tme_editable(submission_id)
+        run_id = self._identity(source, request.execution_key)
+        with self._request_lock(run_id):
+            # Recheck after waiting. Never replay a now-invalid source.
+            with self.submissions._locked():
+                if self._source(submission_id, request) != source:
+                    raise SourceIntegrityError()
+                self.submissions.assert_tme_editable(submission_id)
+            if self._path(run_id).exists() or self._path(run_id).is_symlink():
+                existing = self._read(run_id)
+                if question_context is not None and existing.question_context != question_context:
+                    raise SourceIntegrityError()
+                return self.view(existing)
+            created_at = datetime.now(timezone.utc)
+            try:
+                if source.dynamic_context is not None:
+                    from confia_lean_auditor.dynamic.grading_context import audit_dynamic
+                    from uuid import uuid4
+                    result=audit_dynamic(source,self.root / "artifacts" / (run_id+"-"+uuid4().hex))
+                elif source.tme_context is not None:
+                    from confia_lean_auditor.tme.accepted_audit import audit_accepted_tme_transcription
+                    from uuid import uuid4
+                    result = audit_accepted_tme_transcription(source, self.root / "artifacts" / (run_id + "-" + uuid4().hex))
+                else:
+                    result = AuditResponse.model_validate(self.engine(EngineRequest(
+                        problem_id=source.problem_id, solution=source.solution_text)))
+                if result.problem_id != source.problem_id:
+                    raise ValueError("engine returned another problem")
+                manifest = capture_manifest(result)
+                self._validate_artifacts(result, manifest)
+                manifest_hash = canonical_sha256([item.model_dump(mode="json") for item in manifest])
+                result_hash = model_sha256(result)
+                status, error_code = "COMPLETED", None
+            except Exception as exc:
+                # Pipeline diagnostics can contain student content. Persist
+                # only the failure category, never a fictitious result.
+                result, result_hash, status, error_code = None, None, "FAILED", "AUDITOR_FAILED"
+                if isinstance(exc, ReproducibilityIntegrityError):
+                    error_code = "METADATA_INTEGRITY_FAILED"
+                manifest, manifest_hash = [], None
+            metadata = result.reproducibility if result else None
+            record = metadata.record if metadata else None
+            product_fields = {"question_context": question_context, "completed_at": datetime.now(timezone.utc)} if question_context else {}
+            if source.dynamic_context:product_fields["engine_mode"]="DYNAMIC"
+            run = AuditRun(**product_fields, audit_run_id=run_id, source=source, created_at=created_at,
+                **{field: getattr(source, field) for field in ("submission_id", "problem_id",
+                    "transcription_id", "revision_number", "acceptance_id", "source_hash")},
+                status=status, result=result, artifact_dir=result.artifact_dir if result else None,
+                result_sha256=result_hash,
+                required_artifacts=manifest, artifact_manifest_sha256=manifest_hash,
+                reproducibility_status=metadata.status if metadata else (
+                    "unavailable" if status == "FAILED" else "legacy_unversioned"),
+                reproducibility_manifest_filename=record.filename if record else None,
+                reproducibility_manifest_sha256=record.manifest_sha256 if record else None,
+                execution_key=request.execution_key, error_code=error_code,
+                auditor_version=source.dynamic_context.grader_version if source.dynamic_context else source.tme_context.auditor_version if source.tme_context else None)
+            if question_event_builder is not None:
+                events = question_event_builder(self.view(run))
+                run = AuditRun.model_validate({**run.model_dump(), "question_events": events,
+                    "question_events_sha256": canonical_sha256(events)})
+            # A newer revision leaves this accepted source valid. Changed
+            # originals/acceptance block publication even after engine execution.
+            with self.submissions._locked():
+                if self._source(submission_id, request) != source:
+>                   raise SourceIntegrityError()
+E                   confia_lean_auditor.submission_audits.errors.SourceIntegrityError
+
+app/confia_lean_auditor/submission_audits/service.py:247: SourceIntegrityError
+=========================== short test summary info ============================
+FAILED tests/test_tme_finalization.py::test_generic_audit_started_before_finalization_cannot_publish_after_it
+1 failed, 314 passed in 89.25s (0:01:29)

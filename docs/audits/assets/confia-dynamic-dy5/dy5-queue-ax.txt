@@ -1,0 +1,118 @@
+Browser tab: 6, Title: "ConfIA — Confiabilidade e Explicabilidade", URL: "http://127.0.0.1:8770/tme?view=queue".
+1 AXWebArea ConfIA — Confiabilidade e Explicabilidade, URL: 127.0.0.1:8770/tme?view=queue
+	2 link Description: Ir para conteúdo, Value: 127.0.0.1:8770/tme?view=queue#main
+	3 container
+		4 text ConfIA Plataforma de
+		5 text correção assistida
+		6 button (collapsed) Description: Perfil do avaliador, ID: evaluator-avatar, Secondary Actions: Expand
+	140 container
+		141 heading Fila de correções, Value: 1
+			142 text Fila de correções
+		143 text Acompanhe, filtre e continue suas correções.
+		144 button Corrigir próxima
+			145 text Corrigir próxima
+		146 container
+			147 text Buscar prova
+			148 search text field (settable) Buscar prova
+		149 container
+			150 text Dados
+			151 pop up button (collapsed, settable) Dados, Value: Todos, Secondary Actions: Expand
+				152 menu
+					153 (selected) Todos
+					154 Sintéticos
+					155 Reais
+		156 container
+			157 text Inspeção
+			158 pop up button (collapsed, settable) Inspeção, Value: Todos, Secondary Actions: Expand
+				159 menu
+					160 (selected) Todos
+					161 Amostra
+		162 container
+			163 text Questão
+			164 pop up button (collapsed, settable) Questão, Value: Todos, Secondary Actions: Expand
+				165 menu
+					166 (selected) Todos
+					167 dyn_2826d1f1d0304c0c88f42d06c523f18b
+					168 dyn_33b5f7bfbd6f48b88b91ff3c0e7daf11
+					169 dyn_6838256355cc471bb83e9e2b58974922
+					170 dyn_adc51c81f3764c4386d740f410aff617
+					171 dyn_b689570e828844f3b41089001861569f
+					172 dyn_be4b3d0fd83041e3a7bd9dba710103a1
+		173 container
+			174 text Status
+			175 pop up button (collapsed, settable) Status, Value: Todos, Secondary Actions: Expand
+				176 menu
+					177 (selected) Todos
+					178 Pendente
+					179 Em andamento
+					180 Inconclusiva
+					181 Finalizada
+		182 container
+			183 text Origem
+			184 pop up button (collapsed, settable) Origem, Value: Todos, Secondary Actions: Expand
+				185 menu
+					186 (selected) Todos
+					187 Foto / scan
+					188 Escrita digital
+					189 Resolução textual
+		190 button Buscar
+		191 button Atualizar dados
+		192 button Abrir correção DY5-PROVA-UP · dyn_2826d1f1d0304c0c88f42d06c523f18b · Finalizada
+			193 text Prova DY5-PROVA-UP
+			194 text dyn_2826d1f1d0304c0c88f42d06c523f18b
+			195 text dyn_2826d1f1d0304c0c88f42d06c523f18b
+			196 text Resolução textual
+			197 text Finalizada
+			198 text 6 / 10
+			199 text 12/11/2026, 00:47
+		200 button Abrir correção DY5-LISTA-UP · dyn_6838256355cc471bb83e9e2b58974922 · Em andamento
+			201 text Prova DY5-LISTA-UP
+			202 text dyn_6838256355cc471bb83e9e2b58974922
+			203 text dyn_6838256355cc471bb83e9e2b58974922
+			204 text Resolução textual
+			205 text Em andamento
+			206 text Não disponível
+			207 text 12/11/2026, 00:46
+		208 button Abrir correção DY5-ACORDO · dyn_adc51c81f3764c4386d740f410aff617 · Em andamento
+			209 text Prova DY5-ACORDO
+			210 text dyn_adc51c81f3764c4386d740f410aff617
+			211 text dyn_adc51c81f3764c4386d740f410aff617
+			212 text Resolução textual
+			213 text Em andamento
+			214 text 10 / 10
+			215 text 12/11/2026, 00:41
+		216 button Abrir correção DY5-LINEAR · dyn_b689570e828844f3b41089001861569f · Em andamento
+			217 text Prova DY5-LINEAR
+			218 text dyn_b689570e828844f3b41089001861569f
+			219 text dyn_b689570e828844f3b41089001861569f
+			220 text Resolução textual
+			221 text Em andamento
+			222 text 10 / 10
+			223 text 12/11/2026, 00:41
+		224 button Abrir correção DY5-SUFICIENCIA · dyn_be4b3d0fd83041e3a7bd9dba710103a1 · Inconclusiva
+			225 text Prova DY5-SUFICIENCIA
+			226 text dyn_be4b3d0fd83041e3a7bd9dba710103a1
+			227 text dyn_be4b3d0fd83041e3a7bd9dba710103a1
+			228 text Resolução textual
+			229 text Inconclusiva
+			230 text 7 / 10
+			231 text 12/11/2026, 00:41
+		232 button Abrir correção DY5-LISTA-DOWN · dyn_33b5f7bfbd6f48b88b91ff3c0e7daf11 · Inconclusiva
+			233 text Prova DY5-LISTA-DOWN
+			234 text dyn_33b5f7bfbd6f48b88b91ff3c0e7daf11
+			235 text dyn_33b5f7bfbd6f48b88b91ff3c0e7daf11
+			236 text Resolução textual
+			237 text Inconclusiva
+			238 text 0 / 10
+			239 text 12/11/2026, 00:41
+		240 container Paginação
+			241 text 6 registros · Página 1 de 1
+			242 button (disabled) Anterior
+			243 button (disabled) Próxima
+	135 container Description: Navegação principal, ID: home-bottom-nav
+		136 button Início
+		137 button Fila
+		138 button Nova
+		139 button Resultados
+
+The focused UI element is 137 button Fila

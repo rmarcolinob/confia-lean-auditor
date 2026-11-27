@@ -1,0 +1,9 @@
+{
+  "status": "PASS_BEFORE_FINAL_RUN",
+  "new_false_credit": 0,
+  "recovered_points": 26,
+  "negative_controls": 16,
+  "method_run_sha256": "ada98a84d4c54e9696b688e1201cd7bec1e80504694291b659c0ec6cf755608c",
+  "targeted_tests": "90 passed",
+  "known_remaining_missed_credit": "specific formula wording outside executable language"
+}

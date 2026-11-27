@@ -1,0 +1,15 @@
+Browser tab: 6, Title: "ConfIA — Confiabilidade e Explicabilidade", URL: "http://127.0.0.1:8770/tme?case_id=case_a4cc1942dec74862a1e5d067c2eaf464".
+The following is a diff from the previous accessibility tree with ~ and + representing changed and added elements, respectively. Removed elements are summarized by ID range.
+Removed element IDs: 70-71
++							125 container
++								126 button (expanded) Reconciliação · 2 critérios requerem revisão, Secondary Actions: Collapse
++									127 text Reconciliação · 2 critérios requerem revisão
++								128 text A sugestão reconciliada usa evidência e rubrica. Concordância entre agentes não é prova. A nota final depende da confirmação do professor. Perfil: Lista formativa Primeira análise: 3,0 · Sugestão reconciliada: 0
++								129 button (collapsed) Justificar a resolução por transformações equivalentes. · Reconciliação: 0 / 4, Secondary Actions: Expand
++									130 text Justificar a resolução por transformações equivalentes. · Reconciliação: 0 / 4
++								131 button (collapsed) Obter todas as raízes reais. Crédito parcial proporcional às raízes corretas. · Reconciliação: 0 / 3, Secondary Actions: Expand
++									132 text Obter todas as raízes reais. Crédito parcial proporcional às raízes corretas. · Reconciliação: 0 / 3
++								133 button (collapsed) Secondary Actions: Expand, Verificar as raízes por substituição. Crédito parcial proporcional às raízes corretas. · Reconciliação: 0 / 3
++									134 text Verificar as raízes por substituição. Crédito parcial proporcional às raízes corretas. · Reconciliação: 0 / 3
++								135 text method: Resultado verdadeiro não substitui a justificativa exigida; nenhuma mudança automática. check: Igualdade de pontos sem todas as condições de verificação/suficiência; revisão necessária.
+The focused UI element is 126 button (expanded) Reconciliação · 2 critérios requerem revisão, Secondary Actions: Collapse

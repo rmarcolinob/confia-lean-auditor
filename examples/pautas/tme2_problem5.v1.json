@@ -1,0 +1,648 @@
+{
+  "schema_version": "pauta.v1",
+  "problem_id": "TME2026P5",
+  "title": "TME² 2026 — Problema 5",
+  "max_score": 20,
+  "unresolved_policy": "withhold",
+  "obligations": [
+    {
+      "id": "a.candidate",
+      "description": "a.candidate",
+      "accepted_origins": [
+        "deterministic",
+        "student_lean"
+      ]
+    },
+    {
+      "id": "a.product",
+      "description": "a.product",
+      "accepted_origins": [
+        "deterministic",
+        "student_lean"
+      ]
+    },
+    {
+      "id": "a.enumeration",
+      "description": "a.enumeration",
+      "accepted_origins": [
+        "deterministic",
+        "student_lean"
+      ]
+    },
+    {
+      "id": "a.structural_max",
+      "description": "a.structural_max",
+      "accepted_origins": [
+        "deterministic",
+        "student_lean"
+      ]
+    },
+    {
+      "id": "a.normal_list",
+      "description": "a.normal_list",
+      "accepted_origins": [
+        "deterministic",
+        "student_lean"
+      ]
+    },
+    {
+      "id": "a.one_domain",
+      "description": "a.one_domain",
+      "accepted_origins": [
+        "deterministic",
+        "student_lean"
+      ]
+    },
+    {
+      "id": "a.one_sum",
+      "description": "a.one_sum",
+      "accepted_origins": [
+        "deterministic",
+        "student_lean"
+      ]
+    },
+    {
+      "id": "a.one_gain",
+      "description": "a.one_gain",
+      "accepted_origins": [
+        "deterministic",
+        "student_lean"
+      ]
+    },
+    {
+      "id": "a.domain",
+      "description": "a.domain",
+      "accepted_origins": [
+        "deterministic",
+        "student_lean"
+      ]
+    },
+    {
+      "id": "a.sum_preserved",
+      "description": "a.sum_preserved",
+      "accepted_origins": [
+        "deterministic",
+        "student_lean"
+      ]
+    },
+    {
+      "id": "a.increase",
+      "description": "a.increase",
+      "accepted_origins": [
+        "deterministic",
+        "student_lean"
+      ]
+    },
+    {
+      "id": "a.four_sum",
+      "description": "a.four_sum",
+      "accepted_origins": [
+        "deterministic",
+        "student_lean"
+      ]
+    },
+    {
+      "id": "a.four_product",
+      "description": "a.four_product",
+      "accepted_origins": [
+        "deterministic",
+        "student_lean"
+      ]
+    },
+    {
+      "id": "a.twos_sum",
+      "description": "a.twos_sum",
+      "accepted_origins": [
+        "deterministic",
+        "student_lean"
+      ]
+    },
+    {
+      "id": "a.twos_gain",
+      "description": "a.twos_gain",
+      "accepted_origins": [
+        "deterministic",
+        "student_lean"
+      ]
+    },
+    {
+      "id": "b.domain",
+      "description": "b.domain",
+      "accepted_origins": [
+        "deterministic",
+        "student_lean"
+      ]
+    },
+    {
+      "id": "b.sum_preserved",
+      "description": "b.sum_preserved",
+      "accepted_origins": [
+        "deterministic",
+        "student_lean"
+      ]
+    },
+    {
+      "id": "b.increase",
+      "description": "b.increase",
+      "accepted_origins": [
+        "deterministic",
+        "student_lean"
+      ]
+    },
+    {
+      "id": "b.old_contribution",
+      "description": "b.old_contribution",
+      "accepted_origins": [
+        "deterministic",
+        "student_lean"
+      ]
+    },
+    {
+      "id": "b.new_contribution",
+      "description": "b.new_contribution",
+      "accepted_origins": [
+        "deterministic",
+        "student_lean"
+      ]
+    },
+    {
+      "id": "b.comparison",
+      "description": "b.comparison",
+      "accepted_origins": [
+        "deterministic",
+        "student_lean"
+      ]
+    },
+    {
+      "id": "c.one_domain",
+      "description": "c.one_domain",
+      "accepted_origins": [
+        "deterministic",
+        "student_lean"
+      ]
+    },
+    {
+      "id": "c.one_sum",
+      "description": "c.one_sum",
+      "accepted_origins": [
+        "deterministic",
+        "student_lean"
+      ]
+    },
+    {
+      "id": "c.one_gain",
+      "description": "c.one_gain",
+      "accepted_origins": [
+        "deterministic",
+        "student_lean"
+      ]
+    },
+    {
+      "id": "c.domain",
+      "description": "c.domain",
+      "accepted_origins": [
+        "deterministic",
+        "student_lean"
+      ]
+    },
+    {
+      "id": "c.sum_preserved",
+      "description": "c.sum_preserved",
+      "accepted_origins": [
+        "deterministic",
+        "student_lean"
+      ]
+    },
+    {
+      "id": "c.increase",
+      "description": "c.increase",
+      "accepted_origins": [
+        "deterministic",
+        "student_lean"
+      ]
+    },
+    {
+      "id": "c.four_sum",
+      "description": "c.four_sum",
+      "accepted_origins": [
+        "deterministic",
+        "student_lean"
+      ]
+    },
+    {
+      "id": "c.four_product",
+      "description": "c.four_product",
+      "accepted_origins": [
+        "deterministic",
+        "student_lean"
+      ]
+    },
+    {
+      "id": "c.twos_sum",
+      "description": "c.twos_sum",
+      "accepted_origins": [
+        "deterministic",
+        "student_lean"
+      ]
+    },
+    {
+      "id": "c.twos_gain",
+      "description": "c.twos_gain",
+      "accepted_origins": [
+        "deterministic",
+        "student_lean"
+      ]
+    },
+    {
+      "id": "c.no_ones",
+      "description": "c.no_ones",
+      "accepted_origins": [
+        "deterministic",
+        "student_lean"
+      ]
+    },
+    {
+      "id": "c.no_ge5",
+      "description": "c.no_ge5",
+      "accepted_origins": [
+        "deterministic",
+        "student_lean"
+      ]
+    },
+    {
+      "id": "c.threes_count",
+      "description": "c.threes_count",
+      "accepted_origins": [
+        "deterministic",
+        "student_lean"
+      ]
+    },
+    {
+      "id": "c.twos_count",
+      "description": "c.twos_count",
+      "accepted_origins": [
+        "deterministic",
+        "student_lean"
+      ]
+    },
+    {
+      "id": "c.decomposition",
+      "description": "c.decomposition",
+      "accepted_origins": [
+        "deterministic",
+        "student_lean"
+      ]
+    },
+    {
+      "id": "c.max_product",
+      "description": "c.max_product",
+      "accepted_origins": [
+        "deterministic",
+        "student_lean"
+      ]
+    },
+    {
+      "id": "c.general_rule",
+      "description": "c.general_rule",
+      "accepted_origins": [
+        "deterministic",
+        "student_lean"
+      ]
+    },
+    {
+      "id": "c.quotient",
+      "description": "c.quotient",
+      "accepted_origins": [
+        "deterministic",
+        "student_lean"
+      ]
+    },
+    {
+      "id": "c.general_complete",
+      "description": "c.general_complete",
+      "accepted_origins": [
+        "deterministic",
+        "student_lean"
+      ]
+    },
+    {
+      "id": "c.residue0_twos",
+      "description": "c.residue0_twos",
+      "accepted_origins": [
+        "deterministic",
+        "student_lean"
+      ]
+    },
+    {
+      "id": "c.residue0_threes",
+      "description": "c.residue0_threes",
+      "accepted_origins": [
+        "deterministic",
+        "student_lean"
+      ]
+    },
+    {
+      "id": "c.residue1_twos",
+      "description": "c.residue1_twos",
+      "accepted_origins": [
+        "deterministic",
+        "student_lean"
+      ]
+    },
+    {
+      "id": "c.residue1_threes",
+      "description": "c.residue1_threes",
+      "accepted_origins": [
+        "deterministic",
+        "student_lean"
+      ]
+    },
+    {
+      "id": "c.residue2_twos",
+      "description": "c.residue2_twos",
+      "accepted_origins": [
+        "deterministic",
+        "student_lean"
+      ]
+    },
+    {
+      "id": "c.residue2_threes",
+      "description": "c.residue2_threes",
+      "accepted_origins": [
+        "deterministic",
+        "student_lean"
+      ]
+    },
+    {
+      "id": "d.list_twos",
+      "description": "d.list_twos",
+      "accepted_origins": [
+        "deterministic",
+        "student_lean"
+      ]
+    },
+    {
+      "id": "d.list_four",
+      "description": "d.list_four",
+      "accepted_origins": [
+        "deterministic",
+        "student_lean"
+      ]
+    },
+    {
+      "id": "d.four_sum",
+      "description": "d.four_sum",
+      "accepted_origins": [
+        "deterministic",
+        "student_lean"
+      ]
+    },
+    {
+      "id": "d.four_product",
+      "description": "d.four_product",
+      "accepted_origins": [
+        "deterministic",
+        "student_lean"
+      ]
+    },
+    {
+      "id": "d.uniqueness",
+      "description": "d.uniqueness",
+      "accepted_origins": [
+        "deterministic",
+        "student_lean"
+      ]
+    },
+    {
+      "id": "d.size_twos",
+      "description": "d.size_twos",
+      "accepted_origins": [
+        "deterministic",
+        "student_lean"
+      ]
+    },
+    {
+      "id": "d.size_four",
+      "description": "d.size_four",
+      "accepted_origins": [
+        "deterministic",
+        "student_lean"
+      ]
+    },
+    {
+      "id": "d.different_sizes",
+      "description": "d.different_sizes",
+      "accepted_origins": [
+        "deterministic",
+        "student_lean"
+      ]
+    },
+    {
+      "id": "d.sizes",
+      "description": "d.sizes",
+      "accepted_origins": [
+        "deterministic",
+        "student_lean"
+      ]
+    },
+    {
+      "id": "d.cf_adoption",
+      "description": "d.cf_adoption",
+      "accepted_origins": [
+        "deterministic",
+        "student_lean"
+      ]
+    },
+    {
+      "id": "d.cf_dependency",
+      "description": "d.cf_dependency",
+      "accepted_origins": [
+        "deterministic",
+        "student_lean"
+      ]
+    },
+    {
+      "id": "d.cf_coherence",
+      "description": "d.cf_coherence",
+      "accepted_origins": [
+        "deterministic",
+        "student_lean"
+      ]
+    }
+  ],
+  "items": [
+    {
+      "id": "a",
+      "max_points": 6,
+      "scoring_strategy": "additive",
+      "children": [
+        {
+          "id": "a.list",
+          "max_points": 2,
+          "scoring_strategy": "all_of",
+          "obligation_ids": [
+            "a.candidate"
+          ]
+        },
+        {
+          "id": "a.calculation",
+          "max_points": 1,
+          "scoring_strategy": "all_of",
+          "obligation_ids": [
+            "a.product"
+          ]
+        },
+        {
+          "id": "a.argument",
+          "max_points": 3,
+          "scoring_strategy": "any_of",
+          "obligation_ids": [
+            "a.enumeration",
+            "a.structural_max"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b",
+      "max_points": 4,
+      "scoring_strategy": "additive",
+      "children": [
+        {
+          "id": "b.sum",
+          "max_points": 1,
+          "scoring_strategy": "all_of",
+          "obligation_ids": [
+            "b.sum_preserved"
+          ]
+        },
+        {
+          "id": "b.contributions",
+          "max_points": 1,
+          "scoring_strategy": "all_of",
+          "obligation_ids": [
+            "b.comparison"
+          ]
+        },
+        {
+          "id": "b.improvement",
+          "max_points": 2,
+          "scoring_strategy": "all_of",
+          "obligation_ids": [
+            "b.increase"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "c",
+      "max_points": 6,
+      "scoring_strategy": "max_of",
+      "children": [
+        {
+          "id": "c.official_replacement_path",
+          "max_points": 6,
+          "scoring_strategy": "additive",
+          "children": [
+            {
+              "id": "c.reduction",
+              "max_points": 2,
+              "scoring_strategy": "all_of",
+              "obligation_ids": [
+                "c.no_ones",
+                "c.no_ge5"
+              ]
+            },
+            {
+              "id": "c.normal_counts",
+              "max_points": 2,
+              "scoring_strategy": "all_of",
+              "obligation_ids": [
+                "c.four_sum",
+                "c.four_product",
+                "c.twos_sum",
+                "c.twos_gain",
+                "c.threes_count",
+                "c.twos_count"
+              ]
+            },
+            {
+              "id": "c.answer",
+              "max_points": 2,
+              "scoring_strategy": "all_of",
+              "obligation_ids": [
+                "c.decomposition",
+                "c.max_product"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "c.general_integer_break_path",
+          "max_points": 6,
+          "scoring_strategy": "all_of",
+          "obligation_ids": [
+            "c.general_complete"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "d",
+      "max_points": 4,
+      "scoring_strategy": "additive",
+      "children": [
+        {
+          "id": "d.twos",
+          "max_points": 1,
+          "scoring_strategy": "all_of",
+          "obligation_ids": [
+            "d.list_twos"
+          ]
+        },
+        {
+          "id": "d.four",
+          "max_points": 1,
+          "scoring_strategy": "all_of",
+          "obligation_ids": [
+            "d.list_four"
+          ]
+        },
+        {
+          "id": "d.only_forms",
+          "max_points": 1,
+          "scoring_strategy": "all_of",
+          "obligation_ids": [
+            "d.uniqueness"
+          ]
+        },
+        {
+          "id": "d.counts",
+          "max_points": 1,
+          "scoring_strategy": "max_of",
+          "children": [
+            {
+              "id": "d.sizes_absolute",
+              "max_points": 1,
+              "scoring_strategy": "all_of",
+              "obligation_ids": [
+                "d.sizes"
+              ]
+            },
+            {
+              "id": "d.sizes_cf",
+              "max_points": 1,
+              "scoring_strategy": "carry_forward",
+              "carry_forward": {
+                "prior_obligation_id": "c.threes_count",
+                "adoption_obligation_id": "d.cf_adoption",
+                "dependency_obligation_id": "d.cf_dependency",
+                "coherence_obligation_id": "d.cf_coherence"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,904 @@
+{
+  "mode": "offline_existing_fixtures_with_simulated_minimal_provider",
+  "real_api_calls": 0,
+  "notes": [
+    "Partial/false cases replace one item of the complete fixture; other items stay correct.",
+    "Remaining obligations in the changed short item receive explicit simulated not_met opinions; production does not infer zero from absence.",
+    "Indeterminate obligations in unused methods/bands may remain without affecting a decided score.",
+    "These are integration controls, not GPT accuracy measurements against human gold."
+  ],
+  "existing_fixture_count": {
+    "P1": 20,
+    "P2": 55,
+    "P3": 25,
+    "P4": 38,
+    "P5": 52
+  },
+  "matrix": [
+    {
+      "kind": "false",
+      "problem": "TME2026P1",
+      "fixtures": [
+        "a_complete",
+        "b_complete",
+        "c_complete",
+        "d_complete"
+      ],
+      "replacement": "a_single_arithmetic_error",
+      "score": 19.0,
+      "items": [
+        {
+          "id": "a",
+          "points": "2",
+          "status": "decided",
+          "selected_band": "a.arithmetic_only",
+          "selected_method_path": null
+        },
+        {
+          "id": "b",
+          "points": "5",
+          "status": "decided",
+          "selected_band": null,
+          "selected_method_path": null
+        },
+        {
+          "id": "c",
+          "points": "6",
+          "status": "decided",
+          "selected_band": null,
+          "selected_method_path": null
+        },
+        {
+          "id": "d",
+          "points": "6",
+          "status": "decided",
+          "selected_band": null,
+          "selected_method_path": null
+        }
+      ],
+      "simulated_calls": 0,
+      "pending_scoring_items": [],
+      "obligation_status_counts": {
+        "supported": 19,
+        "refuted": 2,
+        "indeterminate": 0,
+        "technical_error": 0
+      },
+      "opinions": []
+    },
+    {
+      "kind": "full",
+      "problem": "TME2026P1",
+      "fixtures": [
+        "a_complete",
+        "b_complete",
+        "c_complete",
+        "d_complete"
+      ],
+      "replacement": null,
+      "score": 20.0,
+      "items": [
+        {
+          "id": "a",
+          "points": "3",
+          "status": "decided",
+          "selected_band": "a.full",
+          "selected_method_path": null
+        },
+        {
+          "id": "b",
+          "points": "5",
+          "status": "decided",
+          "selected_band": null,
+          "selected_method_path": null
+        },
+        {
+          "id": "c",
+          "points": "6",
+          "status": "decided",
+          "selected_band": null,
+          "selected_method_path": null
+        },
+        {
+          "id": "d",
+          "points": "6",
+          "status": "decided",
+          "selected_band": null,
+          "selected_method_path": null
+        }
+      ],
+      "simulated_calls": 0,
+      "pending_scoring_items": [],
+      "obligation_status_counts": {
+        "supported": 19,
+        "refuted": 1,
+        "indeterminate": 1,
+        "technical_error": 0
+      },
+      "opinions": []
+    },
+    {
+      "kind": "partial",
+      "problem": "TME2026P1",
+      "fixtures": [
+        "a_complete",
+        "b_complete",
+        "c_complete",
+        "d_complete"
+      ],
+      "replacement": "a_only_inverse",
+      "score": 18.0,
+      "items": [
+        {
+          "id": "a",
+          "points": "1",
+          "status": "decided",
+          "selected_band": "a.identification",
+          "selected_method_path": null
+        },
+        {
+          "id": "b",
+          "points": "5",
+          "status": "decided",
+          "selected_band": null,
+          "selected_method_path": null
+        },
+        {
+          "id": "c",
+          "points": "6",
+          "status": "decided",
+          "selected_band": null,
+          "selected_method_path": null
+        },
+        {
+          "id": "d",
+          "points": "6",
+          "status": "decided",
+          "selected_band": null,
+          "selected_method_path": null
+        }
+      ],
+      "simulated_calls": 1,
+      "pending_scoring_items": [],
+      "obligation_status_counts": {
+        "supported": 17,
+        "refuted": 2,
+        "indeterminate": 2,
+        "technical_error": 0
+      },
+      "opinions": [
+        {
+          "obligation": "a.constructs_subtraction",
+          "response": {
+            "decision": "not_met",
+            "justification": "SIMULAÇÃO OFFLINE: o item desta fixture não desenvolve a obrigação solicitada.",
+            "quotes": [
+              "137"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "kind": "false",
+      "problem": "TME2026P2",
+      "fixtures": [
+        "a_text_complete",
+        "b_complete",
+        "c_complete"
+      ],
+      "replacement": "b_false_center",
+      "score": 13.0,
+      "items": [
+        {
+          "id": "a",
+          "points": "5",
+          "status": "decided",
+          "selected_band": null,
+          "selected_method_path": "a.complete_configuration_path"
+        },
+        {
+          "id": "b",
+          "points": "0",
+          "status": "decided",
+          "selected_band": null,
+          "selected_method_path": null
+        },
+        {
+          "id": "c",
+          "points": "8",
+          "status": "decided",
+          "selected_band": null,
+          "selected_method_path": null
+        }
+      ],
+      "simulated_calls": 5,
+      "pending_scoring_items": [],
+      "obligation_status_counts": {
+        "supported": 10,
+        "refuted": 6,
+        "indeterminate": 7,
+        "technical_error": 0
+      },
+      "opinions": [
+        {
+          "obligation": "b.balance_relation",
+          "response": {
+            "decision": "not_met",
+            "justification": "SIMULAÇÃO OFFLINE: o item desta fixture não desenvolve a obrigação solicitada.",
+            "quotes": [
+              "admissible_center: 3"
+            ]
+          }
+        },
+        {
+          "obligation": "b.sum_formula",
+          "response": {
+            "decision": "not_met",
+            "justification": "SIMULAÇÃO OFFLINE: o item desta fixture não desenvolve a obrigação solicitada.",
+            "quotes": [
+              "admissible_center: 3"
+            ]
+          }
+        },
+        {
+          "obligation": "b.centers",
+          "response": {
+            "decision": "not_met",
+            "justification": "SIMULAÇÃO OFFLINE: o item desta fixture não desenvolve a obrigação solicitada.",
+            "quotes": [
+              "admissible_center: 3"
+            ]
+          }
+        },
+        {
+          "obligation": "b.center_sums",
+          "response": {
+            "decision": "not_met",
+            "justification": "SIMULAÇÃO OFFLINE: o item desta fixture não desenvolve a obrigação solicitada.",
+            "quotes": [
+              "admissible_center: 3"
+            ]
+          }
+        },
+        {
+          "obligation": "b.realizable_1",
+          "response": {
+            "decision": "not_met",
+            "justification": "SIMULAÇÃO OFFLINE: o item desta fixture não desenvolve a obrigação solicitada.",
+            "quotes": [
+              "admissible_center: 3"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "kind": "full",
+      "problem": "TME2026P2",
+      "fixtures": [
+        "a_text_complete",
+        "b_complete",
+        "c_complete"
+      ],
+      "replacement": null,
+      "score": 20.0,
+      "items": [
+        {
+          "id": "a",
+          "points": "5",
+          "status": "decided",
+          "selected_band": null,
+          "selected_method_path": "a.complete_configuration_path"
+        },
+        {
+          "id": "b",
+          "points": "7",
+          "status": "decided",
+          "selected_band": null,
+          "selected_method_path": null
+        },
+        {
+          "id": "c",
+          "points": "8",
+          "status": "decided",
+          "selected_band": null,
+          "selected_method_path": null
+        }
+      ],
+      "simulated_calls": 0,
+      "pending_scoring_items": [],
+      "obligation_status_counts": {
+        "supported": 18,
+        "refuted": 0,
+        "indeterminate": 5,
+        "technical_error": 0
+      },
+      "opinions": []
+    },
+    {
+      "kind": "partial",
+      "problem": "TME2026P2",
+      "fixtures": [
+        "a_text_complete",
+        "b_complete",
+        "c_complete"
+      ],
+      "replacement": "a_pairs_only",
+      "score": 18.0,
+      "items": [
+        {
+          "id": "a",
+          "points": "3",
+          "status": "decided",
+          "selected_band": null,
+          "selected_method_path": "a.obligation_path"
+        },
+        {
+          "id": "b",
+          "points": "7",
+          "status": "decided",
+          "selected_band": null,
+          "selected_method_path": null
+        },
+        {
+          "id": "c",
+          "points": "8",
+          "status": "decided",
+          "selected_band": null,
+          "selected_method_path": null
+        }
+      ],
+      "simulated_calls": 3,
+      "pending_scoring_items": [],
+      "obligation_status_counts": {
+        "supported": 16,
+        "refuted": 3,
+        "indeterminate": 4,
+        "technical_error": 0
+      },
+      "opinions": [
+        {
+          "obligation": "a.line_sum",
+          "response": {
+            "decision": "not_met",
+            "justification": "SIMULAÇÃO OFFLINE: o item desta fixture não desenvolve a obrigação solicitada.",
+            "quotes": [
+              "pairs: {(1, 9),(2, 8),(3, 7),(4, 6)}"
+            ]
+          }
+        },
+        {
+          "obligation": "a.placement",
+          "response": {
+            "decision": "not_met",
+            "justification": "SIMULAÇÃO OFFLINE: o item desta fixture não desenvolve a obrigação solicitada.",
+            "quotes": [
+              "pairs: {(1, 9),(2, 8),(3, 7),(4, 6)}"
+            ]
+          }
+        },
+        {
+          "obligation": "a.complete_configuration",
+          "response": {
+            "decision": "not_met",
+            "justification": "SIMULAÇÃO OFFLINE: o item desta fixture não desenvolve a obrigação solicitada.",
+            "quotes": [
+              "pairs: {(1, 9),(2, 8),(3, 7),(4, 6)}"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "kind": "false",
+      "problem": "TME2026P3",
+      "fixtures": [
+        "a_complete",
+        "b_official",
+        "c_complete"
+      ],
+      "replacement": "a_wrong_probability",
+      "score": 18.0,
+      "items": [
+        {
+          "id": "a",
+          "points": "2",
+          "status": "decided",
+          "selected_band": null,
+          "selected_method_path": null
+        },
+        {
+          "id": "b",
+          "points": "8",
+          "status": "decided",
+          "selected_band": null,
+          "selected_method_path": "b.counting"
+        },
+        {
+          "id": "c",
+          "points": "8",
+          "status": "decided",
+          "selected_band": null,
+          "selected_method_path": null
+        }
+      ],
+      "simulated_calls": 0,
+      "pending_scoring_items": [],
+      "obligation_status_counts": {
+        "supported": 11,
+        "refuted": 1,
+        "indeterminate": 1,
+        "technical_error": 0
+      },
+      "opinions": []
+    },
+    {
+      "kind": "full",
+      "problem": "TME2026P3",
+      "fixtures": [
+        "a_complete",
+        "b_official",
+        "c_complete"
+      ],
+      "replacement": null,
+      "score": 20.0,
+      "items": [
+        {
+          "id": "a",
+          "points": "4",
+          "status": "decided",
+          "selected_band": null,
+          "selected_method_path": null
+        },
+        {
+          "id": "b",
+          "points": "8",
+          "status": "decided",
+          "selected_band": null,
+          "selected_method_path": "b.counting"
+        },
+        {
+          "id": "c",
+          "points": "8",
+          "status": "decided",
+          "selected_band": null,
+          "selected_method_path": null
+        }
+      ],
+      "simulated_calls": 0,
+      "pending_scoring_items": [],
+      "obligation_status_counts": {
+        "supported": 12,
+        "refuted": 0,
+        "indeterminate": 1,
+        "technical_error": 0
+      },
+      "opinions": []
+    },
+    {
+      "kind": "partial",
+      "problem": "TME2026P3",
+      "fixtures": [
+        "a_complete",
+        "b_official",
+        "c_complete"
+      ],
+      "replacement": "a_answer_only",
+      "score": 18.0,
+      "items": [
+        {
+          "id": "a",
+          "points": "2",
+          "status": "decided",
+          "selected_band": null,
+          "selected_method_path": null
+        },
+        {
+          "id": "b",
+          "points": "8",
+          "status": "decided",
+          "selected_band": null,
+          "selected_method_path": "b.counting"
+        },
+        {
+          "id": "c",
+          "points": "8",
+          "status": "decided",
+          "selected_band": null,
+          "selected_method_path": null
+        }
+      ],
+      "simulated_calls": 1,
+      "pending_scoring_items": [],
+      "obligation_status_counts": {
+        "supported": 11,
+        "refuted": 1,
+        "indeterminate": 1,
+        "technical_error": 0
+      },
+      "opinions": [
+        {
+          "obligation": "a.bottom_white_count",
+          "response": {
+            "decision": "not_met",
+            "justification": "SIMULAÇÃO OFFLINE: o item desta fixture não desenvolve a obrigação solicitada.",
+            "quotes": [
+              "1/3"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "kind": "false",
+      "problem": "TME2026P4",
+      "fixtures": [
+        "a_complete",
+        "b_official",
+        "c_complete"
+      ],
+      "replacement": "a_wrong_perimeter",
+      "score": 19.0,
+      "items": [
+        {
+          "id": "a",
+          "points": "3",
+          "status": "decided",
+          "selected_band": null,
+          "selected_method_path": null
+        },
+        {
+          "id": "b",
+          "points": "6",
+          "status": "decided",
+          "selected_band": null,
+          "selected_method_path": "b.official_metric_path"
+        },
+        {
+          "id": "c",
+          "points": "10",
+          "status": "decided",
+          "selected_band": null,
+          "selected_method_path": null
+        }
+      ],
+      "simulated_calls": 0,
+      "pending_scoring_items": [],
+      "obligation_status_counts": {
+        "supported": 25,
+        "refuted": 1,
+        "indeterminate": 5,
+        "technical_error": 0
+      },
+      "opinions": []
+    },
+    {
+      "kind": "full",
+      "problem": "TME2026P4",
+      "fixtures": [
+        "a_complete",
+        "b_official",
+        "c_complete"
+      ],
+      "replacement": null,
+      "score": 20.0,
+      "items": [
+        {
+          "id": "a",
+          "points": "4",
+          "status": "decided",
+          "selected_band": null,
+          "selected_method_path": null
+        },
+        {
+          "id": "b",
+          "points": "6",
+          "status": "decided",
+          "selected_band": null,
+          "selected_method_path": "b.official_metric_path"
+        },
+        {
+          "id": "c",
+          "points": "10",
+          "status": "decided",
+          "selected_band": null,
+          "selected_method_path": null
+        }
+      ],
+      "simulated_calls": 0,
+      "pending_scoring_items": [],
+      "obligation_status_counts": {
+        "supported": 26,
+        "refuted": 0,
+        "indeterminate": 5,
+        "technical_error": 0
+      },
+      "opinions": []
+    },
+    {
+      "kind": "partial",
+      "problem": "TME2026P4",
+      "fixtures": [
+        "a_complete",
+        "b_official",
+        "c_complete"
+      ],
+      "replacement": "b_partial",
+      "score": 16.0,
+      "items": [
+        {
+          "id": "a",
+          "points": "4",
+          "status": "decided",
+          "selected_band": null,
+          "selected_method_path": null
+        },
+        {
+          "id": "b",
+          "points": "2",
+          "status": "decided",
+          "selected_band": null,
+          "selected_method_path": "b.official_metric_path"
+        },
+        {
+          "id": "c",
+          "points": "10",
+          "status": "decided",
+          "selected_band": null,
+          "selected_method_path": null
+        }
+      ],
+      "simulated_calls": 2,
+      "pending_scoring_items": [],
+      "obligation_status_counts": {
+        "supported": 23,
+        "refuted": 4,
+        "indeterminate": 4,
+        "technical_error": 0
+      },
+      "opinions": [
+        {
+          "obligation": "b.apqr",
+          "response": {
+            "decision": "not_met",
+            "justification": "SIMULAÇÃO OFFLINE: o item desta fixture não desenvolve a obrigação solicitada.",
+            "quotes": [
+              "AP: 6-x\nQR: 6-x\nPQ: -x\nAR: -x"
+            ]
+          }
+        },
+        {
+          "obligation": "b.perimeter_apqr",
+          "response": {
+            "decision": "not_met",
+            "justification": "SIMULAÇÃO OFFLINE: o item desta fixture não desenvolve a obrigação solicitada.",
+            "quotes": [
+              "AP: 6-x\nQR: 6-x\nPQ: -x\nAR: -x"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "kind": "false",
+      "problem": "TME2026P5",
+      "fixtures": [
+        "a_complete",
+        "b_complete",
+        "c_complete",
+        "d_complete"
+      ],
+      "replacement": "a_false_product",
+      "score": 16.0,
+      "items": [
+        {
+          "id": "a",
+          "points": "2",
+          "status": "decided",
+          "selected_band": null,
+          "selected_method_path": null
+        },
+        {
+          "id": "b",
+          "points": "4",
+          "status": "decided",
+          "selected_band": null,
+          "selected_method_path": null
+        },
+        {
+          "id": "c",
+          "points": "6",
+          "status": "decided",
+          "selected_band": null,
+          "selected_method_path": "c.official_replacement_path"
+        },
+        {
+          "id": "d",
+          "points": "4",
+          "status": "decided",
+          "selected_band": null,
+          "selected_method_path": null
+        }
+      ],
+      "simulated_calls": 2,
+      "pending_scoring_items": [],
+      "obligation_status_counts": {
+        "supported": 32,
+        "refuted": 3,
+        "indeterminate": 23,
+        "technical_error": 0
+      },
+      "opinions": [
+        {
+          "obligation": "a.enumeration",
+          "response": {
+            "decision": "not_met",
+            "justification": "SIMULAÇÃO OFFLINE: o item desta fixture não desenvolve a obrigação solicitada.",
+            "quotes": [
+              "candidate: (2,3,3,3)\nproduct: 2*3*3*3=53"
+            ]
+          }
+        },
+        {
+          "obligation": "a.structural_max",
+          "response": {
+            "decision": "not_met",
+            "justification": "SIMULAÇÃO OFFLINE: o item desta fixture não desenvolve a obrigação solicitada.",
+            "quotes": [
+              "candidate: (2,3,3,3)\nproduct: 2*3*3*3=53"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "kind": "full",
+      "problem": "TME2026P5",
+      "fixtures": [
+        "a_complete",
+        "b_complete",
+        "c_complete",
+        "d_complete"
+      ],
+      "replacement": null,
+      "score": 20.0,
+      "items": [
+        {
+          "id": "a",
+          "points": "6",
+          "status": "decided",
+          "selected_band": null,
+          "selected_method_path": null
+        },
+        {
+          "id": "b",
+          "points": "4",
+          "status": "decided",
+          "selected_band": null,
+          "selected_method_path": null
+        },
+        {
+          "id": "c",
+          "points": "6",
+          "status": "decided",
+          "selected_band": null,
+          "selected_method_path": "c.official_replacement_path"
+        },
+        {
+          "id": "d",
+          "points": "4",
+          "status": "decided",
+          "selected_band": null,
+          "selected_method_path": null
+        }
+      ],
+      "simulated_calls": 0,
+      "pending_scoring_items": [],
+      "obligation_status_counts": {
+        "supported": 34,
+        "refuted": 0,
+        "indeterminate": 24,
+        "technical_error": 0
+      },
+      "opinions": []
+    },
+    {
+      "kind": "partial",
+      "problem": "TME2026P5",
+      "fixtures": [
+        "a_complete",
+        "b_complete",
+        "c_complete",
+        "d_complete"
+      ],
+      "replacement": "a_list_only",
+      "score": 16.0,
+      "items": [
+        {
+          "id": "a",
+          "points": "2",
+          "status": "decided",
+          "selected_band": null,
+          "selected_method_path": null
+        },
+        {
+          "id": "b",
+          "points": "4",
+          "status": "decided",
+          "selected_band": null,
+          "selected_method_path": null
+        },
+        {
+          "id": "c",
+          "points": "6",
+          "status": "decided",
+          "selected_band": null,
+          "selected_method_path": "c.official_replacement_path"
+        },
+        {
+          "id": "d",
+          "points": "4",
+          "status": "decided",
+          "selected_band": null,
+          "selected_method_path": null
+        }
+      ],
+      "simulated_calls": 3,
+      "pending_scoring_items": [],
+      "obligation_status_counts": {
+        "supported": 32,
+        "refuted": 3,
+        "indeterminate": 23,
+        "technical_error": 0
+      },
+      "opinions": [
+        {
+          "obligation": "a.product",
+          "response": {
+            "decision": "not_met",
+            "justification": "SIMULAÇÃO OFFLINE: o item desta fixture não desenvolve a obrigação solicitada.",
+            "quotes": [
+              "candidate: (2,3,3,3)"
+            ]
+          }
+        },
+        {
+          "obligation": "a.enumeration",
+          "response": {
+            "decision": "not_met",
+            "justification": "SIMULAÇÃO OFFLINE: o item desta fixture não desenvolve a obrigação solicitada.",
+            "quotes": [
+              "candidate: (2,3,3,3)"
+            ]
+          }
+        },
+        {
+          "obligation": "a.structural_max",
+          "response": {
+            "decision": "not_met",
+            "justification": "SIMULAÇÃO OFFLINE: o item desta fixture não desenvolve a obrigação solicitada.",
+            "quotes": [
+              "candidate: (2,3,3,3)"
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "diagnosis": {
+    "P1": "Os itens b/c/d estavam separados na revisão aceita, mas não geraram fatos reconhecidos. O gate anterior exigia source_claim_ids atribuíveis para chamar o fallback: zero chamadas.",
+    "partial_a": "O checker reconheceu 137 e a subtração, e refutou 595. A detecção de erro aritmético isolado não reconheceu a prosa adicional; o parecer semântico agora pode decidir essa obrigação sem substituir a refutação.",
+    "integration": "O fallback recebe texto literal do item aceito, solução integral, pauta e requisitos já existentes. SHA-256, citações e escopo validam a proveniência; nenhuma prova ou MathClaimRecord é fabricado.",
+    "scoring": "Somente o PautaEngine aplica pesos, faixas, caminhos alternativos e crédito parcial. met/not_met são conclusivos; review/resposta inválida/falha técnica não geram zero.",
+    "completion": "A projeção por questão informa INCOMPLETE se a nota estiver ausente. A interface SPECIALIZED distingue correção pendente, mantém os resultados parciais e permite nova tentativa explícita com chave própria. AuditRun.status continua descrevendo a execução técnica, preservando o contrato persistido."
+  },
+  "limitations": [
+    "Nenhuma chamada paga nem auditoria real foi executada. Os providers simulados verificam a integração, não a precisão de um modelo.",
+    "A execução real posterior precisa carregar este código e ter o provider autorizado/configurado; o servidor do piloto não foi reiniciado.",
+    "Itens ausentes, diagramas não confirmados, escopo ambíguo e respostas inconclusivas continuam pendentes justificadamente.",
+    "Hipóteses, citações e tentativas descartadas são preservadas no contexto integral para avaliação; sua mera presença não produz crédito ou fato verificado.",
+    "O indicador histórico needs_review de evidência semântica continua preservado; nota numérica decidida e certificação formal são propriedades distintas.",
+    "No replay P1 foram necessários 15 pareceres simulados. Há no máximo uma adjudicação por obrigação nesta passagem, e não se avaliam caminhos irrelevantes de itens já decididos. Latência e custo reais não foram medidos."
+  ]
+}

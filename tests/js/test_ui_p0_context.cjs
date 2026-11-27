@@ -4,7 +4,7 @@ const fs = require("node:fs");
 const path = require("node:path");
 const vm = require("node:vm");
 const { element, descendants, flush, deferred } = require("./ui-dom.cjs");
-const source = fs.readFileSync(path.join(__dirname, "../../app/confia_lean_auditor/static/app.js"), "utf8");
+const source = fs.readFileSync(path.join(__dirname, "../../app/confia_lean_auditor/static/audit-view.js"), "utf8") + "\n" + fs.readFileSync(path.join(__dirname, "../../app/confia_lean_auditor/static/app.js"), "utf8");
 const problems = ["A", "B"].map(id => ({ problem_id: id, title: `Questão ${id}`, statement: `Enunciado ${id}`, examples: [{ key: "correct", label: "Exemplo" }] }));
 const report = (id, summary = `Relatório ${id}`) => ({ problem_id: id, pedagogical_report: { result: "insuficiente", summary, score: 1, max_score: 10, evidence_items: [], attention_points: [] } });
 const response = data => ({ ok: true, json: async () => data });
@@ -46,10 +46,10 @@ test("shared report explicitly limits formal verification to selected claims and
   await write(ui, 'Solução de teste');
   await ui.get('#audit-button').click(); await flush();
   const section = descendants(ui.get('#result-panel')).find(n => n.className === 'formal-checks-section');
-  assert.match(section.textContent, /Verificações formais.*somente os claims e passos.*não verifica toda a solução/);
+  assert.match(section.textContent, /Verificação matemática.*somente os claims e passos.*não verifica toda a solução/);
   const details = section.children.find(n => n.tag === 'details');
   assert.equal(Boolean(details.open), false);
-  assert.match(details.textContent, /Passo selecionado: Afirmação verificada.*student_claim_0: Não foi possível verificar formalmente/);
+  assert.match(details.textContent, /Passo selecionado: Verificado formalmente.*student_claim_0: Não verificado/);
 });
 
 test("formal details distinguish proven refutations from unavailable or inconclusive checks", async () => {
@@ -64,12 +64,12 @@ test("formal details distinguish proven refutations from unavailable or inconclu
   await write(ui, "Solução de teste");
   await ui.get("#audit-button").click(); await flush();
   const section = descendants(ui.get("#result-panel")).find(n => n.className === "formal-checks-section");
-  assert.match(section.textContent, /technical: Verificação formal indisponível/);
-  assert.match(section.textContent, /unproved: Não foi possível verificar formalmente/);
-  assert.match(section.textContent, /false: Erro matemático identificado/);
-  assert.match(section.textContent, /unsupported-refutation: Não foi possível verificar formalmente/);
-  assert.match(section.textContent, /timeout-step: Verificação formal indisponível/);
-  assert.match(section.textContent, /goals-step: Não foi possível verificar formalmente/);
+  assert.match(section.textContent, /technical: Verificação formal não concluída/);
+  assert.match(section.textContent, /unproved: Não verificado/);
+  assert.match(section.textContent, /false: Refutado formalmente/);
+  assert.match(section.textContent, /unsupported-refutation: Não verificado/);
+  assert.match(section.textContent, /timeout-step: Verificação formal não concluída/);
+  assert.match(section.textContent, /goals-step: Não verificado/);
 });
 
 test("teacher report keeps suggested result, evidence, attention and F2Q3 criteria visible", async () => {
@@ -83,7 +83,7 @@ test("teacher report keeps suggested result, evidence, attention and F2Q3 criter
   const ui = await page(() => response(data));
   const target = element("section");
   ui.render(data, target, { context: "teacher" });
-  assert.match(target.textContent, /Nota sugerida.*Resultado sugerido.*Evidências.*Pontos de atenção.*Critérios de avaliação/s);
+  assert.match(target.textContent, /Resultado sugerido.*Pontuação sugerida.*Evidências.*Pontos de atenção.*Critérios de avaliação/s);
   assert.match(target.textContent, /cos beta - sin beta = -1\/2/);
   assert.match(target.textContent, /\(5\+sqrt\(7\)\)\/8/);
   assert.doesNotMatch(target.textContent, /\[local path hidden\]/);
@@ -102,18 +102,18 @@ test("incomplete assessment shows no global numeric grade and keeps pending crit
   await ui.get("#audit-button").click(); await flush();
   const visible = text(ui);
   assert.match(visible, /inconclusivo/);
-  assert.match(visible, /Avaliação incompleta/);
-  assert.match(visible, /Critérios decididos: 5 \/ 5; sem nota global/);
+  assert.match(visible, /Não determinada/);
+  assert.match(visible, /Critérios decididos: 1\/2.*Pontos decididos: 5\/10/);
   assert.doesNotMatch(visible, /null \/ 10|0 \/ 10/);
   const target = element("section");
   ui.render(data, target, { context: "teacher" });
-  assert.match(target.textContent, /Avaliação incompleta/);
-  assert.match(target.textContent, /Critérios decididos: 5 \/ 5; sem nota global/);
-  assert.doesNotMatch(target.textContent, /null\s*\/\s*10|0\s*\/\s*10|5\s*\/\s*10/);
+  assert.match(target.textContent, /Não determinada/);
+  assert.match(target.textContent, /Critérios decididos: 1\/2.*Pontos decididos: 5\/10/);
+  assert.doesNotMatch(target.textContent, /Pontuação sugerida: (?:null|0|5)\s*\/\s*10/);
   assert.equal(data.score, null);
   assert.equal(data.pedagogical_report.score, null);
-  assert.match(target.textContent, /Critério pendente: Indeterminado.*indisponível/);
-  assert.match(target.textContent, /Critério decidido: 5 \/ 5/);
+  assert.match(target.textContent, /Critério pendente.*Pontos decididos: Indeterminado.*indisponível/);
+  assert.match(target.textContent, /Critério decidido.*Pontos decididos: 5 \/ 5/);
 });
 
 for (const context of ["student", "teacher"]) {
@@ -132,12 +132,12 @@ for (const context of ["student", "teacher"]) {
       const ui = await page(() => response(data));
       const target = element("section");
       ui.render(data, target, { context });
-      assert.match(target.textContent, /Avaliação incompleta/);
-      assert.match(target.textContent, /inconclusivo/i);
-      assert.doesNotMatch(target.textContent, /(?:0|5|null)\s*\/\s*10/);
-      if (subtotal) assert.match(target.textContent, /Critérios decididos: 5 \/ 5; sem nota global/);
-      else assert.doesNotMatch(target.textContent, /Critérios decididos:/);
-      if (context === "teacher") assert.match(target.textContent, /Critério pendente: Indeterminado/);
+      assert.match(target.textContent, /Não determinada/);
+      assert.match(target.textContent, /inconclusiv[oa]/i);
+      assert.doesNotMatch(target.textContent, /Pontuação(?: sugerida)?: (?:0|5|null)\s*\/\s*10/);
+      if (subtotal) assert.match(target.textContent, /Critérios decididos: 1\/2.*Pontos decididos: 5\/10/);
+      else assert.match(target.textContent, /Critérios decididos: 0\/1.*nenhum critério decidido/);
+      if (context === "teacher") assert.match(target.textContent, /Critério pendente.*Pontos decididos: Indeterminado/);
       assert.equal(JSON.stringify(data), original);
     });
   }

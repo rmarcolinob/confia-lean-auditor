@@ -1,0 +1,1881 @@
+{
+  "mode": "READ_ONLY_PROJECTION_AND_ARCHIVED_REPLAY",
+  "paid_api_calls": 0,
+  "real_audits_reexecuted": 0,
+  "historical_files_unchanged": true,
+  "verified_file_count": 65,
+  "file_sha256": {
+    "runtime/pilot-dec10/submission_audits/aud_1eb247481575591afe015612b9bcab6b98943d338347f5ce36da598eabaa019e.json": "e120f5fbd9c9c0515ae91df33dd5e59565c14da060ed2da593deff8fd26358fd",
+    "runtime/pilot-dec10/submission_audits/artifacts/aud_1eb247481575591afe015612b9bcab6b98943d338347f5ce36da598eabaa019e-954184e1018f41e3af8f4bd8e3c09943/audit.json": "56397b600d3b9681b44ccd9ab8ed57bc13b833a3cd33923b2991fe10cc4cbd19",
+    "runtime/pilot-dec10/submission_audits/artifacts/aud_1eb247481575591afe015612b9bcab6b98943d338347f5ce36da598eabaa019e-954184e1018f41e3af8f4bd8e3c09943/solution.txt": "015cd234e48ee8f8f97aefceec6e3375405757d4d7d305364735ca8d6938dd69",
+    "runtime/pilot-dec10/submission_audits/artifacts/aud_1eb247481575591afe015612b9bcab6b98943d338347f5ce36da598eabaa019e-954184e1018f41e3af8f4bd8e3c09943/accepted_revision.json": "115c15218c3df7bb9f6ce7483c8c966b1a070fba18f24b304d8c1a7a25b843d6",
+    "runtime/pilot-dec10/submission_audits/artifacts/aud_1eb247481575591afe015612b9bcab6b98943d338347f5ce36da598eabaa019e-954184e1018f41e3af8f4bd8e3c09943/input_mapping.json": "bf86e0af02671a1084f0d1224a677a6ebb1b83657d4013096355ed5c830e016b",
+    "runtime/pilot-dec10/submission_audits/artifacts/aud_1eb247481575591afe015612b9bcab6b98943d338347f5ce36da598eabaa019e-954184e1018f41e3af8f4bd8e3c09943/certificates/4d4b2822cfae86e723604d112e31f981347a086355c2ea72686cb5f33b1a1004.lean": "268f140d5e465cb79ea78acdbfa8342d54ea2d6d6d4280522261d66eef2d2b48",
+    "runtime/pilot-dec10/submission_audits/aud_6f7e8d0a116941fe22164444b60ecbd0c71e1e227c4a6c244528fafc5eed1808.json": "a92a49e8da804590590c75e333d2cd75a107e68aebd61db61a2435168c166683",
+    "runtime/pilot-dec10/submission_audits/artifacts/aud_6f7e8d0a116941fe22164444b60ecbd0c71e1e227c4a6c244528fafc5eed1808-090477ae550c430f9103647850bc4a01/audit.json": "1fab26b553c9af993faa2000b3ec4480a7260f38ef53bb4780347773775ef427",
+    "runtime/pilot-dec10/submission_audits/artifacts/aud_6f7e8d0a116941fe22164444b60ecbd0c71e1e227c4a6c244528fafc5eed1808-090477ae550c430f9103647850bc4a01/solution.txt": "80d19b52db48ccf83e6f27c330f35eefd4aa609d3f1b55c0ea2ce513188443b7",
+    "runtime/pilot-dec10/submission_audits/artifacts/aud_6f7e8d0a116941fe22164444b60ecbd0c71e1e227c4a6c244528fafc5eed1808-090477ae550c430f9103647850bc4a01/accepted_revision.json": "b6da0f9b2cb552ac866770008179f283056e5ce0b02eb159dc1b75929dd51e15",
+    "runtime/pilot-dec10/submission_audits/artifacts/aud_6f7e8d0a116941fe22164444b60ecbd0c71e1e227c4a6c244528fafc5eed1808-090477ae550c430f9103647850bc4a01/input_mapping.json": "52a549f9635ee831919de76af216b39f0904c32e986e183df3e686910c836222",
+    "runtime/pilot-dec10/submission_audits/artifacts/aud_6f7e8d0a116941fe22164444b60ecbd0c71e1e227c4a6c244528fafc5eed1808-090477ae550c430f9103647850bc4a01/certificates/e49b7bb30ec1789b81f52f15dcc50811bbb7c00c5e7b111c88016783fa69f9c0.lean": "5adf5c5e748a2c3bb459508f56dcb45b36132792bb55c6695931f66e2121e5b7",
+    "runtime/pilot-dec10/submission_audits/artifacts/aud_6f7e8d0a116941fe22164444b60ecbd0c71e1e227c4a6c244528fafc5eed1808-090477ae550c430f9103647850bc4a01/certificates/0ecfdcb3afef7679d5afcafec6bbe44ac0d762b8596adafdfb8b5d4ac52b4bb3.lean": "18cc68c7628bc466e8ffacbaeaa1c95494ba182faebbeaec01fdf99c6a9fba5e",
+    "runtime/pilot-dec10/submission_audits/artifacts/aud_6f7e8d0a116941fe22164444b60ecbd0c71e1e227c4a6c244528fafc5eed1808-090477ae550c430f9103647850bc4a01/certificates/cebe22e001efc321e9b68bf8fadc9f065ed693ccb438cecbded05fa39e387438.lean": "e2c7b5dcc54c06742c66bc686d6683aecc538c9d2423884f6e1be8ab938c17cc",
+    "runtime/pilot-dec10/submission_audits/artifacts/aud_6f7e8d0a116941fe22164444b60ecbd0c71e1e227c4a6c244528fafc5eed1808-090477ae550c430f9103647850bc4a01/certificates/e0037781582415eaa1fd16cdeacba2e01b6b6cd4ac5f32ad29f3fed87ee4efe4.lean": "18ac8a4aba1bb87df9a2308e724eeb35a98c19229f2156fd97c1b202449f961d",
+    "runtime/pilot-dec10/submission_audits/artifacts/aud_6f7e8d0a116941fe22164444b60ecbd0c71e1e227c4a6c244528fafc5eed1808-090477ae550c430f9103647850bc4a01/certificates/763ca48daecb2fb454a0abe62657a75cd8ea1a3a29c142ee7e7c75c6b230f778.lean": "d542c9415163081e615dc50a20e014952ec611f7456f170ca91f32fb7200384a",
+    "runtime/pilot-dec10/submission_audits/artifacts/aud_6f7e8d0a116941fe22164444b60ecbd0c71e1e227c4a6c244528fafc5eed1808-090477ae550c430f9103647850bc4a01/certificates/c6552b338a44b1230da42cf7cc7b3b589ffa18ab1b0bae12e589d52c8de7f684.lean": "a4d3762aa721154bb9690136931441acd0b6cdac03f6b2724577ff521211d332",
+    "runtime/pilot-dec10/submission_audits/aud_b78d47c5651567e96939a38cd3ac76b1ead85eb9e5cde1a308360ae687067ee6.json": "b79f62212d4bb4267c802f95847ed065c82dc272a8abbdbf20a4205980fdc826",
+    "runtime/pilot-dec10/submission_audits/artifacts/aud_b78d47c5651567e96939a38cd3ac76b1ead85eb9e5cde1a308360ae687067ee6-d23d850481044ab98463da9149ebd93f/audit.json": "8cdf7b359eaee53638d7056868307ef2c4c0d77860c20c864efb3d7e5aa5a8b8",
+    "runtime/pilot-dec10/submission_audits/artifacts/aud_b78d47c5651567e96939a38cd3ac76b1ead85eb9e5cde1a308360ae687067ee6-d23d850481044ab98463da9149ebd93f/solution.txt": "d2db7c95b1fbfbe1a3c807a8559f546d04eb8ee91309b45ff05b7126a7610126",
+    "runtime/pilot-dec10/submission_audits/artifacts/aud_b78d47c5651567e96939a38cd3ac76b1ead85eb9e5cde1a308360ae687067ee6-d23d850481044ab98463da9149ebd93f/accepted_revision.json": "b655c3cad3f95ad273e1b7d03b182e47efafb6a1e65d210160962f5d430bca07",
+    "runtime/pilot-dec10/submission_audits/artifacts/aud_b78d47c5651567e96939a38cd3ac76b1ead85eb9e5cde1a308360ae687067ee6-d23d850481044ab98463da9149ebd93f/input_mapping.json": "68ff0829ad4b532259de60575466fe8dc8b98527a20f4eef728b144bf7384fa2",
+    "runtime/pilot-dec10/submission_audits/artifacts/aud_b78d47c5651567e96939a38cd3ac76b1ead85eb9e5cde1a308360ae687067ee6-d23d850481044ab98463da9149ebd93f/certificates/65398caff279c25613dc2889379e64987c98f527f042e865cc4ee0cceaac8901.lean": "1c8a7b86cd2d7984241871e126b03df2c862f98f8b48169d0e1b120f729aa205",
+    "runtime/pilot-dec10/submission_audits/artifacts/aud_b78d47c5651567e96939a38cd3ac76b1ead85eb9e5cde1a308360ae687067ee6-d23d850481044ab98463da9149ebd93f/certificates/c2d2eefaaca6a8cd769f6a743633abfab27fd161a9311affa0d4ad15ab1a0455.lean": "0056ba0315cd08113af4da29a60de7bc51abb9f4b46a6dceb91ae73dfef6b30e",
+    "runtime/pilot-dec10/submission_audits/artifacts/aud_b78d47c5651567e96939a38cd3ac76b1ead85eb9e5cde1a308360ae687067ee6-d23d850481044ab98463da9149ebd93f/certificates/2d7a3370a6eae8bbe7d148a7527f77465158d7753d6e56a7104dde94949b2640.lean": "162970a84b8de634047ff624c61fbb08e878fefe8679696b85498e6c9581a839",
+    "runtime/pilot-dec10/submission_audits/artifacts/aud_b78d47c5651567e96939a38cd3ac76b1ead85eb9e5cde1a308360ae687067ee6-d23d850481044ab98463da9149ebd93f/certificates/45495eb460b5d6f41c345b2cde3219682ff708d106e763de039e45181b5ed988.lean": "eac23a24f5533c9b1ecfe606fd9e0d509a2a280ef89dd372b0ffedfbd38e16e8",
+    "runtime/pilot-dec10/submission_audits/artifacts/aud_b78d47c5651567e96939a38cd3ac76b1ead85eb9e5cde1a308360ae687067ee6-d23d850481044ab98463da9149ebd93f/certificates/3af283513481b10f54e9caaab5339a532c9995e781a3d8ff0878d3523151f6ee.lean": "141a676fb8f4e05ac528fb4adf11202a972a255b8922560f13b81484d47497a9",
+    "runtime/pilot-dec10/submission_audits/aud_00e84780b3c5556e82c092d34fbc66f8af67da2b398b1860da19b88366433bb2.json": "29b2e49b56e3556ef4031837c75e894ec20bce288396abbf6d00e33ae4774d96",
+    "runtime/pilot-dec10/submission_audits/artifacts/aud_00e84780b3c5556e82c092d34fbc66f8af67da2b398b1860da19b88366433bb2-a801630986a14d108c0ebe0b71de22df/audit.json": "309724b9be4014bc199785b3e2805709fa27dcdc5b0da66131660940085340be",
+    "runtime/pilot-dec10/submission_audits/artifacts/aud_00e84780b3c5556e82c092d34fbc66f8af67da2b398b1860da19b88366433bb2-a801630986a14d108c0ebe0b71de22df/solution.txt": "aab3240c93702393bf6fdb2a68372274bced524780fb40e69e60b41bdd4d00d4",
+    "runtime/pilot-dec10/submission_audits/artifacts/aud_00e84780b3c5556e82c092d34fbc66f8af67da2b398b1860da19b88366433bb2-a801630986a14d108c0ebe0b71de22df/accepted_revision.json": "48d0744e512d7ad863cdc36cb9896b0a94abde7d1af204b1a317cd345e407e5f",
+    "runtime/pilot-dec10/submission_audits/artifacts/aud_00e84780b3c5556e82c092d34fbc66f8af67da2b398b1860da19b88366433bb2-a801630986a14d108c0ebe0b71de22df/input_mapping.json": "fc2c57a9a2795a253d3cb600ecbdf37edeb85811adc70c70ad84fe07632ed4f9",
+    "runtime/pilot-dec10/submission_audits/artifacts/aud_00e84780b3c5556e82c092d34fbc66f8af67da2b398b1860da19b88366433bb2-a801630986a14d108c0ebe0b71de22df/certificates/3ff5b1c6f890e2d7ffd1e868840545236e46ec9635b042b8c6dc90e94554b210.lean": "c8561f3499a2e5dee492dc3020d2a813f33f9598a2aa78ca513df68b38915e71",
+    "runtime/pilot-dec10/submission_audits/artifacts/aud_00e84780b3c5556e82c092d34fbc66f8af67da2b398b1860da19b88366433bb2-a801630986a14d108c0ebe0b71de22df/certificates/d22f3b7c99b7802e0582a87837c1627c5907bca3292c9f6bc8a9a0024a20245b.lean": "318dd3bec207e5a9c967e7f6e2e823b5346715b89dcba76fb6590eac07cfc2e8",
+    "runtime/pilot-dec10/submission_audits/artifacts/aud_00e84780b3c5556e82c092d34fbc66f8af67da2b398b1860da19b88366433bb2-a801630986a14d108c0ebe0b71de22df/certificates/8b0a50f366666b41a6cb000fcef678aabe1b975498cce2e46f9ae8e8936ff1a1.lean": "39b71633aed0a9a33ebf7164639d9c9c72de9f3c43cd083ec96142a5dc212558",
+    "runtime/pilot-dec10/submission_audits/artifacts/aud_00e84780b3c5556e82c092d34fbc66f8af67da2b398b1860da19b88366433bb2-a801630986a14d108c0ebe0b71de22df/certificates/3181095fec4861c6a11d5bada776480d81235c82e0a0d5754b789a063ad9db3d.lean": "6a27df2d721eee768e6402e8c0c429081b1a162925cba2fb07d926ecc65335ae",
+    "runtime/pilot-dec10/submission_audits/artifacts/aud_00e84780b3c5556e82c092d34fbc66f8af67da2b398b1860da19b88366433bb2-a801630986a14d108c0ebe0b71de22df/certificates/8735b60d451ab5e3fc47ac810e80691ae723144839f0678de2f2eec86015986c.lean": "750c4b61f5a7c4379cf3fb340530212a71d72de2156a226a0c067f674fd404a2",
+    "runtime/pilot-dec10/submission_audits/artifacts/aud_00e84780b3c5556e82c092d34fbc66f8af67da2b398b1860da19b88366433bb2-a801630986a14d108c0ebe0b71de22df/certificates/71942b3ce32917ebf159b5bca439df49a3f93e9333315b9cc81cf1239d5b546c.lean": "5f4d3f1a047fc5d76558bf35026ff2bd210ae2b818672a48273de1dba47cceba",
+    "runtime/pilot-dec10/submission_audits/artifacts/aud_00e84780b3c5556e82c092d34fbc66f8af67da2b398b1860da19b88366433bb2-a801630986a14d108c0ebe0b71de22df/certificates/33850301dd1d479a376fbc8be8fec677ad725d98e83abaf950734a5a72910a8d.lean": "3655c7729a7f2c239e13bd3cc49aea8174a801c9ce6fe60628f0d57b0a665adf",
+    "runtime/pilot-dec10/submission_audits/artifacts/aud_00e84780b3c5556e82c092d34fbc66f8af67da2b398b1860da19b88366433bb2-a801630986a14d108c0ebe0b71de22df/certificates/808aab269fef9c1402174ab49cdb1ff11216efd4dd1f9698cae36822fd4285a4.lean": "26d8db5c079193f83ee02e53768071ec0eee055c9a122434f76a0dd6b47c896f",
+    "runtime/pilot-dec10/submission_audits/artifacts/aud_00e84780b3c5556e82c092d34fbc66f8af67da2b398b1860da19b88366433bb2-a801630986a14d108c0ebe0b71de22df/certificates/3f956c4abf53af017e28a857901cf1d4d1bccd6293eb5131c52fedfc2fa66cf1.lean": "9179736e013a449fb6df6cd7e85a4473a12d1acd068fed581dbab8ce842fcfda",
+    "runtime/pilot-dec10/submission_audits/aud_e840502ea785c0ff3469e187a2f2d53831f8a9eba6f281ac9805103b0d230c93.json": "3692306f156042cba5a5bf540b41bf21be72fa044a8674242febff28f8346647",
+    "runtime/pilot-dec10/submission_audits/artifacts/aud_e840502ea785c0ff3469e187a2f2d53831f8a9eba6f281ac9805103b0d230c93-9117abcb309a43ef9e394e3bafaa2a0a/audit.json": "3a35cf55741a67bc70899bc34d6cdead613232e11830610bb876a65253ed137b",
+    "runtime/pilot-dec10/submission_audits/artifacts/aud_e840502ea785c0ff3469e187a2f2d53831f8a9eba6f281ac9805103b0d230c93-9117abcb309a43ef9e394e3bafaa2a0a/solution.txt": "9b16182ac1995b0b3edcf54144e3d446fa00a4954e65a5503518a711c96c4dff",
+    "runtime/pilot-dec10/submission_audits/artifacts/aud_e840502ea785c0ff3469e187a2f2d53831f8a9eba6f281ac9805103b0d230c93-9117abcb309a43ef9e394e3bafaa2a0a/accepted_revision.json": "ee4f58b2dd914e08f1f2bd34220fdbf305a90cf4dcbbc46f38a0ac960a4889c8",
+    "runtime/pilot-dec10/submission_audits/artifacts/aud_e840502ea785c0ff3469e187a2f2d53831f8a9eba6f281ac9805103b0d230c93-9117abcb309a43ef9e394e3bafaa2a0a/input_mapping.json": "102039f90e1257efbee07f6a930c85e3b392e2cedb50c0e649b9f512b9a61560",
+    "runtime/pilot-dec10/submission_audits/artifacts/aud_e840502ea785c0ff3469e187a2f2d53831f8a9eba6f281ac9805103b0d230c93-9117abcb309a43ef9e394e3bafaa2a0a/certificates/acd2a88722685b8fe4f9c028094c6b130b74391bce3a2d4ef99c35dbd129ed11.lean": "2814f6825c248e406fda44bcdd01c4dc10aacdfdb166f28dd7bb033231ee217e",
+    "runtime/pilot-dec10/submission_audits/artifacts/aud_e840502ea785c0ff3469e187a2f2d53831f8a9eba6f281ac9805103b0d230c93-9117abcb309a43ef9e394e3bafaa2a0a/certificates/b951ab9839d0c185ca36f3ad3f7d320a509363a3146cd4a11b87f7bbdc3612fe.lean": "1395c73acd6e6c9e5da001161f46e57a17325787fe03db6e739492b99a77b7d2",
+    "runtime/pilot-dec10/submission_audits/artifacts/aud_e840502ea785c0ff3469e187a2f2d53831f8a9eba6f281ac9805103b0d230c93-9117abcb309a43ef9e394e3bafaa2a0a/certificates/e64965ff5c19756e48291a0eb43812804b0775d1b9d6d2d03c267100067797ca.lean": "ac9f99379ecdf4be16e192d7547c48b515297189dde586199bddf94835e53e0b",
+    "runtime/pilot-dec10/submission_audits/artifacts/aud_e840502ea785c0ff3469e187a2f2d53831f8a9eba6f281ac9805103b0d230c93-9117abcb309a43ef9e394e3bafaa2a0a/certificates/4d5ec80a8ccb2a26aa9bff00b5a7deaa3c5757c37e9fc2938499258b8b12abd8.lean": "080893500480a110662611c5c12785fd0428d857a824ad0bf1dc93b203ca41be",
+    "runtime/pilot-dec10/submission_audits/artifacts/aud_e840502ea785c0ff3469e187a2f2d53831f8a9eba6f281ac9805103b0d230c93-9117abcb309a43ef9e394e3bafaa2a0a/certificates/58c0c34bb6718b72135532dcca2ba928ae28897eee8234a6db0ebe6a9975828f.lean": "f2bd99ab57233a385ea807c2af96e8da1024a083a12a2ff3978cc9d6b9823ae6",
+    "runtime/pilot-dec10/submission_audits/artifacts/aud_e840502ea785c0ff3469e187a2f2d53831f8a9eba6f281ac9805103b0d230c93-9117abcb309a43ef9e394e3bafaa2a0a/certificates/518450c9dbdca737d0c47d7605fb7a94c941560c3782f89f86394969a367a36b.lean": "d4891ce5db7cc4bbe25fb32fbec0c189b4a3efad580a89a9fde03b6c541b7927",
+    "runtime/pilot-dec10/submission_audits/artifacts/aud_e840502ea785c0ff3469e187a2f2d53831f8a9eba6f281ac9805103b0d230c93-9117abcb309a43ef9e394e3bafaa2a0a/certificates/0dd4d4ceefa9a4f4bef972800fc296ae2ba53e9fc966a603355187b00c955e08.lean": "3b6eed8a981ecfb6555cf57ba8e5f03988db7304160de146c73e4b6f1a5f1fdf",
+    "runtime/pilot-dec10/submission_audits/artifacts/aud_e840502ea785c0ff3469e187a2f2d53831f8a9eba6f281ac9805103b0d230c93-9117abcb309a43ef9e394e3bafaa2a0a/certificates/bf25dd1d881b3c62ec126e4a44ec0f26e9a14268febd21521ed430ad1ed57002.lean": "9390c534b69cad30ea676aaa93f0a800977a26dbd5386ec850ad7b91ed5bfe6e",
+    "runtime/pilot-dec10/submission_audits/artifacts/aud_e840502ea785c0ff3469e187a2f2d53831f8a9eba6f281ac9805103b0d230c93-9117abcb309a43ef9e394e3bafaa2a0a/certificates/6c712787cc2d3a1387952223b541d6467046787bbca66c38d0b3945df6399ecd.lean": "db704afc8f07d609d5281ed815cc3fc76fa12242e628b26897000c84d16f9a50",
+    "runtime/pilot-dec10/submission_audits/artifacts/aud_e840502ea785c0ff3469e187a2f2d53831f8a9eba6f281ac9805103b0d230c93-9117abcb309a43ef9e394e3bafaa2a0a/certificates/03ad3440b43b79ccfe7f8544ec7e647190e2c0578bfc640a7e5b5202c1d5e3d9.lean": "f783421f751b7b9ee20989086f336e1df51721c1f0078afe61090408f539ab16",
+    "runtime/pilot-dec10/submission_audits/artifacts/aud_e840502ea785c0ff3469e187a2f2d53831f8a9eba6f281ac9805103b0d230c93-9117abcb309a43ef9e394e3bafaa2a0a/certificates/a776638b9d9365297ca6301fe4a1211bf39a5c814ffa8e537652a0fd22ea93d8.lean": "d2fd87eb02d4078e6b6026f3ada21013f917acc22954636228a203902d6e57f1",
+    "runtime/pilot-dec10/submission_audits/artifacts/aud_e840502ea785c0ff3469e187a2f2d53831f8a9eba6f281ac9805103b0d230c93-9117abcb309a43ef9e394e3bafaa2a0a/certificates/c58c43c1a58138d189116d91e2b5289441f72fbd8a8c4e1e805b350951c1c897.lean": "22a8acd85aa1f6c9c8a9f1c8248b81066e9da2263913730295023903f4b1d4c6",
+    "runtime/pilot-dec10/submission_audits/artifacts/aud_e840502ea785c0ff3469e187a2f2d53831f8a9eba6f281ac9805103b0d230c93-9117abcb309a43ef9e394e3bafaa2a0a/certificates/779d4c8dc462c5eac2e2faad4672f8ef579d09a0ffdb4d132d541356f91418ad.lean": "8ce3f64f14d2c7377131bec735dc7fa981d3dd5db76f711295fb7481bd33e0ac",
+    "runtime/pilot-dec10/submission_audits/artifacts/aud_e840502ea785c0ff3469e187a2f2d53831f8a9eba6f281ac9805103b0d230c93-9117abcb309a43ef9e394e3bafaa2a0a/certificates/fe1ac22738852ad001444dc3a3a94e1cf2ea49cacc4b62891755ea3d037ad197.lean": "204f45f11210d009b2b6175c95f5c141841bf05b7c8346ae0d4cb7c11efa36a0",
+    "tests/fixtures/tme_p1_archived_quote_scope/audit.json": "56397b600d3b9681b44ccd9ab8ed57bc13b833a3cd33923b2991fe10cc4cbd19",
+    "tests/fixtures/tme_p1_archived_quote_scope/accepted_revision.json": "115c15218c3df7bb9f6ce7483c8c966b1a070fba18f24b304d8c1a7a25b843d6",
+    "tests/fixtures/tme_p1_archived_quote_scope/source_manifest.json": "7739330e0f7666ba1d6ab2677e2c95ff7a18a0216d4a01106c34a8069dc8dd48",
+    "tests/fixtures/tme_p1_archived_quote_scope/input_mapping.json": "bf86e0af02671a1084f0d1224a677a6ebb1b83657d4013096355ed5c830e016b",
+    "tests/fixtures/tme_p1_archived_quote_scope/solution.txt": "015cd234e48ee8f8f97aefceec6e3375405757d4d7d305364735ca8d6938dd69"
+  },
+  "historical_runs": [
+    {
+      "audit_run_id": "aud_1eb247481575591afe015612b9bcab6b98943d338347f5ce36da598eabaa019e",
+      "problem_id": "TME2026P1",
+      "mode": "READ_ONLY_PERSISTED_AUDIT",
+      "source_file": "runtime/pilot-dec10/submission_audits/aud_1eb247481575591afe015612b9bcab6b98943d338347f5ce36da598eabaa019e.json",
+      "source_file_sha256": "e120f5fbd9c9c0515ae91df33dd5e59565c14da060ed2da593deff8fd26358fd",
+      "result_sha256_before": "3d28898de9f98fb3f6f023cfddfc59217509582582f384948583828aefb69eb1",
+      "result_sha256_after": "3d28898de9f98fb3f6f023cfddfc59217509582582f384948583828aefb69eb1",
+      "diagnostics": {
+        "schema_version": "tme-review-diagnostics.v1",
+        "scope": "persisted_pauta_decisions",
+        "score_state": "undetermined",
+        "final_score": null,
+        "known_points": "15",
+        "possible_points": "17",
+        "max_score": "20",
+        "reason": "SAVED_SCORING_INTERVAL",
+        "items": [
+          {
+            "item_id": "a",
+            "score_state": "determined",
+            "points_awarded": "2",
+            "known_points": "2",
+            "possible_points": "2",
+            "selected_method_path": null,
+            "selected_band": "a.arithmetic_only"
+          },
+          {
+            "item_id": "b",
+            "score_state": "determined",
+            "points_awarded": "5",
+            "known_points": "5",
+            "possible_points": "5",
+            "selected_method_path": null,
+            "selected_band": null
+          },
+          {
+            "item_id": "c",
+            "score_state": "determined",
+            "points_awarded": "4",
+            "known_points": "4",
+            "possible_points": "4",
+            "selected_method_path": null,
+            "selected_band": null
+          },
+          {
+            "item_id": "d",
+            "score_state": "undetermined",
+            "points_awarded": null,
+            "known_points": "4",
+            "possible_points": "6",
+            "selected_method_path": null,
+            "selected_band": null
+          }
+        ],
+        "mathematical_pending": {
+          "state": "present",
+          "obligation_ids": [
+            "d.middle_choices"
+          ],
+          "occurrences": [
+            {
+              "item_id": "d",
+              "rule_path": [
+                "d",
+                "d.count"
+              ],
+              "obligation_id": "d.middle_choices",
+              "effective_status": "technical_error",
+              "origin": "semantic",
+              "evidence_refs": [
+                "accepted:d:db70ea68d225c78b5654ff9228730baafba6c700cef6d77d2150d1251410ed38"
+              ],
+              "affects_score": true,
+              "dispensable_alternative": false,
+              "reason": "OPEN_SCORING_INTERVAL"
+            }
+          ]
+        },
+        "nonblocking_pending": [
+          {
+            "item_id": "c",
+            "rule_path": [
+              "c",
+              "c.list",
+              "c.list.full"
+            ],
+            "obligation_id": "c.no_extraneous_values",
+            "effective_status": "technical_error",
+            "origin": "semantic",
+            "evidence_refs": [
+              "accepted:c:e750d753dba150790505385c986dc060822823e408400279b431219104ec51af"
+            ],
+            "affects_score": false,
+            "dispensable_alternative": true,
+            "reason": "ALTERNATIVE_CANNOT_IMPROVE_SCORE"
+          },
+          {
+            "item_id": "c",
+            "rule_path": [
+              "c",
+              "c.list",
+              "c.list.pattern"
+            ],
+            "obligation_id": "c.several_correct",
+            "effective_status": "indeterminate",
+            "origin": "deterministic",
+            "evidence_refs": [],
+            "affects_score": false,
+            "dispensable_alternative": true,
+            "reason": "ALTERNATIVE_CANNOT_IMPROVE_SCORE"
+          },
+          {
+            "item_id": "c",
+            "rule_path": [
+              "c",
+              "c.list",
+              "c.list.pattern"
+            ],
+            "obligation_id": "c.pattern_recognized",
+            "effective_status": "indeterminate",
+            "origin": "deterministic",
+            "evidence_refs": [],
+            "affects_score": false,
+            "dispensable_alternative": true,
+            "reason": "ALTERNATIVE_CANNOT_IMPROVE_SCORE"
+          },
+          {
+            "item_id": "c",
+            "rule_path": [
+              "c",
+              "c.list",
+              "c.list.some"
+            ],
+            "obligation_id": "c.some_correct",
+            "effective_status": "indeterminate",
+            "origin": "deterministic",
+            "evidence_refs": [],
+            "affects_score": false,
+            "dispensable_alternative": true,
+            "reason": "ALTERNATIVE_CANNOT_IMPROVE_SCORE"
+          }
+        ],
+        "dispensable_alternatives": [
+          {
+            "item_id": "c",
+            "rule_path": [
+              "c",
+              "c.list",
+              "c.list.full"
+            ],
+            "obligation_id": "c.no_extraneous_values",
+            "effective_status": "technical_error",
+            "origin": "semantic",
+            "evidence_refs": [
+              "accepted:c:e750d753dba150790505385c986dc060822823e408400279b431219104ec51af"
+            ],
+            "affects_score": false,
+            "dispensable_alternative": true,
+            "reason": "ALTERNATIVE_CANNOT_IMPROVE_SCORE"
+          },
+          {
+            "item_id": "c",
+            "rule_path": [
+              "c",
+              "c.list",
+              "c.list.pattern"
+            ],
+            "obligation_id": "c.several_correct",
+            "effective_status": "indeterminate",
+            "origin": "deterministic",
+            "evidence_refs": [],
+            "affects_score": false,
+            "dispensable_alternative": true,
+            "reason": "ALTERNATIVE_CANNOT_IMPROVE_SCORE"
+          },
+          {
+            "item_id": "c",
+            "rule_path": [
+              "c",
+              "c.list",
+              "c.list.pattern"
+            ],
+            "obligation_id": "c.pattern_recognized",
+            "effective_status": "indeterminate",
+            "origin": "deterministic",
+            "evidence_refs": [],
+            "affects_score": false,
+            "dispensable_alternative": true,
+            "reason": "ALTERNATIVE_CANNOT_IMPROVE_SCORE"
+          },
+          {
+            "item_id": "c",
+            "rule_path": [
+              "c",
+              "c.list",
+              "c.list.some"
+            ],
+            "obligation_id": "c.some_correct",
+            "effective_status": "indeterminate",
+            "origin": "deterministic",
+            "evidence_refs": [],
+            "affects_score": false,
+            "dispensable_alternative": true,
+            "reason": "ALTERNATIVE_CANNOT_IMPROVE_SCORE"
+          }
+        ],
+        "technical_errors": [
+          {
+            "item_id": "c",
+            "rule_path": [
+              "c",
+              "c.list",
+              "c.list.full"
+            ],
+            "obligation_id": "c.no_extraneous_values",
+            "effective_status": "technical_error",
+            "origin": "semantic",
+            "evidence_refs": [
+              "accepted:c:e750d753dba150790505385c986dc060822823e408400279b431219104ec51af"
+            ],
+            "affects_score": false,
+            "dispensable_alternative": true,
+            "reason": "ALTERNATIVE_CANNOT_IMPROVE_SCORE"
+          },
+          {
+            "item_id": "d",
+            "rule_path": [
+              "d",
+              "d.count"
+            ],
+            "obligation_id": "d.middle_choices",
+            "effective_status": "technical_error",
+            "origin": "semantic",
+            "evidence_refs": [
+              "accepted:d:db70ea68d225c78b5654ff9228730baafba6c700cef6d77d2150d1251410ed38"
+            ],
+            "affects_score": true,
+            "dispensable_alternative": false,
+            "reason": "OPEN_SCORING_INTERVAL"
+          }
+        ],
+        "semantic_evidence_review": {
+          "state": "present",
+          "occurrences": [
+            {
+              "item_id": "a",
+              "rule_path": [
+                "a",
+                "a.arithmetic_only"
+              ],
+              "obligation_id": "a.arithmetic_error_only",
+              "effective_status": "supported",
+              "origin": "semantic",
+              "evidence_refs": [
+                "accepted:a:81e99a89ac8a3a6cdbc81ccf7c0fda98ff1103f676958a77d495aedf4889cb95"
+              ],
+              "affects_score": false,
+              "dispensable_alternative": false,
+              "reason": "CONCLUSIVE_EVIDENCE",
+              "decision_conclusive": true
+            },
+            {
+              "item_id": "b",
+              "rule_path": [
+                "b",
+                "b.reverse"
+              ],
+              "obligation_id": "b.reversed_number",
+              "effective_status": "supported",
+              "origin": "semantic",
+              "evidence_refs": [
+                "accepted:b:ebeeca0f2cd084c9d021db4797f25c746d30aef3b9b2e266ec2dd57ba7c5b60a"
+              ],
+              "affects_score": false,
+              "dispensable_alternative": false,
+              "reason": "CONCLUSIVE_EVIDENCE",
+              "decision_conclusive": true
+            },
+            {
+              "item_id": "b",
+              "rule_path": [
+                "b",
+                "b.subtract_cancel"
+              ],
+              "obligation_id": "b.subtraction",
+              "effective_status": "supported",
+              "origin": "semantic",
+              "evidence_refs": [
+                "accepted:b:ebeeca0f2cd084c9d021db4797f25c746d30aef3b9b2e266ec2dd57ba7c5b60a"
+              ],
+              "affects_score": false,
+              "dispensable_alternative": false,
+              "reason": "CONCLUSIVE_EVIDENCE",
+              "decision_conclusive": true
+            },
+            {
+              "item_id": "b",
+              "rule_path": [
+                "b",
+                "b.subtract_cancel"
+              ],
+              "obligation_id": "b.middle_cancellation",
+              "effective_status": "supported",
+              "origin": "semantic",
+              "evidence_refs": [
+                "accepted:b:ebeeca0f2cd084c9d021db4797f25c746d30aef3b9b2e266ec2dd57ba7c5b60a"
+              ],
+              "affects_score": false,
+              "dispensable_alternative": false,
+              "reason": "CONCLUSIVE_EVIDENCE",
+              "decision_conclusive": true
+            },
+            {
+              "item_id": "b",
+              "rule_path": [
+                "b",
+                "b.simplify"
+              ],
+              "obligation_id": "b.factorization",
+              "effective_status": "supported",
+              "origin": "semantic",
+              "evidence_refs": [
+                "accepted:b:ebeeca0f2cd084c9d021db4797f25c746d30aef3b9b2e266ec2dd57ba7c5b60a"
+              ],
+              "affects_score": false,
+              "dispensable_alternative": false,
+              "reason": "CONCLUSIVE_EVIDENCE",
+              "decision_conclusive": true
+            },
+            {
+              "item_id": "c",
+              "rule_path": [
+                "c",
+                "c.expression"
+              ],
+              "obligation_id": "c.uses_expression",
+              "effective_status": "supported",
+              "origin": "semantic",
+              "evidence_refs": [
+                "accepted:c:e750d753dba150790505385c986dc060822823e408400279b431219104ec51af",
+                "accepted:b:ebeeca0f2cd084c9d021db4797f25c746d30aef3b9b2e266ec2dd57ba7c5b60a"
+              ],
+              "affects_score": false,
+              "dispensable_alternative": false,
+              "reason": "CONCLUSIVE_EVIDENCE",
+              "decision_conclusive": true
+            },
+            {
+              "item_id": "c",
+              "rule_path": [
+                "c",
+                "c.domain"
+              ],
+              "obligation_id": "c.difference_domain",
+              "effective_status": "refuted",
+              "origin": "semantic",
+              "evidence_refs": [
+                "accepted:c:e750d753dba150790505385c986dc060822823e408400279b431219104ec51af"
+              ],
+              "affects_score": false,
+              "dispensable_alternative": false,
+              "reason": "CONCLUSIVE_EVIDENCE",
+              "decision_conclusive": true
+            },
+            {
+              "item_id": "c",
+              "rule_path": [
+                "c",
+                "c.list",
+                "c.list.full"
+              ],
+              "obligation_id": "c.complete_list",
+              "effective_status": "refuted",
+              "origin": "semantic",
+              "evidence_refs": [
+                "accepted:c:e750d753dba150790505385c986dc060822823e408400279b431219104ec51af"
+              ],
+              "affects_score": false,
+              "dispensable_alternative": false,
+              "reason": "CONCLUSIVE_EVIDENCE",
+              "decision_conclusive": true
+            },
+            {
+              "item_id": "c",
+              "rule_path": [
+                "c",
+                "c.list",
+                "c.list.full"
+              ],
+              "obligation_id": "c.no_extraneous_values",
+              "effective_status": "technical_error",
+              "origin": "semantic",
+              "evidence_refs": [
+                "accepted:c:e750d753dba150790505385c986dc060822823e408400279b431219104ec51af"
+              ],
+              "affects_score": false,
+              "dispensable_alternative": true,
+              "reason": "ALTERNATIVE_CANNOT_IMPROVE_SCORE",
+              "decision_conclusive": false
+            },
+            {
+              "item_id": "c",
+              "rule_path": [
+                "c",
+                "c.list",
+                "c.list.one_error"
+              ],
+              "obligation_id": "c.single_list_error",
+              "effective_status": "supported",
+              "origin": "semantic",
+              "evidence_refs": [
+                "accepted:c:e750d753dba150790505385c986dc060822823e408400279b431219104ec51af"
+              ],
+              "affects_score": false,
+              "dispensable_alternative": false,
+              "reason": "CONCLUSIVE_EVIDENCE",
+              "decision_conclusive": true
+            },
+            {
+              "item_id": "d",
+              "rule_path": [
+                "d",
+                "d.pairs"
+              ],
+              "obligation_id": "d.digit_pairs",
+              "effective_status": "supported",
+              "origin": "semantic",
+              "evidence_refs": [
+                "accepted:d:db70ea68d225c78b5654ff9228730baafba6c700cef6d77d2150d1251410ed38"
+              ],
+              "affects_score": false,
+              "dispensable_alternative": false,
+              "reason": "CONCLUSIVE_EVIDENCE",
+              "decision_conclusive": true
+            },
+            {
+              "item_id": "d",
+              "rule_path": [
+                "d",
+                "d.count"
+              ],
+              "obligation_id": "d.middle_choices",
+              "effective_status": "technical_error",
+              "origin": "semantic",
+              "evidence_refs": [
+                "accepted:d:db70ea68d225c78b5654ff9228730baafba6c700cef6d77d2150d1251410ed38"
+              ],
+              "affects_score": true,
+              "dispensable_alternative": false,
+              "reason": "OPEN_SCORING_INTERVAL",
+              "decision_conclusive": false
+            },
+            {
+              "item_id": "d",
+              "rule_path": [
+                "d",
+                "d.count"
+              ],
+              "obligation_id": "d.total_thirty",
+              "effective_status": "supported",
+              "origin": "semantic",
+              "evidence_refs": [
+                "accepted:d:db70ea68d225c78b5654ff9228730baafba6c700cef6d77d2150d1251410ed38"
+              ],
+              "affects_score": false,
+              "dispensable_alternative": false,
+              "reason": "CONCLUSIVE_EVIDENCE",
+              "decision_conclusive": true
+            }
+          ]
+        },
+        "human_review": {
+          "state": "unknown",
+          "required": null,
+          "confirmation_state": "unknown",
+          "rule_id": null,
+          "scope": "audit_record",
+          "reason": "NO_EXPLICIT_HUMAN_REVIEW_RULE_IN_AUDIT"
+        },
+        "audit_run_id": "aud_1eb247481575591afe015612b9bcab6b98943d338347f5ce36da598eabaa019e",
+        "problem_id": "TME2026P1",
+        "source_result_sha256": "3d28898de9f98fb3f6f023cfddfc59217509582582f384948583828aefb69eb1",
+        "source_hash": "aff2adf82342ab432f68e43700864bafddf91674923c66823fd2d0a81ed124e4",
+        "stale": null,
+        "legacy": {
+          "status": "COMPLETED",
+          "score": null,
+          "needs_review": true,
+          "verdict": "inconclusivo"
+        }
+      },
+      "existing_service_read_verified": true
+    },
+    {
+      "audit_run_id": "aud_6f7e8d0a116941fe22164444b60ecbd0c71e1e227c4a6c244528fafc5eed1808",
+      "problem_id": "TME2026P2",
+      "mode": "READ_ONLY_PERSISTED_AUDIT",
+      "source_file": "runtime/pilot-dec10/submission_audits/aud_6f7e8d0a116941fe22164444b60ecbd0c71e1e227c4a6c244528fafc5eed1808.json",
+      "source_file_sha256": "a92a49e8da804590590c75e333d2cd75a107e68aebd61db61a2435168c166683",
+      "result_sha256_before": "0f99a6c6527ea0c7ec9e8bd035609c7c71d0d171c3e725dc7fa2db5ef5fc4d74",
+      "result_sha256_after": "0f99a6c6527ea0c7ec9e8bd035609c7c71d0d171c3e725dc7fa2db5ef5fc4d74",
+      "diagnostics": {
+        "schema_version": "tme-review-diagnostics.v1",
+        "scope": "persisted_pauta_decisions",
+        "score_state": "determined",
+        "final_score": "20",
+        "known_points": "20",
+        "possible_points": "20",
+        "max_score": "20",
+        "reason": "SAVED_SCORING_INTERVAL",
+        "items": [
+          {
+            "item_id": "a",
+            "score_state": "determined",
+            "points_awarded": "5",
+            "known_points": "5",
+            "possible_points": "5",
+            "selected_method_path": "a.complete_configuration_path",
+            "selected_band": null
+          },
+          {
+            "item_id": "b",
+            "score_state": "determined",
+            "points_awarded": "7",
+            "known_points": "7",
+            "possible_points": "7",
+            "selected_method_path": null,
+            "selected_band": null
+          },
+          {
+            "item_id": "c",
+            "score_state": "determined",
+            "points_awarded": "8",
+            "known_points": "8",
+            "possible_points": "8",
+            "selected_method_path": null,
+            "selected_band": null
+          }
+        ],
+        "mathematical_pending": {
+          "state": "absent",
+          "obligation_ids": [],
+          "occurrences": []
+        },
+        "nonblocking_pending": [
+          {
+            "item_id": "a",
+            "rule_path": [
+              "a",
+              "a.obligation_path",
+              "a.rule"
+            ],
+            "obligation_id": "a.line_sum",
+            "effective_status": "indeterminate",
+            "origin": "deterministic",
+            "evidence_refs": [],
+            "affects_score": false,
+            "dispensable_alternative": true,
+            "reason": "ALTERNATIVE_CANNOT_IMPROVE_SCORE"
+          },
+          {
+            "item_id": "c",
+            "rule_path": [
+              "c",
+              "c.counting",
+              "c.direct_product_path"
+            ],
+            "obligation_id": "c.counting_product",
+            "effective_status": "indeterminate",
+            "origin": "deterministic",
+            "evidence_refs": [],
+            "affects_score": false,
+            "dispensable_alternative": true,
+            "reason": "ALTERNATIVE_CANNOT_IMPROVE_SCORE"
+          }
+        ],
+        "dispensable_alternatives": [
+          {
+            "item_id": "a",
+            "rule_path": [
+              "a",
+              "a.obligation_path",
+              "a.rule"
+            ],
+            "obligation_id": "a.line_sum",
+            "effective_status": "indeterminate",
+            "origin": "deterministic",
+            "evidence_refs": [],
+            "affects_score": false,
+            "dispensable_alternative": true,
+            "reason": "ALTERNATIVE_CANNOT_IMPROVE_SCORE"
+          },
+          {
+            "item_id": "c",
+            "rule_path": [
+              "c",
+              "c.counting",
+              "c.direct_product_path"
+            ],
+            "obligation_id": "c.counting_product",
+            "effective_status": "indeterminate",
+            "origin": "deterministic",
+            "evidence_refs": [],
+            "affects_score": false,
+            "dispensable_alternative": true,
+            "reason": "ALTERNATIVE_CANNOT_IMPROVE_SCORE"
+          }
+        ],
+        "technical_errors": [],
+        "semantic_evidence_review": {
+          "state": "absent",
+          "occurrences": []
+        },
+        "human_review": {
+          "state": "unknown",
+          "required": null,
+          "confirmation_state": "unknown",
+          "rule_id": null,
+          "scope": "audit_record",
+          "reason": "NO_EXPLICIT_HUMAN_REVIEW_RULE_IN_AUDIT"
+        },
+        "audit_run_id": "aud_6f7e8d0a116941fe22164444b60ecbd0c71e1e227c4a6c244528fafc5eed1808",
+        "problem_id": "TME2026P2",
+        "source_result_sha256": "0f99a6c6527ea0c7ec9e8bd035609c7c71d0d171c3e725dc7fa2db5ef5fc4d74",
+        "source_hash": "eb60a48d9f1c70da6f47739e367a0eb2ca1582df4c31589acd33e5c748112952",
+        "stale": null,
+        "legacy": {
+          "status": "COMPLETED",
+          "score": 20.0,
+          "needs_review": true,
+          "verdict": "inconclusivo"
+        }
+      },
+      "existing_service_read_verified": true
+    },
+    {
+      "audit_run_id": "aud_b78d47c5651567e96939a38cd3ac76b1ead85eb9e5cde1a308360ae687067ee6",
+      "problem_id": "TME2026P3",
+      "mode": "READ_ONLY_PERSISTED_AUDIT",
+      "source_file": "runtime/pilot-dec10/submission_audits/aud_b78d47c5651567e96939a38cd3ac76b1ead85eb9e5cde1a308360ae687067ee6.json",
+      "source_file_sha256": "b79f62212d4bb4267c802f95847ed065c82dc272a8abbdbf20a4205980fdc826",
+      "result_sha256_before": "c098a8ff044032b3a91d63d70964f26b923cee7d8bce7e2847c3ba6b07b897ba",
+      "result_sha256_after": "c098a8ff044032b3a91d63d70964f26b923cee7d8bce7e2847c3ba6b07b897ba",
+      "diagnostics": {
+        "schema_version": "tme-review-diagnostics.v1",
+        "scope": "persisted_pauta_decisions",
+        "score_state": "determined",
+        "final_score": "20",
+        "known_points": "20",
+        "possible_points": "20",
+        "max_score": "20",
+        "reason": "SAVED_SCORING_INTERVAL",
+        "items": [
+          {
+            "item_id": "a",
+            "score_state": "determined",
+            "points_awarded": "4",
+            "known_points": "4",
+            "possible_points": "4",
+            "selected_method_path": null,
+            "selected_band": null
+          },
+          {
+            "item_id": "b",
+            "score_state": "determined",
+            "points_awarded": "8",
+            "known_points": "8",
+            "possible_points": "8",
+            "selected_method_path": "b.counting",
+            "selected_band": null
+          },
+          {
+            "item_id": "c",
+            "score_state": "determined",
+            "points_awarded": "8",
+            "known_points": "8",
+            "possible_points": "8",
+            "selected_method_path": null,
+            "selected_band": null
+          }
+        ],
+        "mathematical_pending": {
+          "state": "absent",
+          "obligation_ids": [],
+          "occurrences": []
+        },
+        "nonblocking_pending": [
+          {
+            "item_id": "b",
+            "rule_path": [
+              "b",
+              "b.alternative"
+            ],
+            "obligation_id": "b.alternative_complete",
+            "effective_status": "indeterminate",
+            "origin": "deterministic",
+            "evidence_refs": [],
+            "affects_score": false,
+            "dispensable_alternative": true,
+            "reason": "ALTERNATIVE_CANNOT_IMPROVE_SCORE"
+          }
+        ],
+        "dispensable_alternatives": [
+          {
+            "item_id": "b",
+            "rule_path": [
+              "b",
+              "b.alternative"
+            ],
+            "obligation_id": "b.alternative_complete",
+            "effective_status": "indeterminate",
+            "origin": "deterministic",
+            "evidence_refs": [],
+            "affects_score": false,
+            "dispensable_alternative": true,
+            "reason": "ALTERNATIVE_CANNOT_IMPROVE_SCORE"
+          }
+        ],
+        "technical_errors": [],
+        "semantic_evidence_review": {
+          "state": "absent",
+          "occurrences": []
+        },
+        "human_review": {
+          "state": "unknown",
+          "required": null,
+          "confirmation_state": "unknown",
+          "rule_id": null,
+          "scope": "audit_record",
+          "reason": "NO_EXPLICIT_HUMAN_REVIEW_RULE_IN_AUDIT"
+        },
+        "audit_run_id": "aud_b78d47c5651567e96939a38cd3ac76b1ead85eb9e5cde1a308360ae687067ee6",
+        "problem_id": "TME2026P3",
+        "source_result_sha256": "c098a8ff044032b3a91d63d70964f26b923cee7d8bce7e2847c3ba6b07b897ba",
+        "source_hash": "17f4a5ff3a2d70b39cf1795d790fb68801ef7d755a39cc4062e5da39e0ca1955",
+        "stale": null,
+        "legacy": {
+          "status": "COMPLETED",
+          "score": 20.0,
+          "needs_review": true,
+          "verdict": "inconclusivo"
+        }
+      },
+      "existing_service_read_verified": true
+    },
+    {
+      "audit_run_id": "aud_00e84780b3c5556e82c092d34fbc66f8af67da2b398b1860da19b88366433bb2",
+      "problem_id": "TME2026P4",
+      "mode": "READ_ONLY_PERSISTED_AUDIT",
+      "source_file": "runtime/pilot-dec10/submission_audits/aud_00e84780b3c5556e82c092d34fbc66f8af67da2b398b1860da19b88366433bb2.json",
+      "source_file_sha256": "29b2e49b56e3556ef4031837c75e894ec20bce288396abbf6d00e33ae4774d96",
+      "result_sha256_before": "9da6740904da21905f6a2e1be6e21cd7ca1281f8d0bd1cab2eb16199a7ac21db",
+      "result_sha256_after": "9da6740904da21905f6a2e1be6e21cd7ca1281f8d0bd1cab2eb16199a7ac21db",
+      "diagnostics": {
+        "schema_version": "tme-review-diagnostics.v1",
+        "scope": "persisted_pauta_decisions",
+        "score_state": "determined",
+        "final_score": "20",
+        "known_points": "20",
+        "possible_points": "20",
+        "max_score": "20",
+        "reason": "SAVED_SCORING_INTERVAL",
+        "items": [
+          {
+            "item_id": "a",
+            "score_state": "determined",
+            "points_awarded": "4",
+            "known_points": "4",
+            "possible_points": "4",
+            "selected_method_path": null,
+            "selected_band": null
+          },
+          {
+            "item_id": "b",
+            "score_state": "determined",
+            "points_awarded": "6",
+            "known_points": "6",
+            "possible_points": "6",
+            "selected_method_path": "b.official_metric_path",
+            "selected_band": null
+          },
+          {
+            "item_id": "c",
+            "score_state": "determined",
+            "points_awarded": "10",
+            "known_points": "10",
+            "possible_points": "10",
+            "selected_method_path": null,
+            "selected_band": null
+          }
+        ],
+        "mathematical_pending": {
+          "state": "absent",
+          "obligation_ids": [],
+          "occurrences": []
+        },
+        "nonblocking_pending": [
+          {
+            "item_id": "b",
+            "rule_path": [
+              "b",
+              "b.parallelogram_path"
+            ],
+            "obligation_id": "b.apqr",
+            "effective_status": "indeterminate",
+            "origin": "deterministic",
+            "evidence_refs": [],
+            "affects_score": false,
+            "dispensable_alternative": true,
+            "reason": "ALTERNATIVE_CANNOT_IMPROVE_SCORE"
+          },
+          {
+            "item_id": "c",
+            "rule_path": [
+              "c",
+              "c.methods",
+              "c.cases_path",
+              "c.case_equations"
+            ],
+            "obligation_id": "c.case_3x",
+            "effective_status": "indeterminate",
+            "origin": "deterministic",
+            "evidence_refs": [],
+            "affects_score": false,
+            "dispensable_alternative": true,
+            "reason": "ALTERNATIVE_CANNOT_IMPROVE_SCORE"
+          },
+          {
+            "item_id": "c",
+            "rule_path": [
+              "c",
+              "c.methods",
+              "c.cases_path",
+              "c.case_equations"
+            ],
+            "obligation_id": "c.case_other",
+            "effective_status": "indeterminate",
+            "origin": "deterministic",
+            "evidence_refs": [],
+            "affects_score": false,
+            "dispensable_alternative": true,
+            "reason": "ALTERNATIVE_CANNOT_IMPROVE_SCORE"
+          },
+          {
+            "item_id": "c",
+            "rule_path": [
+              "c",
+              "c.methods",
+              "c.cases_path",
+              "c.case_values"
+            ],
+            "obligation_id": "c.case_3x_root",
+            "effective_status": "indeterminate",
+            "origin": "deterministic",
+            "evidence_refs": [],
+            "affects_score": false,
+            "dispensable_alternative": true,
+            "reason": "ALTERNATIVE_CANNOT_IMPROVE_SCORE"
+          },
+          {
+            "item_id": "c",
+            "rule_path": [
+              "c",
+              "c.methods",
+              "c.cases_path",
+              "c.case_values"
+            ],
+            "obligation_id": "c.case_other_root",
+            "effective_status": "indeterminate",
+            "origin": "deterministic",
+            "evidence_refs": [],
+            "affects_score": false,
+            "dispensable_alternative": true,
+            "reason": "ALTERNATIVE_CANNOT_IMPROVE_SCORE"
+          },
+          {
+            "item_id": "c",
+            "rule_path": [
+              "c",
+              "c.methods",
+              "c.cases_path",
+              "c.case_union"
+            ],
+            "obligation_id": "c.case_3x",
+            "effective_status": "indeterminate",
+            "origin": "deterministic",
+            "evidence_refs": [],
+            "affects_score": false,
+            "dispensable_alternative": true,
+            "reason": "ALTERNATIVE_CANNOT_IMPROVE_SCORE"
+          },
+          {
+            "item_id": "c",
+            "rule_path": [
+              "c",
+              "c.methods",
+              "c.cases_path",
+              "c.case_union"
+            ],
+            "obligation_id": "c.case_other",
+            "effective_status": "indeterminate",
+            "origin": "deterministic",
+            "evidence_refs": [],
+            "affects_score": false,
+            "dispensable_alternative": true,
+            "reason": "ALTERNATIVE_CANNOT_IMPROVE_SCORE"
+          },
+          {
+            "item_id": "c",
+            "rule_path": [
+              "c",
+              "c.methods",
+              "c.cases_path",
+              "c.case_union"
+            ],
+            "obligation_id": "c.case_3x_root",
+            "effective_status": "indeterminate",
+            "origin": "deterministic",
+            "evidence_refs": [],
+            "affects_score": false,
+            "dispensable_alternative": true,
+            "reason": "ALTERNATIVE_CANNOT_IMPROVE_SCORE"
+          },
+          {
+            "item_id": "c",
+            "rule_path": [
+              "c",
+              "c.methods",
+              "c.cases_path",
+              "c.case_union"
+            ],
+            "obligation_id": "c.case_other_root",
+            "effective_status": "indeterminate",
+            "origin": "deterministic",
+            "evidence_refs": [],
+            "affects_score": false,
+            "dispensable_alternative": true,
+            "reason": "ALTERNATIVE_CANNOT_IMPROVE_SCORE"
+          }
+        ],
+        "dispensable_alternatives": [
+          {
+            "item_id": "b",
+            "rule_path": [
+              "b",
+              "b.parallelogram_path"
+            ],
+            "obligation_id": "b.apqr",
+            "effective_status": "indeterminate",
+            "origin": "deterministic",
+            "evidence_refs": [],
+            "affects_score": false,
+            "dispensable_alternative": true,
+            "reason": "ALTERNATIVE_CANNOT_IMPROVE_SCORE"
+          },
+          {
+            "item_id": "c",
+            "rule_path": [
+              "c",
+              "c.methods",
+              "c.cases_path",
+              "c.case_equations"
+            ],
+            "obligation_id": "c.case_3x",
+            "effective_status": "indeterminate",
+            "origin": "deterministic",
+            "evidence_refs": [],
+            "affects_score": false,
+            "dispensable_alternative": true,
+            "reason": "ALTERNATIVE_CANNOT_IMPROVE_SCORE"
+          },
+          {
+            "item_id": "c",
+            "rule_path": [
+              "c",
+              "c.methods",
+              "c.cases_path",
+              "c.case_equations"
+            ],
+            "obligation_id": "c.case_other",
+            "effective_status": "indeterminate",
+            "origin": "deterministic",
+            "evidence_refs": [],
+            "affects_score": false,
+            "dispensable_alternative": true,
+            "reason": "ALTERNATIVE_CANNOT_IMPROVE_SCORE"
+          },
+          {
+            "item_id": "c",
+            "rule_path": [
+              "c",
+              "c.methods",
+              "c.cases_path",
+              "c.case_values"
+            ],
+            "obligation_id": "c.case_3x_root",
+            "effective_status": "indeterminate",
+            "origin": "deterministic",
+            "evidence_refs": [],
+            "affects_score": false,
+            "dispensable_alternative": true,
+            "reason": "ALTERNATIVE_CANNOT_IMPROVE_SCORE"
+          },
+          {
+            "item_id": "c",
+            "rule_path": [
+              "c",
+              "c.methods",
+              "c.cases_path",
+              "c.case_values"
+            ],
+            "obligation_id": "c.case_other_root",
+            "effective_status": "indeterminate",
+            "origin": "deterministic",
+            "evidence_refs": [],
+            "affects_score": false,
+            "dispensable_alternative": true,
+            "reason": "ALTERNATIVE_CANNOT_IMPROVE_SCORE"
+          },
+          {
+            "item_id": "c",
+            "rule_path": [
+              "c",
+              "c.methods",
+              "c.cases_path",
+              "c.case_union"
+            ],
+            "obligation_id": "c.case_3x",
+            "effective_status": "indeterminate",
+            "origin": "deterministic",
+            "evidence_refs": [],
+            "affects_score": false,
+            "dispensable_alternative": true,
+            "reason": "ALTERNATIVE_CANNOT_IMPROVE_SCORE"
+          },
+          {
+            "item_id": "c",
+            "rule_path": [
+              "c",
+              "c.methods",
+              "c.cases_path",
+              "c.case_union"
+            ],
+            "obligation_id": "c.case_other",
+            "effective_status": "indeterminate",
+            "origin": "deterministic",
+            "evidence_refs": [],
+            "affects_score": false,
+            "dispensable_alternative": true,
+            "reason": "ALTERNATIVE_CANNOT_IMPROVE_SCORE"
+          },
+          {
+            "item_id": "c",
+            "rule_path": [
+              "c",
+              "c.methods",
+              "c.cases_path",
+              "c.case_union"
+            ],
+            "obligation_id": "c.case_3x_root",
+            "effective_status": "indeterminate",
+            "origin": "deterministic",
+            "evidence_refs": [],
+            "affects_score": false,
+            "dispensable_alternative": true,
+            "reason": "ALTERNATIVE_CANNOT_IMPROVE_SCORE"
+          },
+          {
+            "item_id": "c",
+            "rule_path": [
+              "c",
+              "c.methods",
+              "c.cases_path",
+              "c.case_union"
+            ],
+            "obligation_id": "c.case_other_root",
+            "effective_status": "indeterminate",
+            "origin": "deterministic",
+            "evidence_refs": [],
+            "affects_score": false,
+            "dispensable_alternative": true,
+            "reason": "ALTERNATIVE_CANNOT_IMPROVE_SCORE"
+          }
+        ],
+        "technical_errors": [],
+        "semantic_evidence_review": {
+          "state": "absent",
+          "occurrences": []
+        },
+        "human_review": {
+          "state": "unknown",
+          "required": null,
+          "confirmation_state": "unknown",
+          "rule_id": null,
+          "scope": "audit_record",
+          "reason": "NO_EXPLICIT_HUMAN_REVIEW_RULE_IN_AUDIT"
+        },
+        "audit_run_id": "aud_00e84780b3c5556e82c092d34fbc66f8af67da2b398b1860da19b88366433bb2",
+        "problem_id": "TME2026P4",
+        "source_result_sha256": "9da6740904da21905f6a2e1be6e21cd7ca1281f8d0bd1cab2eb16199a7ac21db",
+        "source_hash": "062a408fd18303d6503972803f74520016db788b74ac64efa59de5e31005dc6f",
+        "stale": null,
+        "legacy": {
+          "status": "COMPLETED",
+          "score": 20.0,
+          "needs_review": true,
+          "verdict": "inconclusivo"
+        }
+      },
+      "existing_service_read_verified": true
+    },
+    {
+      "audit_run_id": "aud_e840502ea785c0ff3469e187a2f2d53831f8a9eba6f281ac9805103b0d230c93",
+      "problem_id": "TME2026P5",
+      "mode": "READ_ONLY_PERSISTED_AUDIT",
+      "source_file": "runtime/pilot-dec10/submission_audits/aud_e840502ea785c0ff3469e187a2f2d53831f8a9eba6f281ac9805103b0d230c93.json",
+      "source_file_sha256": "3692306f156042cba5a5bf540b41bf21be72fa044a8674242febff28f8346647",
+      "result_sha256_before": "b9fdf2feea88cfa4881fda8ee0249bae28762f911cd15cbe67fddc83a516e554",
+      "result_sha256_after": "b9fdf2feea88cfa4881fda8ee0249bae28762f911cd15cbe67fddc83a516e554",
+      "diagnostics": {
+        "schema_version": "tme-review-diagnostics.v1",
+        "scope": "persisted_pauta_decisions",
+        "score_state": "determined",
+        "final_score": "20",
+        "known_points": "20",
+        "possible_points": "20",
+        "max_score": "20",
+        "reason": "SAVED_SCORING_INTERVAL",
+        "items": [
+          {
+            "item_id": "a",
+            "score_state": "determined",
+            "points_awarded": "6",
+            "known_points": "6",
+            "possible_points": "6",
+            "selected_method_path": null,
+            "selected_band": null
+          },
+          {
+            "item_id": "b",
+            "score_state": "determined",
+            "points_awarded": "4",
+            "known_points": "4",
+            "possible_points": "4",
+            "selected_method_path": null,
+            "selected_band": null
+          },
+          {
+            "item_id": "c",
+            "score_state": "determined",
+            "points_awarded": "6",
+            "known_points": "6",
+            "possible_points": "6",
+            "selected_method_path": "c.official_replacement_path",
+            "selected_band": null
+          },
+          {
+            "item_id": "d",
+            "score_state": "determined",
+            "points_awarded": "4",
+            "known_points": "4",
+            "possible_points": "4",
+            "selected_method_path": null,
+            "selected_band": null
+          }
+        ],
+        "mathematical_pending": {
+          "state": "absent",
+          "obligation_ids": [],
+          "occurrences": []
+        },
+        "nonblocking_pending": [
+          {
+            "item_id": "a",
+            "rule_path": [
+              "a",
+              "a.argument"
+            ],
+            "obligation_id": "a.structural_max",
+            "effective_status": "indeterminate",
+            "origin": "deterministic",
+            "evidence_refs": [],
+            "affects_score": false,
+            "dispensable_alternative": true,
+            "reason": "SATISFIED_DISJUNCTION"
+          },
+          {
+            "item_id": "c",
+            "rule_path": [
+              "c",
+              "c.general_integer_break_path"
+            ],
+            "obligation_id": "c.general_complete",
+            "effective_status": "indeterminate",
+            "origin": "deterministic",
+            "evidence_refs": [
+              "native:digital-quantity.v1:1234:1249",
+              "native:real-a750f8aa20406a06b37f",
+              "native:digital-quantity.v1:1250:1269",
+              "native:real-09ca7f29afe50d0a3ff9",
+              "native:digital-quantity.v1:1270:1289",
+              "native:real-201d9c038289a2ebff5e",
+              "native:digital-quantity.v1:1290:1310",
+              "native:real-115719ce80bdaca10fd5",
+              "native:digital-quantity.v1:1126:1142",
+              "native:digital-quantity.v1:1143:1159",
+              "native:digital-quantity.v1:1160:1175",
+              "native:digital-quantity.v1:1176:1188",
+              "native:digital-quantity.v1:1189:1213",
+              "native:real-0ba6a43ce16456eff9fd",
+              "native:digital-quantity.v1:1214:1233",
+              "native:real-32e4961b3134a019adae",
+              "native:digital-quantity.v1:1373:1393",
+              "check:0393b5eaa9f55ddc2c44"
+            ],
+            "affects_score": false,
+            "dispensable_alternative": true,
+            "reason": "ALTERNATIVE_CANNOT_IMPROVE_SCORE"
+          },
+          {
+            "item_id": "d",
+            "rule_path": [
+              "d",
+              "d.counts",
+              "d.sizes_cf"
+            ],
+            "obligation_id": "d.cf_adoption",
+            "effective_status": "indeterminate",
+            "origin": "deterministic",
+            "evidence_refs": [],
+            "affects_score": false,
+            "dispensable_alternative": true,
+            "reason": "CARRY_FORWARD_INAPPLICABLE_PRIOR_SUPPORTED"
+          },
+          {
+            "item_id": "d",
+            "rule_path": [
+              "d",
+              "d.counts",
+              "d.sizes_cf"
+            ],
+            "obligation_id": "d.cf_dependency",
+            "effective_status": "indeterminate",
+            "origin": "deterministic",
+            "evidence_refs": [],
+            "affects_score": false,
+            "dispensable_alternative": true,
+            "reason": "CARRY_FORWARD_INAPPLICABLE_PRIOR_SUPPORTED"
+          },
+          {
+            "item_id": "d",
+            "rule_path": [
+              "d",
+              "d.counts",
+              "d.sizes_cf"
+            ],
+            "obligation_id": "d.cf_coherence",
+            "effective_status": "indeterminate",
+            "origin": "deterministic",
+            "evidence_refs": [],
+            "affects_score": false,
+            "dispensable_alternative": true,
+            "reason": "CARRY_FORWARD_INAPPLICABLE_PRIOR_SUPPORTED"
+          }
+        ],
+        "dispensable_alternatives": [
+          {
+            "item_id": "a",
+            "rule_path": [
+              "a",
+              "a.argument"
+            ],
+            "obligation_id": "a.structural_max",
+            "effective_status": "indeterminate",
+            "origin": "deterministic",
+            "evidence_refs": [],
+            "affects_score": false,
+            "dispensable_alternative": true,
+            "reason": "SATISFIED_DISJUNCTION"
+          },
+          {
+            "item_id": "c",
+            "rule_path": [
+              "c",
+              "c.general_integer_break_path"
+            ],
+            "obligation_id": "c.general_complete",
+            "effective_status": "indeterminate",
+            "origin": "deterministic",
+            "evidence_refs": [
+              "native:digital-quantity.v1:1234:1249",
+              "native:real-a750f8aa20406a06b37f",
+              "native:digital-quantity.v1:1250:1269",
+              "native:real-09ca7f29afe50d0a3ff9",
+              "native:digital-quantity.v1:1270:1289",
+              "native:real-201d9c038289a2ebff5e",
+              "native:digital-quantity.v1:1290:1310",
+              "native:real-115719ce80bdaca10fd5",
+              "native:digital-quantity.v1:1126:1142",
+              "native:digital-quantity.v1:1143:1159",
+              "native:digital-quantity.v1:1160:1175",
+              "native:digital-quantity.v1:1176:1188",
+              "native:digital-quantity.v1:1189:1213",
+              "native:real-0ba6a43ce16456eff9fd",
+              "native:digital-quantity.v1:1214:1233",
+              "native:real-32e4961b3134a019adae",
+              "native:digital-quantity.v1:1373:1393",
+              "check:0393b5eaa9f55ddc2c44"
+            ],
+            "affects_score": false,
+            "dispensable_alternative": true,
+            "reason": "ALTERNATIVE_CANNOT_IMPROVE_SCORE"
+          },
+          {
+            "item_id": "d",
+            "rule_path": [
+              "d",
+              "d.counts",
+              "d.sizes_cf"
+            ],
+            "obligation_id": "d.cf_adoption",
+            "effective_status": "indeterminate",
+            "origin": "deterministic",
+            "evidence_refs": [],
+            "affects_score": false,
+            "dispensable_alternative": true,
+            "reason": "CARRY_FORWARD_INAPPLICABLE_PRIOR_SUPPORTED"
+          },
+          {
+            "item_id": "d",
+            "rule_path": [
+              "d",
+              "d.counts",
+              "d.sizes_cf"
+            ],
+            "obligation_id": "d.cf_dependency",
+            "effective_status": "indeterminate",
+            "origin": "deterministic",
+            "evidence_refs": [],
+            "affects_score": false,
+            "dispensable_alternative": true,
+            "reason": "CARRY_FORWARD_INAPPLICABLE_PRIOR_SUPPORTED"
+          },
+          {
+            "item_id": "d",
+            "rule_path": [
+              "d",
+              "d.counts",
+              "d.sizes_cf"
+            ],
+            "obligation_id": "d.cf_coherence",
+            "effective_status": "indeterminate",
+            "origin": "deterministic",
+            "evidence_refs": [],
+            "affects_score": false,
+            "dispensable_alternative": true,
+            "reason": "CARRY_FORWARD_INAPPLICABLE_PRIOR_SUPPORTED"
+          }
+        ],
+        "technical_errors": [],
+        "semantic_evidence_review": {
+          "state": "absent",
+          "occurrences": []
+        },
+        "human_review": {
+          "state": "unknown",
+          "required": null,
+          "confirmation_state": "unknown",
+          "rule_id": null,
+          "scope": "audit_record",
+          "reason": "NO_EXPLICIT_HUMAN_REVIEW_RULE_IN_AUDIT"
+        },
+        "audit_run_id": "aud_e840502ea785c0ff3469e187a2f2d53831f8a9eba6f281ac9805103b0d230c93",
+        "problem_id": "TME2026P5",
+        "source_result_sha256": "b9fdf2feea88cfa4881fda8ee0249bae28762f911cd15cbe67fddc83a516e554",
+        "source_hash": "aac43facd743d93eb13f42a0a6d2784d485673c1d6943c77840358a3de3e9069",
+        "stale": null,
+        "legacy": {
+          "status": "COMPLETED",
+          "score": 20.0,
+          "needs_review": true,
+          "verdict": "inconclusivo"
+        }
+      },
+      "existing_service_read_verified": true
+    }
+  ],
+  "p1_replay": {
+    "mode": "OFFLINE_ARCHIVED_GPT_RESPONSES",
+    "persisted_as_audit_run": false,
+    "source_audit_run_id": "aud_1eb247481575591afe015612b9bcab6b98943d338347f5ce36da598eabaa019e",
+    "archived_responses": [
+      "a.arithmetic_error_only",
+      "b.reversed_number",
+      "b.subtraction",
+      "b.middle_cancellation",
+      "b.factorization",
+      "c.uses_expression",
+      "c.difference_domain",
+      "c.complete_list",
+      "c.no_extraneous_values",
+      "c.single_list_error",
+      "d.digit_pairs",
+      "d.middle_choices",
+      "d.total_thirty"
+    ],
+    "assessment_sha256": "a2fa9aa78097f4d6186e5bc0414729482fbad7ff632309143fda0b35bc569c74",
+    "diagnostics": {
+      "schema_version": "tme-review-diagnostics.v1",
+      "scope": "persisted_pauta_decisions",
+      "score_state": "determined",
+      "final_score": "17",
+      "known_points": "17",
+      "possible_points": "17",
+      "max_score": "20",
+      "reason": "SAVED_SCORING_INTERVAL",
+      "items": [
+        {
+          "item_id": "a",
+          "score_state": "determined",
+          "points_awarded": "2",
+          "known_points": "2",
+          "possible_points": "2",
+          "selected_method_path": null,
+          "selected_band": "a.arithmetic_only"
+        },
+        {
+          "item_id": "b",
+          "score_state": "determined",
+          "points_awarded": "5",
+          "known_points": "5",
+          "possible_points": "5",
+          "selected_method_path": null,
+          "selected_band": null
+        },
+        {
+          "item_id": "c",
+          "score_state": "determined",
+          "points_awarded": "4",
+          "known_points": "4",
+          "possible_points": "4",
+          "selected_method_path": null,
+          "selected_band": null
+        },
+        {
+          "item_id": "d",
+          "score_state": "determined",
+          "points_awarded": "6",
+          "known_points": "6",
+          "possible_points": "6",
+          "selected_method_path": null,
+          "selected_band": null
+        }
+      ],
+      "mathematical_pending": {
+        "state": "absent",
+        "obligation_ids": [],
+        "occurrences": []
+      },
+      "nonblocking_pending": [
+        {
+          "item_id": "c",
+          "rule_path": [
+            "c",
+            "c.list",
+            "c.list.pattern"
+          ],
+          "obligation_id": "c.several_correct",
+          "effective_status": "indeterminate",
+          "origin": "deterministic",
+          "evidence_refs": [],
+          "affects_score": false,
+          "dispensable_alternative": true,
+          "reason": "ALTERNATIVE_CANNOT_IMPROVE_SCORE"
+        },
+        {
+          "item_id": "c",
+          "rule_path": [
+            "c",
+            "c.list",
+            "c.list.pattern"
+          ],
+          "obligation_id": "c.pattern_recognized",
+          "effective_status": "indeterminate",
+          "origin": "deterministic",
+          "evidence_refs": [],
+          "affects_score": false,
+          "dispensable_alternative": true,
+          "reason": "ALTERNATIVE_CANNOT_IMPROVE_SCORE"
+        },
+        {
+          "item_id": "c",
+          "rule_path": [
+            "c",
+            "c.list",
+            "c.list.some"
+          ],
+          "obligation_id": "c.some_correct",
+          "effective_status": "indeterminate",
+          "origin": "deterministic",
+          "evidence_refs": [],
+          "affects_score": false,
+          "dispensable_alternative": true,
+          "reason": "ALTERNATIVE_CANNOT_IMPROVE_SCORE"
+        }
+      ],
+      "dispensable_alternatives": [
+        {
+          "item_id": "c",
+          "rule_path": [
+            "c",
+            "c.list",
+            "c.list.pattern"
+          ],
+          "obligation_id": "c.several_correct",
+          "effective_status": "indeterminate",
+          "origin": "deterministic",
+          "evidence_refs": [],
+          "affects_score": false,
+          "dispensable_alternative": true,
+          "reason": "ALTERNATIVE_CANNOT_IMPROVE_SCORE"
+        },
+        {
+          "item_id": "c",
+          "rule_path": [
+            "c",
+            "c.list",
+            "c.list.pattern"
+          ],
+          "obligation_id": "c.pattern_recognized",
+          "effective_status": "indeterminate",
+          "origin": "deterministic",
+          "evidence_refs": [],
+          "affects_score": false,
+          "dispensable_alternative": true,
+          "reason": "ALTERNATIVE_CANNOT_IMPROVE_SCORE"
+        },
+        {
+          "item_id": "c",
+          "rule_path": [
+            "c",
+            "c.list",
+            "c.list.some"
+          ],
+          "obligation_id": "c.some_correct",
+          "effective_status": "indeterminate",
+          "origin": "deterministic",
+          "evidence_refs": [],
+          "affects_score": false,
+          "dispensable_alternative": true,
+          "reason": "ALTERNATIVE_CANNOT_IMPROVE_SCORE"
+        }
+      ],
+      "technical_errors": [],
+      "semantic_evidence_review": {
+        "state": "present",
+        "occurrences": [
+          {
+            "item_id": "a",
+            "rule_path": [
+              "a",
+              "a.arithmetic_only"
+            ],
+            "obligation_id": "a.arithmetic_error_only",
+            "effective_status": "supported",
+            "origin": "semantic",
+            "evidence_refs": [
+              "accepted:a:81e99a89ac8a3a6cdbc81ccf7c0fda98ff1103f676958a77d495aedf4889cb95"
+            ],
+            "affects_score": false,
+            "dispensable_alternative": false,
+            "reason": "CONCLUSIVE_EVIDENCE",
+            "decision_conclusive": true
+          },
+          {
+            "item_id": "b",
+            "rule_path": [
+              "b",
+              "b.reverse"
+            ],
+            "obligation_id": "b.reversed_number",
+            "effective_status": "supported",
+            "origin": "semantic",
+            "evidence_refs": [
+              "accepted:b:ebeeca0f2cd084c9d021db4797f25c746d30aef3b9b2e266ec2dd57ba7c5b60a"
+            ],
+            "affects_score": false,
+            "dispensable_alternative": false,
+            "reason": "CONCLUSIVE_EVIDENCE",
+            "decision_conclusive": true
+          },
+          {
+            "item_id": "b",
+            "rule_path": [
+              "b",
+              "b.subtract_cancel"
+            ],
+            "obligation_id": "b.subtraction",
+            "effective_status": "supported",
+            "origin": "semantic",
+            "evidence_refs": [
+              "accepted:b:ebeeca0f2cd084c9d021db4797f25c746d30aef3b9b2e266ec2dd57ba7c5b60a"
+            ],
+            "affects_score": false,
+            "dispensable_alternative": false,
+            "reason": "CONCLUSIVE_EVIDENCE",
+            "decision_conclusive": true
+          },
+          {
+            "item_id": "b",
+            "rule_path": [
+              "b",
+              "b.subtract_cancel"
+            ],
+            "obligation_id": "b.middle_cancellation",
+            "effective_status": "supported",
+            "origin": "semantic",
+            "evidence_refs": [
+              "accepted:b:ebeeca0f2cd084c9d021db4797f25c746d30aef3b9b2e266ec2dd57ba7c5b60a"
+            ],
+            "affects_score": false,
+            "dispensable_alternative": false,
+            "reason": "CONCLUSIVE_EVIDENCE",
+            "decision_conclusive": true
+          },
+          {
+            "item_id": "b",
+            "rule_path": [
+              "b",
+              "b.simplify"
+            ],
+            "obligation_id": "b.factorization",
+            "effective_status": "supported",
+            "origin": "semantic",
+            "evidence_refs": [
+              "accepted:b:ebeeca0f2cd084c9d021db4797f25c746d30aef3b9b2e266ec2dd57ba7c5b60a"
+            ],
+            "affects_score": false,
+            "dispensable_alternative": false,
+            "reason": "CONCLUSIVE_EVIDENCE",
+            "decision_conclusive": true
+          },
+          {
+            "item_id": "c",
+            "rule_path": [
+              "c",
+              "c.expression"
+            ],
+            "obligation_id": "c.uses_expression",
+            "effective_status": "supported",
+            "origin": "semantic",
+            "evidence_refs": [
+              "accepted:c:e750d753dba150790505385c986dc060822823e408400279b431219104ec51af",
+              "accepted:b:ebeeca0f2cd084c9d021db4797f25c746d30aef3b9b2e266ec2dd57ba7c5b60a"
+            ],
+            "affects_score": false,
+            "dispensable_alternative": false,
+            "reason": "CONCLUSIVE_EVIDENCE",
+            "decision_conclusive": true
+          },
+          {
+            "item_id": "c",
+            "rule_path": [
+              "c",
+              "c.domain"
+            ],
+            "obligation_id": "c.difference_domain",
+            "effective_status": "refuted",
+            "origin": "semantic",
+            "evidence_refs": [
+              "accepted:c:e750d753dba150790505385c986dc060822823e408400279b431219104ec51af"
+            ],
+            "affects_score": false,
+            "dispensable_alternative": false,
+            "reason": "CONCLUSIVE_EVIDENCE",
+            "decision_conclusive": true
+          },
+          {
+            "item_id": "c",
+            "rule_path": [
+              "c",
+              "c.list",
+              "c.list.full"
+            ],
+            "obligation_id": "c.complete_list",
+            "effective_status": "refuted",
+            "origin": "semantic",
+            "evidence_refs": [
+              "accepted:c:e750d753dba150790505385c986dc060822823e408400279b431219104ec51af"
+            ],
+            "affects_score": false,
+            "dispensable_alternative": false,
+            "reason": "CONCLUSIVE_EVIDENCE",
+            "decision_conclusive": true
+          },
+          {
+            "item_id": "c",
+            "rule_path": [
+              "c",
+              "c.list",
+              "c.list.full"
+            ],
+            "obligation_id": "c.no_extraneous_values",
+            "effective_status": "supported",
+            "origin": "semantic",
+            "evidence_refs": [
+              "accepted:c:e750d753dba150790505385c986dc060822823e408400279b431219104ec51af",
+              "accepted:b:ebeeca0f2cd084c9d021db4797f25c746d30aef3b9b2e266ec2dd57ba7c5b60a"
+            ],
+            "affects_score": false,
+            "dispensable_alternative": false,
+            "reason": "CONCLUSIVE_EVIDENCE",
+            "decision_conclusive": true
+          },
+          {
+            "item_id": "c",
+            "rule_path": [
+              "c",
+              "c.list",
+              "c.list.one_error"
+            ],
+            "obligation_id": "c.single_list_error",
+            "effective_status": "supported",
+            "origin": "semantic",
+            "evidence_refs": [
+              "accepted:c:e750d753dba150790505385c986dc060822823e408400279b431219104ec51af"
+            ],
+            "affects_score": false,
+            "dispensable_alternative": false,
+            "reason": "CONCLUSIVE_EVIDENCE",
+            "decision_conclusive": true
+          },
+          {
+            "item_id": "d",
+            "rule_path": [
+              "d",
+              "d.pairs"
+            ],
+            "obligation_id": "d.digit_pairs",
+            "effective_status": "supported",
+            "origin": "semantic",
+            "evidence_refs": [
+              "accepted:d:db70ea68d225c78b5654ff9228730baafba6c700cef6d77d2150d1251410ed38"
+            ],
+            "affects_score": false,
+            "dispensable_alternative": false,
+            "reason": "CONCLUSIVE_EVIDENCE",
+            "decision_conclusive": true
+          },
+          {
+            "item_id": "d",
+            "rule_path": [
+              "d",
+              "d.count"
+            ],
+            "obligation_id": "d.middle_choices",
+            "effective_status": "supported",
+            "origin": "semantic",
+            "evidence_refs": [
+              "accepted:d:db70ea68d225c78b5654ff9228730baafba6c700cef6d77d2150d1251410ed38",
+              "accepted:b:ebeeca0f2cd084c9d021db4797f25c746d30aef3b9b2e266ec2dd57ba7c5b60a"
+            ],
+            "affects_score": false,
+            "dispensable_alternative": false,
+            "reason": "CONCLUSIVE_EVIDENCE",
+            "decision_conclusive": true
+          },
+          {
+            "item_id": "d",
+            "rule_path": [
+              "d",
+              "d.count"
+            ],
+            "obligation_id": "d.total_thirty",
+            "effective_status": "supported",
+            "origin": "semantic",
+            "evidence_refs": [
+              "accepted:d:db70ea68d225c78b5654ff9228730baafba6c700cef6d77d2150d1251410ed38"
+            ],
+            "affects_score": false,
+            "dispensable_alternative": false,
+            "reason": "CONCLUSIVE_EVIDENCE",
+            "decision_conclusive": true
+          }
+        ]
+      },
+      "human_review": {
+        "state": "unknown",
+        "required": null,
+        "confirmation_state": "unknown",
+        "rule_id": null,
+        "scope": "audit_record",
+        "reason": "NO_EXPLICIT_HUMAN_REVIEW_RULE_IN_AUDIT"
+      }
+    }
+  },
+  "working_tree_auditor_version": "tme-integration.v1:2da7a5bd4d0cd615fd06993b9e7e45fa86c27b6778476724882d65342526b9da",
+  "validation": {
+    "passed": 971,
+    "deselected": 1,
+    "log": "tests.txt",
+    "duration_seconds": 320.94,
+    "deselected_test": "tests/test_tme_accepted_integration.py::test_real_local_lean_status_certificates_preserved",
+    "historical_hashes_verified_after_tests": true
+  }
+}

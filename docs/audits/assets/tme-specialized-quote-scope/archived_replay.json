@@ -1,0 +1,802 @@
+{
+  "mode": "OFFLINE_ARCHIVED_GPT_RESPONSE_REPLAY",
+  "audit_run_id": "aud_1eb247481575591afe015612b9bcab6b98943d338347f5ce36da598eabaa019e",
+  "paid_api_calls": 0,
+  "original_audit_reexecuted": false,
+  "source_manifest": {
+    "audit_run_id": "aud_1eb247481575591afe015612b9bcab6b98943d338347f5ce36da598eabaa019e",
+    "source_directory": "runtime/pilot-dec10/submission_audits/artifacts/aud_1eb247481575591afe015612b9bcab6b98943d338347f5ce36da598eabaa019e-954184e1018f41e3af8f4bd8e3c09943",
+    "files": {
+      "audit.json": "56397b600d3b9681b44ccd9ab8ed57bc13b833a3cd33923b2991fe10cc4cbd19",
+      "solution.txt": "015cd234e48ee8f8f97aefceec6e3375405757d4d7d305364735ca8d6938dd69",
+      "input_mapping.json": "bf86e0af02671a1084f0d1224a677a6ebb1b83657d4013096355ed5c830e016b",
+      "accepted_revision.json": "115c15218c3df7bb9f6ce7483c8c966b1a070fba18f24b304d8c1a7a25b843d6"
+    }
+  },
+  "original_artifact_hashes": {
+    "runtime/pilot-dec10/submission_audits/artifacts/aud_1eb247481575591afe015612b9bcab6b98943d338347f5ce36da598eabaa019e-954184e1018f41e3af8f4bd8e3c09943/audit.json": "56397b600d3b9681b44ccd9ab8ed57bc13b833a3cd33923b2991fe10cc4cbd19",
+    "runtime/pilot-dec10/submission_audits/artifacts/aud_1eb247481575591afe015612b9bcab6b98943d338347f5ce36da598eabaa019e-954184e1018f41e3af8f4bd8e3c09943/accepted_revision.json": "115c15218c3df7bb9f6ce7483c8c966b1a070fba18f24b304d8c1a7a25b843d6",
+    "runtime/pilot-dec10/submission_audits/artifacts/aud_1eb247481575591afe015612b9bcab6b98943d338347f5ce36da598eabaa019e-954184e1018f41e3af8f4bd8e3c09943/input_mapping.json": "bf86e0af02671a1084f0d1224a677a6ebb1b83657d4013096355ed5c830e016b",
+    "runtime/pilot-dec10/submission_audits/artifacts/aud_1eb247481575591afe015612b9bcab6b98943d338347f5ce36da598eabaa019e-954184e1018f41e3af8f4bd8e3c09943/solution.txt": "015cd234e48ee8f8f97aefceec6e3375405757d4d7d305364735ca8d6938dd69",
+    "runtime/pilot-dec10/submission_audits/artifacts/aud_1eb247481575591afe015612b9bcab6b98943d338347f5ce36da598eabaa019e-954184e1018f41e3af8f4bd8e3c09943/certificates/4d4b2822cfae86e723604d112e31f981347a086355c2ea72686cb5f33b1a1004.lean": "268f140d5e465cb79ea78acdbfa8342d54ea2d6d6d4280522261d66eef2d2b48",
+    "runtime/pilot-dec10/submission_audits/aud_1eb247481575591afe015612b9bcab6b98943d338347f5ce36da598eabaa019e.json": "e120f5fbd9c9c0515ae91df33dd5e59565c14da060ed2da593deff8fd26358fd"
+  },
+  "explanation": "Somente o estado pré-fallback das obrigações foi reconstruído a partir de request.checks persistido. As 13 respostas GPT originais foram reutilizadas sem alteração. Nenhum checker, Lean ou AuditService foi reexecutado para este caso.",
+  "before": {
+    "score": null,
+    "known_points": "15",
+    "items": [
+      {
+        "id": "a",
+        "status": "decided",
+        "points": "2",
+        "known_points": "2"
+      },
+      {
+        "id": "b",
+        "status": "decided",
+        "points": "5",
+        "known_points": "5"
+      },
+      {
+        "id": "c",
+        "status": "decided",
+        "points": "4",
+        "known_points": "4"
+      },
+      {
+        "id": "d",
+        "status": "technical_error",
+        "points": null,
+        "known_points": "4"
+      }
+    ]
+  },
+  "after": {
+    "score": 17.0,
+    "items": [
+      {
+        "id": "a",
+        "status": "decided",
+        "points": "2"
+      },
+      {
+        "id": "b",
+        "status": "decided",
+        "points": "5"
+      },
+      {
+        "id": "c",
+        "status": "decided",
+        "points": "4"
+      },
+      {
+        "id": "d",
+        "status": "decided",
+        "points": "6"
+      }
+    ],
+    "technical_errors": []
+  },
+  "archived_responses_reused": 13,
+  "auditor_unchanged": true,
+  "responses": [
+    {
+      "obligation": "a.arithmetic_error_only",
+      "archived_response_sha256": "078ae585bebf5dae6e0901fae248a0284eb6b6e4c3384baac100911273e83014",
+      "original_error": null,
+      "original_provider": {
+        "response_id": "resp_095ca96cd0039d39016b0718b461e087d28b6f14263082faba",
+        "model": "gpt-6.1-sol",
+        "status": "completed",
+        "usage": {
+          "input_tokens": 3187,
+          "input_tokens_details": {
+            "cached_tokens": 0,
+            "cache_write_tokens": 3184,
+            "cache_write_tokens_details": {
+              "ttl_12h_tokens": 0,
+              "ttl_30m_tokens": 3184
+            }
+          },
+          "output_tokens": 119,
+          "output_tokens_details": {
+            "reasoning_tokens": 0
+          },
+          "total_tokens": 3306
+        }
+      },
+      "response": {
+        "decision": "met",
+        "justification": "No item (a), o aluno identifica corretamente o invertido de 731 como 137 e monta a subtração correta. A única falha nesse item é aritmética: afirma 595, enquanto, por conferência, 731 − 137 = 594. Assim, o desenvolvimento apresentado satisfaz o critério de montagem correta com erro apenas aritmético.",
+        "quotes": [
+          "Invertendo 731, obtenho 137. Portanto, 731 - 137 = 595."
+        ]
+      },
+      "new_decision": "met",
+      "new_error": null,
+      "validated_quotes": [
+        {
+          "text": "Invertendo 731, obtenho 137. Portanto, 731 - 137 = 595.",
+          "occurrences": [
+            {
+              "start": 0,
+              "end": 55
+            }
+          ]
+        }
+      ],
+      "authorized_item_ids": [
+        "a"
+      ]
+    },
+    {
+      "obligation": "b.reversed_number",
+      "archived_response_sha256": "71afb8d1be02c93477151b1e9f8febad64024ac6ab8e025a8bfe653c0ca3bcbd",
+      "original_error": null,
+      "original_provider": {
+        "response_id": "resp_09eba36feb51bc85016b0718b84d2887d29cc26069a7ab375c",
+        "model": "gpt-6.1-sol",
+        "status": "completed",
+        "usage": {
+          "input_tokens": 3213,
+          "input_tokens_details": {
+            "cached_tokens": 0,
+            "cache_write_tokens": 3210,
+            "cache_write_tokens_details": {
+              "ttl_12h_tokens": 0,
+              "ttl_30m_tokens": 3210
+            }
+          },
+          "output_tokens": 122,
+          "output_tokens_details": {
+            "reasoning_tokens": 0
+          },
+          "total_tokens": 3335
+        }
+      },
+      "response": {
+        "decision": "met",
+        "justification": "O aluno representa explicitamente o número invertido como 100c+10b+a, colocando c nas centenas, b nas dezenas e a nas unidades. Esse passo também é utilizado na subtração desenvolvida, satisfazendo o critério avaliado.",
+        "quotes": [
+          "O original é 100a+10b+c e o invertido é 100c+10b+a.",
+          "(100a+10b+c)-(100c+10b+a)=99a-99c=99(a-c)."
+        ]
+      },
+      "new_decision": "met",
+      "new_error": null,
+      "validated_quotes": [
+        {
+          "text": "O original é 100a+10b+c e o invertido é 100c+10b+a.",
+          "occurrences": [
+            {
+              "start": 56,
+              "end": 107
+            }
+          ]
+        },
+        {
+          "text": "(100a+10b+c)-(100c+10b+a)=99a-99c=99(a-c).",
+          "occurrences": [
+            {
+              "start": 147,
+              "end": 189
+            }
+          ]
+        }
+      ],
+      "authorized_item_ids": [
+        "b"
+      ]
+    },
+    {
+      "obligation": "b.subtraction",
+      "archived_response_sha256": "b80af33989dcfe389abc0c747e0f0d1a92913de997a46f56a8615bd5e3f8bcbb",
+      "original_error": null,
+      "original_provider": {
+        "response_id": "resp_0d8035b6be73c890016b0718bc12a087d2a12c9aa951a83cdc",
+        "model": "gpt-6.1-sol",
+        "status": "completed",
+        "usage": {
+          "input_tokens": 3219,
+          "input_tokens_details": {
+            "cached_tokens": 0,
+            "cache_write_tokens": 3216,
+            "cache_write_tokens_details": {
+              "ttl_12h_tokens": 0,
+              "ttl_30m_tokens": 3216
+            }
+          },
+          "output_tokens": 129,
+          "output_tokens_details": {
+            "reasoning_tokens": 0
+          },
+          "total_tokens": 3348
+        }
+      },
+      "response": {
+        "decision": "met",
+        "justification": "O aluno monta explicitamente a subtração do número original pelo invertido, com os dois polinômios corretamente agrupados: (100a+10b+c)-(100c+10b+a). Esse passo intermediário está efetivamente escrito e satisfaz o critério avaliado.",
+        "quotes": [
+          "O original é 100a+10b+c e o invertido é 100c+10b+a.",
+          "(100a+10b+c)-(100c+10b+a)=99a-99c=99(a-c)."
+        ]
+      },
+      "new_decision": "met",
+      "new_error": null,
+      "validated_quotes": [
+        {
+          "text": "O original é 100a+10b+c e o invertido é 100c+10b+a.",
+          "occurrences": [
+            {
+              "start": 56,
+              "end": 107
+            }
+          ]
+        },
+        {
+          "text": "(100a+10b+c)-(100c+10b+a)=99a-99c=99(a-c).",
+          "occurrences": [
+            {
+              "start": 147,
+              "end": 189
+            }
+          ]
+        }
+      ],
+      "authorized_item_ids": [
+        "b"
+      ]
+    },
+    {
+      "obligation": "b.middle_cancellation",
+      "archived_response_sha256": "59968dac9bf79f65df5df16ec379c31a12b91d1d3eef22463a6ca25b1c4c8c64",
+      "original_error": null,
+      "original_provider": {
+        "response_id": "resp_03489a1b337a20a8016b0718c0016887d2871d03b17d044b15",
+        "model": "gpt-6.1-sol",
+        "status": "completed",
+        "usage": {
+          "input_tokens": 3220,
+          "input_tokens_details": {
+            "cached_tokens": 0,
+            "cache_write_tokens": 3217,
+            "cache_write_tokens_details": {
+              "ttl_12h_tokens": 0,
+              "ttl_30m_tokens": 3217
+            }
+          },
+          "output_tokens": 129,
+          "output_tokens_details": {
+            "reasoning_tokens": 0
+          },
+          "total_tokens": 3349
+        }
+      },
+      "response": {
+        "decision": "met",
+        "justification": "O aluno explicita o cancelamento dos termos 10b e o sustenta pela subtração algébrica corretamente escrita: o termo +10b do original é subtraído do termo +10b do invertido, resultando em zero. A igualdade apresentada com 99a-99c demonstra esse cancelamento de modo suficiente.",
+        "quotes": [
+          "Subtraindo, os termos 10b se cancelam: (100a+10b+c)-(100c+10b+a)=99a-99c=99(a-c)."
+        ]
+      },
+      "new_decision": "met",
+      "new_error": null,
+      "validated_quotes": [
+        {
+          "text": "Subtraindo, os termos 10b se cancelam: (100a+10b+c)-(100c+10b+a)=99a-99c=99(a-c).",
+          "occurrences": [
+            {
+              "start": 108,
+              "end": 189
+            }
+          ]
+        }
+      ],
+      "authorized_item_ids": [
+        "b"
+      ]
+    },
+    {
+      "obligation": "b.factorization",
+      "archived_response_sha256": "4dfe99e45e8e13d0eb626384422edc66663e0f6515d6e9bc86b492c92b23bbec",
+      "original_error": null,
+      "original_provider": {
+        "response_id": "resp_08feeb763d077695016b0718c39b8487d2a68a321a815ef391",
+        "model": "gpt-6.1-sol",
+        "status": "completed",
+        "usage": {
+          "input_tokens": 3236,
+          "input_tokens_details": {
+            "cached_tokens": 0,
+            "cache_write_tokens": 3233,
+            "cache_write_tokens_details": {
+              "ttl_12h_tokens": 0,
+              "ttl_30m_tokens": 3233
+            }
+          },
+          "output_tokens": 118,
+          "output_tokens_details": {
+            "reasoning_tokens": 0
+          },
+          "total_tokens": 3354
+        }
+      },
+      "response": {
+        "decision": "met",
+        "justification": "O aluno apresenta uma cadeia algébrica válida desde a subtração dos números até 99a−99c=99(a−c). A última igualdade coloca o fator comum 99 em evidência, constituindo desenvolvimento suficiente da fatoração, e não apenas uma conclusão isolada.",
+        "quotes": [
+          "Subtraindo, os termos 10b se cancelam: (100a+10b+c)-(100c+10b+a)=99a-99c=99(a-c)."
+        ]
+      },
+      "new_decision": "met",
+      "new_error": null,
+      "validated_quotes": [
+        {
+          "text": "Subtraindo, os termos 10b se cancelam: (100a+10b+c)-(100c+10b+a)=99a-99c=99(a-c).",
+          "occurrences": [
+            {
+              "start": 108,
+              "end": 189
+            }
+          ]
+        }
+      ],
+      "authorized_item_ids": [
+        "b"
+      ]
+    },
+    {
+      "obligation": "c.uses_expression",
+      "archived_response_sha256": "7a2a56d82bd5e5cecc62947865fb8f1aad839bf140daa44d9587b92cb4795ee6",
+      "original_error": null,
+      "original_provider": {
+        "response_id": "resp_0825a6cb24f6f71d016b0718c76fb887d291691775c56bbd20",
+        "model": "gpt-6.1-sol",
+        "status": "completed",
+        "usage": {
+          "input_tokens": 3314,
+          "input_tokens_details": {
+            "cached_tokens": 0,
+            "cache_write_tokens": 3311,
+            "cache_write_tokens_details": {
+              "ttl_12h_tokens": 0,
+              "ttl_30m_tokens": 3311
+            }
+          },
+          "output_tokens": 213,
+          "output_tokens_details": {
+            "reasoning_tokens": 43
+          },
+          "total_tokens": 3527
+        }
+      },
+      "response": {
+        "decision": "met",
+        "justification": "O aluno deduz corretamente 99(a-c) no item b e utiliza essa expressão no item c ao relacionar os valores de a-c aos resultados múltiplos de 99. Esse uso está suficientemente explicitado pela continuidade do argumento, sem necessidade de repetir a fórmula. A omissão de 792 na lista afeta sua completude, mas não invalida o uso da expressão, único critério avaliado.",
+        "quotes": [
+          "(100a+10b+c)-(100c+10b+a)=99a-99c=99(a-c).",
+          "Como a-c assume valores de 1 a 8, os resultados são 99, 198, 297, 396, 495, 594 e 693."
+        ]
+      },
+      "new_decision": "met",
+      "new_error": null,
+      "validated_quotes": [
+        {
+          "text": "(100a+10b+c)-(100c+10b+a)=99a-99c=99(a-c).",
+          "occurrences": [
+            {
+              "start": 147,
+              "end": 189
+            }
+          ]
+        },
+        {
+          "text": "Como a-c assume valores de 1 a 8, os resultados são 99, 198, 297, 396, 495, 594 e 693.",
+          "occurrences": [
+            {
+              "start": 190,
+              "end": 276
+            }
+          ]
+        }
+      ],
+      "authorized_item_ids": [
+        "b",
+        "c"
+      ]
+    },
+    {
+      "obligation": "c.difference_domain",
+      "archived_response_sha256": "d68be144a94a1972cefb9fe928d9c6b7a78ae63847aa9016c63e9f0de500d23e",
+      "original_error": null,
+      "original_provider": {
+        "response_id": "resp_0384e9b5b44ebf07016b0718cc959c87d295766ebaa5294475",
+        "model": "gpt-6.1-sol",
+        "status": "completed",
+        "usage": {
+          "input_tokens": 3178,
+          "input_tokens_details": {
+            "cached_tokens": 0,
+            "cache_write_tokens": 3175,
+            "cache_write_tokens_details": {
+              "ttl_12h_tokens": 0,
+              "ttl_30m_tokens": 3175
+            }
+          },
+          "output_tokens": 156,
+          "output_tokens_details": {
+            "reasoning_tokens": 0
+          },
+          "total_tokens": 3334
+        }
+      },
+      "response": {
+        "decision": "not_met",
+        "justification": "O aluno afirma corretamente o domínio de a-c, mas não o justifica: usa essa afirmação como premissa para listar os resultados. Não explica por que as condições sobre os algarismos implicam os limites 1 e 8. Para conferência, esses limites decorrem de a>c, c≥1 e a≤9; esse argumento não está apresentado na solução. Assim, há apenas a conclusão isolada, insuficiente para o critério de justificação.",
+        "quotes": [
+          "Como a-c assume valores de 1 a 8, os resultados são 99, 198, 297, 396, 495, 594 e 693."
+        ]
+      },
+      "new_decision": "not_met",
+      "new_error": null,
+      "validated_quotes": [
+        {
+          "text": "Como a-c assume valores de 1 a 8, os resultados são 99, 198, 297, 396, 495, 594 e 693.",
+          "occurrences": [
+            {
+              "start": 190,
+              "end": 276
+            }
+          ]
+        }
+      ],
+      "authorized_item_ids": [
+        "c"
+      ]
+    },
+    {
+      "obligation": "c.complete_list",
+      "archived_response_sha256": "87bf0f1381795cd20d1f53d767adf19e237a14ad2d8fd2635aa3e71ce4fc0cf1",
+      "original_error": null,
+      "original_provider": {
+        "response_id": "resp_0edcca5574126e0c016b0718d092d487d2a143a00c97503b0f",
+        "model": "gpt-6.1-sol",
+        "status": "completed",
+        "usage": {
+          "input_tokens": 3157,
+          "input_tokens_details": {
+            "cached_tokens": 0,
+            "cache_write_tokens": 3154,
+            "cache_write_tokens_details": {
+              "ttl_12h_tokens": 0,
+              "ttl_30m_tokens": 3154
+            }
+          },
+          "output_tokens": 147,
+          "output_tokens_details": {
+            "reasoning_tokens": 0
+          },
+          "total_tokens": 3304
+        }
+      },
+      "response": {
+        "decision": "not_met",
+        "justification": "A lista apresentada contém somente sete resultados e omite 792. Para conferência, esse valor é possível quando a=9 e c=1, pois 99(9−1)=792 (por exemplo, 901−109=792). Embora o aluno afirme que a−c assume valores de 1 a 8, não enumera o resultado correspondente a 8; portanto, não lista todos os valores exigidos.",
+        "quotes": [
+          "Como a-c assume valores de 1 a 8, os resultados são 99, 198, 297, 396, 495, 594 e 693."
+        ]
+      },
+      "new_decision": "not_met",
+      "new_error": null,
+      "validated_quotes": [
+        {
+          "text": "Como a-c assume valores de 1 a 8, os resultados são 99, 198, 297, 396, 495, 594 e 693.",
+          "occurrences": [
+            {
+              "start": 190,
+              "end": 276
+            }
+          ]
+        }
+      ],
+      "authorized_item_ids": [
+        "c"
+      ]
+    },
+    {
+      "obligation": "c.no_extraneous_values",
+      "archived_response_sha256": "6b0be043105c0b0cbdaee4cd8253c37654d3efd42b45dd777d226b4d015ffc22",
+      "original_error": "QuoteOutsideAuthorizedItem",
+      "original_provider": {
+        "response_id": "resp_073673b978ba1cce016b0718d42c4087d29128ae701f2687f1",
+        "model": "gpt-6.1-sol",
+        "status": "completed",
+        "usage": {
+          "input_tokens": 3171,
+          "input_tokens_details": {
+            "cached_tokens": 0,
+            "cache_write_tokens": 3168,
+            "cache_write_tokens_details": {
+              "ttl_12h_tokens": 0,
+              "ttl_30m_tokens": 3168
+            }
+          },
+          "output_tokens": 170,
+          "output_tokens_details": {
+            "reasoning_tokens": 0
+          },
+          "total_tokens": 3341
+        }
+      },
+      "response": {
+        "decision": "met",
+        "justification": "Todos os valores efetivamente listados são resultados possíveis: 99, 198, 297, 396, 495, 594 e 693 correspondem a 99(a-c) para diferenças de 1 a 7, permitidas pelas hipóteses. Não há valores indevidos nem repetições. A omissão de 792 torna a lista incompleta, mas não viola o critério específico avaliado.",
+        "quotes": [
+          "Como a-c assume valores de 1 a 8, os resultados são 99, 198, 297, 396, 495, 594 e 693.",
+          "(100a+10b+c)-(100c+10b+a)=99a-99c=99(a-c)."
+        ]
+      },
+      "new_decision": "met",
+      "new_error": null,
+      "validated_quotes": [
+        {
+          "text": "Como a-c assume valores de 1 a 8, os resultados são 99, 198, 297, 396, 495, 594 e 693.",
+          "occurrences": [
+            {
+              "start": 190,
+              "end": 276
+            }
+          ]
+        },
+        {
+          "text": "(100a+10b+c)-(100c+10b+a)=99a-99c=99(a-c).",
+          "occurrences": [
+            {
+              "start": 147,
+              "end": 189
+            }
+          ]
+        }
+      ],
+      "authorized_item_ids": [
+        "b",
+        "c"
+      ]
+    },
+    {
+      "obligation": "c.single_list_error",
+      "archived_response_sha256": "cac48d9cb32cb7724075b9d3b9c08f67ba4d3c77de2532971eeab9928d0173b9",
+      "original_error": null,
+      "original_provider": {
+        "response_id": "resp_08d699c8b434c7d1016b0718d8899487d28f7935f117814feb",
+        "model": "gpt-6.1-sol",
+        "status": "completed",
+        "usage": {
+          "input_tokens": 3187,
+          "input_tokens_details": {
+            "cached_tokens": 0,
+            "cache_write_tokens": 3184,
+            "cache_write_tokens_details": {
+              "ttl_12h_tokens": 0,
+              "ttl_30m_tokens": 3184
+            }
+          },
+          "output_tokens": 166,
+          "output_tokens_details": {
+            "reasoning_tokens": 0
+          },
+          "total_tokens": 3353
+        }
+      },
+      "response": {
+        "decision": "met",
+        "justification": "A lista escrita contém sete valores distintos, todos corretos, correspondentes a 99 vezes os inteiros de 1 a 7. Conferindo pelas hipóteses, a diferença a-c pode assumir os valores de 1 a 8; portanto, falta apenas 99·8 = 792, possível, por exemplo, para a=9 e c=1. Há exatamente uma omissão, sem valores indevidos nem repetições. O erro aritmético do item (a) não compromete esta enumeração.",
+        "quotes": [
+          "Como a-c assume valores de 1 a 8, os resultados são 99, 198, 297, 396, 495, 594 e 693."
+        ]
+      },
+      "new_decision": "met",
+      "new_error": null,
+      "validated_quotes": [
+        {
+          "text": "Como a-c assume valores de 1 a 8, os resultados são 99, 198, 297, 396, 495, 594 e 693.",
+          "occurrences": [
+            {
+              "start": 190,
+              "end": 276
+            }
+          ]
+        }
+      ],
+      "authorized_item_ids": [
+        "c"
+      ]
+    },
+    {
+      "obligation": "d.digit_pairs",
+      "archived_response_sha256": "fdb403fe80f3c3ecc54f4adc18ba3fc38fce6dbaff8fb963dd5784a109d21613",
+      "original_error": null,
+      "original_provider": {
+        "response_id": "resp_08fb5ece4299647b016b0718dcc14087d2a5e023ce054c87f8",
+        "model": "gpt-6.1-sol",
+        "status": "completed",
+        "usage": {
+          "input_tokens": 3215,
+          "input_tokens_details": {
+            "cached_tokens": 0,
+            "cache_write_tokens": 3212,
+            "cache_write_tokens_details": {
+              "ttl_12h_tokens": 0,
+              "ttl_30m_tokens": 3212
+            }
+          },
+          "output_tokens": 123,
+          "output_tokens_details": {
+            "reasoning_tokens": 0
+          },
+          "total_tokens": 3338
+        }
+      },
+      "response": {
+        "decision": "met",
+        "justification": "O aluno enumera explicitamente e sem repetições exatamente os três pares exigidos. A lista é matematicamente correta: com a-c=6, c não nulo e a≤9, os pares possíveis são precisamente (7,1), (8,2) e (9,3).",
+        "quotes": [
+          "Para o resultado 594, 99(a-c)=594, portanto a-c=6.",
+          "Os pares são (7,1), (8,2) e (9,3)."
+        ]
+      },
+      "new_decision": "met",
+      "new_error": null,
+      "validated_quotes": [
+        {
+          "text": "Para o resultado 594, 99(a-c)=594, portanto a-c=6.",
+          "occurrences": [
+            {
+              "start": 277,
+              "end": 327
+            }
+          ]
+        },
+        {
+          "text": "Os pares são (7,1), (8,2) e (9,3).",
+          "occurrences": [
+            {
+              "start": 328,
+              "end": 362
+            }
+          ]
+        }
+      ],
+      "authorized_item_ids": [
+        "d"
+      ]
+    },
+    {
+      "obligation": "d.middle_choices",
+      "archived_response_sha256": "a82814b8ba7447591f77fda9e1f57db559c0575eafce3878ff961b3ccc811439",
+      "original_error": "QuoteOutsideAuthorizedItem",
+      "original_provider": {
+        "response_id": "resp_09af3b592bc67967016b0718e018d487d298ce7740a433d067",
+        "model": "gpt-6.1-sol",
+        "status": "completed",
+        "usage": {
+          "input_tokens": 3186,
+          "input_tokens_details": {
+            "cached_tokens": 0,
+            "cache_write_tokens": 3183,
+            "cache_write_tokens_details": {
+              "ttl_12h_tokens": 0,
+              "ttl_30m_tokens": 3183
+            }
+          },
+          "output_tokens": 245,
+          "output_tokens_details": {
+            "reasoning_tokens": 72
+          },
+          "total_tokens": 3431
+        }
+      },
+      "response": {
+        "decision": "met",
+        "justification": "A afirmação de dez escolhas não está isolada: o aluno demonstrou anteriormente que os termos em b se cancelam e que o resultado depende apenas de a-c. Assim, para cada par fixado, a afirmação de dez escolhas para o algarismo b é sustentada pela independência do resultado em relação a ele. Trata-se de justificativa abreviada suficiente no contexto do problema.",
+        "quotes": [
+          "Subtraindo, os termos 10b se cancelam: (100a+10b+c)-(100c+10b+a)=99a-99c=99(a-c).",
+          "Os pares são (7,1), (8,2) e (9,3). Há 10 escolhas para b em cada par."
+        ]
+      },
+      "new_decision": "met",
+      "new_error": null,
+      "validated_quotes": [
+        {
+          "text": "Subtraindo, os termos 10b se cancelam: (100a+10b+c)-(100c+10b+a)=99a-99c=99(a-c).",
+          "occurrences": [
+            {
+              "start": 108,
+              "end": 189
+            }
+          ]
+        },
+        {
+          "text": "Os pares são (7,1), (8,2) e (9,3). Há 10 escolhas para b em cada par.",
+          "occurrences": [
+            {
+              "start": 328,
+              "end": 397
+            }
+          ]
+        }
+      ],
+      "authorized_item_ids": [
+        "b",
+        "d"
+      ]
+    },
+    {
+      "obligation": "d.total_thirty",
+      "archived_response_sha256": "fdc72a8741009602722479d88d39a9b591f1fe22c1e7d7a52f2a8e4348a4b4bc",
+      "original_error": null,
+      "original_provider": {
+        "response_id": "resp_01ae4261be54504e016b0718e5cac087d28d11c91ba0c513af",
+        "model": "gpt-6.1-sol",
+        "status": "completed",
+        "usage": {
+          "input_tokens": 3209,
+          "input_tokens_details": {
+            "cached_tokens": 0,
+            "cache_write_tokens": 3206,
+            "cache_write_tokens_details": {
+              "ttl_12h_tokens": 0,
+              "ttl_30m_tokens": 3206
+            }
+          },
+          "output_tokens": 130,
+          "output_tokens_details": {
+            "reasoning_tokens": 0
+          },
+          "total_tokens": 3339
+        }
+      },
+      "response": {
+        "decision": "met",
+        "justification": "O aluno conclui explicitamente que há 30 números, a partir dos três pares admissíveis de centenas e unidades e das dez escolhas para o algarismo central em cada par. A contagem corresponde corretamente a 3 × 10 = 30 números distintos. Os erros nos itens anteriores não comprometem essa dedução, que é independentemente correta.",
+        "quotes": [
+          "Os pares são (7,1), (8,2) e (9,3).",
+          "Há 10 escolhas para b em cada par. Logo, 30 números."
+        ]
+      },
+      "new_decision": "met",
+      "new_error": null,
+      "validated_quotes": [
+        {
+          "text": "Os pares são (7,1), (8,2) e (9,3).",
+          "occurrences": [
+            {
+              "start": 328,
+              "end": 362
+            }
+          ]
+        },
+        {
+          "text": "Há 10 escolhas para b em cada par. Logo, 30 números.",
+          "occurrences": [
+            {
+              "start": 363,
+              "end": 415
+            }
+          ]
+        }
+      ],
+      "authorized_item_ids": [
+        "d"
+      ]
+    }
+  ],
+  "conclusions": {
+    "d.middle_choices": "Resposta met e citações literais válidas. QuoteOutsideAuthorizedItem foi provocado pela citação do cancelamento de 10b em b, que justifica as dez escolhas afirmadas em d. Adicionada dependência de evidência b para essa obrigação.",
+    "c.no_extraneous_values": "Resposta met e citações literais válidas. O validador rejeitou a fórmula provada em b, utilizada para conferir os valores da lista em c. Adicionada dependência de evidência b; a mesma falha pode impedir a faixa completa porque ela requer esta obrigação.",
+    "c.difference_domain": "not_met original preservado. A pauta exige justificar o intervalo; o aluno apenas o afirma. Trata-se de critério não atendido, não de falsidade matemática do intervalo. O vocabulário interno refuted permanece compatível com o PautaEngine; o rótulo de apresentação agora distingue o parecer semântico.",
+    "scoring": "a=2, b=5, c=4 (expressão 1, domínio 0, lista com uma omissão 3), d=6. A pauta original calcula 17/20.",
+    "scope": "Não há liberação geral de citações entre itens, preenchimento de item ausente, relaxamento de literalidade, nova inferência ou alteração de pesos."
+  }
+}

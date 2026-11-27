@@ -1,0 +1,23 @@
+"""Run the two formal failures with the original HEAD main module in memory.
+All other existing Python source files are unchanged. No checkout/file rewrite.
+"""
+from pathlib import Path
+import importlib
+import subprocess
+import sys
+import types
+import pytest
+root = Path.cwd()
+source = subprocess.check_output(['git', 'show', 'HEAD:app/confia_lean_auditor/main.py'], text=True)
+name = 'confia_lean_auditor.main'
+package = importlib.import_module('confia_lean_auditor')
+module = types.ModuleType(name)
+module.__file__ = str(root / 'app/confia_lean_auditor/main.py')
+module.__package__ = 'confia_lean_auditor'
+sys.modules[name] = module
+setattr(package, 'main', module)
+exec(compile(source, module.__file__, 'exec'), module.__dict__)
+assert not any(getattr(route, 'path', '').startswith('/dynamic') for route in module.app.routes)
+print('Baseline main loaded directly from current HEAD; no Dynamic router; unchanged specialized modules.', flush=True)
+sys.exit(pytest.main(['-q', 'tests/test_submission_audits.py::test_real_bridge_preserves_wrong_solution_and_runs_existing_lean_pipeline',
+    'tests/test_tme_accepted_integration.py::test_real_local_lean_status_certificates_preserved']))

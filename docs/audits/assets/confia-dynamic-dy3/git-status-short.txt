@@ -1,0 +1,28 @@
+ M app/confia_lean_auditor/dynamic/router.py
+ M app/confia_lean_auditor/dynamic/store.py
+ M app/confia_lean_auditor/static/dynamic.js
+ M app/confia_lean_auditor/static/tme/correction-workspace.js
+ M app/confia_lean_auditor/static/tme/index.html
+ M app/confia_lean_auditor/static/tme/secondary-views.js
+ M app/confia_lean_auditor/static/tme/tme.js
+ M app/confia_lean_auditor/static/tme/workspace-report.js
+ M app/confia_lean_auditor/submission_audits/artifacts.py
+ M app/confia_lean_auditor/submission_audits/schemas.py
+ M app/confia_lean_auditor/submission_audits/service.py
+ M app/confia_lean_auditor/submissions/schemas.py
+ M app/confia_lean_auditor/submissions/store.py
+ M app/confia_lean_auditor/teacher_decisions/service.py
+ M app/confia_lean_auditor/tme/home_summary.py
+ M app/confia_lean_auditor/tme/models.py
+ M app/confia_lean_auditor/tme/router.py
+ M app/confia_lean_auditor/tme/store.py
+ M tests/test_dynamic_dy1.py
+ M tests/test_dynamic_dy2.py
+?? app/confia_lean_auditor/dynamic/grader.py
+?? app/confia_lean_auditor/dynamic/grading_context.py
+?? app/confia_lean_auditor/dynamic/grading_models.py
+?? app/confia_lean_auditor/submissions/text_source.py
+?? docs/audits/CONFIA_DYNAMIC_DY3_GRADER_IMPLEMENTACAO_01.md
+?? docs/audits/assets/confia-dynamic-dy3/
+?? tests/js/test_dynamic_dy3.cjs
+?? tests/test_dynamic_dy3.py

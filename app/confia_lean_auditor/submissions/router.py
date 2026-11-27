@@ -14,7 +14,7 @@ from confia_lean_auditor.core.paths import get_repo_root
 from confia_lean_auditor.auth.dependencies import (
     require_any_role, require_role, visible_submissions,
     student_submission_access, submission_access, teacher_submission_access,
-    teacher_transcription_access,
+    teacher_transcription_access, recognition_write_access,
 )
 from confia_lean_auditor.auth.models import AuthUser, Role
 from confia_lean_auditor.institutional.store import InstitutionalScopeError, institutional_store
@@ -194,7 +194,7 @@ def recognize_body(submission_id, raw):
 
 @router.post("/{submission_id}/recognitions", response_model=RecognitionResponse)
 async def recognize_submission(submission_id: str, request: Request, response: Response,
-                               _record=Depends(student_submission_access)):
+                               _record=Depends(recognition_write_access)):
     # The body limiter bounds reads. Parse within guarded so rejected extras cannot
     # echo possible secrets/manuscript in FastAPI's default validation errors.
     if request.headers.get("content-type", "").split(";")[0].strip().lower() != "application/json":

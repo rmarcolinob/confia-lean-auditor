@@ -1,0 +1,92 @@
+{
+  "date": "2026-11-26",
+  "validation_code_commit": "dd61720621190b5eb235a094101825463420192f",
+  "main_base": "8fde840d95fa4df0553b915d7b60301c9892aa65",
+  "global_initial": {
+    "started_at_commit": "8ee1830e258daf1a08d3c948c15587a264bed1da",
+    "collected": 3644,
+    "passed": 3586,
+    "failed": 4,
+    "skipped": 53,
+    "xfailed": 1,
+    "duration_seconds": 5505.5,
+    "note": "Full initial log retained. Corrections were verified separately; this is not a claimed all-green rerun of the final snapshot.",
+    "raw_log_sha256": "de0c1c7f34d7aa55c8e821f374738e65b03504003cb675c0399eaea8a5f37340",
+    "published_log_normalization": "Trailing whitespace only; assertions, failures, counts and skip reasons retained."
+  },
+  "rechecks": {
+    "recognition": {
+      "passed": 100,
+      "seconds": 6.15
+    },
+    "integrity_auth_dynamic": {
+      "passed": 146,
+      "deselected": 1,
+      "seconds": 158.01,
+      "deselected_test": "test_real_bridge_preserves_wrong_solution_and_runs_existing_lean_pipeline; executed in global run"
+    },
+    "ui": {
+      "passed": 45,
+      "seconds": 3.37
+    },
+    "javascript": {
+      "passed": 620,
+      "failed": 0,
+      "seconds": 2.98014
+    }
+  },
+  "fresh_clone": {
+    "independent_virtualenv": true,
+    "origin": "local integration repository, --no-local clone",
+    "auth_institutional_budget_passed": 21,
+    "benchmark_passed": 15,
+    "integrity_passed": 8,
+    "http_startup_verified": true,
+    "mathlib_rebuilt_from_scratch": false
+  },
+  "limitations": [
+    "53 skips retain their exact reasons in the global log; do not treat as passes",
+    "ITA CAP04 real Lean parity was NOT_COMPARABLE_TECHNICAL_AVAILABILITY; parity not approved",
+    "Known legacy ITA F2Q6 extraction xfail",
+    "Prior intermittent P3 cause not resolved",
+    "No paid providers, independent gold or real student photographs used"
+  ],
+  "artifacts": {
+    "fresh-clone-integrity.txt": {
+      "sha256": "f95a176c18384947a627b22a797e07234616a7bfd57788d683e3b2fc0a01f043",
+      "size_bytes": 98
+    },
+    "fresh-clone-tests.txt": {
+      "sha256": "00b2d3d6db94fec1d4e59b8b612e21e0a6d4d3c8edcfc0e57bf052aaebd84b2e",
+      "size_bytes": 100
+    },
+    "integrity-recheck.txt": {
+      "sha256": "677d6915dd49ea3371259a8aa604b54e60f40f335300fb8a92995c1d5b19f029",
+      "size_bytes": 286
+    },
+    "interfaces.jpg": {
+      "sha256": "a6b5666a43d1e18b2485d82c42779143b0a0bbb18b06458e320c357d311b3d3c",
+      "size_bytes": 231137
+    },
+    "javascript.txt": {
+      "sha256": "05ab7f8be5eccbfced60260ec9d850ad677262f5aadfa7a04125a591cf3b2ae9",
+      "size_bytes": 59646
+    },
+    "python-global-initial.txt": {
+      "sha256": "e8adbf819bdc5880900c91fb5b30b9c27482ae951f433dac3b104036799ce14c",
+      "size_bytes": 10189
+    },
+    "recognition-recheck.txt": {
+      "sha256": "546eaa45e5f8d7e19cc7559adc87101870712f9fdde905e175e60534d4bc3829",
+      "size_bytes": 180
+    },
+    "specialized-integrity.json": {
+      "sha256": "303a11cd9c716032612a55e4f40b5a302628ab284c14a8eb16a1535507edcc9c",
+      "size_bytes": 273
+    },
+    "ui-recheck.txt": {
+      "sha256": "2b7d8f20bde3abe4cc89d6aaceed663ec2d5106b9eedfd73d8ca213150128e1c",
+      "size_bytes": 99
+    }
+  }
+}

@@ -1,0 +1,18 @@
+ M app/confia_lean_auditor/static/tme/full-exam.js
+ M app/confia_lean_auditor/static/tme/index.html
+ M app/confia_lean_auditor/tme/certification.py
+ M app/confia_lean_auditor/tme/certification_gold.py
+ M app/confia_lean_auditor/tme/certification_router.py
+?? app/confia_lean_auditor/tme/certification_dynamic.py
+?? app/confia_lean_auditor/tme/certification_experiment_metrics.py
+?? app/confia_lean_auditor/tme/certification_models.py
+?? app/confia_lean_auditor/tme/certification_paired.py
+?? app/confia_lean_auditor/tme/certification_runs.py
+?? benchmarks/dynamic/
+?? docs/audits/CONFIA_DYNAMIC_DY7_BENCHMARK_01.md
+?? docs/audits/CONFIA_DYNAMIC_DY7_CERTIFICATION_IMPLEMENTACAO_01.md
+?? docs/audits/assets/confia-dynamic-dy7/
+?? docs/integration/DYNAMIC_CERTIFICATION_PROTOCOL.md
+?? scripts/evaluation/run_dynamic_certification.py
+?? tests/js/test_dynamic_dy7.cjs
+?? tests/test_dynamic_dy7.py

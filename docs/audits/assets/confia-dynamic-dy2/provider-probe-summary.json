@@ -1,0 +1,39 @@
+[
+  {
+    "problem_id": "dyn_6504b9f3aab84e03b2b3a40f928c8642",
+    "preparations": [
+      {
+        "id": "dprep_6c98fc4b73e64479a306aa3109d01e77",
+        "status": "FAILED",
+        "failure": "PROVIDER_INVALID_OUTPUT"
+      },
+      {
+        "id": "dprep_fcbc7e3e5a554dcd811cd6092ecac52d",
+        "status": "FAILED",
+        "failure": "PROVIDER_INVALID_OUTPUT"
+      },
+      {
+        "id": "dprep_cf8258d7b4254dc3b874b9c4ff807e80",
+        "status": "REVIEW_REQUIRED",
+        "failure": null
+      }
+    ],
+    "failed_suggestions": [
+      {
+        "code": "PROVIDER_INCOMPLETE_OR_REFUSED",
+        "response_id": null
+      },
+      {
+        "code": "PROVIDER_INCOMPLETE_OR_REFUSED",
+        "response_id": "resp_0099a55913e6d859016af51624d16087d195f2e2ee90b90a7e"
+      },
+      {
+        "code": "PROVIDER_INCOMPLETE_OR_REFUSED",
+        "response_id": "resp_08315c27bba5f322016af51678537487d1a1748ef506c23238"
+      }
+    ],
+    "successful_rubric_statuses": [
+      "DRAFT_AI"
+    ]
+  }
+]

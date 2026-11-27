@@ -76,7 +76,9 @@
     const { schoolId, classroomId } = context();
     list.replaceChildren(); progress.hidden = true; progress.replaceChildren();
     get("teacher-create-exam").disabled = !schoolId || !classroomId;
-    if (!schoolId || !classroomId) { message.textContent = "Selecione uma escola e uma turma."; return; }
+    if (!schoolId || !classroomId) { message.textContent = window.ConfIAAuthUser
+      ? "Selecione uma escola e uma turma."
+      : "Atividades institucionais exigem sessão docente e vínculo com uma turma. No piloto local, use DYNAMIC para criar ou retomar uma atividade."; return; }
     message.textContent = "Carregando exames…";
     try {
       const data = await request(`/assessments?school_id=${encodeURIComponent(schoolId)}&classroom_id=${encodeURIComponent(classroomId)}`);

@@ -1,0 +1,16 @@
+{
+  "python": "3.9.6",
+  "dependencies": {
+    "pydantic": "2.13.5",
+    "fastapi": "0.128.8",
+    "pytest": "8.4.2",
+    "httpx": "0.28.1",
+    "openai": "2.48.0",
+    "uvicorn": "0.39.0"
+  },
+  "worktree": "/Users/LinMarcolino/Documents/confia-lean-auditor-dynamic",
+  "external_worktrees_used": false,
+  "credential_values_recorded": false,
+  "live_provider": "openai",
+  "live_model": "gpt-4.1-2025-04-14"
+}

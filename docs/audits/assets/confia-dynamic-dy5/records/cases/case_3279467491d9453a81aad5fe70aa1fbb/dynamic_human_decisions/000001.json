@@ -1,0 +1,32 @@
+{
+  "data": {
+    "sequence": 1,
+    "previous_sha256": null,
+    "request_sha256": "69473e957f1141ae76937985ff4310ea478fd59ff7b954de70742bb70eb174ee",
+    "decision": {
+      "reconciliation_id": "drec_8f06d8de4bf24ebd71d0b6bdd970f9574134129551307854d6969d043674016e",
+      "audit_run_id": "aud_e3bea497dc5c011ed2e61ae2e2010293eb8c2053fa1c9a48fccf0019b8dd89a5",
+      "max_points": "10",
+      "final_points": "10",
+      "feedback": "",
+      "override_reason": "Cenário sintético DY5: método equivalente conferido pelo avaliador; crédito recuperado após revisão docente.",
+      "reconciliation_sha256": "660f8cc6a5f02034c380e4a3062c1d3d2c797e62041668e37c5a67643bfc5983",
+      "grader_suggested_points": "6.0",
+      "independent_review_id": "drev_58eca530c96686e8e6538827d114bdc8d187d3c113c9b4a8958da2060a59bbf0",
+      "transcription_version_id": "tr_6ba51d1d7d9f44d1bbe1962da38c8b59:1",
+      "review_required_snapshot": true,
+      "review_reasons_snapshot": [
+        "method: Evidência fiel e verificável satisfaz a rubrica; crédito legítimo identificado. Perfil SCHOOL_EXAM exige homologação da divergência; sem ajuste automático."
+      ],
+      "human_decision_id": "hdec_660936fb1f5841d1a029ac088c49c9e0",
+      "case_id": "case_3279467491d9453a81aad5fe70aa1fbb",
+      "decided_by_user_id": "tme-demo-evaluator",
+      "decided_at": "2026-11-12T03:47:38.708662Z",
+      "audit_source_sha256": "006a661a2ec10a3e9bbd7ca5563cb1395d2147270fca7772114c6ebe5a235742",
+      "audit_result_sha256": "9515e3d6e76cf8d55478d5f20b5606c1413a770f26319ebd5cb50e9bece2791c",
+      "suggested_points": "6",
+      "schema_version": "1.0"
+    }
+  },
+  "sha256": "79a347d0168a010bf49fca711b442f1ce686ccd446d7bda024a26ab0e90824e4"
+}

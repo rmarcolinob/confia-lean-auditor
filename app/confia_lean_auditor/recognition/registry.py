@@ -63,7 +63,9 @@ def configured_registry() -> RecognizerRegistry:
     registry = RecognizerRegistry()
     if os.environ.get("CONFIA_MATHPIX_APP_ID") and os.environ.get("CONFIA_MATHPIX_APP_KEY"):
         from confia_lean_auditor.recognition.mathpix import MathpixRecognitionProvider
+        from confia_lean_auditor.recognition.mathpix_image import MathpixImageProvider
         registry.register("mathpix", MathpixRecognitionProvider)
+        registry.register("mathpix_image", MathpixImageProvider)
     if os.environ.get("CONFIA_ENV", "production") in {"development", "test"}:
         from confia_lean_auditor.recognition.fake import FakeTestRecognizer
         registry.register("fake_test", FakeTestRecognizer)

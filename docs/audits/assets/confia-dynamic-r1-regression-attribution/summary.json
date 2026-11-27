@@ -1,0 +1,76 @@
+{
+  "baseline_counts": {
+    "PASS": 0,
+    "FAIL": 105,
+    "SKIP": 0,
+    "ERROR": 0,
+    "INCOMPLETE": 0
+  },
+  "r1_counts": {
+    "PASS": 0,
+    "FAIL": 105,
+    "SKIP": 0,
+    "ERROR": 0,
+    "INCOMPLETE": 0
+  },
+  "paired_counts": {
+    "FAIL_BOTH_SAME_FINGERPRINT": 105
+  },
+  "same_traceback": 101,
+  "same_assertion": 101,
+  "formal_cases": 102,
+  "formal_environment_confirmed": 102,
+  "formal_same_source_sequence": 102,
+  "formal_baseline_verification_calls": 435,
+  "formal_r1_verification_calls": 435,
+  "PASS_BASELINE_FAIL_R1": [],
+  "unresolved": [],
+  "contracts": {
+    "baseline_counts": {
+      "PASS": 613,
+      "FAIL": 4,
+      "SKIP": 2,
+      "ERROR": 0,
+      "INCOMPLETE": 0
+    },
+    "r1_counts": {
+      "PASS": 705,
+      "FAIL": 4,
+      "SKIP": 2,
+      "ERROR": 0,
+      "INCOMPLETE": 0
+    },
+    "common_node_count": 619,
+    "paired_counts": {
+      "PASS_BOTH": 613,
+      "FAIL_BOTH_SAME_FINGERPRINT": 4,
+      "SKIP_BOTH_NOT_EXECUTED": 2
+    },
+    "baseline_only": [],
+    "dynamic_r1_counts": {
+      "PASS": 306
+    },
+    "shared_r1_counts": {
+      "PASS": 399,
+      "FAIL": 4,
+      "SKIP": 2
+    },
+    "r1_only_counts": {
+      "PASS": 92
+    }
+  },
+  "NEW_R1_REGRESSIONS": 0,
+  "same_attribution_traceback": 105,
+  "provisional_verdict": "R1_REGRESSION_ATTRIBUTION_CLEAN",
+  "verdict": "R1_REGRESSION_ATTRIBUTION_CLEAN",
+  "baseline_sha": "5aa7344e5904305a414688741f83aafc7d610200",
+  "product_code_preserved": true,
+  "holdout_v2_started": false,
+  "integrity_checks_passed": true,
+  "report": "/Users/LinMarcolino/Documents/confia-lean-auditor-dynamic/docs/audits/CONFIA_DYNAMIC_R1_REGRESSION_ATTRIBUTION_01.md",
+  "original_full_suite_counts": {
+    "passed": 3009,
+    "skipped": 47,
+    "failed": 105
+  }
+}

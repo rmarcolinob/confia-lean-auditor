@@ -1,0 +1,3699 @@
+{
+  "schema_version": "tme-audit-result.v1",
+  "problem_id": "TME2026P1",
+  "accepted_transcription_revision_id": "tr_8a456e91a2b34ecabde5a1ef4534881d:1",
+  "accepted_revision_sha256": "4fc1240dcdcbd989ba8dfee789ba32255f3a6a3d2dbd9e1dbe3149943c990985",
+  "context": {
+    "semantic_policy": "semantic-b-minimal.v1",
+    "auditor_version": "tme-integration.v1:cb1c1bc1615298ad23c30024a404da7fd49893462f96b6d046f42b7355d42703",
+    "pauta_version": "pauta.v1",
+    "pauta_sha256": "76887c541019255a3ac4522e13debaff32aa739a604198e4e35a52e0b0ecd0bf",
+    "use_lean": true
+  },
+  "artifact_dir": "/Users/LinMarcolino/Documents/confia-lean-auditor/artifacts/worktrees/confia-dec10-integration/runtime/pilot-dec10/submission_audits/artifacts/aud_5b0f90a76bf2bc56abff79009130daa25524c8853f6f14eb3797ec476d383027-ed34f75dcb724356a011638291ae0ec5",
+  "pauta": {
+    "schema_version": "pauta.v1",
+    "problem_id": "TME2_P1_PILOT",
+    "title": "TME² — Problema 1 (piloto do contrato de pauta fornecido)",
+    "max_score": "20",
+    "unresolved_policy": "withhold",
+    "obligations": [
+      {
+        "id": "a.identifies_137",
+        "description": "Identifica 137 como o número requerido.",
+        "accepted_origins": [
+          "deterministic",
+          "student_lean"
+        ]
+      },
+      {
+        "id": "a.constructs_subtraction",
+        "description": "Monta a subtração 731 - 137.",
+        "accepted_origins": [
+          "deterministic",
+          "student_lean"
+        ]
+      },
+      {
+        "id": "a.result_594",
+        "description": "Conclui que a subtração montada resulta em 594.",
+        "accepted_origins": [
+          "deterministic",
+          "student_lean"
+        ]
+      },
+      {
+        "id": "a.arithmetic_error_only",
+        "description": "A montagem é correta e a única falha é aritmética, conforme evidência avaliada upstream.",
+        "accepted_origins": [
+          "deterministic",
+          "student_lean"
+        ]
+      },
+      {
+        "id": "b.reversed_number",
+        "description": "Representa o invertido como 100c + 10b + a.",
+        "accepted_origins": [
+          "deterministic",
+          "student_lean"
+        ]
+      },
+      {
+        "id": "b.subtraction",
+        "description": "Monta corretamente (100a+10b+c) - (100c+10b+a).",
+        "accepted_origins": [
+          "deterministic",
+          "student_lean"
+        ]
+      },
+      {
+        "id": "b.middle_cancellation",
+        "description": "Justifica o cancelamento dos termos 10b na subtração.",
+        "accepted_origins": [
+          "deterministic",
+          "student_lean"
+        ]
+      },
+      {
+        "id": "b.factorization",
+        "description": "Desenvolve a simplificação 99a - 99c = 99(a-c), com justificação atribuída.",
+        "accepted_origins": [
+          "deterministic",
+          "student_lean"
+        ]
+      },
+      {
+        "id": "c.uses_expression",
+        "description": "Utiliza 99(a-c) no item c.",
+        "accepted_origins": [
+          "deterministic",
+          "student_lean"
+        ]
+      },
+      {
+        "id": "c.difference_domain",
+        "description": "Justifica a-c pertencente a {1,...,8}.",
+        "accepted_origins": [
+          "deterministic",
+          "student_lean"
+        ]
+      },
+      {
+        "id": "c.complete_list",
+        "description": "Lista todos os valores exigidos.",
+        "accepted_origins": [
+          "deterministic",
+          "student_lean"
+        ]
+      },
+      {
+        "id": "c.no_extraneous_values",
+        "description": "A lista não contém valores indevidos.",
+        "accepted_origins": [
+          "deterministic",
+          "student_lean"
+        ]
+      },
+      {
+        "id": "c.single_list_error",
+        "description": "A lista tem exatamente uma omissão ou exatamente um valor indevido, e nenhuma outra falha.",
+        "accepted_origins": [
+          "deterministic",
+          "student_lean"
+        ]
+      },
+      {
+        "id": "c.several_correct",
+        "description": "Apresenta vários valores corretos.",
+        "accepted_origins": [
+          "deterministic",
+          "student_lean"
+        ]
+      },
+      {
+        "id": "c.pattern_recognized",
+        "description": "Reconhece o padrão matemático dos valores.",
+        "accepted_origins": [
+          "deterministic",
+          "student_lean"
+        ]
+      },
+      {
+        "id": "c.some_correct",
+        "description": "Apresenta alguns valores corretos.",
+        "accepted_origins": [
+          "deterministic",
+          "student_lean"
+        ]
+      },
+      {
+        "id": "d.equation",
+        "description": "Estabelece 99(a-c)=594.",
+        "accepted_origins": [
+          "deterministic",
+          "student_lean"
+        ]
+      },
+      {
+        "id": "d.difference_six",
+        "description": "Obtém a-c=6.",
+        "accepted_origins": [
+          "deterministic",
+          "student_lean"
+        ]
+      },
+      {
+        "id": "d.digit_pairs",
+        "description": "Identifica exatamente os pares (7,1), (8,2), (9,3).",
+        "accepted_origins": [
+          "deterministic",
+          "student_lean"
+        ]
+      },
+      {
+        "id": "d.middle_choices",
+        "description": "Justifica dez possibilidades para b.",
+        "accepted_origins": [
+          "deterministic",
+          "student_lean"
+        ]
+      },
+      {
+        "id": "d.total_thirty",
+        "description": "Conclui o total 30 a partir dos pares e das dez possibilidades.",
+        "accepted_origins": [
+          "deterministic",
+          "student_lean"
+        ]
+      }
+    ],
+    "items": [
+      {
+        "id": "a",
+        "description": "",
+        "scoring_strategy": "banded",
+        "max_points": "3",
+        "obligation_ids": [],
+        "children": [
+          {
+            "id": "a.full",
+            "description": "",
+            "scoring_strategy": "all_of",
+            "max_points": "3",
+            "obligation_ids": [
+              "a.identifies_137",
+              "a.constructs_subtraction",
+              "a.result_594"
+            ],
+            "children": [],
+            "carry_forward": null
+          },
+          {
+            "id": "a.arithmetic_only",
+            "description": "",
+            "scoring_strategy": "all_of",
+            "max_points": "2",
+            "obligation_ids": [
+              "a.identifies_137",
+              "a.constructs_subtraction",
+              "a.arithmetic_error_only"
+            ],
+            "children": [],
+            "carry_forward": null
+          },
+          {
+            "id": "a.identification",
+            "description": "",
+            "scoring_strategy": "all_of",
+            "max_points": "1",
+            "obligation_ids": [
+              "a.identifies_137"
+            ],
+            "children": [],
+            "carry_forward": null
+          }
+        ],
+        "carry_forward": null
+      },
+      {
+        "id": "b",
+        "description": "",
+        "scoring_strategy": "additive",
+        "max_points": "5",
+        "obligation_ids": [],
+        "children": [
+          {
+            "id": "b.reverse",
+            "description": "",
+            "scoring_strategy": "all_of",
+            "max_points": "2",
+            "obligation_ids": [
+              "b.reversed_number"
+            ],
+            "children": [],
+            "carry_forward": null
+          },
+          {
+            "id": "b.subtract_cancel",
+            "description": "",
+            "scoring_strategy": "all_of",
+            "max_points": "2",
+            "obligation_ids": [
+              "b.subtraction",
+              "b.middle_cancellation"
+            ],
+            "children": [],
+            "carry_forward": null
+          },
+          {
+            "id": "b.simplify",
+            "description": "",
+            "scoring_strategy": "all_of",
+            "max_points": "1",
+            "obligation_ids": [
+              "b.factorization"
+            ],
+            "children": [],
+            "carry_forward": null
+          }
+        ],
+        "carry_forward": null
+      },
+      {
+        "id": "c",
+        "description": "",
+        "scoring_strategy": "additive",
+        "max_points": "6",
+        "obligation_ids": [],
+        "children": [
+          {
+            "id": "c.expression",
+            "description": "",
+            "scoring_strategy": "all_of",
+            "max_points": "1",
+            "obligation_ids": [
+              "c.uses_expression"
+            ],
+            "children": [],
+            "carry_forward": null
+          },
+          {
+            "id": "c.domain",
+            "description": "",
+            "scoring_strategy": "all_of",
+            "max_points": "1",
+            "obligation_ids": [
+              "c.difference_domain"
+            ],
+            "children": [],
+            "carry_forward": null
+          },
+          {
+            "id": "c.list",
+            "description": "",
+            "scoring_strategy": "banded",
+            "max_points": "4",
+            "obligation_ids": [],
+            "children": [
+              {
+                "id": "c.list.full",
+                "description": "",
+                "scoring_strategy": "all_of",
+                "max_points": "4",
+                "obligation_ids": [
+                  "c.complete_list",
+                  "c.no_extraneous_values"
+                ],
+                "children": [],
+                "carry_forward": null
+              },
+              {
+                "id": "c.list.one_error",
+                "description": "",
+                "scoring_strategy": "all_of",
+                "max_points": "3",
+                "obligation_ids": [
+                  "c.single_list_error"
+                ],
+                "children": [],
+                "carry_forward": null
+              },
+              {
+                "id": "c.list.pattern",
+                "description": "",
+                "scoring_strategy": "all_of",
+                "max_points": "2",
+                "obligation_ids": [
+                  "c.several_correct",
+                  "c.pattern_recognized"
+                ],
+                "children": [],
+                "carry_forward": null
+              },
+              {
+                "id": "c.list.some",
+                "description": "",
+                "scoring_strategy": "all_of",
+                "max_points": "1",
+                "obligation_ids": [
+                  "c.some_correct"
+                ],
+                "children": [],
+                "carry_forward": null
+              }
+            ],
+            "carry_forward": null
+          }
+        ],
+        "carry_forward": null
+      },
+      {
+        "id": "d",
+        "description": "",
+        "scoring_strategy": "additive",
+        "max_points": "6",
+        "obligation_ids": [],
+        "children": [
+          {
+            "id": "d.solve",
+            "description": "",
+            "scoring_strategy": "all_of",
+            "max_points": "2",
+            "obligation_ids": [
+              "d.equation",
+              "d.difference_six"
+            ],
+            "children": [],
+            "carry_forward": null
+          },
+          {
+            "id": "d.pairs",
+            "description": "",
+            "scoring_strategy": "all_of",
+            "max_points": "2",
+            "obligation_ids": [
+              "d.digit_pairs"
+            ],
+            "children": [],
+            "carry_forward": null
+          },
+          {
+            "id": "d.count",
+            "description": "",
+            "scoring_strategy": "all_of",
+            "max_points": "2",
+            "obligation_ids": [
+              "d.middle_choices",
+              "d.total_thirty"
+            ],
+            "children": [],
+            "carry_forward": null
+          }
+        ],
+        "carry_forward": null
+      }
+    ]
+  },
+  "bridge": {
+    "schema_version": "pauta-bridge.v1",
+    "evidence": {
+      "schema_version": "pauta-evidence.v1",
+      "problem_id": "TME2_P1_PILOT",
+      "solution_id": "accepted-8b5b50380273fbd4376976d30a5396f5f4b19f712b87e157274b03b620b29e23",
+      "obligations": [
+        {
+          "source_claim_ids": [
+            "student:generic_math_43_58_relation"
+          ],
+          "verification_source": "deterministic",
+          "grounding_status": "grounded",
+          "metadata": {
+            "fact_id": "a.inverted_number_137",
+            "mapping_version": "tme2-p1-obligations.v1",
+            "reason": "MAPPED_VERIFIED_FACT",
+            "source_sha256": "6755623875db16c504b438e0e4ff1407be6b8d7a067aeb3f7b8f4bbe3855ae3c",
+            "verifications": [
+              {
+                "verification_id": "tme2-p1-digital-check.v1:1de938029daa1792bb05",
+                "verification_source": "deterministic",
+                "effective_status": "supported",
+                "reason": "EXISTING_VERIFICATION_RESULT",
+                "metadata": {
+                  "checker": "tme2-p1-digital-check.v1"
+                }
+              }
+            ]
+          },
+          "obligation_id": "a.identifies_137",
+          "status": "supported",
+          "origin": "deterministic",
+          "evidence_refs": [
+            "student:generic_math_43_58_relation",
+            "check:1de938029daa1792bb05"
+          ],
+          "attributable_to_student": true,
+          "conditional_on": null
+        },
+        {
+          "source_claim_ids": [
+            "student:generic_math_43_58_relation"
+          ],
+          "verification_source": "deterministic",
+          "grounding_status": "grounded",
+          "metadata": {
+            "fact_id": "a.subtraction_731_137",
+            "mapping_version": "tme2-p1-obligations.v1",
+            "reason": "MAPPED_VERIFIED_FACT",
+            "source_sha256": "6755623875db16c504b438e0e4ff1407be6b8d7a067aeb3f7b8f4bbe3855ae3c",
+            "verifications": [
+              {
+                "verification_id": "tme2-p1-digital-check.v1:ac2fae067f60cf1f1c32",
+                "verification_source": "deterministic",
+                "effective_status": "supported",
+                "reason": "EXISTING_VERIFICATION_RESULT",
+                "metadata": {
+                  "checker": "tme2-p1-digital-check.v1"
+                }
+              }
+            ]
+          },
+          "obligation_id": "a.constructs_subtraction",
+          "status": "supported",
+          "origin": "deterministic",
+          "evidence_refs": [
+            "student:generic_math_43_58_relation",
+            "check:ac2fae067f60cf1f1c32"
+          ],
+          "attributable_to_student": true,
+          "conditional_on": null
+        },
+        {
+          "source_claim_ids": [
+            "student:generic_math_43_58_relation",
+            "student:tme2-arithmetic-b055de628d3fe364"
+          ],
+          "verification_source": "student_lean",
+          "grounding_status": "grounded",
+          "metadata": {
+            "fact_id": "a.result_594",
+            "mapping_version": "tme2-p1-obligations.v1",
+            "reason": "MAPPED_VERIFIED_FACT",
+            "source_sha256": "6755623875db16c504b438e0e4ff1407be6b8d7a067aeb3f7b8f4bbe3855ae3c",
+            "verifications": [
+              {
+                "verification_id": "tme2-p1-digital-check.v1:bc35f6e79af1f5a61fdc",
+                "verification_source": "student_lean",
+                "effective_status": "refuted",
+                "reason": "EXISTING_VERIFICATION_RESULT",
+                "metadata": {
+                  "checker": "tme2-p1-digital-check.v1"
+                }
+              }
+            ]
+          },
+          "obligation_id": "a.result_594",
+          "status": "refuted",
+          "origin": "student_lean",
+          "evidence_refs": [
+            "student:generic_math_43_58_relation",
+            "student:tme2-arithmetic-b055de628d3fe364",
+            "/Users/LinMarcolino/Documents/confia-lean-auditor/artifacts/worktrees/confia-dec10-integration/artifacts/student_claim_checks/tme2-p1-pilot-61da7df50cb846d49619ddd2ec501347/student_claim_check_0_refutation.lean"
+          ],
+          "attributable_to_student": true,
+          "conditional_on": null
+        },
+        {
+          "source_claim_ids": [],
+          "verification_source": "deterministic",
+          "grounding_status": "unavailable",
+          "metadata": {
+            "fact_id": "a.single_arithmetic_error",
+            "mapping_version": "tme2-p1-obligations.v1",
+            "reason": "NO_EXISTING_FACT",
+            "source_sha256": "6755623875db16c504b438e0e4ff1407be6b8d7a067aeb3f7b8f4bbe3855ae3c",
+            "verifications": []
+          },
+          "obligation_id": "a.arithmetic_error_only",
+          "status": "indeterminate",
+          "origin": "deterministic",
+          "evidence_refs": [],
+          "attributable_to_student": false,
+          "conditional_on": null
+        },
+        {
+          "source_claim_ids": [],
+          "verification_source": "deterministic",
+          "grounding_status": "unavailable",
+          "metadata": {
+            "fact_id": "b.reversed_number",
+            "mapping_version": "tme2-p1-obligations.v1",
+            "reason": "NO_EXISTING_FACT",
+            "source_sha256": "6755623875db16c504b438e0e4ff1407be6b8d7a067aeb3f7b8f4bbe3855ae3c",
+            "verifications": []
+          },
+          "obligation_id": "b.reversed_number",
+          "status": "indeterminate",
+          "origin": "deterministic",
+          "evidence_refs": [],
+          "attributable_to_student": false,
+          "conditional_on": null
+        },
+        {
+          "source_claim_ids": [],
+          "verification_source": "deterministic",
+          "grounding_status": "unavailable",
+          "metadata": {
+            "fact_id": "b.subtraction",
+            "mapping_version": "tme2-p1-obligations.v1",
+            "reason": "NO_EXISTING_FACT",
+            "source_sha256": "6755623875db16c504b438e0e4ff1407be6b8d7a067aeb3f7b8f4bbe3855ae3c",
+            "verifications": []
+          },
+          "obligation_id": "b.subtraction",
+          "status": "indeterminate",
+          "origin": "deterministic",
+          "evidence_refs": [],
+          "attributable_to_student": false,
+          "conditional_on": null
+        },
+        {
+          "source_claim_ids": [],
+          "verification_source": "deterministic",
+          "grounding_status": "unavailable",
+          "metadata": {
+            "fact_id": "b.middle_cancellation",
+            "mapping_version": "tme2-p1-obligations.v1",
+            "reason": "NO_EXISTING_FACT",
+            "source_sha256": "6755623875db16c504b438e0e4ff1407be6b8d7a067aeb3f7b8f4bbe3855ae3c",
+            "verifications": []
+          },
+          "obligation_id": "b.middle_cancellation",
+          "status": "indeterminate",
+          "origin": "deterministic",
+          "evidence_refs": [],
+          "attributable_to_student": false,
+          "conditional_on": null
+        },
+        {
+          "source_claim_ids": [],
+          "verification_source": "deterministic",
+          "grounding_status": "unavailable",
+          "metadata": {
+            "fact_id": "b.factorization",
+            "mapping_version": "tme2-p1-obligations.v1",
+            "reason": "NO_EXISTING_FACT",
+            "source_sha256": "6755623875db16c504b438e0e4ff1407be6b8d7a067aeb3f7b8f4bbe3855ae3c",
+            "verifications": []
+          },
+          "obligation_id": "b.factorization",
+          "status": "indeterminate",
+          "origin": "deterministic",
+          "evidence_refs": [],
+          "attributable_to_student": false,
+          "conditional_on": null
+        },
+        {
+          "source_claim_ids": [],
+          "verification_source": "deterministic",
+          "grounding_status": "unavailable",
+          "metadata": {
+            "fact_id": "c.uses_expression",
+            "mapping_version": "tme2-p1-obligations.v1",
+            "reason": "NO_EXISTING_FACT",
+            "source_sha256": "6755623875db16c504b438e0e4ff1407be6b8d7a067aeb3f7b8f4bbe3855ae3c",
+            "verifications": []
+          },
+          "obligation_id": "c.uses_expression",
+          "status": "indeterminate",
+          "origin": "deterministic",
+          "evidence_refs": [],
+          "attributable_to_student": false,
+          "conditional_on": null
+        },
+        {
+          "source_claim_ids": [],
+          "verification_source": "deterministic",
+          "grounding_status": "unavailable",
+          "metadata": {
+            "fact_id": "c.difference_domain",
+            "mapping_version": "tme2-p1-obligations.v1",
+            "reason": "NO_EXISTING_FACT",
+            "source_sha256": "6755623875db16c504b438e0e4ff1407be6b8d7a067aeb3f7b8f4bbe3855ae3c",
+            "verifications": []
+          },
+          "obligation_id": "c.difference_domain",
+          "status": "indeterminate",
+          "origin": "deterministic",
+          "evidence_refs": [],
+          "attributable_to_student": false,
+          "conditional_on": null
+        },
+        {
+          "source_claim_ids": [],
+          "verification_source": "deterministic",
+          "grounding_status": "unavailable",
+          "metadata": {
+            "fact_id": "c.complete_list",
+            "mapping_version": "tme2-p1-obligations.v1",
+            "reason": "NO_EXISTING_FACT",
+            "source_sha256": "6755623875db16c504b438e0e4ff1407be6b8d7a067aeb3f7b8f4bbe3855ae3c",
+            "verifications": []
+          },
+          "obligation_id": "c.complete_list",
+          "status": "indeterminate",
+          "origin": "deterministic",
+          "evidence_refs": [],
+          "attributable_to_student": false,
+          "conditional_on": null
+        },
+        {
+          "source_claim_ids": [],
+          "verification_source": "deterministic",
+          "grounding_status": "unavailable",
+          "metadata": {
+            "fact_id": "c.no_extraneous_values",
+            "mapping_version": "tme2-p1-obligations.v1",
+            "reason": "NO_EXISTING_FACT",
+            "source_sha256": "6755623875db16c504b438e0e4ff1407be6b8d7a067aeb3f7b8f4bbe3855ae3c",
+            "verifications": []
+          },
+          "obligation_id": "c.no_extraneous_values",
+          "status": "indeterminate",
+          "origin": "deterministic",
+          "evidence_refs": [],
+          "attributable_to_student": false,
+          "conditional_on": null
+        },
+        {
+          "source_claim_ids": [],
+          "verification_source": "deterministic",
+          "grounding_status": "unavailable",
+          "metadata": {
+            "fact_id": "c.single_list_error",
+            "mapping_version": "tme2-p1-obligations.v1",
+            "reason": "NO_EXISTING_FACT",
+            "source_sha256": "6755623875db16c504b438e0e4ff1407be6b8d7a067aeb3f7b8f4bbe3855ae3c",
+            "verifications": []
+          },
+          "obligation_id": "c.single_list_error",
+          "status": "indeterminate",
+          "origin": "deterministic",
+          "evidence_refs": [],
+          "attributable_to_student": false,
+          "conditional_on": null
+        },
+        {
+          "source_claim_ids": [],
+          "verification_source": "deterministic",
+          "grounding_status": "unavailable",
+          "metadata": {
+            "fact_id": "c.several_correct",
+            "mapping_version": "tme2-p1-obligations.v1",
+            "reason": "NO_EXISTING_FACT",
+            "source_sha256": "6755623875db16c504b438e0e4ff1407be6b8d7a067aeb3f7b8f4bbe3855ae3c",
+            "verifications": []
+          },
+          "obligation_id": "c.several_correct",
+          "status": "indeterminate",
+          "origin": "deterministic",
+          "evidence_refs": [],
+          "attributable_to_student": false,
+          "conditional_on": null
+        },
+        {
+          "source_claim_ids": [],
+          "verification_source": "deterministic",
+          "grounding_status": "unavailable",
+          "metadata": {
+            "fact_id": "c.pattern_recognized",
+            "mapping_version": "tme2-p1-obligations.v1",
+            "reason": "NO_EXISTING_FACT",
+            "source_sha256": "6755623875db16c504b438e0e4ff1407be6b8d7a067aeb3f7b8f4bbe3855ae3c",
+            "verifications": []
+          },
+          "obligation_id": "c.pattern_recognized",
+          "status": "indeterminate",
+          "origin": "deterministic",
+          "evidence_refs": [],
+          "attributable_to_student": false,
+          "conditional_on": null
+        },
+        {
+          "source_claim_ids": [],
+          "verification_source": "deterministic",
+          "grounding_status": "unavailable",
+          "metadata": {
+            "fact_id": "c.some_correct",
+            "mapping_version": "tme2-p1-obligations.v1",
+            "reason": "NO_EXISTING_FACT",
+            "source_sha256": "6755623875db16c504b438e0e4ff1407be6b8d7a067aeb3f7b8f4bbe3855ae3c",
+            "verifications": []
+          },
+          "obligation_id": "c.some_correct",
+          "status": "indeterminate",
+          "origin": "deterministic",
+          "evidence_refs": [],
+          "attributable_to_student": false,
+          "conditional_on": null
+        },
+        {
+          "source_claim_ids": [],
+          "verification_source": "deterministic",
+          "grounding_status": "unavailable",
+          "metadata": {
+            "fact_id": "d.equation",
+            "mapping_version": "tme2-p1-obligations.v1",
+            "reason": "NO_EXISTING_FACT",
+            "source_sha256": "6755623875db16c504b438e0e4ff1407be6b8d7a067aeb3f7b8f4bbe3855ae3c",
+            "verifications": []
+          },
+          "obligation_id": "d.equation",
+          "status": "indeterminate",
+          "origin": "deterministic",
+          "evidence_refs": [],
+          "attributable_to_student": false,
+          "conditional_on": null
+        },
+        {
+          "source_claim_ids": [],
+          "verification_source": "deterministic",
+          "grounding_status": "unavailable",
+          "metadata": {
+            "fact_id": "d.difference_six",
+            "mapping_version": "tme2-p1-obligations.v1",
+            "reason": "NO_EXISTING_FACT",
+            "source_sha256": "6755623875db16c504b438e0e4ff1407be6b8d7a067aeb3f7b8f4bbe3855ae3c",
+            "verifications": []
+          },
+          "obligation_id": "d.difference_six",
+          "status": "indeterminate",
+          "origin": "deterministic",
+          "evidence_refs": [],
+          "attributable_to_student": false,
+          "conditional_on": null
+        },
+        {
+          "source_claim_ids": [],
+          "verification_source": "deterministic",
+          "grounding_status": "unavailable",
+          "metadata": {
+            "fact_id": "d.digit_pairs",
+            "mapping_version": "tme2-p1-obligations.v1",
+            "reason": "NO_EXISTING_FACT",
+            "source_sha256": "6755623875db16c504b438e0e4ff1407be6b8d7a067aeb3f7b8f4bbe3855ae3c",
+            "verifications": []
+          },
+          "obligation_id": "d.digit_pairs",
+          "status": "indeterminate",
+          "origin": "deterministic",
+          "evidence_refs": [],
+          "attributable_to_student": false,
+          "conditional_on": null
+        },
+        {
+          "source_claim_ids": [],
+          "verification_source": "deterministic",
+          "grounding_status": "unavailable",
+          "metadata": {
+            "fact_id": "d.middle_choices",
+            "mapping_version": "tme2-p1-obligations.v1",
+            "reason": "NO_EXISTING_FACT",
+            "source_sha256": "6755623875db16c504b438e0e4ff1407be6b8d7a067aeb3f7b8f4bbe3855ae3c",
+            "verifications": []
+          },
+          "obligation_id": "d.middle_choices",
+          "status": "indeterminate",
+          "origin": "deterministic",
+          "evidence_refs": [],
+          "attributable_to_student": false,
+          "conditional_on": null
+        },
+        {
+          "source_claim_ids": [],
+          "verification_source": "deterministic",
+          "grounding_status": "unavailable",
+          "metadata": {
+            "fact_id": "d.total_thirty",
+            "mapping_version": "tme2-p1-obligations.v1",
+            "reason": "NO_EXISTING_FACT",
+            "source_sha256": "6755623875db16c504b438e0e4ff1407be6b8d7a067aeb3f7b8f4bbe3855ae3c",
+            "verifications": []
+          },
+          "obligation_id": "d.total_thirty",
+          "status": "indeterminate",
+          "origin": "deterministic",
+          "evidence_refs": [],
+          "attributable_to_student": false,
+          "conditional_on": null
+        }
+      ]
+    },
+    "auditor": {
+      "schema_version": "auditor-pauta-facts.v1",
+      "problem_id": "TME2_P1_PILOT",
+      "solution_id": "accepted-8b5b50380273fbd4376976d30a5396f5f4b19f712b87e157274b03b620b29e23",
+      "source_sha256": "6755623875db16c504b438e0e4ff1407be6b8d7a067aeb3f7b8f4bbe3855ae3c",
+      "records": [
+        {
+          "schema_version": "math-claim-v1",
+          "record_id": "student:generic_math_43_58_relation",
+          "problem_id": "TME2_P1_PILOT",
+          "claim_type": "math_relation",
+          "provenance": {
+            "origin": "student_explicit",
+            "channel": "student",
+            "legacy_id": "generic_math_43_58_relation",
+            "extraction_method": "generic_math"
+          },
+          "source": {
+            "grounding_status": "grounded",
+            "raw_text": "731 - 137 = 595",
+            "source_start": 43,
+            "source_end": 58,
+            "source_sha256": "6755623875db16c504b438e0e4ff1407be6b8d7a067aeb3f7b8f4bbe3855ae3c",
+            "attributable": true
+          },
+          "canonical_form": {
+            "family": "mathematical",
+            "subject": "expression",
+            "variables": [],
+            "value": {
+              "kind": "equality",
+              "tree": {
+                "kind": "relation",
+                "value": "=",
+                "args": [
+                  {
+                    "kind": "rational",
+                    "value": "594",
+                    "args": []
+                  },
+                  {
+                    "kind": "rational",
+                    "value": "595",
+                    "args": []
+                  }
+                ]
+              },
+              "affine": [
+                [
+                  "",
+                  "1"
+                ]
+              ],
+              "relation": "=",
+              "variables": [],
+              "schema_version": "canonical-math-v1",
+              "domain": "real_total"
+            },
+            "method": "parse_math",
+            "mathematical_form": null
+          },
+          "canonicalization_status": "parsed",
+          "canonicalization_reason": "Bounded real syntax and exact affine projection",
+          "semantic_role": "conclusion",
+          "legacy_payload": {
+            "id": "generic_math_43_58_relation",
+            "problem_id": "TME2_P1_PILOT",
+            "claim_type": "math_relation",
+            "raw_text": "731 - 137 = 595",
+            "normalized_text": "731 - 137 = 595",
+            "context": "[a]\nInvertendo 731, obtenho 137. Portanto, 731 - 137 = 595.\n\n[b]\nO número original é 100a + 10b + c e o invertido é 100c + 10b + a. Subtraindo, os termos 10b ",
+            "data": {
+              "expression": "731 - 137 = 595"
+            },
+            "method": "generic_math",
+            "confidence": 1.0,
+            "grounding": {
+              "status": "grounded",
+              "validator": "generic-source-v1",
+              "extraction_method": "generic_math",
+              "source_text": "731 - 137 = 595",
+              "source_start": 43,
+              "source_end": 58,
+              "source_sha256": "6755623875db16c504b438e0e4ff1407be6b8d7a067aeb3f7b8f4bbe3855ae3c",
+              "payload_sha256": "44741c3731728a28de9e41c94127b99266f80a3b633a265828fa865ed3f45945",
+              "reason": "Literal mathematical candidate; detection is not verification"
+            }
+          },
+          "verification_results": [
+            {
+              "verification_id": "tme2-p1-digital-check.v1:1de938029daa1792bb05",
+              "mechanism": "student_check",
+              "origin": "student_explicit",
+              "status": "verified",
+              "attributed_to_student": true,
+              "artifact_ref": "check:1de938029daa1792bb05"
+            },
+            {
+              "verification_id": "tme2-p1-digital-check.v1:ac2fae067f60cf1f1c32",
+              "mechanism": "student_check",
+              "origin": "student_explicit",
+              "status": "verified",
+              "attributed_to_student": true,
+              "artifact_ref": "check:ac2fae067f60cf1f1c32"
+            },
+            {
+              "verification_id": "tme2-p1-digital-check.v1:bc35f6e79af1f5a61fdc",
+              "mechanism": "student_check",
+              "origin": "student_explicit",
+              "status": "refuted",
+              "attributed_to_student": true,
+              "artifact_ref": "/Users/LinMarcolino/Documents/confia-lean-auditor/artifacts/worktrees/confia-dec10-integration/artifacts/student_claim_checks/tme2-p1-pilot-61da7df50cb846d49619ddd2ec501347/student_claim_check_0_refutation.lean"
+            }
+          ],
+          "rubric_links": [
+            "a"
+          ],
+          "expected_obligation": null
+        },
+        {
+          "schema_version": "math-claim-v1",
+          "record_id": "student:generic_math_116_130_expression",
+          "problem_id": "TME2_P1_PILOT",
+          "claim_type": "math_expression",
+          "provenance": {
+            "origin": "student_candidate",
+            "channel": "student",
+            "legacy_id": "generic_math_116_130_expression",
+            "extraction_method": "generic_math"
+          },
+          "source": {
+            "grounding_status": "grounded",
+            "raw_text": "100c + 10b + a",
+            "source_start": 116,
+            "source_end": 130,
+            "source_sha256": "6755623875db16c504b438e0e4ff1407be6b8d7a067aeb3f7b8f4bbe3855ae3c",
+            "attributable": false
+          },
+          "canonical_form": {
+            "family": "mathematical",
+            "subject": "expression",
+            "variables": [
+              "a",
+              "b",
+              "c"
+            ],
+            "value": {
+              "kind": "expression",
+              "tree": {
+                "kind": "sum",
+                "value": null,
+                "args": [
+                  {
+                    "kind": "sum",
+                    "value": null,
+                    "args": [
+                      {
+                        "kind": "product",
+                        "value": null,
+                        "args": [
+                          {
+                            "kind": "rational",
+                            "value": "100",
+                            "args": []
+                          },
+                          {
+                            "kind": "variable",
+                            "value": "c",
+                            "args": []
+                          }
+                        ]
+                      },
+                      {
+                        "kind": "product",
+                        "value": null,
+                        "args": [
+                          {
+                            "kind": "rational",
+                            "value": "10",
+                            "args": []
+                          },
+                          {
+                            "kind": "variable",
+                            "value": "b",
+                            "args": []
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "kind": "variable",
+                    "value": "a",
+                    "args": []
+                  }
+                ]
+              },
+              "affine": [
+                [
+                  "a",
+                  "1"
+                ],
+                [
+                  "b",
+                  "10"
+                ],
+                [
+                  "c",
+                  "100"
+                ]
+              ],
+              "relation": null,
+              "variables": [
+                "a",
+                "b",
+                "c"
+              ],
+              "schema_version": "canonical-math-v1",
+              "domain": "real_total"
+            },
+            "method": "parse_math",
+            "mathematical_form": null
+          },
+          "canonicalization_status": "parsed",
+          "canonicalization_reason": "Bounded real syntax and exact affine projection",
+          "semantic_role": "unknown",
+          "legacy_payload": {
+            "id": "generic_math_116_130_expression",
+            "problem_id": "TME2_P1_PILOT",
+            "claim_type": "math_expression",
+            "raw_text": "100c + 10b + a",
+            "normalized_text": "100c + 10b + a",
+            "context": "31, obtenho 137. Portanto, 731 - 137 = 595.\n\n[b]\nO número original é 100a + 10b + c e o invertido é 100c + 10b + a. Subtraindo, os termos 10b se cancelam: (100a+10b+c)-(100c+10b+a)=99a-99c=99(a-c).\n\n[c]\nComo a-c po",
+            "data": {
+              "expression": "100c + 10b + a"
+            },
+            "method": "generic_math",
+            "confidence": 1.0,
+            "grounding": {
+              "status": "grounded",
+              "validator": "generic-source-v1",
+              "extraction_method": "generic_math",
+              "source_text": "100c + 10b + a",
+              "source_start": 116,
+              "source_end": 130,
+              "source_sha256": "6755623875db16c504b438e0e4ff1407be6b8d7a067aeb3f7b8f4bbe3855ae3c",
+              "payload_sha256": "477f687aadb4d7e2cb9f810d70def72dcd0cabc025e39e5257433c15573b3a92",
+              "reason": "Literal mathematical candidate; detection is not verification"
+            }
+          },
+          "verification_results": [],
+          "rubric_links": [
+            "b"
+          ],
+          "expected_obligation": null
+        },
+        {
+          "schema_version": "math-claim-v1",
+          "record_id": "student:generic_math_171_204_relation",
+          "problem_id": "TME2_P1_PILOT",
+          "claim_type": "math_relation",
+          "provenance": {
+            "origin": "student_candidate",
+            "channel": "student",
+            "legacy_id": "generic_math_171_204_relation",
+            "extraction_method": "generic_math"
+          },
+          "source": {
+            "grounding_status": "grounded",
+            "raw_text": "(100a+10b+c)-(100c+10b+a)=99a-99c",
+            "source_start": 171,
+            "source_end": 204,
+            "source_sha256": "6755623875db16c504b438e0e4ff1407be6b8d7a067aeb3f7b8f4bbe3855ae3c",
+            "attributable": false
+          },
+          "canonical_form": {
+            "family": "mathematical",
+            "subject": "expression",
+            "variables": [
+              "a",
+              "b",
+              "c"
+            ],
+            "value": {
+              "kind": "equality",
+              "tree": {
+                "kind": "relation",
+                "value": "=",
+                "args": [
+                  {
+                    "kind": "difference",
+                    "value": null,
+                    "args": [
+                      {
+                        "kind": "sum",
+                        "value": null,
+                        "args": [
+                          {
+                            "kind": "sum",
+                            "value": null,
+                            "args": [
+                              {
+                                "kind": "product",
+                                "value": null,
+                                "args": [
+                                  {
+                                    "kind": "rational",
+                                    "value": "100",
+                                    "args": []
+                                  },
+                                  {
+                                    "kind": "variable",
+                                    "value": "a",
+                                    "args": []
+                                  }
+                                ]
+                              },
+                              {
+                                "kind": "product",
+                                "value": null,
+                                "args": [
+                                  {
+                                    "kind": "rational",
+                                    "value": "10",
+                                    "args": []
+                                  },
+                                  {
+                                    "kind": "variable",
+                                    "value": "b",
+                                    "args": []
+                                  }
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            "kind": "variable",
+                            "value": "c",
+                            "args": []
+                          }
+                        ]
+                      },
+                      {
+                        "kind": "sum",
+                        "value": null,
+                        "args": [
+                          {
+                            "kind": "sum",
+                            "value": null,
+                            "args": [
+                              {
+                                "kind": "product",
+                                "value": null,
+                                "args": [
+                                  {
+                                    "kind": "rational",
+                                    "value": "100",
+                                    "args": []
+                                  },
+                                  {
+                                    "kind": "variable",
+                                    "value": "c",
+                                    "args": []
+                                  }
+                                ]
+                              },
+                              {
+                                "kind": "product",
+                                "value": null,
+                                "args": [
+                                  {
+                                    "kind": "rational",
+                                    "value": "10",
+                                    "args": []
+                                  },
+                                  {
+                                    "kind": "variable",
+                                    "value": "b",
+                                    "args": []
+                                  }
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            "kind": "variable",
+                            "value": "a",
+                            "args": []
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "kind": "difference",
+                    "value": null,
+                    "args": [
+                      {
+                        "kind": "product",
+                        "value": null,
+                        "args": [
+                          {
+                            "kind": "rational",
+                            "value": "99",
+                            "args": []
+                          },
+                          {
+                            "kind": "variable",
+                            "value": "a",
+                            "args": []
+                          }
+                        ]
+                      },
+                      {
+                        "kind": "product",
+                        "value": null,
+                        "args": [
+                          {
+                            "kind": "rational",
+                            "value": "99",
+                            "args": []
+                          },
+                          {
+                            "kind": "variable",
+                            "value": "c",
+                            "args": []
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              "affine": [],
+              "relation": "=",
+              "variables": [
+                "a",
+                "b",
+                "c"
+              ],
+              "schema_version": "canonical-math-v1",
+              "domain": "real_total"
+            },
+            "method": "parse_math",
+            "mathematical_form": null
+          },
+          "canonicalization_status": "parsed",
+          "canonicalization_reason": "Bounded real syntax and exact affine projection",
+          "semantic_role": "unknown",
+          "legacy_payload": {
+            "id": "generic_math_171_204_relation",
+            "problem_id": "TME2_P1_PILOT",
+            "claim_type": "math_relation",
+            "raw_text": "(100a+10b+c)-(100c+10b+a)=99a-99c",
+            "normalized_text": "(100a+10b+c)-(100c+10b+a)=99a-99c",
+            "context": "ro original é 100a + 10b + c e o invertido é 100c + 10b + a. Subtraindo, os termos 10b se cancelam: (100a+10b+c)-(100c+10b+a)=99a-99c=99(a-c).\n\n[c]\nComo a-c pode assumir os valores de 1 a 8, os resultados são 99, 198, 297, 396, 495, ",
+            "data": {
+              "expression": "(100a+10b+c)-(100c+10b+a)=99a-99c"
+            },
+            "method": "generic_math",
+            "confidence": 1.0,
+            "grounding": {
+              "status": "grounded",
+              "validator": "generic-source-v1",
+              "extraction_method": "generic_math",
+              "source_text": "(100a+10b+c)-(100c+10b+a)=99a-99c",
+              "source_start": 171,
+              "source_end": 204,
+              "source_sha256": "6755623875db16c504b438e0e4ff1407be6b8d7a067aeb3f7b8f4bbe3855ae3c",
+              "payload_sha256": "8f7d720e6a1e8f3c2da6783ad4005f5c7fd79a264568e1a16f13c8d4f653134a",
+              "reason": "Literal mathematical candidate; detection is not verification"
+            }
+          },
+          "verification_results": [],
+          "rubric_links": [
+            "b"
+          ],
+          "expected_obligation": null
+        },
+        {
+          "schema_version": "math-claim-v1",
+          "record_id": "student:generic_math_197_212_relation",
+          "problem_id": "TME2_P1_PILOT",
+          "claim_type": "math_relation",
+          "provenance": {
+            "origin": "student_candidate",
+            "channel": "student",
+            "legacy_id": "generic_math_197_212_relation",
+            "extraction_method": "generic_math"
+          },
+          "source": {
+            "grounding_status": "grounded",
+            "raw_text": "99a-99c=99(a-c)",
+            "source_start": 197,
+            "source_end": 212,
+            "source_sha256": "6755623875db16c504b438e0e4ff1407be6b8d7a067aeb3f7b8f4bbe3855ae3c",
+            "attributable": false
+          },
+          "canonical_form": {
+            "family": "mathematical",
+            "subject": "expression",
+            "variables": [
+              "a",
+              "c"
+            ],
+            "value": {
+              "kind": "equality",
+              "tree": {
+                "kind": "relation",
+                "value": "=",
+                "args": [
+                  {
+                    "kind": "difference",
+                    "value": null,
+                    "args": [
+                      {
+                        "kind": "product",
+                        "value": null,
+                        "args": [
+                          {
+                            "kind": "rational",
+                            "value": "99",
+                            "args": []
+                          },
+                          {
+                            "kind": "variable",
+                            "value": "a",
+                            "args": []
+                          }
+                        ]
+                      },
+                      {
+                        "kind": "product",
+                        "value": null,
+                        "args": [
+                          {
+                            "kind": "rational",
+                            "value": "99",
+                            "args": []
+                          },
+                          {
+                            "kind": "variable",
+                            "value": "c",
+                            "args": []
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "kind": "product",
+                    "value": null,
+                    "args": [
+                      {
+                        "kind": "rational",
+                        "value": "99",
+                        "args": []
+                      },
+                      {
+                        "kind": "difference",
+                        "value": null,
+                        "args": [
+                          {
+                            "kind": "variable",
+                            "value": "a",
+                            "args": []
+                          },
+                          {
+                            "kind": "variable",
+                            "value": "c",
+                            "args": []
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              "affine": [],
+              "relation": "=",
+              "variables": [
+                "a",
+                "c"
+              ],
+              "schema_version": "canonical-math-v1",
+              "domain": "real_total"
+            },
+            "method": "parse_math",
+            "mathematical_form": null
+          },
+          "canonicalization_status": "parsed",
+          "canonicalization_reason": "Bounded real syntax and exact affine projection",
+          "semantic_role": "unknown",
+          "legacy_payload": {
+            "id": "generic_math_197_212_relation",
+            "problem_id": "TME2_P1_PILOT",
+            "claim_type": "math_relation",
+            "raw_text": "99a-99c=99(a-c)",
+            "normalized_text": "99a-99c=99(a-c)",
+            "context": " c e o invertido é 100c + 10b + a. Subtraindo, os termos 10b se cancelam: (100a+10b+c)-(100c+10b+a)=99a-99c=99(a-c).\n\n[c]\nComo a-c pode assumir os valores de 1 a 8, os resultados são 99, 198, 297, 396, 495, 594 e 69",
+            "data": {
+              "expression": "99a-99c=99(a-c)"
+            },
+            "method": "generic_math",
+            "confidence": 1.0,
+            "grounding": {
+              "status": "grounded",
+              "validator": "generic-source-v1",
+              "extraction_method": "generic_math",
+              "source_text": "99a-99c=99(a-c)",
+              "source_start": 197,
+              "source_end": 212,
+              "source_sha256": "6755623875db16c504b438e0e4ff1407be6b8d7a067aeb3f7b8f4bbe3855ae3c",
+              "payload_sha256": "a6887190226245d6e3f61d846dfb6abc7d8b275847b821d36a23824bb391e29c",
+              "reason": "Literal mathematical candidate; detection is not verification"
+            }
+          },
+          "verification_results": [],
+          "rubric_links": [
+            "b"
+          ],
+          "expected_obligation": null
+        },
+        {
+          "schema_version": "math-claim-v1",
+          "record_id": "student:generic_math_348_359_relation",
+          "problem_id": "TME2_P1_PILOT",
+          "claim_type": "math_relation",
+          "provenance": {
+            "origin": "student_candidate",
+            "channel": "student",
+            "legacy_id": "generic_math_348_359_relation",
+            "extraction_method": "generic_math"
+          },
+          "source": {
+            "grounding_status": "grounded",
+            "raw_text": "99(a-c)=594",
+            "source_start": 348,
+            "source_end": 359,
+            "source_sha256": "6755623875db16c504b438e0e4ff1407be6b8d7a067aeb3f7b8f4bbe3855ae3c",
+            "attributable": false
+          },
+          "canonical_form": {
+            "family": "mathematical",
+            "subject": "expression",
+            "variables": [
+              "a",
+              "c"
+            ],
+            "value": {
+              "kind": "equality",
+              "tree": {
+                "kind": "relation",
+                "value": "=",
+                "args": [
+                  {
+                    "kind": "product",
+                    "value": null,
+                    "args": [
+                      {
+                        "kind": "rational",
+                        "value": "99",
+                        "args": []
+                      },
+                      {
+                        "kind": "difference",
+                        "value": null,
+                        "args": [
+                          {
+                            "kind": "variable",
+                            "value": "a",
+                            "args": []
+                          },
+                          {
+                            "kind": "variable",
+                            "value": "c",
+                            "args": []
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "kind": "rational",
+                    "value": "594",
+                    "args": []
+                  }
+                ]
+              },
+              "affine": [
+                [
+                  "",
+                  "1"
+                ],
+                [
+                  "a",
+                  "-1/6"
+                ],
+                [
+                  "c",
+                  "1/6"
+                ]
+              ],
+              "relation": "=",
+              "variables": [
+                "a",
+                "c"
+              ],
+              "schema_version": "canonical-math-v1",
+              "domain": "real_total"
+            },
+            "method": "parse_math",
+            "mathematical_form": null
+          },
+          "canonicalization_status": "parsed",
+          "canonicalization_reason": "Bounded real syntax and exact affine projection",
+          "semantic_role": "unknown",
+          "legacy_payload": {
+            "id": "generic_math_348_359_relation",
+            "problem_id": "TME2_P1_PILOT",
+            "claim_type": "math_relation",
+            "raw_text": "99(a-c)=594",
+            "normalized_text": "99(a-c)=594",
+            "context": "res de 1 a 8, os resultados são 99, 198, 297, 396, 495, 594 e 693.\n\n[d]\nSe o resultado é 594, então 99(a-c)=594, logo a-c=6. Os pares possíveis são (7,1), (8,2) e (9,3). Para cada par existem 10 escolhas para o ",
+            "data": {
+              "expression": "99(a-c)=594"
+            },
+            "method": "generic_math",
+            "confidence": 1.0,
+            "grounding": {
+              "status": "grounded",
+              "validator": "generic-source-v1",
+              "extraction_method": "generic_math",
+              "source_text": "99(a-c)=594",
+              "source_start": 348,
+              "source_end": 359,
+              "source_sha256": "6755623875db16c504b438e0e4ff1407be6b8d7a067aeb3f7b8f4bbe3855ae3c",
+              "payload_sha256": "3dc15f02a2730185301388f3e0ede27fab2e2a5590ca056fc57f86da715ab69b",
+              "reason": "Literal mathematical candidate; detection is not verification"
+            }
+          },
+          "verification_results": [],
+          "rubric_links": [
+            "d"
+          ],
+          "expected_obligation": null
+        },
+        {
+          "schema_version": "math-claim-v1",
+          "record_id": "student:generic_math_366_371_relation",
+          "problem_id": "TME2_P1_PILOT",
+          "claim_type": "math_relation",
+          "provenance": {
+            "origin": "student_candidate",
+            "channel": "student",
+            "legacy_id": "generic_math_366_371_relation",
+            "extraction_method": "generic_math"
+          },
+          "source": {
+            "grounding_status": "grounded",
+            "raw_text": "a-c=6",
+            "source_start": 366,
+            "source_end": 371,
+            "source_sha256": "6755623875db16c504b438e0e4ff1407be6b8d7a067aeb3f7b8f4bbe3855ae3c",
+            "attributable": false
+          },
+          "canonical_form": {
+            "family": "mathematical",
+            "subject": "expression",
+            "variables": [
+              "a",
+              "c"
+            ],
+            "value": {
+              "kind": "equality",
+              "tree": {
+                "kind": "relation",
+                "value": "=",
+                "args": [
+                  {
+                    "kind": "difference",
+                    "value": null,
+                    "args": [
+                      {
+                        "kind": "variable",
+                        "value": "a",
+                        "args": []
+                      },
+                      {
+                        "kind": "variable",
+                        "value": "c",
+                        "args": []
+                      }
+                    ]
+                  },
+                  {
+                    "kind": "rational",
+                    "value": "6",
+                    "args": []
+                  }
+                ]
+              },
+              "affine": [
+                [
+                  "",
+                  "1"
+                ],
+                [
+                  "a",
+                  "-1/6"
+                ],
+                [
+                  "c",
+                  "1/6"
+                ]
+              ],
+              "relation": "=",
+              "variables": [
+                "a",
+                "c"
+              ],
+              "schema_version": "canonical-math-v1",
+              "domain": "real_total"
+            },
+            "method": "parse_math",
+            "mathematical_form": null
+          },
+          "canonicalization_status": "parsed",
+          "canonicalization_reason": "Bounded real syntax and exact affine projection",
+          "semantic_role": "unknown",
+          "legacy_payload": {
+            "id": "generic_math_366_371_relation",
+            "problem_id": "TME2_P1_PILOT",
+            "claim_type": "math_relation",
+            "raw_text": "a-c=6",
+            "normalized_text": "a-c=6",
+            "context": "esultados são 99, 198, 297, 396, 495, 594 e 693.\n\n[d]\nSe o resultado é 594, então 99(a-c)=594, logo a-c=6. Os pares possíveis são (7,1), (8,2) e (9,3). Para cada par existem 10 escolhas para o algarismo b.",
+            "data": {
+              "expression": "a-c=6"
+            },
+            "method": "generic_math",
+            "confidence": 1.0,
+            "grounding": {
+              "status": "grounded",
+              "validator": "generic-source-v1",
+              "extraction_method": "generic_math",
+              "source_text": "a-c=6",
+              "source_start": 366,
+              "source_end": 371,
+              "source_sha256": "6755623875db16c504b438e0e4ff1407be6b8d7a067aeb3f7b8f4bbe3855ae3c",
+              "payload_sha256": "dd3fd700a604f59bded260e74b94228e25f0487f6c04ca6ff13c04c6afa43e24",
+              "reason": "Literal mathematical candidate; detection is not verification"
+            }
+          },
+          "verification_results": [],
+          "rubric_links": [
+            "d"
+          ],
+          "expected_obligation": null
+        },
+        {
+          "schema_version": "math-claim-v1",
+          "record_id": "student:tme2-arithmetic-b055de628d3fe364",
+          "problem_id": "TME2_P1_PILOT",
+          "claim_type": "arithmetic_equality",
+          "provenance": {
+            "origin": "student_explicit",
+            "channel": "student",
+            "legacy_id": "tme2-arithmetic-b055de628d3fe364",
+            "extraction_method": "tme2-p1-digital-check.v1"
+          },
+          "source": {
+            "grounding_status": "grounded",
+            "raw_text": "731 - 137 = 595",
+            "source_start": 43,
+            "source_end": 58,
+            "source_sha256": "6755623875db16c504b438e0e4ff1407be6b8d7a067aeb3f7b8f4bbe3855ae3c",
+            "attributable": true
+          },
+          "canonical_form": null,
+          "canonicalization_status": "unsupported",
+          "canonicalization_reason": "No unique explicit mathematical field in the legacy payload",
+          "semantic_role": "unknown",
+          "legacy_payload": {
+            "id": "tme2-arithmetic-b055de628d3fe364",
+            "problem_id": "TME2_P1_PILOT",
+            "claim_type": "arithmetic_equality",
+            "raw_text": "731 - 137 = 595",
+            "normalized_text": "731 - 137 = 595",
+            "context": "731 - 137 = 595",
+            "data": {
+              "left_expr": "731 - 137",
+              "right_expr": "595"
+            },
+            "method": "norm_num",
+            "confidence": 0.85,
+            "grounding": {
+              "status": "grounded",
+              "validator": "local-source-v1",
+              "extraction_method": "tme2-p1-digital-check.v1",
+              "source_text": "731 - 137 = 595",
+              "source_start": 43,
+              "source_end": 58,
+              "source_sha256": "6755623875db16c504b438e0e4ff1407be6b8d7a067aeb3f7b8f4bbe3855ae3c",
+              "payload_sha256": "88282df36cf87b11c2f36e77d4e02d1154a147b9373dd3749c700f000446509c"
+            }
+          },
+          "verification_results": [
+            {
+              "verification_id": "tme2-p1-digital-check.v1:bc35f6e79af1f5a61fdc",
+              "mechanism": "student_check",
+              "origin": "student_explicit",
+              "status": "refuted",
+              "attributed_to_student": true,
+              "artifact_ref": "/Users/LinMarcolino/Documents/confia-lean-auditor/artifacts/worktrees/confia-dec10-integration/artifacts/student_claim_checks/tme2-p1-pilot-61da7df50cb846d49619ddd2ec501347/student_claim_check_0_refutation.lean"
+            }
+          ],
+          "rubric_links": [
+            "a"
+          ],
+          "expected_obligation": null
+        }
+      ],
+      "facts": [
+        {
+          "fact_id": "a.inverted_number_137",
+          "source_claim_ids": [
+            "student:generic_math_43_58_relation"
+          ],
+          "record_fingerprints": {
+            "student:generic_math_43_58_relation": "9a74be39b7e2d33ef4a1402b95a9f1fa0ce63033e95adf388fd77823a1fb6cfc"
+          },
+          "verification": {
+            "verification_id": "tme2-p1-digital-check.v1:1de938029daa1792bb05",
+            "mechanism": "student_check",
+            "origin": "student_explicit",
+            "status": "verified",
+            "attributed_to_student": true,
+            "artifact_ref": "check:1de938029daa1792bb05"
+          },
+          "verification_source": "deterministic",
+          "student_check": null,
+          "conditional_on": null,
+          "metadata": {
+            "checker": "tme2-p1-digital-check.v1"
+          }
+        },
+        {
+          "fact_id": "a.subtraction_731_137",
+          "source_claim_ids": [
+            "student:generic_math_43_58_relation"
+          ],
+          "record_fingerprints": {
+            "student:generic_math_43_58_relation": "9a74be39b7e2d33ef4a1402b95a9f1fa0ce63033e95adf388fd77823a1fb6cfc"
+          },
+          "verification": {
+            "verification_id": "tme2-p1-digital-check.v1:ac2fae067f60cf1f1c32",
+            "mechanism": "student_check",
+            "origin": "student_explicit",
+            "status": "verified",
+            "attributed_to_student": true,
+            "artifact_ref": "check:ac2fae067f60cf1f1c32"
+          },
+          "verification_source": "deterministic",
+          "student_check": null,
+          "conditional_on": null,
+          "metadata": {
+            "checker": "tme2-p1-digital-check.v1"
+          }
+        },
+        {
+          "fact_id": "a.result_594",
+          "source_claim_ids": [
+            "student:generic_math_43_58_relation",
+            "student:tme2-arithmetic-b055de628d3fe364"
+          ],
+          "record_fingerprints": {
+            "student:generic_math_43_58_relation": "9a74be39b7e2d33ef4a1402b95a9f1fa0ce63033e95adf388fd77823a1fb6cfc",
+            "student:tme2-arithmetic-b055de628d3fe364": "3676379dc8f55ff3667bfca9f7506b11e27644f31f3b3afb085a6aff9caefe8b"
+          },
+          "verification": {
+            "verification_id": "tme2-p1-digital-check.v1:bc35f6e79af1f5a61fdc",
+            "mechanism": "student_check",
+            "origin": "student_explicit",
+            "status": "refuted",
+            "attributed_to_student": true,
+            "artifact_ref": "/Users/LinMarcolino/Documents/confia-lean-auditor/artifacts/worktrees/confia-dec10-integration/artifacts/student_claim_checks/tme2-p1-pilot-61da7df50cb846d49619ddd2ec501347/student_claim_check_0_refutation.lean"
+          },
+          "verification_source": "student_lean",
+          "student_check": {
+            "id": "tme2-arithmetic-b055de628d3fe364",
+            "problem_id": "TME2_P1_PILOT",
+            "claim_type": "arithmetic_equality",
+            "raw_text": "731 - 137 = 595",
+            "normalized_text": "731 - 137 = 595",
+            "lean_statement": "((731 : ℤ) - 137) = ((595 : ℤ))",
+            "method": "norm_num",
+            "status": "refuted",
+            "compiled": false,
+            "lean_file": "/Users/LinMarcolino/Documents/confia-lean-auditor/artifacts/worktrees/confia-dec10-integration/artifacts/student_claim_checks/tme2-p1-pilot-61da7df50cb846d49619ddd2ec501347/student_claim_check_0.lean",
+            "stdout": "/Users/LinMarcolino/Documents/confia-lean-auditor/artifacts/worktrees/confia-dec10-integration/artifacts/student_claim_checks/tme2-p1-pilot-61da7df50cb846d49619ddd2ec501347/student_claim_check_0.lean:7:39: error: unsolved goals\n⊢ False\n",
+            "stderr": "",
+            "data": {
+              "left_expr": "731 - 137",
+              "right_expr": "595"
+            },
+            "failure_category": null,
+            "refutation_lean_file": "/Users/LinMarcolino/Documents/confia-lean-auditor/artifacts/worktrees/confia-dec10-integration/artifacts/student_claim_checks/tme2-p1-pilot-61da7df50cb846d49619ddd2ec501347/student_claim_check_0_refutation.lean",
+            "refutation_verified": true,
+            "refutation_stdout": "",
+            "refutation_stderr": "",
+            "grounding": {
+              "status": "grounded",
+              "validator": "local-source-v1",
+              "extraction_method": "tme2-p1-digital-check.v1",
+              "source_text": "731 - 137 = 595",
+              "source_start": 43,
+              "source_end": 58,
+              "source_sha256": "6755623875db16c504b438e0e4ff1407be6b8d7a067aeb3f7b8f4bbe3855ae3c",
+              "payload_sha256": "88282df36cf87b11c2f36e77d4e02d1154a147b9373dd3749c700f000446509c"
+            },
+            "formal_status": "refuted"
+          },
+          "conditional_on": null,
+          "metadata": {
+            "checker": "tme2-p1-digital-check.v1"
+          }
+        }
+      ]
+    }
+  },
+  "assessment": {
+    "schema_version": "pauta-decision.v1",
+    "pauta_version": "pauta.v1",
+    "config_sha256": "76887c541019255a3ac4522e13debaff32aa739a604198e4e35a52e0b0ecd0bf",
+    "evidence_sha256": "4d3b22948c09bfa964121ed92f9844ce697fdf3c6758695083f19a67216c8231",
+    "problem_id": "TME2_P1_PILOT",
+    "solution_id": "accepted-8b5b50380273fbd4376976d30a5396f5f4b19f712b87e157274b03b620b29e23",
+    "unresolved_policy": "withhold",
+    "max_score": "20",
+    "score": "1",
+    "known_points": "1",
+    "possible_points": "19",
+    "needs_review": true,
+    "items": [
+      {
+        "item_id": "a",
+        "scoring_strategy": "banded",
+        "max_points": "3",
+        "points_awarded": "1",
+        "known_points": "1",
+        "possible_points": "2",
+        "status": "indeterminate",
+        "fully_satisfied": false,
+        "satisfied_obligations": [
+          "a.identifies_137",
+          "a.constructs_subtraction"
+        ],
+        "unsatisfied_obligations": [
+          "a.result_594"
+        ],
+        "indeterminate_obligations": [
+          "a.arithmetic_error_only"
+        ],
+        "technical_error_obligations": [],
+        "selected_band": "a.identification",
+        "selected_method_path": null,
+        "carry_forward_applied": false,
+        "evidence_refs": [
+          "student:generic_math_43_58_relation",
+          "check:1de938029daa1792bb05",
+          "check:ac2fae067f60cf1f1c32",
+          "student:tme2-arithmetic-b055de628d3fe364",
+          "/Users/LinMarcolino/Documents/confia-lean-auditor/artifacts/worktrees/confia-dec10-integration/artifacts/student_claim_checks/tme2-p1-pilot-61da7df50cb846d49619ddd2ec501347/student_claim_check_0_refutation.lean"
+        ],
+        "credit_evidence_refs": [
+          "student:generic_math_43_58_relation",
+          "check:1de938029daa1792bb05"
+        ],
+        "needs_review": true,
+        "reason": "HIGHEST_SATISFIED_BAND",
+        "obligations": [
+          {
+            "source_claim_ids": [
+              "student:generic_math_43_58_relation"
+            ],
+            "verification_source": "deterministic",
+            "grounding_status": "grounded",
+            "metadata": {
+              "fact_id": "a.inverted_number_137",
+              "mapping_version": "tme2-p1-obligations.v1",
+              "reason": "MAPPED_VERIFIED_FACT",
+              "source_sha256": "6755623875db16c504b438e0e4ff1407be6b8d7a067aeb3f7b8f4bbe3855ae3c",
+              "verifications": [
+                {
+                  "verification_id": "tme2-p1-digital-check.v1:1de938029daa1792bb05",
+                  "verification_source": "deterministic",
+                  "effective_status": "supported",
+                  "reason": "EXISTING_VERIFICATION_RESULT",
+                  "metadata": {
+                    "checker": "tme2-p1-digital-check.v1"
+                  }
+                }
+              ]
+            },
+            "obligation_id": "a.identifies_137",
+            "input_status": "supported",
+            "effective_status": "supported",
+            "origin": "deterministic",
+            "evidence_refs": [
+              "student:generic_math_43_58_relation",
+              "check:1de938029daa1792bb05"
+            ],
+            "conditional_on": null,
+            "reason": "UPSTREAM_STATUS"
+          },
+          {
+            "source_claim_ids": [
+              "student:generic_math_43_58_relation"
+            ],
+            "verification_source": "deterministic",
+            "grounding_status": "grounded",
+            "metadata": {
+              "fact_id": "a.subtraction_731_137",
+              "mapping_version": "tme2-p1-obligations.v1",
+              "reason": "MAPPED_VERIFIED_FACT",
+              "source_sha256": "6755623875db16c504b438e0e4ff1407be6b8d7a067aeb3f7b8f4bbe3855ae3c",
+              "verifications": [
+                {
+                  "verification_id": "tme2-p1-digital-check.v1:ac2fae067f60cf1f1c32",
+                  "verification_source": "deterministic",
+                  "effective_status": "supported",
+                  "reason": "EXISTING_VERIFICATION_RESULT",
+                  "metadata": {
+                    "checker": "tme2-p1-digital-check.v1"
+                  }
+                }
+              ]
+            },
+            "obligation_id": "a.constructs_subtraction",
+            "input_status": "supported",
+            "effective_status": "supported",
+            "origin": "deterministic",
+            "evidence_refs": [
+              "student:generic_math_43_58_relation",
+              "check:ac2fae067f60cf1f1c32"
+            ],
+            "conditional_on": null,
+            "reason": "UPSTREAM_STATUS"
+          },
+          {
+            "source_claim_ids": [
+              "student:generic_math_43_58_relation",
+              "student:tme2-arithmetic-b055de628d3fe364"
+            ],
+            "verification_source": "student_lean",
+            "grounding_status": "grounded",
+            "metadata": {
+              "fact_id": "a.result_594",
+              "mapping_version": "tme2-p1-obligations.v1",
+              "reason": "MAPPED_VERIFIED_FACT",
+              "source_sha256": "6755623875db16c504b438e0e4ff1407be6b8d7a067aeb3f7b8f4bbe3855ae3c",
+              "verifications": [
+                {
+                  "verification_id": "tme2-p1-digital-check.v1:bc35f6e79af1f5a61fdc",
+                  "verification_source": "student_lean",
+                  "effective_status": "refuted",
+                  "reason": "EXISTING_VERIFICATION_RESULT",
+                  "metadata": {
+                    "checker": "tme2-p1-digital-check.v1"
+                  }
+                }
+              ]
+            },
+            "obligation_id": "a.result_594",
+            "input_status": "refuted",
+            "effective_status": "refuted",
+            "origin": "student_lean",
+            "evidence_refs": [
+              "student:generic_math_43_58_relation",
+              "student:tme2-arithmetic-b055de628d3fe364",
+              "/Users/LinMarcolino/Documents/confia-lean-auditor/artifacts/worktrees/confia-dec10-integration/artifacts/student_claim_checks/tme2-p1-pilot-61da7df50cb846d49619ddd2ec501347/student_claim_check_0_refutation.lean"
+            ],
+            "conditional_on": null,
+            "reason": "UPSTREAM_STATUS"
+          },
+          {
+            "source_claim_ids": [
+              "student:generic_math_43_58_relation"
+            ],
+            "verification_source": "deterministic",
+            "grounding_status": "grounded",
+            "metadata": {
+              "fact_id": "a.inverted_number_137",
+              "mapping_version": "tme2-p1-obligations.v1",
+              "reason": "MAPPED_VERIFIED_FACT",
+              "source_sha256": "6755623875db16c504b438e0e4ff1407be6b8d7a067aeb3f7b8f4bbe3855ae3c",
+              "verifications": [
+                {
+                  "verification_id": "tme2-p1-digital-check.v1:1de938029daa1792bb05",
+                  "verification_source": "deterministic",
+                  "effective_status": "supported",
+                  "reason": "EXISTING_VERIFICATION_RESULT",
+                  "metadata": {
+                    "checker": "tme2-p1-digital-check.v1"
+                  }
+                }
+              ]
+            },
+            "obligation_id": "a.identifies_137",
+            "input_status": "supported",
+            "effective_status": "supported",
+            "origin": "deterministic",
+            "evidence_refs": [
+              "student:generic_math_43_58_relation",
+              "check:1de938029daa1792bb05"
+            ],
+            "conditional_on": null,
+            "reason": "UPSTREAM_STATUS"
+          },
+          {
+            "source_claim_ids": [
+              "student:generic_math_43_58_relation"
+            ],
+            "verification_source": "deterministic",
+            "grounding_status": "grounded",
+            "metadata": {
+              "fact_id": "a.subtraction_731_137",
+              "mapping_version": "tme2-p1-obligations.v1",
+              "reason": "MAPPED_VERIFIED_FACT",
+              "source_sha256": "6755623875db16c504b438e0e4ff1407be6b8d7a067aeb3f7b8f4bbe3855ae3c",
+              "verifications": [
+                {
+                  "verification_id": "tme2-p1-digital-check.v1:ac2fae067f60cf1f1c32",
+                  "verification_source": "deterministic",
+                  "effective_status": "supported",
+                  "reason": "EXISTING_VERIFICATION_RESULT",
+                  "metadata": {
+                    "checker": "tme2-p1-digital-check.v1"
+                  }
+                }
+              ]
+            },
+            "obligation_id": "a.constructs_subtraction",
+            "input_status": "supported",
+            "effective_status": "supported",
+            "origin": "deterministic",
+            "evidence_refs": [
+              "student:generic_math_43_58_relation",
+              "check:ac2fae067f60cf1f1c32"
+            ],
+            "conditional_on": null,
+            "reason": "UPSTREAM_STATUS"
+          },
+          {
+            "source_claim_ids": [],
+            "verification_source": "deterministic",
+            "grounding_status": "unavailable",
+            "metadata": {
+              "fact_id": "a.single_arithmetic_error",
+              "mapping_version": "tme2-p1-obligations.v1",
+              "reason": "NO_EXISTING_FACT",
+              "source_sha256": "6755623875db16c504b438e0e4ff1407be6b8d7a067aeb3f7b8f4bbe3855ae3c",
+              "verifications": []
+            },
+            "obligation_id": "a.arithmetic_error_only",
+            "input_status": "indeterminate",
+            "effective_status": "indeterminate",
+            "origin": "deterministic",
+            "evidence_refs": [],
+            "conditional_on": null,
+            "reason": "UPSTREAM_STATUS"
+          },
+          {
+            "source_claim_ids": [
+              "student:generic_math_43_58_relation"
+            ],
+            "verification_source": "deterministic",
+            "grounding_status": "grounded",
+            "metadata": {
+              "fact_id": "a.inverted_number_137",
+              "mapping_version": "tme2-p1-obligations.v1",
+              "reason": "MAPPED_VERIFIED_FACT",
+              "source_sha256": "6755623875db16c504b438e0e4ff1407be6b8d7a067aeb3f7b8f4bbe3855ae3c",
+              "verifications": [
+                {
+                  "verification_id": "tme2-p1-digital-check.v1:1de938029daa1792bb05",
+                  "verification_source": "deterministic",
+                  "effective_status": "supported",
+                  "reason": "EXISTING_VERIFICATION_RESULT",
+                  "metadata": {
+                    "checker": "tme2-p1-digital-check.v1"
+                  }
+                }
+              ]
+            },
+            "obligation_id": "a.identifies_137",
+            "input_status": "supported",
+            "effective_status": "supported",
+            "origin": "deterministic",
+            "evidence_refs": [
+              "student:generic_math_43_58_relation",
+              "check:1de938029daa1792bb05"
+            ],
+            "conditional_on": null,
+            "reason": "UPSTREAM_STATUS"
+          }
+        ],
+        "children": [
+          {
+            "item_id": "a.full",
+            "scoring_strategy": "all_of",
+            "max_points": "3",
+            "points_awarded": "0",
+            "known_points": "0",
+            "possible_points": "0",
+            "status": "decided",
+            "fully_satisfied": false,
+            "satisfied_obligations": [
+              "a.identifies_137",
+              "a.constructs_subtraction"
+            ],
+            "unsatisfied_obligations": [
+              "a.result_594"
+            ],
+            "indeterminate_obligations": [],
+            "technical_error_obligations": [],
+            "selected_band": null,
+            "selected_method_path": null,
+            "carry_forward_applied": false,
+            "evidence_refs": [
+              "student:generic_math_43_58_relation",
+              "check:1de938029daa1792bb05",
+              "check:ac2fae067f60cf1f1c32",
+              "student:tme2-arithmetic-b055de628d3fe364",
+              "/Users/LinMarcolino/Documents/confia-lean-auditor/artifacts/worktrees/confia-dec10-integration/artifacts/student_claim_checks/tme2-p1-pilot-61da7df50cb846d49619ddd2ec501347/student_claim_check_0_refutation.lean"
+            ],
+            "credit_evidence_refs": [],
+            "needs_review": false,
+            "reason": "REFUTED",
+            "obligations": [
+              {
+                "source_claim_ids": [
+                  "student:generic_math_43_58_relation"
+                ],
+                "verification_source": "deterministic",
+                "grounding_status": "grounded",
+                "metadata": {
+                  "fact_id": "a.inverted_number_137",
+                  "mapping_version": "tme2-p1-obligations.v1",
+                  "reason": "MAPPED_VERIFIED_FACT",
+                  "source_sha256": "6755623875db16c504b438e0e4ff1407be6b8d7a067aeb3f7b8f4bbe3855ae3c",
+                  "verifications": [
+                    {
+                      "verification_id": "tme2-p1-digital-check.v1:1de938029daa1792bb05",
+                      "verification_source": "deterministic",
+                      "effective_status": "supported",
+                      "reason": "EXISTING_VERIFICATION_RESULT",
+                      "metadata": {
+                        "checker": "tme2-p1-digital-check.v1"
+                      }
+                    }
+                  ]
+                },
+                "obligation_id": "a.identifies_137",
+                "input_status": "supported",
+                "effective_status": "supported",
+                "origin": "deterministic",
+                "evidence_refs": [
+                  "student:generic_math_43_58_relation",
+                  "check:1de938029daa1792bb05"
+                ],
+                "conditional_on": null,
+                "reason": "UPSTREAM_STATUS"
+              },
+              {
+                "source_claim_ids": [
+                  "student:generic_math_43_58_relation"
+                ],
+                "verification_source": "deterministic",
+                "grounding_status": "grounded",
+                "metadata": {
+                  "fact_id": "a.subtraction_731_137",
+                  "mapping_version": "tme2-p1-obligations.v1",
+                  "reason": "MAPPED_VERIFIED_FACT",
+                  "source_sha256": "6755623875db16c504b438e0e4ff1407be6b8d7a067aeb3f7b8f4bbe3855ae3c",
+                  "verifications": [
+                    {
+                      "verification_id": "tme2-p1-digital-check.v1:ac2fae067f60cf1f1c32",
+                      "verification_source": "deterministic",
+                      "effective_status": "supported",
+                      "reason": "EXISTING_VERIFICATION_RESULT",
+                      "metadata": {
+                        "checker": "tme2-p1-digital-check.v1"
+                      }
+                    }
+                  ]
+                },
+                "obligation_id": "a.constructs_subtraction",
+                "input_status": "supported",
+                "effective_status": "supported",
+                "origin": "deterministic",
+                "evidence_refs": [
+                  "student:generic_math_43_58_relation",
+                  "check:ac2fae067f60cf1f1c32"
+                ],
+                "conditional_on": null,
+                "reason": "UPSTREAM_STATUS"
+              },
+              {
+                "source_claim_ids": [
+                  "student:generic_math_43_58_relation",
+                  "student:tme2-arithmetic-b055de628d3fe364"
+                ],
+                "verification_source": "student_lean",
+                "grounding_status": "grounded",
+                "metadata": {
+                  "fact_id": "a.result_594",
+                  "mapping_version": "tme2-p1-obligations.v1",
+                  "reason": "MAPPED_VERIFIED_FACT",
+                  "source_sha256": "6755623875db16c504b438e0e4ff1407be6b8d7a067aeb3f7b8f4bbe3855ae3c",
+                  "verifications": [
+                    {
+                      "verification_id": "tme2-p1-digital-check.v1:bc35f6e79af1f5a61fdc",
+                      "verification_source": "student_lean",
+                      "effective_status": "refuted",
+                      "reason": "EXISTING_VERIFICATION_RESULT",
+                      "metadata": {
+                        "checker": "tme2-p1-digital-check.v1"
+                      }
+                    }
+                  ]
+                },
+                "obligation_id": "a.result_594",
+                "input_status": "refuted",
+                "effective_status": "refuted",
+                "origin": "student_lean",
+                "evidence_refs": [
+                  "student:generic_math_43_58_relation",
+                  "student:tme2-arithmetic-b055de628d3fe364",
+                  "/Users/LinMarcolino/Documents/confia-lean-auditor/artifacts/worktrees/confia-dec10-integration/artifacts/student_claim_checks/tme2-p1-pilot-61da7df50cb846d49619ddd2ec501347/student_claim_check_0_refutation.lean"
+                ],
+                "conditional_on": null,
+                "reason": "UPSTREAM_STATUS"
+              }
+            ],
+            "children": []
+          },
+          {
+            "item_id": "a.arithmetic_only",
+            "scoring_strategy": "all_of",
+            "max_points": "2",
+            "points_awarded": "0",
+            "known_points": "0",
+            "possible_points": "2",
+            "status": "indeterminate",
+            "fully_satisfied": false,
+            "satisfied_obligations": [
+              "a.identifies_137",
+              "a.constructs_subtraction"
+            ],
+            "unsatisfied_obligations": [],
+            "indeterminate_obligations": [
+              "a.arithmetic_error_only"
+            ],
+            "technical_error_obligations": [],
+            "selected_band": null,
+            "selected_method_path": null,
+            "carry_forward_applied": false,
+            "evidence_refs": [
+              "student:generic_math_43_58_relation",
+              "check:1de938029daa1792bb05",
+              "check:ac2fae067f60cf1f1c32"
+            ],
+            "credit_evidence_refs": [],
+            "needs_review": true,
+            "reason": "INDETERMINATE",
+            "obligations": [
+              {
+                "source_claim_ids": [
+                  "student:generic_math_43_58_relation"
+                ],
+                "verification_source": "deterministic",
+                "grounding_status": "grounded",
+                "metadata": {
+                  "fact_id": "a.inverted_number_137",
+                  "mapping_version": "tme2-p1-obligations.v1",
+                  "reason": "MAPPED_VERIFIED_FACT",
+                  "source_sha256": "6755623875db16c504b438e0e4ff1407be6b8d7a067aeb3f7b8f4bbe3855ae3c",
+                  "verifications": [
+                    {
+                      "verification_id": "tme2-p1-digital-check.v1:1de938029daa1792bb05",
+                      "verification_source": "deterministic",
+                      "effective_status": "supported",
+                      "reason": "EXISTING_VERIFICATION_RESULT",
+                      "metadata": {
+                        "checker": "tme2-p1-digital-check.v1"
+                      }
+                    }
+                  ]
+                },
+                "obligation_id": "a.identifies_137",
+                "input_status": "supported",
+                "effective_status": "supported",
+                "origin": "deterministic",
+                "evidence_refs": [
+                  "student:generic_math_43_58_relation",
+                  "check:1de938029daa1792bb05"
+                ],
+                "conditional_on": null,
+                "reason": "UPSTREAM_STATUS"
+              },
+              {
+                "source_claim_ids": [
+                  "student:generic_math_43_58_relation"
+                ],
+                "verification_source": "deterministic",
+                "grounding_status": "grounded",
+                "metadata": {
+                  "fact_id": "a.subtraction_731_137",
+                  "mapping_version": "tme2-p1-obligations.v1",
+                  "reason": "MAPPED_VERIFIED_FACT",
+                  "source_sha256": "6755623875db16c504b438e0e4ff1407be6b8d7a067aeb3f7b8f4bbe3855ae3c",
+                  "verifications": [
+                    {
+                      "verification_id": "tme2-p1-digital-check.v1:ac2fae067f60cf1f1c32",
+                      "verification_source": "deterministic",
+                      "effective_status": "supported",
+                      "reason": "EXISTING_VERIFICATION_RESULT",
+                      "metadata": {
+                        "checker": "tme2-p1-digital-check.v1"
+                      }
+                    }
+                  ]
+                },
+                "obligation_id": "a.constructs_subtraction",
+                "input_status": "supported",
+                "effective_status": "supported",
+                "origin": "deterministic",
+                "evidence_refs": [
+                  "student:generic_math_43_58_relation",
+                  "check:ac2fae067f60cf1f1c32"
+                ],
+                "conditional_on": null,
+                "reason": "UPSTREAM_STATUS"
+              },
+              {
+                "source_claim_ids": [],
+                "verification_source": "deterministic",
+                "grounding_status": "unavailable",
+                "metadata": {
+                  "fact_id": "a.single_arithmetic_error",
+                  "mapping_version": "tme2-p1-obligations.v1",
+                  "reason": "NO_EXISTING_FACT",
+                  "source_sha256": "6755623875db16c504b438e0e4ff1407be6b8d7a067aeb3f7b8f4bbe3855ae3c",
+                  "verifications": []
+                },
+                "obligation_id": "a.arithmetic_error_only",
+                "input_status": "indeterminate",
+                "effective_status": "indeterminate",
+                "origin": "deterministic",
+                "evidence_refs": [],
+                "conditional_on": null,
+                "reason": "UPSTREAM_STATUS"
+              }
+            ],
+            "children": []
+          },
+          {
+            "item_id": "a.identification",
+            "scoring_strategy": "all_of",
+            "max_points": "1",
+            "points_awarded": "1",
+            "known_points": "1",
+            "possible_points": "1",
+            "status": "decided",
+            "fully_satisfied": true,
+            "satisfied_obligations": [
+              "a.identifies_137"
+            ],
+            "unsatisfied_obligations": [],
+            "indeterminate_obligations": [],
+            "technical_error_obligations": [],
+            "selected_band": null,
+            "selected_method_path": null,
+            "carry_forward_applied": false,
+            "evidence_refs": [
+              "student:generic_math_43_58_relation",
+              "check:1de938029daa1792bb05"
+            ],
+            "credit_evidence_refs": [
+              "student:generic_math_43_58_relation",
+              "check:1de938029daa1792bb05"
+            ],
+            "needs_review": false,
+            "reason": "SUPPORTED",
+            "obligations": [
+              {
+                "source_claim_ids": [
+                  "student:generic_math_43_58_relation"
+                ],
+                "verification_source": "deterministic",
+                "grounding_status": "grounded",
+                "metadata": {
+                  "fact_id": "a.inverted_number_137",
+                  "mapping_version": "tme2-p1-obligations.v1",
+                  "reason": "MAPPED_VERIFIED_FACT",
+                  "source_sha256": "6755623875db16c504b438e0e4ff1407be6b8d7a067aeb3f7b8f4bbe3855ae3c",
+                  "verifications": [
+                    {
+                      "verification_id": "tme2-p1-digital-check.v1:1de938029daa1792bb05",
+                      "verification_source": "deterministic",
+                      "effective_status": "supported",
+                      "reason": "EXISTING_VERIFICATION_RESULT",
+                      "metadata": {
+                        "checker": "tme2-p1-digital-check.v1"
+                      }
+                    }
+                  ]
+                },
+                "obligation_id": "a.identifies_137",
+                "input_status": "supported",
+                "effective_status": "supported",
+                "origin": "deterministic",
+                "evidence_refs": [
+                  "student:generic_math_43_58_relation",
+                  "check:1de938029daa1792bb05"
+                ],
+                "conditional_on": null,
+                "reason": "UPSTREAM_STATUS"
+              }
+            ],
+            "children": []
+          }
+        ]
+      },
+      {
+        "item_id": "b",
+        "scoring_strategy": "additive",
+        "max_points": "5",
+        "points_awarded": "0",
+        "known_points": "0",
+        "possible_points": "5",
+        "status": "indeterminate",
+        "fully_satisfied": false,
+        "satisfied_obligations": [],
+        "unsatisfied_obligations": [],
+        "indeterminate_obligations": [
+          "b.reversed_number",
+          "b.subtraction",
+          "b.middle_cancellation",
+          "b.factorization"
+        ],
+        "technical_error_obligations": [],
+        "selected_band": null,
+        "selected_method_path": null,
+        "carry_forward_applied": false,
+        "evidence_refs": [],
+        "credit_evidence_refs": [],
+        "needs_review": true,
+        "reason": "CAPPED_SUM",
+        "obligations": [
+          {
+            "source_claim_ids": [],
+            "verification_source": "deterministic",
+            "grounding_status": "unavailable",
+            "metadata": {
+              "fact_id": "b.reversed_number",
+              "mapping_version": "tme2-p1-obligations.v1",
+              "reason": "NO_EXISTING_FACT",
+              "source_sha256": "6755623875db16c504b438e0e4ff1407be6b8d7a067aeb3f7b8f4bbe3855ae3c",
+              "verifications": []
+            },
+            "obligation_id": "b.reversed_number",
+            "input_status": "indeterminate",
+            "effective_status": "indeterminate",
+            "origin": "deterministic",
+            "evidence_refs": [],
+            "conditional_on": null,
+            "reason": "UPSTREAM_STATUS"
+          },
+          {
+            "source_claim_ids": [],
+            "verification_source": "deterministic",
+            "grounding_status": "unavailable",
+            "metadata": {
+              "fact_id": "b.subtraction",
+              "mapping_version": "tme2-p1-obligations.v1",
+              "reason": "NO_EXISTING_FACT",
+              "source_sha256": "6755623875db16c504b438e0e4ff1407be6b8d7a067aeb3f7b8f4bbe3855ae3c",
+              "verifications": []
+            },
+            "obligation_id": "b.subtraction",
+            "input_status": "indeterminate",
+            "effective_status": "indeterminate",
+            "origin": "deterministic",
+            "evidence_refs": [],
+            "conditional_on": null,
+            "reason": "UPSTREAM_STATUS"
+          },
+          {
+            "source_claim_ids": [],
+            "verification_source": "deterministic",
+            "grounding_status": "unavailable",
+            "metadata": {
+              "fact_id": "b.middle_cancellation",
+              "mapping_version": "tme2-p1-obligations.v1",
+              "reason": "NO_EXISTING_FACT",
+              "source_sha256": "6755623875db16c504b438e0e4ff1407be6b8d7a067aeb3f7b8f4bbe3855ae3c",
+              "verifications": []
+            },
+            "obligation_id": "b.middle_cancellation",
+            "input_status": "indeterminate",
+            "effective_status": "indeterminate",
+            "origin": "deterministic",
+            "evidence_refs": [],
+            "conditional_on": null,
+            "reason": "UPSTREAM_STATUS"
+          },
+          {
+            "source_claim_ids": [],
+            "verification_source": "deterministic",
+            "grounding_status": "unavailable",
+            "metadata": {
+              "fact_id": "b.factorization",
+              "mapping_version": "tme2-p1-obligations.v1",
+              "reason": "NO_EXISTING_FACT",
+              "source_sha256": "6755623875db16c504b438e0e4ff1407be6b8d7a067aeb3f7b8f4bbe3855ae3c",
+              "verifications": []
+            },
+            "obligation_id": "b.factorization",
+            "input_status": "indeterminate",
+            "effective_status": "indeterminate",
+            "origin": "deterministic",
+            "evidence_refs": [],
+            "conditional_on": null,
+            "reason": "UPSTREAM_STATUS"
+          }
+        ],
+        "children": [
+          {
+            "item_id": "b.reverse",
+            "scoring_strategy": "all_of",
+            "max_points": "2",
+            "points_awarded": "0",
+            "known_points": "0",
+            "possible_points": "2",
+            "status": "indeterminate",
+            "fully_satisfied": false,
+            "satisfied_obligations": [],
+            "unsatisfied_obligations": [],
+            "indeterminate_obligations": [
+              "b.reversed_number"
+            ],
+            "technical_error_obligations": [],
+            "selected_band": null,
+            "selected_method_path": null,
+            "carry_forward_applied": false,
+            "evidence_refs": [],
+            "credit_evidence_refs": [],
+            "needs_review": true,
+            "reason": "INDETERMINATE",
+            "obligations": [
+              {
+                "source_claim_ids": [],
+                "verification_source": "deterministic",
+                "grounding_status": "unavailable",
+                "metadata": {
+                  "fact_id": "b.reversed_number",
+                  "mapping_version": "tme2-p1-obligations.v1",
+                  "reason": "NO_EXISTING_FACT",
+                  "source_sha256": "6755623875db16c504b438e0e4ff1407be6b8d7a067aeb3f7b8f4bbe3855ae3c",
+                  "verifications": []
+                },
+                "obligation_id": "b.reversed_number",
+                "input_status": "indeterminate",
+                "effective_status": "indeterminate",
+                "origin": "deterministic",
+                "evidence_refs": [],
+                "conditional_on": null,
+                "reason": "UPSTREAM_STATUS"
+              }
+            ],
+            "children": []
+          },
+          {
+            "item_id": "b.subtract_cancel",
+            "scoring_strategy": "all_of",
+            "max_points": "2",
+            "points_awarded": "0",
+            "known_points": "0",
+            "possible_points": "2",
+            "status": "indeterminate",
+            "fully_satisfied": false,
+            "satisfied_obligations": [],
+            "unsatisfied_obligations": [],
+            "indeterminate_obligations": [
+              "b.subtraction",
+              "b.middle_cancellation"
+            ],
+            "technical_error_obligations": [],
+            "selected_band": null,
+            "selected_method_path": null,
+            "carry_forward_applied": false,
+            "evidence_refs": [],
+            "credit_evidence_refs": [],
+            "needs_review": true,
+            "reason": "INDETERMINATE",
+            "obligations": [
+              {
+                "source_claim_ids": [],
+                "verification_source": "deterministic",
+                "grounding_status": "unavailable",
+                "metadata": {
+                  "fact_id": "b.subtraction",
+                  "mapping_version": "tme2-p1-obligations.v1",
+                  "reason": "NO_EXISTING_FACT",
+                  "source_sha256": "6755623875db16c504b438e0e4ff1407be6b8d7a067aeb3f7b8f4bbe3855ae3c",
+                  "verifications": []
+                },
+                "obligation_id": "b.subtraction",
+                "input_status": "indeterminate",
+                "effective_status": "indeterminate",
+                "origin": "deterministic",
+                "evidence_refs": [],
+                "conditional_on": null,
+                "reason": "UPSTREAM_STATUS"
+              },
+              {
+                "source_claim_ids": [],
+                "verification_source": "deterministic",
+                "grounding_status": "unavailable",
+                "metadata": {
+                  "fact_id": "b.middle_cancellation",
+                  "mapping_version": "tme2-p1-obligations.v1",
+                  "reason": "NO_EXISTING_FACT",
+                  "source_sha256": "6755623875db16c504b438e0e4ff1407be6b8d7a067aeb3f7b8f4bbe3855ae3c",
+                  "verifications": []
+                },
+                "obligation_id": "b.middle_cancellation",
+                "input_status": "indeterminate",
+                "effective_status": "indeterminate",
+                "origin": "deterministic",
+                "evidence_refs": [],
+                "conditional_on": null,
+                "reason": "UPSTREAM_STATUS"
+              }
+            ],
+            "children": []
+          },
+          {
+            "item_id": "b.simplify",
+            "scoring_strategy": "all_of",
+            "max_points": "1",
+            "points_awarded": "0",
+            "known_points": "0",
+            "possible_points": "1",
+            "status": "indeterminate",
+            "fully_satisfied": false,
+            "satisfied_obligations": [],
+            "unsatisfied_obligations": [],
+            "indeterminate_obligations": [
+              "b.factorization"
+            ],
+            "technical_error_obligations": [],
+            "selected_band": null,
+            "selected_method_path": null,
+            "carry_forward_applied": false,
+            "evidence_refs": [],
+            "credit_evidence_refs": [],
+            "needs_review": true,
+            "reason": "INDETERMINATE",
+            "obligations": [
+              {
+                "source_claim_ids": [],
+                "verification_source": "deterministic",
+                "grounding_status": "unavailable",
+                "metadata": {
+                  "fact_id": "b.factorization",
+                  "mapping_version": "tme2-p1-obligations.v1",
+                  "reason": "NO_EXISTING_FACT",
+                  "source_sha256": "6755623875db16c504b438e0e4ff1407be6b8d7a067aeb3f7b8f4bbe3855ae3c",
+                  "verifications": []
+                },
+                "obligation_id": "b.factorization",
+                "input_status": "indeterminate",
+                "effective_status": "indeterminate",
+                "origin": "deterministic",
+                "evidence_refs": [],
+                "conditional_on": null,
+                "reason": "UPSTREAM_STATUS"
+              }
+            ],
+            "children": []
+          }
+        ]
+      },
+      {
+        "item_id": "c",
+        "scoring_strategy": "additive",
+        "max_points": "6",
+        "points_awarded": "0",
+        "known_points": "0",
+        "possible_points": "6",
+        "status": "indeterminate",
+        "fully_satisfied": false,
+        "satisfied_obligations": [],
+        "unsatisfied_obligations": [],
+        "indeterminate_obligations": [
+          "c.uses_expression",
+          "c.difference_domain",
+          "c.complete_list",
+          "c.no_extraneous_values",
+          "c.single_list_error",
+          "c.several_correct",
+          "c.pattern_recognized",
+          "c.some_correct"
+        ],
+        "technical_error_obligations": [],
+        "selected_band": null,
+        "selected_method_path": null,
+        "carry_forward_applied": false,
+        "evidence_refs": [],
+        "credit_evidence_refs": [],
+        "needs_review": true,
+        "reason": "CAPPED_SUM",
+        "obligations": [
+          {
+            "source_claim_ids": [],
+            "verification_source": "deterministic",
+            "grounding_status": "unavailable",
+            "metadata": {
+              "fact_id": "c.uses_expression",
+              "mapping_version": "tme2-p1-obligations.v1",
+              "reason": "NO_EXISTING_FACT",
+              "source_sha256": "6755623875db16c504b438e0e4ff1407be6b8d7a067aeb3f7b8f4bbe3855ae3c",
+              "verifications": []
+            },
+            "obligation_id": "c.uses_expression",
+            "input_status": "indeterminate",
+            "effective_status": "indeterminate",
+            "origin": "deterministic",
+            "evidence_refs": [],
+            "conditional_on": null,
+            "reason": "UPSTREAM_STATUS"
+          },
+          {
+            "source_claim_ids": [],
+            "verification_source": "deterministic",
+            "grounding_status": "unavailable",
+            "metadata": {
+              "fact_id": "c.difference_domain",
+              "mapping_version": "tme2-p1-obligations.v1",
+              "reason": "NO_EXISTING_FACT",
+              "source_sha256": "6755623875db16c504b438e0e4ff1407be6b8d7a067aeb3f7b8f4bbe3855ae3c",
+              "verifications": []
+            },
+            "obligation_id": "c.difference_domain",
+            "input_status": "indeterminate",
+            "effective_status": "indeterminate",
+            "origin": "deterministic",
+            "evidence_refs": [],
+            "conditional_on": null,
+            "reason": "UPSTREAM_STATUS"
+          },
+          {
+            "source_claim_ids": [],
+            "verification_source": "deterministic",
+            "grounding_status": "unavailable",
+            "metadata": {
+              "fact_id": "c.complete_list",
+              "mapping_version": "tme2-p1-obligations.v1",
+              "reason": "NO_EXISTING_FACT",
+              "source_sha256": "6755623875db16c504b438e0e4ff1407be6b8d7a067aeb3f7b8f4bbe3855ae3c",
+              "verifications": []
+            },
+            "obligation_id": "c.complete_list",
+            "input_status": "indeterminate",
+            "effective_status": "indeterminate",
+            "origin": "deterministic",
+            "evidence_refs": [],
+            "conditional_on": null,
+            "reason": "UPSTREAM_STATUS"
+          },
+          {
+            "source_claim_ids": [],
+            "verification_source": "deterministic",
+            "grounding_status": "unavailable",
+            "metadata": {
+              "fact_id": "c.no_extraneous_values",
+              "mapping_version": "tme2-p1-obligations.v1",
+              "reason": "NO_EXISTING_FACT",
+              "source_sha256": "6755623875db16c504b438e0e4ff1407be6b8d7a067aeb3f7b8f4bbe3855ae3c",
+              "verifications": []
+            },
+            "obligation_id": "c.no_extraneous_values",
+            "input_status": "indeterminate",
+            "effective_status": "indeterminate",
+            "origin": "deterministic",
+            "evidence_refs": [],
+            "conditional_on": null,
+            "reason": "UPSTREAM_STATUS"
+          },
+          {
+            "source_claim_ids": [],
+            "verification_source": "deterministic",
+            "grounding_status": "unavailable",
+            "metadata": {
+              "fact_id": "c.single_list_error",
+              "mapping_version": "tme2-p1-obligations.v1",
+              "reason": "NO_EXISTING_FACT",
+              "source_sha256": "6755623875db16c504b438e0e4ff1407be6b8d7a067aeb3f7b8f4bbe3855ae3c",
+              "verifications": []
+            },
+            "obligation_id": "c.single_list_error",
+            "input_status": "indeterminate",
+            "effective_status": "indeterminate",
+            "origin": "deterministic",
+            "evidence_refs": [],
+            "conditional_on": null,
+            "reason": "UPSTREAM_STATUS"
+          },
+          {
+            "source_claim_ids": [],
+            "verification_source": "deterministic",
+            "grounding_status": "unavailable",
+            "metadata": {
+              "fact_id": "c.several_correct",
+              "mapping_version": "tme2-p1-obligations.v1",
+              "reason": "NO_EXISTING_FACT",
+              "source_sha256": "6755623875db16c504b438e0e4ff1407be6b8d7a067aeb3f7b8f4bbe3855ae3c",
+              "verifications": []
+            },
+            "obligation_id": "c.several_correct",
+            "input_status": "indeterminate",
+            "effective_status": "indeterminate",
+            "origin": "deterministic",
+            "evidence_refs": [],
+            "conditional_on": null,
+            "reason": "UPSTREAM_STATUS"
+          },
+          {
+            "source_claim_ids": [],
+            "verification_source": "deterministic",
+            "grounding_status": "unavailable",
+            "metadata": {
+              "fact_id": "c.pattern_recognized",
+              "mapping_version": "tme2-p1-obligations.v1",
+              "reason": "NO_EXISTING_FACT",
+              "source_sha256": "6755623875db16c504b438e0e4ff1407be6b8d7a067aeb3f7b8f4bbe3855ae3c",
+              "verifications": []
+            },
+            "obligation_id": "c.pattern_recognized",
+            "input_status": "indeterminate",
+            "effective_status": "indeterminate",
+            "origin": "deterministic",
+            "evidence_refs": [],
+            "conditional_on": null,
+            "reason": "UPSTREAM_STATUS"
+          },
+          {
+            "source_claim_ids": [],
+            "verification_source": "deterministic",
+            "grounding_status": "unavailable",
+            "metadata": {
+              "fact_id": "c.some_correct",
+              "mapping_version": "tme2-p1-obligations.v1",
+              "reason": "NO_EXISTING_FACT",
+              "source_sha256": "6755623875db16c504b438e0e4ff1407be6b8d7a067aeb3f7b8f4bbe3855ae3c",
+              "verifications": []
+            },
+            "obligation_id": "c.some_correct",
+            "input_status": "indeterminate",
+            "effective_status": "indeterminate",
+            "origin": "deterministic",
+            "evidence_refs": [],
+            "conditional_on": null,
+            "reason": "UPSTREAM_STATUS"
+          }
+        ],
+        "children": [
+          {
+            "item_id": "c.expression",
+            "scoring_strategy": "all_of",
+            "max_points": "1",
+            "points_awarded": "0",
+            "known_points": "0",
+            "possible_points": "1",
+            "status": "indeterminate",
+            "fully_satisfied": false,
+            "satisfied_obligations": [],
+            "unsatisfied_obligations": [],
+            "indeterminate_obligations": [
+              "c.uses_expression"
+            ],
+            "technical_error_obligations": [],
+            "selected_band": null,
+            "selected_method_path": null,
+            "carry_forward_applied": false,
+            "evidence_refs": [],
+            "credit_evidence_refs": [],
+            "needs_review": true,
+            "reason": "INDETERMINATE",
+            "obligations": [
+              {
+                "source_claim_ids": [],
+                "verification_source": "deterministic",
+                "grounding_status": "unavailable",
+                "metadata": {
+                  "fact_id": "c.uses_expression",
+                  "mapping_version": "tme2-p1-obligations.v1",
+                  "reason": "NO_EXISTING_FACT",
+                  "source_sha256": "6755623875db16c504b438e0e4ff1407be6b8d7a067aeb3f7b8f4bbe3855ae3c",
+                  "verifications": []
+                },
+                "obligation_id": "c.uses_expression",
+                "input_status": "indeterminate",
+                "effective_status": "indeterminate",
+                "origin": "deterministic",
+                "evidence_refs": [],
+                "conditional_on": null,
+                "reason": "UPSTREAM_STATUS"
+              }
+            ],
+            "children": []
+          },
+          {
+            "item_id": "c.domain",
+            "scoring_strategy": "all_of",
+            "max_points": "1",
+            "points_awarded": "0",
+            "known_points": "0",
+            "possible_points": "1",
+            "status": "indeterminate",
+            "fully_satisfied": false,
+            "satisfied_obligations": [],
+            "unsatisfied_obligations": [],
+            "indeterminate_obligations": [
+              "c.difference_domain"
+            ],
+            "technical_error_obligations": [],
+            "selected_band": null,
+            "selected_method_path": null,
+            "carry_forward_applied": false,
+            "evidence_refs": [],
+            "credit_evidence_refs": [],
+            "needs_review": true,
+            "reason": "INDETERMINATE",
+            "obligations": [
+              {
+                "source_claim_ids": [],
+                "verification_source": "deterministic",
+                "grounding_status": "unavailable",
+                "metadata": {
+                  "fact_id": "c.difference_domain",
+                  "mapping_version": "tme2-p1-obligations.v1",
+                  "reason": "NO_EXISTING_FACT",
+                  "source_sha256": "6755623875db16c504b438e0e4ff1407be6b8d7a067aeb3f7b8f4bbe3855ae3c",
+                  "verifications": []
+                },
+                "obligation_id": "c.difference_domain",
+                "input_status": "indeterminate",
+                "effective_status": "indeterminate",
+                "origin": "deterministic",
+                "evidence_refs": [],
+                "conditional_on": null,
+                "reason": "UPSTREAM_STATUS"
+              }
+            ],
+            "children": []
+          },
+          {
+            "item_id": "c.list",
+            "scoring_strategy": "banded",
+            "max_points": "4",
+            "points_awarded": "0",
+            "known_points": "0",
+            "possible_points": "4",
+            "status": "indeterminate",
+            "fully_satisfied": false,
+            "satisfied_obligations": [],
+            "unsatisfied_obligations": [],
+            "indeterminate_obligations": [
+              "c.complete_list",
+              "c.no_extraneous_values",
+              "c.single_list_error",
+              "c.several_correct",
+              "c.pattern_recognized",
+              "c.some_correct"
+            ],
+            "technical_error_obligations": [],
+            "selected_band": null,
+            "selected_method_path": null,
+            "carry_forward_applied": false,
+            "evidence_refs": [],
+            "credit_evidence_refs": [],
+            "needs_review": true,
+            "reason": "HIGHEST_SATISFIED_BAND",
+            "obligations": [
+              {
+                "source_claim_ids": [],
+                "verification_source": "deterministic",
+                "grounding_status": "unavailable",
+                "metadata": {
+                  "fact_id": "c.complete_list",
+                  "mapping_version": "tme2-p1-obligations.v1",
+                  "reason": "NO_EXISTING_FACT",
+                  "source_sha256": "6755623875db16c504b438e0e4ff1407be6b8d7a067aeb3f7b8f4bbe3855ae3c",
+                  "verifications": []
+                },
+                "obligation_id": "c.complete_list",
+                "input_status": "indeterminate",
+                "effective_status": "indeterminate",
+                "origin": "deterministic",
+                "evidence_refs": [],
+                "conditional_on": null,
+                "reason": "UPSTREAM_STATUS"
+              },
+              {
+                "source_claim_ids": [],
+                "verification_source": "deterministic",
+                "grounding_status": "unavailable",
+                "metadata": {
+                  "fact_id": "c.no_extraneous_values",
+                  "mapping_version": "tme2-p1-obligations.v1",
+                  "reason": "NO_EXISTING_FACT",
+                  "source_sha256": "6755623875db16c504b438e0e4ff1407be6b8d7a067aeb3f7b8f4bbe3855ae3c",
+                  "verifications": []
+                },
+                "obligation_id": "c.no_extraneous_values",
+                "input_status": "indeterminate",
+                "effective_status": "indeterminate",
+                "origin": "deterministic",
+                "evidence_refs": [],
+                "conditional_on": null,
+                "reason": "UPSTREAM_STATUS"
+              },
+              {
+                "source_claim_ids": [],
+                "verification_source": "deterministic",
+                "grounding_status": "unavailable",
+                "metadata": {
+                  "fact_id": "c.single_list_error",
+                  "mapping_version": "tme2-p1-obligations.v1",
+                  "reason": "NO_EXISTING_FACT",
+                  "source_sha256": "6755623875db16c504b438e0e4ff1407be6b8d7a067aeb3f7b8f4bbe3855ae3c",
+                  "verifications": []
+                },
+                "obligation_id": "c.single_list_error",
+                "input_status": "indeterminate",
+                "effective_status": "indeterminate",
+                "origin": "deterministic",
+                "evidence_refs": [],
+                "conditional_on": null,
+                "reason": "UPSTREAM_STATUS"
+              },
+              {
+                "source_claim_ids": [],
+                "verification_source": "deterministic",
+                "grounding_status": "unavailable",
+                "metadata": {
+                  "fact_id": "c.several_correct",
+                  "mapping_version": "tme2-p1-obligations.v1",
+                  "reason": "NO_EXISTING_FACT",
+                  "source_sha256": "6755623875db16c504b438e0e4ff1407be6b8d7a067aeb3f7b8f4bbe3855ae3c",
+                  "verifications": []
+                },
+                "obligation_id": "c.several_correct",
+                "input_status": "indeterminate",
+                "effective_status": "indeterminate",
+                "origin": "deterministic",
+                "evidence_refs": [],
+                "conditional_on": null,
+                "reason": "UPSTREAM_STATUS"
+              },
+              {
+                "source_claim_ids": [],
+                "verification_source": "deterministic",
+                "grounding_status": "unavailable",
+                "metadata": {
+                  "fact_id": "c.pattern_recognized",
+                  "mapping_version": "tme2-p1-obligations.v1",
+                  "reason": "NO_EXISTING_FACT",
+                  "source_sha256": "6755623875db16c504b438e0e4ff1407be6b8d7a067aeb3f7b8f4bbe3855ae3c",
+                  "verifications": []
+                },
+                "obligation_id": "c.pattern_recognized",
+                "input_status": "indeterminate",
+                "effective_status": "indeterminate",
+                "origin": "deterministic",
+                "evidence_refs": [],
+                "conditional_on": null,
+                "reason": "UPSTREAM_STATUS"
+              },
+              {
+                "source_claim_ids": [],
+                "verification_source": "deterministic",
+                "grounding_status": "unavailable",
+                "metadata": {
+                  "fact_id": "c.some_correct",
+                  "mapping_version": "tme2-p1-obligations.v1",
+                  "reason": "NO_EXISTING_FACT",
+                  "source_sha256": "6755623875db16c504b438e0e4ff1407be6b8d7a067aeb3f7b8f4bbe3855ae3c",
+                  "verifications": []
+                },
+                "obligation_id": "c.some_correct",
+                "input_status": "indeterminate",
+                "effective_status": "indeterminate",
+                "origin": "deterministic",
+                "evidence_refs": [],
+                "conditional_on": null,
+                "reason": "UPSTREAM_STATUS"
+              }
+            ],
+            "children": [
+              {
+                "item_id": "c.list.full",
+                "scoring_strategy": "all_of",
+                "max_points": "4",
+                "points_awarded": "0",
+                "known_points": "0",
+                "possible_points": "4",
+                "status": "indeterminate",
+                "fully_satisfied": false,
+                "satisfied_obligations": [],
+                "unsatisfied_obligations": [],
+                "indeterminate_obligations": [
+                  "c.complete_list",
+                  "c.no_extraneous_values"
+                ],
+                "technical_error_obligations": [],
+                "selected_band": null,
+                "selected_method_path": null,
+                "carry_forward_applied": false,
+                "evidence_refs": [],
+                "credit_evidence_refs": [],
+                "needs_review": true,
+                "reason": "INDETERMINATE",
+                "obligations": [
+                  {
+                    "source_claim_ids": [],
+                    "verification_source": "deterministic",
+                    "grounding_status": "unavailable",
+                    "metadata": {
+                      "fact_id": "c.complete_list",
+                      "mapping_version": "tme2-p1-obligations.v1",
+                      "reason": "NO_EXISTING_FACT",
+                      "source_sha256": "6755623875db16c504b438e0e4ff1407be6b8d7a067aeb3f7b8f4bbe3855ae3c",
+                      "verifications": []
+                    },
+                    "obligation_id": "c.complete_list",
+                    "input_status": "indeterminate",
+                    "effective_status": "indeterminate",
+                    "origin": "deterministic",
+                    "evidence_refs": [],
+                    "conditional_on": null,
+                    "reason": "UPSTREAM_STATUS"
+                  },
+                  {
+                    "source_claim_ids": [],
+                    "verification_source": "deterministic",
+                    "grounding_status": "unavailable",
+                    "metadata": {
+                      "fact_id": "c.no_extraneous_values",
+                      "mapping_version": "tme2-p1-obligations.v1",
+                      "reason": "NO_EXISTING_FACT",
+                      "source_sha256": "6755623875db16c504b438e0e4ff1407be6b8d7a067aeb3f7b8f4bbe3855ae3c",
+                      "verifications": []
+                    },
+                    "obligation_id": "c.no_extraneous_values",
+                    "input_status": "indeterminate",
+                    "effective_status": "indeterminate",
+                    "origin": "deterministic",
+                    "evidence_refs": [],
+                    "conditional_on": null,
+                    "reason": "UPSTREAM_STATUS"
+                  }
+                ],
+                "children": []
+              },
+              {
+                "item_id": "c.list.one_error",
+                "scoring_strategy": "all_of",
+                "max_points": "3",
+                "points_awarded": "0",
+                "known_points": "0",
+                "possible_points": "3",
+                "status": "indeterminate",
+                "fully_satisfied": false,
+                "satisfied_obligations": [],
+                "unsatisfied_obligations": [],
+                "indeterminate_obligations": [
+                  "c.single_list_error"
+                ],
+                "technical_error_obligations": [],
+                "selected_band": null,
+                "selected_method_path": null,
+                "carry_forward_applied": false,
+                "evidence_refs": [],
+                "credit_evidence_refs": [],
+                "needs_review": true,
+                "reason": "INDETERMINATE",
+                "obligations": [
+                  {
+                    "source_claim_ids": [],
+                    "verification_source": "deterministic",
+                    "grounding_status": "unavailable",
+                    "metadata": {
+                      "fact_id": "c.single_list_error",
+                      "mapping_version": "tme2-p1-obligations.v1",
+                      "reason": "NO_EXISTING_FACT",
+                      "source_sha256": "6755623875db16c504b438e0e4ff1407be6b8d7a067aeb3f7b8f4bbe3855ae3c",
+                      "verifications": []
+                    },
+                    "obligation_id": "c.single_list_error",
+                    "input_status": "indeterminate",
+                    "effective_status": "indeterminate",
+                    "origin": "deterministic",
+                    "evidence_refs": [],
+                    "conditional_on": null,
+                    "reason": "UPSTREAM_STATUS"
+                  }
+                ],
+                "children": []
+              },
+              {
+                "item_id": "c.list.pattern",
+                "scoring_strategy": "all_of",
+                "max_points": "2",
+                "points_awarded": "0",
+                "known_points": "0",
+                "possible_points": "2",
+                "status": "indeterminate",
+                "fully_satisfied": false,
+                "satisfied_obligations": [],
+                "unsatisfied_obligations": [],
+                "indeterminate_obligations": [
+                  "c.several_correct",
+                  "c.pattern_recognized"
+                ],
+                "technical_error_obligations": [],
+                "selected_band": null,
+                "selected_method_path": null,
+                "carry_forward_applied": false,
+                "evidence_refs": [],
+                "credit_evidence_refs": [],
+                "needs_review": true,
+                "reason": "INDETERMINATE",
+                "obligations": [
+                  {
+                    "source_claim_ids": [],
+                    "verification_source": "deterministic",
+                    "grounding_status": "unavailable",
+                    "metadata": {
+                      "fact_id": "c.several_correct",
+                      "mapping_version": "tme2-p1-obligations.v1",
+                      "reason": "NO_EXISTING_FACT",
+                      "source_sha256": "6755623875db16c504b438e0e4ff1407be6b8d7a067aeb3f7b8f4bbe3855ae3c",
+                      "verifications": []
+                    },
+                    "obligation_id": "c.several_correct",
+                    "input_status": "indeterminate",
+                    "effective_status": "indeterminate",
+                    "origin": "deterministic",
+                    "evidence_refs": [],
+                    "conditional_on": null,
+                    "reason": "UPSTREAM_STATUS"
+                  },
+                  {
+                    "source_claim_ids": [],
+                    "verification_source": "deterministic",
+                    "grounding_status": "unavailable",
+                    "metadata": {
+                      "fact_id": "c.pattern_recognized",
+                      "mapping_version": "tme2-p1-obligations.v1",
+                      "reason": "NO_EXISTING_FACT",
+                      "source_sha256": "6755623875db16c504b438e0e4ff1407be6b8d7a067aeb3f7b8f4bbe3855ae3c",
+                      "verifications": []
+                    },
+                    "obligation_id": "c.pattern_recognized",
+                    "input_status": "indeterminate",
+                    "effective_status": "indeterminate",
+                    "origin": "deterministic",
+                    "evidence_refs": [],
+                    "conditional_on": null,
+                    "reason": "UPSTREAM_STATUS"
+                  }
+                ],
+                "children": []
+              },
+              {
+                "item_id": "c.list.some",
+                "scoring_strategy": "all_of",
+                "max_points": "1",
+                "points_awarded": "0",
+                "known_points": "0",
+                "possible_points": "1",
+                "status": "indeterminate",
+                "fully_satisfied": false,
+                "satisfied_obligations": [],
+                "unsatisfied_obligations": [],
+                "indeterminate_obligations": [
+                  "c.some_correct"
+                ],
+                "technical_error_obligations": [],
+                "selected_band": null,
+                "selected_method_path": null,
+                "carry_forward_applied": false,
+                "evidence_refs": [],
+                "credit_evidence_refs": [],
+                "needs_review": true,
+                "reason": "INDETERMINATE",
+                "obligations": [
+                  {
+                    "source_claim_ids": [],
+                    "verification_source": "deterministic",
+                    "grounding_status": "unavailable",
+                    "metadata": {
+                      "fact_id": "c.some_correct",
+                      "mapping_version": "tme2-p1-obligations.v1",
+                      "reason": "NO_EXISTING_FACT",
+                      "source_sha256": "6755623875db16c504b438e0e4ff1407be6b8d7a067aeb3f7b8f4bbe3855ae3c",
+                      "verifications": []
+                    },
+                    "obligation_id": "c.some_correct",
+                    "input_status": "indeterminate",
+                    "effective_status": "indeterminate",
+                    "origin": "deterministic",
+                    "evidence_refs": [],
+                    "conditional_on": null,
+                    "reason": "UPSTREAM_STATUS"
+                  }
+                ],
+                "children": []
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "item_id": "d",
+        "scoring_strategy": "additive",
+        "max_points": "6",
+        "points_awarded": "0",
+        "known_points": "0",
+        "possible_points": "6",
+        "status": "indeterminate",
+        "fully_satisfied": false,
+        "satisfied_obligations": [],
+        "unsatisfied_obligations": [],
+        "indeterminate_obligations": [
+          "d.equation",
+          "d.difference_six",
+          "d.digit_pairs",
+          "d.middle_choices",
+          "d.total_thirty"
+        ],
+        "technical_error_obligations": [],
+        "selected_band": null,
+        "selected_method_path": null,
+        "carry_forward_applied": false,
+        "evidence_refs": [],
+        "credit_evidence_refs": [],
+        "needs_review": true,
+        "reason": "CAPPED_SUM",
+        "obligations": [
+          {
+            "source_claim_ids": [],
+            "verification_source": "deterministic",
+            "grounding_status": "unavailable",
+            "metadata": {
+              "fact_id": "d.equation",
+              "mapping_version": "tme2-p1-obligations.v1",
+              "reason": "NO_EXISTING_FACT",
+              "source_sha256": "6755623875db16c504b438e0e4ff1407be6b8d7a067aeb3f7b8f4bbe3855ae3c",
+              "verifications": []
+            },
+            "obligation_id": "d.equation",
+            "input_status": "indeterminate",
+            "effective_status": "indeterminate",
+            "origin": "deterministic",
+            "evidence_refs": [],
+            "conditional_on": null,
+            "reason": "UPSTREAM_STATUS"
+          },
+          {
+            "source_claim_ids": [],
+            "verification_source": "deterministic",
+            "grounding_status": "unavailable",
+            "metadata": {
+              "fact_id": "d.difference_six",
+              "mapping_version": "tme2-p1-obligations.v1",
+              "reason": "NO_EXISTING_FACT",
+              "source_sha256": "6755623875db16c504b438e0e4ff1407be6b8d7a067aeb3f7b8f4bbe3855ae3c",
+              "verifications": []
+            },
+            "obligation_id": "d.difference_six",
+            "input_status": "indeterminate",
+            "effective_status": "indeterminate",
+            "origin": "deterministic",
+            "evidence_refs": [],
+            "conditional_on": null,
+            "reason": "UPSTREAM_STATUS"
+          },
+          {
+            "source_claim_ids": [],
+            "verification_source": "deterministic",
+            "grounding_status": "unavailable",
+            "metadata": {
+              "fact_id": "d.digit_pairs",
+              "mapping_version": "tme2-p1-obligations.v1",
+              "reason": "NO_EXISTING_FACT",
+              "source_sha256": "6755623875db16c504b438e0e4ff1407be6b8d7a067aeb3f7b8f4bbe3855ae3c",
+              "verifications": []
+            },
+            "obligation_id": "d.digit_pairs",
+            "input_status": "indeterminate",
+            "effective_status": "indeterminate",
+            "origin": "deterministic",
+            "evidence_refs": [],
+            "conditional_on": null,
+            "reason": "UPSTREAM_STATUS"
+          },
+          {
+            "source_claim_ids": [],
+            "verification_source": "deterministic",
+            "grounding_status": "unavailable",
+            "metadata": {
+              "fact_id": "d.middle_choices",
+              "mapping_version": "tme2-p1-obligations.v1",
+              "reason": "NO_EXISTING_FACT",
+              "source_sha256": "6755623875db16c504b438e0e4ff1407be6b8d7a067aeb3f7b8f4bbe3855ae3c",
+              "verifications": []
+            },
+            "obligation_id": "d.middle_choices",
+            "input_status": "indeterminate",
+            "effective_status": "indeterminate",
+            "origin": "deterministic",
+            "evidence_refs": [],
+            "conditional_on": null,
+            "reason": "UPSTREAM_STATUS"
+          },
+          {
+            "source_claim_ids": [],
+            "verification_source": "deterministic",
+            "grounding_status": "unavailable",
+            "metadata": {
+              "fact_id": "d.total_thirty",
+              "mapping_version": "tme2-p1-obligations.v1",
+              "reason": "NO_EXISTING_FACT",
+              "source_sha256": "6755623875db16c504b438e0e4ff1407be6b8d7a067aeb3f7b8f4bbe3855ae3c",
+              "verifications": []
+            },
+            "obligation_id": "d.total_thirty",
+            "input_status": "indeterminate",
+            "effective_status": "indeterminate",
+            "origin": "deterministic",
+            "evidence_refs": [],
+            "conditional_on": null,
+            "reason": "UPSTREAM_STATUS"
+          }
+        ],
+        "children": [
+          {
+            "item_id": "d.solve",
+            "scoring_strategy": "all_of",
+            "max_points": "2",
+            "points_awarded": "0",
+            "known_points": "0",
+            "possible_points": "2",
+            "status": "indeterminate",
+            "fully_satisfied": false,
+            "satisfied_obligations": [],
+            "unsatisfied_obligations": [],
+            "indeterminate_obligations": [
+              "d.equation",
+              "d.difference_six"
+            ],
+            "technical_error_obligations": [],
+            "selected_band": null,
+            "selected_method_path": null,
+            "carry_forward_applied": false,
+            "evidence_refs": [],
+            "credit_evidence_refs": [],
+            "needs_review": true,
+            "reason": "INDETERMINATE",
+            "obligations": [
+              {
+                "source_claim_ids": [],
+                "verification_source": "deterministic",
+                "grounding_status": "unavailable",
+                "metadata": {
+                  "fact_id": "d.equation",
+                  "mapping_version": "tme2-p1-obligations.v1",
+                  "reason": "NO_EXISTING_FACT",
+                  "source_sha256": "6755623875db16c504b438e0e4ff1407be6b8d7a067aeb3f7b8f4bbe3855ae3c",
+                  "verifications": []
+                },
+                "obligation_id": "d.equation",
+                "input_status": "indeterminate",
+                "effective_status": "indeterminate",
+                "origin": "deterministic",
+                "evidence_refs": [],
+                "conditional_on": null,
+                "reason": "UPSTREAM_STATUS"
+              },
+              {
+                "source_claim_ids": [],
+                "verification_source": "deterministic",
+                "grounding_status": "unavailable",
+                "metadata": {
+                  "fact_id": "d.difference_six",
+                  "mapping_version": "tme2-p1-obligations.v1",
+                  "reason": "NO_EXISTING_FACT",
+                  "source_sha256": "6755623875db16c504b438e0e4ff1407be6b8d7a067aeb3f7b8f4bbe3855ae3c",
+                  "verifications": []
+                },
+                "obligation_id": "d.difference_six",
+                "input_status": "indeterminate",
+                "effective_status": "indeterminate",
+                "origin": "deterministic",
+                "evidence_refs": [],
+                "conditional_on": null,
+                "reason": "UPSTREAM_STATUS"
+              }
+            ],
+            "children": []
+          },
+          {
+            "item_id": "d.pairs",
+            "scoring_strategy": "all_of",
+            "max_points": "2",
+            "points_awarded": "0",
+            "known_points": "0",
+            "possible_points": "2",
+            "status": "indeterminate",
+            "fully_satisfied": false,
+            "satisfied_obligations": [],
+            "unsatisfied_obligations": [],
+            "indeterminate_obligations": [
+              "d.digit_pairs"
+            ],
+            "technical_error_obligations": [],
+            "selected_band": null,
+            "selected_method_path": null,
+            "carry_forward_applied": false,
+            "evidence_refs": [],
+            "credit_evidence_refs": [],
+            "needs_review": true,
+            "reason": "INDETERMINATE",
+            "obligations": [
+              {
+                "source_claim_ids": [],
+                "verification_source": "deterministic",
+                "grounding_status": "unavailable",
+                "metadata": {
+                  "fact_id": "d.digit_pairs",
+                  "mapping_version": "tme2-p1-obligations.v1",
+                  "reason": "NO_EXISTING_FACT",
+                  "source_sha256": "6755623875db16c504b438e0e4ff1407be6b8d7a067aeb3f7b8f4bbe3855ae3c",
+                  "verifications": []
+                },
+                "obligation_id": "d.digit_pairs",
+                "input_status": "indeterminate",
+                "effective_status": "indeterminate",
+                "origin": "deterministic",
+                "evidence_refs": [],
+                "conditional_on": null,
+                "reason": "UPSTREAM_STATUS"
+              }
+            ],
+            "children": []
+          },
+          {
+            "item_id": "d.count",
+            "scoring_strategy": "all_of",
+            "max_points": "2",
+            "points_awarded": "0",
+            "known_points": "0",
+            "possible_points": "2",
+            "status": "indeterminate",
+            "fully_satisfied": false,
+            "satisfied_obligations": [],
+            "unsatisfied_obligations": [],
+            "indeterminate_obligations": [
+              "d.middle_choices",
+              "d.total_thirty"
+            ],
+            "technical_error_obligations": [],
+            "selected_band": null,
+            "selected_method_path": null,
+            "carry_forward_applied": false,
+            "evidence_refs": [],
+            "credit_evidence_refs": [],
+            "needs_review": true,
+            "reason": "INDETERMINATE",
+            "obligations": [
+              {
+                "source_claim_ids": [],
+                "verification_source": "deterministic",
+                "grounding_status": "unavailable",
+                "metadata": {
+                  "fact_id": "d.middle_choices",
+                  "mapping_version": "tme2-p1-obligations.v1",
+                  "reason": "NO_EXISTING_FACT",
+                  "source_sha256": "6755623875db16c504b438e0e4ff1407be6b8d7a067aeb3f7b8f4bbe3855ae3c",
+                  "verifications": []
+                },
+                "obligation_id": "d.middle_choices",
+                "input_status": "indeterminate",
+                "effective_status": "indeterminate",
+                "origin": "deterministic",
+                "evidence_refs": [],
+                "conditional_on": null,
+                "reason": "UPSTREAM_STATUS"
+              },
+              {
+                "source_claim_ids": [],
+                "verification_source": "deterministic",
+                "grounding_status": "unavailable",
+                "metadata": {
+                  "fact_id": "d.total_thirty",
+                  "mapping_version": "tme2-p1-obligations.v1",
+                  "reason": "NO_EXISTING_FACT",
+                  "source_sha256": "6755623875db16c504b438e0e4ff1407be6b8d7a067aeb3f7b8f4bbe3855ae3c",
+                  "verifications": []
+                },
+                "obligation_id": "d.total_thirty",
+                "input_status": "indeterminate",
+                "effective_status": "indeterminate",
+                "origin": "deterministic",
+                "evidence_refs": [],
+                "conditional_on": null,
+                "reason": "UPSTREAM_STATUS"
+              }
+            ],
+            "children": []
+          }
+        ]
+      }
+    ]
+  },
+  "input_warnings": [],
+  "reproducibility": null,
+  "score": null,
+  "max_score": 20.0,
+  "needs_review": true,
+  "verdict": "inconclusivo"
+}

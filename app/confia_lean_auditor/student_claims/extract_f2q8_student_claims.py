@@ -369,7 +369,7 @@ def _extract_arithmetic_equalities(solution: str, start_index: int = 0) -> list[
 
     return claims
 
-def extract_f2q8_student_claims(solution: str) -> list[StudentClaim]:
+def extract_f2q8_student_claims(solution: str, *, _ground: bool = True) -> list[StudentClaim]:
     claims: list[StudentClaim] = []
 
     for extractor in [
@@ -383,4 +383,7 @@ def extract_f2q8_student_claims(solution: str) -> list[StudentClaim]:
         new_claims = extractor(solution, start_index=len(claims))
         claims.extend(new_claims)
 
+    if _ground:
+        from confia_lean_auditor.student_claims.grounding import ground_student_claims
+        return ground_student_claims(solution, claims, extract_f2q8_student_claims)
     return claims

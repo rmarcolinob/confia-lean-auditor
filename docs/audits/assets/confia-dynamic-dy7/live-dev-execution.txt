@@ -1,0 +1,7 @@
+[
+  {
+    "id": "run_6e2b21c1a4796e7f3b8c5012ba5bf8edb0f37116a7526988d3c7ab5697f4096b",
+    "N": 1,
+    "verdict": "PILOT_METRICS_AVAILABLE"
+  }
+]

@@ -1,0 +1,22 @@
+{
+  "nodeids": [
+    "tests/test_tme_model_compat.py::test_real_smoke_dry_run_separates_semantic_hashes_from_transport",
+    "tests/test_tme_model_compat.py::test_transport_builder_does_not_weaken_holdout_guard"
+  ],
+  "skip_reason": "Frozen local DEV pack unavailable",
+  "inputs": {
+    "baseline": {
+      "artifacts/evaluations/tme_semantic_understanding_01/dev_ids.json": false,
+      "artifacts/evaluations/tme_semantic_diag_01/cases_analysis.json": false
+    },
+    "r1": {
+      "artifacts/evaluations/tme_semantic_understanding_01/dev_ids.json": false,
+      "artifacts/evaluations/tme_semantic_diag_01/cases_analysis.json": false
+    }
+  },
+  "test_source_sha256": {
+    "baseline": "b2fe93815e07ea8548911088a08073b48a1ce4f97c8a8b95107ff8301fe54ad6",
+    "r1": "b2fe93815e07ea8548911088a08073b48a1ce4f97c8a8b95107ff8301fe54ad6"
+  },
+  "no_fixture_imported_from_other_worktrees": true
+}

@@ -4,7 +4,7 @@
       "additionalProperties": false,
       "properties": {
         "page_index": {
-          "exclusiveMaximum": 3,
+          "exclusiveMaximum": 50,
           "minimum": 0,
           "title": "Page Index",
           "type": "integer"

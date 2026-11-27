@@ -1,0 +1,10 @@
+{
+  "audit_run_id": "aud_1eb247481575591afe015612b9bcab6b98943d338347f5ce36da598eabaa019e",
+  "source_directory": "runtime/pilot-dec10/submission_audits/artifacts/aud_1eb247481575591afe015612b9bcab6b98943d338347f5ce36da598eabaa019e-954184e1018f41e3af8f4bd8e3c09943",
+  "files": {
+    "audit.json": "56397b600d3b9681b44ccd9ab8ed57bc13b833a3cd33923b2991fe10cc4cbd19",
+    "solution.txt": "015cd234e48ee8f8f97aefceec6e3375405757d4d7d305364735ca8d6938dd69",
+    "input_mapping.json": "bf86e0af02671a1084f0d1224a677a6ebb1b83657d4013096355ed5c830e016b",
+    "accepted_revision.json": "115c15218c3df7bb9f6ce7483c8c966b1a070fba18f24b304d8c1a7a25b843d6"
+  }
+}

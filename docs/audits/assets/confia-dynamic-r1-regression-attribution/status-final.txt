@@ -1,0 +1,12 @@
+ M app/confia_lean_auditor/dynamic/grader.py
+ M app/confia_lean_auditor/dynamic/grading_models.py
+?? app/confia_lean_auditor/dynamic/method_sufficiency.py
+?? app/confia_lean_auditor/dynamic/substitution.py
+?? app/confia_lean_auditor/dynamic/versions.py
+?? benchmarks/dynamic/dev_v2/
+?? docs/audits/CONFIA_DYNAMIC_R1_DEV_V2_IMPLEMENTACAO_01.md
+?? docs/audits/CONFIA_DYNAMIC_R1_REGRESSION_ATTRIBUTION_01.md
+?? docs/audits/assets/confia-dynamic-r1-dev-v2/
+?? docs/audits/assets/confia-dynamic-r1-regression-attribution/
+?? scripts/evaluation/run_dynamic_dev_v2.py
+?? tests/test_dynamic_r1.py

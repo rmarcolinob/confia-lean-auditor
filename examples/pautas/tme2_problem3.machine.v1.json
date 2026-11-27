@@ -1,0 +1,37 @@
+{
+  "schema_version": "tme2-p3-machine.v1",
+  "problem_id": "TME2026P3",
+  "source_reference": "User-confirmed original P3 figure, bottom-to-top, in this task (2026-10-31). Official PDF download returned HTTP 403.",
+  "stacks_bottom_first": [
+    [
+      "white",
+      "black",
+      "white",
+      "gray",
+      "black"
+    ],
+    [
+      "white",
+      "gray",
+      "black"
+    ],
+    [
+      "gray",
+      "black"
+    ],
+    [
+      "black",
+      "black"
+    ],
+    [
+      "gray",
+      "black"
+    ],
+    [
+      "black",
+      "white",
+      "gray",
+      "black"
+    ]
+  ]
+}

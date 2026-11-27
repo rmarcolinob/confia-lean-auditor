@@ -1,0 +1,117 @@
+{
+  "executable": "/Users/LinMarcolino/Documents/confia-lean-auditor/.venv/bin/python",
+  "implementation": "CPython",
+  "lake_packages": {
+    "Cli": {
+      "actual_revision": "4f10f47646cb7d5748d6f423f4a07f98f7bbcc9e",
+      "available": true,
+      "dirty": false,
+      "locked_revision": "4f10f47646cb7d5748d6f423f4a07f98f7bbcc9e"
+    },
+    "LeanSearchClient": {
+      "actual_revision": "c5d5b8fe6e5158def25cd28eb94e4141ad97c843",
+      "available": true,
+      "dirty": false,
+      "locked_revision": "c5d5b8fe6e5158def25cd28eb94e4141ad97c843"
+    },
+    "Qq": {
+      "actual_revision": "b8f98e9087e02c8553945a2c5abf07cec8e798c3",
+      "available": true,
+      "dirty": false,
+      "locked_revision": "b8f98e9087e02c8553945a2c5abf07cec8e798c3"
+    },
+    "aesop": {
+      "actual_revision": "f642a64c76df8ba9cb53dba3b919425a0c2aeaf1",
+      "available": true,
+      "dirty": false,
+      "locked_revision": "f642a64c76df8ba9cb53dba3b919425a0c2aeaf1"
+    },
+    "batteries": {
+      "actual_revision": "495c008c3e3f4fb4256ff5582ddb3abf3198026f",
+      "available": true,
+      "dirty": false,
+      "locked_revision": "495c008c3e3f4fb4256ff5582ddb3abf3198026f"
+    },
+    "importGraph": {
+      "actual_revision": "85b59af46828c029a9168f2f9c35119bd0721e6e",
+      "available": true,
+      "dirty": false,
+      "locked_revision": "85b59af46828c029a9168f2f9c35119bd0721e6e"
+    },
+    "mathlib": {
+      "actual_revision": "8f9d9cff6bd728b17a24e163c9402775d9e6a365",
+      "available": true,
+      "dirty": false,
+      "locked_revision": "8f9d9cff6bd728b17a24e163c9402775d9e6a365"
+    },
+    "plausible": {
+      "actual_revision": "55c8532eb21ec9f6d565d51d96b8ca50bd1fbef3",
+      "available": true,
+      "dirty": false,
+      "locked_revision": "55c8532eb21ec9f6d565d51d96b8ca50bd1fbef3"
+    },
+    "proofwidgets": {
+      "actual_revision": "be3b2e63b1bbf496c478cef98b86972a37c1417d",
+      "available": true,
+      "dirty": false,
+      "locked_revision": "be3b2e63b1bbf496c478cef98b86972a37c1417d"
+    }
+  },
+  "lake_version": "Lake version 5.0.0-src+7e01a1b (Lean version 4.28.0)",
+  "lean_executed_by_dynamic": false,
+  "lean_version": "Lean (version 4.28.0, arm64-apple-darwin24.6.0, commit 7e01a1bf5c70fc6167d49c345d3bf80596e9a79b, Release)",
+  "machine": "arm64",
+  "node_version": "v24.15.0",
+  "observation_scope": "This process only; no .env or running server inspection",
+  "observed_configuration": {
+    "CONFIA_DYNAMIC_LLM_ENABLED": null,
+    "CONFIA_DYNAMIC_MODEL": null,
+    "CONFIA_DYNAMIC_POLICY": null,
+    "CONFIA_DYNAMIC_REASONING_EFFORT": null,
+    "CONFIA_DYNAMIC_REVIEWER_ENABLED": null,
+    "CONFIA_DYNAMIC_REVIEWER_MODEL": null,
+    "CONFIA_DYNAMIC_REVIEWER_REASONING_EFFORT": null,
+    "CONFIA_RECOGNITION_TIMEOUT_SECONDS": null,
+    "CONFIA_SEMANTIC_LLM_ENABLED": null,
+    "CONFIA_SEMANTIC_MODEL": null,
+    "CONFIA_SEMANTIC_REASONING_EFFORT": null
+  },
+  "platform": "macOS-27.2.1-arm64-arm-64bit",
+  "python_packages": {
+    "annotated-doc": "0.0.4",
+    "annotated-types": "0.7.0",
+    "anyio": "4.12.1",
+    "certifi": "2026.6.17",
+    "click": "8.1.8",
+    "confia-lean-auditor": "0.1.0",
+    "distro": "1.9.0",
+    "exceptiongroup": "1.3.1",
+    "fastapi": "0.128.8",
+    "h11": "0.16.0",
+    "httpcore": "1.0.9",
+    "httpx": "0.28.1",
+    "idna": "3.18",
+    "iniconfig": "2.1.0",
+    "jiter": "0.16.0",
+    "openai": "2.44.0",
+    "packaging": "26.2",
+    "pillow": "11.3.0",
+    "pip": "26.0.1",
+    "pluggy": "1.6.0",
+    "pydantic": "2.13.4",
+    "pydantic-core": "2.46.4",
+    "pygments": "2.20.0",
+    "pypdfium2": "4.30.0",
+    "pytest": "8.4.2",
+    "setuptools": "82.0.1",
+    "sniffio": "1.3.1",
+    "starlette": "0.49.3",
+    "tomli": "2.4.1",
+    "tqdm": "4.68.3",
+    "typing-extensions": "4.16.0",
+    "typing-inspection": "0.4.2",
+    "uvicorn": "0.39.0",
+    "wheel": "0.47.0"
+  },
+  "python_version": "3.9.6"
+}

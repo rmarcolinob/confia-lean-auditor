@@ -1,0 +1,114 @@
+Browser tab: 5, Title: "ConfIA — Confiabilidade e Explicabilidade", URL: "http://127.0.0.1:8769/tme?view=queue".
+1 AXWebArea ConfIA — Confiabilidade e Explicabilidade, URL: 127.0.0.1:8769/tme?view=queue
+	2 link Description: Ir para conteúdo, Value: 127.0.0.1:8769/tme?view=queue#main
+	3 container
+		4 text ConfIA Plataforma de
+		5 text correção assistida
+		6 button (collapsed) Description: Perfil do avaliador, ID: evaluator-avatar, Secondary Actions: Expand
+	141 container
+		142 heading Fila de correções, Value: 1
+			143 text Fila de correções
+		144 text Acompanhe, filtre e continue suas correções.
+		145 button Corrigir próxima
+			146 text Corrigir próxima
+		147 container
+			148 text Buscar prova
+			149 search text field (settable) Buscar prova
+		150 container
+			151 text Dados
+			152 pop up button (collapsed, settable) Dados, Value: Todos, Secondary Actions: Expand
+				153 menu
+					154 (selected) Todos
+					155 Sintéticos
+					156 Reais
+		157 container
+			158 text Inspeção
+			159 pop up button (collapsed, settable) Inspeção, Value: Todos, Secondary Actions: Expand
+				160 menu
+					161 (selected) Todos
+					162 Amostra
+		163 container
+			164 text Questão
+			165 pop up button (collapsed, settable) Questão, Value: Todos, Secondary Actions: Expand
+				166 menu
+					167 (selected) Todos
+					168 dyn_52d5ae37c2ce47cf9969761ef97d1dcd
+					169 dyn_c1bbe46c219345619241ece724b0049e
+		170 container
+			171 text Status
+			172 pop up button (collapsed, settable) Status, Value: Todos, Secondary Actions: Expand
+				173 menu
+					174 (selected) Todos
+					175 Pendente
+					176 Em andamento
+					177 Inconclusiva
+					178 Finalizada
+		179 container
+			180 text Origem
+			181 pop up button (collapsed, settable) Origem, Value: Todos, Secondary Actions: Expand
+				182 menu
+					183 (selected) Todos
+					184 Foto / scan
+					185 Escrita digital
+					186 Resolução textual
+		187 button Buscar
+		188 button Atualizar dados
+		189 button Abrir correção DY3-S1 · dyn_52d5ae37c2ce47cf9969761ef97d1dcd · Inconclusiva
+			190 text Prova DY3-S1
+			191 text dyn_52d5ae37c2ce47cf9969761ef97d1dcd
+			192 text dyn_52d5ae37c2ce47cf9969761ef97d1dcd
+			193 text Resolução textual
+			194 text Inconclusiva
+			195 text 10 / 10
+			196 text 11/11/2026, 23:43
+		197 button Abrir correção DY3-S2 · dyn_52d5ae37c2ce47cf9969761ef97d1dcd · Inconclusiva
+			198 text Prova DY3-S2
+			199 text dyn_52d5ae37c2ce47cf9969761ef97d1dcd
+			200 text dyn_52d5ae37c2ce47cf9969761ef97d1dcd
+			201 text Resolução textual
+			202 text Inconclusiva
+			203 text 10 / 10
+			204 text 11/11/2026, 23:43
+		205 button Abrir correção DY3-S3 · dyn_52d5ae37c2ce47cf9969761ef97d1dcd · Inconclusiva
+			206 text Prova DY3-S3
+			207 text dyn_52d5ae37c2ce47cf9969761ef97d1dcd
+			208 text dyn_52d5ae37c2ce47cf9969761ef97d1dcd
+			209 text Resolução textual
+			210 text Inconclusiva
+			211 text 1.5 / 10
+			212 text 11/11/2026, 23:43
+		213 button Abrir correção DY3-S4 · dyn_52d5ae37c2ce47cf9969761ef97d1dcd · Inconclusiva
+			214 text Prova DY3-S4
+			215 text dyn_52d5ae37c2ce47cf9969761ef97d1dcd
+			216 text dyn_52d5ae37c2ce47cf9969761ef97d1dcd
+			217 text Resolução textual
+			218 text Inconclusiva
+			219 text 0 / 10
+			220 text 11/11/2026, 23:43
+		221 button Abrir correção DY3-REVIEW · dyn_52d5ae37c2ce47cf9969761ef97d1dcd · Inconclusiva
+			222 text Prova DY3-REVIEW
+			223 text dyn_52d5ae37c2ce47cf9969761ef97d1dcd
+			224 text dyn_52d5ae37c2ce47cf9969761ef97d1dcd
+			225 text Resolução textual
+			226 text Inconclusiva
+			227 text 0 / 10
+			228 text 11/11/2026, 23:43
+		229 button Abrir correção DY3-LINEAR · dyn_c1bbe46c219345619241ece724b0049e · Inconclusiva
+			230 text Prova DY3-LINEAR
+			231 text dyn_c1bbe46c219345619241ece724b0049e
+			232 text dyn_c1bbe46c219345619241ece724b0049e
+			233 text Resolução textual
+			234 text Inconclusiva
+			235 text 10 / 10
+			236 text 11/11/2026, 23:43
+		237 container Paginação
+			238 text 6 registros · Página 1 de 1
+			239 button (disabled) Anterior
+			240 button (disabled) Próxima
+	136 container Description: Navegação principal, ID: home-bottom-nav
+		137 button Início
+		138 button Fila
+		139 button Nova
+		140 button Resultados
+
+The focused UI element is 1 AXWebArea ConfIA — Confiabilidade e Explicabilidade, URL: 127.0.0.1:8769/tme?view=queue

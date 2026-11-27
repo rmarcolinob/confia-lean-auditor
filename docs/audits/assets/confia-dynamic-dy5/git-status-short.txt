@@ -1,0 +1,20 @@
+ M app/confia_lean_auditor/assessments/models.py
+ M app/confia_lean_auditor/assessments/store.py
+ M app/confia_lean_auditor/dynamic/router.py
+ M app/confia_lean_auditor/static/dynamic.js
+ M app/confia_lean_auditor/static/tme/index.html
+ M app/confia_lean_auditor/static/tme/tme.js
+ M app/confia_lean_auditor/static/tme/workspace-report.js
+ M app/confia_lean_auditor/tme/home_summary.py
+ M app/confia_lean_auditor/tme/models.py
+ M app/confia_lean_auditor/tme/router.py
+ M app/confia_lean_auditor/tme/store.py
+ M tests/js/test_dynamic_dy3.cjs
+?? app/confia_lean_auditor/dynamic/human_decisions.py
+?? app/confia_lean_auditor/dynamic/reconciliation.py
+?? app/confia_lean_auditor/dynamic/reconciliation_models.py
+?? app/confia_lean_auditor/dynamic/reconciliation_service.py
+?? docs/audits/CONFIA_DYNAMIC_DY5_RECONCILIATION_IMPLEMENTACAO_01.md
+?? docs/audits/assets/confia-dynamic-dy5/
+?? tests/js/test_dynamic_dy5.cjs
+?? tests/test_dynamic_dy5.py

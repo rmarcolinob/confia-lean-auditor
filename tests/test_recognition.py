@@ -95,7 +95,7 @@ def test_mathpix_registry_requires_both_credentials(monkeypatch):
     monkeypatch.setenv("CONFIA_MATHPIX_APP_KEY", "test-app-key")
     assert configured_registry().providers() == []
     monkeypatch.setenv("CONFIA_MATHPIX_APP_ID", "test-app-id")
-    assert configured_registry().providers() == ["mathpix"]
+    assert configured_registry().providers() == ["mathpix", "mathpix_image"]
 
 
 def test_fake_result_null_fields_provenance_hashes_and_immutable_submission(client):

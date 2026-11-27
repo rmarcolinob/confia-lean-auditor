@@ -242,6 +242,13 @@ def test_role_matrix_object_scope_hmer_teacher_and_audit(auth_case, monkeypatch)
     assert other_teacher.get(f"/submission-audits/{aid}").status_code == 403
     assert manager.get(f"/submission-audits/{aid}").status_code == 403
     assert teacher.get(f"/submission-audits/{aid}/reproducibility").status_code == 200
+    diagnostic = teacher.get(f"/submission-audits/{aid}/diagnostics")
+    assert diagnostic.status_code == 200
+    assert diagnostic.json()["score_state"] == "unknown"  # ITA is outside this TME projection.
+    assert diagnostic.json()["reason"] == "UNSUPPORTED_RESULT_TYPE"
+    assert other_teacher.get(f"/submission-audits/{aid}/diagnostics").status_code == 403
+    assert manager.get(f"/submission-audits/{aid}/diagnostics").status_code == 403
+    assert student_a.get(f"/submission-audits/{aid}/diagnostics").status_code == 403
     aggregates = manager.get("/management/schools/school-a/overview")
     assert aggregates.status_code == 200, aggregates.text
     counts = aggregates.json()["metrics"]

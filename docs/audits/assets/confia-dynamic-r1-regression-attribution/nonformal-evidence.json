@@ -1,0 +1,57 @@
+{
+  "baseline": {
+    "max_source_pages": 50,
+    "schema_differences": [
+      {
+        "path": "/$defs/RecognitionSegment/properties/page_index/exclusiveMaximum",
+        "stored": 3,
+        "runtime": 50
+      }
+    ],
+    "missing_ui_phrase": "Verificação formal com Lean",
+    "required_phrase_present": false,
+    "sticky_occurrences_after_embedded_marker": 1,
+    "sticky_lines": [
+      140,
+      442
+    ],
+    "source_sha256": {
+      "benchmarks/handwriting_recognition/schema.py": "55e687262bfa450a57835af5cdb0ed04d94beeb7becb72192d74418811c62508",
+      "benchmarks/handwriting_recognition/sample.schema.json": "7bb1f10aaf6b8f3800c889be9e2c01d8c01d4255e128f8f31e836819c425aac6",
+      "app/confia_lean_auditor/recognition/schemas.py": "3f243b6dd7e00bf3c59222027e0f40586e9c7254ff38f167f8992b90aabe54c1",
+      "app/confia_lean_auditor/submissions/schemas.py": "b52b61490115ee38786cebb43ae61ef11fd61c7aa269aea37e748d7a3607cb61",
+      "app/confia_lean_auditor/static/app.js": "1157df24ed105d3b37e69fbf7917f60c0228560c3b4db7f28485ce34d5a2f7af",
+      "app/confia_lean_auditor/static/submissions/teacher.js": "0a64f715d5172cf94f815e41ddeb1c2a0f5e43238b7c703438edc34796233663",
+      "app/confia_lean_auditor/static/capture/tablet.js": "a6dd4bfea48a04221d9d4717db4e8df40f16d8ef09a657763d2fc648cd433d9e",
+      "app/confia_lean_auditor/static/capture/tablet.css": "bcae8b10b80c391f6ceb12a5bc5edc5525d8cc0962a74127646581deba1d0432"
+    }
+  },
+  "r1": {
+    "max_source_pages": 50,
+    "schema_differences": [
+      {
+        "path": "/$defs/RecognitionSegment/properties/page_index/exclusiveMaximum",
+        "stored": 3,
+        "runtime": 50
+      }
+    ],
+    "missing_ui_phrase": "Verificação formal com Lean",
+    "required_phrase_present": false,
+    "sticky_occurrences_after_embedded_marker": 1,
+    "sticky_lines": [
+      140,
+      442
+    ],
+    "source_sha256": {
+      "benchmarks/handwriting_recognition/schema.py": "55e687262bfa450a57835af5cdb0ed04d94beeb7becb72192d74418811c62508",
+      "benchmarks/handwriting_recognition/sample.schema.json": "7bb1f10aaf6b8f3800c889be9e2c01d8c01d4255e128f8f31e836819c425aac6",
+      "app/confia_lean_auditor/recognition/schemas.py": "3f243b6dd7e00bf3c59222027e0f40586e9c7254ff38f167f8992b90aabe54c1",
+      "app/confia_lean_auditor/submissions/schemas.py": "b52b61490115ee38786cebb43ae61ef11fd61c7aa269aea37e748d7a3607cb61",
+      "app/confia_lean_auditor/static/app.js": "1157df24ed105d3b37e69fbf7917f60c0228560c3b4db7f28485ce34d5a2f7af",
+      "app/confia_lean_auditor/static/submissions/teacher.js": "0a64f715d5172cf94f815e41ddeb1c2a0f5e43238b7c703438edc34796233663",
+      "app/confia_lean_auditor/static/capture/tablet.js": "a6dd4bfea48a04221d9d4717db4e8df40f16d8ef09a657763d2fc648cd433d9e",
+      "app/confia_lean_auditor/static/capture/tablet.css": "bcae8b10b80c391f6ceb12a5bc5edc5525d8cc0962a74127646581deba1d0432"
+    }
+  },
+  "identical_baseline_and_r1": true
+}

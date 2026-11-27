@@ -1,0 +1,148 @@
+Browser tab: 6, Title: "ConfIA — Confiabilidade e Explicabilidade", URL: "http://127.0.0.1:8770/tme?case_id=case_3279467491d9453a81aad5fe70aa1fbb".
+1 AXWebArea ConfIA — Confiabilidade e Explicabilidade, URL: 127.0.0.1:8770/tme?case_id=case_3279467491d9453a81aad5fe70aa1fbb
+	2 link Description: Ir para conteúdo, Value: 127.0.0.1:8770/tme?case_id=case_3279467491d9453a81aad5fe70aa1fbb#main
+	3 container
+		4 text ConfIA Plataforma de
+		5 text correção assistida
+		6 button (collapsed) Description: Perfil do avaliador, ID: evaluator-avatar, Secondary Actions: Expand
+	7 container app
+		144 container
+			145 button Voltar para fila
+			146 heading Prova DY5-PROVA-UP, Value: 1
+				147 text Prova DY5-PROVA-UP
+			148 text Finalizada Questão 1 · 1 questão disponível · Questão inédita · Resolução textual
+			149 container Questões disponíveis desta prova
+				150 button Q1 · Questão atual
+			151 content list Progresso da correção
+				152 text Entrada
+				153 text Transcrição
+				154 text Análise
+				155 text Decisão
+		156 container
+			157 heading Enunciado, Value: 2
+				158 text Enunciado
+			159 button (collapsed) Ver enunciado completo, Secondary Actions: Expand
+			160 text Resolva no conjunto dos reais: 2y² - 14y + 24 = 0.
+		161 container
+			162 container solution-pane
+				163 container
+					164 heading Solução do participante, Value: 2
+						165 text Solução do participante
+					166 button (collapsed) Description: Expandir solução, Secondary Actions: Expand
+				167 tab group Visualização da solução
+					168 tab (selected, settable, boolean) Original, Value: 1, ID: tab-original
+					169 tab (selectable, settable, boolean) Transcrição, Value: 0, ID: tab-transcript
+					170 tab (selectable, settable, boolean) Comparar, Value: 0, ID: tab-compare
+				171 container Description: Original, ID: solution-views
+					172 container Original
+						173 text Delta=(-14)^2-4*2*24=4; y=(14+sqrt(4))/4=4; y=(14-sqrt(4))/4=3; S={3,4}; 2*3^2-14*3+24=0; 2*4^2-14*4+24=0
+				174 button (collapsed) Originais e histórico, Secondary Actions: Expand
+					175 text Originais e histórico
+			176 splitter Description: Redimensionar solução e análise, Help: Arraste ou use as setas. Home: 45%; End: 70%; duplo clique: 60%., Value: 60
+			177 container Description: Análise ConfIA, ID: analysis-pane
+				178 container
+					179 heading ANÁLISE CONFIA, Value: 2
+						180 text ANÁLISE CONFIA
+					181 button (expanded) Recolher análise, Secondary Actions: Collapse
+					182 container analysis-content
+						183 container Resultado sugerido
+							184 text Sugestão ConfIA
+							185 text 6 / 10
+							186 text Revisão Necessária
+							187 text Sugestão reconciliada · Primeira análise preservada: 6 / 10
+							188 text Revisão necessária · sugestão provisória
+							189 text Modo: Correção dinâmica
+						190 container Cobertura da análise
+							191 heading Cobertura da análise, Value: 3
+								192 text Cobertura da análise
+							193 text 3/3 critérios decididos
+							194 text 3 critérios · 3 decididos · 0 claims formalmente verificados · 0 indeterminados
+						195 container Revisão independente
+							196 button (collapsed) Revisão independente · 1 critério requer revisão, Secondary Actions: Expand
+								197 text Revisão independente · 1 critério requer revisão
+							198 button Solicitar nova revisão independente
+						199 container Reconciliação da sugestão
+							200 button (collapsed) Reconciliação · 1 critério requer revisão, Secondary Actions: Expand
+								201 text Reconciliação · 1 critério requer revisão
+						202 button (collapsed) Evidências e verificações da resolução, Secondary Actions: Expand
+							203 text Evidências e verificações da resolução
+						204 container
+							205 heading Critérios da primeira análise, Value: 3
+								206 text Critérios da primeira análise
+							207 button (collapsed) Sustentado Critério 1 0 / 4 Justificar a resolução por transformações equivalentes., Secondary Actions: Expand
+								208 image Sustentado
+								209 text Critério 1
+								210 text 0 / 4
+								211 text Justificar a resolução por transformações equivalentes.
+							212 button (collapsed) Secondary Actions: Expand, Sustentado Critério 2 3 / 3 Obter todas as raízes reais. Crédito parcial proporcional às raízes corretas.
+								213 image Sustentado
+								214 text Critério 2
+								215 text 3 / 3
+								216 text Obter todas as raízes reais. Crédito parcial proporcional às raízes corretas.
+							217 button (collapsed) Secondary Actions: Expand, Sustentado Critério 3 3 / 3 Verificar as raízes por substituição. Crédito parcial proporcional às raízes corretas.
+								218 image Sustentado
+								219 text Critério 3
+								220 text 3 / 3
+								221 text Verificar as raízes por substituição. Crédito parcial proporcional às raízes corretas.
+						222 container
+							223 heading Passos identificados, Value: 3
+								224 text Passos identificados
+							225 checkbox Description: Passo 1: Delta=(-14)^2-4*2*24=4. Verificado no escopo, Value: 1
+								226 text 01
+								227 text Delta=(-14)^2-4*2*24=4
+								228 image Sustentado
+							229 checkbox Description: Passo 2: y=(14+sqrt(4))/4=4. Verificado no escopo, Value: 0
+								230 text 02
+								231 text y=(14+sqrt(4))/4=4
+								232 image Sustentado
+							233 checkbox Description: Passo 3: y=(14-sqrt(4))/4=3. Verificado no escopo, Value: 0
+								234 text 03
+								235 text y=(14-sqrt(4))/4=3
+								236 image Sustentado
+							237 checkbox Description: Passo 4: S={3,4}. Verificado no escopo, Value: 0
+								238 text 04
+								239 text S={3,4}
+								240 image Sustentado
+							241 checkbox Description: Passo 5: 2*3^2-14*3+24=0. Verificado no escopo, Value: 0
+								242 text 05
+								243 text 2*3^2-14*3+24=0
+								244 image Sustentado
+							245 checkbox Description: Passo 6: 2*4^2-14*4+24=0. Verificado no escopo, Value: 0
+								246 text 06
+								247 text 2*4^2-14*4+24=0
+								248 image Sustentado
+							249 text Delta=(-14)^2-4*2*24=4
+							250 text Verificado no escopo
+							251 text Trecho preservado: caracteres 0–22 da transcrição aceita.
+						252 container
+							253 heading Verificação matemática, Value: 3
+								254 text Verificação matemática
+							255 text 0 claims verificados formalmente 6 não formalizados 0 falhas técnicas
+							256 button (collapsed) Detalhes da verificação, Secondary Actions: Expand
+								257 text Detalhes da verificação
+						258 button (collapsed) Resumo e evidências da análise, Secondary Actions: Expand
+							259 text Resumo e evidências da análise
+						260 button (collapsed) Detalhes técnicos, Secondary Actions: Expand
+							261 text Detalhes técnicos
+						262 button (collapsed) Histórico de confirmações, Secondary Actions: Expand
+							263 text Histórico de confirmações
+		264 text Correção registrada.
+		265 container Description: Decisão do avaliador, ID: evaluator-decision
+			266 heading Decisão do avaliador, Value: 2
+				267 text Decisão do avaliador
+			268 text Sugestão ConfIA
+			269 text 6 / 10
+			270 text Correção registrada
+			271 text Pontuação final do avaliador: 10 / 10
+			272 text Finalizada
+			273 button (collapsed) Observação registrada, Secondary Actions: Expand
+				274 text Observação registrada
+			275 button Corrigir próxima
+			276 button Voltar para fila
+	139 container Description: Navegação principal, ID: home-bottom-nav
+		140 button Início
+		141 button Fila
+		142 button Nova
+		143 button Resultados
+
+The focused UI element is 1 AXWebArea ConfIA — Confiabilidade e Explicabilidade, URL: 127.0.0.1:8770/tme?case_id=case_3279467491d9453a81aad5fe70aa1fbb

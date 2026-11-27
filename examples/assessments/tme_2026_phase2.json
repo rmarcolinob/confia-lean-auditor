@@ -1,0 +1,7 @@
+{
+  "assessment_id": "asmt_dec20260000000000000000000000001",
+  "title": "TME² — 2ª Fase 2026",
+  "instructions": "Associe as páginas às questões antes de iniciar a correção. Use apenas o código pseudônimo do participante.",
+  "academic_year": 2026,
+  "problem_ids": ["TME2026P1", "TME2026P2", "TME2026P3", "TME2026P4", "TME2026P5"]
+}

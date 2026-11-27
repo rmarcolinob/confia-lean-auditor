@@ -7,7 +7,7 @@ from dataclasses import asdict
 from pathlib import Path
 
 from confia_lean_auditor.student_claims.schemas import StudentClaim, StudentClaimCheck
-from confia_lean_auditor.lean.student_proof import evaluate_student_proof, negation_method
+from confia_lean_auditor.lean.student_proof import evaluate_student_proof, negation_method, grounded_checker
 
 
 ROOT_DIR = Path(__file__).resolve().parents[3]
@@ -28,7 +28,8 @@ def _run_lean_file(lean_file: Path, timeout_seconds: int = 90) -> subprocess.Com
 
 
 def _lean_int_expr(expr: str) -> str:
-    expr = expr.strip()
+    from confia_lean_auditor.core.math_canonical.normalization import mathematical_signs
+    expr = mathematical_signs(expr.strip())
 
     def repl(match: re.Match[str]) -> str:
         return f"({match.group(0)} : ℤ)"
@@ -149,8 +150,10 @@ def _build_lean_code(claim: StudentClaim, theorem_name: str, lean_statement: str
     lines.append("")
     lines.append("namespace ConfiaStudentClaimCheck")
     lines.append("")
-    safe_raw = claim.raw_text.replace("-/", "-∕")
-    lines.append(f"/-- Afirmação extraída do aluno: {safe_raw} -/")
+    source = claim.grounding or {}
+    safe_raw = str(source.get("source_text", "[source unresolved]")).replace("-/", "-∕")
+    safe_raw = f"[{source.get('source_start')}:{source.get('source_end')}] {safe_raw}"
+    lines.append(f"/-- Proposição vinculada ao trecho de origem: {safe_raw} -/")
     lines.append(f"theorem {theorem_name} :")
     lines.append(f"    {lean_statement} := by")
     lines.append(f"  {method or claim.method}")
@@ -161,6 +164,7 @@ def _build_lean_code(claim: StudentClaim, theorem_name: str, lean_statement: str
     return "\n".join(lines)
 
 
+@grounded_checker
 def check_one_student_claim(
     claim: StudentClaim,
     run_id: str,
@@ -188,6 +192,7 @@ def check_one_student_claim(
             stdout="",
             stderr=unsupported_reason,
             data=claim.data,
+            grounding=claim.grounding,
         )
 
     method = claim.method

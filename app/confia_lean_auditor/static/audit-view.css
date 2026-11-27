@@ -1,0 +1,30 @@
+.confia-audit-view { display: grid; gap: 20px; min-width: 0; color: var(--color-text); }
+.confia-audit-view > section,
+.confia-audit-view > details {
+  min-width: 0; margin: 0; padding: 20px;
+  border: 1px solid var(--color-border); border-radius: var(--radius-card);
+  background: var(--color-surface);
+}
+.confia-audit-view .result-summary { border-top: 4px solid var(--color-primary); }
+.confia-audit-view .result-title { margin: 8px 0 16px; color: var(--color-primary-strong); }
+.confia-audit-view .audit-score { font-size: 1.2rem; font-weight: 700; }
+.confia-audit-view .audit-verdict { font-weight: 600; }
+.confia-audit-view .audit-inconclusive { margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--color-border); }
+.confia-audit-view h3 { margin: 0 0 14px; font-size: 1.12rem; }
+.confia-audit-view h4 { margin: 0 0 12px; font-size: 1rem; line-height: 1.5; }
+.confia-audit-view p, .confia-audit-view li { line-height: 1.6; overflow-wrap: anywhere; }
+.confia-audit-view .summary-text { margin: 0; }
+.confia-audit-view .muted { color: var(--color-text-muted); }
+.confia-audit-view .audit-criterion, .confia-audit-view .audit-claim {
+  padding: 18px 0; border-top: 1px solid var(--color-border);
+}
+.confia-audit-view .audit-points { font-weight: 700; }
+.confia-audit-view .audit-status { color: var(--color-primary-strong); font-weight: 600; }
+.confia-audit-view .evidence-quote { border-left: 3px solid var(--color-primary); padding-left: 12px; white-space: pre-wrap; }
+.confia-audit-view .evidence-item { margin-top: 12px; padding: 14px; background: var(--color-surface-subtle); }
+.confia-audit-view summary { cursor: pointer; min-height: var(--control-height); line-height: 1.6; font-weight: 600; }
+.confia-audit-view pre { max-height: 420px; max-width: 100%; overflow: auto; white-space: pre-wrap; overflow-wrap: anywhere; }
+.confia-audit-view .katex-display { max-width: 100%; overflow-x: auto; }
+@media (max-width: 700px) {
+  .confia-audit-view > section, .confia-audit-view > details { padding: 14px; }
+}

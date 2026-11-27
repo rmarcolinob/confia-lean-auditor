@@ -1,0 +1,16 @@
+{
+  "source_run": "artifacts/runs/20261125T003359_219972",
+  "solution_id": "ITA2025F2Q1_S071_L04",
+  "files": {
+    "audit.json": "847322f5fde73e861f14a79e3b90cd2b4ffe21597d892e565be7156038d61e46",
+    "solution.txt": "abfd6160505dd7a7f5cc483d474e94960ce9f27c2446394dbf3f0f135533f016",
+    "student_claim_checks/student_check_1_lean_file.lean": "3032aea2308ad7d7a903dd766eea8f21030906a0fb7bb41fccafed30d50843c5",
+    "student_claim_checks/student_check_2_lean_file.lean": "40fcbcc9698c8b4c9b6f38408f8527a21dbe798f078d60827beecf48e7c44fbd",
+    "student_claim_checks/student_check_3_lean_file.lean": "57d098bcf1a1957fc69ef5325fe4ce3778400b16bb8d1b02d9f7a2237ff62a87"
+  },
+  "historical_source": {
+    "path": "/Users/LinMarcolino/Documents/confia-lean-auditor/experiments/semantic_b_plus/offline/cases/ITA2025F2Q1_S071_L04.json",
+    "source_sha256": "abfd6160505dd7a7f5cc483d474e94960ce9f27c2446394dbf3f0f135533f016",
+    "matches_run_solution": true
+  }
+}

@@ -1272,3 +1272,10 @@ body[data-handwriting-focus="true"] .resolution-heading .eyebrow { display: none
   .home-grid .button { width: 100%; }
   #teacher-exam-form { padding: var(--spacing-3); }
 }
+
+/* Self-study keeps the shared cards, typography and notebook untouched. */
+#student-self-study { display: grid; gap: var(--spacing-4); }
+#student-self-study[hidden] { display: none; }
+#student-self-study textarea { min-height: 120px; }
+#student-self-study input[type="checkbox"] { width: 20px; min-height: 20px; height: 20px; margin: 0 8px; vertical-align: middle; }
+#student-self-study .study-original { white-space: pre-wrap; overflow-wrap: anywhere; }

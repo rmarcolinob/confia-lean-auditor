@@ -1,7 +1,8 @@
 from datetime import datetime
-from typing import Annotated, Literal, Optional
+from typing import Annotated, Literal, Optional, Union
 
-from pydantic import Field, model_validator
+from pydantic import Field, model_validator, model_serializer
+from confia_lean_auditor.submissions.reading_confirmation import ReadingConfirmation
 from confia_lean_auditor.submissions.integrity import model_sha256, canonical_sha256
 
 from confia_lean_auditor.core.schemas import AuditResponse
@@ -9,6 +10,9 @@ from confia_lean_auditor.submissions.schemas import (
     AcceptanceId, ArtifactReference, Sha256, SubmissionId, SubmissionModel,
     TranscriptionAcceptance, TranscriptionAcceptanceReceipt, TranscriptionId, TranscriptionRevision,
 )
+
+from confia_lean_auditor.tme.audit_models import TMEAuditContext, TMEAuditResult
+from confia_lean_auditor.dynamic.grading_models import DynamicGradingContext, DynamicAuditResult
 
 AuditRunId = Annotated[str, Field(pattern=r"^aud_[0-9a-f]{64}$")]
 
@@ -29,7 +33,19 @@ class ConversionWarning(SubmissionModel):
     message: str
 
 
+from confia_lean_auditor.dynamic.school_contracts import SchoolAttemptBinding
+
 class AuditProvenance(SubmissionModel):
+    school_attempt: Optional[SchoolAttemptBinding] = None
+    reading_confirmation: Optional[ReadingConfirmation] = None
+
+    @model_serializer(mode='wrap')
+    def historical_shape(self, handler):
+        data=handler(self)
+        if self.school_attempt is None: data.pop('school_attempt',None)
+        if self.reading_confirmation is None: data.pop('reading_confirmation',None)
+        return data
+
     conversion_version: Literal["segments-v1"] = "segments-v1"
     original_artifacts: list[ArtifactReference]
     revision: TranscriptionRevision
@@ -49,8 +65,22 @@ class AuditSource(SubmissionModel):
     provenance: AuditProvenance
     warnings: list[ConversionWarning] = Field(default_factory=list)
 
+    scoring_context: Optional[dict] = None
+    tme_context: Optional[TMEAuditContext] = None
+    dynamic_context: Optional[DynamicGradingContext] = None
+
+    @model_serializer(mode="wrap")
+    def preserve_legacy_shape(self, handler):
+        data = handler(self)
+        if "scoring_context" not in self.model_fields_set: data.pop("scoring_context", None)
+        if "tme_context" not in self.model_fields_set:
+            data.pop("tme_context", None)
+        if "dynamic_context" not in self.model_fields_set: data.pop("dynamic_context",None)
+        return data
+
     @model_validator(mode="after")
     def accepted_binding(self):
+        if self.dynamic_context and (self.tme_context or self.dynamic_context.problem_id!=self.problem_id): raise ValueError("invalid engine context")
         revision, acceptance = self.provenance.revision, self.provenance.acceptance
         receipt = self.provenance.acceptance_receipt
         for field in ("submission_id", "transcription_id", "revision_number"):
@@ -77,7 +107,18 @@ class RequiredArtifact(SubmissionModel):
     byte_size: int = Field(ge=0)
 
 
+class QuestionAuditContext(SubmissionModel):
+    assessment_id: str
+    participant_id: str
+    exam_submission_id: str
+    question_attempt_id: str
+    engine_mode: Literal["TME_CURRENT", "DYNAMIC"] = "TME_CURRENT"
+    adapter_version: Literal["question-audit.v1"] = "question-audit.v1"
+    max_score: float = Field(gt=0)
+
+
 class AuditRun(SubmissionModel):
+    engine_mode: Optional[Literal["SPECIALIZED","DYNAMIC"]] = None
     audit_run_id: AuditRunId
     submission_id: SubmissionId
     problem_id: str
@@ -88,12 +129,25 @@ class AuditRun(SubmissionModel):
     source: AuditSource
     created_at: datetime
     status: Literal["COMPLETED", "FAILED"]
-    result: Optional[AuditResponse] = None
+    result: Optional[Union[DynamicAuditResult, TMEAuditResult, AuditResponse]] = None
     result_sha256: Optional[Sha256] = None
     required_artifacts: list[RequiredArtifact] = Field(default_factory=list)
     artifact_manifest_sha256: Optional[Sha256] = None
     artifact_dir: Optional[str] = None
     auditor_version: Optional[str] = None
+    question_context: Optional[QuestionAuditContext] = None
+    completed_at: Optional[datetime] = None
+    question_events: Optional[list[dict]] = None
+    question_events_sha256: Optional[Sha256] = None
+
+    @model_serializer(mode="wrap")
+    def preserve_pre_question_shape(self, handler):
+        data = handler(self)
+        for field in ("engine_mode", "question_context", "completed_at", "question_events", "question_events_sha256"):
+            if field not in self.model_fields_set:
+                data.pop(field, None)
+        return data
+
     execution_key: Optional[str] = None
     error_code: Optional[Literal["AUDITOR_FAILED", "METADATA_INTEGRITY_FAILED"]] = None
     reproducibility_status: Literal["recorded", "unavailable", "legacy_unversioned"] = "legacy_unversioned"
@@ -102,6 +156,25 @@ class AuditRun(SubmissionModel):
 
     @model_validator(mode="after")
     def coherent(self):
+        if (self.engine_mode=="DYNAMIC") != bool(self.source.dynamic_context): raise ValueError("engine/source mismatch")
+        if self.result is not None and bool(self.source.dynamic_context)!=isinstance(self.result,DynamicAuditResult): raise ValueError("dynamic result/engine mismatch")
+        if isinstance(self.result,DynamicAuditResult):
+            if self.source.dynamic_context!=self.result.context or self.result.analysis.source_sha256!=self.source_hash or self.result.analysis.transcription_version!=f"{self.transcription_id}:{self.revision_number}": raise ValueError("dynamic source/context mismatch")
+        if self.question_events is not None:
+            if (not self.question_context or self.question_events_sha256 != canonical_sha256(self.question_events)
+                    or any(event.get("audit_run_id") != self.audit_run_id
+                        or event.get("question_attempt_id") != self.question_context.question_attempt_id
+                        or event.get("transcription_version_id") != f"{self.transcription_id}:{self.revision_number}"
+                        for event in self.question_events)):
+                raise ValueError("invalid question events")
+        elif self.question_events_sha256 is not None:
+            raise ValueError("event digest without events")
+        if self.completed_at and self.completed_at < self.created_at:
+            raise ValueError("completion precedes start")
+        if self.question_context and (not self.completed_at or not (self.source.tme_context or self.source.dynamic_context)):
+            raise ValueError("question audit requires completion and engine context")
+        if self.question_context and self.question_context.engine_mode != ("DYNAMIC" if self.source.dynamic_context else "TME_CURRENT"):
+            raise ValueError("question audit requires completion and engine context")
         metadata = self.result.reproducibility if self.result else None
         record = metadata.record if metadata else None
         expected_statuses = {metadata.status} if metadata else (
@@ -116,6 +189,12 @@ class AuditRun(SubmissionModel):
                       "acceptance_id", "source_hash"):
             if getattr(self, field) != getattr(self.source, field):
                 raise ValueError("inconsistent audit source binding")
+        if isinstance(self.result, TMEAuditResult):
+            if (self.source.tme_context != self.result.context
+                    or self.auditor_version != self.result.context.auditor_version
+                    or self.result.accepted_transcription_revision_id != f"{self.transcription_id}:{self.revision_number}"
+                    or self.result.accepted_revision_sha256 != self.source.provenance.acceptance.accepted_revision_sha256):
+                raise ValueError("inconsistent accepted TME result")
         if self.status == "COMPLETED":
             if self.result is None or self.error_code is not None or not self.artifact_dir:
                 raise ValueError("completed audit requires a result")

@@ -1,0 +1,29 @@
+........................................................................ [ 36%]
+........................................................................ [ 72%]
+.....................................F.................                  [100%]
+=================================== FAILURES ===================================
+______ test_failed_reviewer_can_only_preserve_score_with_technical_review ______
+
+setup = (PosixPath('/private/var/folders/4h/mld1ypt95nq1z3nm58k0k64m0000gn/T/pytest-of-LinMarcolino/pytest-1/test_failed_reviewer_can_only_0'), <starlette.testclient.TestClient object at 0x10cb84e50>)
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10ce74130>
+
+    def test_failed_reviewer_can_only_preserve_score_with_technical_review(
+        setup, monkeypatch
+    ):
+        _, _, _, _, _, _, _, r, _ = chain(
+            setup, monkeypatch, provider=ReviewerProvider(failure=True)
+        )
+>       assert (
+            r["technical_uncertainty"]
+            and r["review_required"]
+            and r["reconciled_suggested_score"] == "10"
+        )
+E       AssertionError: assert (True and True and '10.00' == '10'
+E         
+E         - 10
+E         + 10.00)
+
+tests/test_dynamic_dy5.py:495: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_dynamic_dy5.py::test_failed_reviewer_can_only_preserve_score_with_technical_review
+1 failed, 198 passed in 20.66s

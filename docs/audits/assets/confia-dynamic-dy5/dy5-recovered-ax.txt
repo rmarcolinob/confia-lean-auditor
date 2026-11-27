@@ -1,0 +1,153 @@
+Browser tab: 6, Title: "ConfIA — Confiabilidade e Explicabilidade", URL: "http://127.0.0.1:8770/tme?case_id=case_b9e7b902a0b0484cb6c35ffd19c55814".
+1 AXWebArea ConfIA — Confiabilidade e Explicabilidade, URL: 127.0.0.1:8770/tme?case_id=case_b9e7b902a0b0484cb6c35ffd19c55814
+	2 link Description: Ir para conteúdo, Value: 127.0.0.1:8770/tme?case_id=case_b9e7b902a0b0484cb6c35ffd19c55814#main
+	3 container
+		4 text ConfIA Plataforma de
+		5 text correção assistida
+		6 button (collapsed) Description: Perfil do avaliador, ID: evaluator-avatar, Secondary Actions: Expand
+	7 container app
+		140 container
+			141 button Voltar para fila
+			142 heading Prova DY5-LISTA-UP, Value: 1
+				143 text Prova DY5-LISTA-UP
+			144 text Aguardando decisão Questão 1 · 1 questão disponível · Questão inédita · Resolução textual
+			145 container Questões disponíveis desta prova
+				146 button Q1 · Questão atual
+			147 content list Progresso da correção
+				148 text Entrada
+				149 text Transcrição
+				150 text Análise
+				151 text Decisão
+		152 container
+			153 heading Enunciado, Value: 2
+				154 text Enunciado
+			155 button (collapsed) Ver enunciado completo, Secondary Actions: Expand
+			156 text Resolva no conjunto dos reais: 2y² - 14y + 24 = 0.
+		157 container
+			158 container solution-pane
+				159 container
+					160 heading Solução do participante, Value: 2
+						161 text Solução do participante
+					162 button (collapsed) Description: Expandir solução, Secondary Actions: Expand
+				163 tab group Visualização da solução
+					164 tab (selected, settable, boolean) Original, Value: 1, ID: tab-original
+					165 tab (selectable, settable, boolean) Transcrição, Value: 0, ID: tab-transcript
+					166 tab (selectable, settable, boolean) Comparar, Value: 0, ID: tab-compare
+				167 container Description: Original, ID: solution-views
+					168 container Original
+						169 text y²-7y+12=0; (y-3)(y-4)=0; S={3,4}; 2*3^2-14*3+24=0; 2*4^2-14*4+24=0
+				170 button (collapsed) Originais e histórico, Secondary Actions: Expand
+					171 text Originais e histórico
+			172 splitter Description: Redimensionar solução e análise, Help: Arraste ou use as setas. Home: 45%; End: 70%; duplo clique: 60%., Value: 60
+			173 container Description: Análise ConfIA, ID: analysis-pane
+				174 container
+					175 heading ANÁLISE CONFIA, Value: 2
+						176 text ANÁLISE CONFIA
+					177 button (expanded) Recolher análise, Secondary Actions: Collapse
+					178 container analysis-content
+						179 container Resultado sugerido
+							180 text Sugestão ConfIA
+							181 text 10 / 10
+							182 text Análise Concluída
+							183 text Sugestão reconciliada · Primeira análise preservada: 6 / 10
+							184 text Sugestão provisória · decisão do professor
+							185 text Modo: Correção dinâmica
+						186 container Cobertura da análise
+							187 heading Cobertura da análise, Value: 3
+								188 text Cobertura da análise
+							189 text 3/3 critérios decididos
+							190 text 3 critérios · 3 decididos · 0 claims formalmente verificados · 0 indeterminados
+						191 container Revisão independente
+							192 button (collapsed) Revisão independente · 1 divergência resolvida, Secondary Actions: Expand
+								193 text Revisão independente · 1 divergência resolvida
+							194 button Solicitar nova revisão independente
+						195 container Reconciliação da sugestão
+							267 container
+								268 button (expanded) Reconciliação · 1 divergência resolvida, Secondary Actions: Collapse
+									269 text Reconciliação · 1 divergência resolvida
+								270 text A sugestão reconciliada usa evidência e rubrica. Concordância entre agentes não é prova. A nota final depende da confirmação do professor. Perfil: Lista formativa Primeira análise: 6,0 · Sugestão reconciliada: 10
+								271 button (expanded) Justificar a resolução por transformações equivalentes. · Reconciliação: 4 / 4, Secondary Actions: Collapse
+									272 text Justificar a resolução por transformações equivalentes. · Reconciliação: 4 / 4
+								277 text Primeira análise: 0 · Revisão: 4 · Reconciliação: 4
+								278 text Evidência fiel e verificável satisfaz a rubrica; crédito legítimo identificado.
+								279 text Decisão sustentada no escopo verificável
+								273 button (collapsed) Obter todas as raízes reais. Crédito parcial proporcional às raízes corretas. · Reconciliação: 3 / 3, Secondary Actions: Expand
+									274 text Obter todas as raízes reais. Crédito parcial proporcional às raízes corretas. · Reconciliação: 3 / 3
+								275 button (collapsed) Secondary Actions: Expand, Verificar as raízes por substituição. Crédito parcial proporcional às raízes corretas. · Reconciliação: 3 / 3
+									276 text Verificar as raízes por substituição. Crédito parcial proporcional às raízes corretas. · Reconciliação: 3 / 3
+						198 button (collapsed) Evidências e verificações da resolução, Secondary Actions: Expand
+							199 text Evidências e verificações da resolução
+						200 container
+							201 heading Critérios da primeira análise, Value: 3
+								202 text Critérios da primeira análise
+							203 button (collapsed) Sustentado Critério 1 0 / 4 Justificar a resolução por transformações equivalentes., Secondary Actions: Expand
+								204 image Sustentado
+								205 text Critério 1
+								206 text 0 / 4
+								207 text Justificar a resolução por transformações equivalentes.
+							208 button (collapsed) Secondary Actions: Expand, Sustentado Critério 2 3 / 3 Obter todas as raízes reais. Crédito parcial proporcional às raízes corretas.
+								209 image Sustentado
+								210 text Critério 2
+								211 text 3 / 3
+								212 text Obter todas as raízes reais. Crédito parcial proporcional às raízes corretas.
+							213 button (collapsed) Secondary Actions: Expand, Sustentado Critério 3 3 / 3 Verificar as raízes por substituição. Crédito parcial proporcional às raízes corretas.
+								214 image Sustentado
+								215 text Critério 3
+								216 text 3 / 3
+								217 text Verificar as raízes por substituição. Crédito parcial proporcional às raízes corretas.
+						218 container
+							219 heading Passos identificados, Value: 3
+								220 text Passos identificados
+							221 checkbox Description: Passo 1: y²-7y+12=0. Verificado no escopo, Value: 1
+								222 text 01
+								223 text y²-7y+12=0
+								224 image Sustentado
+							225 checkbox Description: Passo 2: (y-3)(y-4)=0. Verificado no escopo, Value: 0
+								226 text 02
+								227 text (y-3)(y-4)=0
+								228 image Sustentado
+							229 checkbox Description: Passo 3: S={3,4}. Verificado no escopo, Value: 0
+								230 text 03
+								231 text S={3,4}
+								232 image Sustentado
+							233 checkbox Description: Passo 4: 2*3^2-14*3+24=0. Verificado no escopo, Value: 0
+								234 text 04
+								235 text 2*3^2-14*3+24=0
+								236 image Sustentado
+							237 checkbox Description: Passo 5: 2*4^2-14*4+24=0. Verificado no escopo, Value: 0
+								238 text 05
+								239 text 2*4^2-14*4+24=0
+								240 image Sustentado
+							241 text y²-7y+12=0
+							242 text Verificado no escopo
+							243 text Trecho preservado: caracteres 0–10 da transcrição aceita.
+						244 container
+							245 heading Verificação matemática, Value: 3
+								246 text Verificação matemática
+							247 text 0 claims verificados formalmente 5 não formalizados 0 falhas técnicas
+							248 button (collapsed) Detalhes da verificação, Secondary Actions: Expand
+								249 text Detalhes da verificação
+						250 button (collapsed) Resumo e evidências da análise, Secondary Actions: Expand
+							251 text Resumo e evidências da análise
+						252 button (collapsed) Detalhes técnicos, Secondary Actions: Expand
+							253 text Detalhes técnicos
+		254 container Description: Decisão do avaliador, ID: evaluator-decision
+			255 heading Decisão do avaliador, Value: 2
+				256 text Decisão do avaliador
+			257 text Sugestão ConfIA
+			258 text 10 / 10
+			259 container
+				260 text Pontuação final
+				261 stepper (settable) Pontuação final
+				262 button Usar sugestão
+				263 button Ajustar
+				264 button (collapsed) Adicionar observação, Secondary Actions: Expand
+					265 text Adicionar observação
+				266 button Finalizar correção
+	135 container Description: Navegação principal, ID: home-bottom-nav
+		136 button Início
+		137 button Fila
+		138 button Nova
+		139 button Resultados
+
+The focused UI element is 271 button (expanded) Justificar a resolução por transformações equivalentes. · Reconciliação: 4 / 4, Secondary Actions: Collapse

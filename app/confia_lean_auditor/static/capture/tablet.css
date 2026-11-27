@@ -174,6 +174,21 @@ select {
   white-space: pre-wrap;
 }
 
+/* Official TME figures in the digital notebook; legacy ITA presentation is unchanged. */
+body[data-tme="true"] .tme-problem-text { margin: 0 0 .8em; }
+body[data-tme="true"] .tme-problem-figure { margin: 1em 0; }
+body[data-tme="true"] .tme-problem-figure img {
+  display: block;
+  width: auto;
+  max-width: 100%;
+  max-height: min(48vh, 360px);
+  height: auto;
+  margin: auto;
+}
+body[data-embedded="true"][data-tme="true"] .problem-dock__body[data-has-figures="true"] {
+  max-height: min(65vh, 520px);
+}
+
 /* Only wide formulas scroll locally; the page and notebook keep their width. */
 .problem-statement .katex-display {
   max-width: 100%;
@@ -418,6 +433,24 @@ body[data-embedded="true"] #continue-draft,
 body[data-embedded="true"] #technical-details,
 body[data-embedded="true"] .export-card { display: none; }
 body[data-embedded="true"] .notebook-controls { display: none; }
+/* TME embeds the actual notebook controls, including pages and send actions. */
+body[data-embedded="true"][data-tme="true"] .notebook-controls,
+body[data-embedded="true"][data-tme="true"] .setup-card,
+body[data-embedded="true"][data-tme="true"] .export-card { display: block; }
+body[data-embedded="true"][data-tme="true"] #problem-dock { display: block; top: 0; }
+body[data-embedded="true"][data-tme="true"] .notebook-controls {
+  position: sticky;
+  top: calc(var(--pilot-dock-height, 0px) + 8px);
+  z-index: calc(var(--z-sticky) - 1);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-card);
+}
+body[data-embedded="true"][data-tme="true"] .problem-dock__body { max-height: min(25vh, 200px); }
+body[data-embedded="true"][data-tme="true"] .toolbar { justify-content: flex-start; }
+body[data-embedded="true"][data-tme="true"] .draft-persistence-bar { display: flex; }
+body[data-embedded="true"][data-tme="true"] .page-toolbar { margin-bottom: 12px; }
+body[data-embedded="true"][data-tme="true"] #capture-purpose,
+body[data-embedded="true"][data-tme="true"] #open-teacher { display: none; }
 /* Compact only the embedded chrome; never stretch or crop the ink page. */
 body[data-embedded="true"] .notebook-controls { padding: 6px; margin-bottom: 8px; }
 body[data-embedded="true"] .toolbar { margin-bottom: 6px; }
@@ -430,3 +463,9 @@ body[data-embedded="true"] .tool-group button { min-height: 44px; }
   body[data-embedded="true"] .page-toolbar button { padding: 6px; }
 }
 #continue-draft { margin-top: 12px; }
+@media (max-width: 760px) {
+  body[data-embedded="true"][data-tme="true"] .toolbar { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  body[data-embedded="true"][data-tme="true"] .tool-group { display: contents; }
+  body[data-embedded="true"][data-tme="true"] .page-toolbar { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  body[data-embedded="true"][data-tme="true"] .page-toolbar strong { grid-column: 1 / -1; grid-row: 1; }
+}

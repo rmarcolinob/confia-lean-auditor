@@ -45,7 +45,7 @@
           throw new Error("Renderizador ou expressão indisponível.");
         }
         const math = root.document.createElement("span");
-        root.katex.render(segment.content, math, { ...options, throwOnError: true, macros: {} });
+        root.katex.render(segment.content, math, { ...options, throwOnError: true, displayMode: segment.display === true, macros: {} });
         fragment.appendChild(math);
       }
     }
@@ -132,5 +132,17 @@
     }
   }
 
-  root.ConfiaProblemMath = Object.freeze({ render });
+  // Quiet rich content for operational screens. Text enters through textContent;
+  // only the existing trusted KaTeX renderer creates mathematical markup.
+  function renderContent(element, source, presentation = {}) {
+    element.textContent = typeof source === "string" ? source : "";
+    const message = root.document.createElement("p");
+    render(element, message, presentation);
+    // A malformed expression remains readable without a red technical tooltip.
+    for (const error of element.querySelectorAll(".katex-error")) {
+      error.parentNode.replaceChild(root.document.createTextNode(error.textContent), error);
+    }
+  }
+
+  root.ConfiaProblemMath = Object.freeze({ render, renderContent });
 })(globalThis);

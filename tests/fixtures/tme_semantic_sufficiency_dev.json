@@ -1,0 +1,625 @@
+[
+  {
+    "solution_id": "TME2026P1_06",
+    "problem_id": "TME2_P1_PILOT",
+    "obligation_id": "d.total_thirty",
+    "error_class": "wrong_written_result",
+    "historical_kind": "FALSE_CREDIT",
+    "source": "(a) Invertendo 731, fica 137. Então, fazendo a subtração, 731 − 137 = 594, portanto o resultado produzido é 594, pois o algarismo das centenas é maior e a diferença fica positiva.\n(b) Se o número é abc, ele vale 100a + 10b + c, e o invertido vale 100c + 10b + a. Assim,\nabc − cba = (100a + 10b + c) − (100c + 10b + a)\n= 100a − 100c + c − a\n= 99a − 99c = 99(a − c).\nOs termos com b desaparecem, então a afirmação está certa.\n(c) Como a e c são algarismos, c não pode ser zero e a é maior que c. Logo a − c pode ser 1, 2, 3, 4, 5, 6, 7 ou 8. Os resultados são 99, 198, 297, 396, 495, 594, 693 e 792. O maior não é 891 porque para isso c teria que ser zero.\n(d) Para obter 594, temos 99(a − c) = 594, então a − c = 6. Os pares possíveis são (7,1), (8,2) e (9,3). Para cada um deles, b pode ser qualquer algarismo de 0 a 9, dando 3 · 10 = 20 números. Portanto, o resultado 594 pode ter vindo de 20 números diferentes.",
+    "candidate": {
+      "obligation_id": "d.total_thirty",
+      "semantic_judgment": "satisfied",
+      "evidence_ids": [
+        "E012"
+      ],
+      "method_path": "d.count",
+      "assertion_mode": "asserted",
+      "confidence": "high",
+      "concise_rationale": "O total de 30 números diferentes foi corretamente concluído.",
+      "extracted_mathematical_statements": [
+        {
+          "subject": "expression",
+          "expression": "30",
+          "representation_kind": "math",
+          "evidence_ids": [
+            "E012"
+          ]
+        }
+      ]
+    },
+    "expected_reconciled_support": false
+  },
+  {
+    "solution_id": "TME2026P1_13",
+    "problem_id": "TME2_P1_PILOT",
+    "obligation_id": "d.middle_choices",
+    "error_class": "wrong_written_result",
+    "historical_kind": "FALSE_CREDIT",
+    "source": "(a) O invertido de 731 é 137, então 731 − 137 = 594.\n(b) abc − cba = 100a + 10b + c − 100c − 10b − a = 99a − 99c = 99(a − c). Beatriz está correta.\n(c) a − c vai de 1 a 8, logo os resultados são 99, 198, 297, 396, 495, 594, 693 e 792.\n(d) 99(a − c) = 594, logo a − c = 6. Pares: (7,1), (8,2), (9,3). Cada par tem b de 0 a 9, isto é, 9 valores de b. Logo a máquina pode ter recebido 27 números diferentes.",
+    "candidate": {
+      "obligation_id": "d.middle_choices",
+      "semantic_judgment": "satisfied",
+      "evidence_ids": [
+        "E007",
+        "E008"
+      ],
+      "method_path": "d.count",
+      "assertion_mode": "asserted",
+      "confidence": "high",
+      "concise_rationale": "Justifica corretamente que cada par tem 10 possibilidades para b.",
+      "extracted_mathematical_statements": []
+    },
+    "expected_reconciled_support": false
+  },
+  {
+    "solution_id": "TME2026P1_13",
+    "problem_id": "TME2_P1_PILOT",
+    "obligation_id": "d.total_thirty",
+    "error_class": "wrong_written_result",
+    "historical_kind": "FALSE_CREDIT",
+    "source": "(a) O invertido de 731 é 137, então 731 − 137 = 594.\n(b) abc − cba = 100a + 10b + c − 100c − 10b − a = 99a − 99c = 99(a − c). Beatriz está correta.\n(c) a − c vai de 1 a 8, logo os resultados são 99, 198, 297, 396, 495, 594, 693 e 792.\n(d) 99(a − c) = 594, logo a − c = 6. Pares: (7,1), (8,2), (9,3). Cada par tem b de 0 a 9, isto é, 9 valores de b. Logo a máquina pode ter recebido 27 números diferentes.",
+    "candidate": {
+      "obligation_id": "d.total_thirty",
+      "semantic_judgment": "satisfied",
+      "evidence_ids": [
+        "E007",
+        "E008"
+      ],
+      "method_path": "d.count",
+      "assertion_mode": "asserted",
+      "confidence": "high",
+      "concise_rationale": "Conclui corretamente que o total é 30 a partir dos pares e das possibilidades para b.",
+      "extracted_mathematical_statements": [
+        {
+          "subject": "expression",
+          "expression": "30",
+          "representation_kind": "math",
+          "evidence_ids": [
+            "E008"
+          ]
+        }
+      ]
+    },
+    "expected_reconciled_support": false
+  },
+  {
+    "solution_id": "TME2026P2_01",
+    "problem_id": "TME2026P2",
+    "obligation_id": "c.pair_orientations",
+    "error_class": "wrong_written_result",
+    "historical_kind": "FALSE_CREDIT",
+    "source": "(a) A soma dos números de 1 a 9 é 45. Com 5 no centro, os oito números restantes somam 40. Se S é a soma de cada linha, somando as quatro linhas temos 4S = 40 + 4·5 = 60, logo S = 15. Portanto, os números das extremidades de cada linha devem somar 10. Os pares possíveis são (1,9), (2,8), (3,7) e (4,6). Um exemplo: A=1, E=9; B=2, F=8; C=3, G=7; D=4, H=6.\n(b) Seja x o número central. Somando as quatro linhas, os números externos aparecem uma vez e x aparece quatro vezes: 4S = (45 - x) + 4x = 45 + 3x. Então S = (45+3x)/4. Para S inteiro, 45+3x deve ser múltiplo de 4. Testando x de 1 a 9: x=1 dá 48/4=12; x=2 dá 51/4 não inteiro; x=3 dá 54/4 não; x=4 dá 57/4 não; x=5 dá 60/4=15; x=6 dá 63/4 não; x=7 dá 66/4 não; x=8 dá 69/4 não; x=9 dá 72/4=18. Assim, x pode ser 1, 5 ou 9, com somas comuns 12, 15 e 18 respectivamente.\n(c) A maior soma comum é 18, obtida com x=9. Nesse caso, os pares de extremidades somam 9: (1,8), (2,7), (3,6), (4,5). Podemos distribuir esses pares nas quatro linhas de 4! = 24 maneiras. Em cada linha, os dois números podem trocar de posição, dando 2 opções por linha, ou seja, 2^4 = 8. Portanto, o número de preenchimentos é 4!·2^4 = 24·8 = 192.",
+    "candidate": {
+      "obligation_id": "c.pair_orientations",
+      "semantic_judgment": "satisfied",
+      "evidence_ids": [
+        "E006"
+      ],
+      "method_path": "c.counting",
+      "assertion_mode": "asserted",
+      "confidence": "high",
+      "concise_rationale": "As orientações independentes dos pares foram corretamente calculadas como 16.",
+      "extracted_mathematical_statements": [
+        {
+          "subject": "pair_orientations",
+          "expression": "2^4 = 16",
+          "representation_kind": "math",
+          "evidence_ids": [
+            "E006"
+          ]
+        }
+      ]
+    },
+    "expected_reconciled_support": false
+  },
+  {
+    "solution_id": "TME2026P2_01",
+    "problem_id": "TME2026P2",
+    "obligation_id": "c.counting_product",
+    "error_class": "invalid_equality",
+    "historical_kind": "FALSE_CREDIT",
+    "source": "(a) A soma dos números de 1 a 9 é 45. Com 5 no centro, os oito números restantes somam 40. Se S é a soma de cada linha, somando as quatro linhas temos 4S = 40 + 4·5 = 60, logo S = 15. Portanto, os números das extremidades de cada linha devem somar 10. Os pares possíveis são (1,9), (2,8), (3,7) e (4,6). Um exemplo: A=1, E=9; B=2, F=8; C=3, G=7; D=4, H=6.\n(b) Seja x o número central. Somando as quatro linhas, os números externos aparecem uma vez e x aparece quatro vezes: 4S = (45 - x) + 4x = 45 + 3x. Então S = (45+3x)/4. Para S inteiro, 45+3x deve ser múltiplo de 4. Testando x de 1 a 9: x=1 dá 48/4=12; x=2 dá 51/4 não inteiro; x=3 dá 54/4 não; x=4 dá 57/4 não; x=5 dá 60/4=15; x=6 dá 63/4 não; x=7 dá 66/4 não; x=8 dá 69/4 não; x=9 dá 72/4=18. Assim, x pode ser 1, 5 ou 9, com somas comuns 12, 15 e 18 respectivamente.\n(c) A maior soma comum é 18, obtida com x=9. Nesse caso, os pares de extremidades somam 9: (1,8), (2,7), (3,6), (4,5). Podemos distribuir esses pares nas quatro linhas de 4! = 24 maneiras. Em cada linha, os dois números podem trocar de posição, dando 2 opções por linha, ou seja, 2^4 = 8. Portanto, o número de preenchimentos é 4!·2^4 = 24·8 = 192.",
+    "candidate": {
+      "obligation_id": "c.counting_product",
+      "semantic_judgment": "satisfied",
+      "evidence_ids": [
+        "E006"
+      ],
+      "method_path": "c.counting",
+      "assertion_mode": "asserted",
+      "confidence": "high",
+      "concise_rationale": "A contagem equivalente foi corretamente apresentada como produto 24×16.",
+      "extracted_mathematical_statements": [
+        {
+          "subject": "counting_product",
+          "expression": "24 × 16 = 384",
+          "representation_kind": "math",
+          "evidence_ids": [
+            "E006"
+          ]
+        }
+      ]
+    },
+    "expected_reconciled_support": false
+  },
+  {
+    "solution_id": "TME2026P2_08",
+    "problem_id": "TME2026P2",
+    "obligation_id": "c.pair_orientations",
+    "error_class": "wrong_written_result",
+    "historical_kind": "FALSE_CREDIT",
+    "source": "(a) A soma de 1 até 9 é 45. Com 5 no centro, sobram 40 para os oito externos. Como as quatro linhas têm a mesma soma, cada par de extremos deve somar 10. Os pares são (1,9), (2,8), (3,7) e (4,6). Por exemplo, A=1 e E=9, B=2 e F=8, C=3 e G=7, D=4 e H=6. Assim cada linha soma 15.\n(b) Se o centro é x e a soma comum é S, somando as quatro linhas os externos aparecem uma vez e o centro aparece quatro vezes. Então 4S = (45 - x) + 4x = 45 + 3x, logo S = (45 + 3x)/4. Para S ser inteiro, 45 + 3x precisa ser múltiplo de 4. Testando x de 1 a 9, dá x = 1, 5 ou 9. Com x = 1, S = 12 e os pares são (2,9), (3,8), (4,7), (5,6). Com x = 5, S = 15 e os pares são (1,9), (2,8), (3,7), (4,6). Com x = 9, S = 18 e os pares são (1,8), (2,7), (3,6), (4,5).\n(c) A maior soma é 18, então o centro é 9. Os quatro pares podem ser distribuídos nas quatro linhas de 4! = 24 modos. Em cada linha, os dois números podem trocar de posição, e como são quatro linhas isso dá 2^4; aqui conto 2^4 = 8. Portanto o total é 24 · 8 = 192. Assim, com a maior soma comum, há 192 preenchimentos equilibrados.",
+    "candidate": {
+      "obligation_id": "c.pair_orientations",
+      "semantic_judgment": "satisfied",
+      "evidence_ids": [
+        "E006"
+      ],
+      "method_path": "c.counting",
+      "assertion_mode": "asserted",
+      "confidence": "high",
+      "concise_rationale": "As orientações independentes dos pares foram corretamente calculadas como 16.",
+      "extracted_mathematical_statements": [
+        {
+          "subject": "pair_orientations",
+          "expression": "2^4 = 16",
+          "representation_kind": "math",
+          "evidence_ids": [
+            "E006"
+          ]
+        }
+      ]
+    },
+    "expected_reconciled_support": false
+  },
+  {
+    "solution_id": "TME2026P2_08",
+    "problem_id": "TME2026P2",
+    "obligation_id": "c.counting_product",
+    "error_class": "invalid_equality",
+    "historical_kind": "FALSE_CREDIT",
+    "source": "(a) A soma de 1 até 9 é 45. Com 5 no centro, sobram 40 para os oito externos. Como as quatro linhas têm a mesma soma, cada par de extremos deve somar 10. Os pares são (1,9), (2,8), (3,7) e (4,6). Por exemplo, A=1 e E=9, B=2 e F=8, C=3 e G=7, D=4 e H=6. Assim cada linha soma 15.\n(b) Se o centro é x e a soma comum é S, somando as quatro linhas os externos aparecem uma vez e o centro aparece quatro vezes. Então 4S = (45 - x) + 4x = 45 + 3x, logo S = (45 + 3x)/4. Para S ser inteiro, 45 + 3x precisa ser múltiplo de 4. Testando x de 1 a 9, dá x = 1, 5 ou 9. Com x = 1, S = 12 e os pares são (2,9), (3,8), (4,7), (5,6). Com x = 5, S = 15 e os pares são (1,9), (2,8), (3,7), (4,6). Com x = 9, S = 18 e os pares são (1,8), (2,7), (3,6), (4,5).\n(c) A maior soma é 18, então o centro é 9. Os quatro pares podem ser distribuídos nas quatro linhas de 4! = 24 modos. Em cada linha, os dois números podem trocar de posição, e como são quatro linhas isso dá 2^4; aqui conto 2^4 = 8. Portanto o total é 24 · 8 = 192. Assim, com a maior soma comum, há 192 preenchimentos equilibrados.",
+    "candidate": {
+      "obligation_id": "c.counting_product",
+      "semantic_judgment": "satisfied",
+      "evidence_ids": [
+        "E006"
+      ],
+      "method_path": "c.counting",
+      "assertion_mode": "asserted",
+      "confidence": "high",
+      "concise_rationale": "A contagem equivalente como produto foi corretamente apresentada.",
+      "extracted_mathematical_statements": [
+        {
+          "subject": "counting_product",
+          "expression": "24 × 16 = 384",
+          "representation_kind": "math",
+          "evidence_ids": [
+            "E006"
+          ]
+        }
+      ]
+    },
+    "expected_reconciled_support": false
+  },
+  {
+    "solution_id": "TME2026P2_01",
+    "problem_id": "TME2026P2",
+    "obligation_id": "c.total",
+    "error_class": "wrong_written_result",
+    "historical_kind": "FALSE_CREDIT",
+    "source": "(a) A soma dos números de 1 a 9 é 45. Com 5 no centro, os oito números restantes somam 40. Se S é a soma de cada linha, somando as quatro linhas temos 4S = 40 + 4·5 = 60, logo S = 15. Portanto, os números das extremidades de cada linha devem somar 10. Os pares possíveis são (1,9), (2,8), (3,7) e (4,6). Um exemplo: A=1, E=9; B=2, F=8; C=3, G=7; D=4, H=6.\n(b) Seja x o número central. Somando as quatro linhas, os números externos aparecem uma vez e x aparece quatro vezes: 4S = (45 - x) + 4x = 45 + 3x. Então S = (45+3x)/4. Para S inteiro, 45+3x deve ser múltiplo de 4. Testando x de 1 a 9: x=1 dá 48/4=12; x=2 dá 51/4 não inteiro; x=3 dá 54/4 não; x=4 dá 57/4 não; x=5 dá 60/4=15; x=6 dá 63/4 não; x=7 dá 66/4 não; x=8 dá 69/4 não; x=9 dá 72/4=18. Assim, x pode ser 1, 5 ou 9, com somas comuns 12, 15 e 18 respectivamente.\n(c) A maior soma comum é 18, obtida com x=9. Nesse caso, os pares de extremidades somam 9: (1,8), (2,7), (3,6), (4,5). Podemos distribuir esses pares nas quatro linhas de 4! = 24 maneiras. Em cada linha, os dois números podem trocar de posição, dando 2 opções por linha, ou seja, 2^4 = 8. Portanto, o número de preenchimentos é 4!·2^4 = 24·8 = 192.",
+    "candidate": {
+      "obligation_id": "c.total",
+      "semantic_judgment": "satisfied",
+      "evidence_ids": [
+        "E006"
+      ],
+      "method_path": "c.counting",
+      "assertion_mode": "asserted",
+      "confidence": "high",
+      "concise_rationale": "O total de preenchimentos foi corretamente calculado como 384.",
+      "extracted_mathematical_statements": [
+        {
+          "subject": "total",
+          "expression": "384",
+          "representation_kind": "math",
+          "evidence_ids": [
+            "E006"
+          ]
+        }
+      ]
+    },
+    "expected_reconciled_support": false
+  },
+  {
+    "solution_id": "TME2026P2_01",
+    "problem_id": "TME2026P2",
+    "obligation_id": "b.realizable_5",
+    "error_class": "evidence_elsewhere_not_selected",
+    "historical_kind": "FALSE_ATTRIBUTION",
+    "source": "(a) A soma dos números de 1 a 9 é 45. Com 5 no centro, os oito números restantes somam 40. Se S é a soma de cada linha, somando as quatro linhas temos 4S = 40 + 4·5 = 60, logo S = 15. Portanto, os números das extremidades de cada linha devem somar 10. Os pares possíveis são (1,9), (2,8), (3,7) e (4,6). Um exemplo: A=1, E=9; B=2, F=8; C=3, G=7; D=4, H=6.\n(b) Seja x o número central. Somando as quatro linhas, os números externos aparecem uma vez e x aparece quatro vezes: 4S = (45 - x) + 4x = 45 + 3x. Então S = (45+3x)/4. Para S inteiro, 45+3x deve ser múltiplo de 4. Testando x de 1 a 9: x=1 dá 48/4=12; x=2 dá 51/4 não inteiro; x=3 dá 54/4 não; x=4 dá 57/4 não; x=5 dá 60/4=15; x=6 dá 63/4 não; x=7 dá 66/4 não; x=8 dá 69/4 não; x=9 dá 72/4=18. Assim, x pode ser 1, 5 ou 9, com somas comuns 12, 15 e 18 respectivamente.\n(c) A maior soma comum é 18, obtida com x=9. Nesse caso, os pares de extremidades somam 9: (1,8), (2,7), (3,6), (4,5). Podemos distribuir esses pares nas quatro linhas de 4! = 24 maneiras. Em cada linha, os dois números podem trocar de posição, dando 2 opções por linha, ou seja, 2^4 = 8. Portanto, o número de preenchimentos é 4!·2^4 = 24·8 = 192.",
+    "candidate": {
+      "obligation_id": "b.realizable_5",
+      "semantic_judgment": "satisfied",
+      "evidence_ids": [
+        "E004"
+      ],
+      "method_path": "b.realizability",
+      "assertion_mode": "asserted",
+      "confidence": "high",
+      "concise_rationale": "Os pares que realizam a configuração para x=5 foram corretamente apresentados.",
+      "extracted_mathematical_statements": [
+        {
+          "subject": "realizable_5",
+          "expression": "(1,9),(2,8),(3,7),(4,6)",
+          "representation_kind": "math",
+          "evidence_ids": [
+            "E004"
+          ]
+        }
+      ]
+    },
+    "expected_reconciled_support": false
+  },
+  {
+    "solution_id": "TME2026P2_01",
+    "problem_id": "TME2026P2",
+    "obligation_id": "b.realizable_9",
+    "error_class": "evidence_elsewhere_not_selected",
+    "historical_kind": "FALSE_ATTRIBUTION",
+    "source": "(a) A soma dos números de 1 a 9 é 45. Com 5 no centro, os oito números restantes somam 40. Se S é a soma de cada linha, somando as quatro linhas temos 4S = 40 + 4·5 = 60, logo S = 15. Portanto, os números das extremidades de cada linha devem somar 10. Os pares possíveis são (1,9), (2,8), (3,7) e (4,6). Um exemplo: A=1, E=9; B=2, F=8; C=3, G=7; D=4, H=6.\n(b) Seja x o número central. Somando as quatro linhas, os números externos aparecem uma vez e x aparece quatro vezes: 4S = (45 - x) + 4x = 45 + 3x. Então S = (45+3x)/4. Para S inteiro, 45+3x deve ser múltiplo de 4. Testando x de 1 a 9: x=1 dá 48/4=12; x=2 dá 51/4 não inteiro; x=3 dá 54/4 não; x=4 dá 57/4 não; x=5 dá 60/4=15; x=6 dá 63/4 não; x=7 dá 66/4 não; x=8 dá 69/4 não; x=9 dá 72/4=18. Assim, x pode ser 1, 5 ou 9, com somas comuns 12, 15 e 18 respectivamente.\n(c) A maior soma comum é 18, obtida com x=9. Nesse caso, os pares de extremidades somam 9: (1,8), (2,7), (3,6), (4,5). Podemos distribuir esses pares nas quatro linhas de 4! = 24 maneiras. Em cada linha, os dois números podem trocar de posição, dando 2 opções por linha, ou seja, 2^4 = 8. Portanto, o número de preenchimentos é 4!·2^4 = 24·8 = 192.",
+    "candidate": {
+      "obligation_id": "b.realizable_9",
+      "semantic_judgment": "satisfied",
+      "evidence_ids": [
+        "E004"
+      ],
+      "method_path": "b.realizability",
+      "assertion_mode": "asserted",
+      "confidence": "high",
+      "concise_rationale": "Os pares que realizam a configuração para x=9 foram corretamente apresentados.",
+      "extracted_mathematical_statements": [
+        {
+          "subject": "realizable_9",
+          "expression": "(1,8),(2,7),(3,6),(4,5)",
+          "representation_kind": "math",
+          "evidence_ids": [
+            "E004"
+          ]
+        }
+      ]
+    },
+    "expected_reconciled_support": false
+  },
+  {
+    "solution_id": "TME2026P2_18",
+    "problem_id": "TME2026P2",
+    "obligation_id": "b.realizable_5",
+    "error_class": "evidence_elsewhere_not_selected",
+    "historical_kind": "FALSE_ATTRIBUTION",
+    "source": "(a) soma 1+...+9 = 45. Com 5 no centro sobram 40 pras 4 linhas, ent cada linha precisa das ext. somando 40/4 = 10. Pares: (1,9), (2,8), (3,7), (4,6). Colocando A=1, E=9; B=2, F=8; C=3, G=7; D=4, H=6, dá 15 cada linha.\n(b) Se x no centro e S a soma, somando as 4 linhas cada externo aparece 1 vez e x 4 vezes, daí 4S = (45−x) + 4x = 45 + 3x. S = (45+3x)/4, precisa ser inteiro. Testando de 1 a 9: x=1→12, x=5→15, x=9→18, os outros não dão. Então centro pode ser 1, 5 ou 9 com somas 12, 15, 18 — deve ser isso.\n(c) Soma máx = 18 com centro 9, extremidades somam 9: pares (1,8), (2,7), (3,6), (4,5). Distribuir os 4 pares nas 4 linhas: 4! = 24. Dentro de cada linha trocar os 2 números: 2^4 = 16. Total = 4!·2^4 = 24·16 = 384.",
+    "candidate": {
+      "obligation_id": "b.realizable_5",
+      "semantic_judgment": "satisfied",
+      "evidence_ids": [
+        "E004"
+      ],
+      "method_path": "b.realizability",
+      "assertion_mode": "asserted",
+      "confidence": "high",
+      "concise_rationale": "Os pares que realizam a configuração para o centro 5 foram corretamente apresentados.",
+      "extracted_mathematical_statements": [
+        {
+          "subject": "realizable_5",
+          "expression": "(1,9),(2,8),(3,7),(4,6)",
+          "representation_kind": "integer_pairs",
+          "evidence_ids": [
+            "E004"
+          ]
+        }
+      ]
+    },
+    "expected_reconciled_support": false
+  },
+  {
+    "solution_id": "TME2026P2_18",
+    "problem_id": "TME2026P2",
+    "obligation_id": "b.realizable_9",
+    "error_class": "evidence_elsewhere_not_selected",
+    "historical_kind": "FALSE_ATTRIBUTION",
+    "source": "(a) soma 1+...+9 = 45. Com 5 no centro sobram 40 pras 4 linhas, ent cada linha precisa das ext. somando 40/4 = 10. Pares: (1,9), (2,8), (3,7), (4,6). Colocando A=1, E=9; B=2, F=8; C=3, G=7; D=4, H=6, dá 15 cada linha.\n(b) Se x no centro e S a soma, somando as 4 linhas cada externo aparece 1 vez e x 4 vezes, daí 4S = (45−x) + 4x = 45 + 3x. S = (45+3x)/4, precisa ser inteiro. Testando de 1 a 9: x=1→12, x=5→15, x=9→18, os outros não dão. Então centro pode ser 1, 5 ou 9 com somas 12, 15, 18 — deve ser isso.\n(c) Soma máx = 18 com centro 9, extremidades somam 9: pares (1,8), (2,7), (3,6), (4,5). Distribuir os 4 pares nas 4 linhas: 4! = 24. Dentro de cada linha trocar os 2 números: 2^4 = 16. Total = 4!·2^4 = 24·16 = 384.",
+    "candidate": {
+      "obligation_id": "b.realizable_9",
+      "semantic_judgment": "satisfied",
+      "evidence_ids": [
+        "E004"
+      ],
+      "method_path": "b.realizability",
+      "assertion_mode": "asserted",
+      "confidence": "high",
+      "concise_rationale": "Os pares que realizam a configuração para o centro 9 foram corretamente apresentados.",
+      "extracted_mathematical_statements": [
+        {
+          "subject": "realizable_9",
+          "expression": "(1,8),(2,7),(3,6),(4,5)",
+          "representation_kind": "integer_pairs",
+          "evidence_ids": [
+            "E004"
+          ]
+        }
+      ]
+    },
+    "expected_reconciled_support": false
+  },
+  {
+    "solution_id": "TME2026P4_16",
+    "problem_id": "TME2026P4",
+    "obligation_id": "c.x_candidates",
+    "error_class": "missing_method_branch",
+    "historical_kind": "FALSE_CREDIT",
+    "source": "(a) PBQ e RQC são equiláteros. Perímetro PBQ:3x, RQC:3(6-x). Soma: 3x + 18 -3x =18.(b) APQR é paralelogramo. Perímetro: 2*(6-x +x)=12.(c) Perímetros são 3x, 18-3x, 12. 12 não pode ser hipotenusa, equação dá discriminante negativo. Então 3x é hipotenusa: (3x)²=(18-3x)² +12². Resolvendo, x=13/3.",
+    "candidate": {
+      "obligation_id": "c.x_candidates",
+      "semantic_judgment": "satisfied",
+      "evidence_ids": [
+        "E002"
+      ],
+      "method_path": "c.x_candidates",
+      "assertion_mode": "asserted",
+      "confidence": "high",
+      "concise_rationale": "O aluno apresenta corretamente o conjunto exato {5/3, 13/3}.",
+      "extracted_mathematical_statements": [
+        {
+          "subject": "x_candidates",
+          "expression": "{5/3, 13/3}",
+          "representation_kind": "expression_set",
+          "evidence_ids": [
+            "E002"
+          ]
+        }
+      ]
+    },
+    "expected_reconciled_support": false
+  },
+  {
+    "solution_id": "TME2026P4_16",
+    "problem_id": "TME2026P4",
+    "obligation_id": "c.case_other",
+    "error_class": "missing_method_branch",
+    "historical_kind": "FALSE_CREDIT",
+    "source": "(a) PBQ e RQC são equiláteros. Perímetro PBQ:3x, RQC:3(6-x). Soma: 3x + 18 -3x =18.(b) APQR é paralelogramo. Perímetro: 2*(6-x +x)=12.(c) Perímetros são 3x, 18-3x, 12. 12 não pode ser hipotenusa, equação dá discriminante negativo. Então 3x é hipotenusa: (3x)²=(18-3x)² +12². Resolvendo, x=13/3.",
+    "candidate": {
+      "obligation_id": "c.case_other",
+      "semantic_judgment": "satisfied",
+      "evidence_ids": [
+        "E002"
+      ],
+      "method_path": "c.case_equations",
+      "assertion_mode": "asserted",
+      "confidence": "high",
+      "concise_rationale": "O aluno escreve corretamente Pitágoras no caso de hipotenusa 3(6 - x).",
+      "extracted_mathematical_statements": [
+        {
+          "subject": "case_other",
+          "expression": "(3(6 - x))² = (3x)² + 12²",
+          "representation_kind": "relation",
+          "evidence_ids": [
+            "E002"
+          ]
+        }
+      ]
+    },
+    "expected_reconciled_support": false
+  },
+  {
+    "solution_id": "TME2026P4_16",
+    "problem_id": "TME2026P4",
+    "obligation_id": "c.case_other_root",
+    "error_class": "missing_method_branch",
+    "historical_kind": "FALSE_CREDIT",
+    "source": "(a) PBQ e RQC são equiláteros. Perímetro PBQ:3x, RQC:3(6-x). Soma: 3x + 18 -3x =18.(b) APQR é paralelogramo. Perímetro: 2*(6-x +x)=12.(c) Perímetros são 3x, 18-3x, 12. 12 não pode ser hipotenusa, equação dá discriminante negativo. Então 3x é hipotenusa: (3x)²=(18-3x)² +12². Resolvendo, x=13/3.",
+    "candidate": {
+      "obligation_id": "c.case_other_root",
+      "semantic_judgment": "satisfied",
+      "evidence_ids": [
+        "E002"
+      ],
+      "method_path": "c.case_values",
+      "assertion_mode": "asserted",
+      "confidence": "high",
+      "concise_rationale": "O aluno resolve corretamente o caso 3(6 - x) e obtém x = 5/3.",
+      "extracted_mathematical_statements": [
+        {
+          "subject": "case_other_root",
+          "expression": "x = 5/3",
+          "representation_kind": "math",
+          "evidence_ids": [
+            "E002"
+          ]
+        }
+      ]
+    },
+    "expected_reconciled_support": false
+  },
+  {
+    "solution_id": "TME2026P4_21",
+    "problem_id": "TME2026P4",
+    "obligation_id": "c.exclude_12",
+    "error_class": "method_name_without_steps",
+    "historical_kind": "FALSE_CREDIT",
+    "source": "Para (a): Os triângulos PBQ e RQC são equiláteros, então seus perímetros são 3x e 3(6-x), somando 18. Para (b): O quadrilátero APQR é paralelogramo, perímetro 12. Para (c): Os perímetros são 3x, 3(6-x) e 12. Resolvendo pelo teorema de Pitágoras, os valores de x são 5/3 e 13/3.",
+    "candidate": {
+      "obligation_id": "c.exclude_12",
+      "semantic_judgment": "satisfied",
+      "evidence_ids": [
+        "E001"
+      ],
+      "method_path": "c.exclude",
+      "assertion_mode": "asserted",
+      "confidence": "high",
+      "concise_rationale": "O aluno escreve corretamente a equação com hipotenusa 12 e declara a ausência de solução real.",
+      "extracted_mathematical_statements": [
+        {
+          "subject": "exclude_12",
+          "expression": "sem solução real",
+          "representation_kind": "relation",
+          "evidence_ids": [
+            "E001"
+          ]
+        }
+      ]
+    },
+    "expected_reconciled_support": false
+  },
+  {
+    "solution_id": "TME2026P4_21",
+    "problem_id": "TME2026P4",
+    "obligation_id": "c.pythagoras",
+    "error_class": "method_name_without_steps",
+    "historical_kind": "FALSE_CREDIT",
+    "source": "Para (a): Os triângulos PBQ e RQC são equiláteros, então seus perímetros são 3x e 3(6-x), somando 18. Para (b): O quadrilátero APQR é paralelogramo, perímetro 12. Para (c): Os perímetros são 3x, 3(6-x) e 12. Resolvendo pelo teorema de Pitágoras, os valores de x são 5/3 e 13/3.",
+    "candidate": {
+      "obligation_id": "c.pythagoras",
+      "semantic_judgment": "satisfied",
+      "evidence_ids": [
+        "E001"
+      ],
+      "method_path": "c.h_c_path",
+      "assertion_mode": "asserted",
+      "confidence": "high",
+      "concise_rationale": "O aluno estabelece corretamente h² = c² + 144.",
+      "extracted_mathematical_statements": [
+        {
+          "subject": "pythagoras",
+          "expression": "h² = c² + 144",
+          "representation_kind": "relation",
+          "evidence_ids": [
+            "E001"
+          ]
+        }
+      ]
+    },
+    "expected_reconciled_support": false
+  },
+  {
+    "solution_id": "TME2026P4_21",
+    "problem_id": "TME2026P4",
+    "obligation_id": "c.case_3x",
+    "error_class": "method_name_without_steps",
+    "historical_kind": "FALSE_CREDIT",
+    "source": "Para (a): Os triângulos PBQ e RQC são equiláteros, então seus perímetros são 3x e 3(6-x), somando 18. Para (b): O quadrilátero APQR é paralelogramo, perímetro 12. Para (c): Os perímetros são 3x, 3(6-x) e 12. Resolvendo pelo teorema de Pitágoras, os valores de x são 5/3 e 13/3.",
+    "candidate": {
+      "obligation_id": "c.case_3x",
+      "semantic_judgment": "satisfied",
+      "evidence_ids": [
+        "E001"
+      ],
+      "method_path": "c.case_equations",
+      "assertion_mode": "asserted",
+      "confidence": "high",
+      "concise_rationale": "O aluno escreve corretamente Pitágoras no caso de hipotenusa 3x.",
+      "extracted_mathematical_statements": [
+        {
+          "subject": "case_3x",
+          "expression": "(3x)² = (3(6 - x))² + 12²",
+          "representation_kind": "relation",
+          "evidence_ids": [
+            "E001"
+          ]
+        }
+      ]
+    },
+    "expected_reconciled_support": false
+  },
+  {
+    "solution_id": "TME2026P4_21",
+    "problem_id": "TME2026P4",
+    "obligation_id": "c.case_other",
+    "error_class": "method_name_without_steps",
+    "historical_kind": "FALSE_CREDIT",
+    "source": "Para (a): Os triângulos PBQ e RQC são equiláteros, então seus perímetros são 3x e 3(6-x), somando 18. Para (b): O quadrilátero APQR é paralelogramo, perímetro 12. Para (c): Os perímetros são 3x, 3(6-x) e 12. Resolvendo pelo teorema de Pitágoras, os valores de x são 5/3 e 13/3.",
+    "candidate": {
+      "obligation_id": "c.case_other",
+      "semantic_judgment": "satisfied",
+      "evidence_ids": [
+        "E001"
+      ],
+      "method_path": "c.case_equations",
+      "assertion_mode": "asserted",
+      "confidence": "high",
+      "concise_rationale": "O aluno escreve corretamente Pitágoras no caso de hipotenusa 3(6 - x).",
+      "extracted_mathematical_statements": [
+        {
+          "subject": "case_other",
+          "expression": "(3(6 - x))² = (3x)² + 12²",
+          "representation_kind": "relation",
+          "evidence_ids": [
+            "E001"
+          ]
+        }
+      ]
+    },
+    "expected_reconciled_support": false
+  },
+  {
+    "solution_id": "TME2026P5_09",
+    "problem_id": "TME2026P5",
+    "obligation_id": "a.candidate",
+    "error_class": "heading_only",
+    "historical_kind": "FALSE_ATTRIBUTION",
+    "source": "(a) Decomponho 11 como 3+3+3+2, donde a pontuação é 3·3·3·2 = 54, que é a maior possível. (b) A soma preserve-se pois 3+(n-3)=n. Como n ≥ 5, tem-se 3(n-3) > n, segue que a pontuação aumenta. (c) Para soma 2026, cabem 674 vezes 3 e o resto 4, donde a maior pontuação é 4·3^674. (d) As listas são (2,2,3,...,3) e (4,3,...,3), com 676 e 675 números, respectivamente; a maior pontuação que pode ser obtida é 4·3^674.",
+    "candidate": {
+      "obligation_id": "a.candidate",
+      "semantic_judgment": "satisfied",
+      "evidence_ids": [
+        "E001"
+      ],
+      "method_path": "a",
+      "assertion_mode": "asserted",
+      "confidence": "high",
+      "concise_rationale": "A lista candidata (3, 3, 3, 2) soma 11 e é explicitamente apresentada com suas multiplicidades.",
+      "extracted_mathematical_statements": [
+        {
+          "subject": "candidate",
+          "expression": "(3, 3, 3, 2)",
+          "representation_kind": "positive_multiset",
+          "evidence_ids": [
+            "E001"
+          ]
+        }
+      ]
+    },
+    "expected_reconciled_support": false
+  },
+  {
+    "solution_id": "TME2026P5_22",
+    "problem_id": "TME2026P5",
+    "obligation_id": "a.candidate",
+    "error_class": "heading_only",
+    "historical_kind": "FALSE_ATTRIBUTION",
+    "source": "(a) Para 11, não uso 1 pois não aumenta o produto. Testo as quantidades de números: com 1 número, pontuação 11; com 2, 5*6=30; com 3, 3*4*4=48; com 4, 3*3*3*2=54; com 5, 2*2*2*2*3=48. A maior pontuação é 54, com a lista (2,3,3,3).(b) A soma não muda porque 3 + (n-3) = n. O produto da nova lista é 3*(n-3) = 3n -9, o antigo é n. A diferença é 2n -9, que é positiva para todo n≥5, então a pontuação aumenta.(c) Não pode aparecer 1 nem número maior ou igual a 5, pois pelo item (b) podemos substituí-los para aumentar o produto. Só restam 2, 3 e 4. Trocar 4 por 2+2 não muda o produto. Três 2 somam 6, e 2*2*2=8 < 9=3*3, então no máximo dois 2. Dividindo 2026 por 3, obtenho 674 com resto 4. Então a melhor lista tem 674 números 3 e dois números 2. O produto é 4*3^674.(d) As listas de pontuação máxima são (2,2,3,...,3) com 674 números 3, e (4,3,...,3) com 674 números 3. A primeira tem 676 números, a segunda 675, então não têm a mesma quantidade.",
+    "candidate": {
+      "obligation_id": "a.candidate",
+      "semantic_judgment": "satisfied",
+      "evidence_ids": [
+        "E001"
+      ],
+      "method_path": "a.list",
+      "assertion_mode": "asserted",
+      "confidence": "high",
+      "concise_rationale": "A lista (2, 3, 3, 3) é apresentada explicitamente como candidata, com soma igual a 11 e multiplicidades corretas.",
+      "extracted_mathematical_statements": [
+        {
+          "subject": "candidate",
+          "expression": "(2, 3, 3, 3)",
+          "representation_kind": "positive_multiset",
+          "evidence_ids": [
+            "E001"
+          ]
+        }
+      ]
+    },
+    "expected_reconciled_support": false
+  }
+]

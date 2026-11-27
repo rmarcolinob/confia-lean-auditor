@@ -36,7 +36,8 @@ def compact(text: str) -> str:
 
 
 def test_f2q1_correct_solution_has_pedagogical_report():
-    data = audit_f2q1(read_f2q1_example("correct_solution.txt"))
+    solution = read_f2q1_example("correct_solution.txt")
+    data = audit_f2q1(solution)
 
     assert isinstance(data["feedback"], str)
     assert data["feedback"]
@@ -44,11 +45,15 @@ def test_f2q1_correct_solution_has_pedagogical_report():
     report = data["pedagogical_report"]
     text = report_text(report)
 
-    assert "solução" in text
-    assert "correta" in text
-    assert "evidências" in text
+    # Validate the suggestion and attributable evidence, not words that used
+    # to appear only in the reference detector's synthetic descriptions.
+    assert report["score"] == report["max_score"] == 10
+    assert report["result"] == "correto"
+    assert "sugestão confia" in text
     assert report["evidence_items"]
     assert any(item.get("evidence") for item in report["evidence_items"])
+    assert all(compact(item["evidence"]) in compact(solution)
+               for item in report["evidence_items"] if item.get("evidence"))
     assert "confiabilidade alta" in text
     assert "checagem automática" in text
 

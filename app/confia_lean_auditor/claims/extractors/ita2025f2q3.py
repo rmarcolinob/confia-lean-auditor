@@ -9,7 +9,10 @@ from confia_lean_auditor.core.schemas import (
     ExtractedClaim,
     FormalStep,
 )
-from confia_lean_auditor.core.audit_math_projection import project_audit_math
+from confia_lean_auditor.core.audit_math_projection import (
+    has_equivalent_equality,
+    project_audit_math,
+)
 
 
 def normalize(text: str) -> str:
@@ -79,14 +82,7 @@ def detect_features(solution: str) -> Dict[str, bool]:
     # Diferença para beta:
     # cos(beta)-sin(beta)=1/2
     # ------------------------------------------------------------
-    beta_difference = (
-        has_any(
-            "cosbeta-sinbeta=1/2",
-            "cos(beta)-sin(beta)=1/2",
-            "cosbeta-senbeta=1/2",
-        )
-        or "cos beta - sin beta = 1/2" in t
-    )
+    beta_difference = has_equivalent_equality(solution, "cos(beta)-sin(beta)=1/2")
 
     # ------------------------------------------------------------
     # Valores candidatos.
@@ -283,6 +279,7 @@ def extract_claims_ita2025f2q3(solution: str) -> ClaimExtraction:
                 text="A solução obtém cos(beta)-sen(beta)=1/2.",
                 evidence="Foi detectada a diferença cos beta - sen beta = 1/2.",
                 confidence=0.88,
+                normalized={"beta_difference": "1/2"},
             )
         )
 

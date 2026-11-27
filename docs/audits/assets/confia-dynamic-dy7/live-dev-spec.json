@@ -1,0 +1,164 @@
+{
+  "schema_version": "dy7-controlled-protocol.v1",
+  "dataset_version": "dy7-live-dev-01",
+  "material_error_points": "1",
+  "protocol": "Synthetic infrastructure pilot. 12 pseudonymous participants, 2 equations, 2 profiles. Gold is authored before outputs and is not independent human scientific gold. Group split by participant; repeated questions evaluate response holdout, not unseen-problem generalization. No tuning after holdout. Reviewer fixture always proposes maximal points from independently extracted claims; it never reads gold. All operational human decisions are separately predeclared synthetic values.",
+  "profiles": [
+    "FORMATIVE_LIST"
+  ],
+  "problems": [
+    {
+      "title": "Equação em y",
+      "statement": "Resolva no conjunto dos reais: 2*y^2-14*y+24=0.",
+      "max_score": "10",
+      "criteria": [
+        {
+          "criterion_id": "method",
+          "title": "Método",
+          "description": "Justificar a resolução por transformações equivalentes.",
+          "max_points": "4",
+          "order": 1
+        },
+        {
+          "criterion_id": "roots",
+          "title": "Raízes",
+          "description": "Obter todas as raízes reais. Crédito parcial proporcional às raízes corretas.",
+          "max_points": "3",
+          "order": 2
+        },
+        {
+          "criterion_id": "check",
+          "title": "Verificação",
+          "description": "Verificar as raízes por substituição. Crédito parcial proporcional às raízes corretas.",
+          "max_points": "3",
+          "order": 3
+        }
+      ],
+      "preparation_fixture": {
+        "mathematical_domain": "Álgebra real",
+        "normalized_problem": "Resolver a equação em R.",
+        "data": [
+          "2*y^2-14*y+24=0"
+        ],
+        "assumptions": [],
+        "objects": [
+          {
+            "name": "y",
+            "domain": "R",
+            "constraints": []
+          }
+        ],
+        "target": "Conjunto completo de raízes.",
+        "expects_unique_result": false,
+        "candidate_reference_solutions": [
+          {
+            "solution_id": "s1",
+            "strategy_id": "factor",
+            "strategy_label": "Fatoração",
+            "claims": [
+              {
+                "claim_id": "factorization",
+                "text": "2*y^2-14*y+24=2*(y-(3))*(y-(4))",
+                "normalized_form": "2*y^2-14*y+24=2*(y-(3))*(y-(4))",
+                "claim_type": "identity",
+                "dependencies": [],
+                "mathematical_objects": [
+                  "y"
+                ],
+                "proposed_verifier": "SYMBOLIC_ALGEBRA",
+                "verifier_reason": "Identidade polinomial",
+                "formalizability_candidate": true,
+                "check": {
+                  "kind": "EQUALITY",
+                  "left": "2*y^2-14*y+24",
+                  "right": "2*(y-(3))*(y-(4))",
+                  "variable": "y",
+                  "values": []
+                }
+              },
+              {
+                "claim_id": "roots",
+                "text": "Raízes 3 e 4",
+                "normalized_form": "S={3,4}",
+                "claim_type": "root_set",
+                "dependencies": [
+                  "factorization"
+                ],
+                "mathematical_objects": [
+                  "y"
+                ],
+                "proposed_verifier": "DETERMINISTIC",
+                "verifier_reason": "Divisão exata comprova todas as raízes",
+                "formalizability_candidate": true,
+                "check": {
+                  "kind": "ROOT_SET",
+                  "left": "2*y^2-14*y+24",
+                  "right": "0",
+                  "variable": "y",
+                  "values": [
+                    "3",
+                    "4"
+                  ]
+                }
+              }
+            ],
+            "final_result": {
+              "kind": "ROOT_SET",
+              "text": "{3,4}",
+              "values": [
+                "3",
+                "4"
+              ],
+              "supporting_claim_ids": [
+                "roots"
+              ]
+            },
+            "uncertainties": []
+          }
+        ],
+        "alternative_strategies": [
+          {
+            "strategy_id": "factor",
+            "description": "Fatoração ou produto nulo",
+            "expected_key_claim_ids": [
+              "factorization",
+              "roots"
+            ]
+          },
+          {
+            "strategy_id": "formula",
+            "description": "Fórmula quadrática também é legítima.",
+            "expected_key_claim_ids": [
+              "roots"
+            ]
+          }
+        ],
+        "warnings": [],
+        "uncertainties": []
+      },
+      "domain": "equations",
+      "difficulty": "basic"
+    }
+  ],
+  "participants": [
+    {
+      "code": "SYN-001",
+      "group_id": "synthetic-participant-1",
+      "split": "DEV",
+      "solutions": [
+        {
+          "type": "correct_standard",
+          "text": "2*(y-(3))*(y-(4))=0; S={3,4}; 2*(3)^2+(-14)*(3)+(24)=0; 2*(4)^2+(-14)*(4)+(24)=0",
+          "gold_criteria": {
+            "method": "4",
+            "roots": "3",
+            "check": "3"
+          },
+          "requires_review": false,
+          "review_reason": "Predeclared synthetic pedagogical review label: correct_standard",
+          "human_points": "10.0"
+        }
+      ]
+    }
+  ]
+}

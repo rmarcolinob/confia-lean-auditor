@@ -1,16 +1,17 @@
+/* Institutional entry shares the approved TME components and tokens. */
 * { box-sizing: border-box; }
-body { min-height: 100vh; margin: 0; display: flex; flex-direction: column; background: #f5f7fa; color: #17314d; font: 16px/1.5 system-ui, sans-serif; }
-.login-layout { flex: 1; display: grid; place-items: center; padding: 24px; }
-.login-card { width: min(100%, 440px); padding: clamp(24px, 5vw, 40px); border: 1px solid #d7e2ee; border-radius: 18px; background: white; box-shadow: 0 12px 32px #12304a12; }
-.brand-mark { display: grid; place-items: center; width: 54px; height: 54px; border-radius: 10px; background: #123f70; color: white; font-weight: 700; font-size: 22px; }
-.brand-mark span { color: #f2c94c; font-size: 12px; }
-.eyebrow { margin: 24px 0 4px; font-weight: 700; color: #24588a; }
-h1 { margin: 0 0 28px; font-size: clamp(21px, 4vw, 27px); line-height: 1.22; }
-form { display: grid; gap: 8px; }
-label { font-weight: 600; }
-input { width: 100%; min-height: 44px; margin-bottom: 10px; border: 1px solid #9eb4c9; border-radius: 8px; padding: 8px 12px; font: inherit; }
-input:focus-visible, button:focus-visible { outline: 3px solid #f2c94c; outline-offset: 2px; }
-button { min-height: 46px; border: 0; border-radius: 8px; background: #123f70; color: white; font: inherit; font-weight: 700; cursor: pointer; }
-button:disabled { opacity: .65; cursor: wait; }
-#login-error { min-height: 1.5em; margin: 0; color: #a32727; }
-footer { padding: 18px; text-align: center; color: #586e82; font-size: 14px; }
+body { min-height: 100vh; margin: 0; background: var(--confia-bg); color: var(--confia-text); font: 16px/1.5 var(--font-family,system-ui,sans-serif); }
+.login-card { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; max-width: calc(var(--confia-content-max) - 48px); margin: 0 auto 32px; scroll-margin-top: 24px; }
+.login-card p { max-width: 480px; }
+.login-shortcut { color: var(--confia-blue); text-decoration: none; padding: 10px 16px; border: 1px solid var(--confia-border); border-radius: var(--confia-radius-sm); font-size: var(--confia-font-body); }
+#login-form { display: grid; gap: 8px; }
+#login-form label { font-weight: 600; }
+#login-form input { width: 100%; min-height: 44px; margin-bottom: 10px; border: 1px solid var(--confia-border); border-radius: var(--confia-radius-sm); padding: 10px 12px; font: inherit; background: var(--confia-surface); }
+#login-form input:focus-visible, #login-form button:focus-visible, .login-shortcut:focus-visible { outline: 3px solid var(--confia-blue); outline-offset: 2px; }
+#login-form button { min-height: 46px; border: 0; border-radius: var(--confia-radius-sm); background: var(--confia-blue); color: white; font: inherit; font-weight: 700; cursor: pointer; }
+#login-form button:disabled { opacity: .65; cursor: wait; }
+#login-error { min-height: 1.5em; margin: 0; color: var(--confia-rose-ink); }
+footer { padding: 24px; text-align: center; color: var(--confia-muted); font-size: var(--confia-font-body); }
+.skip-link { position: absolute; left: -1000px; }
+.skip-link:focus { left: 16px; top: 8px; z-index: 100; background: white; padding: 12px; }
+@media (max-width:767px) { .login-card { grid-template-columns: 1fr; margin: 0 20px 24px; gap: 20px; } .login-shortcut { padding: 8px; font-size: var(--confia-font-sm); } }

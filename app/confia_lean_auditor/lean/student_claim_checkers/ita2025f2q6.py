@@ -6,7 +6,7 @@ from typing import List
 
 from confia_lean_auditor.lean.student_claim_checker import CHECK_DIR, _run_lean_file
 from confia_lean_auditor.student_claims.schemas import StudentClaim, StudentClaimCheck
-from confia_lean_auditor.lean.student_proof import evaluate_student_proof, negation_method
+from confia_lean_auditor.lean.student_proof import evaluate_student_proof, negation_method, grounded_checker
 
 
 def _build_f2q6_lean_code(
@@ -15,7 +15,9 @@ def _build_f2q6_lean_code(
     lean_statement: str,
     method: str,
 ) -> str:
-    safe_raw = claim.raw_text.replace("-/", "-∕")
+    source = claim.grounding or {}
+    safe_raw = str(source.get("source_text", "[source unresolved]")).replace("-/", "-∕")
+    safe_raw = f"[{source.get('source_start')}:{source.get('source_end')}] {safe_raw}"
 
     return f'''import ConfiaLeanAuditor.Problems.ITA2025F2Q6.Statement
 
@@ -23,7 +25,7 @@ namespace ConfiaStudentClaimCheck.ITA2025F2Q6
 
 open ConfIA.LeanAuditor.ITA2025F2Q6
 
-/-- Afirmação extraída do aluno: {safe_raw} -/
+/-- Proposição vinculada ao trecho de origem: {safe_raw} -/
 theorem {theorem_name} :
     {lean_statement} := by
   {method}
@@ -184,6 +186,7 @@ def _lean_statement_and_method_for_f2q6_claim(
     return None, claim.method, f"unsupported claim_type for F2Q6: {claim.claim_type}"
 
 
+@grounded_checker
 def check_one_f2q6_student_claim(
     claim: StudentClaim,
     run_id: str,
@@ -211,6 +214,7 @@ def check_one_f2q6_student_claim(
             stdout="",
             stderr=unsupported_reason,
             data=claim.data,
+            grounding=claim.grounding,
         )
 
     lean_file = out_dir / f"{theorem_name}.lean"

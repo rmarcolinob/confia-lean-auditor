@@ -5,14 +5,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Entrar — ConfIA</title>
     <link rel="stylesheet" href="/static/design-system.css?v=ui-01">
-    <link rel="stylesheet" href="/static/auth.css?v=core-auth-01">
+    <link rel="stylesheet" href="/static/tme/tme-theme.css?v=platform-01">
+    <link rel="stylesheet" href="/static/tme/home.css?v=teacher-02">
+    <link rel="stylesheet" href="/static/platform.css?v=teacher-02">
+    <link rel="stylesheet" href="/static/platform-presentation.css?v=platform-03">
+    <link rel="stylesheet" href="/static/auth.css?v=platform-03">
   </head>
-  <body>
-    <main class="login-layout">
-      <section class="login-card" aria-labelledby="login-title">
-        <div class="brand-mark" aria-hidden="true">C<span>IA</span></div>
-        <p class="eyebrow">ConfIA</p>
-        <h1 id="login-title">Confiabilidade e Explicabilidade em Matemática</h1>
+  <body data-platform-profile="platform" data-platform-view="home">
+    <a class="skip-link" href="#app-root">Ir para o conteúdo principal</a>
+    <header id="platform-header" class="home-header">
+      <a class="home-brand" href="/"><strong>ConfIA</strong><span>Matemática<br>com confiança</span></a>
+      <a class="login-shortcut" href="#institutional-login">Acesso institucional</a>
+    </header>
+    <main id="app-root" tabindex="-1">
+      <section id="platform-home" aria-label="Início da plataforma"></section>
+      <section id="institutional-login" class="platform-panel login-card" aria-labelledby="login-title">
+        <div><p class="home-greeting">Sua conta ConfIA</p><h2 id="login-title">Entrar na plataforma</h2>
+        <p>Use as credenciais fornecidas pela instituição. Selecionar um módulo não altera seu perfil nem suas permissões.</p></div>
         <form id="login-form">
           <label for="login">Login</label>
           <input id="login" name="login" autocomplete="username" required maxlength="80">
@@ -23,7 +32,9 @@
         </form>
       </section>
     </main>
-    <footer>Governo do Piauí · FAPEPI · SIA</footer>
-    <script src="/static/login.js?v=core-auth-01"></script>
+    <footer>ConfIA — Confiabilidade e Explicabilidade em Matemática · Governo do Piauí · FAPEPI · SIA</footer>
+    <script src="/static/tme/home.js?v=platform-03"></script>
+    <script src="/static/platform-presentation.js?v=platform-03"></script>
+    <script src="/static/login.js?v=module-login-03"></script>
   </body>
 </html>

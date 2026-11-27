@@ -5,6 +5,7 @@ from pathlib import Path
 
 from fastapi.testclient import TestClient
 import httpx
+import pytest
 
 import confia_lean_auditor.main as main
 from confia_lean_auditor.claims.extract_claims import extract_claims
@@ -63,6 +64,34 @@ def test_projection_preserves_falsehoods_signs_and_general_fractions():
     assert "beta_difference" not in types("Subtraindo, cos beta - sen beta = -1/2")[0]
     direct = types("sen(alpha+beta)=(5+sqrt(7))/8")
     assert [item[0] for item in direct[2]] == ["f2q3_student_final_sin_sum", "f2q3_student_final_answer"]
+
+
+@pytest.mark.parametrize('source', [
+    r'Não é verdade, portanto \(\cos\beta-\operatorname{sen}\beta=\frac{1}{2}\).',
+    r'Suponha provisoriamente: \[\cos\beta-\operatorname{sen}\beta=\frac{1}{2}\]',
+    r'\[\cos\beta-\operatorname{sen}\beta=\frac{1}{2}\] Essa afirmação é falsa.',
+])
+def test_nonasserted_hmer_equality_does_not_create_a_positive_beta_claim(source):
+    reference, steps, student = types(source)
+    assert 'beta_difference' not in reference
+    assert 'f2q3_beta_difference' not in steps
+    assert not any(kind == 'f2q3_student_beta_difference' for kind, _ in student)
+
+
+def test_explicit_wrong_hmer_value_retains_original_grounding_and_common_record():
+    from confia_lean_auditor.claims.common import claim_from_student
+    from confia_lean_auditor.student_claims.grounding import source_matches
+
+    source = LATEX.replace(r'=\frac{1}{2}\\', r'=-\frac{1}{2}\\')
+    claim = next(c for c in extract_student_claims(PROBLEM, source)
+                 if c.claim_type == 'f2q3_student_beta_difference')
+    assert claim.data == {'value_expr': '-1 / 2'}
+    assert source_matches(claim, source)
+    record = claim_from_student(claim, solution_text=source)
+    assert record.source.attributable
+    assert record.source.raw_text == source[record.source.source_start:record.source.source_end]
+    assert record.canonicalization_status == 'parsed'
+    assert record.legacy_payload['data'] == claim.data
 
 
 def test_lean_timeout_keeps_textual_claim_and_never_awards_or_zeros_without_proof():

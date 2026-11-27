@@ -1,0 +1,111 @@
+........................................................................ [ 12%]
+..............F......................................................... [ 24%]
+........................................................................ [ 36%]
+........................................................................ [ 48%]
+...F.................................................................... [ 60%]
+........................................................................ [ 72%]
+.................................................F...................... [ 84%]
+....................................................................F... [ 96%]
+.....................                                                    [100%]
+=================================== FAILURES ===================================
+_ test_shared_attempt_original_transcription_audit_replay_queue_and_integrity __
+
+setup = (PosixPath('/private/var/folders/4h/mld1ypt95nq1z3nm58k0k64m0000gn/T/pytest-of-LinMarcolino/pytest-21/test_shared_attempt_original_t0'), <starlette.testclient.TestClient object at 0x10c4eea60>)
+
+    def test_shared_attempt_original_transcription_audit_replay_queue_and_integrity(setup):
+        root,client=setup;d=prepared();case,base,request=attempt(client,d)
+        assert client.get(base+'/original-text').json()['text']==FACTOR
+        response=client.post(base+'/audits',json=request);assert response.status_code==200,response.text
+        run=response.json();assert run['status']=='COMPLETED',run
+        assert run['result']['score']==10 and run['result']['engine_mode']=='DYNAMIC'
+        assert run['source']['dynamic_context']['rubric_version']==1
+        assert client.post(base+'/audits',json=request).json()['audit_run_id']==run['audit_run_id']
+>       assert client.get('/tme/cases?view=queue').status_code==200
+E       AssertionError: assert 503 == 200
+E        +  where 503 = <Response [503 Service Unavailable]>.status_code
+E        +    where <Response [503 Service Unavailable]> = get('/tme/cases?view=queue')
+E        +      where get = <starlette.testclient.TestClient object at 0x10c4eea60>.get
+
+tests/test_dynamic_dy3.py:118: AssertionError
+__ test_real_bridge_preserves_wrong_solution_and_runs_existing_lean_pipeline ___
+
+tmp_path = PosixPath('/private/var/folders/4h/mld1ypt95nq1z3nm58k0k64m0000gn/T/pytest-of-LinMarcolino/pytest-21/test_real_bridge_preserves_wro0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10c677c70>
+
+    def test_real_bridge_preserves_wrong_solution_and_runs_existing_lean_pipeline(tmp_path, monkeypatch):
+        monkeypatch.setenv("CONFIA_SUBMISSIONS_DIR", str(tmp_path / "submissions"))
+        monkeypatch.setenv("CONFIA_SUBMISSION_AUDITS_DIR", str(tmp_path / "audits"))
+        client = TestClient(main.app)
+        solution = "x^57=1; x^14=1-x; x^7=-x. Logo a=1 e b=1.\n2 + 2 = 5"
+        request_payload = payload()
+        sid, rev = source(client, values=[{"segment_id": "wrong", "page_index": 0, "order": 0,
+                                         "kind": "mixed", "text": solution}], request_payload=request_payload)
+        request = accept(client, sid, rev)
+        folder = submissions.store().root / sid
+        before = persisted_files(folder)
+        response = execute(client, sid, request)
+        assert response.status_code == 200, response.text
+        run = response.json()
+        assert run["status"] == "COMPLETED", run
+        internal = persisted_run(run)
+        assert Path(internal["artifact_dir"], "solution.txt").read_text() == solution
+        assert run["result"]["student_claim_checks"]
+>       assert any(item["status"] == "refuted" for item in run["result"]["student_claim_checks"])
+E       assert False
+E        +  where False = any(<generator object test_real_bridge_preserves_wrong_solution_and_runs_existing_lean_pipeline.<locals>.<genexpr> at 0x10cc1a970>)
+
+tests/test_submission_audits.py:356: AssertionError
+______________ test_real_local_lean_status_certificates_preserved ______________
+
+offline = (<starlette.testclient.TestClient object at 0x114520ca0>, [], PosixPath('/private/var/folders/4h/mld1ypt95nq1z3nm58k0k64m0000gn/T/pytest-of-LinMarcolino/pytest-21/test_real_local_lean_status_ce0'))
+
+    def test_real_local_lean_status_certificates_preserved(offline):
+        client,_,_=offline
+        base,_,_,req=prepare(client,2,{'c':'pair_permutations: 4!=24\npair_orientations: 2^4=8'})
+        service=audits.service();service.tme_use_lean=True
+        sid=service.submissions.transcription_history(req['transcription_id']).transcription.submission_id
+        run=service.execute(sid,AuditRequest(**req))
+        assert run.status=='COMPLETED'
+        checks=[f.student_check for f in run.result.bridge.auditor.facts if f.student_check]
+>       assert {c['status'] for c in checks}=={'verified','refuted'}
+E       AssertionError: assert {'technical_error'} == {'refuted', 'verified'}
+E         
+E         Extra items in the left set:
+E         'technical_error'
+E         Extra items in the right set:
+E         'verified'
+E         'refuted'
+E         Use -v to get more diff
+
+tests/test_tme_accepted_integration.py:193: AssertionError
+___________________ test_observed_rubric_gold_partial_labels ___________________
+
+shadow = ((<starlette.testclient.TestClient object at 0x1136307c0>, PosixPath('/private/var/folders/4h/mld1ypt95nq1z3nm58k0k64m.....}]), 'asmt_18ebc3ca284a44b882618886a83a66da', '/tme/assessments/asmt_18ebc3ca284a44b882618886a83a66da/certification')
+
+    def test_observed_rubric_gold_partial_labels(shadow):
+>       ex,aid,url=shadow;client,root,eid,cases=ex;populate(ex)
+
+tests/test_tme_certification.py:154: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_tme_finalization.py:46: in populate
+    rev,_=reading(client,c['case_id'],i,text);run=analyze(client,c['case_id'],request_for(client,c['case_id'],rev))
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+client = <starlette.testclient.TestClient object at 0x1136307c0>
+cid = 'case_78167afa475ba3d910dea4bcae65ff62'
+request = {'acceptance_id': 'acc_f8b9398df7e3474c8d01cf1e52941e86', 'execution_key': 'd3e5caf171ef4835b4dd8a0dad580b2d', 'revision_number': 1, 'transcription_id': 'tr_ec658c0f21014c40b6e03e0ead9dc749'}
+
+    def analyze(client, cid, request):
+        r=client.post(f'/tme/cases/{cid}/audits',json=request)
+>       assert r.status_code==200,r.text
+E       AssertionError: {"detail":"A fonte desta análise não passou na verificação de integridade."}
+E       assert 409 == 200
+E        +  where 409 = <Response [409 Conflict]>.status_code
+
+tests/test_tme_question_audit.py:39: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_dynamic_dy3.py::test_shared_attempt_original_transcription_audit_replay_queue_and_integrity
+FAILED tests/test_submission_audits.py::test_real_bridge_preserves_wrong_solution_and_runs_existing_lean_pipeline
+FAILED tests/test_tme_accepted_integration.py::test_real_local_lean_status_certificates_preserved
+FAILED tests/test_tme_certification.py::test_observed_rubric_gold_partial_labels
+4 failed, 593 passed in 270.41s (0:04:30)

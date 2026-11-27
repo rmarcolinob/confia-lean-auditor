@@ -53,7 +53,7 @@ def _base_rubric() -> RubricAssessment:
 
 
 def _refuted_check(claim_type: str, raw_text: str) -> StudentClaimCheck:
-    return StudentClaimCheck(
+    check = StudentClaimCheck(
         id="student_claim_0",
         problem_id="ITA2025F2Q3",
         claim_type=claim_type,  # type: ignore[arg-type]
@@ -70,6 +70,9 @@ def _refuted_check(claim_type: str, raw_text: str) -> StudentClaimCheck:
         stderr="",
         data={},
     )
+
+    from claim_fixtures import bind_check
+    return bind_check(check, raw_text)
 
 
 def _verified_check(claim_type: str, raw_text: str) -> StudentClaimCheck:

@@ -1,0 +1,56 @@
+{
+  "problem_id": "TME2026P4",
+  "title": "TME² 2026 — Problema 4",
+  "max_score": 20,
+  "pauta_reference": "examples/pautas/tme2_problem4.v1.json",
+  "source": {
+    "document": "Segunda Fase TME² - Gabarito com pauta.pdf",
+    "sha256": "a2660f1c0761738a8b9232dc179feaea9538efb45102e1b2a9b991a3dd2ac384",
+    "pages": [
+      10
+    ]
+  },
+  "statement_blocks": [
+    {
+      "type": "text",
+      "text": "O triângulo equilátero \\(ABC\\) tem lado 6. Os pontos \\(P\\), \\(Q\\) e \\(R\\) estão, respectivamente, nos lados \\(AB\\), \\(BC\\) e \\(AC\\), de modo que \\(PQ\\) é paralelo a \\(AC\\) e \\(QR\\) é paralelo a \\(AB\\). Seja \\(PB = x\\)."
+    },
+    {
+      "type": "figure",
+      "figure_id": "triangulo"
+    },
+    {
+      "type": "text",
+      "text": "(a) Qual é a soma dos perímetros dos dois triângulos sombreados?",
+      "item_id": "a"
+    },
+    {
+      "type": "text",
+      "text": "(b) Qual é o perímetro do quadrilátero \\(APQR\\), que corresponde à região não sombreada no interior do triângulo \\(ABC\\)?",
+      "item_id": "b"
+    },
+    {
+      "type": "text",
+      "text": "(c) Para quais valores de \\(x\\) os perímetros dos triângulos \\(PBQ\\) e \\(RQC\\) e do quadrilátero \\(APQR\\) podem ser as medidas dos três lados de um triângulo retângulo?",
+      "item_id": "c"
+    }
+  ],
+  "figures": [
+    {
+      "id": "triangulo",
+      "src": "/static/problem-assets/TME2026P4/triangulo.png",
+      "alt": "Triângulo ABC com A no topo, C à esquerda e B à direita; P em AB, Q em BC e R em AC. PB está marcado x; os triângulos PBQ e RQC estão sombreados.",
+      "width": 332,
+      "height": 311,
+      "source_page": 10,
+      "source_crop_pixels": [
+        398,
+        220,
+        730,
+        531
+      ],
+      "source_render_height": 1600,
+      "sha256": "85c3da3a9394f9af67c795f4bf54d9c67ef7f48e5debb8aa1554f910febef94b"
+    }
+  ]
+}

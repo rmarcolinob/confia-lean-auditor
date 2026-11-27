@@ -72,42 +72,20 @@ def _make_claim(
 
 
 def _extract_final_answer(solution: str, claims: List[StudentClaim]) -> None:
-    t = normalize(solution)
-
-    # Não queremos capturar o "b=2" dentro de "a+b=2".
-    # Por isso excluímos letras precedidas por "+", "-", ou caractere de palavra.
-    a_matches = list(re.finditer(r"(?<![-+\w])a\s*=\s*(-?\d+)", t))
-    b_matches = list(re.finditer(r"(?<![-+\w])b\s*=\s*(-?\d+)", t))
-
-    if not a_matches or not b_matches:
+    from confia_lean_auditor.student_claims.grounding import select_bindings
+    candidate, status, reason = select_bindings(solution, ("a", "b"))
+    if candidate is None and status != "ambiguous":
         return
-
-    # Em soluções textuais, a resposta final costuma aparecer no final.
-    # Usamos a última ocorrência compatível.
-    a_match = a_matches[-1]
-    b_match = b_matches[-1]
-
-    a_value = int(a_match.group(1))
-    b_value = int(b_match.group(1))
-
-    raw = f"a={a_value}, b={b_value}"
-
-    start = min(a_match.start(), b_match.start())
-    end = max(a_match.end(), b_match.end())
-    context_start = max(0, start - 90)
-    context_end = min(len(solution), end + 90)
-
-    claims.append(
-        _make_claim(
-            idx=len(claims),
-            claim_type="f2q1_student_final_answer",
-            raw_text=raw,
-            normalized_text=f"final_answer: a={a_value}, b={b_value}",
-            context=solution[context_start:context_end],
-            data={"a": a_value, "b": b_value},
-            confidence=0.9,
-        )
+    raw = candidate[2] if candidate else ""
+    data = candidate[3] if candidate else {}
+    claim = _make_claim(
+        idx=len(claims), claim_type="f2q1_student_final_answer",
+        raw_text=raw, normalized_text=f"local final binding: {data}",
+        context=raw, data=data, confidence=0.9,
     )
+    if status == "ambiguous":
+        claim.grounding = {"status": status, "reason": reason}
+    claims.append(claim)
 
 
 def _rhs_after_power(c: str, exp: int) -> str | None:
@@ -255,7 +233,7 @@ def _extract_coefficient_system(solution: str, claims: List[StudentClaim]) -> No
     )
 
 
-def extract_f2q1_student_claims(solution: str) -> List[StudentClaim]:
+def extract_f2q1_student_claims(solution: str, *, _ground: bool = True) -> List[StudentClaim]:
     claims: List[StudentClaim] = []
 
     _extract_power_reductions(solution, claims)
@@ -263,4 +241,7 @@ def extract_f2q1_student_claims(solution: str) -> List[StudentClaim]:
     _extract_coefficient_system(solution, claims)
     _extract_final_answer(solution, claims)
 
+    if _ground:
+        from confia_lean_auditor.student_claims.grounding import ground_student_claims
+        return ground_student_claims(solution, claims, extract_f2q1_student_claims)
     return claims

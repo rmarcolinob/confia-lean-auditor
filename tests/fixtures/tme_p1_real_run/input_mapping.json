@@ -1,0 +1,30 @@
+{
+  "solution": {
+    "a": "Invertendo 731, obtenho 137. Portanto, 731 - 137 = 595.",
+    "b": "O número original é 100a + 10b + c e o invertido é 100c + 10b + a. Subtraindo, os termos 10b se cancelam: (100a+10b+c)-(100c+10b+a)=99a-99c=99(a-c).",
+    "c": "Como a-c pode assumir os valores de 1 a 8, os resultados são 99, 198, 297, 396, 495, 594 e 693.",
+    "d": "Se o resultado é 594, então 99(a-c)=594, logo a-c=6. Os pares possíveis são (7,1), (8,2) e (9,3). Para cada par existem 10 escolhas para o algarismo b. Assim, existem 30 números."
+  },
+  "segment_mapping": [
+    {
+      "item": "a",
+      "segment_id": "seg-a",
+      "page_index": 0
+    },
+    {
+      "item": "b",
+      "segment_id": "seg-b",
+      "page_index": 0
+    },
+    {
+      "item": "c",
+      "segment_id": "seg-c",
+      "page_index": 0
+    },
+    {
+      "item": "d",
+      "segment_id": "seg-d",
+      "page_index": 0
+    }
+  ]
+}

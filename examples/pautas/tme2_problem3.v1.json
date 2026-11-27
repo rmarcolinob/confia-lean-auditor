@@ -1,0 +1,247 @@
+{
+  "schema_version": "pauta.v1",
+  "problem_id": "TME2026P3",
+  "title": "TME² 2026 — 2ª fase, Problema 3",
+  "max_score": 20,
+  "unresolved_policy": "withhold",
+  "obligations": [
+    {
+      "id": "a.bottom_white_count",
+      "description": "Identifica duas bolas brancas entre as seis inferiores.",
+      "accepted_origins": [
+        "deterministic",
+        "student_lean"
+      ]
+    },
+    {
+      "id": "a.first_white_probability",
+      "description": "Probabilidade da primeira branca: 1/3; resposta isolada autorizada.",
+      "accepted_origins": [
+        "deterministic",
+        "student_lean"
+      ]
+    },
+    {
+      "id": "b.ordered_pairs",
+      "description": "36 pares ordenados equiprováveis de compartimentos.",
+      "accepted_origins": [
+        "deterministic",
+        "student_lean"
+      ]
+    },
+    {
+      "id": "b.different_favorable",
+      "description": "10 casos favoráveis com compartimentos diferentes.",
+      "accepted_origins": [
+        "deterministic",
+        "student_lean"
+      ]
+    },
+    {
+      "id": "b.same_compartment",
+      "description": "Somente o compartimento 6 produz branca na segunda retirada repetida.",
+      "accepted_origins": [
+        "deterministic",
+        "student_lean"
+      ]
+    },
+    {
+      "id": "b.second_white_probability",
+      "description": "Conclui a probabilidade 11/36.",
+      "accepted_origins": [
+        "deterministic",
+        "student_lean"
+      ]
+    },
+    {
+      "id": "b.alternative_complete",
+      "description": "Método alternativo completo e verificado; não basta nomeá-lo.",
+      "accepted_origins": [
+        "deterministic",
+        "student_lean"
+      ]
+    },
+    {
+      "id": "c.continue_compartments",
+      "description": "O jogo continua precisamente após branca dos compartimentos 1 ou 2.",
+      "accepted_origins": [
+        "deterministic",
+        "student_lean"
+      ]
+    },
+    {
+      "id": "c.strategy_case_1",
+      "description": "Após branca do 1, preta é ótima e aparece em 3 dos 6 compartimentos.",
+      "accepted_origins": [
+        "deterministic",
+        "student_lean"
+      ]
+    },
+    {
+      "id": "c.strategy_case_2",
+      "description": "Após branca do 2, cinza é ótima e aparece em 3 dos 6 compartimentos.",
+      "accepted_origins": [
+        "deterministic",
+        "student_lean"
+      ]
+    },
+    {
+      "id": "c.conditional_success_1",
+      "description": "Probabilidade condicional 1/2 no primeiro caso.",
+      "accepted_origins": [
+        "deterministic",
+        "student_lean"
+      ]
+    },
+    {
+      "id": "c.conditional_success_2",
+      "description": "Probabilidade condicional 1/2 no segundo caso.",
+      "accepted_origins": [
+        "deterministic",
+        "student_lean"
+      ]
+    },
+    {
+      "id": "c.total_win_probability",
+      "description": "Calcula a probabilidade global 1/6 com os dois ramos desde o primeiro acionamento.",
+      "accepted_origins": [
+        "deterministic",
+        "student_lean"
+      ]
+    }
+  ],
+  "items": [
+    {
+      "id": "a",
+      "max_points": 4,
+      "scoring_strategy": "additive",
+      "children": [
+        {
+          "id": "a.count",
+          "max_points": 2,
+          "scoring_strategy": "all_of",
+          "obligation_ids": [
+            "a.bottom_white_count"
+          ]
+        },
+        {
+          "id": "a.probability",
+          "max_points": 2,
+          "scoring_strategy": "all_of",
+          "obligation_ids": [
+            "a.first_white_probability"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b",
+      "max_points": 8,
+      "scoring_strategy": "max_of",
+      "children": [
+        {
+          "id": "b.counting",
+          "max_points": 8,
+          "scoring_strategy": "additive",
+          "children": [
+            {
+              "id": "b.space",
+              "max_points": 2,
+              "scoring_strategy": "all_of",
+              "obligation_ids": [
+                "b.ordered_pairs"
+              ]
+            },
+            {
+              "id": "b.different",
+              "max_points": 2,
+              "scoring_strategy": "all_of",
+              "obligation_ids": [
+                "b.different_favorable"
+              ]
+            },
+            {
+              "id": "b.same",
+              "max_points": 2,
+              "scoring_strategy": "all_of",
+              "obligation_ids": [
+                "b.same_compartment"
+              ]
+            },
+            {
+              "id": "b.conclusion",
+              "max_points": 2,
+              "scoring_strategy": "all_of",
+              "obligation_ids": [
+                "b.second_white_probability"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "b.alternative",
+          "max_points": 8,
+          "scoring_strategy": "all_of",
+          "obligation_ids": [
+            "b.alternative_complete"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "c",
+      "max_points": 8,
+      "scoring_strategy": "additive",
+      "children": [
+        {
+          "id": "c.continue",
+          "max_points": 1,
+          "scoring_strategy": "all_of",
+          "obligation_ids": [
+            "c.continue_compartments"
+          ]
+        },
+        {
+          "id": "c.first_strategy",
+          "max_points": 2,
+          "scoring_strategy": "all_of",
+          "obligation_ids": [
+            "c.strategy_case_1"
+          ]
+        },
+        {
+          "id": "c.second_strategy",
+          "max_points": 2,
+          "scoring_strategy": "all_of",
+          "obligation_ids": [
+            "c.strategy_case_2"
+          ]
+        },
+        {
+          "id": "c.conditionals",
+          "max_points": 1,
+          "scoring_strategy": "all_of",
+          "obligation_ids": [
+            "c.conditional_success_1",
+            "c.conditional_success_2",
+            "c.strategy_case_1",
+            "c.strategy_case_2"
+          ]
+        },
+        {
+          "id": "c.total",
+          "max_points": 2,
+          "scoring_strategy": "all_of",
+          "obligation_ids": [
+            "c.total_win_probability",
+            "c.continue_compartments",
+            "c.strategy_case_1",
+            "c.strategy_case_2",
+            "c.conditional_success_1",
+            "c.conditional_success_2"
+          ]
+        }
+      ]
+    }
+  ]
+}

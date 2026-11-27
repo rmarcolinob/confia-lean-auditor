@@ -1,0 +1,30 @@
+{
+  "data": {
+    "sequence": 1,
+    "previous_sha256": null,
+    "request_sha256": "ae7064a8043734493a7a40811bdbd66255d20259ee2eeac629e79d2548349000",
+    "decision": {
+      "reconciliation_id": "drec_31ba60ab7f41167726f44efa753064236d15867f8c219e7353bc201e8c2694ac",
+      "audit_run_id": "aud_3ca353ff89073b6059b1cbc52bbf4ad9911323637eb85f48d4b3ffcd0a16c3dc",
+      "max_points": "10",
+      "final_points": "10",
+      "feedback": "",
+      "override_reason": null,
+      "reconciliation_sha256": "0be6e10bd39d1de1df8db4c3eafc489484f8370ce8921dd237a6605d15226d86",
+      "grader_suggested_points": "6.0",
+      "independent_review_id": "drev_33c34a26554b83aa34ec2e7f94efff466146868bf25128b17dfa6b357a38e77f",
+      "transcription_version_id": "tr_4f0112ac74f64536815ce16f6140ef60:1",
+      "review_required_snapshot": false,
+      "review_reasons_snapshot": [],
+      "human_decision_id": "hdec_68ba8562179c460c845ad6205ae74469",
+      "case_id": "case_b9e7b902a0b0484cb6c35ffd19c55814",
+      "decided_by_user_id": "tme-demo-evaluator",
+      "decided_at": "2026-11-12T03:46:15.647350Z",
+      "audit_source_sha256": "e71b8680c1cdd91d23f450c58b70cd091137545a3167a92ac297f28922f061ee",
+      "audit_result_sha256": "c5d9befca8205ea2e68a950311d078595c1c17a1dece39a2d0c1add6680c2854",
+      "suggested_points": "10",
+      "schema_version": "1.0"
+    }
+  },
+  "sha256": "b40eed2f7195bf085d726617c79b466b125f89415b61b82ef3a4e1a356641e00"
+}

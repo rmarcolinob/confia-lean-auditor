@@ -1,0 +1,22 @@
+{
+  "schema": "dynamic-rc1-smoke-samples.v1",
+  "synthetic": true,
+  "gold_included": false,
+  "context": "SELF_STUDY",
+  "grade_year": 8,
+  "cases": [
+    {
+      "id": "S1_TEXT",
+      "statement": "Quatro ingressos iguais custam R$ 28. Quanto custam sete ingressos, mantendo o preco por unidade? Justifique.",
+      "solution": "Divido 28 por 4 e encontro 7 reais por ingresso. Para sete ingressos, calculo 7 vezes 7 = 49 reais."
+    },
+    {
+      "id": "S2_IMAGE",
+      "statement": "Um retangulo tem base de 8 cm e altura de 5 cm. Calcule sua area e seu perimetro, explicando as operacoes e as unidades.",
+      "solution_image": "geometry-synthetic.png",
+      "literal_image_text": "Area: 8 x 5 = 40 cm2.\nPerimetro: 8 + 5 = 13 cm.\nSomei um lado de cada medida.",
+      "image_kind": "synthetic printed text, not authentic handwriting",
+      "human_reading_confirmation_required": true
+    }
+  ]
+}

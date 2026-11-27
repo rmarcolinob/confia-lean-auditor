@@ -1,0 +1,1837 @@
+{
+  "problem_id": "ITA2025F2Q1",
+  "score": null,
+  "max_score": 10.0,
+  "verdict": "inconclusivo",
+  "extracted_claims": {
+    "problem_id": "ITA2025F2Q1",
+    "claims": [
+      {
+        "verification_scope": "generated_reference",
+        "id": "f2q1_c3",
+        "type": "coefficient_system",
+        "text": "Compara com 2x+1 e obtém a+b=2 e -a=1.",
+        "evidence": "A solução iguala os coeficientes do resto calculado aos de 2x+1.",
+        "confidence": 0.9,
+        "normalized": {
+          "system": "a+b=2; -a=1"
+        }
+      },
+      {
+        "verification_scope": "generated_reference",
+        "id": "f2q1_c4",
+        "type": "final_answer",
+        "text": "Conclui a=-1 e b=3.",
+        "evidence": "A solução apresenta os valores corretos de a e b.",
+        "confidence": 0.98,
+        "normalized": {
+          "a": "-1",
+          "b": "3"
+        }
+      }
+    ],
+    "formal_steps": [
+      {
+        "verification_scope": "generated_reference",
+        "id": "f2q1_s3_coefficient_solution",
+        "type": "f2q1_coefficient_solution",
+        "description": "Verificação formal de a=-1, b=3 e do resto 2x+1.",
+        "evidence": "A solução monta o sistema e conclui a=-1, b=3.",
+        "lhs": "0",
+        "rhs": "0",
+        "lean_method": "norm_num",
+        "supports_claim_types": [
+          "coefficient_system",
+          "final_answer"
+        ],
+        "supports_rubric_items": [
+          "coefficient_system",
+          "final_answer"
+        ]
+      }
+    ]
+  },
+  "formal_steps": [
+    {
+      "verification_scope": "generated_reference",
+      "id": "f2q1_s3_coefficient_solution",
+      "type": "f2q1_coefficient_solution",
+      "description": "Verificação formal de a=-1, b=3 e do resto 2x+1.",
+      "evidence": "A solução monta o sistema e conclui a=-1, b=3.",
+      "lhs": "0",
+      "rhs": "0",
+      "lean_method": "norm_num",
+      "supports_claim_types": [
+        "coefficient_system",
+        "final_answer"
+      ],
+      "supports_rubric_items": [
+        "coefficient_system",
+        "final_answer"
+      ],
+      "lean_file": "/Users/LinMarcolino/Documents/confia-lean-auditor/artifacts/worktrees/confia-dec10-integration/artifacts/runs/20261125T003359_219972/formal_steps/f2q1_s3_coefficient_solution.lean",
+      "status": "lean_timeout",
+      "compiled": false,
+      "exit_code": 124,
+      "stdout": "",
+      "stderr": "Lean timeout"
+    }
+  ],
+  "rubric_assessment": {
+    "score": null,
+    "max_score": 10.0,
+    "items": [
+      {
+        "id": "power_reductions",
+        "description": "Usa a relação x^2=x-1, ou x^3=-1 e x^6=1, para reduzir x^57, x^14 e x^7.",
+        "detected": false,
+        "points": null,
+        "max_points": 3.0,
+        "evidence": null,
+        "claim_id": null,
+        "student_check_adjusted": false,
+        "adjustment_notes": [
+          "Avaliação semântica pela rubrica; sem certificação formal."
+        ],
+        "mathematical_status": "indeterminate",
+        "verification_status": "partial",
+        "assessment_note": "Evidência insuficiente para decidir este critério nesta execução.",
+        "verified_points": null,
+        "suggested_points": 0.0,
+        "scoring_basis": "semantic_fallback",
+        "scoring_evidence": [
+          "Como x³ − 1 = (x − 1)(x² − x + 1), tenho x³ ≡ 1 e x⁶ ≡ 1 módulo o divisor",
+          "x⁵⁷ ≡ 1, x¹⁴ ≡ x², x⁷ ≡ x.",
+          "Também uso x² ≡ x − 1."
+        ],
+        "scoring_rationale": "A redução de x⁵⁷ está incorreta e compromete o critério. O aluno parte da identidade falsa x³−1=(x−1)(x²−x+1) e conclui x³≡1. Conferindo módulo x²−x+1, a relação x²≡x−1 implica x³≡−1; portanto, x⁵⁷=(x³)¹⁹≡−1, e não 1. Embora escreva corretamente x²≡x−1 e as reduções de x¹⁴ e x⁷, não corrige o erro referente a x⁵⁷.",
+        "positive_evidence": {
+          "version": "positive-source-v1",
+          "supported": false,
+          "verification_type": "reference_heuristic",
+          "claim_id": null,
+          "criterion_id": "power_reductions",
+          "required_microclaim_ids": [
+            "mc_power_reductions"
+          ],
+          "source_spans": [],
+          "reason": "No reference candidate for this rubric criterion"
+        }
+      },
+      {
+        "id": "reduced_polynomial_form",
+        "description": "Obtém o resto geral p(x) ≡ (a+b)x - a.",
+        "detected": false,
+        "points": null,
+        "max_points": 3.0,
+        "evidence": null,
+        "claim_id": null,
+        "student_check_adjusted": false,
+        "adjustment_notes": [],
+        "mathematical_status": "indeterminate",
+        "verification_status": "partial",
+        "assessment_note": "Evidência insuficiente para decidir este critério nesta execução.",
+        "verified_points": null,
+        "suggested_points": null,
+        "scoring_basis": "unscorable",
+        "positive_evidence": {
+          "version": "positive-source-v1",
+          "supported": false,
+          "verification_type": "reference_heuristic",
+          "claim_id": null,
+          "criterion_id": "reduced_polynomial_form",
+          "required_microclaim_ids": [
+            "mc_reduced_polynomial_form"
+          ],
+          "source_spans": [],
+          "reason": "No reference candidate for this rubric criterion"
+        }
+      },
+      {
+        "id": "coefficient_system",
+        "description": "Compara com 2x+1 e monta o sistema a+b=2 e -a=1.",
+        "detected": false,
+        "points": null,
+        "max_points": 2.0,
+        "evidence": null,
+        "claim_id": "f2q1_c3",
+        "student_check_adjusted": false,
+        "adjustment_notes": [
+          "Avaliação semântica pela rubrica; sem certificação formal."
+        ],
+        "mathematical_status": "indeterminate",
+        "verification_status": "technical_error",
+        "assessment_note": "Verificação formal indisponível nesta execução.",
+        "verified_points": null,
+        "suggested_points": 0.0,
+        "scoring_basis": "semantic_fallback",
+        "scoring_evidence": [
+          "Assim p(x) ≡ 1 + a(x − 1) + bx + 1 = ax + a + bx + 2 = (a + b)x + (a + 2).",
+          "O resto tem grau menor que 2, então comparo com 2x + 1: a + 2 = 1 dá a = −1, e a + b = 2 dá então b = 3."
+        ],
+        "scoring_rationale": "A comparação apresentada usa o resto incorreto (a+b)x+(a+2), obtendo a+2=1 em vez de comparar o termo constante correto −a com 1. Conferindo matematicamente, x³≡−1 e x⁵⁷≡−1; além disso, a(x−1)=ax−a, não ax+a. Esses erros não se cancelam na expressão geral do resto. Embora a+2=1 seja equivalente a −a=1 e produza os valores corretos, essa equivalência final não corrige a premissa incorreta, não retificada, da comparação avaliada.",
+        "positive_evidence": {
+          "version": "positive-source-v1",
+          "supported": false,
+          "verification_type": "reference_heuristic",
+          "claim_id": "f2q1_c3",
+          "criterion_id": "coefficient_system",
+          "required_microclaim_ids": [
+            "mc_coefficient_system"
+          ],
+          "source_spans": [],
+          "source_sha256": "abfd6160505dd7a7f5cc483d474e94960ce9f27c2446394dbf3f0f135533f016",
+          "reason": "Required microclaims are not verified; source alone cannot replace them"
+        }
+      },
+      {
+        "id": "final_answer",
+        "description": "Conclui corretamente a=-1 e b=3.",
+        "detected": true,
+        "points": 2.0,
+        "max_points": 2.0,
+        "evidence": "Ou seja, a = −1 e b = 3, e o polinômio é x⁵⁷ − x¹⁴ + 3x⁷ + 1.",
+        "claim_id": "f2q1_c4",
+        "student_check_adjusted": false,
+        "adjustment_notes": [],
+        "mathematical_status": "supported",
+        "verification_status": "available",
+        "assessment_note": null,
+        "verified_points": 2.0,
+        "suggested_points": 2.0,
+        "scoring_basis": "first_pass",
+        "positive_evidence": {
+          "version": "positive-source-v1",
+          "supported": true,
+          "verification_type": "formal_verification",
+          "claim_id": "f2q1_c4",
+          "criterion_id": "final_answer",
+          "required_microclaim_ids": [],
+          "source_spans": [
+            {
+              "requirement": "student mathematical obligation",
+              "student_claim_id": "student:student_claim_3",
+              "source_text": "Ou seja, a = −1 e b = 3, e o polinômio é x⁵⁷ − x¹⁴ + 3x⁷ + 1.",
+              "source_start": 342,
+              "source_end": 403,
+              "source_sha256": "abfd6160505dd7a7f5cc483d474e94960ce9f27c2446394dbf3f0f135533f016",
+              "grounding": {
+                "grounding_status": "grounded",
+                "raw_text": "Ou seja, a = −1 e b = 3, e o polinômio é x⁵⁷ − x¹⁴ + 3x⁷ + 1.",
+                "source_start": 342,
+                "source_end": 403,
+                "source_sha256": "abfd6160505dd7a7f5cc483d474e94960ce9f27c2446394dbf3f0f135533f016",
+                "attributable": true
+              },
+              "alignment_basis": "structured_values"
+            }
+          ],
+          "student_bridge": {
+            "version": "rubric-student-bridge-v1",
+            "supported": true,
+            "criterion_id": "final_answer",
+            "expected_claim_id": "extracted:expected:final_answer",
+            "expected_source": "problem.correct_answer + positive_rules.binding",
+            "expected_claim_ids": [
+              "extracted:expected:final_answer"
+            ],
+            "expected_variants": [
+              {
+                "record_id": "extracted:expected:final_answer",
+                "status": "aligned",
+                "basis": "structured_values"
+              }
+            ],
+            "alignment": {
+              "reference_record_id": "extracted:expected:final_answer",
+              "student_record_ids": [
+                "student:student_claim_3"
+              ],
+              "status": "aligned",
+              "preferred_attribution_ids": [
+                "student:student_claim_3"
+              ],
+              "reason": "Supported mathematical content agrees; this is not a proof of correctness",
+              "alignment_basis": "structured_values"
+            },
+            "alignment_basis": "structured_values",
+            "student_claim_ids": [
+              "student:student_claim_3"
+            ],
+            "student_check_ids": [
+              "student_claim_3"
+            ],
+            "verification_basis": "formal_lean_verified",
+            "source_spans": [
+              {
+                "requirement": "student mathematical obligation",
+                "student_claim_id": "student:student_claim_3",
+                "source_text": "Ou seja, a = −1 e b = 3, e o polinômio é x⁵⁷ − x¹⁴ + 3x⁷ + 1.",
+                "source_start": 342,
+                "source_end": 403,
+                "source_sha256": "abfd6160505dd7a7f5cc483d474e94960ce9f27c2446394dbf3f0f135533f016",
+                "grounding": {
+                  "grounding_status": "grounded",
+                  "raw_text": "Ou seja, a = −1 e b = 3, e o polinômio é x⁵⁷ − x¹⁴ + 3x⁷ + 1.",
+                  "source_start": 342,
+                  "source_end": 403,
+                  "source_sha256": "abfd6160505dd7a7f5cc483d474e94960ce9f27c2446394dbf3f0f135533f016",
+                  "attributable": true
+                },
+                "alignment_basis": "structured_values"
+              }
+            ],
+            "reason": "Grounded student content satisfies the explicit mathematical obligation"
+          },
+          "source_sha256": "abfd6160505dd7a7f5cc483d474e94960ce9f27c2446394dbf3f0f135533f016",
+          "student_check_ids": [
+            "student_claim_3"
+          ],
+          "reference_dependencies": [],
+          "reference_verification_scope": "generated_reference",
+          "reason": "Student bridge verified the obligation; required microclaims and attribution retained"
+        }
+      }
+    ],
+    "assessment_status": "partial",
+    "evaluated_score": 2.0,
+    "evaluated_max_score": 2.0,
+    "scoring_policy": "semantic-b-minimal.v1",
+    "coverage": 0.2,
+    "estimated_points": null,
+    "needs_review": true,
+    "unscorable_reason": "SEMANTIC_REVIEW_REQUIRED",
+    "secondary_adjudication": {
+      "policy": "semantic-b-minimal.v1",
+      "criteria": {
+        "power_reductions": {
+          "request": {
+            "problem_id": "ITA2025F2Q1",
+            "solution": "Como x³ − 1 = (x − 1)(x² − x + 1), tenho x³ ≡ 1 e x⁶ ≡ 1 módulo o divisor, então reduzo os expoentes de 6 em 6: x⁵⁷ ≡ 1, x¹⁴ ≡ x², x⁷ ≡ x. Também uso x² ≡ x − 1. Assim p(x) ≡ 1 + a(x − 1) + bx + 1 = ax + a + bx + 2 = (a + b)x + (a + 2). O resto tem grau menor que 2, então comparo com 2x + 1: a + 2 = 1 dá a = −1, e a + b = 2 dá então b = 3. Ou seja, a = −1 e b = 3, e o polinômio é x⁵⁷ − x¹⁴ + 3x⁷ + 1.",
+            "statement": "Encontre os valores reais a e b tais que o polinômio p(x)=x^57+a x^14+b x^7+1, ao ser dividido por x^2-x+1, deixe resto 2x+1.",
+            "criterion": {
+              "id": "power_reductions",
+              "description": "Usa a relação x^2=x-1, ou x^3=-1 e x^6=1, para reduzir x^57, x^14 e x^7.",
+              "points": 3.0,
+              "claim_type": "power_reductions",
+              "required_microclaim_ids": [
+                "mc_power_reductions"
+              ]
+            },
+            "rubric": {
+              "problem_id": "ITA2025F2Q1",
+              "max_score": 10.0,
+              "items": [
+                {
+                  "id": "power_reductions",
+                  "description": "Usa a relação x^2=x-1, ou x^3=-1 e x^6=1, para reduzir x^57, x^14 e x^7.",
+                  "points": 3.0,
+                  "claim_type": "power_reductions",
+                  "required_microclaim_ids": [
+                    "mc_power_reductions"
+                  ]
+                },
+                {
+                  "id": "reduced_polynomial_form",
+                  "description": "Obtém o resto geral p(x) ≡ (a+b)x - a.",
+                  "points": 3.0,
+                  "claim_type": "reduced_polynomial_form",
+                  "required_microclaim_ids": [
+                    "mc_reduced_polynomial_form"
+                  ]
+                },
+                {
+                  "id": "coefficient_system",
+                  "description": "Compara com 2x+1 e monta o sistema a+b=2 e -a=1.",
+                  "points": 2.0,
+                  "claim_type": "coefficient_system",
+                  "required_microclaim_ids": [
+                    "mc_coefficient_system"
+                  ]
+                },
+                {
+                  "id": "final_answer",
+                  "description": "Conclui corretamente a=-1 e b=3.",
+                  "points": 2.0,
+                  "claim_type": "final_answer",
+                  "required_microclaim_ids": []
+                }
+              ]
+            },
+            "evidence": [
+              {
+                "source_start": 0,
+                "source_end": 138,
+                "source_text": "Como x³ − 1 = (x − 1)(x² − x + 1), tenho x³ ≡ 1 e x⁶ ≡ 1 módulo o divisor, então reduzo os expoentes de 6 em 6: x⁵⁷ ≡ 1, x¹⁴ ≡ x², x⁷ ≡ x."
+              },
+              {
+                "source_start": 0,
+                "source_end": 138,
+                "source_text": "Como x³ − 1 = (x − 1)(x² − x + 1), tenho x³ ≡ 1 e x⁶ ≡ 1 módulo o divisor, então reduzo os expoentes de 6 em 6: x⁵⁷ ≡ 1, x¹⁴ ≡ x², x⁷ ≡ x."
+              }
+            ],
+            "checks": [
+              {
+                "id": "student_claim_1",
+                "problem_id": "ITA2025F2Q1",
+                "claim_type": "f2q1_student_power_reduction",
+                "raw_text": "x^7=x",
+                "normalized_text": "powRem 7 = (0, 1)",
+                "lean_statement": "powRem 7 = (0, 1)",
+                "method": "norm_num [powRem]",
+                "status": "verified",
+                "compiled": true,
+                "lean_file": "/Users/LinMarcolino/Documents/confia-lean-auditor/artifacts/worktrees/confia-dec10-integration/artifacts/runs/20261125T003359_219972/student_claim_checks/student_check_1_lean_file.lean",
+                "stdout": "",
+                "stderr": "",
+                "data": {
+                  "exponent": 7,
+                  "rhs": "x",
+                  "const": 0,
+                  "coeff": 1
+                },
+                "failure_category": null,
+                "refutation_lean_file": null,
+                "refutation_verified": false,
+                "refutation_stdout": "",
+                "refutation_stderr": "",
+                "grounding": {
+                  "status": "grounded",
+                  "reason": "Local re-extraction and independent representation validation agree",
+                  "extraction_method": "extract_f2q1_student_claims",
+                  "validator": "local-source-v1",
+                  "source_sha256": "abfd6160505dd7a7f5cc483d474e94960ce9f27c2446394dbf3f0f135533f016",
+                  "source_text": "Como x³ − 1 = (x − 1)(x² − x + 1), tenho x³ ≡ 1 e x⁶ ≡ 1 módulo o divisor, então reduzo os expoentes de 6 em 6: x⁵⁷ ≡ 1, x¹⁴ ≡ x², x⁷ ≡ x.",
+                  "source_start": 0,
+                  "source_end": 138,
+                  "payload_sha256": "e860b7ddbb46bb0c4812f1652ca23999f25d8afd5ebf8fb14436d6b940067fa2"
+                },
+                "formal_status": "verified"
+              }
+            ],
+            "microclaims": [
+              {
+                "verification_scope": "generated_reference",
+                "id": "mc_power_reductions",
+                "description": "As potências relevantes reduzem-se a x^57 ≡ -1, x^14 ≡ x-1 e x^7 ≡ x.",
+                "theorem": "power_reductions",
+                "claim_types": [
+                  "power_reductions"
+                ],
+                "required_formal_step_types": [
+                  "f2q1_power_reductions"
+                ],
+                "depends_on_microclaim_ids": [],
+                "dependencies_verified": true,
+                "formal_steps_verified": false,
+                "textual_evidence": false,
+                "lean_status": "no_textual_evidence",
+                "supports_rubric_items": [
+                  "power_reductions"
+                ],
+                "verification_status": "partial"
+              },
+              {
+                "verification_scope": "generated_reference",
+                "id": "mc_reduced_polynomial_form",
+                "description": "O resto geral de p(x) é (a+b)x-a.",
+                "theorem": "reduced_polynomial_form",
+                "claim_types": [
+                  "reduced_polynomial_form"
+                ],
+                "required_formal_step_types": [
+                  "f2q1_reduced_form"
+                ],
+                "depends_on_microclaim_ids": [
+                  "mc_power_reductions"
+                ],
+                "dependencies_verified": false,
+                "formal_steps_verified": false,
+                "textual_evidence": false,
+                "lean_status": "no_textual_evidence",
+                "supports_rubric_items": [
+                  "reduced_polynomial_form"
+                ],
+                "verification_status": "partial"
+              },
+              {
+                "verification_scope": "generated_reference",
+                "id": "mc_coefficient_system",
+                "description": "Comparando (a+b)x-a com 2x+1, obtém-se a+b=2 e -a=1.",
+                "theorem": "coefficient_system_solution",
+                "claim_types": [
+                  "coefficient_system"
+                ],
+                "required_formal_step_types": [
+                  "f2q1_coefficient_solution"
+                ],
+                "depends_on_microclaim_ids": [
+                  "mc_reduced_polynomial_form"
+                ],
+                "dependencies_verified": false,
+                "formal_steps_verified": false,
+                "textual_evidence": true,
+                "lean_status": "formal_steps_not_verified",
+                "supports_rubric_items": [
+                  "coefficient_system"
+                ],
+                "verification_status": "technical_error"
+              },
+              {
+                "verification_scope": "generated_reference",
+                "id": "mc_final_answer",
+                "description": "A solução do sistema é a=-1 e b=3.",
+                "theorem": "final_answer",
+                "claim_types": [
+                  "final_answer"
+                ],
+                "required_formal_step_types": [
+                  "f2q1_coefficient_solution"
+                ],
+                "depends_on_microclaim_ids": [
+                  "mc_coefficient_system"
+                ],
+                "dependencies_verified": false,
+                "formal_steps_verified": false,
+                "textual_evidence": true,
+                "lean_status": "formal_steps_not_verified",
+                "supports_rubric_items": [
+                  "final_answer"
+                ],
+                "verification_status": "technical_error"
+              }
+            ],
+            "reason": "formal_obligation_not_satisfied"
+          },
+          "request_sha256": "a1c082d152e8486b60158ec0efe0cb26c92542bde02cd2cc774f48be57c98d03",
+          "source_sha256": "abfd6160505dd7a7f5cc483d474e94960ce9f27c2446394dbf3f0f135533f016",
+          "formal_certification": false,
+          "response": {
+            "decision": "not_met",
+            "justification": "A redução de x⁵⁷ está incorreta e compromete o critério. O aluno parte da identidade falsa x³−1=(x−1)(x²−x+1) e conclui x³≡1. Conferindo módulo x²−x+1, a relação x²≡x−1 implica x³≡−1; portanto, x⁵⁷=(x³)¹⁹≡−1, e não 1. Embora escreva corretamente x²≡x−1 e as reduções de x¹⁴ e x⁷, não corrige o erro referente a x⁵⁷.",
+            "quotes": [
+              "Como x³ − 1 = (x − 1)(x² − x + 1), tenho x³ ≡ 1 e x⁶ ≡ 1 módulo o divisor",
+              "x⁵⁷ ≡ 1, x¹⁴ ≡ x², x⁷ ≡ x.",
+              "Também uso x² ≡ x − 1."
+            ]
+          },
+          "decision": "not_met",
+          "quotes": [
+            {
+              "text": "Como x³ − 1 = (x − 1)(x² − x + 1), tenho x³ ≡ 1 e x⁶ ≡ 1 módulo o divisor",
+              "occurrences": [
+                {
+                  "start": 0,
+                  "end": 73
+                }
+              ]
+            },
+            {
+              "text": "x⁵⁷ ≡ 1, x¹⁴ ≡ x², x⁷ ≡ x.",
+              "occurrences": [
+                {
+                  "start": 112,
+                  "end": 138
+                }
+              ]
+            },
+            {
+              "text": "Também uso x² ≡ x − 1.",
+              "occurrences": [
+                {
+                  "start": 139,
+                  "end": 161
+                }
+              ]
+            }
+          ],
+          "response_sha256": "b54e1e2cc2691be4916fcdc3b9f2b4691b643a8d175423eb9377d15a4da40d40",
+          "policy": "semantic-b-minimal.v1",
+          "verification_level": "SEMANTIC_NOT_FORMAL",
+          "created_at": "2026-11-25T00:35:05.692625+00:00",
+          "provider": {
+            "response_id": "resp_08a351a5c7db8c7e016b062d34849487d291096d89a11c6865",
+            "model": "gpt-6.1-sol",
+            "status": "completed",
+            "usage": {
+              "input_tokens": 2324,
+              "input_tokens_details": {
+                "cached_tokens": 0,
+                "cache_write_tokens": 2321,
+                "cache_write_tokens_details": {
+                  "ttl_12h_tokens": 0,
+                  "ttl_30m_tokens": 2321
+                }
+              },
+              "output_tokens": 238,
+              "output_tokens_details": {
+                "reasoning_tokens": 0
+              },
+              "total_tokens": 2562
+            }
+          }
+        },
+        "reduced_polynomial_form": {
+          "decision": "review",
+          "reason": "no_eligible_evidence"
+        },
+        "coefficient_system": {
+          "request": {
+            "problem_id": "ITA2025F2Q1",
+            "solution": "Como x³ − 1 = (x − 1)(x² − x + 1), tenho x³ ≡ 1 e x⁶ ≡ 1 módulo o divisor, então reduzo os expoentes de 6 em 6: x⁵⁷ ≡ 1, x¹⁴ ≡ x², x⁷ ≡ x. Também uso x² ≡ x − 1. Assim p(x) ≡ 1 + a(x − 1) + bx + 1 = ax + a + bx + 2 = (a + b)x + (a + 2). O resto tem grau menor que 2, então comparo com 2x + 1: a + 2 = 1 dá a = −1, e a + b = 2 dá então b = 3. Ou seja, a = −1 e b = 3, e o polinômio é x⁵⁷ − x¹⁴ + 3x⁷ + 1.",
+            "statement": "Encontre os valores reais a e b tais que o polinômio p(x)=x^57+a x^14+b x^7+1, ao ser dividido por x^2-x+1, deixe resto 2x+1.",
+            "criterion": {
+              "id": "coefficient_system",
+              "description": "Compara com 2x+1 e monta o sistema a+b=2 e -a=1.",
+              "points": 2.0,
+              "claim_type": "coefficient_system",
+              "required_microclaim_ids": [
+                "mc_coefficient_system"
+              ]
+            },
+            "rubric": {
+              "problem_id": "ITA2025F2Q1",
+              "max_score": 10.0,
+              "items": [
+                {
+                  "id": "power_reductions",
+                  "description": "Usa a relação x^2=x-1, ou x^3=-1 e x^6=1, para reduzir x^57, x^14 e x^7.",
+                  "points": 3.0,
+                  "claim_type": "power_reductions",
+                  "required_microclaim_ids": [
+                    "mc_power_reductions"
+                  ]
+                },
+                {
+                  "id": "reduced_polynomial_form",
+                  "description": "Obtém o resto geral p(x) ≡ (a+b)x - a.",
+                  "points": 3.0,
+                  "claim_type": "reduced_polynomial_form",
+                  "required_microclaim_ids": [
+                    "mc_reduced_polynomial_form"
+                  ]
+                },
+                {
+                  "id": "coefficient_system",
+                  "description": "Compara com 2x+1 e monta o sistema a+b=2 e -a=1.",
+                  "points": 2.0,
+                  "claim_type": "coefficient_system",
+                  "required_microclaim_ids": [
+                    "mc_coefficient_system"
+                  ]
+                },
+                {
+                  "id": "final_answer",
+                  "description": "Conclui corretamente a=-1 e b=3.",
+                  "points": 2.0,
+                  "claim_type": "final_answer",
+                  "required_microclaim_ids": []
+                }
+              ]
+            },
+            "evidence": [
+              {
+                "source_start": 237,
+                "source_end": 341,
+                "source_text": "O resto tem grau menor que 2, então comparo com 2x + 1: a + 2 = 1 dá a = −1, e a + b = 2 dá então b = 3."
+              },
+              {
+                "source_start": 237,
+                "source_end": 341,
+                "source_text": "O resto tem grau menor que 2, então comparo com 2x + 1: a + 2 = 1 dá a = −1, e a + b = 2 dá então b = 3."
+              }
+            ],
+            "checks": [
+              {
+                "id": "student_claim_2",
+                "problem_id": "ITA2025F2Q1",
+                "claim_type": "f2q1_student_coefficient_system",
+                "raw_text": "a+b=2; a=-1",
+                "normalized_text": "coefficient_system: sum_rhs=2, a_rhs=-1",
+                "lean_statement": "candidateA + candidateB = (2 : ℤ) ∧ candidateA = (-1 : ℤ)",
+                "method": "norm_num [candidateA, candidateB]",
+                "status": "verified",
+                "compiled": true,
+                "lean_file": "/Users/LinMarcolino/Documents/confia-lean-auditor/artifacts/worktrees/confia-dec10-integration/artifacts/runs/20261125T003359_219972/student_claim_checks/student_check_2_lean_file.lean",
+                "stdout": "",
+                "stderr": "",
+                "data": {
+                  "sum_lhs": "candidateA + candidateB",
+                  "sum_rhs": 2,
+                  "a_equation_kind": "a",
+                  "a_rhs": -1
+                },
+                "failure_category": null,
+                "refutation_lean_file": null,
+                "refutation_verified": false,
+                "refutation_stdout": "",
+                "refutation_stderr": "",
+                "grounding": {
+                  "status": "grounded",
+                  "reason": "Local re-extraction and independent representation validation agree",
+                  "extraction_method": "extract_f2q1_student_claims",
+                  "validator": "local-source-v1",
+                  "source_sha256": "abfd6160505dd7a7f5cc483d474e94960ce9f27c2446394dbf3f0f135533f016",
+                  "source_text": "O resto tem grau menor que 2, então comparo com 2x + 1: a + 2 = 1 dá a = −1, e a + b = 2 dá então b = 3.",
+                  "source_start": 237,
+                  "source_end": 341,
+                  "payload_sha256": "2d0d3b05d933a497a5280540b9a1263d23d87cbb7238c1662f437c82081b2518"
+                },
+                "formal_status": "verified"
+              }
+            ],
+            "microclaims": [
+              {
+                "verification_scope": "generated_reference",
+                "id": "mc_power_reductions",
+                "description": "As potências relevantes reduzem-se a x^57 ≡ -1, x^14 ≡ x-1 e x^7 ≡ x.",
+                "theorem": "power_reductions",
+                "claim_types": [
+                  "power_reductions"
+                ],
+                "required_formal_step_types": [
+                  "f2q1_power_reductions"
+                ],
+                "depends_on_microclaim_ids": [],
+                "dependencies_verified": true,
+                "formal_steps_verified": false,
+                "textual_evidence": false,
+                "lean_status": "no_textual_evidence",
+                "supports_rubric_items": [
+                  "power_reductions"
+                ],
+                "verification_status": "partial"
+              },
+              {
+                "verification_scope": "generated_reference",
+                "id": "mc_reduced_polynomial_form",
+                "description": "O resto geral de p(x) é (a+b)x-a.",
+                "theorem": "reduced_polynomial_form",
+                "claim_types": [
+                  "reduced_polynomial_form"
+                ],
+                "required_formal_step_types": [
+                  "f2q1_reduced_form"
+                ],
+                "depends_on_microclaim_ids": [
+                  "mc_power_reductions"
+                ],
+                "dependencies_verified": false,
+                "formal_steps_verified": false,
+                "textual_evidence": false,
+                "lean_status": "no_textual_evidence",
+                "supports_rubric_items": [
+                  "reduced_polynomial_form"
+                ],
+                "verification_status": "partial"
+              },
+              {
+                "verification_scope": "generated_reference",
+                "id": "mc_coefficient_system",
+                "description": "Comparando (a+b)x-a com 2x+1, obtém-se a+b=2 e -a=1.",
+                "theorem": "coefficient_system_solution",
+                "claim_types": [
+                  "coefficient_system"
+                ],
+                "required_formal_step_types": [
+                  "f2q1_coefficient_solution"
+                ],
+                "depends_on_microclaim_ids": [
+                  "mc_reduced_polynomial_form"
+                ],
+                "dependencies_verified": false,
+                "formal_steps_verified": false,
+                "textual_evidence": true,
+                "lean_status": "formal_steps_not_verified",
+                "supports_rubric_items": [
+                  "coefficient_system"
+                ],
+                "verification_status": "technical_error"
+              },
+              {
+                "verification_scope": "generated_reference",
+                "id": "mc_final_answer",
+                "description": "A solução do sistema é a=-1 e b=3.",
+                "theorem": "final_answer",
+                "claim_types": [
+                  "final_answer"
+                ],
+                "required_formal_step_types": [
+                  "f2q1_coefficient_solution"
+                ],
+                "depends_on_microclaim_ids": [
+                  "mc_coefficient_system"
+                ],
+                "dependencies_verified": false,
+                "formal_steps_verified": false,
+                "textual_evidence": true,
+                "lean_status": "formal_steps_not_verified",
+                "supports_rubric_items": [
+                  "final_answer"
+                ],
+                "verification_status": "technical_error"
+              }
+            ],
+            "reason": "formal_obligation_not_satisfied"
+          },
+          "request_sha256": "00a449fffdec7091158d3a6ac31c19a0d82ed5a29341f822164e4a97fb266aba",
+          "source_sha256": "abfd6160505dd7a7f5cc483d474e94960ce9f27c2446394dbf3f0f135533f016",
+          "formal_certification": false,
+          "response": {
+            "decision": "not_met",
+            "justification": "A comparação apresentada usa o resto incorreto (a+b)x+(a+2), obtendo a+2=1 em vez de comparar o termo constante correto −a com 1. Conferindo matematicamente, x³≡−1 e x⁵⁷≡−1; além disso, a(x−1)=ax−a, não ax+a. Esses erros não se cancelam na expressão geral do resto. Embora a+2=1 seja equivalente a −a=1 e produza os valores corretos, essa equivalência final não corrige a premissa incorreta, não retificada, da comparação avaliada.",
+            "quotes": [
+              "Assim p(x) ≡ 1 + a(x − 1) + bx + 1 = ax + a + bx + 2 = (a + b)x + (a + 2).",
+              "O resto tem grau menor que 2, então comparo com 2x + 1: a + 2 = 1 dá a = −1, e a + b = 2 dá então b = 3."
+            ]
+          },
+          "decision": "not_met",
+          "quotes": [
+            {
+              "text": "Assim p(x) ≡ 1 + a(x − 1) + bx + 1 = ax + a + bx + 2 = (a + b)x + (a + 2).",
+              "occurrences": [
+                {
+                  "start": 162,
+                  "end": 236
+                }
+              ]
+            },
+            {
+              "text": "O resto tem grau menor que 2, então comparo com 2x + 1: a + 2 = 1 dá a = −1, e a + b = 2 dá então b = 3.",
+              "occurrences": [
+                {
+                  "start": 237,
+                  "end": 341
+                }
+              ]
+            }
+          ],
+          "response_sha256": "cbe97a5367fabda007d3d288a59e2dbd923cfb0ffc0113c0e571252d25bc57dc",
+          "policy": "semantic-b-minimal.v1",
+          "verification_level": "SEMANTIC_NOT_FORMAL",
+          "created_at": "2026-11-25T00:35:12.239422+00:00",
+          "provider": {
+            "response_id": "resp_0085b91a35402e9a016b062d3a144c87d2b8e34335b81f41af",
+            "model": "gpt-6.1-sol",
+            "status": "completed",
+            "usage": {
+              "input_tokens": 2243,
+              "input_tokens_details": {
+                "cached_tokens": 0,
+                "cache_write_tokens": 2240,
+                "cache_write_tokens_details": {
+                  "ttl_12h_tokens": 0,
+                  "ttl_30m_tokens": 2240
+                }
+              },
+              "output_tokens": 322,
+              "output_tokens_details": {
+                "reasoning_tokens": 75
+              },
+              "total_tokens": 2565
+            }
+          }
+        }
+      }
+    }
+  },
+  "lean_certificate": {
+    "verification_scope": "generated_reference",
+    "status": "verified",
+    "compiled": true,
+    "exit_code": 0,
+    "uses_forbidden_token": false,
+    "forbidden_tokens_found": [],
+    "stdout": "",
+    "stderr": "",
+    "lean_file": "/Users/LinMarcolino/Documents/confia-lean-auditor/artifacts/worktrees/confia-dec10-integration/artifacts/runs/20261125T003359_219972/Attempt.lean",
+    "generated_theorems": []
+  },
+  "microclaims": [
+    {
+      "verification_scope": "generated_reference",
+      "id": "mc_power_reductions",
+      "description": "As potências relevantes reduzem-se a x^57 ≡ -1, x^14 ≡ x-1 e x^7 ≡ x.",
+      "theorem": "power_reductions",
+      "claim_types": [
+        "power_reductions"
+      ],
+      "required_formal_step_types": [
+        "f2q1_power_reductions"
+      ],
+      "depends_on_microclaim_ids": [],
+      "dependencies_verified": true,
+      "formal_steps_verified": false,
+      "textual_evidence": false,
+      "lean_status": "no_textual_evidence",
+      "supports_rubric_items": [
+        "power_reductions"
+      ],
+      "verification_status": "partial"
+    },
+    {
+      "verification_scope": "generated_reference",
+      "id": "mc_reduced_polynomial_form",
+      "description": "O resto geral de p(x) é (a+b)x-a.",
+      "theorem": "reduced_polynomial_form",
+      "claim_types": [
+        "reduced_polynomial_form"
+      ],
+      "required_formal_step_types": [
+        "f2q1_reduced_form"
+      ],
+      "depends_on_microclaim_ids": [
+        "mc_power_reductions"
+      ],
+      "dependencies_verified": false,
+      "formal_steps_verified": false,
+      "textual_evidence": false,
+      "lean_status": "no_textual_evidence",
+      "supports_rubric_items": [
+        "reduced_polynomial_form"
+      ],
+      "verification_status": "partial"
+    },
+    {
+      "verification_scope": "generated_reference",
+      "id": "mc_coefficient_system",
+      "description": "Comparando (a+b)x-a com 2x+1, obtém-se a+b=2 e -a=1.",
+      "theorem": "coefficient_system_solution",
+      "claim_types": [
+        "coefficient_system"
+      ],
+      "required_formal_step_types": [
+        "f2q1_coefficient_solution"
+      ],
+      "depends_on_microclaim_ids": [
+        "mc_reduced_polynomial_form"
+      ],
+      "dependencies_verified": false,
+      "formal_steps_verified": false,
+      "textual_evidence": true,
+      "lean_status": "formal_steps_not_verified",
+      "supports_rubric_items": [
+        "coefficient_system"
+      ],
+      "verification_status": "technical_error"
+    },
+    {
+      "verification_scope": "generated_reference",
+      "id": "mc_final_answer",
+      "description": "A solução do sistema é a=-1 e b=3.",
+      "theorem": "final_answer",
+      "claim_types": [
+        "final_answer"
+      ],
+      "required_formal_step_types": [
+        "f2q1_coefficient_solution"
+      ],
+      "depends_on_microclaim_ids": [
+        "mc_coefficient_system"
+      ],
+      "dependencies_verified": false,
+      "formal_steps_verified": false,
+      "textual_evidence": true,
+      "lean_status": "formal_steps_not_verified",
+      "supports_rubric_items": [
+        "final_answer"
+      ],
+      "verification_status": "technical_error"
+    }
+  ],
+  "student_claims": [
+    {
+      "id": "student_claim_0",
+      "problem_id": "ITA2025F2Q1",
+      "claim_type": "f2q1_student_power_reduction",
+      "raw_text": "x^14=x",
+      "normalized_text": "powRem 14 = (0, 1)",
+      "context": "Como x³ − 1 = (x − 1)(x² − x + 1), tenho x³ ≡ 1 e x⁶ ≡ 1 módulo o divisor, então reduzo os expoentes de 6 em 6: x⁵⁷ ≡ 1, x¹⁴ ≡ x², x⁷ ≡ x. Também uso x² ≡ x − 1. Assim p(x) ≡ 1 + a",
+      "data": {
+        "exponent": 14,
+        "rhs": "x",
+        "const": 0,
+        "coeff": 1
+      },
+      "method": "norm_num [powRem]",
+      "confidence": 0.86,
+      "grounding": {
+        "status": "unresolved",
+        "reason": "No local source representation consistent with all structured values",
+        "extraction_method": "extract_f2q1_student_claims",
+        "validator": "local-source-v1",
+        "source_sha256": "abfd6160505dd7a7f5cc483d474e94960ce9f27c2446394dbf3f0f135533f016"
+      }
+    },
+    {
+      "id": "student_claim_1",
+      "problem_id": "ITA2025F2Q1",
+      "claim_type": "f2q1_student_power_reduction",
+      "raw_text": "x^7=x",
+      "normalized_text": "powRem 7 = (0, 1)",
+      "context": "Como x³ − 1 = (x − 1)(x² − x + 1), tenho x³ ≡ 1 e x⁶ ≡ 1 módulo o divisor, então reduzo os expoentes de 6 em 6: x⁵⁷ ≡ 1, x¹⁴ ≡ x², x⁷ ≡ x. Também uso x² ≡ x − 1. Assim p(x) ≡ 1 + a",
+      "data": {
+        "exponent": 7,
+        "rhs": "x",
+        "const": 0,
+        "coeff": 1
+      },
+      "method": "norm_num [powRem]",
+      "confidence": 0.86,
+      "grounding": {
+        "status": "grounded",
+        "reason": "Local re-extraction and independent representation validation agree",
+        "extraction_method": "extract_f2q1_student_claims",
+        "validator": "local-source-v1",
+        "source_sha256": "abfd6160505dd7a7f5cc483d474e94960ce9f27c2446394dbf3f0f135533f016",
+        "source_text": "Como x³ − 1 = (x − 1)(x² − x + 1), tenho x³ ≡ 1 e x⁶ ≡ 1 módulo o divisor, então reduzo os expoentes de 6 em 6: x⁵⁷ ≡ 1, x¹⁴ ≡ x², x⁷ ≡ x.",
+        "source_start": 0,
+        "source_end": 138,
+        "payload_sha256": "e860b7ddbb46bb0c4812f1652ca23999f25d8afd5ebf8fb14436d6b940067fa2"
+      }
+    },
+    {
+      "id": "student_claim_2",
+      "problem_id": "ITA2025F2Q1",
+      "claim_type": "f2q1_student_coefficient_system",
+      "raw_text": "a+b=2; a=-1",
+      "normalized_text": "coefficient_system: sum_rhs=2, a_rhs=-1",
+      "context": "Como x³ − 1 = (x − 1)(x² − x + 1), tenho x³ ≡ 1 e x⁶ ≡ 1 módulo o divisor, então reduzo os expoentes de 6 em 6: x⁵⁷ ≡ 1, x¹⁴ ≡ x², x⁷ ≡ x. Também uso x² ≡ x − 1. Assim p(x) ≡ 1 + a(x − 1) + bx + 1 = ax + a + bx + 2 = (a ",
+      "data": {
+        "sum_lhs": "candidateA + candidateB",
+        "sum_rhs": 2,
+        "a_equation_kind": "a",
+        "a_rhs": -1
+      },
+      "method": "norm_num [candidateA, candidateB]",
+      "confidence": 0.86,
+      "grounding": {
+        "status": "grounded",
+        "reason": "Local re-extraction and independent representation validation agree",
+        "extraction_method": "extract_f2q1_student_claims",
+        "validator": "local-source-v1",
+        "source_sha256": "abfd6160505dd7a7f5cc483d474e94960ce9f27c2446394dbf3f0f135533f016",
+        "source_text": "O resto tem grau menor que 2, então comparo com 2x + 1: a + 2 = 1 dá a = −1, e a + b = 2 dá então b = 3.",
+        "source_start": 237,
+        "source_end": 341,
+        "payload_sha256": "2d0d3b05d933a497a5280540b9a1263d23d87cbb7238c1662f437c82081b2518"
+      }
+    },
+    {
+      "id": "student_claim_3",
+      "problem_id": "ITA2025F2Q1",
+      "claim_type": "f2q1_student_final_answer",
+      "raw_text": "Ou seja, a = −1 e b = 3, e o polinômio é x⁵⁷ − x¹⁴ + 3x⁷ + 1.",
+      "normalized_text": "local final binding: {'a': -1, 'b': 3}",
+      "context": "Ou seja, a = −1 e b = 3, e o polinômio é x⁵⁷ − x¹⁴ + 3x⁷ + 1.",
+      "data": {
+        "a": -1,
+        "b": 3
+      },
+      "method": "norm_num",
+      "confidence": 0.9,
+      "grounding": {
+        "status": "grounded",
+        "reason": "Local re-extraction and independent representation validation agree",
+        "extraction_method": "extract_f2q1_student_claims",
+        "validator": "local-source-v1",
+        "source_sha256": "abfd6160505dd7a7f5cc483d474e94960ce9f27c2446394dbf3f0f135533f016",
+        "source_text": "Ou seja, a = −1 e b = 3, e o polinômio é x⁵⁷ − x¹⁴ + 3x⁷ + 1.",
+        "source_start": 342,
+        "source_end": 403,
+        "payload_sha256": "be23a67b116730b90830716d3d44324f7827e93f0736dfdb193d77e09a843c73"
+      }
+    },
+    {
+      "id": "generic_math_5_33_relation",
+      "problem_id": "ITA2025F2Q1",
+      "claim_type": "math_relation",
+      "raw_text": "x³ − 1 = (x − 1)(x² − x + 1)",
+      "normalized_text": "x³ − 1 = (x − 1)(x² − x + 1)",
+      "context": "Como x³ − 1 = (x − 1)(x² − x + 1), tenho x³ ≡ 1 e x⁶ ≡ 1 módulo o divisor, então reduzo os expoentes de 6 em 6: x⁵⁷ ≡ 1, x¹⁴ ≡ x², x⁷",
+      "data": {
+        "expression": "x³ − 1 = (x − 1)(x² − x + 1)"
+      },
+      "method": "generic_math",
+      "confidence": 1.0,
+      "grounding": {
+        "status": "grounded",
+        "validator": "generic-source-v1",
+        "extraction_method": "generic_math",
+        "source_text": "x³ − 1 = (x − 1)(x² − x + 1)",
+        "source_start": 5,
+        "source_end": 33,
+        "source_sha256": "abfd6160505dd7a7f5cc483d474e94960ce9f27c2446394dbf3f0f135533f016",
+        "payload_sha256": "3be01c6f0186d3ae18a8588d6cb1105889edb362efb792a17fbad4206f009810",
+        "reason": "Literal mathematical candidate; detection is not verification"
+      }
+    },
+    {
+      "id": "generic_math_41_43_expression",
+      "problem_id": "ITA2025F2Q1",
+      "claim_type": "math_expression",
+      "raw_text": "x³",
+      "normalized_text": "x³",
+      "context": "Como x³ − 1 = (x − 1)(x² − x + 1), tenho x³ ≡ 1 e x⁶ ≡ 1 módulo o divisor, então reduzo os expoentes de 6 em 6: x⁵⁷ ≡ 1, x¹⁴ ≡ x², x⁷ ≡ x. Tamb",
+      "data": {
+        "expression": "x³"
+      },
+      "method": "generic_math",
+      "confidence": 1.0,
+      "grounding": {
+        "status": "grounded",
+        "validator": "generic-source-v1",
+        "extraction_method": "generic_math",
+        "source_text": "x³",
+        "source_start": 41,
+        "source_end": 43,
+        "source_sha256": "abfd6160505dd7a7f5cc483d474e94960ce9f27c2446394dbf3f0f135533f016",
+        "payload_sha256": "a50b4c0aa869077f49620c06184fdebb594ea740b1c0a6860e2ae300faf6b01a",
+        "reason": "Literal mathematical candidate; detection is not verification"
+      }
+    },
+    {
+      "id": "generic_math_127_129_expression",
+      "problem_id": "ITA2025F2Q1",
+      "claim_type": "math_expression",
+      "raw_text": "x²",
+      "normalized_text": "x²",
+      "context": "x + 1), tenho x³ ≡ 1 e x⁶ ≡ 1 módulo o divisor, então reduzo os expoentes de 6 em 6: x⁵⁷ ≡ 1, x¹⁴ ≡ x², x⁷ ≡ x. Também uso x² ≡ x − 1. Assim p(x) ≡ 1 + a(x − 1) + bx + 1 = ax + a + bx + 2 = (a + b)x + (",
+      "data": {
+        "expression": "x²"
+      },
+      "method": "generic_math",
+      "confidence": 1.0,
+      "grounding": {
+        "status": "grounded",
+        "validator": "generic-source-v1",
+        "extraction_method": "generic_math",
+        "source_text": "x²",
+        "source_start": 127,
+        "source_end": 129,
+        "source_sha256": "abfd6160505dd7a7f5cc483d474e94960ce9f27c2446394dbf3f0f135533f016",
+        "payload_sha256": "ac5749831961bc0ffcd91aa6eef5a6e0041ba697200c65745da44f89f2be317f",
+        "reason": "Literal mathematical candidate; detection is not verification"
+      }
+    },
+    {
+      "id": "generic_math_150_152_expression",
+      "problem_id": "ITA2025F2Q1",
+      "claim_type": "math_expression",
+      "raw_text": "x²",
+      "normalized_text": "x²",
+      "context": "x⁶ ≡ 1 módulo o divisor, então reduzo os expoentes de 6 em 6: x⁵⁷ ≡ 1, x¹⁴ ≡ x², x⁷ ≡ x. Também uso x² ≡ x − 1. Assim p(x) ≡ 1 + a(x − 1) + bx + 1 = ax + a + bx + 2 = (a + b)x + (a + 2). O resto tem gra",
+      "data": {
+        "expression": "x²"
+      },
+      "method": "generic_math",
+      "confidence": 1.0,
+      "grounding": {
+        "status": "grounded",
+        "validator": "generic-source-v1",
+        "extraction_method": "generic_math",
+        "source_text": "x²",
+        "source_start": 150,
+        "source_end": 152,
+        "source_sha256": "abfd6160505dd7a7f5cc483d474e94960ce9f27c2446394dbf3f0f135533f016",
+        "payload_sha256": "ac5749831961bc0ffcd91aa6eef5a6e0041ba697200c65745da44f89f2be317f",
+        "reason": "Literal mathematical candidate; detection is not verification"
+      }
+    },
+    {
+      "id": "generic_math_155_160_expression",
+      "problem_id": "ITA2025F2Q1",
+      "claim_type": "math_expression",
+      "raw_text": "x − 1",
+      "normalized_text": "x − 1",
+      "context": "1 módulo o divisor, então reduzo os expoentes de 6 em 6: x⁵⁷ ≡ 1, x¹⁴ ≡ x², x⁷ ≡ x. Também uso x² ≡ x − 1. Assim p(x) ≡ 1 + a(x − 1) + bx + 1 = ax + a + bx + 2 = (a + b)x + (a + 2). O resto tem grau menor ",
+      "data": {
+        "expression": "x − 1"
+      },
+      "method": "generic_math",
+      "confidence": 1.0,
+      "grounding": {
+        "status": "grounded",
+        "validator": "generic-source-v1",
+        "extraction_method": "generic_math",
+        "source_text": "x − 1",
+        "source_start": 155,
+        "source_end": 160,
+        "source_sha256": "abfd6160505dd7a7f5cc483d474e94960ce9f27c2446394dbf3f0f135533f016",
+        "payload_sha256": "71472d7e6ad90bd83eb0adf284103f0310f5b287fa9081f091fe866ed220ed87",
+        "reason": "Literal mathematical candidate; detection is not verification"
+      }
+    },
+    {
+      "id": "generic_math_211_235_relation",
+      "problem_id": "ITA2025F2Q1",
+      "claim_type": "math_relation",
+      "raw_text": "+ 2 = (a + b)x + (a + 2)",
+      "normalized_text": "+ 2 = (a + b)x + (a + 2)",
+      "context": " x⁵⁷ ≡ 1, x¹⁴ ≡ x², x⁷ ≡ x. Também uso x² ≡ x − 1. Assim p(x) ≡ 1 + a(x − 1) + bx + 1 = ax + a + bx + 2 = (a + b)x + (a + 2). O resto tem grau menor que 2, então comparo com 2x + 1: a + 2 = 1 dá a = −1, e a + b = 2 dá então ",
+      "data": {
+        "expression": "+ 2 = (a + b)x + (a + 2)"
+      },
+      "method": "generic_math",
+      "confidence": 1.0,
+      "grounding": {
+        "status": "grounded",
+        "validator": "generic-source-v1",
+        "extraction_method": "generic_math",
+        "source_text": "+ 2 = (a + b)x + (a + 2)",
+        "source_start": 211,
+        "source_end": 235,
+        "source_sha256": "abfd6160505dd7a7f5cc483d474e94960ce9f27c2446394dbf3f0f135533f016",
+        "payload_sha256": "bcb0204a618c2da041b16218c62f2e9f2397c4a2770b481cab716f899a50667c",
+        "reason": "Literal mathematical candidate; detection is not verification"
+      }
+    },
+    {
+      "id": "generic_math_285_291_expression",
+      "problem_id": "ITA2025F2Q1",
+      "claim_type": "math_expression",
+      "raw_text": "2x + 1",
+      "normalized_text": "2x + 1",
+      "context": "1) + bx + 1 = ax + a + bx + 2 = (a + b)x + (a + 2). O resto tem grau menor que 2, então comparo com 2x + 1: a + 2 = 1 dá a = −1, e a + b = 2 dá então b = 3. Ou seja, a = −1 e b = 3, e o polinômio é x⁵⁷ − x¹",
+      "data": {
+        "expression": "2x + 1"
+      },
+      "method": "generic_math",
+      "confidence": 1.0,
+      "grounding": {
+        "status": "grounded",
+        "validator": "generic-source-v1",
+        "extraction_method": "generic_math",
+        "source_text": "2x + 1",
+        "source_start": 285,
+        "source_end": 291,
+        "source_sha256": "abfd6160505dd7a7f5cc483d474e94960ce9f27c2446394dbf3f0f135533f016",
+        "payload_sha256": "685ed0af9c8c46190ca8fa50100e1b81f2a2e450fc4f32b012d077d5f3b79dc2",
+        "reason": "Literal mathematical candidate; detection is not verification"
+      }
+    },
+    {
+      "id": "generic_math_293_302_relation",
+      "problem_id": "ITA2025F2Q1",
+      "claim_type": "math_relation",
+      "raw_text": "a + 2 = 1",
+      "normalized_text": "a + 2 = 1",
+      "context": "+ 1 = ax + a + bx + 2 = (a + b)x + (a + 2). O resto tem grau menor que 2, então comparo com 2x + 1: a + 2 = 1 dá a = −1, e a + b = 2 dá então b = 3. Ou seja, a = −1 e b = 3, e o polinômio é x⁵⁷ − x¹⁴ + 3x⁷ + 1",
+      "data": {
+        "expression": "a + 2 = 1"
+      },
+      "method": "generic_math",
+      "confidence": 1.0,
+      "grounding": {
+        "status": "grounded",
+        "validator": "generic-source-v1",
+        "extraction_method": "generic_math",
+        "source_text": "a + 2 = 1",
+        "source_start": 293,
+        "source_end": 302,
+        "source_sha256": "abfd6160505dd7a7f5cc483d474e94960ce9f27c2446394dbf3f0f135533f016",
+        "payload_sha256": "e5d4b344159c775ddf0abcf9ff6e2cc2f578b0caa0e7d74d845ac75d43ce24cc",
+        "reason": "Literal mathematical candidate; detection is not verification"
+      }
+    },
+    {
+      "id": "generic_math_306_312_relation",
+      "problem_id": "ITA2025F2Q1",
+      "claim_type": "math_relation",
+      "raw_text": "a = −1",
+      "normalized_text": "a = −1",
+      "context": "+ bx + 2 = (a + b)x + (a + 2). O resto tem grau menor que 2, então comparo com 2x + 1: a + 2 = 1 dá a = −1, e a + b = 2 dá então b = 3. Ou seja, a = −1 e b = 3, e o polinômio é x⁵⁷ − x¹⁴ + 3x⁷ + 1.",
+      "data": {
+        "expression": "a = −1"
+      },
+      "method": "generic_math",
+      "confidence": 1.0,
+      "grounding": {
+        "status": "grounded",
+        "validator": "generic-source-v1",
+        "extraction_method": "generic_math",
+        "source_text": "a = −1",
+        "source_start": 306,
+        "source_end": 312,
+        "source_sha256": "abfd6160505dd7a7f5cc483d474e94960ce9f27c2446394dbf3f0f135533f016",
+        "payload_sha256": "0c2e82775885bf8bc4c13a50f20b3a800587ad6742f9377109cd75d341dee853",
+        "reason": "Literal mathematical candidate; detection is not verification"
+      }
+    },
+    {
+      "id": "generic_math_335_340_relation",
+      "problem_id": "ITA2025F2Q1",
+      "claim_type": "math_relation",
+      "raw_text": "b = 3",
+      "normalized_text": "b = 3",
+      "context": ". O resto tem grau menor que 2, então comparo com 2x + 1: a + 2 = 1 dá a = −1, e a + b = 2 dá então b = 3. Ou seja, a = −1 e b = 3, e o polinômio é x⁵⁷ − x¹⁴ + 3x⁷ + 1.",
+      "data": {
+        "expression": "b = 3"
+      },
+      "method": "generic_math",
+      "confidence": 1.0,
+      "grounding": {
+        "status": "grounded",
+        "validator": "generic-source-v1",
+        "extraction_method": "generic_math",
+        "source_text": "b = 3",
+        "source_start": 335,
+        "source_end": 340,
+        "source_sha256": "abfd6160505dd7a7f5cc483d474e94960ce9f27c2446394dbf3f0f135533f016",
+        "payload_sha256": "056bbedd7efe2c3ce2204b3757b4d63e87cb0dfd16e08b88f721cea224a2dba9",
+        "reason": "Literal mathematical candidate; detection is not verification"
+      }
+    },
+    {
+      "id": "generic_math_351_357_relation",
+      "problem_id": "ITA2025F2Q1",
+      "claim_type": "math_relation",
+      "raw_text": "a = −1",
+      "normalized_text": "a = −1",
+      "context": "au menor que 2, então comparo com 2x + 1: a + 2 = 1 dá a = −1, e a + b = 2 dá então b = 3. Ou seja, a = −1 e b = 3, e o polinômio é x⁵⁷ − x¹⁴ + 3x⁷ + 1.",
+      "data": {
+        "expression": "a = −1"
+      },
+      "method": "generic_math",
+      "confidence": 1.0,
+      "grounding": {
+        "status": "grounded",
+        "validator": "generic-source-v1",
+        "extraction_method": "generic_math",
+        "source_text": "a = −1",
+        "source_start": 351,
+        "source_end": 357,
+        "source_sha256": "abfd6160505dd7a7f5cc483d474e94960ce9f27c2446394dbf3f0f135533f016",
+        "payload_sha256": "0c2e82775885bf8bc4c13a50f20b3a800587ad6742f9377109cd75d341dee853",
+        "reason": "Literal mathematical candidate; detection is not verification"
+      }
+    },
+    {
+      "id": "generic_math_360_365_relation",
+      "problem_id": "ITA2025F2Q1",
+      "claim_type": "math_relation",
+      "raw_text": "b = 3",
+      "normalized_text": "b = 3",
+      "context": "que 2, então comparo com 2x + 1: a + 2 = 1 dá a = −1, e a + b = 2 dá então b = 3. Ou seja, a = −1 e b = 3, e o polinômio é x⁵⁷ − x¹⁴ + 3x⁷ + 1.",
+      "data": {
+        "expression": "b = 3"
+      },
+      "method": "generic_math",
+      "confidence": 1.0,
+      "grounding": {
+        "status": "grounded",
+        "validator": "generic-source-v1",
+        "extraction_method": "generic_math",
+        "source_text": "b = 3",
+        "source_start": 360,
+        "source_end": 365,
+        "source_sha256": "abfd6160505dd7a7f5cc483d474e94960ce9f27c2446394dbf3f0f135533f016",
+        "payload_sha256": "056bbedd7efe2c3ce2204b3757b4d63e87cb0dfd16e08b88f721cea224a2dba9",
+        "reason": "Literal mathematical candidate; detection is not verification"
+      }
+    },
+    {
+      "id": "generic_math_383_402_expression",
+      "problem_id": "ITA2025F2Q1",
+      "claim_type": "math_expression",
+      "raw_text": "x⁵⁷ − x¹⁴ + 3x⁷ + 1",
+      "normalized_text": "x⁵⁷ − x¹⁴ + 3x⁷ + 1",
+      "context": "m 2x + 1: a + 2 = 1 dá a = −1, e a + b = 2 dá então b = 3. Ou seja, a = −1 e b = 3, e o polinômio é x⁵⁷ − x¹⁴ + 3x⁷ + 1.",
+      "data": {
+        "expression": "x⁵⁷ − x¹⁴ + 3x⁷ + 1"
+      },
+      "method": "generic_math",
+      "confidence": 1.0,
+      "grounding": {
+        "status": "grounded",
+        "validator": "generic-source-v1",
+        "extraction_method": "generic_math",
+        "source_text": "x⁵⁷ − x¹⁴ + 3x⁷ + 1",
+        "source_start": 383,
+        "source_end": 402,
+        "source_sha256": "abfd6160505dd7a7f5cc483d474e94960ce9f27c2446394dbf3f0f135533f016",
+        "payload_sha256": "b7fc1bcde802dbb8ae1281d37fde7460116ed97722c0903e34864aff3210d6de",
+        "reason": "Literal mathematical candidate; detection is not verification"
+      }
+    }
+  ],
+  "student_claim_checks": [
+    {
+      "id": "student_claim_0",
+      "problem_id": "ITA2025F2Q1",
+      "claim_type": "f2q1_student_power_reduction",
+      "raw_text": "x^14=x",
+      "normalized_text": "powRem 14 = (0, 1)",
+      "lean_statement": "",
+      "method": "norm_num [powRem]",
+      "status": "unverified",
+      "compiled": false,
+      "lean_file": null,
+      "stdout": "",
+      "stderr": "",
+      "data": {
+        "exponent": 14,
+        "rhs": "x",
+        "const": 0,
+        "coeff": 1
+      },
+      "failure_category": "CLAIM_NOT_GROUNDED",
+      "refutation_lean_file": null,
+      "refutation_verified": false,
+      "refutation_stdout": "",
+      "refutation_stderr": "",
+      "grounding": {
+        "status": "unresolved",
+        "reason": "Original source binding missing or inconsistent with structured claim",
+        "extraction_method": "extract_f2q1_student_claims",
+        "validator": "local-source-v1",
+        "source_sha256": "abfd6160505dd7a7f5cc483d474e94960ce9f27c2446394dbf3f0f135533f016"
+      },
+      "formal_status": null
+    },
+    {
+      "id": "student_claim_1",
+      "problem_id": "ITA2025F2Q1",
+      "claim_type": "f2q1_student_power_reduction",
+      "raw_text": "x^7=x",
+      "normalized_text": "powRem 7 = (0, 1)",
+      "lean_statement": "powRem 7 = (0, 1)",
+      "method": "norm_num [powRem]",
+      "status": "verified",
+      "compiled": true,
+      "lean_file": "/Users/LinMarcolino/Documents/confia-lean-auditor/artifacts/worktrees/confia-dec10-integration/artifacts/runs/20261125T003359_219972/student_claim_checks/student_check_1_lean_file.lean",
+      "stdout": "",
+      "stderr": "",
+      "data": {
+        "exponent": 7,
+        "rhs": "x",
+        "const": 0,
+        "coeff": 1
+      },
+      "failure_category": null,
+      "refutation_lean_file": null,
+      "refutation_verified": false,
+      "refutation_stdout": "",
+      "refutation_stderr": "",
+      "grounding": {
+        "status": "grounded",
+        "reason": "Local re-extraction and independent representation validation agree",
+        "extraction_method": "extract_f2q1_student_claims",
+        "validator": "local-source-v1",
+        "source_sha256": "abfd6160505dd7a7f5cc483d474e94960ce9f27c2446394dbf3f0f135533f016",
+        "source_text": "Como x³ − 1 = (x − 1)(x² − x + 1), tenho x³ ≡ 1 e x⁶ ≡ 1 módulo o divisor, então reduzo os expoentes de 6 em 6: x⁵⁷ ≡ 1, x¹⁴ ≡ x², x⁷ ≡ x.",
+        "source_start": 0,
+        "source_end": 138,
+        "payload_sha256": "e860b7ddbb46bb0c4812f1652ca23999f25d8afd5ebf8fb14436d6b940067fa2"
+      },
+      "formal_status": "verified"
+    },
+    {
+      "id": "student_claim_2",
+      "problem_id": "ITA2025F2Q1",
+      "claim_type": "f2q1_student_coefficient_system",
+      "raw_text": "a+b=2; a=-1",
+      "normalized_text": "coefficient_system: sum_rhs=2, a_rhs=-1",
+      "lean_statement": "candidateA + candidateB = (2 : ℤ) ∧ candidateA = (-1 : ℤ)",
+      "method": "norm_num [candidateA, candidateB]",
+      "status": "verified",
+      "compiled": true,
+      "lean_file": "/Users/LinMarcolino/Documents/confia-lean-auditor/artifacts/worktrees/confia-dec10-integration/artifacts/runs/20261125T003359_219972/student_claim_checks/student_check_2_lean_file.lean",
+      "stdout": "",
+      "stderr": "",
+      "data": {
+        "sum_lhs": "candidateA + candidateB",
+        "sum_rhs": 2,
+        "a_equation_kind": "a",
+        "a_rhs": -1
+      },
+      "failure_category": null,
+      "refutation_lean_file": null,
+      "refutation_verified": false,
+      "refutation_stdout": "",
+      "refutation_stderr": "",
+      "grounding": {
+        "status": "grounded",
+        "reason": "Local re-extraction and independent representation validation agree",
+        "extraction_method": "extract_f2q1_student_claims",
+        "validator": "local-source-v1",
+        "source_sha256": "abfd6160505dd7a7f5cc483d474e94960ce9f27c2446394dbf3f0f135533f016",
+        "source_text": "O resto tem grau menor que 2, então comparo com 2x + 1: a + 2 = 1 dá a = −1, e a + b = 2 dá então b = 3.",
+        "source_start": 237,
+        "source_end": 341,
+        "payload_sha256": "2d0d3b05d933a497a5280540b9a1263d23d87cbb7238c1662f437c82081b2518"
+      },
+      "formal_status": "verified"
+    },
+    {
+      "id": "student_claim_3",
+      "problem_id": "ITA2025F2Q1",
+      "claim_type": "f2q1_student_final_answer",
+      "raw_text": "Ou seja, a = −1 e b = 3, e o polinômio é x⁵⁷ − x¹⁴ + 3x⁷ + 1.",
+      "normalized_text": "local final binding: {'a': -1, 'b': 3}",
+      "lean_statement": "candidateA = (-1 : ℤ) ∧ candidateB = (3 : ℤ)",
+      "method": "norm_num [candidateA, candidateB]",
+      "status": "verified",
+      "compiled": true,
+      "lean_file": "/Users/LinMarcolino/Documents/confia-lean-auditor/artifacts/worktrees/confia-dec10-integration/artifacts/runs/20261125T003359_219972/student_claim_checks/student_check_3_lean_file.lean",
+      "stdout": "",
+      "stderr": "",
+      "data": {
+        "a": -1,
+        "b": 3
+      },
+      "failure_category": null,
+      "refutation_lean_file": null,
+      "refutation_verified": false,
+      "refutation_stdout": "",
+      "refutation_stderr": "",
+      "grounding": {
+        "status": "grounded",
+        "reason": "Local re-extraction and independent representation validation agree",
+        "extraction_method": "extract_f2q1_student_claims",
+        "validator": "local-source-v1",
+        "source_sha256": "abfd6160505dd7a7f5cc483d474e94960ce9f27c2446394dbf3f0f135533f016",
+        "source_text": "Ou seja, a = −1 e b = 3, e o polinômio é x⁵⁷ − x¹⁴ + 3x⁷ + 1.",
+        "source_start": 342,
+        "source_end": 403,
+        "payload_sha256": "be23a67b116730b90830716d3d44324f7827e93f0736dfdb193d77e09a843c73"
+      },
+      "formal_status": "verified"
+    }
+  ],
+  "feedback": "A solução apresentou evidências suficientes para: Conclui corretamente a=-1 e b=3.. Avaliação incompleta; critérios indeterminados nesta execução: Usa a relação x^2=x-1, ou x^3=-1 e x^6=1, para reduzir x^57, x^14 e x^7.; Obtém o resto geral p(x) ≡ (a+b)x - a.; Compara com 2x+1 e monta o sistema a+b=2 e -a=1.. Nenhum zero foi atribuído por falta de verificação.",
+  "pedagogical_report": {
+    "summary": "A avaliação é inconclusiva; não há evidência suficiente para uma nota global. Nos critérios decididos: 2 de 2 pontos, sem extrapolar para a solução inteira. Parte das evidências pôde ser verificada nesta execução. Parte das verificações formais ficou indisponível nesta execução. Pontuação sugerida indisponível: SEMANTIC_REVIEW_REQUIRED.",
+    "result": "inconclusivo",
+    "score": null,
+    "max_score": 10.0,
+    "verdict": "inconclusivo",
+    "reliability": "confiabilidade alta",
+    "evidence_items": [
+      {
+        "id": "student_claim_0",
+        "title": "Interpretação pendente de revisão",
+        "result": "não conclusiva",
+        "evidence": null,
+        "reliability": "não avaliada",
+        "explanation": "Não foi possível vincular esta interpretação com segurança ao texto original. Uma eventual prova formal da proposição gerada não é atribuída ao estudante."
+      },
+      {
+        "id": "student_claim_1",
+        "title": "Afirmação do estudante",
+        "result": "conferida",
+        "evidence": "Como x³ − 1 = (x − 1)(x² − x + 1), tenho x³ ≡ 1 e x⁶ ≡ 1 módulo o divisor, então reduzo os expoentes de 6 em 6: x⁵⁷ ≡ 1, x¹⁴ ≡ x², x⁷ ≡ x.",
+        "reliability": "confiabilidade alta",
+        "explanation": "Esta afirmação foi vinculada ao texto original e conferida por checagem automática."
+      },
+      {
+        "id": "student_claim_2",
+        "title": "Afirmação do estudante",
+        "result": "conferida",
+        "evidence": "O resto tem grau menor que 2, então comparo com 2x + 1: a + 2 = 1 dá a = −1, e a + b = 2 dá então b = 3.",
+        "reliability": "confiabilidade alta",
+        "explanation": "Esta afirmação foi vinculada ao texto original e conferida por checagem automática."
+      },
+      {
+        "id": "student_claim_3",
+        "title": "Afirmação do estudante",
+        "result": "conferida",
+        "evidence": "Ou seja, a = −1 e b = 3, e o polinômio é x⁵⁷ − x¹⁴ + 3x⁷ + 1.",
+        "reliability": "confiabilidade alta",
+        "explanation": "Esta afirmação foi vinculada ao texto original e conferida por checagem automática."
+      },
+      {
+        "id": "power_reductions",
+        "title": "Usa a relação x^2=x-1, ou x^3=-1 e x^6=1, para reduzir x^57, x^14 e x^7.",
+        "result": "pontuação sugerida",
+        "evidence": "Como x³ − 1 = (x − 1)(x² − x + 1), tenho x³ ≡ 1 e x⁶ ≡ 1 módulo o divisor | x⁵⁷ ≡ 1, x¹⁴ ≡ x², x⁷ ≡ x. | Também uso x² ≡ x − 1.",
+        "reliability": "avaliação semântica, sem certificação formal",
+        "explanation": "Sugestão semântica pela rubrica: 0 de 3. A redução de x⁵⁷ está incorreta e compromete o critério. O aluno parte da identidade falsa x³−1=(x−1)(x²−x+1) e conclui x³≡1. Conferindo módulo x²−x+1, a relação x²≡x−1 implica x³≡−1; portanto, x⁵⁷=(x³)¹⁹≡−1, e não 1. Embora escreva corretamente x²≡x−1 e as reduções de x¹⁴ e x⁷, não corrige o erro referente a x⁵⁷."
+      },
+      {
+        "id": "reduced_polynomial_form",
+        "title": "Obtém o resto geral p(x) ≡ (a+b)x - a.",
+        "result": "indeterminado",
+        "evidence": null,
+        "reliability": "não avaliada",
+        "explanation": "Evidência insuficiente para decidir este critério nesta execução."
+      },
+      {
+        "id": "coefficient_system",
+        "title": "Compara com 2x+1 e monta o sistema a+b=2 e -a=1.",
+        "result": "pontuação sugerida",
+        "evidence": "Assim p(x) ≡ 1 + a(x − 1) + bx + 1 = ax + a + bx + 2 = (a + b)x + (a + 2). | O resto tem grau menor que 2, então comparo com 2x + 1: a + 2 = 1 dá a = −1, e a + b = 2 dá então b = 3.",
+        "reliability": "avaliação semântica, sem certificação formal",
+        "explanation": "Sugestão semântica pela rubrica: 0 de 2. A comparação apresentada usa o resto incorreto (a+b)x+(a+2), obtendo a+2=1 em vez de comparar o termo constante correto −a com 1. Conferindo matematicamente, x³≡−1 e x⁵⁷≡−1; além disso, a(x−1)=ax−a, não ax+a. Esses erros não se cancelam na expressão geral do resto. Embora a+2=1 seja equivalente a −a=1 e produza os valores corretos, essa equivalência final não corrige a premissa incorreta, não retificada, da comparação avaliada."
+      }
+    ],
+    "attention_points": [
+      "Avaliação semântica pela rubrica; sem certificação formal."
+    ],
+    "technical_record_available": true,
+    "verification_status": "technical_error",
+    "assessment_status": "partial",
+    "evaluated_score": 2.0,
+    "evaluated_max_score": 2.0,
+    "scoring_policy": "semantic-b-minimal.v1",
+    "coverage": 0.2,
+    "estimated_points": null,
+    "needs_review": true,
+    "unscorable_reason": "SEMANTIC_REVIEW_REQUIRED"
+  },
+  "artifact_dir": "/Users/LinMarcolino/Documents/confia-lean-auditor/artifacts/worktrees/confia-dec10-integration/artifacts/runs/20261125T003359_219972",
+  "reproducibility": {
+    "status": "recorded",
+    "record": {
+      "manifest": {
+        "schema_version": "1.0",
+        "manifest_id": "rep_8ed55120aab14708b34c1b4ef5fd7af4",
+        "generated_at": "2026-11-25T00:33:58.709565Z",
+        "problem_id": "ITA2025F2Q1",
+        "code_identity": {
+          "git_commit": {
+            "value": "8c1727482954465ba9195f10570b178f9de46056",
+            "metadata_source": "git",
+            "reason": null
+          },
+          "worktree_dirty": false,
+          "worktree_dirty_source": "git",
+          "build_id": {
+            "value": null,
+            "metadata_source": "unavailable",
+            "reason": "not_available"
+          },
+          "dirty_fingerprint_sha256": null
+        },
+        "application_identity": {
+          "project_version": {
+            "value": "0.1.0",
+            "metadata_source": "project",
+            "reason": null
+          },
+          "api_version": "0.4.0",
+          "audit_bridge_version": {
+            "value": null,
+            "metadata_source": "unavailable",
+            "reason": "not_versioned"
+          },
+          "conversion_version": "segments-v1",
+          "capture_schema_version": "1.0",
+          "reproducibility_schema_version": "1.0"
+        },
+        "problem_assets": [
+          {
+            "logical_name": "problem.json",
+            "relative_path": "problems/ITA2025F2Q1/problem.json",
+            "sha256": "905d9242c796b5e43eaf139466e0edc32f8c4869b046050777eb585849e098bb",
+            "size_bytes": 864,
+            "required": true,
+            "status": "available",
+            "reason": null
+          },
+          {
+            "logical_name": "rubric.json",
+            "relative_path": "problems/ITA2025F2Q1/rubric.json",
+            "sha256": "3f91c0b4c804d54656e296298d421fd7669cd22a2b9b67333a31a695459b6bfc",
+            "size_bytes": 1017,
+            "required": true,
+            "status": "available",
+            "reason": null
+          },
+          {
+            "logical_name": "microclaims.json",
+            "relative_path": "problems/ITA2025F2Q1/microclaims.json",
+            "sha256": "6c277d31f286d2fc2cef0d75e96895ce21cd7c68d22f79b65c656844c757fb0b",
+            "size_bytes": 1590,
+            "required": true,
+            "status": "available",
+            "reason": null
+          },
+          {
+            "logical_name": "formal_statement",
+            "relative_path": "ConfiaLeanAuditor/Problems/ITA2025F2Q1/Statement.lean",
+            "sha256": "4d6acb8b7e8d8c52dc92ebea465ecd49633c86093ff27857e564cc12d79fcf1a",
+            "size_bytes": 3545,
+            "required": true,
+            "status": "available",
+            "reason": null
+          }
+        ],
+        "configuration_assets": [
+          {
+            "logical_name": "pyproject.toml",
+            "relative_path": "pyproject.toml",
+            "sha256": "9cc46c96d49acdd066d4219687f78f0652a293a3a8562ceff376a1a717b49587",
+            "size_bytes": 528,
+            "required": true,
+            "status": "available",
+            "reason": null
+          },
+          {
+            "logical_name": "lean-toolchain",
+            "relative_path": "lean-toolchain",
+            "sha256": "db7bb24b756d745bbde83fe92718b51bd3625dae3701ba0f598d0eedcd3f3028",
+            "size_bytes": 25,
+            "required": true,
+            "status": "available",
+            "reason": null
+          },
+          {
+            "logical_name": "lakefile.toml",
+            "relative_path": "lakefile.toml",
+            "sha256": "1a256e6f5f182586c3e0f3d78e02cac3cf3cf22f11088382790351a3455ca5aa",
+            "size_bytes": 382,
+            "required": true,
+            "status": "available",
+            "reason": null
+          },
+          {
+            "logical_name": "lake-manifest.json",
+            "relative_path": "lake-manifest.json",
+            "sha256": "670c704b256c73ce48046b838bf9562b92bf128a2f0239f521e2f9ec404f6219",
+            "size_bytes": 3130,
+            "required": true,
+            "status": "available",
+            "reason": null
+          }
+        ],
+        "execution_configuration": {
+          "llm_formal_steps_enabled": false,
+          "llm_model": {
+            "value": null,
+            "metadata_source": "unavailable",
+            "reason": "not_available"
+          }
+        },
+        "python_environment": {
+          "version": "3.9.6 (default, Oct 19 2026, 19:18:13) \n[Clang 21.0.0 (clang-2100.4.1.1)]",
+          "implementation": "CPython",
+          "major": 3,
+          "minor": 9,
+          "micro": 6,
+          "operating_system": "Darwin",
+          "release": "27.2.0",
+          "machine": "arm64",
+          "dependency_manifest_filename": "python_dependencies.txt",
+          "dependency_manifest_sha256": "bcfeb472aded6092c2c15e79779513ca116c030078ced7b664fd7132e572e33b",
+          "dependency_manifest_size_bytes": 573,
+          "dependency_count": 34
+        },
+        "formal_environment": {
+          "lean_version": {
+            "value": "4.28.0",
+            "metadata_source": "command",
+            "reason": null
+          },
+          "lake_version": {
+            "value": "5.0.0-src+7e01a1b",
+            "metadata_source": "command",
+            "reason": null
+          },
+          "toolchain": {
+            "value": "leanprover/lean4:v4.28.0",
+            "metadata_source": "project",
+            "reason": null
+          },
+          "mathlib_revision": {
+            "value": "8f9d9cff6bd728b17a24e163c9402775d9e6a365",
+            "metadata_source": "lake-manifest",
+            "reason": null
+          },
+          "dependencies": [
+            {
+              "name": "Cli",
+              "revision": {
+                "value": "4f10f47646cb7d5748d6f423f4a07f98f7bbcc9e",
+                "metadata_source": "lake-manifest",
+                "reason": null
+              }
+            },
+            {
+              "name": "LeanSearchClient",
+              "revision": {
+                "value": "c5d5b8fe6e5158def25cd28eb94e4141ad97c843",
+                "metadata_source": "lake-manifest",
+                "reason": null
+              }
+            },
+            {
+              "name": "Qq",
+              "revision": {
+                "value": "b8f98e9087e02c8553945a2c5abf07cec8e798c3",
+                "metadata_source": "lake-manifest",
+                "reason": null
+              }
+            },
+            {
+              "name": "aesop",
+              "revision": {
+                "value": "f642a64c76df8ba9cb53dba3b919425a0c2aeaf1",
+                "metadata_source": "lake-manifest",
+                "reason": null
+              }
+            },
+            {
+              "name": "batteries",
+              "revision": {
+                "value": "495c008c3e3f4fb4256ff5582ddb3abf3198026f",
+                "metadata_source": "lake-manifest",
+                "reason": null
+              }
+            },
+            {
+              "name": "importGraph",
+              "revision": {
+                "value": "85b59af46828c029a9168f2f9c35119bd0721e6e",
+                "metadata_source": "lake-manifest",
+                "reason": null
+              }
+            },
+            {
+              "name": "mathlib",
+              "revision": {
+                "value": "8f9d9cff6bd728b17a24e163c9402775d9e6a365",
+                "metadata_source": "lake-manifest",
+                "reason": null
+              }
+            },
+            {
+              "name": "plausible",
+              "revision": {
+                "value": "55c8532eb21ec9f6d565d51d96b8ca50bd1fbef3",
+                "metadata_source": "lake-manifest",
+                "reason": null
+              }
+            },
+            {
+              "name": "proofwidgets",
+              "revision": {
+                "value": "be3b2e63b1bbf496c478cef98b86972a37c1417d",
+                "metadata_source": "lake-manifest",
+                "reason": null
+              }
+            }
+          ]
+        },
+        "limitations": [
+          "Metadados de reprodutibilidade registrados; reprodução bit a bit não é garantida.",
+          "SHA-256 fornece integridade técnica interna; não é assinatura digital nem prova de autoria.",
+          "Versões e revisões declaradas não atestam os binários ou o conteúdo instalado de dependências.",
+          "O toolchain registra a configuração do projeto; overrides ou PATH não reconhecidos deixam versões indisponíveis.",
+          "Captura pontual antes do pipeline; alterações concorrentes do ambiente não são impedidas."
+        ]
+      },
+      "manifest_sha256": "133ef302690f6f9a07f25ca60ea90a9225f61dd92e256c297ccf057abd7a149e",
+      "filename": "reproducibility_manifest.json",
+      "size_bytes": 5316
+    },
+    "error_code": null
+  },
+  "scoring_policy": "semantic-b-minimal.v1",
+  "evaluated_score": 2.0,
+  "evaluated_max_score": 2.0,
+  "coverage": 0.2,
+  "estimated_points": null,
+  "needs_review": true,
+  "unscorable_reason": "SEMANTIC_REVIEW_REQUIRED"
+}

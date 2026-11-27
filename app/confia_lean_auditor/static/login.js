@@ -14,7 +14,16 @@ form.addEventListener("submit", async event => {
     });
     document.querySelector("#password").value = "";
     if (!response.ok) { error.textContent = "Credenciais inválidas."; return; }
-    location.replace("/");
+    const user = await response.json();
+    const destination = {
+      STUDENT: "/#student/home",
+      TEACHER: "/#teacher/home",
+      SCHOOL_MANAGER: "/#management/home",
+      NETWORK_MANAGER: "/#management/home",
+    }[user.role];
+    location.replace(destination || "/");
+    // Login and the authenticated shell share /; changing only the hash does not load the shell.
+    location.reload();
   } catch (_exception) {
     document.querySelector("#password").value = "";
     error.textContent = "Não foi possível entrar. Tente novamente.";

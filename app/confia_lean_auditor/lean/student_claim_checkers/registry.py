@@ -24,10 +24,19 @@ def check_student_claims_for_problem(
     problem_id: str,
     student_claims: List[StudentClaim],
     run_id: str,
+    solution: str | None = None,
 ) -> List[StudentClaimCheck]:
     """Dispatch dynamic Lean checks for concrete student claims."""
     if not student_claims:
         return []
+
+    if solution is not None:
+        from dataclasses import replace
+        from confia_lean_auditor.student_claims.grounding import source_matches
+        student_claims = [claim if (not claim.grounding or claim.grounding.get("status") != "grounded"
+                                  or source_matches(claim, solution)) else replace(
+            claim, grounding={"status": "unresolved", "reason": "Source or span does not match this audit input"}
+        ) for claim in student_claims]
 
     if problem_id == "ITA2025F2Q8":
         return check_f2q8_student_claims(

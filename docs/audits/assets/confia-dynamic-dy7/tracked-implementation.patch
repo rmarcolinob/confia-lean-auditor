@@ -1,0 +1,256 @@
+diff --git a/app/confia_lean_auditor/static/tme/full-exam.js b/app/confia_lean_auditor/static/tme/full-exam.js
+index df3cc52..7d89d65 100644
+--- a/app/confia_lean_auditor/static/tme/full-exam.js
++++ b/app/confia_lean_auditor/static/tme/full-exam.js
+@@ -207,6 +207,35 @@
+         n('p',`ConfIA × HumanDecision · N: ${stats.confia_vs_human_decision.N} · MAE: ${number(stats.confia_vs_human_decision.MAE)}`),
+         n('p',`HumanDecision × HumanGold · N: ${stats.human_decision_vs_gold.N} · MAE: ${number(stats.human_decision_vs_gold.MAE)}`),
+         n('p','HumanDecision é a decisão feita nesta interface. HumanGold é a correção externa independente. Comparações descritivas, sem inferência causal.'));
++      function dynamicMetrics(metrics,verdict='Projeção atual · dataset ainda não selecionado'){
++        const section=n('section',undefined,'card');section.append(n('h3','Dynamic · avaliação experimental'),message(verdict));
++        for(const stratum of metrics.strata||[]){
++          const m=stratum.metrics;section.append(n('h4',`${stratum.profile} · ${stratum.split} · ${stratum.source_kind} · N: ${m.N}`));
++          for(const [stage,v] of Object.entries(m.stages))section.append(n('p',`${stage} · N: ${v.score.N} · MAE: ${number(v.score.MAE)} · Exata: ${pct(v.score.exact_score_agreement)} · Falso crédito: ${pct(v.criterion.false_credit_rate)} · Crédito perdido: ${pct(v.criterion.missed_credit_rate)}`));
++          const g=m.stages.G2;section.append(n('p',`Revisão: ${pct(g.review_rate)} · Cobertura de automação: ${pct(g.automation_coverage)} · Risco entre automatizados: ${pct(g.unsafe_automation_rate)}`),
++            n('p',`Override humano: ${pct(m.human_override.rate)} · Falhas técnicas: ${m.technical_failure_cases} · Exclusões: ${Object.entries(m.exclusions).map(([k,v])=>`${k}: ${v}`).join(', ')||'0'}`));
++        }
++        section.append(n('p','G0: grader; G1: reviewer verificado; G2: reconciliação; G3: decisão humana. Amostra sintética não demonstra eficácia em alunos reais.'));
++        return section;
++      }
++      if(data.dynamic_metrics?.N){
++        panel.append(dynamicMetrics(data.dynamic_metrics));
++        const history=n('section',undefined,'card');
++        history.append(btn('Execuções experimentais',async()=>{
++          try{
++            const items=await api(`${base}/runs`);history.replaceChildren(n('h3','Execuções imutáveis · SHADOW_EVALUATION'));
++            if(!items.length)history.append(message('Nenhum benchmark congelado. Registre o protocolo e o dataset antes da execução.'));
++            for(const item of items){
++              const entry=n('section',undefined,'card');entry.append(n('p',item.verdict.status));
++              entry.append(btn('Ver métricas da execução',async()=>{try{const value=await api(`${base}/runs/${item.id}`);entry.append(dynamicMetrics(value.metrics,value.verdict.status));}catch(_){entry.append(message('Não foi possível carregar a execução.'));}},'secondary'));
++              for(const [suffix,label] of [['export.json','JSON da execução'],['export.csv','CSV por estágio'],['report.md','Relatório Markdown']]){
++                const link=n('a',label,'button secondary');link.href=`${base}/runs/${item.id}/${suffix}`;link.download=suffix;entry.append(link);
++              }
++              history.append(entry);
++            }
++          }catch(_){history.append(message('Não foi possível carregar o histórico experimental.'));}
++        },'secondary'));panel.append(history);
++      }
+       const select=n('select');select.setAttribute('aria-label','Seleção das provas');
+       for(const [value,label] of [['finalized','Finalizadas'],['current','Estado atual']]){const o=n('option',label);o.value=value;select.append(o);}select.value=filters.selection;
+       select.addEventListener('change',()=>certification(assessmentId,examId,{...filters,selection:select.value}));
+@@ -221,7 +250,8 @@
+       const source=n('input'),dataset=n('input'),content=n('textarea');source.required=true;dataset.required=true;content.required=true;content.rows=6;
+       source.setAttribute('aria-label','Fonte do gold');dataset.setAttribute('aria-label','Versão do dataset');content.setAttribute('aria-label','Conteúdo do gold');
+       source.pattern=dataset.pattern='[A-Za-z0-9_.:-]+';source.maxLength=100;dataset.maxLength=80;
+-      content.placeholder='assessment_id,participant_code,question_id,gold_score,max_score';
++      content.placeholder=data.dynamic_metrics?.N?'JSON: inclua binding de versões e evaluation com avaliador/cegamento.':'assessment_id,participant_code,question_id,gold_score,max_score';
++      if(data.dynamic_metrics?.N){format.value='JSON';form.append(n('p','Dynamic exige JSON com binding, evaluation e versões explícitas. O gold pode ser importado antes de executar o grader pela API compartilhada.'));}
+       form.append(n('h3','Importar gold externo'),n('p','Use códigos pseudônimos. Cada importação substitui o conjunto ativo e preserva o histórico. CSV: cinco colunas acima. JSON: lista de registros com essas mesmas chaves; rubric_gold é opcional.'),
+         field('Formato',format),field('Fonte do gold',source),field('Versão do dataset',dataset),field('Conteúdo do gold',content));
+       const status=message('');let busy=false;const submit=n('button','Importar gold');submit.type='submit';form.append(submit,status);
+diff --git a/app/confia_lean_auditor/static/tme/index.html b/app/confia_lean_auditor/static/tme/index.html
+index b15ba8f..9b15a00 100644
+--- a/app/confia_lean_auditor/static/tme/index.html
++++ b/app/confia_lean_auditor/static/tme/index.html
+@@ -41,7 +41,7 @@
+   <script src="/static/tme/home.js?v=tme-synthetic-demo-03"></script>
+   <script src="/static/tme/correction-workspace.js?v=dy6-01"></script>
+   <script src="/static/tme/secondary-views.js?v=dy6-01"></script>
+-  <script src="/static/tme/full-exam.js?v=dy6-01"></script>
++  <script src="/static/tme/full-exam.js?v=dy7-01-dy6-01"></script>
+   <script src="/static/dynamic.js?v=dy6-01"></script>
+   <script src="/static/dynamic-assessment.js?v=dy6"></script>
+   <script src="/static/tme/tme.js?v=dy6-01"></script>
+diff --git a/app/confia_lean_auditor/tme/certification.py b/app/confia_lean_auditor/tme/certification.py
+index a9cf59c..c4fabcf 100644
+--- a/app/confia_lean_auditor/tme/certification.py
++++ b/app/confia_lean_auditor/tme/certification.py
+@@ -205,7 +205,14 @@ def build(aid,user,selection='finalized',engine_mode=None,gold_version=None):
+                         rubric_gold=g['rubric_gold'] if g else [],timestamps=dict(captured_at=detail.submission.created_at.isoformat(),
+                             audit_started_at=audit['started_at'] if audit else None,audit_completed_at=audit['completed_at'] if audit else None,
+                             human_decided_at=d['decided_at'] if d else None,finalized_at=final['finalized_at'] if final else None))
+-                    rows.append(record.model_dump(mode='json'))
++                    row=record.model_dump(mode='json')
++                    if case.dynamic_context:
++                        from .certification_dynamic import project as dynamic_projection
++                        row['dynamic_evaluation']=dynamic_projection(case,run,d,g,current,doc.assessment.dynamic_policy_profile,doc.assessment.feedback_policy)
++                        if row['dynamic_evaluation']['exclusions']:
++                            row['dynamic_evaluation']['reference_gold_score']=row['human_gold_score']
++                            row.update(human_gold_score=None,rubric_gold=[],absolute_error_vs_gold=None,signed_error_vs_gold=None)
++                    rows.append(row)
+             if included:
+                 events.extend(exam_events)
+                 finals.extend({k:f[k] for k in ('final_correction_id','submission_id','version','previous_final_correction_id','snapshot_sha256','finalized_at')} for f in summary['final_corrections'])
+@@ -221,7 +228,8 @@ def build(aid,user,selection='finalized',engine_mode=None,gold_version=None):
+             filters=dict(selection=selection,engine_mode=engine_mode,gold_version=gold_version),counts=counts,
+             engine_versions=[dict(engine_mode=m,engine_version=v) for m,v in sorted({(r['engine_mode'],r['engine_version']) for r in rows if r['engine_mode']})],
+             gold=gold_metadata(selected),records_sha256=canonical_sha256(rows),events_sha256=canonical_sha256(events),**code_version())
+-        return dict(manifest=manifest,records=rows,events=events,event_coverage=coverage(),gold_history=[gold_metadata(v) for v in versions],
++        from .certification_experiment_metrics import report as dynamic_metrics
++        return dict(dynamic_metrics=dynamic_metrics(rows),manifest=manifest,records=rows,events=events,event_coverage=coverage(),gold_history=[gold_metadata(v) for v in versions],
+             metrics=metrics(rows,audits_history,questions_history),audit_history=audits_history,question_history=questions_history,finalization_history=finals)
+ 
+ 
+diff --git a/app/confia_lean_auditor/tme/certification_gold.py b/app/confia_lean_auditor/tme/certification_gold.py
+index 7bd44f8..674ed41 100644
+--- a/app/confia_lean_auditor/tme/certification_gold.py
++++ b/app/confia_lean_auditor/tme/certification_gold.py
+@@ -6,7 +6,7 @@ import io
+ import json
+ import os
+ from typing import Optional, Literal
+-from pydantic import Field, model_validator
++from pydantic import Field, model_validator, model_serializer
+ from fastapi import HTTPException
+ 
+ from confia_lean_auditor.assessments.store import assessment_store
+@@ -19,14 +19,27 @@ from confia_lean_auditor.teacher_decisions.models import Points
+ from .exam_store import exam_store, ExamConflict, sealed, read_sealed
+ 
+ 
++from .certification_models import GoldBinding, GoldEvaluation
++
++
+ class GoldRubric(SubmissionModel):
+     rubric_item_id: str = Field(min_length=1, max_length=100, pattern=r'^[A-Za-z0-9_.:-]+$')
+     gold_points: Points
+     max_points: Points
+ 
++    comment: Optional[str] = Field(default=None,max_length=1000)
++    adjudication_status: Optional[Literal['SINGLE_RATER','ADJUDICATED','UNRESOLVED']] = None
++
++    @model_serializer(mode='wrap')
++    def compatible(self,handler):
++        data=handler(self)
++        for key in ('comment','adjudication_status'):
++            if getattr(self,key) is None:data.pop(key,None)
++        return data
++
+     @model_validator(mode='after')
+     def bounds(self):
+-        if self.max_points <= 0 or self.gold_points > self.max_points: raise ValueError('invalid rubric score')
++        if self.max_points < 0 or self.gold_points > self.max_points: raise ValueError('invalid rubric score')
+         return self
+ 
+ 
+@@ -39,6 +52,16 @@ class GoldRow(SubmissionModel):
+     rubric_gold: list[GoldRubric] = Field(default_factory=list, max_length=100)
+     scorer_reference: Optional[str] = Field(default=None, min_length=1, max_length=80, pattern=r'^[A-Za-z0-9_.:-]+$')
+ 
++    binding: Optional[GoldBinding] = None
++    evaluation: Optional[GoldEvaluation] = None
++
++    @model_serializer(mode='wrap')
++    def compatible(self,handler):
++        data=handler(self)
++        for key in ('binding','evaluation'):
++            if getattr(self,key) is None:data.pop(key,None)
++        return data
++
+     @model_validator(mode='after')
+     def bounds(self):
+         if self.max_score <= 0 or self.gold_score > self.max_score: raise ValueError('invalid gold score')
+@@ -150,7 +173,32 @@ def import_gold(aid, request, user):
+             if key in seen: raise ValueError('duplicate participant/question')
+             seen.add(key)
+             # Rubric IDs/limits validated against a persisted audit, never a guessed rubric.
+-            if row.rubric_gold:
++            if item.dynamic_context:
++                if not row.binding or not row.evaluation:raise ValueError('Dynamic gold requires explicit version binding and evaluator metadata')
++                from .store import case_store
++                from confia_lean_auditor.dynamic.grading_context import case_context
++                case=case_store().read(row.binding.question_attempt_id)
++                submission=exam_store()._detail(case.exam_submission_id,user).submission
++                if submission.assessment_id!=aid or submission.participant_id!=key[0] or case.assessment_item_id!=key[1]:
++                    raise ValueError('gold attempt association mismatch')
++                from confia_lean_auditor.submissions.router import store as submissions
++                tid,rev=row.binding.transcription_version_id.split(':')
++                history_=submissions().transcription_history(tid)
++                if history_.transcription.submission_id!=case.submission_id or not any(r.revision_number==int(rev) for r in history_.revisions):
++                    raise ValueError('unknown gold transcription')
++                # Resolve the approved rubric without exposing agent predictions to the gold author.
++                _,_,rubric,_=case_context(case)
++                catalog={c.criterion_id:c.max_points for c in rubric.criteria}
++                if row.rubric_gold:
++                    if {r.rubric_item_id for r in row.rubric_gold}!=set(catalog):raise ValueError('criterion gold must cover the complete rubric')
++                    if sum(r.gold_points for r in row.rubric_gold)!=row.gold_score:raise ValueError('criterion gold total mismatch')
++                for rating in row.evaluation.ratings:
++                    if rating.score>row.max_score:raise ValueError('rater score exceeds maximum')
++                    if rating.criterion_points and (set(rating.criterion_points)!=set(catalog) or sum(rating.criterion_points.values())!=rating.score or any(v>catalog[k] for k,v in rating.criterion_points.items())):
++                        raise ValueError('invalid rater criterion scores')
++                for r in row.rubric_gold:
++                    if r.rubric_item_id not in catalog or Decimal(str(catalog[r.rubric_item_id]))!=r.max_points:raise ValueError('gold criterion mismatch')
++            elif row.rubric_gold:
+                 from .certification import rubric_catalog
+                 catalog = rubric_catalog(aid,item.assessment_item_id,user)
+                 if not catalog: raise ValueError('rubric gold requires an observed rubric')
+diff --git a/app/confia_lean_auditor/tme/certification_router.py b/app/confia_lean_auditor/tme/certification_router.py
+index 3196c40..9f33d2e 100644
+--- a/app/confia_lean_auditor/tme/certification_router.py
++++ b/app/confia_lean_auditor/tme/certification_router.py
+@@ -53,3 +53,65 @@ async def import_gold(assessment_id: str,request: Request,response: Response,
+     value=await run_in_threadpool(guarded,gold.import_gold,assessment_id,body,user)
+     response.headers['Cache-Control']='no-store'
+     return cert.gold_metadata(value)
++
++
++from . import certification_runs as runs
++from .certification_models import FreezeDataset, CreateCertificationRun
++
++
++@router.post('/datasets',status_code=201)
++def freeze_dataset(assessment_id: str,body: FreezeDataset,response: Response,user=Depends(require_tme_evaluator)):
++    response.headers['Cache-Control']='no-store'
++    return guarded(runs.freeze,assessment_id,body,user)
++
++
++@router.post('/runs',status_code=201)
++def create_run(assessment_id: str,body: CreateCertificationRun,response: Response,user=Depends(require_tme_evaluator)):
++    response.headers['Cache-Control']='no-store'
++    return guarded(runs.create,assessment_id,body,user)
++
++
++@router.get('/runs')
++def list_runs(assessment_id: str,response: Response,user=Depends(require_tme_evaluator)):
++    response.headers['Cache-Control']='no-store'
++    return guarded(runs.listing,assessment_id,user)
++
++
++@router.get('/runs/{run_id}')
++@router.get('/runs/{run_id}/export.json')
++def get_run(assessment_id: str,run_id: str,response: Response,user=Depends(require_tme_evaluator)):
++    response.headers['Cache-Control']='no-store'
++    return guarded(runs.read,assessment_id,run_id,user)
++
++
++@router.get('/runs/{run_id}/export.csv')
++def run_csv(assessment_id: str,run_id: str,user=Depends(require_tme_evaluator)):
++    value=guarded(runs.read,assessment_id,run_id,user)
++    return Response(runs.export_csv(value),media_type='text/csv',headers={'Cache-Control':'no-store','Content-Disposition':'attachment; filename="dynamic-certification.csv"'})
++
++
++@router.get('/runs/{run_id}/report.md')
++def run_report(assessment_id: str,run_id: str,user=Depends(require_tme_evaluator)):
++    value=guarded(runs.read,assessment_id,run_id,user)
++    return Response(runs.markdown(value),media_type='text/markdown',headers={'Cache-Control':'no-store','Content-Disposition':'attachment; filename="dynamic-certification.md"'})
++
++
++from . import certification_paired as paired
++
++
++@router.post('/comparisons',status_code=201)
++def compare_engines(assessment_id: str,body: paired.PairedRequest,response: Response,user=Depends(require_tme_evaluator)):
++    response.headers['Cache-Control']='no-store'
++    return guarded(paired.compare,assessment_id,body,user)
++
++
++@router.get('/comparisons/{comparison_id}')
++def get_comparison(assessment_id: str,comparison_id: str,response: Response,user=Depends(require_tme_evaluator)):
++    response.headers['Cache-Control']='no-store'
++    return guarded(runs.read,assessment_id,comparison_id,user)
++
++
++@router.get('/datasets/{dataset_id}')
++def get_dataset(assessment_id: str,dataset_id: str,response: Response,user=Depends(require_tme_evaluator)):
++    response.headers['Cache-Control']='no-store'
++    return guarded(runs.read,assessment_id,dataset_id,user)

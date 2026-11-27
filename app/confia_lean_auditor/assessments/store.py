@@ -32,6 +32,14 @@ def definition_hash(document: AssessmentDocument) -> str:
               "school_id", "classroom_id", "academic_year", "opens_at", "closes_at")
     raw = assessment.model_dump(mode="json")
     definition = {field: raw[field] for field in fields}
+    if assessment.scope == "TME":
+        definition["scope"] = "TME"
+    if assessment.dynamic_policy_profile is not None:
+        definition.update(dynamic_policy_profile=assessment.dynamic_policy_profile, dynamic_policy_version=assessment.dynamic_policy_version)
+    if assessment.correction_mode == "DYNAMIC":
+        definition.update(correction_mode=assessment.correction_mode, feedback_policy=assessment.feedback_policy, supersedes_assessment_id=assessment.supersedes_assessment_id)
+    if assessment.school_policy is not None:
+        definition["school_policy"] = assessment.school_policy.model_dump(mode="json")
     definition["items"] = [item.model_dump(mode="json") for item in sorted(document.items, key=lambda x: x.order)]
     return hashlib.sha256(json.dumps(definition, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8")).hexdigest()
 
@@ -101,6 +109,29 @@ class AssessmentStore:
         with self._locked():
             return self._read(assessment_id)
 
+    def create_tme(self, *, title, instructions, teacher_user_id, academic_year,
+                   opens_at, closes_at, items, assessment_id=None, dynamic_policy_profile=None, dynamic_policy_version=None):
+        """Publish a complete roster atomically; no school/user is fabricated."""
+        assessment_id = assessment_id or f"asmt_{uuid4().hex}"
+        now = datetime.now(timezone.utc)
+        document = AssessmentDocument(assessment=Assessment(
+            assessment_id=assessment_id, title=title, instructions=instructions,
+            teacher_user_id=teacher_user_id, academic_year=academic_year,
+            opens_at=opens_at, closes_at=closes_at, created_at=now,
+            scope="TME", schema_version="2.0", dynamic_policy_profile=dynamic_policy_profile, dynamic_policy_version=dynamic_policy_version), items=[
+                AssessmentItem(assessment_id=assessment_id, assessment_item_id=f"ait_{uuid4().hex}",
+                    problem_id=item.problem_id, points=item.points, order=index)
+                for index, item in enumerate(items, 1)])
+        if not document.items:
+            raise AssessmentConflict("assessment requires at least one item")
+        document.assessment = document.assessment.model_copy(update={"status": "PUBLISHED",
+            "published_at": now, "definition_sha256": definition_hash(document)})
+        with self._locked():
+            if self._path(assessment_id).exists():
+                raise AssessmentConflict("assessment ID already exists")
+            self._write(document)
+        return document
+
     def migrate_demo_title(self, assessment_id, *, expected_document, old_title, new_title):
         """Rename a prevalidated demo publication without changing its other fields."""
         with self._locked():
@@ -134,6 +165,8 @@ class AssessmentStore:
             document = self._read(assessment_id)
             if document.assessment.status != "DRAFT":
                 raise AssessmentConflict("published assessment is immutable")
+            if document.assessment.correction_mode == "DYNAMIC":
+                raise AssessmentConflict("use the versioned Dynamic assessment workflow")
             changed = operation(document)
             self._write(changed)
             return changed
@@ -188,6 +221,7 @@ class AssessmentStore:
             if document.assessment.status != "PUBLISHED":
                 raise AssessmentConflict("draft cannot be closed")
             changed = AssessmentDocument(assessment=document.assessment.model_copy(update={
-                "status": "CLOSED", "closed_at": datetime.now(timezone.utc)}), items=document.items)
+                "status": "CLOSED", "closed_at": datetime.now(timezone.utc)}), items=document.items,
+                dynamic_revision=document.dynamic_revision,dynamic_events=document.dynamic_events)
             self._write(changed)
             return changed

@@ -1,0 +1,11 @@
+{
+  "data": {
+    "case_id": "case_a4cc1942dec74862a1e5d067c2eaf464",
+    "assessment_id": "asmt_05295da920cb441090aeacf99aa78906",
+    "assessment_definition_sha256": "9204f4f2e8f4385c57e6889900fbf38962f8de58fb0eacaa4e009dcd9a5db173",
+    "policy_profile": "FORMATIVE_LIST",
+    "policy_version": "dynamic-safe-automation.v1",
+    "configured_at": "2026-11-12T03:41:19.412608+00:00"
+  },
+  "sha256": "f1beaa17b7ccb1f7b5a375d71a5fbfc21e1eed475bd3784cd3df39dee9a3708d"
+}

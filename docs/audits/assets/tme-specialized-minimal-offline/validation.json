@@ -1,0 +1,60 @@
+{
+  "branch": "codex/dec10-functional-integration",
+  "base_commit": "f68fa23",
+  "policy": "semantic-b-minimal.v1",
+  "production_files": [
+    "app/confia_lean_auditor/semantic_policy/tme.py",
+    "app/confia_lean_auditor/semantic_policy/tme_context.py",
+    "app/confia_lean_auditor/tme/accepted_audit.py",
+    "app/confia_lean_auditor/tme/correction_engine.py",
+    "app/confia_lean_auditor/static/tme/tme.js"
+  ],
+  "test_files": [
+    "tests/test_tme_minimal_functional.py",
+    "tests/test_dec10_specialized.py",
+    "tests/test_tme_question_audit.py",
+    "tests/test_tme_finalization.py",
+    "tests/js/test_tme_accepted_integration.cjs",
+    "tests/js/test_question_audit.cjs",
+    "tests/fixtures/tme_p1_real_run/"
+  ],
+  "real_audit_files_unchanged": true,
+  "paid_api_calls": 0,
+  "scoring_and_checker_changes": false,
+  "tests": {
+    "broad": {
+      "passed": 958,
+      "failed": 1,
+      "deselected": 1,
+      "log": "broad-regression.txt",
+      "resolution": "The pre-existing finalization concurrency test used real Lean via the generic service despite the offline fixture. Its worker now matches the fixture use_lean=False; all 9 finalization tests passed afterwards. Production Lean configuration is unchanged."
+    },
+    "final_focused": {
+      "passed": 258,
+      "failed": 0,
+      "log": "final-focused.txt"
+    },
+    "alternative_contradiction_proof": {
+      "passed": 1,
+      "failed": 0,
+      "log": "alternative-proof.txt"
+    },
+    "finalization": {
+      "passed": 9,
+      "failed": 0,
+      "log": "finalization.txt"
+    },
+    "javascript": {
+      "passed": 177,
+      "failed": 0,
+      "log": "javascript.txt"
+    }
+  },
+  "unresolved_test_failures": [],
+  "notes": [
+    "Suite counts overlap and must not be summed.",
+    "The final focused run followed the last context-binding change; it covers all 190 existing fixtures, the 15 numeric matrix cases, simulated external outcomes, API persistence and incomplete/retry state.",
+    "The real Lean certificate smoke test was intentionally deselected in the broad offline run. Formal verified/refuted/timeout integration is covered by existing fixtures and simulated checker outcomes.",
+    "The pilot server was not restarted and no real audit was submitted."
+  ]
+}

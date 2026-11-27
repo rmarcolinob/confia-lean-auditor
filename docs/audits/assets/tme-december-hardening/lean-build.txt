@@ -1,0 +1,13 @@
+✔ [940/1149] Built ConfiaLeanAuditor.Basic (446ms)
+✔ [8027/8038] Built ConfiaLeanAuditor.Problems.ITA2025Q8.Statement (70s)
+✔ [8028/8038] Built ConfiaLeanAuditor.Problems.ITA2025Q1.Statement (71s)
+✔ [8029/8038] Built ConfiaLeanAuditor.Problems.ITA2025Q4.Statement (71s)
+✔ [8030/8038] Built ConfiaLeanAuditor.Problems.ITA2025Q3.Statement (71s)
+✔ [8031/8038] Built ConfiaLeanAuditor.Problems.ITA2025Q5.Statement (71s)
+✔ [8032/8038] Built ConfiaLeanAuditor.Problems.ITA2025F2Q5.Statement (73s)
+✔ [8033/8038] Built ConfiaLeanAuditor.Problems.ITA2025F2Q1.Statement (73s)
+✔ [8034/8038] Built ConfiaLeanAuditor.Problems.ITA2025F2Q6.Statement (73s)
+✔ [8035/8038] Built ConfiaLeanAuditor.Problems.ITA2025F2Q3.Statement (73s)
+✔ [8036/8038] Built ConfiaLeanAuditor.Problems.ITA2025F2Q8.Statement (75s)
+✔ [8037/8038] Built ConfiaLeanAuditor (11s)
+Build completed successfully (8038 jobs).

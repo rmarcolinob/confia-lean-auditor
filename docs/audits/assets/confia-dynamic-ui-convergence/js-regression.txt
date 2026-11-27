@@ -1,0 +1,3240 @@
+TAP version 13
+# Subtest: selected exam contains its summary and deliveries before the next exam
+ok 1 - selected exam contains its summary and deliveries before the next exam
+  ---
+  duration_ms: 69.986458
+  type: 'test'
+  ...
+# Subtest: delivered cell opens exact Submission and its display context; missing cell has no action
+ok 2 - delivered cell opens exact Submission and its display context; missing cell has no action
+  ---
+  duration_ms: 3.985917
+  type: 'test'
+  ...
+# Subtest: switching exams replaces detail, scope and selection without leftover rows
+ok 3 - switching exams replaces detail, scope and selection without leftover rows
+  ---
+  duration_ms: 1.398542
+  type: 'test'
+  ...
+# Subtest: late responses cannot restore the previous exam after selection changes
+ok 4 - late responses cannot restore the previous exam after selection changes
+  ---
+  duration_ms: 1.43
+  type: 'test'
+  ...
+# Subtest: class changes clear detail and invalidate pending progress requests
+ok 5 - class changes clear detail and invalidate pending progress requests
+  ---
+  duration_ms: 0.975875
+  type: 'test'
+  ...
+# Subtest: progress counts only this exam items and maps correction states without duplicate student cards
+ok 6 - progress counts only this exam items and maps correction states without duplicate student cards
+  ---
+  duration_ms: 10.503
+  type: 'test'
+  ...
+# Subtest: denied or mismatched progress never shows previous student deliveries
+ok 7 - denied or mismatched progress never shows previous student deliveries
+  ---
+  duration_ms: 3.514125
+  type: 'test'
+  ...
+# Subtest: draft shows local summary without requesting progress; blocked navigation does not open a Submission
+ok 8 - draft shows local summary without requesting progress; blocked navigation does not open a Submission
+  ---
+  duration_ms: 3.721875
+  type: 'test'
+  ...
+# Subtest: selection brings an offscreen exam header into view instead of scrolling to the deliveries bottom
+ok 9 - selection brings an offscreen exam header into view instead of scrolling to the deliveries bottom
+  ---
+  duration_ms: 1.209
+  type: 'test'
+  ...
+# Subtest: score 0 preserves the global suggestion and raw run
+ok 10 - score 0 preserves the global suggestion and raw run
+  ---
+  duration_ms: 10.247916
+  type: 'test'
+  ...
+# Subtest: score 7 preserves the global suggestion and raw run
+ok 11 - score 7 preserves the global suggestion and raw run
+  ---
+  duration_ms: 1.460292
+  type: 'test'
+  ...
+# Subtest: score 10 preserves the global suggestion and raw run
+ok 12 - score 10 preserves the global suggestion and raw run
+  ---
+  duration_ms: 1.628209
+  type: 'test'
+  ...
+# Subtest: score null preserves the global suggestion and raw run
+ok 13 - score null preserves the global suggestion and raw run
+  ---
+  duration_ms: 2.395584
+  type: 'test'
+  ...
+# Subtest: all criteria, evidence, claims and selective formal statuses remain visible with no score substitution
+ok 14 - all criteria, evidence, claims and selective formal statuses remain visible with no score substitution
+  ---
+  duration_ms: 2.192
+  type: 'test'
+  ...
+# Subtest: proven refutation and a technical failure keep independent semantics
+ok 15 - proven refutation and a technical failure keep independent semantics
+  ---
+  duration_ms: 1.334292
+  type: 'test'
+  ...
+# Subtest: missing pedagogical report still shows the full rubric and uses existing feedback
+ok 16 - missing pedagogical report still shows the full rubric and uses existing feedback
+  ---
+  duration_ms: 3.120875
+  type: 'test'
+  ...
+# Subtest: teacher and IMAGE_SCAN pilot use the same complete run and semantic view; manual decision remains available
+ok 17 - teacher and IMAGE_SCAN pilot use the same complete run and semantic view; manual decision remains available
+  ---
+  duration_ms: 121.710125
+  type: 'test'
+  ...
+# Subtest: teacher and DIGITAL_INK pilot use the same complete run and semantic view; manual decision remains available
+ok 18 - teacher and DIGITAL_INK pilot use the same complete run and semantic view; manual decision remains available
+  ---
+  duration_ms: 13.162666
+  type: 'test'
+  ...
+# Subtest: login sends only credentials and clears the password on success
+ok 19 - login sends only credentials and clears the password on success
+  ---
+  duration_ms: 3.367709
+  type: 'test'
+  ...
+# Subtest: login failure reveals no role selector or credential detail
+ok 20 - login failure reveals no role selector or credential detail
+  ---
+  duration_ms: 0.701042
+  type: 'test'
+  ...
+# Subtest: automatic page changes show saving until the store confirms success
+ok 21 - automatic page changes show saving until the store confirms success
+  ---
+  duration_ms: 26.447875
+  type: 'test'
+  ...
+# Subtest: legacy and delimited math render on load/change and survive collapse/expand
+ok 22 - legacy and delimited math render on load/change and survive collapse/expand
+  ---
+  duration_ms: 4.203166
+  type: 'test'
+  ...
+# Subtest: failed saves stay visible and exporting does not imply local persistence
+ok 23 - failed saves stay visible and exporting does not imply local persistence
+  ---
+  duration_ms: 2.881667
+  type: 'test'
+  ...
+# Subtest: an earlier completed save cannot mark newer pending changes as saved
+ok 24 - an earlier completed save cannot mark newer pending changes as saved
+  ---
+  duration_ms: 3.197
+  type: 'test'
+  ...
+# Subtest: recovery confirms persistence and a new unsaved draft resets the indicator
+ok 25 - recovery confirms persistence and a new unsaved draft resets the indicator
+  ---
+  duration_ms: 22.702334
+  type: 'test'
+  ...
+# Subtest: a recovered frozen copy is not labelled as an editable draft
+ok 26 - a recovered frozen copy is not labelled as an editable draft
+  ---
+  duration_ms: 4.409917
+  type: 'test'
+  ...
+# Subtest: unavailable storage is visible even before the first edit
+ok 27 - unavailable storage is visible even before the first edit
+  ---
+  duration_ms: 2.048125
+  type: 'test'
+  ...
+# Subtest: capture supplies the shared curated registry and current problem id on load/change
+ok 28 - capture supplies the shared curated registry and current problem id on load/change
+  ---
+  duration_ms: 4.733292
+  type: 'test'
+  ...
+# Subtest: a failed presentation fetch does not disable capture or automatic saving
+ok 29 - a failed presentation fetch does not disable capture or automatic saving
+  ---
+  duration_ms: 9.099667
+  type: 'test'
+  ...
+# Subtest: submission is disabled for drafts and receipt is shown only after the server confirms
+ok 30 - submission is disabled for drafts and receipt is shown only after the server confirms
+  ---
+  duration_ms: 9.611416
+  type: 'test'
+  ...
+# Subtest: failed submission preserves snapshot/local status and allows a retry
+ok 31 - failed submission preserves snapshot/local status and allows a retry
+  ---
+  duration_ms: 3.061667
+  type: 'test'
+  ...
+# Subtest: receipt for an earlier snapshot cannot appear on a new editable draft
+ok 32 - receipt for an earlier snapshot cannot appear on a new editable draft
+  ---
+  duration_ms: 6.062
+  type: 'test'
+  ...
+# Subtest: D7 opt-in area no gold and explicit SHADOW, never fabricated zero MAE
+ok 33 - D7 opt-in area no gold and explicit SHADOW, never fabricated zero MAE
+  ---
+  duration_ms: 84.519417
+  type: 'test'
+  ...
+# Subtest: D7 gold metrics and CSV JSON links preserve cohort filters
+ok 34 - D7 gold metrics and CSV JSON links preserve cohort filters
+  ---
+  duration_ms: 6.786916
+  type: 'test'
+  ...
+# Subtest: D7 import CSV refreshes independent gold metrics and asks no student identity
+ok 35 - D7 import CSV refreshes independent gold metrics and asks no student identity
+  ---
+  duration_ms: 7.530167
+  type: 'test'
+  ...
+# Subtest: D7 JSON import envelope and conflict feedback preserve input
+ok 36 - D7 JSON import envelope and conflict feedback preserve input
+  ---
+  duration_ms: 5.61525
+  type: 'test'
+  ...
+# Subtest: network management drills down through real aggregate endpoints only
+ok 37 - network management drills down through real aggregate endpoints only
+  ---
+  duration_ms: 11.531875
+  type: 'test'
+  ...
+# Subtest: school manager starts in own school and never loads network overview
+ok 38 - school manager starts in own school and never loads network overview
+  ---
+  duration_ms: 1.623375
+  type: 'test'
+  ...
+# Subtest: automatic transcription can be analyzed without a review gate; exact revision receipt is retained
+ok 39 - automatic transcription can be analyzed without a review gate; exact revision receipt is retained
+  ---
+  duration_ms: 109.258333
+  type: 'test'
+  ...
+# Subtest: tabs, comparison, zoom, analysis disclosure and decision draft preserve DOM and avoid refetching
+ok 40 - tabs, comparison, zoom, analysis disclosure and decision draft preserve DOM and avoid refetching
+  ---
+  duration_ms: 14.75425
+  type: 'test'
+  ...
+# Subtest: optional editing publishes a new revision and preserves unsaved decision
+ok 41 - optional editing publishes a new revision and preserves unsaved decision
+  ---
+  duration_ms: 6.793458
+  type: 'test'
+  ...
+# Subtest: queue filters, context, progress and null score remain explicit
+ok 42 - queue filters, context, progress and null score remain explicit
+  ---
+  duration_ms: 15.93225
+  type: 'test'
+  ...
+# Subtest: shell isolates correction navigation and supports keyboard, collapse and responsive stacking
+ok 43 - shell isolates correction navigation and supports keyboard, collapse and responsive stacking
+  ---
+  duration_ms: 5.961667
+  type: 'test'
+  ...
+# Subtest: splitter supports pointer capture, keyboard bounds, reset and persisted width
+ok 44 - splitter supports pointer capture, keyboard bounds, reset and persisted width
+  ---
+  duration_ms: 8.149208
+  type: 'test'
+  ...
+# Subtest: semantic tabs use roving focus and preserve page, zoom and decision fields
+ok 45 - semantic tabs use roving focus and preserve page, zoom and decision fields
+  ---
+  duration_ms: 17.216834
+  type: 'test'
+  ...
+# Subtest: criteria, coverage and selected evidence retain server meaning and expansion state
+ok 46 - criteria, coverage and selected evidence retain server meaning and expansion state
+  ---
+  duration_ms: 9.14525
+  type: 'test'
+  ...
+# Subtest: evidence selection exposes a null mapping hook without inventing offsets
+ok 47 - evidence selection exposes a null mapping hook without inventing offsets
+  ---
+  duration_ms: 4.997625
+  type: 'test'
+  ...
+# Subtest: suggestion action distinguishes a valid zero from an undetermined score
+ok 48 - suggestion action distinguishes a valid zero from an undetermined score
+  ---
+  duration_ms: 10.729334
+  type: 'test'
+  ...
+# Subtest: queue filters survive modern results navigation independently of workspace state
+ok 49 - queue filters survive modern results navigation independently of workspace state
+  ---
+  duration_ms: 7.788
+  type: 'test'
+  ...
+# Subtest: analysis drawer opens, retains decision draft and closes with Escape restoring focus
+ok 50 - analysis drawer opens, retains decision draft and closes with Escape restoring focus
+  ---
+  duration_ms: 4.918542
+  type: 'test'
+  ...
+# Subtest: create an explicit Dynamic problem; AI suggestion cannot send a request
+ok 51 - create an explicit Dynamic problem; AI suggestion cannot send a request
+  ---
+  duration_ms: 50.384375
+  type: 'test'
+  ...
+# Subtest: manual criteria total, editing, stable IDs and approval only after saved draft
+ok 52 - manual criteria total, editing, stable IDs and approval only after saved draft
+  ---
+  duration_ms: 17.335209
+  type: 'test'
+  ...
+# Subtest: approval uses saved revision; history remains visible after statement change
+ok 53 - approval uses saved revision; history remains visible after statement change
+  ---
+  duration_ms: 6.598
+  type: 'test'
+  ...
+# Subtest: invalid total blocks save, removal updates total, texts render without HTML injection
+ok 54 - invalid total blocks save, removal updates total, texts render without HTML injection
+  ---
+  duration_ms: 4.222208
+  type: 'test'
+  ...
+# Subtest: removed criterion IDs are not reused for a different criterion in later edits
+ok 55 - removed criterion IDs are not reused for a different criterion in later edits
+  ---
+  duration_ms: 2.767
+  type: 'test'
+  ...
+# Subtest: prepare shows loading, real request and checked evidence with no automatic rubric or approval
+ok 56 - prepare shows loading, real request and checked evidence with no automatic rubric or approval
+  ---
+  duration_ms: 46.512125
+  type: 'test'
+  ...
+# Subtest: AI draft warnings are visible and acknowledgement gates explicit approval; edits require save
+ok 57 - AI draft warnings are visible and acknowledgement gates explicit approval; edits require save
+  ---
+  duration_ms: 7.549208
+  type: 'test'
+  ...
+# Subtest: regeneration has reason and new version; own rubric sends teacher replacement flag
+ok 58 - regeneration has reason and new version; own rubric sends teacher replacement flag
+  ---
+  duration_ms: 41.61725
+  type: 'test'
+  ...
+# Subtest: failed preparation offers retry and never fabricates a candidate
+ok 59 - failed preparation offers retry and never fabricates a candidate
+  ---
+  duration_ms: 2.238042
+  type: 'test'
+  ...
+# Subtest: historical preparation after statement change is visible but cannot enable suggestion
+ok 60 - historical preparation after statement change is visible but cannot enable suggestion
+  ---
+  duration_ms: 2.730333
+  type: 'test'
+  ...
+# Subtest: provider failure surfaces error with no phantom draft
+ok 61 - provider failure surfaces error with no phantom draft
+  ---
+  duration_ms: 2.012584
+  type: 'test'
+  ...
+# Subtest: Nova presents both routes in the existing shell; historical generic modules remain without Dynamic
+ok 62 - Nova presents both routes in the existing shell; historical generic modules remain without Dynamic
+  ---
+  duration_ms: 55.548833
+  type: 'test'
+  ...
+# Subtest: unified creation → preparation → suggestion → edit → explicit approval retains provenance and history
+ok 63 - unified creation → preparation → suggestion → edit → explicit approval retains provenance and history
+  ---
+  duration_ms: 75.084584
+  type: 'test'
+  ...
+# Subtest: deep link restores selected preparation; Nova questão clears it without discarding stored versions
+ok 64 - deep link restores selected preparation; Nova questão clears it without discarding stored versions
+  ---
+  duration_ms: 4.39375
+  type: 'test'
+  ...
+# Subtest: late document read cannot restore a previous preparation over Home or change its URL
+ok 65 - late document read cannot restore a previous preparation over Home or change its URL
+  ---
+  duration_ms: 3.297417
+  type: 'test'
+  ...
+# Subtest: in-flight preparation blocks navigation and preserves route until response; then navigation resumes
+ok 66 - in-flight preparation blocks navigation and preserves route until response; then navigation resumes
+  ---
+  duration_ms: 5.948375
+  type: 'test'
+  ...
+# Subtest: unauthorized or missing preparation stays in the same shell with a recoverable error
+ok 67 - unauthorized or missing preparation stays in the same shell with a recoverable error
+  ---
+  duration_ms: 5.82
+  type: 'test'
+  ...
+# Subtest: Nova questão invalidates an initial pending selection and cannot be overwritten by its response
+ok 68 - Nova questão invalidates an initial pending selection and cannot be overwritten by its response
+  ---
+  duration_ms: 11.736291
+  type: 'test'
+  ...
+# Subtest: a restored workspace invalidates a pending Dynamic read before it can rewrite the URL
+ok 69 - a restored workspace invalidates a pending Dynamic read before it can rewrite the URL
+  ---
+  duration_ms: 19.993834
+  type: 'test'
+  ...
+# Subtest: D6 summary names pending questions, incomplete totals and opens a blocker
+ok 70 - D6 summary names pending questions, incomplete totals and opens a blocker
+  ---
+  duration_ms: 55.916709
+  type: 'test'
+  ...
+# Subtest: D6 preview separates totals, review and adjustment before explicit final confirmation
+ok 71 - D6 preview separates totals, review and adjustment before explicit final confirmation
+  ---
+  duration_ms: 26.169917
+  type: 'test'
+  ...
+# Subtest: D6 finalized question disables edits and audit; reopening preserves decisions and versions
+ok 72 - D6 finalized question disables edits and audit; reopening preserves decisions and versions
+  ---
+  duration_ms: 54.395209
+  type: 'test'
+  ...
+# Subtest: D6 double click is suppressed and stale finalization displays refreshed summary
+ok 73 - D6 double click is suppressed and stale finalization displays refreshed summary
+  ---
+  duration_ms: 40.75675
+  type: 'test'
+  ...
+# Subtest: D6 finalized exam is visible on home with total and adjustment count
+ok 74 - D6 finalized exam is visible on home with total and adjustment count
+  ---
+  duration_ms: 25.377166
+  type: 'test'
+  ...
+# Subtest: production module receives a whole PDF, maps many-to-many and opens persisted question URLs
+ok 75 - production module receives a whole PDF, maps many-to-many and opens persisted question URLs
+  ---
+  duration_ms: 90.031708
+  type: 'test'
+  ...
+# Subtest: image reorder and rotation preserve original bytes; legacy digital path remains reachable
+ok 76 - image reorder and rotation preserve original bytes; legacy digital path remains reachable
+  ---
+  duration_ms: 27.916417
+  type: 'test'
+  ...
+# Subtest: upload failure retains files and stable idempotency key for retry
+ok 77 - upload failure retains files and stable idempotency key for retry
+  ---
+  duration_ms: 12.085375
+  type: 'test'
+  ...
+# Subtest: question deep link restores mapped original; late new-capture fetch cannot replace navigation
+ok 78 - question deep link restores mapped original; late new-capture fetch cannot replace navigation
+  ---
+  duration_ms: 12.739959
+  type: 'test'
+  ...
+# Subtest: D5 accepts suggestion separately, confirms question, preserves audit and reopens with history
+ok 79 - D5 accepts suggestion separately, confirms question, preserves audit and reopens with history
+  ---
+  duration_ms: 163.385834
+  type: 'test'
+  ...
+# Subtest: D5 adjusts total with bounds and reason while keeping agent suggestion and review flag
+ok 80 - D5 adjusts total with bounds and reason while keeping agent suggestion and review flag
+  ---
+  duration_ms: 24.89725
+  type: 'test'
+  ...
+# Subtest: D5 editing confirmed reading invalidates it, reanalysis requires new confirmation and keeps Q2 isolated
+ok 81 - D5 editing confirmed reading invalidates it, reanalysis requires new confirmation and keeps Q2 isolated
+  ---
+  duration_ms: 52.515125
+  type: 'test'
+  ...
+# Subtest: D5 confirmation processing prevents double click and stale conflict refreshes without confirming
+ok 82 - D5 confirmation processing prevents double click and stale conflict refreshes without confirming
+  ---
+  duration_ms: 11.355084
+  type: 'test'
+  ...
+# Subtest: D5 failed or absent suggestion cannot be accepted or adjusted
+ok 83 - D5 failed or absent suggestion cannot be accepted or adjusted
+  ---
+  duration_ms: 10.857959
+  type: 'test'
+  ...
+# Subtest: canvas, preview and PNG share thinner lines without changing saved data
+ok 84 - canvas, preview and PNG share thinner lines without changing saved data
+  ---
+  duration_ms: 7.491416
+  type: 'test'
+  ...
+# Subtest: canvas, preview and PNG share thinner dots without changing saved data
+ok 85 - canvas, preview and PNG share thinner dots without changing saved data
+  ---
+  duration_ms: 0.858333
+  type: 'test'
+  ...
+# Subtest: the live stroke uses the same visual width before it is committed
+ok 86 - the live stroke uses the same visual width before it is committed
+  ---
+  duration_ms: 0.627375
+  type: 'test'
+  ...
+# Subtest: viewport resizing and scrolling preserve logical pointer alignment and reported pressure
+ok 87 - viewport resizing and scrolling preserve logical pointer alignment and reported pressure
+  ---
+  duration_ms: 0.891041
+  type: 'test'
+  ...
+# Subtest: landscape/portrait rotation keeps recovered ink, pointer alignment and PNG geometry
+ok 88 - landscape/portrait rotation keeps recovered ink, pointer alignment and PNG geometry
+  ---
+  duration_ms: 1.46425
+  type: 'test'
+  ...
+# Subtest: erase, undo and redo reconstruct the exact active state
+ok 89 - erase, undo and redo reconstruct the exact active state
+  ---
+  duration_ms: 11.189167
+  type: 'test'
+  ...
+# Subtest: pages keep their strokes isolated
+ok 90 - pages keep their strokes isolated
+  ---
+  duration_ms: 0.402583
+  type: 'test'
+  ...
+# Subtest: a frozen snapshot is independent from a continued draft
+ok 91 - a frozen snapshot is independent from a continued draft
+  ---
+  duration_ms: 0.337083
+  type: 'test'
+  ...
+# Subtest: drafts for different questions have distinct identities and content
+ok 92 - drafts for different questions have distinct identities and content
+  ---
+  duration_ms: 0.164083
+  type: 'test'
+  ...
+# Subtest: TME notebook completes preview, submission and recognition using only case routes
+ok 93 - TME notebook completes preview, submission and recognition using only case routes
+  ---
+  duration_ms: 32.461875
+  type: 'test'
+  ...
+# Subtest: embedded exam uses the configured item submission route and keeps official recognition separate
+ok 94 - embedded exam uses the configured item submission route and keeps official recognition separate
+  ---
+  duration_ms: 5.103125
+  type: 'test'
+  ...
+# Subtest: successful send automatically starts official recognition and shows its review result
+ok 95 - successful send automatically starts official recognition and shows its review result
+  ---
+  duration_ms: 3.166208
+  type: 'test'
+  ...
+# Subtest: automatic failure preserves receipt; retry reuses a lost key and advances a failed run
+ok 96 - automatic failure preserves receipt; retry reuses a lost key and advances a failed run
+  ---
+  duration_ms: 5.144541
+  type: 'test'
+  ...
+# Subtest: embedded controls use the capture handlers and reject stale or foreign commands
+ok 97 - embedded controls use the capture handlers and reject stale or foreign commands
+  ---
+  duration_ms: 12.243375
+  type: 'test'
+  ...
+# Subtest: embedded recognition reports loading, review preview and retry through the bridge
+ok 98 - embedded recognition reports loading, review preview and retry through the bridge
+  ---
+  duration_ms: 2.852
+  type: 'test'
+  ...
+# Subtest: reload resends the same snapshot but replays the same official execution key
+ok 99 - reload resends the same snapshot but replays the same official execution key
+  ---
+  duration_ms: 10.191917
+  type: 'test'
+  ...
+# Subtest: plain catalog text is preserved literally, including HTML-like text
+ok 100 - plain catalog text is preserved literally, including HTML-like text
+  ---
+  duration_ms: 25.332125
+  type: 'test'
+  ...
+# Subtest: mixed text renders $…$ as inline math
+ok 101 - mixed text renders $…$ as inline math
+  ---
+  duration_ms: 15.251292
+  type: 'test'
+  ...
+# Subtest: mixed text renders $$…$$ as display math
+ok 102 - mixed text renders $$…$$ as display math
+  ---
+  duration_ms: 5.938917
+  type: 'test'
+  ...
+# Subtest: mixed text renders \\(…\\) as inline math
+ok 103 - mixed text renders \\(…\\) as inline math
+  ---
+  duration_ms: 6.036375
+  type: 'test'
+  ...
+# Subtest: mixed text renders \\[…\\] as display math
+ok 104 - mixed text renders \\[…\\] as display math
+  ---
+  duration_ms: 9.487584
+  type: 'test'
+  ...
+# Subtest: invalid LaTeX stays legible while the following valid math still renders
+ok 105 - invalid LaTeX stays legible while the following valid math still renders
+  ---
+  duration_ms: 8.88525
+  type: 'test'
+  ...
+# Subtest: missing renderer preserves the source and shows a readable fallback
+ok 106 - missing renderer preserves the source and shows a readable fallback
+  ---
+  duration_ms: 0.902125
+  type: 'test'
+  ...
+# Subtest: untrusted TeX cannot create image or link elements
+ok 107 - untrusted TeX cannot create image or link elements
+  ---
+  duration_ms: 6.550541
+  type: 'test'
+  ...
+# Subtest: legacy polynomial gets braced multi-digit exponents, without changing prose
+ok 108 - legacy polynomial gets braced multi-digit exponents, without changing prose
+  ---
+  duration_ms: 9.550042
+  type: 'test'
+  ...
+# Subtest: actual catalog polynomial, divisor and remainder all render conservatively
+ok 109 - actual catalog polynomial, divisor and remainder all render conservatively
+  ---
+  duration_ms: 7.687084
+  type: 'test'
+  ...
+# Subtest: simple powers, parenthesized polynomials and equalities are supported
+ok 110 - simple powers, parenthesized polynomials and equalities are supported
+  ---
+  duration_ms: 13.13425
+  type: 'test'
+  ...
+# Subtest: delimited math uses the explicit layer, without guessing the surrounding text
+ok 111 - delimited math uses the explicit layer, without guessing the surrounding text
+  ---
+  duration_ms: 4.627958
+  type: 'test'
+  ...
+# Subtest: ordinary prose, isolated letters and hyphenated words remain literal
+ok 112 - ordinary prose, isolated letters and hyphenated words remain literal
+  ---
+  duration_ms: 5.016625
+  type: 'test'
+  ...
+# Subtest: unsafe or unsupported legacy source stays literal: x^2+
+ok 113 - unsafe or unsupported legacy source stays literal: x^2+
+  ---
+  duration_ms: 10.816459
+  type: 'test'
+  ...
+# Subtest: unsafe or unsupported legacy source stays literal: x^2+texto+x^3
+ok 114 - unsafe or unsupported legacy source stays literal: x^2+texto+x^3
+  ---
+  duration_ms: 7.497167
+  type: 'test'
+  ...
+# Subtest: unsafe or unsupported legacy source stays literal: (x^2
+ok 115 - unsafe or unsupported legacy source stays literal: (x^2
+  ---
+  duration_ms: 5.622834
+  type: 'test'
+  ...
+# Subtest: unsafe or unsupported legacy source stays literal: x^2)
+ok 116 - unsafe or unsupported legacy source stays literal: x^2)
+  ---
+  duration_ms: 5.1965
+  type: 'test'
+  ...
+# Subtest: unsafe or unsupported legacy source stays literal: x^2/y
+ok 117 - unsafe or unsupported legacy source stays literal: x^2/y
+  ---
+  duration_ms: 39.128292
+  type: 'test'
+  ...
+# Subtest: unsafe or unsupported legacy source stays literal: (x^2 + 1/x)^6
+ok 118 - unsafe or unsupported legacy source stays literal: (x^2 + 1/x)^6
+  ---
+  duration_ms: 9.696208
+  type: 'test'
+  ...
+# Subtest: unsafe or unsupported legacy source stays literal: x^2^3
+ok 119 - unsafe or unsupported legacy source stays literal: x^2^3
+  ---
+  duration_ms: 5.771042
+  type: 'test'
+  ...
+# Subtest: unsafe or unsupported legacy source stays literal: x^1234567
+ok 120 - unsafe or unsupported legacy source stays literal: x^1234567
+  ---
+  duration_ms: 5.146875
+  type: 'test'
+  ...
+# Subtest: unsafe or unsupported legacy source stays literal: aux^2
+ok 121 - unsafe or unsupported legacy source stays literal: aux^2
+  ---
+  duration_ms: 5.057416
+  type: 'test'
+  ...
+# Subtest: unsafe or unsupported legacy source stays literal: máx^2
+ok 122 - unsafe or unsupported legacy source stays literal: máx^2
+  ---
+  duration_ms: 4.307292
+  type: 'test'
+  ...
+# Subtest: unsafe or unsupported legacy source stays literal: x^2é
+ok 123 - unsafe or unsupported legacy source stays literal: x^2é
+  ---
+  duration_ms: 28.335041
+  type: 'test'
+  ...
+# Subtest: unsafe or unsupported legacy source stays literal: αx^2
+ok 124 - unsafe or unsupported legacy source stays literal: αx^2
+  ---
+  duration_ms: 5.698334
+  type: 'test'
+  ...
+# Subtest: unsafe or unsupported legacy source stays literal: x^2foo
+ok 125 - unsafe or unsupported legacy source stays literal: x^2foo
+  ---
+  duration_ms: 4.86875
+  type: 'test'
+  ...
+# Subtest: unsafe or unsupported legacy source stays literal: x^2 =
+ok 126 - unsafe or unsupported legacy source stays literal: x^2 =
+  ---
+  duration_ms: 4.375709
+  type: 'test'
+  ...
+# Subtest: unsafe or unsupported legacy source stays literal: x^2 * y
+ok 127 - unsafe or unsupported legacy source stays literal: x^2 * y
+  ---
+  duration_ms: 4.217625
+  type: 'test'
+  ...
+# Subtest: unsafe or unsupported legacy source stays literal: x^2 × y
+ok 128 - unsafe or unsupported legacy source stays literal: x^2 × y
+  ---
+  duration_ms: 6.945875
+  type: 'test'
+  ...
+# Subtest: unsafe or unsupported legacy source stays literal: x^2+1,5
+ok 129 - unsafe or unsupported legacy source stays literal: x^2+1,5
+  ---
+  duration_ms: 6.532333
+  type: 'test'
+  ...
+# Subtest: unsafe or unsupported legacy source stays literal: 0.5x^2
+ok 130 - unsafe or unsupported legacy source stays literal: 0.5x^2
+  ---
+  duration_ms: 4.037458
+  type: 'test'
+  ...
+# Subtest: unsafe or unsupported legacy source stays literal: 0,5x^2
+ok 131 - unsafe or unsupported legacy source stays literal: 0,5x^2
+  ---
+  duration_ms: 5.539167
+  type: 'test'
+  ...
+# Subtest: unsafe or unsupported legacy source stays literal: 1/x^2
+ok 132 - unsafe or unsupported legacy source stays literal: 1/x^2
+  ---
+  duration_ms: 5.007167
+  type: 'test'
+  ...
+# Subtest: unsafe or unsupported legacy source stays literal: a_n+x^2
+ok 133 - unsafe or unsupported legacy source stays literal: a_n+x^2
+  ---
+  duration_ms: 4.423042
+  type: 'test'
+  ...
+# Subtest: unsafe or unsupported legacy source stays literal: \\sqrt{x^2}
+ok 134 - unsafe or unsupported legacy source stays literal: \\sqrt{x^2}
+  ---
+  duration_ms: 10.578875
+  type: 'test'
+  ...
+# Subtest: unsafe or unsupported legacy source stays literal: `x^2`
+ok 135 - unsafe or unsupported legacy source stays literal: `x^2`
+  ---
+  duration_ms: 4.488375
+  type: 'test'
+  ...
+# Subtest: unsafe or unsupported legacy source stays literal: <img src=x onerror=alert(1)> x^2
+ok 136 - unsafe or unsupported legacy source stays literal: <img src=x onerror=alert(1)> x^2
+  ---
+  duration_ms: 3.750167
+  type: 'test'
+  ...
+# Subtest: unsafe or unsupported legacy source stays literal: https://example.com/x^2.json
+ok 137 - unsafe or unsupported legacy source stays literal: https://example.com/x^2.json
+  ---
+  duration_ms: 4.807209
+  type: 'test'
+  ...
+# Subtest: unsafe or unsupported legacy source stays literal: x^2x^2x^2x^2x^2x^2x^2x^2x^2x^2x^2x^2x^2x^2x^2x^2x^2x^2x^2x^2
+ok 138 - unsafe or unsupported legacy source stays literal: x^2x^2x^2x^2x^2x^2x^2x^2x^2x^2x^2x^2x^2x^2x^2x^2x^2x^2x^2x^2
+  ---
+  duration_ms: 4.445959
+  type: 'test'
+  ...
+# Subtest: legacy renderer failure preserves the exact source: {"missing":true}
+ok 139 - legacy renderer failure preserves the exact source: {"missing":true}
+  ---
+  duration_ms: 0.795208
+  type: 'test'
+  ...
+# Subtest: legacy renderer failure preserves the exact source: {"failingLegacy":true}
+ok 140 - legacy renderer failure preserves the exact source: {"failingLegacy":true}
+  ---
+  duration_ms: 3.873375
+  type: 'test'
+  ...
+# Subtest: curated ITA2025Q1 renders every math segment and preserves literal prose
+ok 141 - curated ITA2025Q1 renders every math segment and preserves literal prose
+  ---
+  duration_ms: 10.666083
+  type: 'test'
+  ...
+# Subtest: curated ITA2025Q1 mismatch preserves the exact received statement
+ok 142 - curated ITA2025Q1 mismatch preserves the exact received statement
+  ---
+  duration_ms: 5.496417
+  type: 'test'
+  ...
+# Subtest: curated ITA2025Q3 renders every math segment and preserves literal prose
+ok 143 - curated ITA2025Q3 renders every math segment and preserves literal prose
+  ---
+  duration_ms: 12.031334
+  type: 'test'
+  ...
+# Subtest: curated ITA2025Q3 mismatch preserves the exact received statement
+ok 144 - curated ITA2025Q3 mismatch preserves the exact received statement
+  ---
+  duration_ms: 9.365
+  type: 'test'
+  ...
+# Subtest: curated ITA2025Q4 renders every math segment and preserves literal prose
+ok 145 - curated ITA2025Q4 renders every math segment and preserves literal prose
+  ---
+  duration_ms: 35.331167
+  type: 'test'
+  ...
+# Subtest: curated ITA2025Q4 mismatch preserves the exact received statement
+ok 146 - curated ITA2025Q4 mismatch preserves the exact received statement
+  ---
+  duration_ms: 4.608125
+  type: 'test'
+  ...
+# Subtest: curated ITA2025Q5 renders every math segment and preserves literal prose
+ok 147 - curated ITA2025Q5 renders every math segment and preserves literal prose
+  ---
+  duration_ms: 10.128958
+  type: 'test'
+  ...
+# Subtest: curated ITA2025Q5 mismatch preserves the exact received statement
+ok 148 - curated ITA2025Q5 mismatch preserves the exact received statement
+  ---
+  duration_ms: 35.087958
+  type: 'test'
+  ...
+# Subtest: curated ITA2025Q8 renders every math segment and preserves literal prose
+ok 149 - curated ITA2025Q8 renders every math segment and preserves literal prose
+  ---
+  duration_ms: 9.651625
+  type: 'test'
+  ...
+# Subtest: curated ITA2025Q8 mismatch preserves the exact received statement
+ok 150 - curated ITA2025Q8 mismatch preserves the exact received statement
+  ---
+  duration_ms: 21.166625
+  type: 'test'
+  ...
+# Subtest: curated ITA2025F2Q1 renders every math segment and preserves literal prose
+ok 151 - curated ITA2025F2Q1 renders every math segment and preserves literal prose
+  ---
+  duration_ms: 6.440833
+  type: 'test'
+  ...
+# Subtest: curated ITA2025F2Q1 mismatch preserves the exact received statement
+ok 152 - curated ITA2025F2Q1 mismatch preserves the exact received statement
+  ---
+  duration_ms: 4.07475
+  type: 'test'
+  ...
+# Subtest: curated ITA2025F2Q3 renders every math segment and preserves literal prose
+ok 153 - curated ITA2025F2Q3 renders every math segment and preserves literal prose
+  ---
+  duration_ms: 8.666375
+  type: 'test'
+  ...
+# Subtest: curated ITA2025F2Q3 mismatch preserves the exact received statement
+ok 154 - curated ITA2025F2Q3 mismatch preserves the exact received statement
+  ---
+  duration_ms: 4.032125
+  type: 'test'
+  ...
+# Subtest: curated ITA2025F2Q5 renders every math segment and preserves literal prose
+ok 155 - curated ITA2025F2Q5 renders every math segment and preserves literal prose
+  ---
+  duration_ms: 24.212375
+  type: 'test'
+  ...
+# Subtest: curated ITA2025F2Q5 mismatch preserves the exact received statement
+ok 156 - curated ITA2025F2Q5 mismatch preserves the exact received statement
+  ---
+  duration_ms: 5.940792
+  type: 'test'
+  ...
+# Subtest: curated ITA2025F2Q6 renders every math segment and preserves literal prose
+ok 157 - curated ITA2025F2Q6 renders every math segment and preserves literal prose
+  ---
+  duration_ms: 10.966458
+  type: 'test'
+  ...
+# Subtest: curated ITA2025F2Q6 mismatch preserves the exact received statement
+ok 158 - curated ITA2025F2Q6 mismatch preserves the exact received statement
+  ---
+  duration_ms: 12.963166
+  type: 'test'
+  ...
+# Subtest: curated ITA2025F2Q8 renders every math segment and preserves literal prose
+ok 159 - curated ITA2025F2Q8 renders every math segment and preserves literal prose
+  ---
+  duration_ms: 11.392375
+  type: 'test'
+  ...
+# Subtest: curated ITA2025F2Q8 mismatch preserves the exact received statement
+ok 160 - curated ITA2025F2Q8 mismatch preserves the exact received statement
+  ---
+  duration_ms: 16.895625
+  type: 'test'
+  ...
+# Subtest: curation includes reviewed powers, fractions, indices, sums and trigonometry
+ok 161 - curation includes reviewed powers, fractions, indices, sums and trigonometry
+  ---
+  duration_ms: 0.252042
+  type: 'test'
+  ...
+# Subtest: curated data takes priority even if its source contains explicit delimiters
+ok 162 - curated data takes priority even if its source contains explicit delimiters
+  ---
+  duration_ms: 6.49025
+  type: 'test'
+  ...
+# Subtest: a stale curated entry must not fall through to explicit math or legacy guessing
+ok 163 - a stale curated entry must not fall through to explicit math or legacy guessing
+  ---
+  duration_ms: 77.919166
+  type: 'test'
+  ...
+# Subtest: absent curation still resolves explicit math, then restricted legacy, then text
+ok 164 - absent curation still resolves explicit math, then restricted legacy, then text
+  ---
+  duration_ms: 5.506542
+  type: 'test'
+  ...
+# Subtest: invalid curated LaTeX restores the whole source; a subsequent question still renders
+ok 165 - invalid curated LaTeX restores the whole source; a subsequent question still renders
+  ---
+  duration_ms: 9.702834
+  type: 'test'
+  ...
+# Subtest: curated literal text cannot create HTML, and TeX retains trust:false
+ok 166 - curated literal text cannot create HTML, and TeX retains trust:false
+  ---
+  duration_ms: 7.903583
+  type: 'test'
+  ...
+# Subtest: malformed or duplicate curated records cannot silently fall through
+ok 167 - malformed or duplicate curated records cannot silently fall through
+  ---
+  duration_ms: 18.885291
+  type: 'test'
+  ...
+# Subtest: missing KaTeX preserves the original curated statement with a readable message
+ok 168 - missing KaTeX preserves the original curated statement with a readable message
+  ---
+  duration_ms: 0.808958
+  type: 'test'
+  ...
+# Subtest: workspace F2Q3 uses the existing canonical presentation, including sen, fractions and Greek letters
+ok 169 - workspace F2Q3 uses the existing canonical presentation, including sen, fractions and Greek letters
+  ---
+  duration_ms: 9.040708
+  type: 'test'
+  ...
+# Subtest: quiet mixed math keeps ordinary prose and display/inline rendering
+ok 170 - quiet mixed math keeps ordinary prose and display/inline rendering
+  ---
+  duration_ms: 5.208667
+  type: 'test'
+  ...
+# Subtest: quiet failures are literal fallback without a red technical tooltip; later math still renders
+ok 171 - quiet failures are literal fallback without a red technical tooltip; later math still renders
+  ---
+  duration_ms: 5.706542
+  type: 'test'
+  ...
+# Subtest: quiet content preserves HTML-like prose and does not normalize ordinary words
+ok 172 - quiet content preserves HTML-like prose and does not normalize ordinary words
+  ---
+  duration_ms: 52.191041
+  type: 'test'
+  ...
+# Subtest: structured math supports explicit display without changing registry content
+ok 173 - structured math supports explicit display without changing registry content
+  ---
+  duration_ms: 19.075541
+  type: 'test'
+  ...
+# Subtest: question analysis loading prevents double submit and renders backend score criteria evidence and page action
+ok 174 - question analysis loading prevents double submit and renders backend score criteria evidence and page action
+  ---
+  duration_ms: 62.938041
+  type: 'test'
+  ...
+# Subtest: Q1 Q2 preserve separate audit runs, new explicit analysis preserves history, editing makes old audit historical
+ok 175 - Q1 Q2 preserve separate audit runs, new explicit analysis preserves history, editing makes old audit historical
+  ---
+  duration_ms: 28.37425
+  type: 'test'
+  ...
+# Subtest: technical failure has no numerical fallback and warning/review stays readable without unsupported original action
+ok 176 - technical failure has no numerical fallback and warning/review stays readable without unsupported original action
+  ---
+  duration_ms: 12.7015
+  type: 'test'
+  ...
+# Subtest: ambiguous network result retries the same key, then a new requested analysis receives a new key
+ok 177 - ambiguous network result retries the same key, then a new requested analysis receives a new key
+  ---
+  duration_ms: 14.938333
+  type: 'test'
+  ...
+# Subtest: D4 stale Q1 navigates independently of Q2 and reanalysis updates comparison and partial total
+ok 178 - D4 stale Q1 navigates independently of Q2 and reanalysis updates comparison and partial total
+  ---
+  duration_ms: 77.686666
+  type: 'test'
+  ...
+# Subtest: D4 reanalysis loading disables repeated click and keeps previous suggestion historical
+ok 179 - D4 reanalysis loading disables repeated click and keeps previous suggestion historical
+  ---
+  duration_ms: 15.541166
+  type: 'test'
+  ...
+# Subtest: D4 failed reanalysis preserves null current and old score, explicit retry gets a new run
+ok 180 - D4 failed reanalysis preserves null current and old score, explicit retry gets a new run
+  ---
+  duration_ms: 21.600917
+  type: 'test'
+  ...
+# Subtest: plain text remains literal and preserves line breaks
+ok 181 - plain text remains literal and preserves line breaks
+  ---
+  duration_ms: 5.449792
+  type: 'test'
+  ...
+# Subtest: inline math, bare fraction and mixed Portuguese use local KaTeX without changing source
+ok 182 - inline math, bare fraction and mixed Portuguese use local KaTeX without changing source
+  ---
+  duration_ms: 1.444667
+  type: 'test'
+  ...
+# Subtest: multiple inline and display formulas stay in sequence with paragraphs
+ok 183 - multiple inline and display formulas stay in sequence with paragraphs
+  ---
+  duration_ms: 3.91475
+  type: 'test'
+  ...
+# Subtest: mixed Mathpix latex_styled keeps prose outside its math delimiters
+ok 184 - mixed Mathpix latex_styled keeps prose outside its math delimiters
+  ---
+  duration_ms: 0.897458
+  type: 'test'
+  ...
+# Subtest: invalid math and missing KaTeX preserve exact recognized expression
+ok 185 - invalid math and missing KaTeX preserve exact recognized expression
+  ---
+  duration_ms: 1.833958
+  type: 'test'
+  ...
+# Subtest: untrusted HTML is text, and incorrect mathematics remains incorrect
+ok 186 - untrusted HTML is text, and incorrect mathematics remains incorrect
+  ---
+  duration_ms: 0.733583
+  type: 'test'
+  ...
+# Subtest: standalone preview uses frozen strokes before send, renders KaTeX unchanged, and creates no official run
+ok 187 - standalone preview uses frozen strokes before send, renders KaTeX unchanged, and creates no official run
+  ---
+  duration_ms: 42.878375
+  type: 'test'
+  ...
+# Subtest: late preview is discarded after continuing the draft; error never shows a successful preview
+ok 188 - late preview is discarded after continuing the draft; error never shows a successful preview
+  ---
+  duration_ms: 5.407084
+  type: 'test'
+  ...
+# Subtest: embedded parent orders prepare, preview, send and displays only the current preview
+ok 189 - embedded parent orders prepare, preview, send and displays only the current preview
+  ---
+  duration_ms: 31.601334
+  type: 'test'
+  ...
+# Subtest: teacher shows rendered persisted math beside intact original and analysis below, including legacy revisions
+ok 190 - teacher shows rendered persisted math beside intact original and analysis below, including legacy revisions
+  ---
+  duration_ms: 22.965792
+  type: 'test'
+  ...
+# Subtest: teacher receives the official Mathpix NEEDS_REVIEW revision and can confer fidelity before analysis
+ok 191 - teacher receives the official Mathpix NEEDS_REVIEW revision and can confer fidelity before analysis
+  ---
+  duration_ms: 4.241166
+  type: 'test'
+  ...
+# Subtest: recognition UI keeps Mathpix credentials server side and uses safe DOM rendering
+ok 192 - recognition UI keeps Mathpix credentials server side and uses safe DOM rendering
+  ---
+  duration_ms: 4.809541
+  type: 'test'
+  ...
+# Subtest: tablet Mathpix prose with inline TeX renders consistently in student preview and teacher view
+ok 193 - tablet Mathpix prose with inline TeX renders consistently in student preview and teacher view
+  ---
+  duration_ms: 10.643
+  type: 'test'
+  ...
+# Subtest: teacher report renders legacy as a secondary disclosure
+ok 194 - teacher report renders legacy as a secondary disclosure
+  ---
+  duration_ms: 98.895291
+  type: 'test'
+  ...
+# Subtest: teacher report renders legacy_unversioned as a secondary disclosure
+ok 195 - teacher report renders legacy_unversioned as a secondary disclosure
+  ---
+  duration_ms: 8.480667
+  type: 'test'
+  ...
+# Subtest: teacher report renders unavailable as a secondary disclosure
+ok 196 - teacher report renders unavailable as a secondary disclosure
+  ---
+  duration_ms: 19.846
+  type: 'test'
+  ...
+# Subtest: teacher report renders recorded as a secondary disclosure
+ok 197 - teacher report renders recorded as a secondary disclosure
+  ---
+  duration_ms: 8.163625
+  type: 'test'
+  ...
+# Subtest: metadata is rendered as text, never HTML, and unknown worktree state is explicit
+ok 198 - metadata is rendered as text, never HTML, and unknown worktree state is explicit
+  ---
+  duration_ms: 16.479834
+  type: 'test'
+  ...
+# Subtest: unexpected backend text cannot create HTML in teacher report or metadata
+ok 199 - unexpected backend text cannot create HTML in teacher report or metadata
+  ---
+  duration_ms: 9.284583
+  type: 'test'
+  ...
+# Subtest: question uses existing workspace, three tabs, splitter and real empty analysis without grading controls
+ok 200 - question uses existing workspace, three tabs, splitter and real empty analysis without grading controls
+  ---
+  duration_ms: 89.1905
+  type: 'test'
+  ...
+# Subtest: four associated pages retain proportions/layout controls and current page across question navigation
+ok 201 - four associated pages retain proportions/layout controls and current page across question navigation
+  ---
+  duration_ms: 18.187916
+  type: 'test'
+  ...
+# Subtest: capture import then human correction appends a version, preserves history and signals reanalysis without executing audit
+ok 202 - capture import then human correction appends a version, preserves history and signals reanalysis without executing audit
+  ---
+  duration_ms: 24.469125
+  type: 'test'
+  ...
+# Subtest: unsaved draft stays with its question, cancel discards it and unchanged save creates no version
+ok 203 - unsaved draft stays with its question, cancel discards it and unchanged save creates no version
+  ---
+  duration_ms: 24.394667
+  type: 'test'
+  ...
+# Subtest: typed first reading, conflict retains draft and current revision is never silently overwritten
+ok 204 - typed first reading, conflict retains draft and current revision is never silently overwritten
+  ---
+  duration_ms: 25.76025
+  type: 'test'
+  ...
+# Subtest: student home and primary navigation separate TutorIA, Exames and submissions
+ok 205 - student home and primary navigation separate TutorIA, Exames and submissions
+  ---
+  duration_ms: 81.865625
+  type: 'test'
+  ...
+# Subtest: TutorIA uses practice notebook and transient preview without an institutional submission
+ok 206 - TutorIA uses practice notebook and transient preview without an institutional submission
+  ---
+  duration_ms: 20.090333
+  type: 'test'
+  ...
+# Subtest: Exames starts empty and opens only an explicitly available activity in the same notebook
+ok 207 - Exames starts empty and opens only an explicitly available activity in the same notebook
+  ---
+  duration_ms: 26.891708
+  type: 'test'
+  ...
+# Subtest: student exam progress refreshes from the server after receipt and survives new page and session
+ok 208 - student exam progress refreshes from the server after receipt and survives new page and session
+  ---
+  duration_ms: 50.114583
+  type: 'test'
+  ...
+# Subtest: embedded exam starts with its bound submission target before any configure message
+ok 209 - embedded exam starts with its bound submission target before any configure message
+  ---
+  duration_ms: 34.544334
+  type: 'test'
+  ...
+# Subtest: an exam remains available when its manifest loads before the problem catalog
+ok 210 - an exam remains available when its manifest loads before the problem catalog
+  ---
+  duration_ms: 9.820458
+  type: 'test'
+  ...
+# Subtest: TutorIA preview freezes only in memory and never invokes submission or official recognition
+ok 211 - TutorIA preview freezes only in memory and never invokes submission or official recognition
+  ---
+  duration_ms: 7.617458
+  type: 'test'
+  ...
+# Subtest: Minhas submissões reads official records and ignores TutorIA attempts
+ok 212 - Minhas submissões reads official records and ignores TutorIA attempts
+  ---
+  duration_ms: 30.477375
+  type: 'test'
+  ...
+# Subtest: analysis blocked for {"state":"DRAFT"}
+ok 213 - analysis blocked for {"state":"DRAFT"}
+  ---
+  duration_ms: 42.301
+  type: 'test'
+  ...
+# Subtest: analysis blocked for {"state":"NEEDS_REVIEW"}
+ok 214 - analysis blocked for {"state":"NEEDS_REVIEW"}
+  ---
+  duration_ms: 3.269791
+  type: 'test'
+  ...
+# Subtest: analysis blocked for {"acceptances":[]}
+ok 215 - analysis blocked for {"acceptances":[]}
+  ---
+  duration_ms: 5.910625
+  type: 'test'
+  ...
+# Subtest: analysis blocked for {"acceptances":[{"submission_id":"sub_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa","transcription_id":"tr_bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb","revision_number":1,"acceptance_id":"acc_cccccccccccccccccccccccccccccccc","accepted_at":"2026-10-01T13:00:00Z","accepted_revision_sha256":null}]}
+ok 216 - analysis blocked for {"acceptances":[{"submission_id":"sub_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa","transcription_id":"tr_bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb","revision_number":1,"acceptance_id":"acc_cccccccccccccccccccccccccccccccc","accepted_at":"2026-10-01T13:00:00Z","accepted_revision_sha256":null}]}
+  ---
+  duration_ms: 5.396916
+  type: 'test'
+  ...
+# Subtest: analysis blocked for {"acceptances":[{"submission_id":"sub_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa","transcription_id":"tr_bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb","revision_number":2,"acceptance_id":"acc_cccccccccccccccccccccccccccccccc","accepted_at":"2026-10-01T13:00:00Z","accepted_revision_sha256":"dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"}]}
+ok 217 - analysis blocked for {"acceptances":[{"submission_id":"sub_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa","transcription_id":"tr_bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb","revision_number":2,"acceptance_id":"acc_cccccccccccccccccccccccccccccccc","accepted_at":"2026-10-01T13:00:00Z","accepted_revision_sha256":"dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"}]}
+  ---
+  duration_ms: 2.652125
+  type: 'test'
+  ...
+# Subtest: analysis blocked for {"intact":false}
+ok 218 - analysis blocked for {"intact":false}
+  ---
+  duration_ms: 1.806166
+  type: 'test'
+  ...
+# Subtest: analysis blocked for {"readFailure":true}
+ok 219 - analysis blocked for {"readFailure":true}
+  ---
+  duration_ms: 2.862541
+  type: 'test'
+  ...
+# Subtest: only persisted IDs reach bridge; dirty edit disables and discard restores action
+ok 220 - only persisted IDs reach bridge; dirty edit disables and discard restores action
+  ---
+  duration_ms: 11.597292
+  type: 'test'
+  ...
+# Subtest: pending analysis locks navigation and editor; double click produces one POST
+ok 221 - pending analysis locks navigation and editor; double click produces one POST
+  ---
+  duration_ms: 13.602208
+  type: 'test'
+  ...
+# Subtest: newer revision shows old result with explicit stale notice and disables fresh audit until accepted
+ok 222 - newer revision shows old result with explicit stale notice and disables fresh audit until accepted
+  ---
+  duration_ms: 3.403917
+  type: 'test'
+  ...
+# Subtest: 409 invalidates the current presentation and preserves only historical context: Integridade da revisão ou do aceite divergente
+ok 223 - 409 invalidates the current presentation and preserves only historical context: Integridade da revisão ou do aceite divergente
+  ---
+  duration_ms: 3.880625
+  type: 'test'
+  ...
+# Subtest: 409 invalidates the current presentation and preserves only historical context: A transcrição precisa ser conferida antes da análise.
+ok 224 - 409 invalidates the current presentation and preserves only historical context: A transcrição precisa ser conferida antes da análise.
+  ---
+  duration_ms: 2.936208
+  type: 'test'
+  ...
+# Subtest: 409 invalidates the current presentation and preserves only historical context: source stale
+ok 225 - 409 invalidates the current presentation and preserves only historical context: source stale
+  ---
+  duration_ms: 2.594709
+  type: 'test'
+  ...
+# Subtest: 409 invalidates the current presentation and preserves only historical context: result_sha256 divergente
+ok 226 - 409 invalidates the current presentation and preserves only historical context: result_sha256 divergente
+  ---
+  duration_ms: 4.677125
+  type: 'test'
+  ...
+# Subtest: failed transport with a cached report leaves the current workflow failed, then retry restores completion
+ok 227 - failed transport with a cached report leaves the current workflow failed, then retry restores completion
+  ---
+  duration_ms: 7.378125
+  type: 'test'
+  ...
+# Subtest: failure true never renders a successful report
+ok 228 - failure true never renders a successful report
+  ---
+  duration_ms: 4.305708
+  type: 'test'
+  ...
+# Subtest: failure false never renders a successful report
+ok 229 - failure false never renders a successful report
+  ---
+  duration_ms: 3.009333
+  type: 'test'
+  ...
+# Subtest: explicit rerun uses key, transport retry preserves it and completed rerun resets it
+ok 230 - explicit rerun uses key, transport retry preserves it and completed rerun resets it
+  ---
+  duration_ms: 6.165125
+  type: 'test'
+  ...
+# Subtest: diagram warning remains visible beside the report and traceability remains collapsed
+ok 231 - diagram warning remains visible beside the report and traceability remains collapsed
+  ---
+  duration_ms: 3.798125
+  type: 'test'
+  ...
+# Subtest: historical analysis of artificial recognition keeps an explicit primary warning
+ok 232 - historical analysis of artificial recognition keeps an explicit primary warning
+  ---
+  duration_ms: 25.725958
+  type: 'test'
+  ...
+# Subtest: execute displays domain TRANSCRIPTION_NOT_ACCEPTED without exposing private diagnostics
+ok 233 - execute displays domain TRANSCRIPTION_NOT_ACCEPTED without exposing private diagnostics
+  ---
+  duration_ms: 2.987583
+  type: 'test'
+  ...
+# Subtest: list displays domain TRANSCRIPTION_NOT_ACCEPTED without exposing private diagnostics
+ok 234 - list displays domain TRANSCRIPTION_NOT_ACCEPTED without exposing private diagnostics
+  ---
+  duration_ms: 2.226333
+  type: 'test'
+  ...
+# Subtest: execute displays domain SOURCE_INTEGRITY_MISMATCH without exposing private diagnostics
+ok 235 - execute displays domain SOURCE_INTEGRITY_MISMATCH without exposing private diagnostics
+  ---
+  duration_ms: 2.297791
+  type: 'test'
+  ...
+# Subtest: list displays domain SOURCE_INTEGRITY_MISMATCH without exposing private diagnostics
+ok 236 - list displays domain SOURCE_INTEGRITY_MISMATCH without exposing private diagnostics
+  ---
+  duration_ms: 1.968333
+  type: 'test'
+  ...
+# Subtest: execute displays domain REPRODUCIBILITY_INTEGRITY_MISMATCH without exposing private diagnostics
+ok 237 - execute displays domain REPRODUCIBILITY_INTEGRITY_MISMATCH without exposing private diagnostics
+  ---
+  duration_ms: 2.724625
+  type: 'test'
+  ...
+# Subtest: list displays domain REPRODUCIBILITY_INTEGRITY_MISMATCH without exposing private diagnostics
+ok 238 - list displays domain REPRODUCIBILITY_INTEGRITY_MISMATCH without exposing private diagnostics
+  ---
+  duration_ms: 3.221334
+  type: 'test'
+  ...
+# Subtest: execute displays domain RESULT_INTEGRITY_MISMATCH without exposing private diagnostics
+ok 239 - execute displays domain RESULT_INTEGRITY_MISMATCH without exposing private diagnostics
+  ---
+  duration_ms: 6.966417
+  type: 'test'
+  ...
+# Subtest: list displays domain RESULT_INTEGRITY_MISMATCH without exposing private diagnostics
+ok 240 - list displays domain RESULT_INTEGRITY_MISMATCH without exposing private diagnostics
+  ---
+  duration_ms: 2.987083
+  type: 'test'
+  ...
+# Subtest: execute displays domain REVISION_CONFLICT without exposing private diagnostics
+ok 241 - execute displays domain REVISION_CONFLICT without exposing private diagnostics
+  ---
+  duration_ms: 2.801666
+  type: 'test'
+  ...
+# Subtest: list displays domain REVISION_CONFLICT without exposing private diagnostics
+ok 242 - list displays domain REVISION_CONFLICT without exposing private diagnostics
+  ---
+  duration_ms: 3.583583
+  type: 'test'
+  ...
+# Subtest: execute displays domain AUDIT_RUN_CONFLICT without exposing private diagnostics
+ok 243 - execute displays domain AUDIT_RUN_CONFLICT without exposing private diagnostics
+  ---
+  duration_ms: 3.329083
+  type: 'test'
+  ...
+# Subtest: list displays domain AUDIT_RUN_CONFLICT without exposing private diagnostics
+ok 244 - list displays domain AUDIT_RUN_CONFLICT without exposing private diagnostics
+  ---
+  duration_ms: 2.323083
+  type: 'test'
+  ...
+# Subtest: only frozen snapshots can be sent; no draft upload/render
+ok 245 - only frozen snapshots can be sent; no draft upload/render
+  ---
+  duration_ms: 9.760375
+  type: 'test'
+  ...
+# Subtest: all pages use the existing renderer and original JSON/PNG bytes are transported without mutation
+ok 246 - all pages use the existing renderer and original JSON/PNG bytes are transported without mutation
+  ---
+  duration_ms: 2.022916
+  type: 'test'
+  ...
+# Subtest: lost response retry reuses identical snapshot and PNG bytes, without another render
+ok 247 - lost response retry reuses identical snapshot and PNG bytes, without another render
+  ---
+  duration_ms: 0.902125
+  type: 'test'
+  ...
+# Subtest: another frozen snapshot rebuilds its own artifacts instead of reusing the previous version
+ok 248 - another frozen snapshot rebuilds its own artifacts instead of reusing the previous version
+  ---
+  duration_ms: 1.550625
+  type: 'test'
+  ...
+# Subtest: a conflict or server failure is never treated as a receipt
+ok 249 - a conflict or server failure is never treated as a receipt
+  ---
+  duration_ms: 1.984667
+  type: 'test'
+  ...
+# Subtest: malformed successful response, mismatched ids, status and missing hashes are not success
+ok 250 - malformed successful response, mismatched ids, status and missing hashes are not success
+  ---
+  duration_ms: 1.245584
+  type: 'test'
+  ...
+# Subtest: HTTP 202 is not a received receipt even if the payload looks complete
+ok 251 - HTTP 202 is not a received receipt even if the payload looks complete
+  ---
+  duration_ms: 0.777875
+  type: 'test'
+  ...
+# Subtest: concurrent repeated click does not create two requests
+ok 252 - concurrent repeated click does not create two requests
+  ---
+  duration_ms: 0.534583
+  type: 'test'
+  ...
+# Subtest: Assessment sender uses item endpoint and checks server-derived binding
+ok 253 - Assessment sender uses item endpoint and checks server-derived binding
+  ---
+  duration_ms: 0.81775
+  type: 'test'
+  ...
+# Subtest: TME notebook uses its case endpoint and rejects a mismatched receipt
+ok 254 - TME notebook uses its case endpoint and rejects a mismatched receipt
+  ---
+  duration_ms: 2.398583
+  type: 'test'
+  ...
+# Subtest: suggestion is normalized, copy stays a dirty draft, then save/finalize/release are separate writes
+ok 255 - suggestion is normalized, copy stays a dirty draft, then save/finalize/release are separate writes
+  ---
+  duration_ms: 44.051458
+  type: 'test'
+  ...
+# Subtest: manual decimal entry and override require a reason before finalizing, while draft may be saved
+ok 256 - manual decimal entry and override require a reason before finalizing, while draft may be saved
+  ---
+  duration_ms: 4.547
+  type: 'test'
+  ...
+# Subtest: a missing or inconclusive audit allows manual points without an override reason
+ok 257 - a missing or inconclusive audit allows manual points without an override reason
+  ---
+  duration_ms: 2.421208
+  type: 'test'
+  ...
+# Subtest: the opened audit is explicitly selected and provenance stays visible in a disclosure
+ok 258 - the opened audit is explicitly selected and provenance stays visible in a disclosure
+  ---
+  duration_ms: 1.574292
+  type: 'test'
+  ...
+# Subtest: stale suggestion is not reusable and explicit manual mode clears the linkage
+ok 259 - stale suggestion is not reusable and explicit manual mode clears the linkage
+  ---
+  duration_ms: 4.102
+  type: 'test'
+  ...
+# Subtest: invalid points are rejected before transport and server conflicts preserve unsaved text
+ok 260 - invalid points are rejected before transport and server conflicts preserve unsaved text
+  ---
+  duration_ms: 7.435
+  type: 'test'
+  ...
+# Subtest: decision controls expose labels, live feedback and one primary action per stage
+ok 261 - decision controls expose labels, live feedback and one primary action per stage
+  ---
+  duration_ms: 2.901583
+  type: 'test'
+  ...
+# Subtest: server diagnostics never become end-user messages and failed saves retain edits
+ok 262 - server diagnostics never become end-user messages and failed saves retain edits
+  ---
+  duration_ms: 3.22375
+  type: 'test'
+  ...
+# Subtest: student clears earlier detail while refreshing and on failed or late responses
+ok 263 - student clears earlier detail while refreshing and on failed or late responses
+  ---
+  duration_ms: 31.690708
+  type: 'test'
+  ...
+# Subtest: double clicks while saving cannot publish duplicate mutations
+ok 264 - double clicks while saving cannot publish duplicate mutations
+  ---
+  duration_ms: 2.447667
+  type: 'test'
+  ...
+# Subtest: institutional decision panel follows the analysis and dirty decision blocks navigation
+ok 265 - institutional decision panel follows the analysis and dirty decision blocks navigation
+  ---
+  duration_ms: 10.73525
+  type: 'test'
+  ...
+# Subtest: student sees only delivery before release and the released teacher result afterward
+ok 266 - student sees only delivery before release and the released teacher result afterward
+  ---
+  duration_ms: 31.321291
+  type: 'test'
+  ...
+# Subtest: student refuses unmatched or nonreleased results
+ok 267 - student refuses unmatched or nonreleased results
+  ---
+  duration_ms: 63.63625
+  type: 'test'
+  ...
+# Subtest: existing teacher workflow keeps assessment, student and question through transcription reload
+ok 268 - existing teacher workflow keeps assessment, student and question through transcription reload
+  ---
+  duration_ms: 55.873459
+  type: 'test'
+  ...
+# Subtest: context is checked against the returned submission binding before exposing the workflow
+ok 269 - context is checked against the returned submission binding before exposing the workflow
+  ---
+  duration_ms: 10.831334
+  type: 'test'
+  ...
+# Subtest: returning to general queue and opening another solution never retains exam context
+ok 270 - returning to general queue and opening another solution never retains exam context
+  ---
+  duration_ms: 6.463875
+  type: 'test'
+  ...
+# Subtest: a superseded queue refresh cannot reopen an older selected solution
+ok 271 - a superseded queue refresh cannot reopen an older selected solution
+  ---
+  duration_ms: 2.571625
+  type: 'test'
+  ...
+# Subtest: general queue resolves school, class, assessment, student and question through authorized endpoints
+ok 272 - general queue resolves school, class, assessment, student and question through authorized endpoints
+  ---
+  duration_ms: 3.612166
+  type: 'test'
+  ...
+# Subtest: unavailable context names do not leak data from mismatched or unauthorized responses
+ok 273 - unavailable context names do not leak data from mismatched or unauthorized responses
+  ---
+  duration_ms: 3.827291
+  type: 'test'
+  ...
+# Subtest: teacher opens server inbox lazily, lists metadata and shows only original PNGs plus integrity
+ok 274 - teacher opens server inbox lazily, lists metadata and shows only original PNGs plus integrity
+  ---
+  duration_ms: 37.862583
+  type: 'test'
+  ...
+# Subtest: corrupt PNG is not loaded and divergence is explained
+ok 275 - corrupt PNG is not loaded and divergence is explained
+  ---
+  duration_ms: 2.520375
+  type: 'test'
+  ...
+# Subtest: inbox and existing correction prototype are mutually exclusive without new audit requests
+ok 276 - inbox and existing correction prototype are mutually exclusive without new audit requests
+  ---
+  duration_ms: 3.264959
+  type: 'test'
+  ...
+# Subtest: returning to the teacher inbox refreshes a previously loaded transcription state
+ok 277 - returning to the teacher inbox refreshes a previously loaded transcription state
+  ---
+  duration_ms: 2.868875
+  type: 'test'
+  ...
+# Subtest: failed list and detail requests do not leave stale received artifacts on screen
+ok 278 - failed list and detail requests do not leave stale received artifacts on screen
+  ---
+  duration_ms: 2.478209
+  type: 'test'
+  ...
+# Subtest: refresh invalidates an older pending detail response
+ok 279 - refresh invalidates an older pending detail response
+  ---
+  duration_ms: 2.621875
+  type: 'test'
+  ...
+# Subtest: teacher shows original and editable transcription side by side with history and no audit call
+ok 280 - teacher shows original and editable transcription side by side with history and no audit call
+  ---
+  duration_ms: 4.64925
+  type: 'test'
+  ...
+# Subtest: teacher creates a manual transcription and accepts fidelity without an audit request
+ok 281 - teacher creates a manual transcription and accepts fidelity without an audit request
+  ---
+  duration_ms: 8.110959
+  type: 'test'
+  ...
+# Subtest: teacher development action labels artificial recognition and opens NEEDS_REVIEW without accepting
+ok 282 - teacher development action labels artificial recognition and opens NEEDS_REVIEW without accepting
+  ---
+  duration_ms: 3.725875
+  type: 'test'
+  ...
+# Subtest: teacher hides recognition action when no provider is enabled and disables it for corrupt source
+ok 283 - teacher hides recognition action when no provider is enabled and disables it for corrupt source
+  ---
+  duration_ms: 22.376125
+  type: 'test'
+  ...
+# Subtest: teacher preserves retry key and explains provider failure
+ok 284 - teacher preserves retry key and explains provider failure
+  ---
+  duration_ms: 13.333959
+  type: 'test'
+  ...
+# Subtest: ACCEPTED is presented as Transcrição conferida and RECEIVED as Recebida pelo ConfIA
+ok 285 - ACCEPTED is presented as Transcrição conferida and RECEIVED as Recebida pelo ConfIA
+  ---
+  duration_ms: 5.420916
+  type: 'test'
+  ...
+# Subtest: edited transcription detects unsaved changes, blocks acceptance and preserves content when refresh is blocked
+ok 286 - edited transcription detects unsaved changes, blocks acceptance and preserves content when refresh is blocked
+  ---
+  duration_ms: 5.167334
+  type: 'test'
+  ...
+# Subtest: submission switch and mode switch are blocked while transcription is dirty
+ok 287 - submission switch and mode switch are blocked while transcription is dirty
+  ---
+  duration_ms: 3.040125
+  type: 'test'
+  ...
+# Subtest: explicit discard permits context switch and opens only the selected submission
+ok 288 - explicit discard permits context switch and opens only the selected submission
+  ---
+  duration_ms: 7.084375
+  type: 'test'
+  ...
+# Subtest: discard restores the persisted revision and acceptance sends only its revision number
+ok 289 - discard restores the persisted revision and acceptance sends only its revision number
+  ---
+  duration_ms: 12.2145
+  type: 'test'
+  ...
+# Subtest: save creates a persisted revision before that revision can be accepted
+ok 290 - save creates a persisted revision before that revision can be accepted
+  ---
+  duration_ms: 10.072084
+  type: 'test'
+  ...
+# Subtest: source and revision metadata mark pending changes, including whitespace
+ok 291 - source and revision metadata mark pending changes, including whitespace
+  ---
+  duration_ms: 8.390125
+  type: 'test'
+  ...
+# Subtest: 404 and revision conflict are translated while diagnostics stay in the console log
+ok 292 - 404 and revision conflict are translated while diagnostics stay in the console log
+  ---
+  duration_ms: 6.43875
+  type: 'test'
+  ...
+# Subtest: switching transcription is guarded before loading another persisted history
+ok 293 - switching transcription is guarded before loading another persisted history
+  ---
+  duration_ms: 2.955875
+  type: 'test'
+  ...
+# Subtest: pending save locks only incompatible editor changes and blocks a context refresh
+ok 294 - pending save locks only incompatible editor changes and blocks a context refresh
+  ---
+  duration_ms: 6.09475
+  type: 'test'
+  ...
+# Subtest: main column is one white reading document, with source and metadata collapsed
+ok 295 - main column is one white reading document, with source and metadata collapsed
+  ---
+  duration_ms: 35.173125
+  type: 'test'
+  ...
+# Subtest: equivalent text and latex with different spacing or notation render exactly one solution
+ok 296 - equivalent text and latex with different spacing or notation render exactly one solution
+  ---
+  duration_ms: 35.033083
+  type: 'test'
+  ...
+# Subtest: canonical source is latex when populated, otherwise text; fields are never concatenated
+ok 297 - canonical source is latex when populated, otherwise text; fields are never concatenated
+  ---
+  duration_ms: 3.56625
+  type: 'test'
+  ...
+# Subtest: inline/display math, prose, paragraphs and intentional repetitions retain their order
+ok 298 - inline/display math, prose, paragraphs and intentional repetitions retain their order
+  ---
+  duration_ms: 6.480583
+  type: 'test'
+  ...
+# Subtest: edit opens one source textarea; save returns to the new persisted document without modifying revision 1
+ok 299 - edit opens one source textarea; save returns to the new persisted document without modifying revision 1
+  ---
+  duration_ms: 7.334834
+  type: 'test'
+  ...
+# Subtest: Cancel is available even before changing the source; it restores the persisted document without requests
+ok 300 - Cancel is available even before changing the source; it restores the persisted document without requests
+  ---
+  duration_ms: 5.520458
+  type: 'test'
+  ...
+# Subtest: acceptance targets the current revision; editing an accepted revision creates another requiring acceptance
+ok 301 - acceptance targets the current revision; editing an accepted revision creates another requiring acceptance
+  ---
+  duration_ms: 11.45025
+  type: 'test'
+  ...
+# Subtest: history is compact and distinguishes automatic origin from subsequent manual corrections
+ok 302 - history is compact and distinguishes automatic origin from subsequent manual corrections
+  ---
+  duration_ms: 4.157917
+  type: 'test'
+  ...
+# Subtest: multiple pages share one editor and retain drafts, ordering and untouched page provenance
+ok 303 - multiple pages share one editor and retain drafts, ordering and untouched page provenance
+  ---
+  duration_ms: 5.643875
+  type: 'test'
+  ...
+# Subtest: page selection alone does not dirty a revision; Cancel discards drafts on every page
+ok 304 - page selection alone does not dirty a revision; Cancel discards drafts on every page
+  ---
+  duration_ms: 2.497584
+  type: 'test'
+  ...
+# Subtest: unchanged sources preserve exact strings, CRLF, types and segment provenance in the revision payload
+ok 305 - unchanged sources preserve exact strings, CRLF, types and segment provenance in the revision payload
+  ---
+  duration_ms: 3.498625
+  type: 'test'
+  ...
+# Subtest: oversized edits keep the draft and explain the existing segment limit before sending
+ok 306 - oversized edits keep the draft and explain the existing segment limit before sending
+  ---
+  duration_ms: 2.618042
+  type: 'test'
+  ...
+# Subtest: malformed delimiters and HTML-looking text remain literal; a single source does not remove repetitions
+ok 307 - malformed delimiters and HTML-looking text remain literal; a single source does not remove repetitions
+  ---
+  duration_ms: 6.785583
+  type: 'test'
+  ...
+# Subtest: pauta workspace preserves pending score, four statuses, source evidence and local formal labels
+ok 308 - pauta workspace preserves pending score, four statuses, source evidence and local formal labels
+  ---
+  duration_ms: 89.785917
+  type: 'test'
+  ...
+# Subtest: uncompiled check does not advertise a Lean confirmation
+ok 309 - uncompiled check does not advertise a Lean confirmation
+  ---
+  duration_ms: 6.760666
+  type: 'test'
+  ...
+# Subtest: P5 labels are pedagogical rather than internal obligation identifiers
+ok 310 - P5 labels are pedagogical rather than internal obligation identifiers
+  ---
+  duration_ms: 5.027375
+  type: 'test'
+  ...
+# Subtest: Home requests one aggregate without fetching case lists or artifacts
+ok 311 - Home requests one aggregate without fetching case lists or artifacts
+  ---
+  duration_ms: 22.105792
+  type: 'test'
+  ...
+# Subtest: overview displays exact server counts including real inconclusive and numeric zero
+ok 312 - overview displays exact server counts including real inconclusive and numeric zero
+  ---
+  duration_ms: 5.778583
+  type: 'test'
+  ...
+# Subtest: primary CTA uses first server case without creating a correction or sorting in browser
+ok 313 - primary CTA uses first server case without creating a correction or sorting in browser
+  ---
+  duration_ms: 13.851625
+  type: 'test'
+  ...
+# Subtest: priority queue preserves server order, uses operational labels, and renders three cases
+ok 314 - priority queue preserves server order, uses operational labels, and renders three cases
+  ---
+  duration_ms: 4.069125
+  type: 'test'
+  ...
+# Subtest: progress uses actual server denominators and accessible counts
+ok 315 - progress uses actual server denominators and accessible counts
+  ---
+  duration_ms: 3.014083
+  type: 'test'
+  ...
+# Subtest: empty and all-finalized states disable next correction and keep creation available
+ok 316 - empty and all-finalized states disable next correction and keep creation available
+  ---
+  duration_ms: 56.141333
+  type: 'test'
+  ...
+# Subtest: aggregate error has safe text, retry and usable quick actions
+ok 317 - aggregate error has safe text, retry and usable quick actions
+  ---
+  duration_ms: 5.041333
+  type: 'test'
+  ...
+# Subtest: quick actions and bottom navigation preserve existing flows
+ok 318 - quick actions and bottom navigation preserve existing flows
+  ---
+  duration_ms: 69.311709
+  type: 'test'
+  ...
+# Subtest: loading skeletons keep navigation available
+ok 319 - loading skeletons keep navigation available
+  ---
+  duration_ms: 6.200334
+  type: 'test'
+  ...
+# Subtest: period options each query server and render returned counts
+ok 320 - period options each query server and render returned counts
+  ---
+  duration_ms: 14.684834
+  type: 'test'
+  ...
+# Subtest: mobile shell retains safe areas, touch targets and focus
+ok 321 - mobile shell retains safe areas, touch targets and focus
+  ---
+  duration_ms: 1.105583
+  type: 'test'
+  ...
+# Subtest: progress cards open the existing queue once and retain readable progress semantics
+ok 322 - progress cards open the existing queue once and retain readable progress semantics
+  ---
+  duration_ms: 4.2005
+  type: 'test'
+  ...
+# Subtest: desktop single sheet uses document flow at approved width and natural height
+ok 323 - desktop single sheet uses document flow at approved width and natural height
+  ---
+  duration_ms: 93.339667
+  type: 'test'
+  ...
+# Subtest: manual enlargement keeps panning, and normal fit restores document flow
+ok 324 - manual enlargement keeps panning, and normal fit restores document flow
+  ---
+  duration_ms: 8.934959
+  type: 'test'
+  ...
+# Subtest: two pages retain navigation and use their own ratio after rotation without requests
+ok 325 - two pages retain navigation and use their own ratio after rotation without requests
+  ---
+  duration_ms: 29.776709
+  type: 'test'
+  ...
+# Subtest: leaving desktop restores existing tablet/mobile viewport sizing
+ok 326 - leaving desktop restores existing tablet/mobile viewport sizing
+  ---
+  duration_ms: 6.923208
+  type: 'test'
+  ...
+# Subtest: Home → Ver fila keeps modern shell and a restorable URL
+ok 327 - Home → Ver fila keeps modern shell and a restorable URL
+  ---
+  duration_ms: 65.763291
+  type: 'test'
+  ...
+# Subtest: Home → Ver fila completa keeps modern shell and a restorable URL
+ok 328 - Home → Ver fila completa keeps modern shell and a restorable URL
+  ---
+  duration_ms: 16.529958
+  type: 'test'
+  ...
+# Subtest: Home → Nova correção keeps modern shell and a restorable URL
+ok 329 - Home → Nova correção keeps modern shell and a restorable URL
+  ---
+  duration_ms: 8.629833
+  type: 'test'
+  ...
+# Subtest: Home → Resultados keeps modern shell and a restorable URL
+ok 330 - Home → Resultados keeps modern shell and a restorable URL
+  ---
+  duration_ms: 4.146208
+  type: 'test'
+  ...
+# Subtest: Home → Ver todas keeps modern shell and a restorable URL
+ok 331 - Home → Ver todas keeps modern shell and a restorable URL
+  ---
+  duration_ms: 3.623167
+  type: 'test'
+  ...
+# Subtest: queue → workspace → back retains filters and browser back/forward restores views
+ok 332 - queue → workspace → back retains filters and browser back/forward restores views
+  ---
+  duration_ms: 14.17725
+  type: 'test'
+  ...
+# Subtest: progress → exam questions → workspace only requests heavy data at the last step
+ok 333 - progress → exam questions → workspace only requests heavy data at the last step
+  ---
+  duration_ms: 7.233
+  type: 'test'
+  ...
+# Subtest: new → Foto / scan reuses the case and capture flow
+ok 334 - new → Foto / scan reuses the case and capture flow
+  ---
+  duration_ms: 4.40225
+  type: 'test'
+  ...
+# Subtest: new → Escrever no tablet reuses the case and capture flow
+ok 335 - new → Escrever no tablet reuses the case and capture flow
+  ---
+  duration_ms: 4.57275
+  type: 'test'
+  ...
+# Subtest: reload/deep link view=queue
+ok 336 - reload/deep link view=queue
+  ---
+  duration_ms: 2.717875
+  type: 'test'
+  ...
+# Subtest: reload/deep link view=new
+ok 337 - reload/deep link view=new
+  ---
+  duration_ms: 2.632792
+  type: 'test'
+  ...
+# Subtest: reload/deep link view=results
+ok 338 - reload/deep link view=results
+  ---
+  duration_ms: 4.319625
+  type: 'test'
+  ...
+# Subtest: reload/deep link view=exams
+ok 339 - reload/deep link view=exams
+  ---
+  duration_ms: 4.133625
+  type: 'test'
+  ...
+# Subtest: case_id takes precedence over view and direct workspace back falls back to queue
+ok 340 - case_id takes precedence over view and direct workspace back falls back to queue
+  ---
+  duration_ms: 4.450583
+  type: 'test'
+  ...
+# Subtest: queue paginates at 50, preserves filters and never hydrates list rows
+ok 341 - queue paginates at 50, preserves filters and never hydrates list rows
+  ---
+  duration_ms: 32.480167
+  type: 'test'
+  ...
+# Subtest: queue next uses exactly the server priority used by Home
+ok 342 - queue next uses exactly the server priority used by Home
+  ---
+  duration_ms: 5.527125
+  type: 'test'
+  ...
+# Subtest: queue has a domain error and retry without technical data
+ok 343 - queue has a domain error and retry without technical data
+  ---
+  duration_ms: 3.706167
+  type: 'test'
+  ...
+# Subtest: exams has a domain error and retry without technical data
+ok 344 - exams has a domain error and retry without technical data
+  ---
+  duration_ms: 2.248167
+  type: 'test'
+  ...
+# Subtest: results has a domain error and retry without technical data
+ok 345 - results has a domain error and retry without technical data
+  ---
+  duration_ms: 68.072916
+  type: 'test'
+  ...
+# Subtest: queue empty state uses real zero data
+ok 346 - queue empty state uses real zero data
+  ---
+  duration_ms: 18.501041
+  type: 'test'
+  ...
+# Subtest: exams empty state uses real zero data
+ok 347 - exams empty state uses real zero data
+  ---
+  duration_ms: 8.253
+  type: 'test'
+  ...
+# Subtest: results empty state uses real zero data
+ok 348 - results empty state uses real zero data
+  ---
+  duration_ms: 5.203667
+  type: 'test'
+  ...
+# Subtest: full queue link clears an earlier exam filter
+ok 349 - full queue link clears an earlier exam filter
+  ---
+  duration_ms: 4.489625
+  type: 'test'
+  ...
+# Subtest: one mount fetches one metadata page and repeated pending navigation shares work
+ok 350 - one mount fetches one metadata page and repeated pending navigation shares work
+  ---
+  duration_ms: 4.001791
+  type: 'test'
+  ...
+# Subtest: TME2026P1: actual notebook renders all declared figures in statement order
+ok 351 - TME2026P1: actual notebook renders all declared figures in statement order
+  ---
+  duration_ms: 16.170375
+  type: 'test'
+  ...
+# Subtest: TME2026P2: actual notebook renders all declared figures in statement order
+ok 352 - TME2026P2: actual notebook renders all declared figures in statement order
+  ---
+  duration_ms: 5.588916
+  type: 'test'
+  ...
+# Subtest: TME2026P3: actual notebook renders all declared figures in statement order
+ok 353 - TME2026P3: actual notebook renders all declared figures in statement order
+  ---
+  duration_ms: 2.1945
+  type: 'test'
+  ...
+# Subtest: TME2026P4: actual notebook renders all declared figures in statement order
+ok 354 - TME2026P4: actual notebook renders all declared figures in statement order
+  ---
+  duration_ms: 2.009666
+  type: 'test'
+  ...
+# Subtest: TME2026P5: actual notebook renders all declared figures in statement order
+ok 355 - TME2026P5: actual notebook renders all declared figures in statement order
+  ---
+  duration_ms: 3.167291
+  type: 'test'
+  ...
+# Subtest: notebook rejects nonlocal or mismatched figure: /Users/local/figure.png
+ok 356 - notebook rejects nonlocal or mismatched figure: /Users/local/figure.png
+  ---
+  duration_ms: 2.2275
+  type: 'test'
+  ...
+# Subtest: notebook rejects nonlocal or mismatched figure: https://example.invalid/figure.png
+ok 357 - notebook rejects nonlocal or mismatched figure: https://example.invalid/figure.png
+  ---
+  duration_ms: 3.494667
+  type: 'test'
+  ...
+# Subtest: notebook rejects nonlocal or mismatched figure: /static/problem-assets/TME2026P4/triangulo.png
+ok 358 - notebook rejects nonlocal or mismatched figure: /static/problem-assets/TME2026P4/triangulo.png
+  ---
+  duration_ms: 2.0115
+  type: 'test'
+  ...
+# Subtest: ITA retains its existing string/curated presentation even when extra metadata is present
+ok 359 - ITA retains its existing string/curated presentation even when extra metadata is present
+  ---
+  duration_ms: 2.949833
+  type: 'test'
+  ...
+# Subtest: photo states, retry and single transcription remain visible without exposing technical content
+ok 360 - photo states, retry and single transcription remain visible without exposing technical content
+  ---
+  duration_ms: 69.309083
+  type: 'test'
+  ...
+# Subtest: adjusting a saved photo recovers original bytes and timestamps and publishes a separate case
+ok 361 - adjusting a saved photo recovers original bytes and timestamps and publishes a separate case
+  ---
+  duration_ms: 33.515417
+  type: 'test'
+  ...
+# Subtest: pilot notebook shows the selected statement, updates sticky offset, and reuses the five editing handlers
+ok 362 - pilot notebook shows the selected statement, updates sticky offset, and reuses the five editing handlers
+  ---
+  duration_ms: 22.148666
+  type: 'test'
+  ...
+# Subtest: existing TME selector lists all five official problems
+ok 363 - existing TME selector lists all five official problems
+  ---
+  duration_ms: 59.340458
+  type: 'test'
+  ...
+# Subtest: TME2026P1: complete statement and figures in existing collapsible panel
+ok 364 - TME2026P1: complete statement and figures in existing collapsible panel
+  ---
+  duration_ms: 9.939
+  type: 'test'
+  ...
+# Subtest: TME2026P2: complete statement and figures in existing collapsible panel
+ok 365 - TME2026P2: complete statement and figures in existing collapsible panel
+  ---
+  duration_ms: 6.704584
+  type: 'test'
+  ...
+# Subtest: TME2026P3: complete statement and figures in existing collapsible panel
+ok 366 - TME2026P3: complete statement and figures in existing collapsible panel
+  ---
+  duration_ms: 3.339833
+  type: 'test'
+  ...
+# Subtest: TME2026P4: complete statement and figures in existing collapsible panel
+ok 367 - TME2026P4: complete statement and figures in existing collapsible panel
+  ---
+  duration_ms: 4.449208
+  type: 'test'
+  ...
+# Subtest: TME2026P5: complete statement and figures in existing collapsible panel
+ok 368 - TME2026P5: complete statement and figures in existing collapsible panel
+  ---
+  duration_ms: 3.33725
+  type: 'test'
+  ...
+# Subtest: legacy ITA rendering and fallback still use the complete original string
+ok 369 - legacy ITA rendering and fallback still use the complete original string
+  ---
+  duration_ms: 3.129458
+  type: 'test'
+  ...
+# Subtest: catalog image URL cannot load external content
+ok 370 - catalog image URL cannot load external content
+  ---
+  duration_ms: 4.864458
+  type: 'test'
+  ...
+# Subtest: official mathematical notation parses with the bundled KaTeX renderer
+ok 371 - official mathematical notation parses with the bundled KaTeX renderer
+  ---
+  duration_ms: 65.562208
+  type: 'test'
+  ...
+# Subtest: native grouped selector preserves all 15 IDs and short labels (desktop=true)
+ok 372 - native grouped selector preserves all 15 IDs and short labels (desktop=true)
+  ---
+  duration_ms: 57.305166
+  type: 'test'
+  ...
+# Subtest: native grouped selector preserves all 15 IDs and short labels (desktop=false)
+ok 373 - native grouped selector preserves all 15 IDs and short labels (desktop=false)
+  ---
+  duration_ms: 4.90875
+  type: 'test'
+  ...
+# Subtest: ITA2025F2Q1: selection submits original ID and preserves its statement/figures
+ok 374 - ITA2025F2Q1: selection submits original ID and preserves its statement/figures
+  ---
+  duration_ms: 9.530875
+  type: 'test'
+  ...
+# Subtest: ITA2025F2Q3: selection submits original ID and preserves its statement/figures
+ok 375 - ITA2025F2Q3: selection submits original ID and preserves its statement/figures
+  ---
+  duration_ms: 5.404333
+  type: 'test'
+  ...
+# Subtest: ITA2025F2Q5: selection submits original ID and preserves its statement/figures
+ok 376 - ITA2025F2Q5: selection submits original ID and preserves its statement/figures
+  ---
+  duration_ms: 4.82875
+  type: 'test'
+  ...
+# Subtest: ITA2025F2Q6: selection submits original ID and preserves its statement/figures
+ok 377 - ITA2025F2Q6: selection submits original ID and preserves its statement/figures
+  ---
+  duration_ms: 5.940958
+  type: 'test'
+  ...
+# Subtest: ITA2025F2Q8: selection submits original ID and preserves its statement/figures
+ok 378 - ITA2025F2Q8: selection submits original ID and preserves its statement/figures
+  ---
+  duration_ms: 4.5725
+  type: 'test'
+  ...
+# Subtest: ITA2025Q1: selection submits original ID and preserves its statement/figures
+ok 379 - ITA2025Q1: selection submits original ID and preserves its statement/figures
+  ---
+  duration_ms: 4.684666
+  type: 'test'
+  ...
+# Subtest: ITA2025Q3: selection submits original ID and preserves its statement/figures
+ok 380 - ITA2025Q3: selection submits original ID and preserves its statement/figures
+  ---
+  duration_ms: 16.21
+  type: 'test'
+  ...
+# Subtest: ITA2025Q4: selection submits original ID and preserves its statement/figures
+ok 381 - ITA2025Q4: selection submits original ID and preserves its statement/figures
+  ---
+  duration_ms: 4.508625
+  type: 'test'
+  ...
+# Subtest: ITA2025Q5: selection submits original ID and preserves its statement/figures
+ok 382 - ITA2025Q5: selection submits original ID and preserves its statement/figures
+  ---
+  duration_ms: 4.997333
+  type: 'test'
+  ...
+# Subtest: ITA2025Q8: selection submits original ID and preserves its statement/figures
+ok 383 - ITA2025Q8: selection submits original ID and preserves its statement/figures
+  ---
+  duration_ms: 4.258542
+  type: 'test'
+  ...
+# Subtest: TME2026P1: selection submits original ID and preserves its statement/figures
+ok 384 - TME2026P1: selection submits original ID and preserves its statement/figures
+  ---
+  duration_ms: 5.008792
+  type: 'test'
+  ...
+# Subtest: TME2026P2: selection submits original ID and preserves its statement/figures
+ok 385 - TME2026P2: selection submits original ID and preserves its statement/figures
+  ---
+  duration_ms: 4.047875
+  type: 'test'
+  ...
+# Subtest: TME2026P3: selection submits original ID and preserves its statement/figures
+ok 386 - TME2026P3: selection submits original ID and preserves its statement/figures
+  ---
+  duration_ms: 17.366875
+  type: 'test'
+  ...
+# Subtest: TME2026P4: selection submits original ID and preserves its statement/figures
+ok 387 - TME2026P4: selection submits original ID and preserves its statement/figures
+  ---
+  duration_ms: 55.185541
+  type: 'test'
+  ...
+# Subtest: TME2026P5: selection submits original ID and preserves its statement/figures
+ok 388 - TME2026P5: selection submits original ID and preserves its statement/figures
+  ---
+  duration_ms: 5.783583
+  type: 'test'
+  ...
+# Subtest: mobile photo review supports add, confirm, reorder, rotate, replace and remove
+ok 389 - mobile photo review supports add, confirm, reorder, rotate, replace and remove
+  ---
+  duration_ms: 1.663042
+  type: 'test'
+  ...
+# Subtest: photo limits and unsupported formats fail before upload
+ok 390 - photo limits and unsupported formats fail before upload
+  ---
+  duration_ms: 0.492458
+  type: 'test'
+  ...
+# Subtest: OCR PNG is physically rotated and resized without changing the original
+ok 391 - OCR PNG is physically rotated and resized without changing the original
+  ---
+  duration_ms: 0.479042
+  type: 'test'
+  ...
+# Subtest: failed decode leaves the selected original and review state intact
+ok 392 - failed decode leaves the selected original and review state intact
+  ---
+  duration_ms: 0.282917
+  type: 'test'
+  ...
+# Subtest: synthetic queue labels, sample marks and filter deep links
+ok 393 - synthetic queue labels, sample marks and filter deep links
+  ---
+  duration_ms: 41.847541
+  type: 'test'
+  ...
+# Subtest: synthetic case header exposes provenance and inspection group
+ok 394 - synthetic case header exposes provenance and inspection group
+  ---
+  duration_ms: 27.0265
+  type: 'test'
+  ...
+# Subtest: case_id deep link opens the same workspace, statement and only actual related questions
+ok 395 - case_id deep link opens the same workspace, statement and only actual related questions
+  ---
+  duration_ms: 77.916334
+  type: 'test'
+  ...
+# Subtest: null score retains an enabled human decision and does not become zero
+ok 396 - null score retains an enabled human decision and does not become zero
+  ---
+  duration_ms: 16.23875
+  type: 'test'
+  ...
+# Subtest: override reveals a reason and blocks submission until provided, using the unchanged payload
+ok 397 - override reveals a reason and blocks submission until provided, using the unchanged payload
+  ---
+  duration_ms: 21.641834
+  type: 'test'
+  ...
+# Subtest: use suggestion scales only the displayed decision amount when maximum changes
+ok 398 - use suggestion scales only the displayed decision amount when maximum changes
+  ---
+  duration_ms: 11.760583
+  type: 'test'
+  ...
+# Subtest: human decision with no audit binds the exact revision without a compulsory review gate
+ok 399 - human decision with no audit binds the exact revision without a compulsory review gate
+  ---
+  duration_ms: 5.14275
+  type: 'test'
+  ...
+# Subtest: after finalization the next action uses the existing all-period queue and does not create a case
+ok 400 - after finalization the next action uses the existing all-period queue and does not create a case
+  ---
+  duration_ms: 10.137459
+  type: 'test'
+  ...
+# Subtest: empty next queue returns to the queue with clear feedback
+ok 401 - empty next queue returns to the queue with clear feedback
+  ---
+  duration_ms: 14.814833
+  type: 'test'
+  ...
+# Subtest: failed decision retains draft and safely explains retry
+ok 402 - failed decision retains draft and safely explains retry
+  ---
+  duration_ms: 7.487958
+  type: 'test'
+  ...
+# Subtest: criteria and claims preserve refutation, uncertainty and technical errors with no manufactured evidence
+ok 403 - criteria and claims preserve refutation, uncertainty and technical errors with no manufactured evidence
+  ---
+  duration_ms: 11.608667
+  type: 'test'
+  ...
+# Subtest: formal verified label requires execution and an artifact, while empty claims have an explicit state
+ok 404 - formal verified label requires execution and an artifact, while empty claims have an explicit state
+  ---
+  duration_ms: 15.902084
+  type: 'test'
+  ...
+# Subtest: technical provenance is closed and original images are reused across review rerenders
+ok 405 - technical provenance is closed and original images are reused across review rerenders
+  ---
+  duration_ms: 18.631167
+  type: 'test'
+  ...
+# Subtest: digital writing uses preserved page rendering without recreating strokes
+ok 406 - digital writing uses preserved page rendering without recreating strokes
+  ---
+  duration_ms: 5.3
+  type: 'test'
+  ...
+# Subtest: original pan moves the viewport and rotation reserves reachable nonnegative bounds
+ok 407 - original pan moves the viewport and rotation reserves reachable nonnegative bounds
+  ---
+  duration_ms: 4.790959
+  type: 'test'
+  ...
+# Subtest: shared theme is extracted verbatim and responsive layout uses Home tokens and semantic tabs
+ok 408 - shared theme is extracted verbatim and responsive layout uses Home tokens and semantic tabs
+  ---
+  duration_ms: 11.571084
+  type: 'test'
+  ...
+# Subtest: a technical failure does not impose an override reason absent from the existing server rule
+ok 409 - a technical failure does not impose an override reason absent from the existing server rule
+  ---
+  duration_ms: 8.981875
+  type: 'test'
+  ...
+# Subtest: failed analysis stays technical and exposes retry while a decision remains possible
+ok 410 - failed analysis stays technical and exposes retry while a decision remains possible
+  ---
+  duration_ms: 10.695125
+  type: 'test'
+  ...
+# Subtest: two finalize activations cannot create duplicate decisions
+ok 411 - two finalize activations cannot create duplicate decisions
+  ---
+  duration_ms: 35.352625
+  type: 'test'
+  ...
+# Subtest: statement receives the shared registry once and expands the same rendered subtree
+ok 412 - statement receives the shared registry once and expands the same rendered subtree
+  ---
+  duration_ms: 14.922458
+  type: 'test'
+  ...
+# Subtest: missing presentation asset retains the statement without blocking the workspace
+ok 413 - missing presentation asset retains the statement without blocking the workspace
+  ---
+  duration_ms: 9.512542
+  type: 'test'
+  ...
+# Subtest: compact layout moves its boundary before a fraction and expanded layout retains full content
+ok 414 - compact layout moves its boundary before a fraction and expanded layout retains full content
+  ---
+  duration_ms: 7.549083
+  type: 'test'
+  ...
+# Subtest: bounded desktop width and page fits preserve aspect ratio, zoom and rotated reachable bounds
+ok 415 - bounded desktop width and page fits preserve aspect ratio, zoom and rotated reachable bounds
+  ---
+  duration_ms: 56.134667
+  type: 'test'
+  ...
+# Subtest: bounded fit page uses extra viewer height and avoids stretching a landscape page
+ok 416 - bounded fit page uses extra viewer height and avoids stretching a landscape page
+  ---
+  duration_ms: 12.643
+  type: 'test'
+  ...
+# Subtest: mobile retains existing width/rotation sizing even with a saved desktop page fit
+ok 417 - mobile retains existing width/rotation sizing even with a saved desktop page fit
+  ---
+  duration_ms: 9.534
+  type: 'test'
+  ...
+# Subtest: fit and expansion reuse image nodes and perform no new requests
+ok 418 - fit and expansion reuse image nodes and perform no new requests
+  ---
+  duration_ms: 29.974959
+  type: 'test'
+  ...
+# Subtest: page, zoom, rotation, fit, expansion and collapsed analysis survive workspace rerender
+ok 419 - page, zoom, rotation, fit, expansion and collapsed analysis survive workspace rerender
+  ---
+  duration_ms: 20.06575
+  type: 'test'
+  ...
+# Subtest: desktop tab metadata has a compact provider caption and history is closed initially
+ok 420 - desktop tab metadata has a compact provider caption and history is closed initially
+  ---
+  duration_ms: 8.025208
+  type: 'test'
+  ...
+# Subtest: desktop defaults to page and mobile defaults to width
+ok 421 - desktop defaults to page and mobile defaults to width
+  ---
+  duration_ms: 61.214542
+  type: 'test'
+  ...
+# Subtest: automatic page fit uses the smaller dimension and centers portrait and landscape
+ok 422 - automatic page fit uses the smaller dimension and centers portrait and landscape
+  ---
+  duration_ms: 7.304
+  type: 'test'
+  ...
+# Subtest: manual zoom becomes custom, freezes automatic base, and page fit restores framing
+ok 423 - manual zoom becomes custom, freezes automatic base, and page fit restores framing
+  ---
+  duration_ms: 7.60175
+  type: 'test'
+  ...
+# Subtest: desktop rotation restores page fit after custom zoom and fits all four orientations
+ok 424 - desktop rotation restores page fit after custom zoom and fits all four orientations
+  ---
+  duration_ms: 8.603791
+  type: 'test'
+  ...
+# Subtest: page navigation keeps the selected fit mode and uses each image dimensions
+ok 425 - page navigation keeps the selected fit mode and uses each image dimensions
+  ---
+  duration_ms: 6.733667
+  type: 'test'
+  ...
+# Subtest: default follows breakpoint until the evaluator explicitly selects a mode
+ok 426 - default follows breakpoint until the evaluator explicitly selects a mode
+  ---
+  duration_ms: 5.169708
+  type: 'test'
+  ...
+# Subtest: Original uses the full available width even in a short desktop window
+ok 427 - Original uses the full available width even in a short desktop window
+  ---
+  duration_ms: 53.642208
+  type: 'test'
+  ...
+# Subtest: Original follows splitter width and accommodates a rotated full sheet
+ok 428 - Original follows splitter width and accommodates a rotated full sheet
+  ---
+  duration_ms: 10.8565
+  type: 'test'
+  ...
+# Subtest: tabs restore wide Original after bounded comparison without requests or duplicate images
+ok 429 - tabs restore wide Original after bounded comparison without requests or duplicate images
+  ---
+  duration_ms: 8.445416
+  type: 'test'
+  ...
+# Subtest: shared outline icons retain accessible action names and textual result states
+ok 430 - shared outline icons retain accessible action names and textual result states
+  ---
+  duration_ms: 58.338208
+  type: 'test'
+  ...
+# Subtest: segmented tabs preserve keyboard focus, selection and request-free switching
+ok 431 - segmented tabs preserve keyboard focus, selection and request-free switching
+  ---
+  duration_ms: 9.693958
+  type: 'test'
+  ...
+# Subtest: exam names are formatted for display without rewriting the stored code
+ok 432 - exam names are formatted for display without rewriting the stored code
+  ---
+  duration_ms: 55.957708
+  type: 'test'
+  ...
+# Subtest: only Transcrição exposes compact transcription metadata; tab navigation preserves the image
+ok 433 - only Transcrição exposes compact transcription metadata; tab navigation preserves the image
+  ---
+  duration_ms: 9.81375
+  type: 'test'
+  ...
+# Subtest: mobile statement moves the compact boundary before a fraction and expands the same content
+ok 434 - mobile statement moves the compact boundary before a fraction and expands the same content
+  ---
+  duration_ms: 10.435834
+  type: 'test'
+  ...
+# Subtest: decision clearance follows measured bar heights including wrapping and safe-area padding
+ok 435 - decision clearance follows measured bar heights including wrapping and safe-area padding
+  ---
+  duration_ms: 10.342208
+  type: 'test'
+  ...
+# Subtest: floating assistant opens in place on TutorIA overview with accessible nonmodal controls and Escape
+ok 436 - floating assistant opens in place on TutorIA overview with accessible nonmodal controls and Escape
+  ---
+  duration_ms: 53.593166
+  type: 'test'
+  ...
+# Subtest: opening, messaging and collapsing preserves notebook identity, question, ink, snapshot and draft
+ok 437 - opening, messaging and collapsing preserves notebook identity, question, ink, snapshot and draft
+  ---
+  duration_ms: 12.487958
+  type: 'test'
+  ...
+# Subtest: repeated notebook layout updates keep composer identity and draft; selected questions isolate conversations
+ok 438 - repeated notebook layout updates keep composer identity and draft; selected questions isolate conversations
+  ---
+  duration_ms: 12.197959
+  type: 'test'
+  ...
+# Subtest: context updates in the same drawer through lesson, attempt and overview navigation
+ok 439 - context updates in the same drawer through lesson, attempt and overview navigation
+  ---
+  duration_ms: 17.633375
+  type: 'test'
+  ...
+# Subtest: drawer preserves conversation and draft across close, internal navigation and a visit outside TutorIA
+ok 440 - drawer preserves conversation and draft across close, internal navigation and a visit outside TutorIA
+  ---
+  duration_ms: 24.840917
+  type: 'test'
+  ...
+# Subtest: exam route and mode block opening and stale message actions; leaving Exames restores the launcher
+ok 441 - exam route and mode block opening and stale message actions; leaving Exames restores the launcher
+  ---
+  duration_ms: 8.924917
+  type: 'test'
+  ...
+# Subtest: legacy institutional submission mode, teacher, management and unresolved authentication cannot open pedagogy
+ok 442 - legacy institutional submission mode, teacher, management and unresolved authentication cannot open pedagogy
+  ---
+  duration_ms: 32.138875
+  type: 'test'
+  ...
+# Subtest: launcher is restricted to existing TutorIA views and never renders outside them
+ok 443 - launcher is restricted to existing TutorIA views and never renders outside them
+  ---
+  duration_ms: 23.409167
+  type: 'test'
+  ...
+# Subtest: bank context follows only real catalog theme filters, with no invented topic when absent
+ok 444 - bank context follows only real catalog theme filters, with no invented topic when absent
+  ---
+  duration_ms: 17.158625
+  type: 'test'
+  ...
+# Subtest: assistant is a drawer tool, without a card, tab or separate chat page
+ok 445 - assistant is a drawer tool, without a card, tab or separate chat page
+  ---
+  duration_ms: 53.517417
+  type: 'test'
+  ...
+# Subtest: all four quick prompts append a student message and a short response; hints progress
+ok 446 - all four quick prompts append a student message and a short response; hints progress
+  ---
+  duration_ms: 15.571416
+  type: 'test'
+  ...
+# Subtest: typed messages stay literal, render math and cannot become executable HTML or institutional output
+ok 447 - typed messages stay literal, render math and cannot become executable HTML or institutional output
+  ---
+  duration_ms: 8.820084
+  type: 'test'
+  ...
+# Subtest: composer rejects empty/oversize input and respects multiline editing and composition
+ok 448 - composer rejects empty/oversize input and respects multiline editing and composition
+  ---
+  duration_ms: 13.62725
+  type: 'test'
+  ...
+# Subtest: session history and draft survive navigation; reset and reload are explicit
+ok 449 - session history and draft survive navigation; reset and reload are explicit
+  ---
+  duration_ms: 30.517042
+  type: 'test'
+  ...
+# Subtest: practice entry carries only the selected question and resumes the identical notebook and draft
+ok 450 - practice entry carries only the selected question and resumes the identical notebook and draft
+  ---
+  duration_ms: 9.165125
+  type: 'test'
+  ...
+# Subtest: content entry uses the selected lesson context instead of an unrelated question
+ok 451 - content entry uses the selected lesson context instead of an unrelated question
+  ---
+  duration_ms: 9.455916
+  type: 'test'
+  ...
+# Subtest: attempt context comes from feedback on opening the drawer and remains faithful without an automatic correctness claim
+ok 452 - attempt context comes from feedback on opening the drawer and remains faithful without an automatic correctness claim
+  ---
+  duration_ms: 14.911667
+  type: 'test'
+  ...
+# Subtest: Exames never offers the chat shortcut or inherits chat content; pending demo replies cannot reopen it
+ok 453 - Exames never offers the chat shortcut or inherits chat content; pending demo replies cannot reopen it
+  ---
+  duration_ms: 18.1405
+  type: 'test'
+  ...
+# Subtest: context boundary excludes unrelated institutional records
+ok 454 - context boundary excludes unrelated institutional records
+  ---
+  duration_ms: 8.417459
+  type: 'test'
+  ...
+# Subtest: TutorIA landing page has six modules and never opens the notebook automatically
+ok 455 - TutorIA landing page has six modules and never opens the notebook automatically
+  ---
+  duration_ms: 60.408125
+  type: 'test'
+  ...
+# Subtest: all six modules navigate and secondary navigation keeps TutorIA selected
+ok 456 - all six modules navigate and secondary navigation keeps TutorIA selected
+  ---
+  duration_ms: 25.495667
+  type: 'test'
+  ...
+# Subtest: library provides navigable topics, sample lessons and math without fabricating catalog questions
+ok 457 - library provides navigable topics, sample lessons and math without fabricating catalog questions
+  ---
+  duration_ms: 8.438458
+  type: 'test'
+  ...
+# Subtest: catalog search and metadata filters use only real API fields
+ok 458 - catalog search and metadata filters use only real API fields
+  ---
+  duration_ms: 9.806667
+  type: 'test'
+  ...
+# ConfIA: carregamento de questões Error: Não foi possível carregar as questões.
+#     at loadProblems (evalmachine.<anonymous>:549:11)
+# Subtest: question bank has loading, empty and failure states instead of fictional replacements
+ok 459 - question bank has loading, empty and failure states instead of fictional replacements
+  ---
+  duration_ms: 30.580459
+  type: 'test'
+  ...
+# Subtest: Resolve reuses TUTOR notebook; feedback creates no audit or institutional submission
+ok 460 - Resolve reuses TUTOR notebook; feedback creates no audit or institutional submission
+  ---
+  duration_ms: 12.334125
+  type: 'test'
+  ...
+# Subtest: typed practice uses the same pedagogical path and keeps demo feedback explicit
+ok 461 - typed practice uses the same pedagogical path and keeps demo feedback explicit
+  ---
+  duration_ms: 9.292875
+  type: 'test'
+  ...
+# Subtest: real session attempts replace illustrative activities and never become demo progress or management data
+ok 462 - real session attempts replace illustrative activities and never become demo progress or management data
+  ---
+  duration_ms: 12.906166
+  type: 'test'
+  ...
+# Subtest: nested routes survive hash navigation and a return from Exames clears its binding before practice
+ok 463 - nested routes survive hash navigation and a return from Exames clears its binding before practice
+  ---
+  duration_ms: 21.251709
+  type: 'test'
+  ...
+# Subtest: returning home preserves notebook identity without leaving the writing layout visible
+ok 464 - returning home preserves notebook identity without leaving the writing layout visible
+  ---
+  duration_ms: 10.870917
+  type: 'test'
+  ...
+# Subtest: authenticated shell locks navigation to the server role and exposes logout
+ok 465 - authenticated shell locks navigation to the server role and exposes logout
+  ---
+  duration_ms: 67.101542
+  type: 'test'
+  ...
+# Subtest: authenticated teacher opens the original and recognized transcription, then enables analysis after acceptance
+ok 466 - authenticated teacher opens the original and recognized transcription, then enables analysis after acceptance
+  ---
+  duration_ms: 21.677833
+  type: 'test'
+  ...
+# Subtest: teacher changes school and classroom without leaving the previous queue or detail visible
+ok 467 - teacher changes school and classroom without leaving the previous queue or detail visible
+  ---
+  duration_ms: 24.548042
+  type: 'test'
+  ...
+# Subtest: teacher Alunos view lists only the selected classroom and hides manuscript detail
+ok 468 - teacher Alunos view lists only the selected classroom and hides manuscript detail
+  ---
+  duration_ms: 31.409917
+  type: 'test'
+  ...
+# Subtest: teacher Alunos groups real Assessment items, statuses and legacy deliveries in its classroom
+ok 469 - teacher Alunos groups real Assessment items, statuses and legacy deliveries in its classroom
+  ---
+  duration_ms: 20.577875
+  type: 'test'
+  ...
+# Subtest: initial shell explicitly selects Aluno and shows only its home and menu
+ok 470 - initial shell explicitly selects Aluno and shows only its home and menu
+  ---
+  duration_ms: 5.782167
+  type: 'test'
+  ...
+# Subtest: every existing destination stays reachable, and profile/current-page semantics follow navigation
+ok 471 - every existing destination stays reachable, and profile/current-page semantics follow navigation
+  ---
+  duration_ms: 10.872875
+  type: 'test'
+  ...
+# Subtest: teacher routes converge on the same solution and keep the local text demonstration separate
+ok 472 - teacher routes converge on the same solution and keep the local text demonstration separate
+  ---
+  duration_ms: 7.815292
+  type: 'test'
+  ...
+# Subtest: UI-P0 dirty editor protects profile switches, shell links and browser history
+ok 473 - UI-P0 dirty editor protects profile switches, shell links and browser history
+  ---
+  duration_ms: 9.803125
+  type: 'test'
+  ...
+# Subtest: Envios exposes session receipts and no legacy local submission editor
+ok 474 - Envios exposes session receipts and no legacy local submission editor
+  ---
+  duration_ms: 5.803084
+  type: 'test'
+  ...
+# Subtest: capture return query, deep links, invalid links and skip link preserve consistent state
+ok 475 - capture return query, deep links, invalid links and skip link preserve consistent state
+  ---
+  duration_ms: 23.601375
+  type: 'test'
+  ...
+# Subtest: Resolver opens the one notebook for the selected problem; both purposes reuse its frame
+ok 476 - Resolver opens the one notebook for the selected problem; both purposes reuse its frame
+  ---
+  duration_ms: 50.326208
+  type: 'test'
+  ...
+# Subtest: practice audits only explicitly typed text, with a frozen problem/draft/presentation context
+ok 477 - practice audits only explicitly typed text, with a frozen problem/draft/presentation context
+  ---
+  duration_ms: 17.117458
+  type: 'test'
+  ...
+# Subtest: handwriting does not create text or trigger analysis; ink edits mark an earlier analysis stale
+ok 478 - handwriting does not create text or trigger analysis; ink edits mark an earlier analysis stale
+  ---
+  duration_ms: 12.615791
+  type: 'test'
+  ...
+# Subtest: changing question/draft keeps explicit text, analysis and receipts in their own contexts
+ok 479 - changing question/draft keeps explicit text, analysis and receipts in their own contexts
+  ---
+  duration_ms: 11.984791
+  type: 'test'
+  ...
+# Subtest: late practice analysis cannot appear in submission and returns only to its original draft
+ok 480 - late practice analysis cannot appear in submission and returns only to its original draft
+  ---
+  duration_ms: 19.474583
+  type: 'test'
+  ...
+# Subtest: late analysis for A cannot replace solution or feedback for B
+ok 481 - late analysis for A cannot replace solution or feedback for B
+  ---
+  duration_ms: 16.345209
+  type: 'test'
+  ...
+# Subtest: Feedback is current session context; Envios uses session receipts and never loads general server history
+ok 482 - Feedback is current session context; Envios uses session receipts and never loads general server history
+  ---
+  duration_ms: 15.687916
+  type: 'test'
+  ...
+# Subtest: messages from unrelated windows or origins cannot switch notebook context
+ok 483 - messages from unrelated windows or origins cannot switch notebook context
+  ---
+  duration_ms: 6.032042
+  type: 'test'
+  ...
+# Subtest: practice notebook preserves writing/pages/autosave but cannot prepare or send a submission
+ok 484 - practice notebook preserves writing/pages/autosave but cannot prepare or send a submission
+  ---
+  duration_ms: 15.609291
+  type: 'test'
+  ...
+# Subtest: notebook entry resolves correct problem and serial question changes never mix drafts
+ok 485 - notebook entry resolves correct problem and serial question changes never mix drafts
+  ---
+  duration_ms: 2.637958
+  type: 'test'
+  ...
+# Subtest: receipt arriving after a mode/question change remains attached to the submitted snapshot
+ok 486 - receipt arriving after a mode/question change remains attached to the submitted snapshot
+  ---
+  duration_ms: 6.21625
+  type: 'test'
+  ...
+# Subtest: typed alternative preserves the selected statement, text, analysis and the same notebook
+ok 487 - typed alternative preserves the selected statement, text, analysis and the same notebook
+  ---
+  duration_ms: 7.177167
+  type: 'test'
+  ...
+# Subtest: teacher link leaves the embedded notebook through the institutional shell and preserves context
+ok 488 - teacher link leaves the embedded notebook through the institutional shell and preserves context
+  ---
+  duration_ms: 8.041208
+  type: 'test'
+  ...
+# Subtest: recovery rejects documents from another question instead of mixing strokes
+ok 489 - recovery rejects documents from another question instead of mixing strokes
+  ---
+  duration_ms: 2.426083
+  type: 'test'
+  ...
+# Subtest: direct compatibility entry does not leave the notebook if migration saving fails
+ok 490 - direct compatibility entry does not leave the notebook if migration saving fails
+  ---
+  duration_ms: 1.746917
+  type: 'test'
+  ...
+# Subtest: analysis starts closed, and opening or closing it never audits or loses text/context
+ok 491 - analysis starts closed, and opening or closing it never audits or loses text/context
+  ---
+  duration_ms: 8.304625
+  type: 'test'
+  ...
+# Subtest: typed entry and feedback editing expose the textarea; notebook/new drafts start closed
+ok 492 - typed entry and feedback editing expose the textarea; notebook/new drafts start closed
+  ---
+  duration_ms: 13.208834
+  type: 'test'
+  ...
+# Subtest: embedded sticky question starts compact and expands; standalone entry retains its statement
+ok 493 - embedded sticky question starts compact and expands; standalone entry retains its statement
+  ---
+  duration_ms: 2.304583
+  type: 'test'
+  ...
+# Subtest: existing draft with handwriting recovers unchanged inside the taller notebook
+ok 494 - existing draft with handwriting recovers unchanged inside the taller notebook
+  ---
+  duration_ms: 1.849917
+  type: 'test'
+  ...
+# Subtest: parent question precedes the notebook in both modes; practice focus and typed view keep their behavior
+ok 495 - parent question precedes the notebook in both modes; practice focus and typed view keep their behavior
+  ---
+  duration_ms: 7.161958
+  type: 'test'
+  ...
+# Subtest: workspace renders capture status and routes actions through the existing notebook frame
+ok 496 - workspace renders capture status and routes actions through the existing notebook frame
+  ---
+  duration_ms: 13.097625
+  type: 'test'
+  ...
+# Subtest: parent sticky ink toolbar follows statement height and delegates every ink command
+ok 497 - parent sticky ink toolbar follows statement height and delegates every ink command
+  ---
+  duration_ms: 9.012166
+  type: 'test'
+  ...
+# Subtest: parent sticky updates with the selected problem and its disclosure preserves notebook/text
+ok 498 - parent sticky updates with the selected problem and its disclosure preserves notebook/text
+  ---
+  duration_ms: 7.347208
+  type: 'test'
+  ...
+# Subtest: every catalog question shows only its ID above its complete statement in the parent notebook
+ok 499 - every catalog question shows only its ID above its complete statement in the parent notebook
+  ---
+  duration_ms: 64.133375
+  type: 'test'
+  ...
+# Subtest: parent question uses the same renderer, registry and fallback message as the approved typed statement
+ok 500 - parent question uses the same renderer, registry and fallback message as the approved typed statement
+  ---
+  duration_ms: 3.515209
+  type: 'test'
+  ...
+# Subtest: embedded practice hides its question presentation without hiding autosave or changing standalone/submission
+ok 501 - embedded practice hides its question presentation without hiding autosave or changing standalone/submission
+  ---
+  duration_ms: 1.590417
+  type: 'test'
+  ...
+# Subtest: queue uses the persisted NEEDS_REVIEW transcription separately from RECEIVED and analysis
+ok 502 - queue uses the persisted NEEDS_REVIEW transcription separately from RECEIVED and analysis
+  ---
+  duration_ms: 32.058
+  type: 'test'
+  ...
+# Subtest: queue uses the persisted ACCEPTED transcription separately from RECEIVED and analysis
+ok 503 - queue uses the persisted ACCEPTED transcription separately from RECEIVED and analysis
+  ---
+  duration_ms: 1.792125
+  type: 'test'
+  ...
+# Subtest: queue uses the persisted DRAFT transcription separately from RECEIVED and analysis
+ok 504 - queue uses the persisted DRAFT transcription separately from RECEIVED and analysis
+  ---
+  duration_ms: 3.715958
+  type: 'test'
+  ...
+# Subtest: received solution without transcription has only the receipt stage completed
+ok 505 - received solution without transcription has only the receipt stage completed
+  ---
+  duration_ms: 5.667833
+  type: 'test'
+  ...
+# Subtest: original precedes the complementary workflow and page navigation preserves original URLs
+ok 506 - original precedes the complementary workflow and page navigation preserves original URLs
+  ---
+  duration_ms: 3.883
+  type: 'test'
+  ...
+# Subtest: accepted fidelity completes only transcription; no audit, grade or institutional decision
+ok 507 - accepted fidelity completes only transcription; no audit, grade or institutional decision
+  ---
+  duration_ms: 3.399834
+  type: 'test'
+  ...
+# Subtest: IDs, hashes and enums stay in closed disclosures and acceptance history remains available
+ok 508 - IDs, hashes and enums stay in closed disclosures and acceptance history remains available
+  ---
+  duration_ms: 3.817541
+  type: 'test'
+  ...
+# Subtest: production has no recognition controls; persisted fake transcription remains explicitly artificial
+ok 509 - production has no recognition controls; persisted fake transcription remains explicitly artificial
+  ---
+  duration_ms: 4.355209
+  type: 'test'
+  ...
+# Subtest: transcription filters operate on the same queue and preserve the selected workspace
+ok 510 - transcription filters operate on the same queue and preserve the selected workspace
+  ---
+  duration_ms: 9.767292
+  type: 'test'
+  ...
+# Subtest: existing teacher queue filters Assessment and problem without copying submissions
+ok 511 - existing teacher queue filters Assessment and problem without copying submissions
+  ---
+  duration_ms: 2.202459
+  type: 'test'
+  ...
+# Subtest: failure to consult a transcription never looks like an absent transcription or completed analysis
+ok 512 - failure to consult a transcription never looks like an absent transcription or completed analysis
+  ---
+  duration_ms: 1.385875
+  type: 'test'
+  ...
+# Subtest: Portuguese integrity conflict is translated and unsaved transcription survives
+ok 513 - Portuguese integrity conflict is translated and unsaved transcription survives
+  ---
+  duration_ms: 15.213375
+  type: 'test'
+  ...
+# Subtest: return to queue respects unsaved changes and does not discard them implicitly
+ok 514 - return to queue respects unsaved changes and does not discard them implicitly
+  ---
+  duration_ms: 4.200792
+  type: 'test'
+  ...
+# Subtest: shared report explicitly limits formal verification to selected claims and steps
+ok 515 - shared report explicitly limits formal verification to selected claims and steps
+  ---
+  duration_ms: 40.082542
+  type: 'test'
+  ...
+# Subtest: formal details distinguish proven refutations from unavailable or inconclusive checks
+ok 516 - formal details distinguish proven refutations from unavailable or inconclusive checks
+  ---
+  duration_ms: 8.249375
+  type: 'test'
+  ...
+# Subtest: teacher report keeps suggested result, evidence, attention and F2Q3 criteria visible
+ok 517 - teacher report keeps suggested result, evidence, attention and F2Q3 criteria visible
+  ---
+  duration_ms: 14.830292
+  type: 'test'
+  ...
+# Subtest: incomplete assessment shows no global numeric grade and keeps pending criteria explicit
+ok 518 - incomplete assessment shows no global numeric grade and keeps pending criteria explicit
+  ---
+  duration_ms: 8.829084
+  type: 'test'
+  ...
+# Subtest: student renders a null/inconclusive score without turning subtotal 0 into a final grade
+ok 519 - student renders a null/inconclusive score without turning subtotal 0 into a final grade
+  ---
+  duration_ms: 2.523083
+  type: 'test'
+  ...
+# Subtest: student renders a null/inconclusive score without turning subtotal 5 into a final grade
+ok 520 - student renders a null/inconclusive score without turning subtotal 5 into a final grade
+  ---
+  duration_ms: 2.525292
+  type: 'test'
+  ...
+# Subtest: teacher renders a null/inconclusive score without turning subtotal 0 into a final grade
+ok 521 - teacher renders a null/inconclusive score without turning subtotal 0 into a final grade
+  ---
+  duration_ms: 2.12825
+  type: 'test'
+  ...
+# Subtest: teacher renders a null/inconclusive score without turning subtotal 5 into a final grade
+ok 522 - teacher renders a null/inconclusive score without turning subtotal 5 into a final grade
+  ---
+  duration_ms: 3.154834
+  type: 'test'
+  ...
+# Subtest: student request and report retain original problem and solution when selection changes during analysis
+ok 523 - student request and report retain original problem and solution when selection changes during analysis
+  ---
+  duration_ms: 6.938166
+  type: 'test'
+  ...
+# Subtest: editing after analysis marks the preserved report as stale and reanalysis restores current state
+ok 524 - editing after analysis marks the preserved report as stale and reanalysis restores current state
+  ---
+  duration_ms: 3.461416
+  type: 'test'
+  ...
+# Subtest: changing the problem after a completed analysis marks the result stale
+ok 525 - changing the problem after a completed analysis marks the result stale
+  ---
+  duration_ms: 3.875291
+  type: 'test'
+  ...
+# Subtest: teacher response for A does not update B and remains available when returning to A
+ok 526 - teacher response for A does not update B and remains available when returning to A
+  ---
+  duration_ms: 2.97225
+  type: 'test'
+  ...
+# Subtest: teacher concurrent A and B analyses keep independent processing and results
+ok 527 - teacher concurrent A and B analyses keep independent processing and results
+  ---
+  duration_ms: 3.661458
+  type: 'test'
+  ...
+# Subtest: teacher failure for A never replaces the selected B report
+ok 528 - teacher failure for A never replaces the selected B report
+  ---
+  duration_ms: 2.970834
+  type: 'test'
+  ...
+# Subtest: text submission explicitly describes local demonstration and keeps localStorage-only transport
+ok 529 - text submission explicitly describes local demonstration and keeps localStorage-only transport
+  ---
+  duration_ms: 2.712916
+  type: 'test'
+  ...
+# Subtest: audit error is translated, logged and leaves previous report intact on retry
+ok 530 - audit error is translated, logged and leaves previous report intact on retry
+  ---
+  duration_ms: 6.5495
+  type: 'test'
+  ...
+# Subtest: validation marks the field, announces error and clears it after correction
+ok 531 - validation marks the field, announces error and clears it after correction
+  ---
+  duration_ms: 4.492334
+  type: 'test'
+  ...
+# Subtest: example loading cannot overwrite text edited during its request
+ok 532 - example loading cannot overwrite text edited during its request
+  ---
+  duration_ms: 2.966542
+  type: 'test'
+  ...
+# Subtest: changing mode during audit preserves its result for return to study
+ok 533 - changing mode during audit preserves its result for return to study
+  ---
+  duration_ms: 2.880625
+  type: 'test'
+  ...
+# Subtest: continued editing does not rebuild an already stale report
+ok 534 - continued editing does not rebuild an already stale report
+  ---
+  duration_ms: 1.963417
+  type: 'test'
+  ...
+# Subtest: mismatched response is rejected and cannot be presented as the requested question
+ok 535 - mismatched response is rejected and cannot be presented as the requested question
+  ---
+  duration_ms: 2.292041
+  type: 'test'
+  ...
+# Subtest: teacher retry failure keeps the earlier report and announces unavailable analysis
+ok 536 - teacher retry failure keeps the earlier report and announces unavailable analysis
+  ---
+  duration_ms: 3.002209
+  type: 'test'
+  ...
+# Subtest: student response compares current field values even if an external edit emits no input event
+ok 537 - student response compares current field values even if an external edit emits no input event
+  ---
+  duration_ms: 2.415917
+  type: 'test'
+  ...
+# Subtest: UI-03 text analysis states reflect actual mocked requests and never change local evaluation data
+ok 538 - UI-03 text analysis states reflect actual mocked requests and never change local evaluation data
+  ---
+  duration_ms: 3.928417
+  type: 'test'
+  ...
+1..538
+# tests 538
+# suites 0
+# pass 538
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1644.427292

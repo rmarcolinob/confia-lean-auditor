@@ -192,7 +192,7 @@ test('student clears earlier detail while refreshing and on failed or late respo
   assert.equal(ui.get('#student-exams').getAttribute('aria-busy'), 'true');
   next = { ok: false, status: 403 };
   ui.visit('exams'); await flush();
-  assert.match(ui.get('#student-exams-message').textContent, /Não foi possível consultar os exames/);
+  assert.match(ui.get('#student-exams-message').textContent, /Seu perfil não tem acesso às atividades desta turma/);
   pending.resolve({ ok: true, json: async () => [exam] }); await flush();
   assert.equal(ui.get('#student-exam-list').textContent, '');
   assert.equal(ui.get('#student-exam-items').textContent, '');
@@ -278,4 +278,11 @@ test('student refuses unmatched or nonreleased results', async () => {
     await openExam(ui);
     assert.doesNotMatch(ui.get('#student-exam-items').textContent, /Pontuação|Not visible/);
   }
+});
+
+for (const status of [401,500]) test(`student assessment HTTP ${status} gives a distinct access state`,async()=>{
+ const ui=await studentPage(undefined,{examsTransport:()=>({ok:false,status})});
+ ui.visit('exams');await flush();
+ assert.match(ui.get('#student-exams-message').textContent,status===401?/sessão de aluno autenticada/:/Não foi possível consultar os exames/);
+ assert.equal(ui.get('#student-exam-list').textContent,'');
 });

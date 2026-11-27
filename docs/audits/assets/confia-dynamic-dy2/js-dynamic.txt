@@ -1,0 +1,19 @@
+✔ create an explicit Dynamic problem; AI suggestion cannot send a request (15.258792ms)
+✔ manual criteria total, editing, stable IDs and approval only after saved draft (3.316833ms)
+✔ approval uses saved revision; history remains visible after statement change (2.452208ms)
+✔ invalid total blocks save, removal updates total, texts render without HTML injection (1.385041ms)
+✔ removed criterion IDs are not reused for a different criterion in later edits (1.693875ms)
+✔ prepare shows loading, real request and checked evidence with no automatic rubric or approval (18.376792ms)
+✔ AI draft warnings are visible and acknowledgement gates explicit approval; edits require save (2.855875ms)
+✔ regeneration has reason and new version; own rubric sends teacher replacement flag (2.679583ms)
+✔ failed preparation offers retry and never fabricates a candidate (0.849083ms)
+✔ historical preparation after statement change is visible but cannot enable suggestion (0.764875ms)
+✔ provider failure surfaces error with no phantom draft (1.383667ms)
+ℹ tests 11
+ℹ suites 0
+ℹ pass 11
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 82.473917
