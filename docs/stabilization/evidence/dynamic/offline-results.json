@@ -1,0 +1,32 @@
+{
+  "base_commit": "923bf3acbd9994af9662bcdff6b18eac1b6d4df9",
+  "topics": [
+    "conjuntos",
+    "intervalos",
+    "porcentagem",
+    "razao",
+    "proporcao",
+    "funcao_afim",
+    "funcao_quadratica",
+    "funcao_modular",
+    "funcao_exponencial",
+    "funcao_logaritmica",
+    "equacao",
+    "inequacao",
+    "juros_simples",
+    "juros_compostos",
+    "geometria_plana",
+    "trigonometria"
+  ],
+  "synthetic_opinion_integration_tests": 96,
+  "actual_disabled_provider_tests": 16,
+  "regressions": {
+    "passed": 840,
+    "skipped": 2,
+    "seconds": 374.53
+  },
+  "live_provider_calls": 0,
+  "independent_human_gold_cases": 0,
+  "historical_gate_pending": 21,
+  "lean_executed_by_dynamic": false
+}

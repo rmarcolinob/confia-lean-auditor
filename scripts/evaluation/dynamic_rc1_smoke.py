@@ -29,10 +29,11 @@ def reservation(group):
     return (INPUT_RESERVE * inp + OUTPUTS[group] * out) / 1000000
 
 
-def plan():
-    return dict(mode='PLAN_ONLY',api_calls=0,cap_usd=str(CAP),max_calls=sum(LIMITS.values()),
-        limits=LIMITS,reservation_usd={g:str(reservation(g)) for g in LIMITS},
-        maximum_reserved_usd=str(sum(LIMITS[g]*reservation(g) for g in LIMITS)),
+def plan(text_only=False):
+    limits = dict(LIMITS, ocr=0) if text_only else dict(LIMITS)
+    return dict(mode='PLAN_ONLY',api_calls=0,cap_usd=str(CAP),max_calls=sum(limits.values()),
+        text_only=text_only,limits=limits,reservation_usd={g:str(reservation(g)) for g in limits},
+        maximum_reserved_usd=str(sum(limits[g]*reservation(g) for g in limits)),
         max_request_json_bytes=MAX_JSON_BYTES,input_token_reserve_per_llm_call=INPUT_RESERVE,
         prices_checked='2026-11-26',requires_later_explicit_authorization=True)
 
@@ -41,14 +42,15 @@ class StopSmoke(RuntimeError): pass
 
 
 class BudgetGate:
-    def __init__(self, directory):
+    def __init__(self, directory, *, text_only=False):
         self.root=Path(directory);self.root.mkdir(parents=True,exist_ok=True,mode=0o700)
         self.ledger=self.root/'ledger.jsonl'
         # A restart must not silently reset spending; no automatic retries/resume.
         if self.ledger.exists():raise StopSmoke('Existing ledger: review it before any new authorization.')
-        self.used=Decimal(0);self.counts={k:0 for k in LIMITS};self.halted=False
+        self.limits = plan(text_only)['limits']
+        self.used=Decimal(0);self.counts={k:0 for k in self.limits};self.halted=False
         self.lock=threading.Lock()
-        self._event(dict(event='plan',**plan()))
+        self._event(dict(event='plan',**plan(text_only)))
 
     def _event(self, row):
         data=(json.dumps(row,sort_keys=True,ensure_ascii=False)+'\n').encode()
@@ -94,7 +96,7 @@ class BudgetGate:
             try:
                 group,model,body=self.classify(request)
                 amount=reservation(group)
-                if self.counts[group]>=LIMITS[group] or self.used+amount>CAP:raise StopSmoke('Call or budget cap reached.')
+                if self.counts[group]>=self.limits[group] or self.used+amount>CAP:raise StopSmoke('Call or budget cap reached.')
                 self.counts[group]+=1;self.used+=amount
                 call=sum(self.counts.values());started=time.perf_counter()
                 # Only hashes/metadata: never record credentials or request headers.
@@ -136,23 +138,25 @@ class BudgetGate:
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--serve-after-authorization',action='store_true')
+    parser.add_argument('--text-only',action='store_true',help='Exclude OCR: zero OCR calls and no OCR credentials required.')
     parser.add_argument('--authorized-budget-usd')
     parser.add_argument('--data-dir',type=Path)
     parser.add_argument('--port',type=int,default=8026)
     args=parser.parse_args()
-    if not args.serve_after_authorization:print(json.dumps(plan(),indent=2));return
+    if not args.serve_after_authorization:print(json.dumps(plan(args.text_only),indent=2));return
     if args.authorized_budget_usd!='6.00' or not args.data_dir:parser.error('Explicit USD 6.00 authorization and isolated data directory required.')
     required={'CONFIA_AUTH_ENABLED':'1','CONFIA_DYNAMIC_LLM_ENABLED':'1','CONFIA_SEMANTIC_LLM_ENABLED':'1',
         'CONFIA_DYNAMIC_MODEL':'gpt-4.1','CONFIA_SEMANTIC_MODEL':'gpt-6.1-sol','CONFIA_SEMANTIC_REASONING_EFFORT':'medium'}
     if any(os.getenv(k)!=v for k,v in required.items()):parser.error('Configuration differs from approved smoke plan.')
-    if not all(os.getenv(k) for k in ('OPENAI_API_KEY','CONFIA_MATHPIX_APP_ID','CONFIA_MATHPIX_APP_KEY')):parser.error('Secure provider configuration missing.')
+    credentials = ('OPENAI_API_KEY',) if args.text_only else ('OPENAI_API_KEY','CONFIA_MATHPIX_APP_ID','CONFIA_MATHPIX_APP_KEY')
+    if not all(os.getenv(k) for k in credentials):parser.error('Secure provider configuration missing.')
     import sys
     sys.path.insert(0,str(ROOT/'app'))
     data=args.data_dir.resolve()
     for store in ('AUTH','INSTITUTIONAL','ASSESSMENTS','ASSESSMENT_PARTICIPANTS','TME_EXAMS','TME_CASES','SUBMISSIONS','SUBMISSION_AUDITS','DYNAMIC','TEACHER_DECISIONS','SELF_STUDY'):
         os.environ['CONFIA_'+store+'_DIR']=str(data/store.lower())
     os.environ.update(CONFIA_ENV='development',CONFIA_COOKIE_SECURE='0',CONFIA_TME_DEMO_NO_AUTH='0',CONFIA_DYNAMIC_DEMO_ENABLED='0',CONFIA_LEAN_AUDITOR_ROOT=str(ROOT),CONFIA_DYNAMIC_REVIEWER_ENABLED='0')
-    gate=BudgetGate(data/'smoke-control')
+    gate=BudgetGate(data/'smoke-control',text_only=args.text_only)
     import httpx,uvicorn
     original=httpx.Client.send
     httpx.Client.send=lambda client,request,**kwargs:gate.send(original,client,request,**kwargs)
