@@ -1,0 +1,6 @@
+Traceback (most recent call last):
+  File "/private/tmp/confia-integrated-pr7-10/artifacts/integrated-validation/platform_flow.py", line 80, in <module>
+    elif sys.argv[1]=='verify':verify()
+  File "/private/tmp/confia-integrated-pr7-10/artifacts/integrated-validation/platform_flow.py", line 73, in verify
+    assert metrics['submissions_count']==metrics['decisions_finalized_count']==metrics['decisions_released_count']==1
+AssertionError

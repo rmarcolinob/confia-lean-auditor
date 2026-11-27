@@ -1,0 +1,58 @@
+[
+  {
+    "status": "fulfilled",
+    "value": {
+      "number": 7,
+      "state": "open",
+      "merged": false,
+      "base": "main",
+      "base_sha": "923bf3acbd9994af9662bcdff6b18eac1b6d4df9",
+      "head": "codex/stabilize-technical-pre10dez",
+      "head_sha": "5f37f4db5397253b83e9c48266b7805f59ca6ea7",
+      "url": "https://github.com/rmarcolinob/confia-lean-auditor/pull/7",
+      "updated_at": "2026-11-27T16:47:01Z"
+    }
+  },
+  {
+    "status": "fulfilled",
+    "value": {
+      "number": 8,
+      "state": "open",
+      "merged": false,
+      "base": "main",
+      "base_sha": "923bf3acbd9994af9662bcdff6b18eac1b6d4df9",
+      "head": "codex/stabilize-specialized-pre10dez",
+      "head_sha": "3a1cf5f00f36a1f8768a1b4314cf6b4471706a3a",
+      "url": "https://github.com/rmarcolinob/confia-lean-auditor/pull/8",
+      "updated_at": "2026-11-27T16:52:57Z"
+    }
+  },
+  {
+    "status": "fulfilled",
+    "value": {
+      "number": 9,
+      "state": "open",
+      "merged": false,
+      "base": "main",
+      "base_sha": "923bf3acbd9994af9662bcdff6b18eac1b6d4df9",
+      "head": "codex/stabilize-platform-pre10dez",
+      "head_sha": "61bae9dc273b71a116f04ffc90b0d9afcf097465",
+      "url": "https://github.com/rmarcolinob/confia-lean-auditor/pull/9",
+      "updated_at": "2026-11-27T17:03:16Z"
+    }
+  },
+  {
+    "status": "fulfilled",
+    "value": {
+      "number": 10,
+      "state": "open",
+      "merged": false,
+      "base": "main",
+      "base_sha": "923bf3acbd9994af9662bcdff6b18eac1b6d4df9",
+      "head": "codex/validate-dynamic-pre10dez",
+      "head_sha": "ff7a098bc9ab9a5d71d55d6aaab90291afa7386c",
+      "url": "https://github.com/rmarcolinob/confia-lean-auditor/pull/10",
+      "updated_at": "2026-11-27T17:15:18Z"
+    }
+  }
+]

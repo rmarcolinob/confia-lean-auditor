@@ -1,0 +1,28 @@
+{
+  "mode": "PLAN_ONLY",
+  "api_calls": 0,
+  "cap_usd": "6.00",
+  "max_calls": 21,
+  "text_only": true,
+  "limits": {
+    "prepare": 2,
+    "rubric": 2,
+    "help2": 1,
+    "grader": 8,
+    "independent_reviewer": 8,
+    "ocr": 0
+  },
+  "reservation_usd": {
+    "prepare": "0.28",
+    "rubric": "0.28",
+    "help2": "0.28",
+    "grader": "0.24",
+    "independent_reviewer": "0.24",
+    "ocr": "0.01"
+  },
+  "maximum_reserved_usd": "5.24",
+  "max_request_json_bytes": 65536,
+  "input_token_reserve_per_llm_call": 100000,
+  "prices_checked": "2026-11-26",
+  "requires_later_explicit_authorization": true
+}

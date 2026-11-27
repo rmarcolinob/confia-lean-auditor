@@ -1,0 +1,42 @@
+=================================== FAILURES ===================================
+2026-11-27T18:04:59.8507593Z __________ test_five_problems_accepted_engine_persistence_api[full-4] __________
+2026-11-27T18:04:59.8507953Z
+2026-11-27T18:04:59.8508378Z offline = (<starlette.testclient.TestClient object at 0x75dcd8de7e90>, [], PosixPath('/tmp/pytest-of-runner/pytest-0/test_five_problems_accepted_en3'))
+2026-11-27T18:04:59.8509106Z n = 4, kind = 'full'
+2026-11-27T18:04:59.8509253Z
+2026-11-27T18:04:59.8509375Z     @pytest.mark.parametrize('n',range(1,6))
+2026-11-27T18:04:59.8509844Z     @pytest.mark.parametrize('kind',['full','partial','false','indeterminate'])
+2026-11-27T18:04:59.8510380Z     def test_five_problems_accepted_engine_persistence_api(offline,n,kind):
+2026-11-27T18:04:59.8510795Z         client,calls,_=offline
+2026-11-27T18:04:59.8511942Z         solution=solution_for(n,FULL[n] if kind=='full' else [PARTIAL[n] if kind=='partial' else FALSE[n]]) if kind!='indeterminate' else {'a':'Uma ideia ainda não estabelecida com segurança.'}
+2026-11-27T18:04:59.8512815Z         base,sid,rev,request=prepare(client,n,solution)
+2026-11-27T18:04:59.8513211Z >       run,stored=execute(client,base,request)
+2026-11-27T18:04:59.8513576Z                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-11-27T18:04:59.8513778Z
+2026-11-27T18:04:59.8514214Z tests/test_tme_accepted_integration.py:92:
+2026-11-27T18:04:59.8515014Z _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+2026-11-27T18:04:59.8515327Z
+2026-11-27T18:04:59.8515586Z client = <starlette.testclient.TestClient object at 0x75dcd8de7e90>
+2026-11-27T18:04:59.8516125Z base = '/tme/cases/case_bed1bfd13c214defa814ba8ba98dcdb4'
+2026-11-27T18:04:59.8516954Z request = {'acceptance_id': 'acc_56d3e76910dc43b386194d61981941ed', 'revision_number': 1, 'transcription_id': 'tr_43bdba4591c740dba4fdec127fffbd7c'}
+2026-11-27T18:04:59.8517603Z
+2026-11-27T18:04:59.8517739Z     def execute(client, base, request):
+2026-11-27T18:04:59.8518137Z         response=client.post(base+'/audits',json=request)
+2026-11-27T18:04:59.8518576Z         assert response.status_code==200,response.text
+2026-11-27T18:04:59.8519100Z >       run=response.json();assert run['status']=='COMPLETED',run.get('error_code')
+2026-11-27T18:04:59.8519657Z                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-11-27T18:04:59.8520072Z E       AssertionError: AUDITOR_FAILED
+2026-11-27T18:04:59.8520511Z E       assert 'FAILED' == 'COMPLETED'
+2026-11-27T18:04:59.8520833Z E
+2026-11-27T18:04:59.8521075Z E         - COMPLETED
+2026-11-27T18:04:59.8521576Z E         + FAILED
+2026-11-27T18:04:59.8521734Z
+2026-11-27T18:04:59.8521942Z tests/test_tme_accepted_integration.py:79: AssertionError
+2026-11-27T18:04:59.8522442Z =========================== short test summary info ============================
+2026-11-27T18:04:59.8523348Z FAILED tests/test_tme_accepted_integration.py::test_five_problems_accepted_engine_persistence_api[full-4] - AssertionError: AUDITOR_FAILED
+2026-11-27T18:04:59.8524253Z assert 'FAILED' == 'COMPLETED'
+2026-11-27T18:04:59.8524466Z
+2026-11-27T18:04:59.8524623Z   - COMPLETED
+2026-11-27T18:04:59.8524787Z   + FAILED
+2026-11-27T18:04:59.8525014Z 1 failed, 3711 passed, 52 skipped, 1 xfailed in 3510.83s (0:58:30)
+2026-11-27T18:05:01.3131357Z ##[error]
