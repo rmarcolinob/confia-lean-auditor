@@ -193,6 +193,9 @@
       if (!authenticatedProfile) { location.replace("/"); return; }
       window.ConfIAAuthProfile = authenticatedProfile;
       window.ConfIAAuthUser = authenticatedUser;
+      if (authenticatedProfile !== "management" && typeof initializeProblemCatalog === "function") {
+        initializeProblemCatalog();
+      }
       const sessionBadge = document.querySelector(".header-context .badge");
       if (sessionBadge) sessionBadge.textContent = "Sessão institucional";
       if (authenticatedProfile === "student") document.querySelector("#student-home-name").textContent = authenticatedUser.display_name;

@@ -1,0 +1,52 @@
+{
+  "base": "923bf3acbd9994af9662bcdff6b18eac1b6d4df9",
+  "integrated_head": "13822365e7cc9848fd828b5f2718f3dc4151c57e",
+  "platform": "macOS 27.2.1 arm64",
+  "python": "3.9.6",
+  "node": "24.15.0",
+  "lean": {
+    "exit_code": 0,
+    "seconds": 9.24
+  },
+  "mathlib": "8f9d9cff6bd728b17a24e163c9402775d9e6a365",
+  "paid_calls": 0,
+  "browser": "BLOCKED: browser access host unavailable; native Chrome timed out",
+  "production_changes_beyond_prs": [],
+  "javascript": {
+    "exit_code": 0,
+    "seconds": 1.957
+  },
+  "platform-seed": {
+    "exit_code": 0,
+    "seconds": 6.367
+  },
+  "platform-resume": {
+    "exit_code": 1,
+    "seconds": 2.775
+  },
+  "platform-resume-correct-storage": {
+    "exit_code": 0,
+    "seconds": 2.128
+  },
+  "smoke-plan": {
+    "exit_code": 0,
+    "seconds": 0.049
+  },
+  "python-full": {
+    "total": 3808,
+    "counts": {
+      "passed": 3755,
+      "skipped": 52,
+      "xfailed": 1
+    },
+    "exit_code": 0,
+    "seconds": 12809.12,
+    "pytest_reported_seconds": 5439.41,
+    "warnings": 2,
+    "warning_detail": "record_property incompatible with junit_family xunit2 in two existing CAP04 tests"
+  },
+  "platform-resume-idempotency": {
+    "exit_code": 0,
+    "seconds": 2.362
+  }
+}

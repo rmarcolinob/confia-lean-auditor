@@ -231,7 +231,7 @@ def test_concurrent_double_click_executes_engine_once(setup, monkeypatch):
     assert len(calls) == 1 and len(run_files()) == 1
 
 
-def test_engine_failure_is_terminal_failure_without_success_result(setup, monkeypatch):
+def test_engine_failure_is_terminal_failure_without_success_result(setup, monkeypatch, caplog):
     client, calls = setup
     sid, rev = source(client)
     request = accept(client, sid, rev)
@@ -243,7 +243,41 @@ def test_engine_failure_is_terminal_failure_without_success_result(setup, monkey
     assert run["status"] == "FAILED" and run["result"] is None and run["artifact_dir"] is None
     assert run["error_code"] == "AUDITOR_FAILED"
     assert "private provider" not in run_files()[0].read_text()
+    assert "stage=engine type=RuntimeError location=" in caplog.text
+    assert "private provider" not in caplog.text
+    assert "Cálculo do aluno" not in caplog.text
     assert execute(client, sid, request).json() == run and len(calls) == 1
+
+
+@pytest.mark.parametrize('stage', ['capture_manifest', 'validate_artifacts', 'hash_result'])
+def test_artifact_failure_diagnostics_retain_stage_without_private_payload(setup, monkeypatch, caplog, stage):
+    from confia_lean_auditor.submission_audits import service as module
+    client, _ = setup
+    sid, rev = source(client)
+    request = accept(client, sid, rev)
+    original = module.capture_manifest
+
+    def fail(*args):
+        raise ValueError('PRIVATE_STUDENT_CONTENT /private/local/provider-token')
+
+    def capture(result):
+        if stage == 'capture_manifest':
+            fail()
+        manifest = original(result)
+        if stage == 'validate_artifacts':
+            monkeypatch.setattr(module.AuditService, '_validate_artifacts', staticmethod(fail))
+        elif stage == 'hash_result':
+            monkeypatch.setattr(module, 'model_sha256', fail)
+        return manifest
+
+    monkeypatch.setattr(module, 'capture_manifest', capture)
+    run = execute(client, sid, request).json()
+    assert run['status'] == 'FAILED' and run['result'] is None
+    assert run['error_code'] == 'AUDITOR_FAILED'
+    assert f'stage={stage} type=ValueError location=' in caplog.text
+    for secret in ('PRIVATE_STUDENT_CONTENT', '/private/local', 'provider-token'):
+        assert secret not in caplog.text
+        assert secret not in run_files()[0].read_text()
 
 
 def test_change_during_engine_blocks_publication(setup, monkeypatch):

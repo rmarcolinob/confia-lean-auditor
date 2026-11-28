@@ -1,0 +1,158 @@
+[
+  {
+    "status": "fulfilled",
+    "value": {
+      "pr": "7",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "Action completed."
+          }
+        ],
+        "structuredContent": {
+          "workflow_runs": [
+            {
+              "id": 46036498733,
+              "name": "Python tests",
+              "status": "completed",
+              "conclusion": "success",
+              "run_number": 132,
+              "jobs_url": "https://api.github.com/repos/rmarcolinob/confia-lean-auditor/actions/runs/46036498733/jobs",
+              "logs_url": "https://api.github.com/repos/rmarcolinob/confia-lean-auditor/actions/runs/46036498733/logs",
+              "workflow_id": 307698047
+            },
+            {
+              "id": 46036498722,
+              "name": "Lean Action CI",
+              "status": "completed",
+              "conclusion": "success",
+              "run_number": 134,
+              "jobs_url": "https://api.github.com/repos/rmarcolinob/confia-lean-auditor/actions/runs/46036498722/jobs",
+              "logs_url": "https://api.github.com/repos/rmarcolinob/confia-lean-auditor/actions/runs/46036498722/logs",
+              "workflow_id": 307531708
+            }
+          ]
+        },
+        "isError": false
+      }
+    }
+  },
+  {
+    "status": "fulfilled",
+    "value": {
+      "pr": "8",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "Action completed."
+          }
+        ],
+        "structuredContent": {
+          "workflow_runs": [
+            {
+              "id": 46037312395,
+              "name": "Lean Action CI",
+              "status": "completed",
+              "conclusion": "success",
+              "run_number": 136,
+              "jobs_url": "https://api.github.com/repos/rmarcolinob/confia-lean-auditor/actions/runs/46037312395/jobs",
+              "logs_url": "https://api.github.com/repos/rmarcolinob/confia-lean-auditor/actions/runs/46037312395/logs",
+              "workflow_id": 307531708
+            },
+            {
+              "id": 46037312402,
+              "name": "Python tests",
+              "status": "completed",
+              "conclusion": "success",
+              "run_number": 134,
+              "jobs_url": "https://api.github.com/repos/rmarcolinob/confia-lean-auditor/actions/runs/46037312402/jobs",
+              "logs_url": "https://api.github.com/repos/rmarcolinob/confia-lean-auditor/actions/runs/46037312402/logs",
+              "workflow_id": 307698047
+            }
+          ]
+        },
+        "isError": false
+      }
+    }
+  },
+  {
+    "status": "fulfilled",
+    "value": {
+      "pr": "9",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "Action completed."
+          }
+        ],
+        "structuredContent": {
+          "workflow_runs": [
+            {
+              "id": 46038710988,
+              "name": "Python tests",
+              "status": "completed",
+              "conclusion": "success",
+              "run_number": 136,
+              "jobs_url": "https://api.github.com/repos/rmarcolinob/confia-lean-auditor/actions/runs/46038710988/jobs",
+              "logs_url": "https://api.github.com/repos/rmarcolinob/confia-lean-auditor/actions/runs/46038710988/logs",
+              "workflow_id": 307698047
+            },
+            {
+              "id": 46038711075,
+              "name": "Lean Action CI",
+              "status": "completed",
+              "conclusion": "success",
+              "run_number": 138,
+              "jobs_url": "https://api.github.com/repos/rmarcolinob/confia-lean-auditor/actions/runs/46038711075/jobs",
+              "logs_url": "https://api.github.com/repos/rmarcolinob/confia-lean-auditor/actions/runs/46038711075/logs",
+              "workflow_id": 307531708
+            }
+          ]
+        },
+        "isError": false
+      }
+    }
+  },
+  {
+    "status": "fulfilled",
+    "value": {
+      "pr": "10",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "Action completed."
+          }
+        ],
+        "structuredContent": {
+          "workflow_runs": [
+            {
+              "id": 46038908413,
+              "name": "Lean Action CI",
+              "status": "completed",
+              "conclusion": "success",
+              "run_number": 140,
+              "jobs_url": "https://api.github.com/repos/rmarcolinob/confia-lean-auditor/actions/runs/46038908413/jobs",
+              "logs_url": "https://api.github.com/repos/rmarcolinob/confia-lean-auditor/actions/runs/46038908413/logs",
+              "workflow_id": 307531708
+            },
+            {
+              "id": 46038908451,
+              "name": "Python tests",
+              "status": "completed",
+              "conclusion": "success",
+              "run_number": 138,
+              "jobs_url": "https://api.github.com/repos/rmarcolinob/confia-lean-auditor/actions/runs/46038908451/jobs",
+              "logs_url": "https://api.github.com/repos/rmarcolinob/confia-lean-auditor/actions/runs/46038908451/logs",
+              "workflow_id": 307698047
+            }
+          ]
+        },
+        "isError": false
+      }
+    }
+  }
+]

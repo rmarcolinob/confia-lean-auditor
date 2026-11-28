@@ -103,14 +103,20 @@ def _metrics(school_ids: set[str], classroom_ids: set[str]) -> Metrics:
         return Metrics(**counts)
     try:
         decisions = []
+        from .question_decisions import decision_state
         for record in records:
+            question = decision_state(record, submissions)
+            if question is not None:
+                decisions.append(question)
+                continue  # One current decision per scoped submission, no double count.
             decision = decision_store().get_for_submission(record.submission_id)
             if decision is not None:
                 validate_binding(decision, record)
-                decisions.append(decision)
-        counts["decisions_finalized_count"] = sum(d.status != "DRAFT" for d in decisions)
-        counts["decisions_released_count"] = sum(d.status == "RELEASED" for d in decisions)
-        counts["override_count"] = sum(d.status != "DRAFT" and d.is_override for d in decisions)
+                decisions.append(dict(finalized=decision.status != "DRAFT", released=decision.status == "RELEASED",
+                                      override=decision.status != "DRAFT" and decision.is_override))
+        counts["decisions_finalized_count"] = sum(d['finalized'] for d in decisions)
+        counts["decisions_released_count"] = sum(d['released'] for d in decisions)
+        counts["override_count"] = sum(d['override'] for d in decisions)
     except (ValueError, OSError):
         pass
     try:

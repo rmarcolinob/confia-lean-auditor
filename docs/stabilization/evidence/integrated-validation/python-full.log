@@ -1,0 +1,87 @@
+........................................................................ [  1%]
+........................................................................ [  3%]
+........................................................................ [  5%]
+.........................................s.............................. [  7%]
+........................................s............................... [  9%]
+........................................................................ [ 11%]
+........................................................................ [ 13%]
+........................................................................ [ 15%]
+........................................................................ [ 17%]
+........................................................................ [ 18%]
+........................................................................ [ 20%]
+........................................................................ [ 22%]
+........................................................................ [ 24%]
+........................................................................ [ 26%]
+................................................................x....... [ 28%]
+........................................................................ [ 30%]
+.......................................s................................ [ 32%]
+........................................................................ [ 34%]
+........................................................................ [ 35%]
+........................................................................ [ 37%]
+..............................................................s......... [ 39%]
+........................................................................ [ 41%]
+........................................................................ [ 43%]
+........................................................................ [ 45%]
+.................s...................................................... [ 47%]
+........................................................................ [ 49%]
+........................................................................ [ 51%]
+........................................................................ [ 52%]
+.......................s.................................sssss.......... [ 54%]
+.............s.......................................................... [ 56%]
+........................................................................ [ 58%]
+........................................................................ [ 60%]
+........................................................................ [ 62%]
+........................................................................ [ 64%]
+.......................................................................s [ 66%]
+ssssssssssssssssssss.................................................... [ 68%]
+........................................................................ [ 69%]
+........................................................................ [ 71%]
+........................................................................ [ 73%]
+........................................................................ [ 75%]
+........................................................................ [ 77%]
+........................................................................ [ 79%]
+........................................................................ [ 81%]
+........................................................................ [ 83%]
+........................................................................ [ 85%]
+........................................................................ [ 86%]
+........................................................................ [ 88%]
+........................................................................ [ 90%]
+........................................................................ [ 92%]
+................s......sssssssssss......ss.............................. [ 94%]
+....................................................................ssss [ 96%]
+s....................................................................... [ 98%]
+................................................................         [100%]
+=============================== warnings summary ===============================
+tests/test_cap04_parity.py::test_real_engine_smoke[ITA2025F2Q1-correct_solution.txt]
+tests/test_cap04_parity.py::test_real_engine_smoke[ITA2025F2Q8-wrong_answer.txt]
+  tests/test_cap04_parity.py:347: PytestWarning: record_property is incompatible with junit_family 'xunit2' (use 'legacy' or 'xunit1')
+    @pytest.mark.parametrize("problem,example", [(PROBLEM, "correct_solution.txt"), ("ITA2025F2Q8", "wrong_answer.txt")])
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+- generated xml file: /private/tmp/confia-integrated-pr7-10/artifacts/integrated-validation/python-full.xml -
+=========================== short test summary info ============================
+SKIPPED [1] tests/test_claim_fidelity.py:118: Original smoke artifact is local; the portable source fixture is tested separately
+SKIPPED [1] tests/test_common_math_claims.py:247: Local historical artifact
+SKIPPED [1] tests/test_generic_student_math.py:206: Local replay artifacts; portable cases above cover the syntax
+SKIPPED [1] tests/test_math_canonical.py:217: Local historical artifact
+SKIPPED [1] tests/test_positive_credit_evidence.py:139: Historical smoke artifact is local
+SKIPPED [1] tests/test_rubric_bridge.py:202: Local V2 artifact; equivalent portable regression is tested above
+SKIPPED [1] tests/test_scope_boundary.py:77: Frozen DEV artifact unavailable; never load another dataset
+SKIPPED [1] tests/test_scope_boundary_replay.py:37: Frozen DEV outputs unavailable; never substitute another split
+SKIPPED [3] tests/test_scope_boundary_replay.py:56: Frozen DEV outputs unavailable; never substitute another split
+SKIPPED [1] tests/test_score_policy.py:153: Local synthetic corpus fixture unavailable
+SKIPPED [21] tests/test_sufficiency_dev_regressions.py:25: Actual independent gate shadow has not run yet
+SKIPPED [1] tests/test_tme_model_ablation.py:90: Frozen local DEV pack unavailable; never replace with another dataset
+SKIPPED [3] tests/test_tme_model_ablation.py:111: Frozen local DEV pack unavailable; never replace with another dataset
+SKIPPED [1] tests/test_tme_model_ablation.py:125: Frozen local DEV pack unavailable; never replace with another dataset
+SKIPPED [1] tests/test_tme_model_ablation.py:133: Frozen local DEV pack unavailable; never replace with another dataset
+SKIPPED [1] tests/test_tme_model_ablation.py:145: Frozen local DEV pack unavailable; never replace with another dataset
+SKIPPED [1] tests/test_tme_model_ablation.py:151: Frozen local DEV pack unavailable; never replace with another dataset
+SKIPPED [1] tests/test_tme_model_ablation.py:184: Frozen local DEV pack unavailable; never replace with another dataset
+SKIPPED [1] tests/test_tme_model_ablation.py:194: Frozen local DEV pack unavailable; never replace with another dataset
+SKIPPED [1] tests/test_tme_model_ablation.py:204: Frozen local DEV pack unavailable; never replace with another dataset
+SKIPPED [1] tests/test_tme_model_ablation.py:210: Frozen local DEV pack unavailable; never replace with another dataset
+SKIPPED [1] tests/test_tme_model_compat.py:112: Frozen local DEV pack unavailable
+SKIPPED [1] tests/test_tme_model_compat.py:136: Frozen local DEV pack unavailable
+SKIPPED [5] tests/test_tme_review_diagnostics.py:218: Local pilot audit unavailable; portable P1 and synthetic regressions still run
+3755 passed, 52 skipped, 1 xfailed, 2 warnings in 5439.41s (1:30:39)

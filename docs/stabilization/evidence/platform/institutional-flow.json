@@ -1,0 +1,56 @@
+{
+  "before_approval_attempt": 409,
+  "pre_release_result": null,
+  "submitted_status": "TECHNICAL_ERROR",
+  "automatic": {
+    "suggested_score": null,
+    "status": "COMPLETED",
+    "reconciled_score": null,
+    "technical_uncertainty": true
+  },
+  "final_human_score": "10",
+  "before_explicit_release": null,
+  "student_release_denied": 403,
+  "released_result": {
+    "released_at": "2026-11-27T16:55:38.137237+00:00",
+    "final_total": "10",
+    "max_total": "10.0",
+    "questions": [
+      {
+        "order": 1,
+        "final_points": "10",
+        "max_points": "10.0"
+      }
+    ],
+    "teacher_feedback": "As operações preservam a igualdade. Confira a substituição na equação original."
+  },
+  "isolation": {
+    "other_student": 404,
+    "other_school_teacher": 403,
+    "student_workspace": 403,
+    "anonymous": 401,
+    "manager_other_school": 403
+  },
+  "management": {
+    "number_of_schools": 1,
+    "number_of_classrooms": 2,
+    "number_of_students": 2,
+    "number_of_teachers": 1,
+    "submissions_count": 1,
+    "transcriptions_count": 1,
+    "recognition_success_count": 0,
+    "recognition_failure_count": 0,
+    "audit_runs_count": 1,
+    "completed_audits": 1,
+    "inconclusive_audits": 0,
+    "decisions_finalized_count": 1,
+    "decisions_released_count": 1,
+    "override_count": 0
+  },
+  "persisted_tme_human_decisions": 1,
+  "persisted_generic_teacher_decisions": 0,
+  "audit_bytes_preserved": true,
+  "idempotent_same_attempt": true,
+  "evidence_kind": "real_local_http_synthetic_text_no_llm_no_ocr",
+  "human_adjudication": "explicit synthetic teacher input, not an automated verdict or independent gold"
+}

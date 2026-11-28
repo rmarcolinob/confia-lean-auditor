@@ -1,0 +1,38 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+__________ test_five_problems_accepted_engine_persistence_api[full-4] __________
+
+offline = (<starlette.testclient.TestClient object at 0x10d746c10>, [], PosixPath('/private/var/folders/4h/mld1ypt95nq1z3nm58k0k64m0000gn/T/pytest-of-LinMarcolino/pytest-76/test_five_problems_accepted_en0'))
+n = 4, kind = 'full'
+
+    @pytest.mark.parametrize('n',range(1,6))
+    @pytest.mark.parametrize('kind',['full','partial','false','indeterminate'])
+    def test_five_problems_accepted_engine_persistence_api(offline,n,kind):
+        client,calls,_=offline
+        solution=solution_for(n,FULL[n] if kind=='full' else [PARTIAL[n] if kind=='partial' else FALSE[n]]) if kind!='indeterminate' else {'a':'Uma ideia ainda não estabelecida com segurança.'}
+        base,sid,rev,request=prepare(client,n,solution)
+>       run,stored=execute(client,base,request)
+
+tests/test_tme_accepted_integration.py:92:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+client = <starlette.testclient.TestClient object at 0x10d746c10>
+base = '/tme/cases/case_df51fc4c9fa348c7b8f3e01694abe251'
+request = {'acceptance_id': 'acc_2d12e56c893e4a6b9ac80fd719126e72', 'revision_number': 1, 'transcription_id': 'tr_504e68aacd874fcc862a733c2ebd8034'}
+
+    def execute(client, base, request):
+        response=client.post(base+'/audits',json=request)
+        assert response.status_code==200,response.text
+>       run=response.json();assert run['status']=='COMPLETED',run.get('error_code')
+E       AssertionError: AUDITOR_FAILED
+E       assert 'FAILED' == 'COMPLETED'
+E
+E         - COMPLETED
+E         + FAILED
+
+tests/test_tme_accepted_integration.py:79: AssertionError
+------------------------------ Captured log call -------------------------------
+ERROR    confia_lean_auditor.submission_audits.service:service.py:257 Audit execution failed: stage=engine type=ValueError location=student_claims/digital_items.py:44
+=========================== short test summary info ============================
+FAILED tests/test_tme_accepted_integration.py::test_five_problems_accepted_engine_persistence_api[full-4]
+1 failed in 1.94s

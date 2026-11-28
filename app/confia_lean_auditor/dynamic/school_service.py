@@ -263,6 +263,18 @@ def release(identifier,body,user):
         return value
 
 
+def current_release(identifier, final):
+    """Read the publication bound to the current finalization, without mutation."""
+    folder=exam_store().folder(identifier)/'school_releases'
+    if folder.is_symlink():raise ExamConflict('Armazenamento inválido.')
+    files=sorted(folder.glob('*.json')) if folder.exists() else []
+    if final and files:
+        r=read_sealed(files[-1])
+        if r['final_correction_id']==final['final_correction_id'] and r['final_sha256']==canonical_sha256(final):
+            return r
+    return None
+
+
 def student_view(detail,teacher):
     identifier=detail.submission.submission_id;a=detail.assessment.assessment;binding=detail.submission.school_attempt
     if not binding:raise HTTPException(404)
@@ -284,16 +296,12 @@ def student_view(detail,teacher):
     release_record=None
     from confia_lean_auditor.tme.finalization import lifecycle
     final=lifecycle(identifier)['current_final_correction']
-    folder=exam_store().folder(identifier)/'school_releases'
-    if folder.is_symlink():raise ExamConflict('Armazenamento inválido.')
-    files=sorted(folder.glob('*.json')) if folder.exists() else []
-    if final and files:
-        r=read_sealed(files[-1])
-        if r['final_correction_id']==final['final_correction_id'] and r['final_sha256']==canonical_sha256(final):
-            release_record=dict(released_at=r['released_at'],released_by=r['released_by'])
-            if r['release_grade']:
-                release_record.update(final_total=final['final_total'],max_total=final['max_total'],questions=[dict(order=q['question_order'],final_points=q['final_score'],max_points=q['max_score']) for q in final['questions']])
-            if r['release_feedback']:release_record['teacher_feedback']=r['teacher_feedback']
+    r=current_release(identifier,final)
+    if r:
+        release_record=dict(released_at=r['released_at'],released_by=r['released_by'])
+        if r['release_grade']:
+            release_record.update(final_total=final['final_total'],max_total=final['max_total'],questions=[dict(order=q['question_order'],final_points=q['final_score'],max_points=q['max_score']) for q in final['questions']])
+        if r['release_feedback']:release_record['teacher_feedback']=r['teacher_feedback']
     return dict(attempt_id=identifier,assessment_id=a.assessment_id,attempt_number=binding.attempt_number,
         student_user_id=binding.student_user_id,teacher_user_id=binding.teacher_user_id,
         submitted=submitted,created_at=detail.submission.created_at,status='RELEASED' if release_record else 'SUBMITTED' if submitted else 'DRAFT',
