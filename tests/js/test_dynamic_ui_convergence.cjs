@@ -1,5 +1,7 @@
 const test=require('node:test'), assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path');
-const {pilot,walk,text}=require('./tme-dom.cjs');
+// Preserve regression coverage for the existing full preparation editor.
+const {pilot:basePilot,walk,text}=require('./tme-dom.cjs');
+const pilot=options=>basePilot({...options,legacyPreparation:true});
 const {deferred,flush}=require('./ui-dom.cjs');
 const pid='dyn_'+'d'.repeat(32),prepId='dprep_'+'e'.repeat(32),rid='drub_'+'f'.repeat(32);
 const reply=data=>({ok:true,json:async()=>data});

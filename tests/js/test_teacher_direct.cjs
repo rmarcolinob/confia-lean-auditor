@@ -3,14 +3,15 @@ const test=require('node:test'),assert=require('node:assert/strict');
 const {pilot,walk,text}=require('./tme-dom.cjs');
 const reply=data=>({ok:true,json:async()=>data});
 const cid='case_'+'a'.repeat(32),tid='tr_demo';
-test('SPECIALIZED direct intake sends typed original without assessment or automatic audit',async()=>{
- const ui=await pilot({initialSearch:'?view=new&mode=specialized',mockFetch:(url)=>url==='/tme/direct-solutions'?reply({case_id:cid}):undefined});
+test('SPECIALIZED single page corrects a confirmed digital solution without assessment or navigation',async()=>{
+ const ui=await pilot({automatic:true,initialSearch:'?view=new&mode=specialized',mockFetch:(url)=>url==='/tme/direct-solutions'?reply({case_id:cid}):url.endsWith('/audits')?reply({status:'FAILED',audit_run_id:'aud_test'}):url.endsWith('/transcriptions/tr_demo')?reply({transcription:{transcription_id:'tr_demo'},revisions:[{revision_number:1,segments:[{kind:'text',text:'x = 2'}]}],acceptances:[]}):undefined});
  const select=walk(ui.root).find(n=>n.attributes['aria-label']==='Problema preparado');select.value='ITA2025F2Q1';await select.handlers.change();
- const nodes=walk(ui.root);nodes.find(n=>n.attributes['aria-label']==='Resolução digitada').value='x = 2';
+ await ui.click('Solução já digital');const nodes=walk(ui.root);nodes.find(n=>n.attributes['aria-label']==='Solução já digital').value='x = 2';const check=nodes.find(n=>n.attributes['aria-label']==='Confirmo o texto da solução');check.checked=true;check.handlers.change();
  const form=nodes.find(n=>n.tag==='form');await form.handlers.submit({preventDefault(){}});
  const call=ui.calls.find(c=>c.url==='/tme/direct-solutions');assert(call);
+ assert.equal(ui.root.dataset.view,'new');assert(ui.calls.some(c=>c.url.endsWith('/audits')));assert.match(text(ui.root),/Falha técnica/);
  assert.equal(JSON.parse(call.options.body).problem_id,'ITA2025F2Q1');assert.equal(JSON.parse(call.options.body).solution,'x = 2');
- assert(!ui.calls.some(c=>c.options.method==='POST'&&/audits|assessments|release|publish/.test(c.url)));
+ assert(!ui.calls.some(c=>c.options.method==='POST'&&/assessments|release|publish/.test(c.url)));
 });
 test('direct workspace blocks analysis until explicit transcription confirmation',async()=>{
  const ui=await pilot({mode:'TEXT',automatic:true,mockFetch:(url)=>url.endsWith('/original-text')?reply({text:'x = 2',teacher_confirmation_required:true}):undefined});
@@ -25,7 +26,7 @@ test('direct workspace blocks analysis until explicit transcription confirmation
 test('direct intake keeps typed work on backend failure and labels OCR unavailable',async()=>{
  const ui=await pilot({initialSearch:'?view=new&mode=specialized',mockFetch:url=>url==='/tme/direct-solutions'?{ok:false,json:async()=>({detail:'Falha de armazenamento'})}:undefined});
  const select=walk(ui.root).find(n=>n.attributes['aria-label']==='Problema preparado');select.value='ITA2025F2Q1';await select.handlers.change();
- const solution=walk(ui.root).find(n=>n.attributes['aria-label']==='Resolução digitada');solution.value='Texto a preservar';
+ await ui.click('Solução já digital');const solution=walk(ui.root).find(n=>n.attributes['aria-label']==='Solução já digital');solution.value='Texto a preservar';const check=walk(ui.root).find(n=>n.attributes['aria-label']==='Confirmo o texto da solução');check.checked=true;check.handlers.change();
  await walk(ui.root).find(n=>n.tag==='form').handlers.submit({preventDefault(){}});
- assert.equal(solution.value,'Texto a preservar');assert.equal(solution.disabled,false);assert.match(text(ui.root),/Falha de armazenamento/);assert.match(text(ui.root),/nenhum OCR/);
+ assert.equal(solution.value,'Texto a preservar');assert.equal(solution.disabled,false);assert.match(text(ui.root),/Falha de armazenamento/);assert.match(text(ui.root),/imagens aguardam a integração/);
 });

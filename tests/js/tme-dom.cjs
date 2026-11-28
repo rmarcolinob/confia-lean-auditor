@@ -25,7 +25,7 @@ function walk(root) { return [root, ...root.children.flatMap(walk)]; }
 function text(root) { return walk(root).map(e => e.textContent).join(' '); }
 const json = data => ({ ok: true, json: async () => data });
 
-async function pilot({ auditRun = null, mode = 'IMAGE_SCAN', automatic = false, pendingAudit = false, initialStorage = [], pageCount = 1, startHome = false, desktop = false, homeCases = null, homeSummary = null, homeError = false, deepLink = false, catalog = null, presentationError = false, decisionError = false, initialSearch = null, listingError = false, fullExam = false, mockFetch = null } = {}) {
+async function pilot({ auditRun = null, mode = 'IMAGE_SCAN', automatic = false, pendingAudit = false, initialStorage = [], pageCount = 1, startHome = false, desktop = false, homeCases = null, homeSummary = null, homeError = false, deepLink = false, catalog = null, presentationError = false, decisionError = false, initialSearch = null, listingError = false, fullExam = false, mockFetch = null, legacyPreparation = false } = {}) {
   const root = element('main'), calls = [], rendered = [], reports = [], statements = [];
   let existingDecision = null, revisionNumber = 1, editedText = 'x = 2', accepted = Boolean(auditRun) && !pendingAudit, hasAudit = Boolean(auditRun) && !pendingAudit;
   let current = { case_id: 'case_' + 'a'.repeat(32), source_mode: mode,
@@ -124,7 +124,10 @@ async function pilot({ auditRun = null, mode = 'IMAGE_SCAN', automatic = false, 
   vm.runInNewContext(fs.readFileSync(path.join(__dirname, '../../app/confia_lean_auditor/static/audit-view.js'), 'utf8'), ctx);
   for (const file of ['workspace-controls.js', 'workspace-report.js', 'home.js', 'correction-workspace.js', 'secondary-views.js']) vm.runInNewContext(fs.readFileSync(path.join(__dirname, '../../app/confia_lean_auditor/static/tme/' + file), 'utf8'), ctx);
   vm.runInNewContext(fs.readFileSync(path.join(__dirname, '../../app/confia_lean_auditor/static/teacher-direct.js'), 'utf8'), ctx);
+  vm.runInNewContext(fs.readFileSync(path.join(__dirname, '../../app/confia_lean_auditor/static/dynamic-direct.js'), 'utf8'), ctx);
+  vm.runInNewContext(fs.readFileSync(path.join(__dirname, '../../app/confia_lean_auditor/static/dynamic-correction.js'), 'utf8'), ctx);
   vm.runInNewContext(fs.readFileSync(path.join(__dirname, '../../app/confia_lean_auditor/static/dynamic.js'), 'utf8'), ctx);
+  if(legacyPreparation)ctx.window.ConfIADynamicDirect=ctx.window.ConfIADynamic;
   if(fullExam)vm.runInNewContext(fs.readFileSync(path.join(__dirname, '../../app/confia_lean_auditor/static/tme/full-exam.js'), 'utf8'), ctx);
   const render = ctx.window.ConfIAReport.render;
   ctx.window.ConfIAReport.render = (data, target, options) => {

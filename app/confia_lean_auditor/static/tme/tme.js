@@ -255,7 +255,11 @@
         preparation=window.ConfIADynamicAssessment.create({host,simplified:true,setBusy:value=>{state.busy=value;},onSelect:(id,step)=>writeRoute("new",{mode:"dynamic",assessment_id:id,step}),onOpenExam:id=>openExam(id).catch(showError),onUpload:id=>{preparation?.cancel();preparation=null;return fullExam.newCorrection({assessmentId:id});}});
         return preparation.load(params.assessment_id,params.step);
       }
-      preparation=window.ConfIADynamic.create({host,direct:true,setBusy:value=>{state.busy=value;},
+      if(params.step!=="advanced"){
+        preparation=window.ConfIADynamicDirect.create({host,setBusy:value=>{state.busy=value;},onOpenAttempt:id=>openCase(id).catch(showError),onSelect:id=>writeRoute("new",{mode:"dynamic",problem_id:id})});
+        return preparation.load(params.problem_id);
+      }
+      preparation=window.ConfIADynamic.create({host,setBusy:value=>{state.busy=value;},
         onSelect:id=>writeRoute("new",{mode:"dynamic",problem_id:id}),onOpenAttempt:id=>openCase(id).catch(showError)});
       return preparation.load(params.problem_id);
     }
