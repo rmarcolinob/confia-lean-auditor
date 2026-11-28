@@ -36,6 +36,7 @@
   const menus = document.querySelectorAll("[data-profile-menu]");
   const links = document.querySelectorAll("[data-shell-link]");
   const authMode = document.body?.classList?.contains("auth-enabled") || false;
+  const demoRoles = document.body?.classList?.contains("confia-local-multi-role") || false;
   let authenticatedProfile = null;
   let authenticatedUser = null;
   let current = { profile: "student", view: "home" };
@@ -116,16 +117,37 @@
     if (focus) document.querySelector("#platform-home h1")?.focus();
     return true;
   }
+  function demoSwitch(profile, view="home") {
+    if (!demoRoles || !profiles[profile]) return false;
+    fetch("/auth/local-demo/switch", {
+      method: "POST", credentials: "same-origin", cache: "no-store",
+      headers: {"Content-Type":"application/json"},
+      body: JSON.stringify({profile})
+    }).then(response => {
+      if (!response.ok) throw new Error("Não foi possível trocar o perfil de demonstração.");
+      location.assign("/#"+profile+"/"+(view||"home"));
+    }).catch(() => {
+      const status = document.querySelector("#service-status");
+      if (status) status.textContent = "Não foi possível trocar o perfil. Recarregue a página.";
+    });
+    return true;
+  }
   function navigate(profile, view, { focus = true, historyMode = "push" } = {}) {
     if (profile === "platform" && view === "home" && window.ConfIAPlatformPresentation) return platformHome({focus, historyMode});
     if (authMode && !authenticatedProfile) return false;
-    if (authMode && profile !== authenticatedProfile) { profile = authenticatedProfile; view = "home"; }
+    if (authMode && profile !== authenticatedProfile) {
+      if (demoRoles && profiles[profile]) return demoSwitch(profile, view);
+      profile = authenticatedProfile; view = "home";
+    }
     if (authMode && profile === "student" && view === "resolve") view = "tutoria/practice";
     if (authMode && profile === "student" && view === "feedback") view = "tutoria/feedback";
     // Old bookmarks return to the overview; the assistant has no dedicated page.
     if (profile === "student" && view === "tutoria/chat") view = "tutoria";
     if (!profiles[profile]?.views[view]) { profile = "student"; view = "home"; }
-    if (authMode && profile !== authenticatedProfile) { profile = authenticatedProfile; view = "home"; }
+    if (authMode && profile !== authenticatedProfile) {
+      if (demoRoles && profiles[profile]) return demoSwitch(profile, view);
+      profile = authenticatedProfile; view = "home";
+    }
     // UI-P0 protects unsaved transcription edits across every shell destination.
     navigating = true;
     const allowed = activateArea(profiles[profile].area);
@@ -147,7 +169,10 @@
     activateProfile(area) {
       if (navigating) return;
       const profile = Object.keys(profiles).find(key => profiles[key].area === area) || "student";
-      if (authMode && profile !== authenticatedProfile) return;
+      if (authMode && profile !== authenticatedProfile) {
+        if (demoRoles) demoSwitch(profile, "home");
+        return;
+      }
       render(profile, "home", true);
       history.pushState(null, "", `#${profile}/home`);
     },
@@ -197,23 +222,25 @@
         initializeProblemCatalog();
       }
       const sessionBadge = document.querySelector(".header-context .badge");
-      if (sessionBadge) sessionBadge.textContent = "Sessão institucional";
+      if (sessionBadge) sessionBadge.textContent = demoRoles ? "Demonstração local" : "Sessão institucional";
       if (authenticatedProfile === "student") document.querySelector("#student-home-name").textContent = authenticatedUser.display_name;
       document.querySelector(".brand").setAttribute("href", `#${authenticatedProfile}/home`);
-      document.querySelector("#demo-profile-label").remove();
-      document.querySelector(".profile-switch").remove();
-      document.querySelector(".sidebar-note").remove();
-      for (const menu of menus) {
-        if (menu.dataset.profileMenu !== authenticatedProfile) menu.remove();
-      }
-      for (const link of links) {
-        const route = /^#(student|teacher|management)\//.exec(link.getAttribute("href") || "");
-        if (route && route[1] !== authenticatedProfile) link.remove();
+      if (!demoRoles) {
+        document.querySelector("#demo-profile-label").remove();
+        document.querySelector(".profile-switch").remove();
+        document.querySelector(".sidebar-note").remove();
+        for (const menu of menus) {
+          if (menu.dataset.profileMenu !== authenticatedProfile) menu.remove();
+        }
+        for (const link of links) {
+          const route = /^#(student|teacher|management)\//.exec(link.getAttribute("href") || "");
+          if (route && route[1] !== authenticatedProfile) link.remove();
+        }
       }
       const label = profiles[authenticatedProfile].label;
       document.querySelector("#auth-identity").textContent = `${authenticatedUser.display_name} / ${label}`;
       document.querySelector("#auth-identity").hidden = false;
-      document.querySelector("#auth-logout").hidden = false;
+      document.querySelector("#auth-logout").hidden = demoRoles;
       document.querySelector("#auth-logout").addEventListener("click", async () => {
         const result = await fetch("/auth/logout", { method: "POST", credentials: "same-origin" });
         if (result.ok) location.replace("/");

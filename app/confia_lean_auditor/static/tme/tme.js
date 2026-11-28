@@ -256,6 +256,58 @@
         return preparation.load(params.assessment_id,params.step);
       }
       if(params.step!=="advanced"){
+
+        // CONFIA_MINHAS_QUESTOES
+        const panel = node("section",undefined,"tme-panel");
+        const select = node("select");
+        select.setAttribute("aria-label","Minhas questões DYNAMIC");
+
+        const placeholder = node("option","Selecione uma questão cadastrada");
+        placeholder.value = "";
+        select.append(placeholder);
+
+        const open = btn("Abrir questão",()=>{
+          if(select.value)
+            navigate("new",{mode:"dynamic",problem_id:select.value});
+        },"tme-button secondary");
+        open.disabled = true;
+
+        select.addEventListener("change",()=>{
+          open.disabled = !select.value;
+        });
+
+        const status = node("p","Carregando questões...");
+        panel.append(node("h2","Minhas questões"),select,open,status);
+        host.before(panel);
+
+        api("/dynamic/problems").then(problems=>{
+          if(!Array.isArray(problems))throw Error("Resposta inválida");
+
+          let count = 0;
+          for(const item of problems){
+            const last = item.statements?.at(-1);
+            const id = item.problem?.problem_id;
+            if(!last || !id)continue;
+
+            const name = String(last.title || last.statement).slice(0,75);
+            const state = item.current_configuration
+              ? "Rubrica aprovada" : "Rubrica pendente";
+
+            const option = node("option",name+" — "+state);
+            option.value = id;
+            select.append(option);
+            count++;
+          }
+
+          if(params.problem_id)select.value = params.problem_id;
+          open.disabled = !select.value;
+          status.textContent = count
+            ? count+" questão(ões) disponível(is)."
+            : "Nenhuma questão cadastrada.";
+        }).catch(()=>{
+          status.textContent = "Não foi possível carregar as questões.";
+        });
+
         preparation=window.ConfIADynamicDirect.create({host,setBusy:value=>{state.busy=value;},onOpenAttempt:id=>openCase(id).catch(showError),onSelect:id=>writeRoute("new",{mode:"dynamic",problem_id:id})});
         return preparation.load(params.problem_id);
       }

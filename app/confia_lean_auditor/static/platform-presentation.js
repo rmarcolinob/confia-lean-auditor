@@ -42,7 +42,8 @@
     const page = el('div', null, 'tme-home platform-dashboard platform-entry');
     page.append(banner('Confiabilidade e Explicabilidade em Matemática', 'Matemática com confiança.',
       'Um ambiente para aprender, acompanhar soluções e apoiar decisões pedagógicas. Escolha seu espaço no ConfIA.'));
-    const authenticated = Boolean(root.ConfIAAuthUser);
+    const authenticated = Boolean(root.ConfIAAuthUser) &&
+      !document.body.classList.contains("confia-local-multi-role");
     const mode = el('section', null, 'platform-session-note');
     mode.append(Home.icon(authenticated || login ? 'user' : 'unknown'), el('div', null));
     mode.lastChild.append(el('strong', login ? 'Acesso institucional' : authenticated ? 'Sessão institucional' : 'Ambiente de demonstração local'),
@@ -114,7 +115,7 @@
     header.querySelector('details').open = false;
     const user = root.ConfIAAuthUser;
     get('platform-session').textContent = user ? user.display_name + ' · Sessão institucional' : 'Demonstração local · sem sessão institucional';
-    get('platform-logout').hidden = !user;
+    get('platform-logout').hidden = !user || document.body.classList.contains("confia-local-multi-role");
     get('platform-brand-context').textContent = ({platform:'Matemática com confiança',student:'Área do aluno · Aprendizagem',management:'Área da gestão · Acompanhamento'})[profile];
     nav.replaceChildren();
     for (const [target, label, glyph] of navigation[profile] || []) {

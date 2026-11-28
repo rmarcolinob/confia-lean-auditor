@@ -5,8 +5,8 @@
   const field=(text,el)=>{const label=n('label',text);label.append(el);return label;};
   const cents=value=>/^\d+(?:\.\d{1,2})?$/.test(String(value))?Math.round(Number(value)*100):null;
   const money=value=>(value/100).toLocaleString('pt-BR',{maximumFractionDigits:2});
-  function create({host,setBusy=()=>{},onSelect=()=>{}}){
-    let doc=null,rows=[],busy=false,disposed=false,approved=false,caps={},nextId=1,intake;
+  function create({host,setBusy=()=>{},onSelect=()=>{},onOpenAttempt=()=>{}}){
+    let doc=null,rows=[],busy=false,disposed=false,approved=false,showConfig=true,caps={},nextId=1,intake;
     const usedIds=new Set();
     const page=n('section',null,'dynamic-form'),message=n('p'),rubric=n('section',null,'tme-panel dynamic-rubric'),rowHost=n('div'),sum=n('p'),warnings=n('div'),reading=n('input');
     const title=n('input'),statement=n('textarea'),total=n('input');
@@ -18,7 +18,7 @@
       await persist();const r=currentRubric();showWarnings();
       if(r.review_warnings?.some(w=>w.requires_review)&&!reading.checked){message.textContent='Rubrica salva. Leia os avisos abaixo e confirme sua aprovação.';return;}
       if(r.status!=='APPROVED')doc=await request(`/dynamic/problems/${doc.problem.problem_id}/rubrics/${r.rubric_id}/approve`,{expected_revision:doc.revision,acknowledge_warnings:reading.checked});
-      approved=true;showWarnings();message.textContent=doc.correction_available===false?'Rubrica aprovada; a preparação ainda não permite corrigir. Confira as pendências.':'Rubrica aprovada. Insira a solução abaixo e clique em Corrigir solução.';
+      approved=true;showConfig=false;showWarnings();message.textContent=doc.correction_available===false?'Rubrica aprovada; a preparação ainda não permite corrigir. Confira as pendências.':'Rubrica aprovada. Insira a solução abaixo e clique em Corrigir solução.';
     }));
     const suggest=button('Sugerir rubrica com IA',()=>perform(async()=>{
       approved=false;intake.resetContext();await saveStatement();
@@ -30,8 +30,23 @@
     }));
     const capability=n('p'),approvalState=n('p');approvalState.setAttribute('role','status');
     rubric.append(n('h2','Rubrica'),rowHost,add,sum,suggest,capability,warnings,field('Li os avisos e assumo a revisão docente',reading),approve,approvalState);
-    const source=n('div');page.append(field('Título (opcional)',title),field('Enunciado do problema',statement),field('Pontuação total',total),rubric,source,message);host.append(page);
-    intake=root.ConfIATeacherDirect.create({host:source,problemId:()=>doc?.problem.problem_id,dynamic:true,setBusy:value=>{busy=value;setBusy(value);update(false);},ready:()=>approved&&!busy&&doc?.correction_available!==false});
+    const source=n('div');
+      const configFields=[
+        field('Título (opcional)',title),
+        field('Enunciado do problema',statement),
+        field('Pontuação total',total),
+        rubric
+      ];
+      const summary=n('p',null,'tme-panel');
+      const edit=button('Ver ou editar problema e rubrica',()=>{
+        showConfig=true;update();
+      });
+      const back=button('Voltar à correção',()=>{
+        showConfig=false;update();
+      });
+      page.append(...configFields,back,summary,edit,source,message);
+      host.append(page);
+    intake=root.ConfIATeacherDirect.create({host:source,problemId:()=>doc?.problem.problem_id,dynamic:true,setBusy:value=>{busy=value;setBusy(value);update(false);},ready:()=>approved&&!busy&&doc?.correction_available!==false,onOpen:onOpenAttempt});
     for(const input of [title,statement,total])input.addEventListener('input',invalidate);
     reading.addEventListener('change',update);
     function button(text,fn){const b=n('button',text,'tme-button secondary');b.type='button';b.addEventListener('click',fn);return b;}
@@ -44,11 +59,44 @@
     function valid(){
       const max=cents(total.value);return statement.value.trim()&&max>0&&max<=100000&&rows.length>0&&rows.every(r=>r.title.value.trim()&&r.description.value.trim()&&cents(r.points.value)!==null&&(r.original.credit_levels||[]).every(level=>cents(level.points)<cents(r.points.value)))&&rows.reduce((s,r)=>s+cents(r.points.value),0)===max;
     }
+    function validationBlockers(){
+      const issues=[];
+      if(!statement.value.trim())issues.push('preencha o enunciado');
+      const max=cents(total.value);
+      if(!(max>0&&max<=100000))issues.push('informe uma pontuação total válida');
+      if(!rows.length)issues.push('adicione um critério');
+      rows.forEach((r,i)=>{
+        const k=i+1,points=cents(r.points.value);
+        if(!r.title.value.trim())issues.push(`preencha o título do critério ${k}`);
+        if(!r.description.value.trim())issues.push(`preencha a descrição do critério ${k}`);
+        if(points===null)issues.push(`corrija os pontos do critério ${k}`);
+        if((r.original.credit_levels||[]).some(level=>!(cents(level.points)<points)))
+          issues.push(`revise os níveis de crédito parcial do critério ${k}`);
+      });
+      const values=rows.map(r=>cents(r.points.value));
+      if(max!==null&&values.every(v=>v!==null)&&
+         values.reduce((a,b)=>a+b,0)!==max)
+        issues.push('a soma dos critérios deve corresponder ao total');
+      return issues;
+    }
     function update(refresh=true){
       const values=rows.map(r=>cents(r.points.value));sum.textContent=`Soma dos critérios: ${values.some(v=>v===null)?'inválida':money(values.reduce((a,b)=>a+b,0))} / ${cents(total.value)===null?'inválido':money(cents(total.value))} pontos`;
       approve.disabled=busy||approved||!valid();suggest.disabled=busy||!caps.rubric_suggestion_configured||!statement.value.trim()||!(cents(total.value)>0);add.disabled=busy;
       for(const input of [title,statement,total,reading,...rowHost.querySelectorAll('input,textarea,button')])input.disabled=busy;
-      approvalState.textContent=approved?'Rubrica aprovada':'Aprovação pendente';if(refresh)intake?.refresh();
+      approvalState.textContent=approved?'Rubrica aprovada':valid()?
+        'Rubrica pronta para aprovação.':
+        'Para aprovar: '+validationBlockers().join('; ')+'.';const correcting=approved&&!showConfig;
+        for(const el of configFields)
+          el.style.display=correcting?'none':'';
+        summary.style.display=correcting?'':'none';
+        edit.style.display=correcting?'':'none';
+        back.style.display=approved&&showConfig?'':'none';
+        edit.disabled=busy;
+        back.disabled=busy;
+        summary.textContent=approved
+          ? `${title.value.trim()||'Questão sem título'} · ${total.value} pontos · Rubrica aprovada`
+          : '';
+        if(refresh)intake?.refresh();
     }
     function addRow(data={}){
       let id=data.criterion_id;if(!id){do{id='criterion_'+nextId++;}while(usedIds.has(id));}usedIds.add(id);
@@ -96,7 +144,7 @@
       try{
         caps=await request('/dynamic/capabilities').catch(()=>({}));if(disposed)return;
         capability.textContent=caps.rubric_suggestion_configured?'A sugestão por IA não aprova a rubrica. Leia e aprove antes da correção.':'Sugestão por IA indisponível neste ambiente. Escreva sua rubrica.';
-        if(id){doc=await request(`/dynamic/problems/${encodeURIComponent(id)}`);if(disposed)return;const last=doc.statements.at(-1);title.value=last.title||'';statement.value=last.statement;total.value=last.max_score;doc.rubrics.forEach(r=>r.criteria.forEach(c=>usedIds.add(c.criterion_id)));replaceRows(currentRubric()?.criteria||[]);approved=currentRubric()?.status==='APPROVED'&&Boolean(doc.current_configuration);showWarnings();if(doc.correction_available===false)message.textContent='A correção ainda não está disponível para esta configuração. Confira as pendências.';}
+        if(id){doc=await request(`/dynamic/problems/${encodeURIComponent(id)}`);if(disposed)return;const last=doc.statements.at(-1);title.value=last.title||'';statement.value=last.statement;total.value=last.max_score;doc.rubrics.forEach(r=>r.criteria.forEach(c=>usedIds.add(c.criterion_id)));replaceRows(currentRubric()?.criteria||[]);approved=currentRubric()?.status==='APPROVED'&&Boolean(doc.current_configuration);showConfig=!approved;showWarnings();if(doc.correction_available===false)message.textContent='A correção ainda não está disponível para esta configuração. Confira as pendências.';}
         else if(!rows.length)addRow();update();
       }catch(error){if(!disposed){message.textContent=error.message;update();}}
     }

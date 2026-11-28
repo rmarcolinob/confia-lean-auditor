@@ -221,7 +221,11 @@ function writeLocalSubmissions(submissions) {
 
 function activateArea(targetId) {
   if (document.body?.classList?.contains("auth-enabled") &&
-      targetId !== `${window.ConfIAAuthProfile}-area`) return false;
+      targetId !== `${window.ConfIAAuthProfile}-area`) {
+    if (document.body?.classList?.contains("confia-local-multi-role"))
+      window.ConfIAShell?.activateProfile(targetId);
+    return false;
+  }
   if (typeof window !== "undefined" && window.ConfIATeacher && !window.ConfIATeacher.canLeave()) return false;
   for (const button of tabButtons) {
     const isActive = button.dataset.tabTarget === targetId;

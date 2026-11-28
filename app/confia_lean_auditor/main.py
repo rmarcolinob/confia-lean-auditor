@@ -49,10 +49,15 @@ from confia_lean_auditor.core.public_audit import (
     public_audit_response, audit_exception_response, install_audit_exception_handlers,
 )
 from confia_lean_auditor.auth.dependencies import (
-    auth_enabled, optional_user, require_any_role, require_role, same_origin,
+    auth_enabled, optional_user, require_any_role, require_role, same_origin, COOKIE_NAME,
 )
 from confia_lean_auditor.auth.models import Role
 from confia_lean_auditor.auth.router import cookie_secure, router as auth_router
+from confia_lean_auditor.auth.local_demo import (
+    router as local_demo_router, enabled as local_demo_enabled,
+    issue_session as local_demo_issue_session,
+)
+from confia_lean_auditor.auth.store import SESSION_SECONDS
 from confia_lean_auditor.institutional.router import router as institutional_router
 from confia_lean_auditor.assessments.router import router as assessments_router
 from confia_lean_auditor.management.router import router as management_router
@@ -77,6 +82,7 @@ app.add_middleware(TranscriptionBodyLimitMiddleware)
 STATIC_DIR = Path(__file__).resolve().parent / "static"
 app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
 app.include_router(auth_router)
+app.include_router(local_demo_router)
 app.include_router(submissions_router)
 app.include_router(transcriptions_router)
 app.include_router(submission_audits_router)
@@ -119,12 +125,22 @@ async def same_origin_mutations(request: Request, call_next):
 def index(request: Request):
     if not auth_enabled():
         return FileResponse(STATIC_DIR / "index.html")
-    if optional_user(request) is None:
+    demo = local_demo_enabled(request)
+    user = optional_user(request)
+    demo_session = None
+    if demo and user is None:
+        user, demo_session = local_demo_issue_session("teacher")
+    if user is None:
         return FileResponse(STATIC_DIR / "login.html", headers={"Cache-Control": "no-store"})
     html = (STATIC_DIR / "index.html").read_text(encoding="utf-8")
-    html = html.replace('<body>', '<body class="auth-enabled auth-loading">', 1)
+    classes = "auth-enabled auth-loading" + (" confia-local-multi-role" if demo else "")
+    html = html.replace('<body>', f'<body class="{classes}">', 1)
     html = html.replace('id="app-root" class="shell"', 'id="app-root" class="shell" data-auth-enabled="true"', 1)
-    return HTMLResponse(html, headers={"Cache-Control": "no-store"})
+    response = HTMLResponse(html, headers={"Cache-Control": "no-store"})
+    if demo_session:
+        response.set_cookie(COOKIE_NAME, demo_session, max_age=SESSION_SECONDS,
+                            path="/", httponly=True, secure=False, samesite="lax")
+    return response
 
 
 @app.get("/capture", include_in_schema=False)
