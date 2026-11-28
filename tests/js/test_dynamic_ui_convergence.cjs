@@ -14,10 +14,10 @@ const submit=ui=>walk(ui.root).find(n=>n.tag==='form').handlers.submit({preventD
 test('Nova presents both routes in the existing shell; teacher preparation remains in the shared shell while student integration is separate',async()=>{
  const ui=await pilot({startHome:true});await walk(ui.root).find(n=>n.tag==='button' && walk(n).some(c=>c.textContent==='Nova correção')).click();await flush();
  assert.equal(ui.root.dataset.view,'new');assert.equal(ui.window.history.url,'/tme?view=new');
- assert.match(text(ui.root),/Avaliação preparada/);assert.match(text(ui.root),/Nova atividade ou prova/);
+ assert.match(text(ui.root),/Corrigir com SPECIALIZED/);assert.match(text(ui.root),/Corrigir com DYNAMIC/);
  assert.doesNotMatch(text(ui.root),/Gestão|Perfil de demonstração/);
  assert.match(text(ui.root),/SPECIALIZED/);assert.match(text(ui.root),/DYNAMIC/);
- await ui.click('Avaliação preparada');assert.match(text(ui.root),/Escrever no tablet/);
+ await ui.click('Corrigir com SPECIALIZED');await ui.click('Foto / scan ou escrita digital');assert.match(text(ui.root),/Escrever no tablet/);
  assert.equal(ui.window.history.url,'/tme?view=new&mode=specialized');
  const staticDir=path.join(__dirname,'../../app/confia_lean_auditor/static');
  const legacy=fs.readFileSync(path.join(staticDir,'index.html'),'utf8'),shell=fs.readFileSync(path.join(staticDir,'shell.js'),'utf8');
@@ -47,7 +47,7 @@ test('unified creation → preparation → suggestion → edit → explicit appr
   }
   return reply(saved);
  }});
- await walk(ui.root).find(n=>n.tag==='button' && walk(n).some(c=>c.textContent==='Nova correção')).click();await flush();await ui.click('Nova atividade ou prova');
+ await walk(ui.root).find(n=>n.tag==='button' && walk(n).some(c=>c.textContent==='Nova correção')).click();await flush();await ui.click('Corrigir com DYNAMIC');
  assert.match(text(ui.root),/Forneça sua rubrica/);assert.equal(ui.window.history.url,'/tme?view=new&mode=dynamic');
  field(ui,'Título').value='Questão inédita';field(ui,'Enunciado').value='Resolva em R: x²-5x+6=0.';await submit(ui);
  assert.equal(ui.window.history.url,`/tme?view=new&mode=dynamic&problem_id=${pid}`);
@@ -89,7 +89,7 @@ test('in-flight preparation blocks navigation and preserves route until response
 
 test('unauthorized or missing preparation stays in the same shell with a recoverable error',async()=>{
  const ui=await pilot({initialSearch:`?view=new&mode=dynamic&problem_id=${pid}`,mockFetch:async(url)=>url==='/dynamic/problems'?reply([]):url===`/dynamic/problems/${pid}`?{ok:false,json:async()=>({detail:'Questão não encontrada.'})}:undefined});
- assert.match(text(ui.root),/Questão não encontrada/);assert.equal(ui.root.dataset.view,'new');await ui.click('Voltar às opções');assert.match(text(ui.root),/Avaliação preparada/);
+ assert.match(text(ui.root),/Questão não encontrada/);assert.equal(ui.root.dataset.view,'new');await ui.click('Voltar às opções');assert.match(text(ui.root),/Corrigir com SPECIALIZED/);
 });
 
 test('Nova questão invalidates an initial pending selection and cannot be overwritten by its response',async()=>{

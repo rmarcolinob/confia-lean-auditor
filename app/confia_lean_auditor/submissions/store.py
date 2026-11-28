@@ -364,6 +364,13 @@ class SubmissionStore:
                 from .text_source import TextSnapshot
                 snapshot=TextSnapshot.model_validate_json((folder / "snapshot.json").read_bytes())
                 if snapshot.problem_id!=record.problem_id or snapshot.snapshot_id!=record.snapshot_id or snapshot.case_id!=record.tme_case_id: raise SubmissionIntegrityConflict()
+                if snapshot.original:
+                    from hashlib import sha256
+                    path = folder / "original_1.bin"
+                    if path.is_symlink() or not path.is_file(): raise SubmissionIntegrityConflict()
+                    data = path.read_bytes()
+                    if snapshot.original.filename != "original_1.bin" or len(data) != snapshot.original.size_bytes or sha256(data).hexdigest() != snapshot.original.sha256:
+                        raise SubmissionIntegrityConflict()
                 return record
             elif record.source == "exam_pages":
                 from confia_lean_auditor.tme.review_models import QuestionSourceSnapshot

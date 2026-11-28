@@ -66,7 +66,7 @@ class CaseStore:
             else:
                 resolve(body.problem_id,evaluator_actor(user),dynamic_context.allow_preparation_review,dynamic_context)
                 if body.source_mode != "TEXT": raise ValueError("invalid dynamic source")
-        elif body.source_mode == "TEXT" or body.problem_id not in (CATALOG.keys() | PUBLIC_PROBLEMS.keys()):
+        elif body.problem_id not in (CATALOG.keys() | PUBLIC_PROBLEMS.keys()):
             raise ValueError("Questão não disponível no catálogo.")
         case = CorrectionCase(**body.model_dump(), case_id=case_id or f"case_{uuid4().hex}",
             created_by_user_id=user.user_id, created_at=datetime.now(timezone.utc), **(exam_binding or {}), **({"dynamic_context":dynamic_context} if dynamic_context else {}))

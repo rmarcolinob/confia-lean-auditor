@@ -27,7 +27,7 @@ test('progress → exam questions → workspace only requests heavy data at the 
 });
 
 for(const mode of ['Foto / scan','Escrever no tablet'])test(`new → ${mode} reuses the case and capture flow`,async()=>{
-  const ui=await pilot({startHome:true});await click(ui,'Nova correção');await ui.click('Avaliação preparada');const code=walk(ui.root).find(n=>n.tag==='input');code.value='EXAM-NEW';const question=walk(ui.root).find(n=>n.tag==='select');question.value='ITA2025F2Q1';await click(ui,mode);await click(ui,'Continuar');assert.equal(ui.root.dataset.view,'workspace');assert.match(ui.window.history.url,/case_id=case_c/);assert.equal(ui.calls.filter(c=>c.options.method==='POST').length,1);modern(ui);
+  const ui=await pilot({startHome:true});await click(ui,'Nova correção');await ui.click('Corrigir com SPECIALIZED');await ui.click('Foto / scan ou escrita digital');const code=walk(ui.root).find(n=>n.tag==='input');code.value='EXAM-NEW';const question=walk(ui.root).find(n=>n.tag==='select');question.value='ITA2025F2Q1';await click(ui,mode);await click(ui,'Continuar');assert.equal(ui.root.dataset.view,'workspace');assert.match(ui.window.history.url,/case_id=case_c/);assert.equal(ui.calls.filter(c=>c.options.method==='POST').length,1);modern(ui);
   if(mode==='Escrever no tablet')assert.match(walk(ui.root).find(n=>n.tag==='iframe').src,/\/capture\?embedded=1/);else assert.match(text(ui.root),/Fotografar página/);
 });
 

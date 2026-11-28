@@ -468,3 +468,7 @@ def original_text(case_id: str,user=Depends(require_tme_evaluator)):
     from confia_lean_auditor.submissions.text_source import TextSnapshot
     path,_=guarded(submission_store().artifact,case.submission_id)
     return TextSnapshot.model_validate_json(path.read_bytes())
+
+
+from .direct_router import router as direct_router
+router.include_router(direct_router)

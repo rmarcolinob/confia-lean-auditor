@@ -15,8 +15,8 @@
     TEACHER:"Professor", TECHNICAL_DEMO:"Demonstração técnica", EXPLICIT:"explícita", INFERRED:"inferida"
   };
   const readable = value => String(value || "").replace(/\b[A-Z][A-Z_]+\b/g, code => labels[code] || code);
-  function create({host:panel,onSelect=()=>{},setBusy=()=>{},onOpenAttempt=()=>{},assessmentOnly=false,simplified=false}) {
-  let disposed=false, creation, selectionGeneration=0;
+  function create({host:panel,onSelect=()=>{},setBusy=()=>{},onOpenAttempt=()=>{},assessmentOnly=false,simplified=false,direct=false}) {
+  let disposed=false, creation, directIntake, selectionGeneration=0;
 
   let detail, list, message, busy = false, loadGeneration = 0;
   const n = (tag, text, cls) => { const el = document.createElement(tag); if (text != null) el.textContent = text; if (cls) el.className = cls; return el; };
@@ -276,7 +276,10 @@
       const next=n("section",null,"tme-panel dynamic-next");
       append(next,n("h3","Preparação salva no ConfIA"),n("p","A configuração aprovada está registrada. Receba uma resolução textual e abra o workspace Original / Transcrição / Comparar, com o painel ConfIA e decisão humana."),
         n("p","A aprovação da rubrica não elimina avisos ou incertezas e não substitui a decisão final do professor."));
-      if(doc.correction_available) {
+      if(doc.correction_available && direct) {
+        directIntake?.cancel();
+        directIntake=window.ConfIATeacherDirect.create({host:next,problemId:pid,dynamic:true,setBusy,onOpen:onOpenAttempt});
+      } else if(doc.correction_available) {
         const form=n("form",null,"dynamic-form"),code=input("Código da resolução"),solution=input("Resolução do aluno","","textarea"),allow=input("Permitir análise provisória com preparação em revisão","","checkbox");
         const policy=n("select");policy.setAttribute("aria-label","Perfil da atividade");
         for(const [value,title] of [["SCHOOL_EXAM","Prova escolar"],["FORMATIVE_LIST","Lista formativa"]]){const option=n("option",title);option.value=value;policy.append(option);}policy.value="SCHOOL_EXAM";
@@ -347,14 +350,14 @@
     creation=n("section",null,"tme-panel dynamic-creation");
     append(creation,n("h2","Dados da atividade"),n("p","Cadastre o enunciado e os pontos. Forneça sua rubrica ou gere uma sugestão para aprovar. Avaliações sem verificação exata são identificadas como semânticas e passam por revisão e reconciliação."),statementForm());
     const resume=n("details",null,"tme-panel dynamic-resume");append(resume,n("summary","Retomar preparação"),list);
-    if(simplified)append(panel,message,creation,detail);
+    if(simplified)append(panel,...(direct?[button("Novo problema",newQuestion),resume]:[]),message,creation,detail);
     else append(panel,button("Nova questão",newQuestion),resume,message,creation,detail);
     try {
       await refreshList();
       if(generation===loadGeneration && !disposed && problemId)await selectProblem(problemId);
     } catch(error) {if(generation===loadGeneration && !disposed)message.textContent=error.message;}
   }
-  return {load,cancel(){disposed=true;++loadGeneration;}};
+  return {load,cancel(){directIntake?.cancel();disposed=true;++loadGeneration;}};
   }
   root.ConfIADynamic = {create};
 })(window);

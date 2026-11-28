@@ -6,7 +6,7 @@ import tempfile
 from datetime import datetime, timezone
 from uuid import uuid4
 from pydantic import Field
-from typing import Literal
+from typing import Literal, Optional
 from .schemas import (
     SubmissionModel,
     SubmissionRecord,
@@ -20,29 +20,41 @@ def sha256(data):
     return _sha256(data).hexdigest()
 
 
+DIRECT_CONFIRMATION = "Conferi explicitamente a transcrição com a solução original antes da auditoria."
+
+
 class TextSnapshot(SubmissionModel):
     schema_version: Literal["text-source.v1"] = "text-source.v1"
     snapshot_id: str
     problem_id: str
     case_id: str
     text: str = Field(min_length=1, max_length=20000)
+    teacher_confirmation_required: bool = False
+    original: Optional[ArtifactReference] = None
 
 
-def receive_text(store, case, user, text):
+def receive_text(store, case, user, text, *, direct=False, original=None):
     from confia_lean_auditor.dynamic.grading_context import case_context
 
     if (
-        not case.dynamic_context
-        or case.created_by_user_id != user.user_id
+        case.created_by_user_id != user.user_id
         or case.source_mode != "TEXT"
     ):
         raise ValueError("invalid text case")
-    case_context(case)
+    if case.dynamic_context:
+        case_context(case)
+    else:
+        from confia_lean_auditor.core.problem_catalog import CATALOG
+        from confia_lean_auditor.tme.audit_models import PUBLIC_PROBLEMS
+        if case.problem_id not in CATALOG.keys() | PUBLIC_PROBLEMS.keys():
+            raise ValueError("unknown prepared problem")
     snapshot = TextSnapshot(
         snapshot_id="text:" + uuid4().hex,
         problem_id=case.problem_id,
         case_id=case.case_id,
         text=text,
+        teacher_confirmation_required=direct,
+        original=ArtifactReference(filename="original_1.bin", media_type=original[0], sha256=sha256(original[1]), size_bytes=len(original[1])) if original else None,
     )
     raw = snapshot.model_dump_json().encode()
     from confia_lean_auditor.dynamic.school_scope import source_binding
@@ -75,6 +87,8 @@ def receive_text(store, case, user, text):
                 ("receipt.json", receipt.model_dump_json().encode()),
             ]:
                 store._write(pending / name, data)
+            if original:
+                store._write(pending / "original_1.bin", original[1])
             store._sync_directory(pending)
             os.replace(pending, store.root / record.submission_id)
             store._sync_directory(store.root)

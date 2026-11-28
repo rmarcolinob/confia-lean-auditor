@@ -90,6 +90,11 @@ class AuditService:
         # Hash and embed the exact persisted revision, not its projected status.
         persisted = next(item for item in self.submissions._read_revisions(folder)
                          if item.revision_number == revision.revision_number)
+        if submission.source == "text":
+            from confia_lean_auditor.submissions.text_source import TextSnapshot, DIRECT_CONFIRMATION
+            snapshot = TextSnapshot.model_validate_json((self.submissions.root / submission_id / "snapshot.json").read_bytes())
+            if snapshot.teacher_confirmation_required and acceptance.acceptance_note != DIRECT_CONFIRMATION:
+                raise UnacceptedSource()
         receipt = self.submissions.assert_acceptance_integrity(folder, persisted, acceptance)
         source = build_source(submission, persisted, acceptance, receipt)
         if submission.tme_case_id:

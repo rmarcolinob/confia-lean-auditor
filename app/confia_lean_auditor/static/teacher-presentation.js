@@ -9,8 +9,8 @@
   const styles = document.querySelector('#teacher-home-styles');
   if (!Home || !host || !header || !nav || !styles) return;
   const actions = [
-    ['specialized', 'SPECIALIZED', 'Questões preparadas · ITA, TME² e catálogo', 'document'],
-    ['dynamic', 'DYNAMIC', 'Questões inéditas · rubricas e correção', 'plus'],
+    ['specialized', 'Corrigir com SPECIALIZED', 'Questões preparadas · ITA, TME² e catálogo', 'document'],
+    ['dynamic', 'Corrigir com DYNAMIC', 'Questões inéditas · rubricas e correção', 'plus'],
     ['activities', 'Atividades, listas e provas', 'Preparar e acompanhar as atividades', 'list'],
     ['cases', 'Correções e revisões', 'Acompanhar a fila de soluções', 'check'],
     ['results', 'Resultados e devolutivas', 'Consultar as correções realizadas', 'chart'],

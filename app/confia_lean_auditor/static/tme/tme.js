@@ -245,26 +245,25 @@
   async function newCase(params={}) {
     ++state.generation;state.view="new";
     if(params.mode==="specialized") {
-      if(fullExam)return fullExam.newCorrection();
       return newSingleCase();
     }
     if(params.mode==="dynamic") {
-      const page=Views.Page("DYNAMIC · Avaliações e listas","Cadastre a avaliação, envie as respostas e acompanhe a correção.");
+      const page=Views.Page("Corrigir com DYNAMIC","Insira um problema, aprove a rubrica e corrija a resolução que você já possui.");
       page.heading.append(btn("Voltar às opções",()=>navigate("new"),"tme-button secondary"));
       const host=node("div");host.id="confia-preparation";page.append(host);show(page);
-      if(!params.problem_id && window.ConfIADynamicAssessment){
+      if(params.assessment_id && window.ConfIADynamicAssessment){
         preparation=window.ConfIADynamicAssessment.create({host,simplified:true,setBusy:value=>{state.busy=value;},onSelect:(id,step)=>writeRoute("new",{mode:"dynamic",assessment_id:id,step}),onOpenExam:id=>openExam(id).catch(showError),onUpload:id=>{preparation?.cancel();preparation=null;return fullExam.newCorrection({assessmentId:id});}});
         return preparation.load(params.assessment_id,params.step);
       }
-      preparation=window.ConfIADynamic.create({host,setBusy:value=>{state.busy=value;},
+      preparation=window.ConfIADynamic.create({host,direct:true,setBusy:value=>{state.busy=value;},
         onSelect:id=>writeRoute("new",{mode:"dynamic",problem_id:id}),onOpenAttempt:id=>openCase(id).catch(showError)});
       return preparation.load(params.problem_id);
     }
     const page=Views.Page("Nova correção","Escolha como começar. A preparação e a correção fazem parte do mesmo ConfIA.");
     const choices=node("div",undefined,"confia-creation-choices");
     for(const [mode,title,description] of [
-      ["specialized","Avaliação preparada","Para TME, olimpíadas, vestibulares e avaliações previamente configuradas."],
-      ["dynamic","Nova atividade ou prova","Crie questões inéditas e prepare rubricas com o ConfIA."]]) {
+      ["specialized","Corrigir com SPECIALIZED","Selecione um problema preparado e insira a resolução do aluno."],
+      ["dynamic","Corrigir com DYNAMIC","Insira um problema novo, aprove a rubrica e corrija diretamente."]]) {
       const choice=btn("",()=>navigate("new",{mode}),"tme-panel confia-creation-choice");
       choice.setAttribute("aria-label",title);
       choice.append(node("span",mode.toUpperCase(),"quiet-label"),node("h2",title),node("p",description),node("span","Continuar →","confia-choice-action"));choices.append(choice);
@@ -279,6 +278,43 @@
     window.scrollTo(0,0);return fullExam.open(examId,attemptId);
   }
   async function newSingleCase() {
+    state.view = "new"; const generation=++state.generation;
+    const box = Views.Page("Corrigir com SPECIALIZED","Selecione um problema preparado. As verificações e a pontuação serão produzidas pelo motor existente."); const form = node("form",undefined,"tme-new-form");
+    const skeleton=Views.Loading();box.append(skeleton);show(box);
+    const select = node("select"); select.required = true;
+    const placeholder = node("option", "Selecione uma questão"); placeholder.value = ""; select.appendChild(placeholder);
+    try {
+      const entries = (await api("/tme/problems")).map(problemPresentation)
+        .sort((a,b) => a.group.localeCompare(b.group,"pt-BR",{numeric:true}) || a.number-b.number);
+      const groups = new Map();
+      for (const p of entries) {
+        if (!groups.has(p.group)) {
+          const group = node("optgroup"); group.label = p.group;
+          groups.set(p.group,group); select.appendChild(group);
+        }
+        const option = node("option",p.label); option.value = p.id; groups.get(p.group).appendChild(option);
+      }
+    }
+    catch (_) { if(generation===state.generation){box.replaceChildren(box.heading,Views.ErrorState("Não foi possível carregar as questões.",newCase));}return; }
+    if(generation!==state.generation)return;
+    box.replaceChildren(box.heading);
+    select.setAttribute("aria-label","Problema preparado");
+    box.append(field("Problema preparado",select));
+    const statement=node("div",undefined,"tme-panel"),intake=node("div");box.append(statement,intake);
+    select.addEventListener("change",async()=>{
+      preparation?.cancel();intake.replaceChildren();statement.replaceChildren();
+      if(!select.value)return;
+      const selected=state.problems?.find(p=>(p.problem_id||p.id)===select.value);
+      if(selected){const rendered=Workspace.ProblemStatement(selected,{statementOpen:true},state.presentations);statement.append(rendered);rendered.updateStatementLayout();}
+      preparation=window.ConfIATeacherDirect.create({host:intake,problemId:select.value,setBusy:value=>{state.busy=value;},onOpen:id=>openCase(id)});
+    });
+    const advanced=node('details');advanced.append(node('summary','Outras entradas existentes'));
+    advanced.append(btn('Foto / scan ou escrita digital',()=>newLegacyCase(),'secondary'));
+    advanced.append(btn('Receber documentos de uma avaliação preparada',()=>fullExam.newCorrection(),'secondary'));box.append(advanced);
+    show(box);
+  }
+
+  async function newLegacyCase() {
     state.view = "new"; const generation=++state.generation;
     const box = Views.Page("Nova correção","Localize uma prova e escolha a forma de entrada da solução."); const form = node("form",undefined,"tme-new-form");
     const skeleton=Views.Loading();box.append(skeleton);show(box);
@@ -523,7 +559,7 @@
     const saved = local(c); saved.originalPages ||= new Map();
     if (saved.originalPages.has(index)) return saved.originalPages.get(index);
     const page = node("div", undefined, "page-review"); page.appendChild(node("h3", `Página ${index + 1}`));
-    if(c.source_mode==="TEXT") {const source=node("pre",saved.originalText?.text || "Fonte indisponível.","document");source.style.whiteSpace="pre-wrap";page.appendChild(source);saved.originalPages.set(index,page);return page;}
+    if(c.source_mode==="TEXT") {if(saved.originalText?.original){const url=`/tme/cases/${c.case_id}/original-document`;const link=node("a","Abrir original anexado");link.href=url;link.target="_blank";link.rel="noopener";page.append(link);const view=node(saved.originalText.original.media_type==="application/pdf"?"iframe":"img");view.src=url;view.title="Solução original preservada";view.alt="Solução original preservada";view.style.width="100%";view.style.maxHeight="32rem";if(view.tagName==="IFRAME")view.style.height="32rem";page.append(view);}const source=node("pre",saved.originalText?.text || "Fonte indisponível.","document");source.style.whiteSpace="pre-wrap";page.appendChild(source);saved.originalPages.set(index,page);return page;}
     const examPage=saved.examPages?.[index];
     const examAsset=examPage && saved.fullExam.submission.original_documents.find(a=>a.asset_id===examPage.original_asset_id);
     if(examPage)page.children[0].textContent=`Página ${examPage.page_number} da prova`;
@@ -733,6 +769,19 @@
       }
       actionbar.append(reviewBox);
     }
+    const directPending=Boolean(saved.originalText?.teacher_confirmation_required && latest && !saved.history.acceptances.some(a=>a.revision_number===latest.revision_number && a.acceptance_note===window.ConfIATeacherDirect.confirmation));
+    if(directPending){
+      const check=node('input');check.type='checkbox';check.setAttribute('aria-label','Conferi a transcrição com o original');
+      const confirm=btn('Confirmar transcrição',async()=>{
+        if(!check.checked||state.busy||saved.editing)return;
+        state.busy=true;
+        try{await post(`/tme/cases/${c.case_id}/transcriptions/${saved.history.transcription.transcription_id}/accept`,{revision_number:latest.revision_number,reviewer_identity_verified:false,acceptance_note:window.ConfIATeacherDirect.confirmation});saved.loaded=false;state.message='Transcrição confirmada. Agora execute a correção.';}
+        catch(error){state.message=error.message;}finally{state.busy=false;}
+        await renderCorrection();
+      });confirm.disabled=true;check.disabled=state.busy||Boolean(saved.editing);
+      check.addEventListener('change',()=>{confirm.disabled=!check.checked||state.busy||Boolean(saved.editing);});
+      actionbar.append(field('Conferi a transcrição com o original; isso não confirma a validade matemática.',check),confirm);
+    }
     const progress = saved.processing === "audit" ? "Analisando matemática · executando verificações…" : saved.processing === "recognition" ? "Reconhecendo solução…" : state.message || (run?.status === "FAILED" ? "Não foi possível concluir a análise matemática." : run ? (incomplete(c, run) ? incompleteMessage : "Análise concluída.") : latest ? (c.exam_submission_id || c.source_mode==="TEXT") ? "Transcrição disponível." : "Transcrição automática disponível." : saved.feedback?.state === "FAILED" ? saved.feedback.message : "Aguardando reconhecimento");
     actionbar.appendChild(note(progress));
     actionbar.dataset.quiet=String(!c.exam_submission_id && !state.message && !saved.processing && run?.status==="COMPLETED" && !run.stale && !incomplete(c, run));
@@ -740,7 +789,7 @@
     if (!latest && (!c.exam_submission_id || pages.length)) primary = btn(saved.feedback?.state === "FAILED" ? "Tentar novamente" : "Reconhecer", recognize);
     else if(c.exam_submission_id && latest) primary=btn(run?.status==="FAILED"?"Tentar novamente":saved.examReview.reanalysis_required?"Reanalisar questão":run?"Executar nova análise":"Analisar com ConfIA",audit);
     else if (!c.exam_submission_id && (!run || run.stale || run.status === "FAILED" || incomplete(c, run))) primary = btn(incomplete(c, run) ? "Tentar novamente" : "Analisar com ConfIA", audit);
-    if (primary) { primary.disabled = state.busy || Boolean(c.exam_submission_id && saved.editing) || Boolean(saved.examReview?.exam_finalized) || Boolean(latest && reading?.required && reading.status!=='CONFIRMED'); actionbar.appendChild(primary); }
+    if (primary) { primary.disabled = state.busy || directPending || Boolean(saved.editing) || Boolean(saved.examReview?.exam_finalized) || Boolean(latest && reading?.required && reading.status!=='CONFIRMED'); actionbar.appendChild(primary); }
     if (saved.processing === "recognition") actionbar.appendChild(loading("Reconhecendo…"));
     const heading = context(c, saved.decision || saved.examReview?.current_human_decision ? 3 : run ? 2 : latest ? 1 : 0); heading.appendChild(openDrawer);
     if(c.exam_submission_id){
@@ -765,9 +814,9 @@
     updatePages(); statement.updateStatementLayout();
     if (!saved.decision && !c.exam_submission_id) {
       sticky = node("div", undefined, "correction-action-bar"); sticky.setAttribute("aria-label","Ação da correção");
-      if (primary) { const action = btn(primary.textContent,()=>primary.click()); action.disabled=state.busy; sticky.append(node("span",saved.processing ? "Processando…" : latest ? "Transcrição disponível" : "Solução preservada"),action); }
+      if (primary) { const action = btn(primary.textContent,()=>primary.click()); action.disabled=primary.disabled; sticky.append(node("span",saved.processing ? "Processando…" : latest ? "Transcrição disponível" : "Solução preservada"),action); }
       else { sticky.append(node("span",run?.result?.score == null ? "Sugestão não determinada" : `Sugestão ${String(run.result.score).replace(".",",")}`,"sticky-suggestion"),btn("Ajustar",()=>saved.adjustDecision(),"secondary"),btn("Finalizar",()=>saved.submitDecision())); }
-      for(const control of sticky.querySelectorAll("button")) control.disabled=state.busy;
+      for(const control of sticky.querySelectorAll("button")) control.disabled=control.disabled||state.busy;
       root.appendChild(sticky);saved.resizeObserver?.observe(sticky);
     }
     updateClearance();
@@ -849,18 +898,23 @@
         saved.auditRequestKey ||= window.crypto.randomUUID();request.execution_key=saved.auditRequestKey;
       }
       const run = await post(`/tme/cases/${c.case_id}/audits`, request);
-      if(c.dynamic_context && c.exam_submission_id && window.ConfIADynamicCorrection)
-        await window.ConfIADynamicCorrection.complete({caseId:c.case_id,run,api,post});
+      let pipelineError="";
+      if(c.dynamic_context && window.ConfIADynamicCorrection){
+        try{await window.ConfIADynamicCorrection.complete({caseId:c.case_id,run,api,post});}
+        catch(error){pipelineError="Grader preservado. A revisão ou reconciliação não pôde ser concluída; retome no relatório. Nenhuma nota final foi confirmada.";}
+      }
       if(c.exam_submission_id || !c.dynamic_context) delete saved.auditRequestKey;
-      if(c.exam_submission_id) saved.loaded=false;
+      if(c.exam_submission_id || c.dynamic_context) saved.loaded=false;
       saved.audits = [run, ...(saved.audits || []).filter(r => r.audit_run_id !== run.audit_run_id)]; state.message = run.stale ? "A leitura mudou durante a análise. O resultado foi preservado no histórico; reanalise a versão atual." : run.status === "COMPLETED" ? (incomplete(c, run) ? incompleteMessage : "Análise concluída.") : reanalysis ? "Não foi possível concluir a reanálise." : "Não foi possível concluir a análise matemática.";
-    } catch (_) { if(c.exam_submission_id)saved.loaded=false;state.message = reanalysis ? "Não foi possível concluir a reanálise. Confira a versão atual e tente novamente." : "Não foi possível concluir a análise matemática. A solução permanece preservada; tente novamente."; }
+      if(pipelineError)state.message=pipelineError;
+    } catch (_) { if(c.exam_submission_id||c.dynamic_context)saved.loaded=false;state.message = reanalysis ? "Não foi possível concluir a reanálise. Confira a versão atual e tente novamente." : "Não foi possível concluir a análise matemática. A solução permanece preservada; tente novamente."; }
     finally { state.busy = false; saved.processing = null; }
     if (state.current === c && state.view === "workspace") await renderCorrection();
   }
   async function ensureAcceptance(c, history, latest) {
     if(local(c).examReview?.reading_review?.required && local(c).examReview.reading_review.status!=='CONFIRMED')throw new Error('Confirme explicitamente a leitura desta questão antes da correção.');
     let accepted = history.acceptances.find(a => a.revision_number === latest.revision_number);
+    if (!accepted && local(c).originalText?.teacher_confirmation_required)throw new Error("Confirme explicitamente a transcrição antes de corrigir.");
     if (!accepted) {
       const receipt = await post(`/tme/cases/${c.case_id}/transcriptions/${history.transcription.transcription_id}/accept`, { revision_number: latest.revision_number, reviewer_identity_verified: false, acceptance_note: "Vinculação automática da revisão para análise ou decisão a pedido do avaliador; sem conferência humana obrigatória." });
       accepted = receipt.acceptance; history.acceptances.push(accepted);
@@ -1036,7 +1090,7 @@
     saved.submitDecision=()=>{box.scrollIntoView({block:"center",behavior:"smooth"});return submit.click();};
     form.addEventListener("submit", event => { event.preventDefault(); submit.click(); }); form.append(use, adjust, extras, submit, error); box.appendChild(form); return box;
   }
-  fullExam=window.ConfiaFullExam?.create({node,btn,api,post,show,openExam,openQuestion:openExamQuestion,legacy:newSingleCase,setBusy:value=>{state.busy=value;}});
+  fullExam=window.ConfiaFullExam?.create({node,btn,api,post,show,openExam,openQuestion:openExamQuestion,legacy:newLegacyCase,setBusy:value=>{state.busy=value;}});
   if(document.body)document.body.dataset.tmeShell="modern";
   Home.HomeHeader();
   const bottomNav = document.querySelector("#home-bottom-nav");
